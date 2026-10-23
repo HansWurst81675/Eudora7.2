@@ -29,14 +29,16 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | der Hinweis in [Doku/ANWENDER.md](Doku/ANWENDER.md) und in der `LIESMICH.txt` des Pakets — **das ZIP vor dem Entpacken** entsperren (Rechtsklick … |
+| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf dem Filter-/Adressbuchfenster schließt nicht das Fenster, sondern beendet ganz… | **nie gemessen** | die Messung, was Eudora tatsaechlich beendet - dass der Befehl unbehandelt bleibt, erklaert nur, dass nichts geschieht, nicht dass das Programm zugeht… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-130](Intern/BEFUNDE.md#e-130)** | Fünf vorgebaute Fremd-DLLs werden bei jedem Bau neu gestempelt — und im Paket liegen an… | 22.10.2026 an 7.2.0.121 (Quelltext) | zweierlei — **wer** die fünf DLLs beim Bau stempelt, ist nicht gefunden (`paket-bauen.ps1` liest sie nur, kein `.vcxproj` nennt sie), und es ist ni… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
 | **[E-128](Intern/BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | 23.10.2026 an 7.2.0.120 | die Entscheidung über den eigenen Vorschlag und dann sein Einbau — die Vorgabeendung aus dem Inhalt ableiten (`.html`, `.eml`, `.txt`) und den Date… |
-| **[E-126](Intern/BEFUNDE.md#e-126)** | Eine gesendete Mail, die genau während eines Abgleichs des Ziel-IMAP-Ordners dorthin vers… | **nie gemessen** | jede Messung — die Vermutung aus [PRÜFER-33](Befunde/PRUEFER-33.md) Q1 ist nie beobachtet worden, weder bei Gregor noch am Prüfstand, und dort … |
+| **[E-126](Intern/BEFUNDE.md#e-126)** | Eine gesendete Mail, die genau während eines Abgleichs des Ziel-IMAP-Ordners dorthin vers… | 23.10.2026 an 7.2.0.121 (Quelltext) | jede Messung — die Vermutung aus [PRÜFER-33](Befunde/PRUEFER-33.md) Q1 ist nie beobachtet worden, weder bei Gregor noch am Prüfstand, und dort … |
 | **[E-125](Intern/BEFUNDE.md#e-125)** | Eine Nachricht aus einem IMAP-Ordner nach Out verschieben legt eine neue Nachricht mit <br… | 23.10.2026 an 7.2.0.120 | Gregors Lauf am Programm. Der Weg geht über Ziehen-und-Ablegen und endet in einem modalen Dialog; der Prüfstand kann ihn nicht auslösen. Die vier S… |
-| **[E-124](Intern/BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 23.10.2026 an 7.2.0.121 | zwei Dinge von außen — die Antwort von Microsoft auf Vorgang `a567fe2a-9f58-47e1-a675-a62733ec538f` (Stand *Submitted*) gehört hierher, und über … |
+| **[E-124](Intern/BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 23.10.2026 an 7.2.0.121 | der Vorgang bei Microsoft ist **abgewiesen** (zu viele Dateien im Upload, siehe die Messung unten) — nachzuholen ist eine **neue** Einreichung mit *… |
 | **[E-123](Intern/BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | 22.10.2026 an 7.2.0.121 | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
 | **[E-122](Intern/BEFUNDE.md#e-122)** | Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone v… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Berichtigung selbst — `ImapMailbox.cpp:4281` übergibt `CSummary::m_Seconds` an `append_date`, das echtes UTC erwartet, während `m_Seconds` UTC… |
 | **[E-119](Intern/BEFUNDE.md#e-119)** | Bilder, die als data:-Adresse im HTML stecken, erscheinen beim Antworten und Weiterleiten … | 22.10.2026 an 7.2.0.121 (Quelltext) | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… |
@@ -47,13 +49,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-98](Intern/BEFUNDE.md#e-98)** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… | 22.10.2026 an 7.2.0.121 (Quelltext) | zweierlei ist nicht gemessen — welche Vorgabe für *Kopfzeilen einschließen* und *Absätze raten* tatsächlich greift, solange die Kästchen fehlen… |
 | **[E-92](Intern/BEFUNDE.md#e-92)** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… | 22.10.2026 an 7.2.0.121 (Quelltext) | unsere eigene Seite — ein Vergleichsbild aus Eudora zur selben Nachricht liegt nicht vor, es ist also offen, ob unser Weiterleitungskopf überhaupt … |
 | **[E-91](Intern/BEFUNDE.md#e-91)** | zitierte Bereiche stehen bündig im Text, ohne Randbalken und Einrückung — auf Gregors … | 22.10.2026 an 7.2.0.121 (Quelltext) | die **Messung selbst** — ungeklärt ist, ob Gregors Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` tru… |
-| **[E-90](Intern/BEFUNDE.md#e-90)** | Emoji in Betreffzeilen erscheinen als ? — Gregors Thunderbird-Vergleich vom 14.09.2026 z… | 22.10.2026 an 7.2.0.121 (Quelltext) | nichts, was für sich zu beheben wäre — `?` ist die bessere von zwei Möglichkeiten, solange Eudora durchgehend ANSI/MBCS gebaut ist (Begründung i… |
+| **[E-90](Intern/BEFUNDE.md#e-90)** | Emoji in Betreffzeilen fallen ersatzlos weg (bis 7.2.0.58: sie erschienen als ?) — Grego… | 22.10.2026 an 7.2.0.121 (Quelltext) | nichts, was für sich zu beheben wäre — `?` ist die bessere von zwei Möglichkeiten, solange Eudora durchgehend ANSI/MBCS gebaut ist (Begründung i… |
 | **[E-78](Intern/BEFUNDE.md#e-78)** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… | 22.10.2026 an 7.2.0.121 | die Auswertung der vorhandenen Spurmarken und danach die Behebung — `E-78 nach SetDockState` und `E-78 vor/nach LoadWazooBarConfig` (`mainfrm.cpp`, … |
 | **[E-77](Intern/BEFUNDE.md#e-77)** | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in `ImapMailbox::… |
 | **[E-71](Intern/BEFUNDE.md#e-71)** | der Filterbericht ist nach einem Filterlauf leer | 22.10.2026 an 7.2.0.121 (Quelltext) | nicht die Behebung, sondern Gregors Freigabe — er hat ihn ausdrücklich auf die nächste Fassung geschoben. Die Messung steht fertig da: in `CFilter… |
 | **[E-47](Intern/BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … | 22.10.2026 an 7.2.0.121 (Quelltext) | eine Entscheidung, keine Behebung — `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nie als Redistributable veröffentlicht, `RegisterCOMObjects()` sche… |
 | **[E-39](Intern/BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Bestätigung am laufenden Programm — belegt ist nur der Quelltext (`persona.cpp:565-566` und `:179-198`, `rs.cpp:1237-1250`). Zu fahren wäre: d… |
-| **[E-14](Intern/BEFUNDE.md#e-14)** | Zusicherung beim Start: der X1-Suchindex wird neu angelegt (SearchManager::Info::InitX1) | **nie gemessen** | die eine Messung, die entscheidet — Eudora zweimal hintereinander auf **demselben gewachsenen** Mailverzeichnis starten und beim zweiten Mal auf `Se… |
 | **[S-6](Intern/BEFUNDE.md#s-6)** | Bereiche überlagern sich | 22.10.2026 an 7.2.0.121 (Quelltext) | das Nachstellen — ob sich die Bereiche heute überhaupt noch überlagern, ist seit dem 30.08.2026 **nie geprüft** worden. Die beiden damals genannt… |
 | **[NP2-3](Intern/BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben | 22.10.2026 an 7.2.0.121 (Quelltext) | die Behebung selbst — `CPaletteDC::BitBltTransparent` (`OTShim_Werkzeugleiste.cpp:239`) meldet unverändert Erfolg, ohne gezeichnet zu haben. Seit d… |
 | **[NP3-3](Intern/BEFUNDE.md#np3-3)** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch | 22.10.2026 an 7.2.0.121 (Quelltext) | eine Zeile Text — der Kommentar in `OTShim_Bild.h:326-330` sagt weiterhin *„an drei von fünf Stellen"* und zählt die Aufrufstellen damit falsch.… |
@@ -96,6 +97,62 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
+
+**Nur übersetzt am 23.10.2026, nicht geschnürt.** 277 Tests, 277 bestanden.
+
+**Was der Anwender merkt.** Zieht er eine **empfangene** Nachricht nach `Out`,
+kommt ein Hinweis mit **einem** Knopf:
+
+> Messages can't be transferred to the Out mailbox.  To send this message
+> again, open it and choose Message > Send Again.
+
+Es wird nichts übertragen und nichts angelegt. **Vorher** fragte Eudora
+*„Some headers may be removed when transferring to the Out Mailbox.  Transfer
+anyway?"*, legte nach einem Ja über `Sum->SendAgain` eine **neue** Nachricht an
+und meldete im selben Zug *„No messages were transferred!"* — der Anwender
+bekam also beides: eine Nachricht, die er nicht wollte, und die Auskunft, es
+sei nichts geschehen.
+
+**Eine verfasste Nachricht bleibt erlaubt.** Sie nach `Out` zu ziehen heißt,
+sie zum Senden einzureihen. Die Bedingung ist deshalb
+`(ToOut && !Sum->IsComp())`, nicht `ToOut` allein.
+
+Gregors Entscheidung vom 17.10.2026 auf die Frage, ob der Weg wie im Original
+eine neue Nachricht anlegen (A) oder abgelehnt werden soll (B): **„B"**.
+
+| Datei | was |
+|---|---|
+| `tocdoc.cpp` | `AlertDialog(IDD_STRIP_HEADERS)` und der Merker `StripHeaders` entfernt; an ihrer Stelle die Ablehnung mit `break`, dazu der Merker `E125Abgelehnt` und die Spurmarke `E-125 Xfer nach Out abgelehnt: …` (`DEBUG_MASK_MISC`) |
+| `EudoraRes.rc` | neuer Dialog `IDD_XFER_TO_OUT_REFUSED`, ein Knopf |
+| `resource.h` | Kennung 8117, `_APS_NEXT_RESOURCE_VALUE` auf 8118 |
+| `Tests/TestE125.cpp` | sieben Prüfungen in zwei Fällen |
+
+**Zwei Nachbesserungen am selben Tag, beide von [PRÜFER-45](Befunde/PRUEFER-45.md)
+gefunden** — die erste Fassung war halb, und der Test dazu war blind:
+
+* **Bei einer IMAP-Quelle kam zusätzlich weiterhin *„No messages were
+  transferred!"*.** Die Bedingung am Ende von `CTocDoc::Xfer` lautet
+  `IsImapToc() || (TargetToc && TargetToc->IsImapToc()) && sumlist.GetCount() > 0`;
+  weil `&&` stärker bindet als `||`, greift der IMAP-Zweig bei einer
+  IMAP-Quelle auch mit leerer Liste. **Genau der Weg, auf dem Gregor den
+  Fehler am 16.10.2026 gefunden hatte**, wäre damit nur zur Hälfte behoben
+  gewesen. Der neue Merker `E125Abgelehnt` überspringt die
+  IMAP-Nachbearbeitung. Der Vorrangfehler in der Klammerung bleibt stehen —
+  er ändert Verhalten an einer alten Stelle und gehört abgestimmt.
+* **Der Regressionstest ließ den ganzen Fehler durch.** Löscht man allein die
+  Zeile `break;`, ist der Befund vollständig zurück — und der Prüfstand meldete
+  **277 von 277 bestanden**. Der Test prüfte den Hinweis, nicht den Ausstieg.
+  Er prüft jetzt zusätzlich Ausstieg, Reihenfolge gegen `SendAgain`, den
+  IMAP-Merker und die Eindeutigkeit der Ressourcenkennung. Beide Gegenproben
+  erneut gefahren, beide rot.
+
+**Was noch fehlt:** Gregors Lauf am Programm. Der Weg geht über
+Ziehen-und-Ablegen und endet in einem modalen Dialog, den der Prüfstand nicht
+auslösen kann. Die vier Schritte stehen als
+[TESTPLAN M3](Intern/TESTPLAN.md#m3-e125); Schritt 4 ist die Gegenprobe mit
+einem Entwurf.
 
 ## 7.2.0.121 — `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus ([E-111](Intern/BEFUNDE.md#e-111))
 

@@ -1782,6 +1782,33 @@ berichtigt. **Die Schranke aus
 [L-49.1](../Befunde/LEKTOR-49.md#l-49.1) gefangen, den schwersten Fund dieses
 Durchgangs.
 
+## Sechsundfünfzigster Durchgang — Bestandsprüfung nach dem E-125-Bau, 23.10.2026 (Bericht: `Befunde/LEKTOR-51.md`)
+
+**22 Funde an 29 Dateien** — 9 falsch, 8 veraltet, 5 unvollständig. Geprüft
+wurde der **Bestand**, nicht der Diff; zum Pflichtumfang gehörten vier
+**unveränderte** Dateien, die `tools/doku-pruefen.pl` als veraltet meldet.
+
+**Der schwerste Fund, [L-51.1](../Befunde/LEKTOR-51.md#l-51.1):** `README.md`
+und der Befundeintrag zu [E-90](BEFUNDE.md#e-90) sagten, Emoji in
+Betreffzeilen erschienen als `?`. Am Quelltext nachgemessen stimmt das seit
+**7.2.0.59** nicht mehr: eine Filterschleife in `utils.cpp:1570-1596` streicht
+jedes Surrogat, **bevor** `WideCharToMultiByte` läuft — Emoji erscheinen also
+gar nicht. Der Eintrag trug die Marke *„Zuletzt belegt am Quelltext:
+22.10.2026"*; die Messung hatte die Schleife 40 Zeilen weiter übersehen und
+den falschen Stand bestätigt.
+
+Weiter: [E-114](BEFUNDE.md#e-114) stand nach seiner Schließung noch an drei
+Stellen offen, [E-124](BEFUNDE.md#e-124) an vier Stellen als *„wartet auf
+Microsoft"*, obwohl der Vorgang abgewiesen ist; `tools/WERKZEUGE.md`
+behauptete, seit 7.2.0.106 seien keine Werkzeuge dazugekommen — es sind 22;
+`Testdaten/README.md` sagte pauschal, **alle** Dateien stammten aus echten
+Nachrichten, was für sechs von elf nicht gilt (eine Datenschutzaussage); und
+in `Arbeitsweise/MEMORY.md` fehlten **sieben Lehren**, darunter die fünf des
+CHRONIST-Laufs vom 22.10.2026 — keine Sitzung hat sie je geladen.
+
+Aus [L-51.4](../Befunde/LEKTOR-51.md#l-51.4) folgte der Versionssprung auf
+**7.2.0.122**: 7.2.0.121 hätte sonst zwei verschiedene Bauten beschrieben.
+
 ## Fünfundfünfzigster Durchgang — „Was noch fehlt" für alle 40 offenen Befunde, 22.10.2026 (Bericht: `Befunde/LEKTOR-50.md`)
 
 **Kein voller Durchgang über alle `.md`, sondern ein gezielter Auftrag an

@@ -17,7 +17,7 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > `tools/paket-bauen.ps1` — **nicht löschen**) und **1.0.30**
 > (`Eudora72-1.0.30-release.zip`). Bis hierher stand **1.0.27** *„die
 > veröffentlichte Fassung"* — dieses ZIP ist **nicht mehr versioniert**, und
-> veröffentlicht ist inzwischen **`v1.0.117`** (21.10.2026, 07:56:56 UTC, Marke `f546b004`, ZIP `Eudora72-1.0.117-release.zip`, SHA-256 `335751a9` am Anfang, auf GitHub als *Latest*; davor `v1.0.113` vom 20.10.2026, 13:01:36 UTC, Marke `ac094f15`, SHA-256 `0d1d4bf4` am Anfang; davor am selben Tag
+> veröffentlicht ist inzwischen **`v1.0.120`** (21.10.2026, 19:07:37 UTC, ZIP `Eudora72-1.0.120-release.zip`, **auf GitHub als *Latest***, nachgemessen am 23.10.2026 mit `git tag --sort=-v:refname`); davor `v1.0.117` vom 21.10.2026, 07:56:56 UTC, Marke `f546b004`, ZIP `Eudora72-1.0.117-release.zip`, SHA-256 `335751a9` am Anfang; davor `v1.0.113` vom 20.10.2026, 13:01:36 UTC, Marke `ac094f15`, SHA-256 `0d1d4bf4` am Anfang; davor am selben Tag
 > `v1.0.112` um 11:55 UTC; davor `v1.0.101` vom 17.10.2026, 19:12 UTC, `v1.0.87` vom 14.10.2026, 05:46 UTC, `v1.0.84` vom 12.10.2026, 12:59 UTC, `v1.0.83` vom selben Tag und `v1.0.72` vom 17.09.2026 — **berichtigt am 17.09.2026 vom LEKTOR,
 > hier stand `v1.0.50`**, und am 12.10.2026 von `v1.0.72` auf `v1.0.83`,
 > gemessen mit `gh release list`). Die ZIPs zu **1.0.21**, **1.0.23**
@@ -155,6 +155,14 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 1.0.122
+
+**Nur übersetzt am 23.10.2026, nicht geschnürt.** Die Nummer ist vergeben, weil der
+Quellstand auf **7.2.0.122** gehoben wurde ([E-125](../Intern/BEFUNDE.md#e-125): Ziehen
+einer empfangenen Nachricht nach `Out` wird abgelehnt statt eine neue Nachricht
+anzulegen; 277 Tests, 277 bestanden, zweimal gegengetestet). Ein ZIP gibt es dazu
+noch nicht — [TESTPLAN M3](../Intern/TESTPLAN.md#m3-e125) braucht Gregors Lauf.
 
 ## 1.0.121
 

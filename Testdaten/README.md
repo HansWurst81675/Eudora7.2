@@ -10,7 +10,8 @@
 > ist, nicht den heutigen Stand** (LEKTOR, L-15.15).
 
 Probenachrichten und Aufrufstapel, mit denen sich die Befunde **E-97**,
-**E-101**, **E-103**, **E-104**, **E-106**, **E-108** und **E-112** nachstellen lassen.
+**E-101**, **E-103**, **E-104**, **E-105**, **E-106**, **E-108**, **E-112**,
+**E-117**, **E-118** und **E-121** nachstellen lassen.
 
 Sie liegen hier, weil es sie sonst nirgends mehr gibt. Bis zum 18.09.2026 lag
 dieses Material ausschliesslich unter `C:\Temp` und in Gregors Testverzeichnissen
@@ -89,7 +90,7 @@ perl -0777 -e 'open(O,">:raw",$ARGV[0]) or die; shift;
     print O "\r\n" unless $d =~ /\r\n\z/; }' Probe.mbx Testdaten/e1*.eml
 ```
 
-Gemessen an den drei `.eml` dieses Verzeichnisses: `Probe.mbx` = 167.399 Byte,
+Gemessen am 18.09.2026 an den damals **drei** `.eml` dieses Verzeichnisses (`e103-…`, `e106-…`, `e108-…`): `Probe.mbx` = 167.399 Byte,
 **2315 CRLF, 353 nackte LF**, drei Trennzeilen — die Summe der Einzeldateien
 plus drei Trennzeilen, die nackten LF unversehrt. Die entstandene `Probe.mbx`
 kommt neben die anderen `.mbx` ins Mailverzeichnis; Eudora legt beim naechsten
@@ -103,7 +104,7 @@ Oberflaeche gestartet.
 
 ## 3. Herkunft und Anonymisierung
 
-Alle fuenf Dateien stammen aus **echten Nachrichten in Gregors Postfach** bzw.
+**Fuenf** der elf Dateien stammen aus **echten Nachrichten in Gregors Postfach** bzw.
 aus Abstuerzen auf seinem Rechner, aufgenommen zwischen dem 14. und 17.09.2026.
 Ein echter Fall ist einem konstruierten ueberlegen: er hat den Pruefweg
 bewiesenermassen ueberlebt (`Arbeitsweise/testdaten-muessen-durchkommen.md`).

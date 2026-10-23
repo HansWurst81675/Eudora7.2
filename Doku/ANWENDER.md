@@ -38,14 +38,6 @@ Alltag am ehesten merkt.
   nicht mehr an. Es gilt, was zuletzt in der `Eudora.ini` stand. Das ist **kein
   Rückschritt durch die Behebung von [E-97](../Intern/BEFUNDE.md#e-97)** — die Kästchen fehlen seit der
   Portierung, es kam nur niemand so weit, weil das Programm vorher abbrach.
-* **Versteckter Vorschautext wird mitgelesen** ([**E-105**](../Intern/BEFUNDE.md#e-105), im Download `v1.0.87` offen; Behebung in 7.2.0.88 eingebaut, ausgeliefert mit `v1.0.101`, von Gregor noch nicht bestätigt): In manchen
-  Werbemails steht über dem Inhalt eine lange Reihe `? ? ? ?`. Absender
-  füllen damit die Vorschauzeile und verbergen sie per CSS `display:none` —
-  Eudoras HTML-Anzeige (Paige) kennt keine CSS-Eigenschaften und zeigt den
-  Bereich deshalb an. Nur Darstellung, kein Datenverlust. Aus demselben Grund
-  stehen in manchen Newslettern Bilder doppelt da (Desktop- und
-  Handyfassung, eine davon per `display:none` verborgen; zweiter Fall,
-  von Gregor am 13.10.2026 an 1.0.86 gemeldet).
 * **Bilder, die als `data:`-Adresse im HTML stecken, erscheinen beim Antworten
   und Weiterleiten als grauer Kasten** ([**E-119**](../Intern/BEFUNDE.md#e-119), offen, am Protokoll belegt):
   der Lader sucht eine Datei, das Bild steht aber base64-kodiert in der
@@ -72,10 +64,11 @@ Alltag am ehesten merkt.
   die Datei aus *File → Save As* sagt im `<meta>` UTF-8, enthält aber
   Windows-1252. Jedes Programm, das sie als HTML liest, folgt dem `<meta>` und
   zeigt statt der Umlaute Ersatzzeichen.
-* **Ein gelöstes angedocktes Fenster hinterlässt eine leere Fläche**
-  ([**E-114**](../Intern/BEFUNDE.md#e-114), offen, an 1.0.84 gemeldet): wird etwa das Filterfenster
-  angedockt und wieder gelöst, bleibt an seiner alten Stelle ein weißer
-  Bereich stehen.
+* **Ein gelöstes angedocktes Fenster hinterließ eine leere Fläche**
+  ([**E-114**](../Intern/BEFUNDE.md#e-114), **am 23.10.2026 geschlossen**): an 1.0.84 einmal
+  gesehen — das Filterfenster angedockt, im nächsten Schritt gelöst, an seiner alten
+  Stelle blieb ein weißer Bereich. Gregor konnte es am selben Tag und seither nicht
+  mehr nachstellen; die Ursache ist nie gemessen worden.
 * **Ctrl+F (*Find Messages*) meldet „Encountered an improper argument"**
   ([**E-115**](../Intern/BEFUNDE.md#e-115), an 1.0.84 gemeldet), und im Reiter *Mailboxes* ist kein
   Postfach angehakt — wenn ein IMAP-Postfach aktiv ist. **Behoben in 7.2.0.86,
@@ -93,13 +86,30 @@ unter *Noch offen*.
 ### Herunterladen und starten
 
 1. [Neuestes Release](https://github.com/HansWurst81675/Eudora7.2/releases/latest)
-   herunterladen, ZIP auspacken — an eine Stelle, an der man schreiben darf,
-   also **nicht** nach `C:\Program Files`.
-2. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
+   herunterladen. **Vor dem Auspacken: Rechtsklick auf die `.zip` →
+   Eigenschaften → unten das Kästchen *Zulassen* ankreuzen → OK.** Ohne
+   diesen Schritt hängt Windows an **jede** entpackte Datei die Markierung
+   „stammt von einem anderen Computer“, und `Eudora.exe` lässt sich dann
+   nicht per Doppelklick starten ([E-138](../Intern/BEFUNDE.md#e-138)).
+2. ZIP auspacken — an eine Stelle, an der man schreiben darf, also **nicht**
+   nach `C:\Program Files`.
+3. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
    den Zugangsdaten des Mailkontos.
-3. Die Titelzeile nennt die Fassung, zum Beispiel
+4. Die Titelzeile nennt die Fassung, zum Beispiel
    `Eudora 7.2.0.72 / Paket 1.0.72` — diese Angabe gehört in jeden
    Fehlerbericht.
+
+> **Schon ausgepackt und die `.exe` startet nicht?** Dann tragen die einzelnen
+> Dateien die Markierung. Nachträglich entfernen lässt sie sich in
+> PowerShell mit
+>
+> ```powershell
+> Get-ChildItem -Recurse 'C:\Pfad\zum\Eudora72-Verzeichnis' | Unblock-File
+> ```
+>
+> Nachsehen, ob es daran liegt: `Get-Item <Pfad>\Eudora.exe -Stream *` — steht
+> dort ein Strom `Zone.Identifier`, ist es die Markierung. Das Kästchen
+> *Zulassen* im Eigenschaften-Dialog wirkt immer nur für **eine** Datei.
 
 Das Postfach liegt im Unterverzeichnis `Mailverzeichnis` **neben** dem
 Programm. Wer eine neue Fassung auspackt, kopiert dieses Verzeichnis herüber
@@ -199,7 +209,12 @@ Aufgabenverwalter ohne jeden neuen Systemaufruf.
    wir empfehlen nicht, Defender abzuschalten.
 4. **Den Fehlalarm melden:** <https://www.microsoft.com/wdsi/filesubmission>,
    Kategorie *Incorrectly detected as malware*. Microsoft nimmt solche
-   Signaturen meist binnen weniger Tage zurück.
+   Signaturen meist binnen weniger Tage zurück. **Wichtig: nur die
+   beanstandete Datei hochladen, kein ZIP.** Unsere eigene Einreichung vom
+   20.10.2026 wurde genau daran abgewiesen — Microsoft zerlegte das Paket in
+   1033 Einzeldateien und analysierte es nicht
+   ([E-124](../Intern/BEFUNDE.md#e-124),
+   [DEFENDER-FEHLALARM.md](../Releases/DEFENDER-FEHLALARM.md)).
 
 **Was wir dagegen tun.** `tools/paket-pruefen.ps1` lässt seit 7.2.0.99
 Defender über jede EXE und DLL eines Pakets laufen und weist bei einem Fund
@@ -233,8 +248,9 @@ Bevor Sie schreiben: die bekannten offenen Punkte stehen in
 
 ## Der Zusatz *EudoraUnicodeFix* — kaputte Umlaute nachträglich reparieren
 
-**Ab Paket 1.0.121** — in `v1.0.120` ist er **noch nicht** enthalten, und
-1.0.121 ist zum Zeitpunkt dieser Zeile noch nicht geschnürt — liegt unter
+**Ab Paket 1.0.122** (Quellstand **7.2.0.122**) — in `v1.0.120` ist er **noch
+nicht** enthalten, und 1.0.122 ist zum Zeitpunkt dieser Zeile noch nicht
+geschnürt — liegt unter
 `Plugins\` ein Zusatz, der **nicht
 von uns** stammt: `EudoraUnicodeFix.dll` von
 [`rjsdotorg`](https://github.com/rjsdotorg/EudoraUnicodeFix-releases)

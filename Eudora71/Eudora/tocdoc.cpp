@@ -2631,6 +2631,18 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 		TargetView->m_SumListBox.SetRedraw(FALSE);
 
 	BOOL FoundSelected = FALSE;
+	//
+	// PRUEFER-45 K2: wurde das Ziehen nach "Out" abgelehnt (E-125), darf die
+	// IMAP-Nachbearbeitung am Ende gar nicht erst anlaufen. Sonst meldet
+	// ImapXferFromImapToLocal auf der leeren Liste
+	// IDS_ERR_IMAP_NO_MSGS_XFERRED - "No messages were transferred!" -, und der
+	// Anwender bekaeme wieder zwei Meldungen: genau die Haelfte des Befundes,
+	// die wir gerade abgestellt haben. Am Quelltext gemessen: die Bedingung
+	// weiter unten ist A || (B && C), nicht (A || B) && C - bei einer
+	// IMAP-QUELLE greift der Zweig also auch mit leerer Liste. Dieser
+	// Vorrangfehler bleibt stehen, er ist ein eigener Befund.
+	//
+	BOOL E125Abgelehnt = FALSE;
 	BOOL ClosedOpenWindow = FALSE;
 	POSITION pos, NextPos;
 	BOOL bGoingBackward = FALSE;
@@ -2739,6 +2751,8 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 		//
 		if (ToOut && !Sum->IsComp())
 		{
+			E125Abgelehnt = TRUE;
+
 			if (HighlightIndex < 0)
 				HighlightIndex = i;
 
@@ -3116,7 +3130,8 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 
 #ifdef IMAP4
 	// If one of the mailboxes is an IMAP mailbox, handle it specially.
-	if ( IsImapToc() || (TargetToc && TargetToc->IsImapToc()) && sumlist.GetCount() > 0 )
+	if ( !E125Abgelehnt &&
+		 ( IsImapToc() || (TargetToc && TargetToc->IsImapToc()) && sumlist.GetCount() > 0 ) )
 	{
 		if (this == TargetToc)
 			{

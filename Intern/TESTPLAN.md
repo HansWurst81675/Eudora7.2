@@ -1,7 +1,8 @@
-# Testplan für Gregor — Quellstand 7.2.0.121 / `VERSION` 1.0.121, Stand 23.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.122 / `VERSION` 1.0.122, Stand 23.10.2026
 
-> **Es gibt kein Paket 1.0.121.** Der Quellstand ist auf 7.2.0.121 gehoben
-> ([E-111](BEFUNDE.md#e-111), nur übersetzt), geschnürt und bei dir liegt
+> **Es gibt kein Paket 1.0.121 und kein 1.0.122.** Der Quellstand ist auf
+> 7.2.0.122 gehoben ([E-111](BEFUNDE.md#e-111) in .121, [E-125](BEFUNDE.md#e-125)
+> in .122 — beide nur übersetzt), geschnürt und bei dir liegt
 > **1.0.120**. Alles unten ist an 1.0.120 zu prüfen, solange nichts anderes
 > dasteht.
 
@@ -239,7 +240,7 @@ Mit der **Paketnummer** — der des Pakets, das du wirklich gestartet hast:
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
-Eigene Tests dieser Fassung: **243 Tests, 243 bestanden.**
+Eigene Tests dieser Fassung: **277 Tests, 277 bestanden** (Stand 7.2.0.122, 23.10.2026). Diese Zahl war am 23.10.2026 zum dritten Mal veraltet ([L-51.16](../Befunde/LEKTOR-51.md)); sie gehört aus `tools/pruefbericht.pl` erzeugt, nicht von Hand gepflegt.
 
 ---
 

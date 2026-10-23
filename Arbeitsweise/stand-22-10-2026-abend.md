@@ -72,7 +72,7 @@ Gregors E-Mail-Adresse steht auf der Seite und gehört **nicht** ins Repo.
 
 E-125 (seine Entscheidung B ist längst gefallen, nur nicht gebaut — Stelle:
 `CTocDoc::Xfer`, `tocdoc.cpp:2950`), E-128 (es war *mein* Vorschlag) und E-124
-(wartet auf Dritte). Ursache: nach dem Stichwort „Entscheidung" einsortiert
+(wartet, wie sich am 23.10.2026 herausstellte, **nicht** auf Dritte: der Vorgang bei Microsoft ist abgewiesen). Ursache: nach dem Stichwort „Entscheidung" einsortiert
 statt den Satz zu lesen. Siehe [[nur-offene-entscheidungen-auf-gregors-liste]].
 Es bleibt **ein** Punkt für ihn: **E-133**, sein Ja zu einer kurzen
 Registry-Änderung auf dieser Maschine.
