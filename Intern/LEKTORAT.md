@@ -1805,7 +1805,49 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
-## Sechsundfünfzigster Durchgang — Bestandsprüfung nach dem E-125-Bau, 23.10.2026 (Bericht: `Befunde/LEKTOR-51.md`)
+## Siebenundfünfzigster Durchgang — nach dem Paket 1.0.122, 23.10.2026 (Bericht: `Befunde/LEKTOR-52.md`)
+
+**14 Funde** — 5 falsch, 6 veraltet, 2 unvollständig, 1 Form. Geprüft wurden
+die acht Befunde, die an diesem Tag neu aufgenommen oder geschlossen worden
+sind, jeweils **gegen den Quelltext**, dazu das gebaute Paket gegen das, was
+die Dokumentation über es behauptet.
+
+**Der Fund, der sofort wirkte ([L-52.6](../Befunde/LEKTOR-52.md#l-52.6)):** dem
+Paket `Eudora72-1.0.122-release` fehlte die `TESTEN.txt`. Ein Vergleich der
+Dateilisten mit 1.0.120 ergab **genau einen** Unterschied — ausgerechnet die
+Prüfanleitung, und das bei einem Paket, dessen einziger Zweck ein manueller
+Test ist. `paket-bauen.ps1` erzeugt sie nicht; sie wurde bisher jedes Mal von
+Hand dazugelegt. Nachgelegt.
+
+**Zwei Dokumente behaupteten, 1.0.122 sei nicht geschnürt**
+([L-52.5](../Befunde/LEKTOR-52.md#l-52.5)), während das Verzeichnis seit 12:00
+bei Gregor lag. Bei der Gelegenheit ist die Messung nachgetragen worden, die
+bisher nur im Chat stand — einschließlich des **verworfenen ersten Anlaufs**:
+`paket-bauen.ps1` nimmt die frischen Binärdateien nur mit `-AusBauverzeichnis`,
+und `-Bauart` steht per Vorgabe auf **Debug**. Ohne beides blieb die
+Debug-`Eudora.exe` vom 30.08.2026 stehen; `paket-pruefen.ps1` hat es
+abgewiesen.
+
+**Fünf Stellen führten einen geschlossenen Befund noch als offen** — darunter
+`ZIEL.md`, der **Maßstab des Projekts**, der E-101 als offen führte und wörtlich
+die Paraphrase wiederholte, die am selben Tag als Fehlerquelle aufgeschrieben
+worden war.
+
+**Drei Fehler steckten in den neuen Einträgen selbst:** E-101 widerlegte sich
+in sich (der letzte Absatz empfahl eine Behebung auf einer Prämisse, die 40
+Zeilen höher widerlegt ist); E-137 nannte die Zeilen der Nachrichtentabelle
+statt der Funktionen; und der Nachweis *„keine Wazoo-Klasse fängt `Strg-W` ab"*
+war über `*.h`-Dateien geführt, in denen ein `ON_COMMAND` grundsätzlich nicht
+steht — **das Ergebnis war richtig, die Messung trug es nicht**.
+
+**Ein Fund löste sich bei der Nachmessung auf**
+([L-52.14](../Befunde/LEKTOR-52.md#l-52.14)): die Vermutung, `Unblock-File`
+werfe an Verzeichnissen Fehler, war ausdrücklich als ungemessen
+gekennzeichnet. Nachgemessen: 0 Fehler, mit und ohne `-File`. Die
+Kennzeichnung hat getan, wofür sie da ist.
+
+## Sechsundfünfzigster Durchgang
+ — Bestandsprüfung nach dem E-125-Bau, 23.10.2026 (Bericht: `Befunde/LEKTOR-51.md`)
 
 **22 Funde an 29 Dateien** — 9 falsch, 8 veraltet, 5 unvollständig. Geprüft
 wurde der **Bestand**, nicht der Diff; zum Pflichtumfang gehörten vier

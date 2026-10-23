@@ -60,7 +60,7 @@ Alltag am ehesten merkt.
   wird keine Endung aus dem MIME-Typ nachgetragen, wenn der Name keine hat.
   Durchlauf in [AUFGABEN.md](../Intern/AUFGABEN.md), **B5**.
 * **Eine gespeicherte HTML-Nachricht zeigt in anderen Programmen falsche
-  Umlaute** ([**E-101**](../Intern/BEFUNDE.md#e-101), **wieder offen** seit 13.10.2026, an 1.0.84 gemeldet):
+  Umlaute** ([**E-101**](../Intern/BEFUNDE.md#e-101), **am 23.10.2026 geschlossen**, an 1.0.84 gemeldet): seit 7.2.0.110 schreibt Eudora `charset="windows-1252"` in die Kopfzeile **und** in das `<meta>`; am 23.10.2026 an 7.2.0.120 an einer gespeicherten Nachricht geprüft — kein einziges Ersatzzeichen. Was es damals war:
   die Datei aus *File → Save As* sagt im `<meta>` UTF-8, enthält aber
   Windows-1252. Jedes Programm, das sie als HTML liest, folgt dem `<meta>` und
   zeigt statt der Umlaute Ersatzzeichen.

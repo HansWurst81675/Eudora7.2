@@ -156,13 +156,21 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 1.0.122
+## 1.0.122 — bereitgestellt am 23.10.2026 um 12:00 als `C:\Users\Gregor\Eudora72-1.0.122-release`
 
-**Nur übersetzt am 23.10.2026, nicht geschnürt.** Die Nummer ist vergeben, weil der
-Quellstand auf **7.2.0.122** gehoben wurde ([E-125](../Intern/BEFUNDE.md#e-125): Ziehen
+**Übersetzt und als Testverzeichnis abgelegt, aber kein ZIP und nicht veröffentlicht.**
+Die Nummer ist vergeben, weil der Quellstand auf **7.2.0.122** gehoben wurde ([E-125](../Intern/BEFUNDE.md#e-125): Ziehen
 einer empfangenen Nachricht nach `Out` wird abgelehnt statt eine neue Nachricht
 anzulegen; 277 Tests, 277 bestanden, zweimal gegengetestet). Ein ZIP gibt es dazu
 noch nicht — [TESTPLAN M3](../Intern/TESTPLAN.md#m3-e125) braucht Gregors Lauf.
+
+| | |
+|---|---|
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-1.0.122-release`, abgelegt am 23.10.2026 um 12:00. Sein 1.0.120 blieb unangetastet |
+| Gegen den Bau gemessen | die `Eudora.exe` im Paket ist **byte-gleich** mit der im Bauverzeichnis: 3.020.800 Byte, 23.10.2026 11:33, Fassung 7.2.0.122. Spurmarke `E-125 Xfer nach Out abgelehnt` enthalten, die alte Rückfrage *„Some headers may be removed“* nicht mehr, keine Debug-Laufzeit importiert |
+| `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„startet ohne Nachinstallation: JA"*, 4 bekannte Warnungen (MFC71/MSVCP71 fehlen, zwei 16-Bit-Altlasten) |
+| Prüfanleitung | `TESTEN.txt` mit den vier Schritten aus [TESTPLAN M3](../Intern/TESTPLAN.md#m3-e125). **Sie fehlte im ersten Anlauf** und wurde nach [LEKTOR-52](../Befunde/LEKTOR-52.md) L-52.6 nachgelegt |
+| Erster Anlauf verworfen | `paket-bauen.ps1` nimmt die frischen Binärdateien nur mit `-AusBauverzeichnis`, und `-Bauart` steht per Vorgabe auf **Debug**. Ohne beides blieb die Debug-`Eudora.exe` vom 30.08.2026 aus der Grundlage stehen (10.201.088 Byte). `paket-pruefen.ps1` hat das abgewiesen — der Fall aus [paket-gegen-den-bau-messen](../Arbeitsweise/paket-gegen-den-bau-messen.md) |
 
 ## 1.0.121
 

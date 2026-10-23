@@ -1,5 +1,11 @@
-Eudora 7.2 — Paket 1.0.3 (Release-Bau)
-======================================
+Eudora 7.2 — Release-Bau, LIESMICH
+==================================
+
+WELCHE FASSUNG DAS IST, steht in der Titelzeile des Programms und in
+TESTEN.txt. Diese Datei gilt fuer jedes Paket; sie nennt deshalb
+bewusst KEINE Nummer. Bis zum 23.10.2026 stand hier 'Paket 1.0.3' -
+eine Zahl, die seit Dutzenden Paketen falsch war und die als erste
+Zeile stand, die ein Erstanwender liest.
 
 ZUERST LESEN: WINDOWS BLOCKIERT DEN START DER HERUNTERGELADENEN EXE
 -------------------------------------------------------------------

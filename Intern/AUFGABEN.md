@@ -410,7 +410,7 @@ widerlegt. Einzelheiten in [CHANGELOG.md](../CHANGELOG.md).
 
 | Punkt | wo | braucht |
 |---|---|---|
-| [**E-101**](BEFUNDE.md#e-101) — gespeicherte HTML-Datei sagt UTF-8, enthält Windows-1252 (**wieder offen** seit 13.10.2026) | `BEFUNDE.md` | Bau, dann Gregors Gegenprobe |
+| [**E-101**](BEFUNDE.md#e-101) — **F2**: der neue Block 4a in `msgutils.cpp:4276-4390` läuft auf dem einzigen Aufrufweg nie, weil `StripTabooHeaders` die `Content-`-Zeilen vorher entfernt. Wirkung ohne Schaden; hält kein Paket auf | `BEFUNDE.md` | Entscheidung, ob 225 Zeilen toter Code bleiben oder der Aufrufweg geändert wird |
 | [**E-116**](BEFUNDE.md#e-116) — `width="35px"` wird als 3508 gelesen (neu, 13.10.2026, PRÜFER-22 F3; am Quelltext belegt, sichtbar erst ab 7.2.0.85) | `BEFUNDE.md` | Test zuerst, dann Bau (Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694`) |
 | [**E-118**](BEFUNDE.md#e-118) — HTML-Mail, in ein IMAP-Postfach verschoben, erscheint als Quelltext (neu, 13.10.2026, an 1.0.86; am Quelltext belegt) | `BEFUNDE.md` | Test zuerst, dann Bau (`ImapAppend.cpp:692`/`:1980` einteilig ohne `Content-Type`, `:1166` mehrteilig fest `text/plain`; Vorlage `SendContentType`, [PRÜFER-25](../Befunde/PRUEFER-25.md) H1) — **Stand 14.10.2026:** eingebaut in 7.2.0.89, von Gregor an 1.0.89 bestätigt; Teil 2 (eingebettete Bilder) eingebaut in 7.2.0.90, von Gregor am 14.10.2026 an 1.0.90 bestätigt (Nachtrag 15.10.2026, [L-36.3](../Befunde/LEKTOR-36.md#l-36.3)) |
 | [**E-119**](BEFUNDE.md#e-119) — `data:`-Bilder beim Antworten und Weiterleiten als grauer Kasten (neu, 13.10.2026, an 1.0.86; am Protokoll belegt) | `BEFUNDE.md` | Messen, ob 1.0.84 dasselbe zeigt; dann Bau im HTML-Import vor `PGHTMIMP.CPP:3317` (der Ladeweg ist zu spät, Attribute werden auf 1023 Zeichen gekürzt — [PRÜFER-25](../Befunde/PRUEFER-25.md) H2) |
@@ -419,7 +419,7 @@ widerlegt. Einzelheiten in [CHANGELOG.md](../CHANGELOG.md).
 | **Die Fenster stehen nach dem Neustart nicht im Vollbild** — Nebenbefund ohne Kennung | oben, 3. | Start, `Eudora.ini` lesen |
 | [**E-39**](BEFUNDE.md#e-39) — der INI-Abschnitt der gelöschten Persönlichkeit entsteht wieder | oben, 4. | Bau + Start |
 | [**E-47**](BEFUNDE.md#e-47) — Fehlerdialog des Verzeichnisdienstes, `MFC71.DLL` und `MSVCP71.dll` fehlen | oben, 5. | keine Behebung in Sicht |
-| [**E-14**](BEFUNDE.md#e-14) — Zusicherung beim Start, der X1-Suchindex wird neu angelegt | `BEFUNDE.md` | echter Befund erst, wenn die Meldung auch beim **zweiten** Start kommt |
+| [**E-14**](BEFUNDE.md#e-14) — **am 23.10.2026 erledigt**, aus neun Mailverzeichnissen gemessen: 59 Sitzungen, 9 Erasing-Zeilen, je eine und immer in der ersten Sitzung. Der normale erste Lauf, kein Fehler | `BEFUNDE.md` | echter Befund erst, wenn die Meldung auch beim **zweiten** Start kommt |
 | [**E-13**](BEFUNDE.md#e-13) — kein Fortschritt beim Mailabruf; die Behebung liegt auf `wt/fortschritt-arbeit`, nicht in diesem Zweig | `BEFUNDE.md` | Merge-Entscheidung |
 | **`ReleaseBuffer` ohne `GetBuffer`** — Fehlerklasse [R-1](BEFUNDE.md#r-1), **16** Stellen bleiben (gemessen 07.09.2026) | [A2](#a2), [R-1](BEFUNDE.md#r-1) | Bau |
 | **Neun Zeigerstellen** aus [X-3](BEFUNDE.md#x-3) | D3a | Bau |
