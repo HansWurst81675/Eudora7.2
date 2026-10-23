@@ -116,6 +116,7 @@
     <ClCompile Include="UnderTestZ2.cpp" />
     <ClCompile Include="TestZeichenWege.cpp" />
     <ClCompile Include="TestStartWege.cpp" />
+    <ClCompile Include="TestE125.cpp" />
     <ClCompile Include="TestMain.cpp" />
   </ItemGroup>
   <ItemGroup>

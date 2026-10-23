@@ -35,6 +35,7 @@ void RunE118Tests(void);
 void RunE24Tests(const char* szEudoraDir);
 void RunZeichenWegeTests(const char* szEudoraDir);
 void RunStartWegeTests(const char* szEudoraDir);
+void RunE125Tests(const char* szEudoraDir);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -134,6 +135,7 @@ int main(int argc, char* argv[])
 	RunE24Tests(szEudoraDir);
 	RunZeichenWegeTests(szEudoraDir);
 	RunStartWegeTests(szEudoraDir);
+	RunE125Tests(szEudoraDir);
 
 	iFailed = TT_Summary();
 	return iFailed;

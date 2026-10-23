@@ -2631,7 +2631,6 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 		TargetView->m_SumListBox.SetRedraw(FALSE);
 
 	BOOL FoundSelected = FALSE;
-	BOOL StripHeaders = FALSE;
 	BOOL ClosedOpenWindow = FALSE;
 	POSITION pos, NextPos;
 	BOOL bGoingBackward = FALSE;
@@ -2711,16 +2710,48 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 			}
 		}
 
-		// Will some headers be stripped when sent to the Out mailbox?
-		if (ToOut && !Sum->IsComp() && !StripHeaders)
+		//
+		// E-125: eine EMPFANGENE Nachricht nach "Out" zu ziehen wird
+		// abgelehnt. Gregors Entscheidung B vom 17.10.2026 auf die Frage,
+		// ob der Weg wie im Original eine neue Nachricht zum erneuten
+		// Senden anlegen (A) oder abgelehnt werden soll mit dem Hinweis
+		// auf Message > Send Again (B): "B".
+		//
+		// WAS DAS ORIGINAL HIER TUT, gemessen an 7.2.0.120 (BEFUNDE.md,
+		// E-125): es fragt "Some headers may be removed when transferring
+		// to the Out Mailbox.  Transfer anyway?" (IDD_STRIP_HEADERS), legt
+		// nach einem Ja weiter unten ueber Sum->SendAgain eine NEUE
+		// Nachricht an (OutToc->AddSum) - und meldet im selben Zug
+		// IDS_ERR_IMAP_NO_MSGS_XFERRED, "No messages were transferred!".
+		// Der Anwender bekommt also beides: eine Nachricht, die er nicht
+		// wollte, und die Auskunft, es sei nichts geschehen. Wer das Ja
+		// gibt, hat die Folge nicht gewaehlt - also wird gar nicht erst
+		// gefragt.
+		//
+		// EINE VERFASSTE NACHRICHT BLEIBT ERLAUBT (Sum->IsComp): sie nach
+		// Out zu ziehen heisst, sie zum Senden einzureihen, und das tut
+		// genau das, was es soll. Die Grenze ist damit dieselbe, die schon
+		// vorher die Frage ausgeloest hat - nur die Antwort ist eine
+		// andere.
+		//
+		// IDD_STRIP_HEADERS bleibt in den Ressourcen stehen, wird aber von
+		// keiner Stelle mehr aufgerufen.
+		//
+		if (ToOut && !Sum->IsComp())
 		{
-			if (AlertDialog(IDD_STRIP_HEADERS) != IDOK)
+			if (HighlightIndex < 0)
+				HighlightIndex = i;
+
 			{
-				if (HighlightIndex < 0)
-					HighlightIndex = i;
-				break;
+				CString szSpur;
+				szSpur.Format("E-125 Xfer nach Out abgelehnt: quelle=%s ziel=%s kopie=%d einzeln=%d",
+					(const char*) Name(), (const char*) TargetToc->Name(),
+					(int) Copy, (int) (SingleSum != NULL));
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
 			}
-			StripHeaders = TRUE;
+
+			AlertDialog(IDD_XFER_TO_OUT_REFUSED);
+			break;
 		}
 		
 		// Close window if need be
