@@ -73,6 +73,7 @@ eine Datei liest, liest diese.
 | [ausreisser-ist-der-befund](ausreisser-ist-der-befund.md) | Was in der eigenen Messausgabe steht und nicht ins Ergebnis passt, ist der Befund - nicht das Rauschen, das man wegerklaert |
 | [aussenwirkung-ist-der-massstab](aussenwirkung-ist-der-massstab.md) | 43 Schranken meldeten gruen, waehrend in der Wurzel 21 Dateien mit 25.532 Zeilen lagen und README.md allein 1266 - am 22.10.2026 hat Gregor an einem Tag viermal gesehen, was keine Schranke sieht: das gerenderte Dokument |
 | [befund-gegen-die-quelle-lesen](befund-gegen-die-quelle-lesen.md) | Widerlegt wird der Prueferbericht, nicht die Zusammenfassung in BEFUNDE.md - aus "Block 4a ist tot" war "der Kern ist tot" geworden, und daran haette eine Auslieferung gehangen |
+| [befund-in-klartext](befund-in-klartext.md) | Gregor versteht die Befundzeilen in BEFUNDE.md nicht mehr - jede braucht vorn drei Saetze Klartext (was der Anwender merkte, Stand, was noch fehlt), die Herleitung dahinter |
 | [bestand-vor-neuer-suche](bestand-vor-neuer-suche.md) | Bevor etwas neu gesucht wird, wird der Bestand gelesen - die Antwort auf E-85 stand 14 Tage fertig in BEFUNDE.md, mit Zeilennummern und Handlungsanweisung |
 | [chat-knapp-halten](chat-knapp-halten.md) | Antworten im Chat kurz halten; Messdetails gehören in BEFUNDE.md, nicht in die Konsole |
 | [commit-auf-einmal-pruefen](commit-auf-einmal-pruefen.md) | Vor dem ersten Commit nach einem Versionssprung oder Urteilswechsel alle Schranken auf einmal fahren (tools/commit-bereit.pl) - der Haken zeigt je Anlauf nur den ersten Mangel |

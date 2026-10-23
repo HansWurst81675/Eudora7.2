@@ -17,10 +17,10 @@ wenn er zurückkommt.
 | Empfangene Nachricht aus dem IMAP-Ordner `OUTBOX (<Dominant>)` nach `Out` ziehen | Gregor, an 1.0.122 | **bestanden**: Hinweis mit einem Knopf, kein „Transfer anyway?", danach kein „No messages were transferred!" |
 | Protokollzeile dazu | Gregor, an 1.0.122 | **bestanden**: `E-125 Xfer nach Out abgelehnt: quelle=OUTBOX (<Dominant>) ziel=Out kopie=0 einzeln=0` |
 | Gegenprobe: eigener Entwurf nach `Out` | Gregor | **abgelehnt, nicht durchführbar**: Der Testplan sagte nicht, wie ein Entwurf außerhalb von `Out` entsteht. Das war ein Fehler des Plans. |
-| Gegenprobe: Entwurf `Out` → `Trash` → `Out` | Prüfstand `C:\Temp\E125` | **bestanden**: Der Entwurf steht wieder in `Out`, `Trash` ist leer, kein Dialog, keine Ablehnung im Protokoll |
+| Gegenprobe: Entwurf `Out` → `Trash` → `Out` | Prüfstand `C:\Temp\E125` | **bestanden**: In `Out` liegt wieder ein Entwurf (eine neu angelegte Kopie mit neuer `Message-Id`, so arbeitet der Weg schon im Original), `Trash` ist leer, kein Dialog, keine Ablehnung im Protokoll |
 | Umkehrprobe im selben Lauf: empfangene Nachricht `In` → `Out` | Prüfstand | **bestanden**: Hinweis erscheint, die Nachricht bleibt in `In`, Protokoll `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out` |
-| Dieselben Fälle gegen 7.2.0.120 | Prüfstand, Paket 1.0.120 von GitHub | **fehlgeschlagen, wie erwartet**: Das Protokoll zeigt wieder „Some headers may be removed when transferring to the Out Mailbox. Transfer anyway?" |
-| Ganzer Regressionslauf `tools/pruefstand-lauf.ps1` | Prüfstand | **8 Fälle, 8 bestanden** (darunter die drei neuen) |
+| Dieselben Fälle gegen 7.2.0.120 | Prüfstand, Paket 1.0.120 von GitHub | **zwei von drei fehlgeschlagen, wie erwartet** (die Gegenprobe bleibt grün, das Verschieben eines Entwurfs ging auch vorher): Das Protokoll zeigt wieder „Some headers may be removed when transferring to the Out Mailbox. Transfer anyway?" |
+| Ganzer Regressionslauf `tools/pruefstand-lauf.ps1` | Prüfstand | **8 Fälle, 8 bestanden**. Die drei neuen liefen an 7.2.0.122, die übrigen fünf in ihren eigenen Prüfverzeichnissen an 7.2.0.121 |
 
 ## Wie gemessen wurde
 
@@ -34,7 +34,7 @@ wenn er zurückkommt.
   Tastendrücke. Es verschiebt über das Menü *Transfer* statt mit der Maus zu
   ziehen. Beides landet in derselben Prüfung (`CTocDoc::Xfer`,
   `tocdoc.cpp:2753`).
-* **Positivprobe.** Das Protokoll des Laufs enthält 453 Spurmarken der Maske
+* **Positivprobe.** Das Protokoll eines Einzellaufs enthielt 453, das des Gesamtlaufs 162 Spurmarken der Maske
   32768. Dass in der Gegenprobe keine `E-125`-Zeile steht, ist also eine
   Messung und kein stummes Protokoll.
 * **Regressionstest.** Die Fälle `E-125a` bis `E-125c` stehen in
