@@ -64,6 +64,17 @@ Paket, erst danach Marke `v7.2.1.0`.
 
 ## Regressionstests — Anordnung vom 22.10.2026
 
+> **Für das Release 7.2.1.x, Gregor am 23.10.2026:** *„für release
+> dokumentieren wir, daß die fehlenden regression tests nachgeholt werden -
+> das ist deine aufgabe fürs nächste mal, aufschreiben und commiten und
+> befolgen."* Das Release wird also **nicht** aufgehalten, bis jeder Befund
+> einen Test hat. Die Release-Notizen nennen den Rückstand ausdrücklich (am
+> 23.10.2026: 50 von 67 kritischen Befunden ohne Test), und er wird ab der
+> nächsten Sitzung **vor jedem neuen Thema** abgearbeitet — Liste und
+> Reihenfolge stehen oben in [WEITERMACHEN.md](Intern/WEITERMACHEN.md).
+> Unverändert gilt Punkt 1 unten: die **vorhandenen** Tests müssen alle
+> bestehen.
+
 > *„das zauberwort heißt regression tests … jetzt ordne ich es an: wir führen
 > vor jedem release alle regression tests aus, soll alles PASSED sein. und zu
 > jedem befund brauchen wir ein regression test, damit wir sehen, daß eine
