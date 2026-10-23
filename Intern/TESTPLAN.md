@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.0.121 / `VERSION` 1.0.121, Stand 22.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.121 / `VERSION` 1.0.121, Stand 23.10.2026
 
 > **Es gibt kein Paket 1.0.121.** Der Quellstand ist auf 7.2.0.121 gehoben
 > ([E-111](BEFUNDE.md#e-111), nur übersetzt), geschnürt und bei dir liegt

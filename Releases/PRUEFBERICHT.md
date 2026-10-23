@@ -4,8 +4,8 @@
 |---|---|
 | **Paketfassung** | `1.0.121` |
 | **Quellstand** | `7.2.0.121` |
-| **Commit** | `294eaad5` (**Arbeitsbaum nicht sauber**: 17 Dateien geaendert) |
-| **Erstellt** | 2026-10-22 20:26 |
+| **Commit** | `0574be0c` (**Arbeitsbaum nicht sauber**: 11 Dateien geaendert) |
+| **Erstellt** | 2026-10-23 07:59 |
 | **Gesamturteil** | **BESTANDEN** |
 
 Erzeugt von `tools/pruefbericht.pl`. Er fuehrt die Tests nicht selbst aus,
@@ -16,7 +16,7 @@ steht hier als nicht gemessen und nicht als gruen.
 
 | Tests | bestanden | fehlgeschlagen |
 |---|---|---|
-| 274 | 274 | 0 |
+| 275 | 275 | 0 |
 
 ## 2. Regressionstests ueber die Oberflaeche (`pruefstand-lauf.ps1`)
 
@@ -55,8 +55,9 @@ falsch an, Sicherheit.
 Von den **67 kritischen** Befunden haben
 
 * **16** einen automatischen Testfall,
-* **1** einen manuellen Fall im [Testplan](../Intern/TESTPLAN.md),
 * **51** bisher **keine Pruefung**.
+
+Dazu **1** mit einem manuellen Fall im [Testplan](../Intern/TESTPLAN.md) — diese Zahl **ueberschneidet sich** mit der ersten Zeile, ein Befund kann beides haben (E-132 hat beides). Die Aufteilung sind die ersten beiden Zeilen, und sie geht auf: 67 von 67.
 
 Die letzte Zahl ist der Rueckstand. Solange sie nicht null ist, sagt ein
 gruener Bericht nicht, dass nichts kaputt ist - er sagt, dass nichts von dem

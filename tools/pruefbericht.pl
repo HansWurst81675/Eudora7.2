@@ -270,7 +270,11 @@ $b .= "  (CLAUDE.md, Abschnitt 4) - dieser Bericht ersetzt das nicht.\n";
 if ($zeigen) { print $b; exit(($gruen_unit && $gruen_ober) ? 0 : 1) }
 
 my $ziel = "$wurzel/Releases/PRUEFBERICHT.md";
-open my $o, '>:raw', $ziel or do { print "  $ziel nicht schreibbar: $!\n"; exit 2 };
+# Der Bericht enthaelt Gedankenstriche aus \x{2014}; ohne Kodierschicht
+# meldet Perl "Wide character in print" und schreibt sie zwar richtig,
+# aber auf Verdacht. Mit :encoding(UTF-8) ist es ausgesprochen - die Datei
+# ist UTF-8 ohne BOM mit reinen LF (CLAUDE.md, Abschnitt 5).
+open my $o, '>:encoding(UTF-8)', $ziel or do { print "  $ziel nicht schreibbar: $!\n"; exit 2 };
 print $o $b;
 close $o;
 print "  Releases/PRUEFBERICHT.md geschrieben - Urteil: $urteil\n";

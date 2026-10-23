@@ -1,6 +1,6 @@
 # Fehlalarm bei Microsoft melden — fertig ausgefüllt
 
-**Stand 22.10.2026** — zuletzt am 21.10.2026 bei Microsoft nachgesehen, der Vorgang stand auf *pending*; am 22.10.2026 nicht erneut abgefragt; am Text ist nichts geändert, er ist eingereicht. Gehört zu [E-124](../Intern/BEFUNDE.md#e-124). Auf Gregors
+**Stand 23.10.2026** — am 23.10.2026 aus Gregors gespeicherter Vorgangsseite gelesen: der Vorgang ist **abgewiesen**, nicht in Arbeit (siehe unten); am 22.10.2026 nicht erneut abgefragt; am Text ist nichts geändert, er ist eingereicht. Gehört zu [E-124](../Intern/BEFUNDE.md#e-124). Auf Gregors
 Ansage vom 20.10.2026: *„ja, melde den fehlalarm bei microsoft"*.
 
 **Warum das hier als Datei liegt und nicht erledigt ist.** Das Formular
@@ -88,12 +88,43 @@ We can provide build logs or a reproducible build on request.
 | Eingereicht | 20.10.2026, 20:57:52, von Gregor |
 | Hochgeladen | `Eudora72-1.0.113-release.zip` |
 | Einstufung | *Incorrect detection* |
-| Status | **Submitted** → *pending* (Stand 20.10.2026, 21:00) |
-| Gutachten | — *(hier eintragen, sobald es da ist)* |
+| Status laut Seite | **In progress** |
+| Gutachten | **keines — der Vorgang ist abgewiesen** |
 
-Der Stand steht auf der Seite des Vorgangs und ändert sich, ohne dass jemand
-etwas tut; *pending* heißt, dass die Datei in der Warteschlange der Analyse
-liegt. **Das Ergebnis gehört hierher und nach
+### Am 23.10.2026 gelesen: der Vorgang ist abgewiesen, nicht in Arbeit
+
+Die Vorgangsseite liegt hinter einer Microsoft-Anmeldung und ist von einem
+Werkzeug aus nicht abrufbar (302 auf `login.microsoftonline.com`). Gregor hat
+sie am 22.10.2026 aus seinem Browser gespeichert; daraus ist Folgendes
+gelesen — nicht erinnert:
+
+> **Analyst comments:** *„Your submission has been rejected due to too many
+> files. For your submission to be analyzed, resubmit fewer files or remove
+> files from any archives you sent. Only include files that need analysis."*
+
+**Der Status sagt „In progress", der Kommentar sagt abgewiesen.** Niemand
+analysiert den Vorgang; Warten hilft nicht. Der Grund steht daneben: wir haben
+das **ganze Paket** hochgeladen, und Microsoft hat es in **1033 Einzeldateien**
+zerlegt (*„This submission contains an extremely large number of individual
+files"*, angezeigt werden 200).
+
+**Zwei Angaben sprechen inhaltlich für uns:**
+
+| | |
+|---|---|
+| `eudora72-1.0.113-release.zip`, Client | `Trojan:Win32/Wacatac.C!ml` |
+| dasselbe ZIP, **Cloud** | **No malware detected** |
+| `smime.dll / 3.ico`, Gutachten | *„An analyst has determined that this file is normal"* → **Not malware** |
+
+Das Suffix `!ml` ist eine Vermutung des lernenden Verfahrens auf dem Rechner
+des Anwenders. Die Cloud widerspricht ihr, und wo ein Mensch hingesehen hat,
+steht Entwarnung.
+
+**Was zu tun ist:** neu einreichen — **nur die eine Datei**, die Defender
+wirklich erwischt hat, nicht das Paket. Erst dann hat ein Analyst etwas, das
+er ansehen kann. Danach die Seite erneut speichern: unter *Analyst comments*
+darf **kein** *rejected* mehr stehen, und *Final determination* muss von
+*Pending* auf eine Aussage wechseln. **Das Ergebnis gehört hierher und nach
 [E-124](../Intern/BEFUNDE.md#e-124)** — auch ein ablehnendes. Fällt der Fehlalarm
 weg, ist es der erste Fall, in dem eine Fehlerklasse dieses Projekts
 **außerhalb** des Projekts abgestellt wurde.

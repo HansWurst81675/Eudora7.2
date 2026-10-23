@@ -95,6 +95,7 @@ my $kennung = qr/[A-Z]{1,3}\d?-\d+[a-z]?/;
 my $befunde = lies($quelle);
 my (@offene, %beschreibung, %fehlt, %gemessen, %messnummer, %quelltext, %gesehen);
 my $zahl_quelltext = 0;
+my @kaputte_marke;
 
 for my $zeile (split /\n/, $befunde) {
     next unless $zeile =~ /^\|\s*$ANKER\s*\**\s*($kennung)\s*\**\s*\|/;
@@ -207,6 +208,26 @@ for my $zeile (split /\n/, $befunde) {
         my ($nr) = $2 =~ /\.(\d+)$/;
         $messnummer{$k} = $nr;
     }
+    # KAPUTTE MARKE IST SCHLIMMER ALS KEINE (23.10.2026).
+    #
+    # Beide Muster oben verlangen, dass der Fettdruck DIREKT nach der
+    # Fassungsnummer schliesst. Schreibt jemand
+    #
+    #     **Zuletzt gemessen: 23.10.2026 an 7.2.0.121 - und ausserdem ...**
+    #
+    # dann greift das Muster nicht, der Befund gilt als NIE GEMESSEN, und die
+    # Messung ist unsichtbar - obwohl sie dasteht. Mir ist genau das am
+    # 22./23.10.2026 VIERMAL passiert (AN-1, E-101, E-98, E-123, E-124), jedes
+    # Mal bemerkt nur daran, dass die Zaehlung sich nicht bewegte. Beim
+    # fuenften Mal haette ich es uebersehen.
+    #
+    # Deshalb: wer den Marken-ANFANG schreibt, aber nicht die Form, bekommt
+    # eine Meldung statt stillen Durchfalls.
+    if ($urteil =~ /\*\*Zuletzt (?:gemessen|belegt am Quelltext):/
+        and !defined $gemessen{$k}) {
+        push @kaputte_marke, $k;
+    }
+
     # Die Kurzbeschreibung ist die zweite Spalte, ohne Auszeichnung.
     my $b = $s[2];
     $b =~ s/\*\*//g;
@@ -512,5 +533,24 @@ for my $datei (@ziele) {
 }
 
 exit 1 if $abweichung and not $schreiben;
+if (@kaputte_marke) {
+    printf "\n  MANGEL - Marke angefangen, aber nicht in der Form geschrieben:\n";
+    printf "    %s\n", $_ for @kaputte_marke;
+    print <<'ENDE';
+
+  Die Marke muss den Fettdruck DIREKT nach der Fassung schliessen:
+
+      **Zuletzt gemessen: 23.10.2026 an 7.2.0.121** — und dann der Text
+      **Zuletzt belegt am Quelltext: 23.10.2026 an 7.2.0.121** — ...
+
+  Steht dahinter noch Text IM Fettdruck, greift das Muster nicht: der
+  Befund gilt als "nie gemessen", die Messung ist unsichtbar, obwohl sie
+  dasteht. Am 22./23.10.2026 ist mir das fuenfmal passiert, jedes Mal nur
+  daran bemerkt, dass die Zaehlung sich nicht bewegte.
+
+ENDE
+    exit 1;
+}
+
 printf "\n  %d offene Befunde, in beiden Listen gleich.\n\n", scalar @offene;
 exit 0;
