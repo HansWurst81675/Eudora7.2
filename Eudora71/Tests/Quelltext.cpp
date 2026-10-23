@@ -300,9 +300,41 @@ int QT_RueckgabeGenutzt(const char* pText, const char* szAufruf, int* piGefunden
 			// hat ebenfalls ')' davor und wuerde faelschlich als
 			// weggeworfen gelten. Dann wird der Test rot und jemand sieht
 			// hin; im Baum kommt es an den geprueften Stellen nicht vor.
-			const char* const	szNutzt = "=(,n&|!?:<>+-*/%";
+			// DREI ZEICHEN HERAUSGENOMMEN (23.10.2026, PRUEFER).
+			//
+			// In der ersten Fassung standen hier auch ',' ':' und '>'. Alle
+			// drei kommen in BEIDEN Lagen vor, und an einem einzelnen
+			// Zeichen sind sie nicht zu unterscheiden:
+			//
+			//   >   a > Aufruf(x)        nutzt     ABER  p->Aufruf(x);  wirft weg
+			//   :   c ? a : Aufruf()     nutzt     ABER  case 1: Aufruf(x);  wirft weg
+			//   ,   f(a, Aufruf(x))      nutzt     ABER  a = 0, Aufruf(x);   wirft weg
+			//
+			// PRUEFER hat den Kommafall gemessen: mit
+			// "lUebersetzt = 0, ISOTranslateChunk(...);" blieb NP3-9 gruen,
+			// obwohl der Wert wegfaellt - genau der Schaden des Befunds.
+			//
+			// '>' laesst sich retten: '->' hat ein '-' davor, der Vergleich
+			// nicht. ':' und ',' lassen sich nicht retten und fliegen raus.
+			// Damit gelten die beiden NUTZENDEN Formen oben jetzt
+			// faelschlich als weggeworfen - der Test wuerde dort ROT. Das
+			// ist die gewollte Richtung (Arbeitsweise/schranke-gegentesten.md:
+			// stumm und Fehlalarm kosten dasselbe, aber nur der Fehlalarm
+			// faellt auf), und an den beiden Nadeln, auf die diese Funktion
+			// angewandt wird, kommt keine der Formen vor: beide Aufrufe
+			// stehen hinter '=' (TextReader.cpp:300, ImapDownload.cpp:4817).
+			const char* const	szNutzt = "=(n&|!?<+*/%";
 
-			if (strchr(szNutzt, chDavor) == NULL)
+			int	bGenutzt = (strchr(szNutzt, chDavor) != NULL);
+
+			// '-' nutzt (a - Aufruf()), '>' nutzt nur, wenn davor KEIN '-'
+			// steht - sonst ist es ein verworfener Methodenaufruf.
+			if (chDavor == '-')
+				bGenutzt = 1;
+			else if (chDavor == '>')
+				bGenutzt = (pZurueck - 1 > pText) && (pZurueck[-2] != 0x2D);
+
+			if (!bGenutzt)
 				iAllesGenutzt = 0;
 		}
 

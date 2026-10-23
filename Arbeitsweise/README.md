@@ -118,6 +118,7 @@ eine Datei liest, liest diese.
 | [nie-direkt-auf-main](nie-direkt-auf-main.md) | Jede Änderung geht über einen eigenen Zweig; auf main wird nur gemergt, und Gregor merged |
 | [nie-stillstehen](nie-stillstehen.md) | Leerlauf ist der teuerste Fehler dieses Projekts — im Hintergrund bauen, weiterarbeiten, ungefragt melden |
 | [nummer-erst-beim-schnueren](nummer-erst-beim-schnueren.md) | Ein Paketeintrag heisst "gebaut", bevor es ein Paket gibt - 1.0.107, .108 und .109 mussten alle drei nachtraeglich in "nie geschnuert" umgeschrieben werden |
+| [nur-offene-entscheidungen-auf-gregors-liste](nur-offene-entscheidungen-auf-gregors-liste.md) | Auf Gregors Liste kommt ein Punkt nur, wenn ein Satz IHN nennt und die Entscheidung noch offen ist - sonst ist es meine Arbeit |
 | [original-ist-eine-messung](original-ist-eine-messung.md) | „Originalfehler\" ist eine Aussage über ein Verhalten, nicht über Quelltext - in einer Portierung ist die unveränderte Quelle gerade der Ort, an dem Verhalten lautlos umkippt |
 | [paket-gegen-den-bau-messen](paket-gegen-den-bau-messen.md) | Was im Paket liegt, ist nicht automatisch das, was ich gebaut habe - jede Datei im Paket gegen das Bauverzeichnis messen, bevor Gregor sie bekommt |
 | [pruefen-statt-vermuten](pruefen-statt-vermuten.md) | Vorhandene Quellen oeffnen, bevor ich eine Ursache vermute - und Vermutungen nie als Tatsache aussprechen |
@@ -136,6 +137,7 @@ eine Datei liest, liest diese.
 | [schranke-gehoert-in-den-haken](schranke-gehoert-in-den-haken.md) | Eine Schranke, die nur läuft wenn ich daran denke, ist keine Schranke; und eine, die zu oft umsonst warnt, wird entwaffnet |
 | [schranke-liest-nur-code](schranke-liest-nur-code.md) | Eine Schranke, die Quelltext mit Regex prueft, muss Kommentare und Protokolltexte vorher wegwerfen und ihren Bereich am Rumpfende abschliessen - sonst liest sie ihre eigene Begruendung |
 | [schranke-teilt-nicht-die-annahme](schranke-teilt-nicht-die-annahme.md) | Eine Schranke, die ihren Umfang aus derselben Annahme nimmt wie das Werkzeug, das sie pruefen soll, prueft nichts |
+| [stand-22-10-2026-abend](stand-22-10-2026-abend.md) | Was am Abend des 22.10.2026 nach dem letzten Merge offen blieb und NICHT im Repo steht - vier Berichtigungen, ein Sicherheitspunkt, das E-124-Ergebnis |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
 | [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md) | Ein Testdatum muss nicht nur den Fehler treffen, sondern jede Schranke auf dem Weg zur Messstelle ueberleben - 550 Spam message rejected |
 | [tests-vor-jedem-commit-laufen-lassen](tests-vor-jedem-commit-laufen-lassen.md) | Unit- und Komponententests gehoeren zu jedem Commit - Ergebnis mitteilen, auch wenn es rot ist |

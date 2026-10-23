@@ -34,18 +34,23 @@
 # Kodierung: reines ASCII, kein BOM.
 
 param(
-    [string] $Pfadfilter,
-    [int]    $Sekunden = 5
+    [string]   $Pfadfilter,
+    [int]      $Sekunden = 5,
+    [string[]] $ErlaubtePfade = @('C:\Temp')
 )
 
 $t = $PSScriptRoot
 
-Write-Host '  messen-e123-abbruch: Abruf ausloesen'
-& powershell -NoProfile -ExecutionPolicy Bypass -File "$t\befehl-schicken.ps1" `
-    -Verzeichnis $Pfadfilter -Befehl 32772 -Sekunden 2 | Out-Null
-
-Write-Host ("  messen-e123-abbruch: {0} s warten, dann abschiessen" -f $Sekunden)
-Start-Sleep -Seconds $Sekunden
+# DIE SCHRANKE STEHT GANZ VORN - VOR JEDER WIRKUNG (23.10.2026).
+#
+# Der erste Entwurf dieser Datei hatte die Pfadpruefung NACH dem Ausloesen des
+# Abrufs. Mit "-Pfadfilter C:\Users\Gregor" wies sie zwar ab, aber da war der
+# Befehl 32772 schon an ein Fenster unter diesem Pfad geschickt - also
+# moeglicherweise an Gregors eigene Sitzung. Gemessen am 23.10.2026 an der
+# eigenen Gegenprobe: die Abweisung kam, nachdem "Abruf ausloesen" dastand.
+#
+# Arbeitsweise/tor-gehoert-zum-schritt.md: jede Schranke bewacht genau einen
+# Schritt - und zwar BEVOR er wirkt, nicht danach.
 
 # Vollstaendiger Pfad des Pruefverzeichnisses, mit abschliessendem Trenner -
 # sonst wuerde C:\Temp\E118x auch auf C:\Temp\E118 passen.
@@ -54,9 +59,39 @@ try {
     $voll = (Resolve-Path -LiteralPath $Pfadfilter -ErrorAction Stop).Path
     if (-not $voll.EndsWith('\')) { $voll += '\' }
 } catch {
-    Write-Host '  messen-e123-abbruch: Pruefverzeichnis nicht aufloesbar - es wird NICHTS abgeschossen'
+    Write-Host '  messen-e123-abbruch: Pruefverzeichnis nicht aufloesbar - es geschieht NICHTS'
     return
 }
+
+# Dieselbe Pruefung wie in testlauf.ps1:108-116, zusaetzlich eine
+# Laufwerkswurzel: "C:\" wuerde sonst auf jeden Pfad passen.
+#
+# WARUM HIER UND NICHT NUR BEIM AUFRUFER: dieses Skript ist per -File direkt
+# aufrufbar. Mit "-Pfadfilter C:\Users\Gregor" HAETTE ES GREGORS EIGENE
+# SITZUNG ABGESCHOSSEN - die Schranke lag allein bei testlauf.ps1 (PRUEFER,
+# 22.10.2026).
+if ($voll -match '^[A-Za-z]:\\$') {
+    Write-Host ('  messen-e123-abbruch: ABGEWIESEN - "' + $voll +
+                '" ist eine Laufwerkswurzel. Es geschieht NICHTS.')
+    return
+}
+$erlaubt = $false
+foreach ($e in $ErlaubtePfade) {
+    if ($voll.StartsWith($e, [System.StringComparison]::OrdinalIgnoreCase)) { $erlaubt = $true }
+}
+if (-not $erlaubt) {
+    Write-Host ('  messen-e123-abbruch: ABGEWIESEN - "' + $voll +
+                '" liegt nicht unter einem erlaubten Pfad (' + ($ErlaubtePfade -join ', ') + ').')
+    Write-Host '  Gregors eigene Verzeichnisse sind ausgeschlossen. Es geschieht NICHTS.'
+    return
+}
+
+Write-Host '  messen-e123-abbruch: Abruf ausloesen'
+& powershell -NoProfile -ExecutionPolicy Bypass -File "$t\befehl-schicken.ps1" `
+    -Verzeichnis $Pfadfilter -Befehl 32772 -Sekunden 2 | Out-Null
+
+Write-Host ("  messen-e123-abbruch: {0} s warten, dann abschiessen" -f $Sekunden)
+Start-Sleep -Seconds $Sekunden
 
 $getroffen = 0
 foreach ($p in (Get-Process -Name 'Eudora' -ErrorAction SilentlyContinue)) {
@@ -64,7 +99,13 @@ foreach ($p in (Get-Process -Name 'Eudora' -ErrorAction SilentlyContinue)) {
     try { $pf = $p.MainModule.FileName } catch { }
     if ($pf -ne '' -and $pf.StartsWith($voll, [System.StringComparison]::OrdinalIgnoreCase)) {
         Write-Host ('  messen-e123-abbruch: ABSCHUSS PID ' + $p.Id + '  ' + $pf)
-        Stop-Process -Id $p.Id -Force
+        # $p.Kill() statt Stop-Process -Id: das Prozessobjekt haelt bereits ein
+        # Handle. Stop-Process schlaegt ueber die PID NEU nach - beendet sich
+        # der Prozess zwischen Get-Process und dem Abschuss, kann Windows die
+        # Nummer inzwischen neu vergeben haben, und es traefe einen fremden
+        # Prozess. Das Fenster ist winzig, der Schaden waere es nicht
+        # (PRUEFER, 22.10.2026).
+        $p.Kill()
         $getroffen++
     } else {
         Write-Host ('  messen-e123-abbruch: fremde Instanz bleibt unangetastet: PID ' + $p.Id)
