@@ -95,7 +95,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.122** / `VERSION` **1.0.122** — nicht geschnürt: [E-125](Intern/BEFUNDE.md#e-125), Ziehen einer empfangenen Nachricht nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen (277 Tests, 277 bestanden, zweimal gegengetestet); davor in 7.2.0.121 [E-111](Intern/BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus (246 Tests, mit Gegenprobe). **Veröffentlicht ist `v1.0.120`** (21.10.2026, 19:07:37 UTC) — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)). Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), was zur Fassung 7.2.1.0 noch fehlt oben in [ZIEL.md](ZIEL.md).*
+*Stand **7.2.0.122** / `VERSION` **1.0.122** — geschnürt als Paket 1.0.122 (23.10.2026), am selben Tag von Gregor und am Prüfstand geprüft ([Testbericht](Intern/TESTBERICHT-E125.md)): [E-125](Intern/BEFUNDE.md#e-125), Ziehen einer empfangenen Nachricht nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen (277 Tests, 277 bestanden, zweimal gegengetestet); davor in 7.2.0.121 [E-111](Intern/BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus (246 Tests, mit Gegenprobe). **Veröffentlicht ist `v1.0.120`** (21.10.2026, 19:07:37 UTC) — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)). Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), was zur Fassung 7.2.1.0 noch fehlt oben in [ZIEL.md](ZIEL.md).*
 
 ### Was geht
 

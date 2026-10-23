@@ -78,16 +78,16 @@ foreach ($zeile in (Get-Content -LiteralPath $Faelle)) {
         Nachricht   = $f[6].Trim()
         Schalter    = $f[7].Trim().ToLower()
     }
-    if ($fall.Schalter -ne '' -and $fall.Schalter -ne 'ohne-argument') {
-        Write-Host ("  Zeile {0}: Schalter '{1}' - erlaubt ist nur ohne-argument" -f $zeilennr, $fall.Schalter)
+    if ($fall.Schalter -ne '' -and $fall.Schalter -ne 'ohne-argument' -and $fall.Schalter -notmatch '^messen=tools[\\/]messen-[a-z0-9-]+\.ps1$') {
+        Write-Host ("  Zeile {0}: Schalter '{1}' - erlaubt sind ohne-argument und messen=tools\messen-<name>.ps1" -f $zeilennr, $fall.Schalter)
         exit 2
     }
     if ($fall.Schalter -ne '' -and $fall.Nachricht -ne '') {
         Write-Host ("  Zeile {0}: {1} - Schalter und Testnachricht gehen nicht zusammen" -f $zeilennr, $fall.Kennung)
         exit 2
     }
-    if ($fall.Quelle -notin @('log', 'ini', 'ablage')) {
-        Write-Host ("  Zeile {0}: Quelle '{1}' - erlaubt sind log, ini und ablage" -f $zeilennr, $fall.Quelle)
+    if ($fall.Quelle -notin @('log', 'ini', 'ablage', 'messung')) {
+        Write-Host ("  Zeile {0}: Quelle '{1}' - erlaubt sind log, ini, ablage und messung" -f $zeilennr, $fall.Quelle)
         exit 2
     }
     if ($fall.Nachricht -ne '') {
@@ -158,6 +158,7 @@ foreach ($g in $gruppen) {
     $beginn = Get-Date
 
     $ablage = Join-Path $verz 'ablage'
+    $messtext = ''
 
     if ($eml -ne '') {
         # Mit Testnachricht: ueber e118-serie.ps1, das POP- und IMAP-
@@ -185,8 +186,24 @@ foreach ($g in $gruppen) {
         # nichts (Arbeitsweise/messung-muss-den-weg-treffen.md).
         $tlArgs = @('-Verzeichnis', $verz, '-Freigabe', $Freigabe, '-Sekunden', $sek)
         if ($sch -eq 'ohne-argument') { $tlArgs += '-OhneArgument' }
+        # messen=<skript>: ein Messskript bedient das Fenster, solange es
+        # steht (E-125, 23.10.2026). Seine Ausgabe wird als Quelle "messung"
+        # geprueft. Vor dem Start legt das Skript mit -Vorbereiten die Lage
+        # im Pruefstand frisch an - sonst misst der zweite Lauf, was der
+        # erste hinterlassen hat.
+        if ($sch -like 'messen=*') {
+            $skript = Join-Path $wurzel ($sch.Substring(7))
+            & powershell -NoProfile -ExecutionPolicy Bypass -File $skript -Vorbereiten -Pfadfilter $verz | Out-Null
+            if ($LASTEXITCODE -ne 0) {
+                foreach ($f in $hier) {
+                    $meldungen += ("    [FEHL] {0,-8} Vorbereiten mit {1} gescheitert" -f $f.Kennung, $skript); $fehl++
+                }
+                continue
+            }
+            $tlArgs += @('-MessenSkript', $skript)
+        }
         Write-Host ("    starte {0} ({1} s, {2} Faelle{3})" -f $verz, $sek, $hier.Count, $(if ($sch) { ", $sch" } else { '' }))
-        & powershell -NoProfile -ExecutionPolicy Bypass -File $testlauf $tlArgs | Out-Null
+        $messtext = (& powershell -NoProfile -ExecutionPolicy Bypass -File $testlauf $tlArgs) -join "`n"
         $rc = $LASTEXITCODE
     }
 
@@ -236,7 +253,8 @@ foreach ($g in $gruppen) {
 
     foreach ($f in $hier) {
         $text = switch ($f.Quelle) {
-            'ini'    { $initext }
+            'ini'     { $initext }
+            'messung' { $messtext }
             'ablage' { $ablagetext }
             default  { $logtext }
         }

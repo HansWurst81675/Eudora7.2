@@ -1,18 +1,26 @@
 # Testplan für Gregor — Quellstand 7.2.0.122 / `VERSION` 1.0.122, Stand 23.10.2026
 
-> **Es gibt kein Paket 1.0.121 und kein 1.0.122.** Der Quellstand ist auf
-> 7.2.0.122 gehoben ([E-111](BEFUNDE.md#e-111) in .121, [E-125](BEFUNDE.md#e-125)
-> in .122 — beide nur übersetzt), geschnürt und bei dir liegt
-> **1.0.120**. Alles unten ist an 1.0.120 zu prüfen, solange nichts anderes
-> dasteht.
+> **Bei dir liegt Paket 1.0.122** (`C:\Users\Gregor\Eudora72-1.0.122-release`,
+> seit 23.10.2026 um 12:00). Veröffentlicht ist `v1.0.120`.
 
 ## Was jetzt zu testen ist
 
-**Zwei Schritte offen, einer nur noch als Gegenprobe.** [C10](#c10) ist neu in
-1.0.120 und offen; [C9](#c9) hast du an 1.0.119 schon bestätigt und steht nur
-noch als Gegenprobe da. [C8](#c8)
-steht seit 1.0.117 und ist von dir noch nicht gefahren. Alles andere in diesem
-Plan ist Nachschlagewerk.
+**Im Moment nichts.** An 1.0.122 war nur ein Fall offen:
+[M3](#m3-e125), Verschieben nach `Out` ([E-125](BEFUNDE.md#e-125)). Du hast
+am 23.10.2026 bestätigt, dass eine empfangene Nachricht abgelehnt wird. Die
+Gegenprobe mit einem Entwurf hast du zu Recht abgelehnt: Die Beschreibung
+sagte nicht, wie man überhaupt einen Entwurf außerhalb von `Out` bekommt. Ich
+habe sie am selben Tag am Prüfstand gefahren. Sie läuft jetzt bei jedem
+Regressionslauf automatisch mit, und die Schritte in M3 sind neu geschrieben.
+
+**Vor dem Release 7.2.1.0** bleiben die Fälle aus [Teil M](#m1-e132) von Hand
+zu fahren.
+
+**Die drei Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
+[C10](#c10) (die Auswahlbox) und [C9](#c9) (das Adressbuch) hast du am
+21.10.2026 bestätigt. C10 stand hier bis zum 23.10. trotzdem als „offen" —
+das war falsch. [C8](#c8) ist derselbe Starttest wie [M1](#m1-e132) und wird
+dort geführt.
 
 ### <a id="c10"></a>Die Auswahlbox im `To:`-Feld — bleibt sie gleich groß?
 
@@ -577,13 +585,17 @@ war, weil alles stimmt, oder weil die Stelle gar nicht erreicht wurde.
 
 ### <a id="m3-e125"></a>M3 — E-125: Ziehen nach `Out` muss abgelehnt werden
 
-**Warum manuell.** Der Weg geht über Ziehen-und-Ablegen zwischen zwei
-Postfachfenstern und endet in einem modalen Dialog. Der Prüfstand kann ihn
-nicht auslösen. Was sich automatisch prüfen lässt, ist die **Stelle** im
-Quelltext und die Ressource — das tun die beiden Testfälle in
-`Eudora71/Tests/TestE125.cpp` (gegengetestet: gegen den alten Stand fallen
-beide um, bei einer zu weiten Bedingung `if (ToOut)` fällt der erste mit der
-Begründung *„trifft jetzt AUCH verfasste Nachrichten"*).
+**Warum manuell.** Das Ziehen selbst — mit der Maus zwischen zwei
+Postfachfenstern — kann der Prüfstand nicht auslösen. Er nimmt das Menü
+*Transfer*, und das landet in derselben Prüfung (`CTocDoc::Xfer`,
+`tocdoc.cpp:2753`). Seit dem 23.10.2026 fährt `tools/messen-e125.ps1` beide
+Richtungen in einem Lauf (Regressionsfälle `E-125a` bis `c` in
+`tools/pruefstand-faelle.txt`); gegen 7.2.0.120 werden sie rot. Am Quelltext
+prüfen die Testfälle in `Eudora71/Tests/TestE125.cpp` die Stelle und die
+Ressource (gegengetestet: gegen den alten Stand fallen beide um, bei einer zu
+weiten Bedingung `if (ToOut)` fällt der erste mit der Begründung *„trifft
+jetzt AUCH verfasste Nachrichten"*). Von Hand bleibt der Fall, weil nur du
+das echte Ziehen mit der Maus machst.
 
 **Vorbereitung.** Ein Konto mit Post im Eingang und ein `Out`-Postfach.
 In der `Eudora.ini` muss `LogLevel` die Maske **32768** (`DEBUG_MASK_MISC`)
@@ -594,11 +606,22 @@ enthalten, sonst fehlt die Spurmarke.
 | 1 | Eine **empfangene** Nachricht aus `In` (oder einem IMAP-Ordner) nach `Out` ziehen | Der Hinweis *„Messages can't be transferred to the Out mailbox. To send this message again, open it and choose Message > Send Again."* mit **einem** Knopf (OK). **Kein** *„Transfer anyway?"* |
 | 2 | OK drücken, dann `Out` ansehen | `Out` enthält **keine** neue Nachricht. Es erscheint **kein** *„No messages were transferred!"* |
 | 3 | Ins `eudora.log` sehen | Eine Zeile `E-125 Xfer nach Out abgelehnt: quelle=… ziel=Out kopie=0 einzeln=…` |
-| 4 | **Gegenprobe:** eine **selbst verfasste**, noch nicht gesendete Nachricht (Entwurf) nach `Out` ziehen | Das muss **weiterhin gehen** — die Nachricht wird zum Senden eingereiht, kein Hinweisdialog, keine `E-125`-Zeile im Protokoll |
+| 4a | **Gegenprobe vorbereiten.** *Message → New Message*, im Feld *To:* deine eigene Adresse, Betreff `E-125 Gegenprobe`. Dann *File → Save* und das Fenster schließen | Der Entwurf steht in `Out` |
+| 4b | Den Entwurf aus `Out` in das **lokale** Postfach `Trash` ziehen — das oberste in der Liste, **nicht** das `Trash` unter deinem IMAP-Konto | Der Entwurf steht in `Trash`, `Out` ist ihn los |
+| 4c | **Gegenprobe:** den Entwurf aus `Trash` zurück nach `Out` ziehen | Das muss **gehen**: kein Hinweis, der Entwurf steht wieder in `Out`, und im `eudora.log` kommt **keine** neue `E-125`-Zeile dazu |
+| 4d | Den Entwurf in `Out` löschen | damit er beim nächsten Senden nicht hinausgeht |
 
 **Schritt 4 ist der wichtigere.** Ohne ihn ist nicht zu unterscheiden, ob die
 Ablehnung den richtigen Fall trifft oder einfach jedes Ziehen nach `Out`
-abwürgt — und damit das Einreihen zum Senden kaputtmacht.
+abwürgt — und damit das Senden kaputtmacht. Bis zum 23.10.2026 stand er hier
+als ein einziger Satz, *„eine selbst verfasste, noch nicht gesendete Nachricht
+(Entwurf) nach `Out` ziehen"* — ohne zu sagen, dass so ein Entwurf immer in
+`Out` liegt und erst herausgeschoben werden muss. Gregor hat ihn deshalb als
+nicht durchführbar abgelehnt.
+
+**Was nicht ins Paket gehört, aber hierher:** ein Entwurf aus einem
+**IMAP**-Ordner nach `Out` liegt danach doppelt da
+([E-142](BEFUNDE.md#e-142)). Deshalb in 4b das lokale `Trash`.
 
 ## Teil D — Wie dein Urteil ins Repo kommt
 

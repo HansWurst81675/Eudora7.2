@@ -128,3 +128,23 @@ E-121 | C:\Temp\E118 | 60 | ablage | ablage-dateien=1 | | Testdaten/e118-html-in
 # E-118: eine HTML-Mail, in ein IMAP-Postfach verschoben, erschien dort als
 # Quelltext. Die Spurmarke muss im Protokoll stehen.
 E-118 | C:\Temp\E118 | 60 | log | E-118 Bild: | | Testdaten/e118-eingebettetes-bild.eml |
+# -------------------------------------------------------------------------
+# E-125 - Verschieben nach Out: empfangen abgelehnt, verfasst erlaubt
+# -------------------------------------------------------------------------
+# Gregor am 23.10.2026 zum neuen Test: "uebernehmen wir den neuen test auch
+# als regression test?" - ja. Er hatte die Gegenprobe (Schritt 4 in
+# Intern/TESTPLAN.md#m3-e125) abgelehnt, weil die Beschreibung nicht sagte,
+# wie ein Entwurf ausserhalb von Out entsteht. tools/messen-e125.ps1 bedient
+# das Fenster: Entwurf speichern, Out -> Trash -> Out, danach eine
+# empfangene Nachricht aus In -> Out. Beide Richtungen in EINEM Lauf - eine
+# gruene Gegenprobe ohne die rote Umkehrprobe hiesse nur, dass die Sperre
+# nicht erreicht wurde (Arbeitsweise/gegenprobe-umdrehen.md).
+#
+# Pruefstand C:\Temp\E125: ein ausgepacktes Paket, in Mailverzeichnis\
+# Eudora.ini unter [Settings] ein Dummy-Konto (POPAccount=e125@127.0.0.1,
+# SMTPServer=127.0.0.1, CheckForMailEvery=0) und LogLevel=58527 - die
+# Spurmarke braucht die Maske 32768. Die Postfaecher legt das Skript vor
+# jedem Lauf mit -Vorbereiten neu an.
+E-125a | C:\Temp\E125 | 120 | messung | E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0 | | | messen=tools\messen-e125.ps1
+E-125b | C:\Temp\E125 | 120 | messung | E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1 | | | messen=tools\messen-e125.ps1
+E-125c | C:\Temp\E125 | 120 | log | E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out | E-125 Xfer nach Out abgelehnt: quelle=Trash | | messen=tools\messen-e125.ps1
