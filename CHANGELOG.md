@@ -14,11 +14,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > **Diese Tabelle wird erzeugt.** `tools/offene-befunde.pl` setzt sie aus den
 > Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) und weist im `pre-commit`
 > ab, wenn sie nicht stimmt. Von Hand eintragen lohnt nicht.
->
-> Bis zum 22.10.2026 stand hier eine handgepflegte Liste. Sie nannte **fünf
-> Befunde als offen, die in ihrer eigenen Statusspalte „Behoben" sagten**
-> ([E-112](Intern/BEFUNDE.md#e-112), [E-115](Intern/BEFUNDE.md#e-115), [E-117](Intern/BEFUNDE.md#e-117), [E-118](Intern/BEFUNDE.md#e-118), [E-68](Intern/BEFUNDE.md#e-68)), und **zehn offene fehlten ganz**. Eine
-> Liste, die beides kann, ist schlimmer als keine.
 
 Die Spalte **was noch fehlt** sagt, was zu tun bleibt — nicht, was schon
 erledigt ist. Die Messung und die Begründung stehen bei jedem Befund in
