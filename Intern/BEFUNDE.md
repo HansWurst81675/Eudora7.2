@@ -16,6 +16,14 @@ grep -cE '^### +[A-Z]' BEFUNDE.md   # Unterabschnitte
 ```
 
 
+## Wie eine Befundzeile beginnt — Regel seit dem 23.10.2026
+
+Gregor am 23.10.2026: *„im befunde ist es einfach nicht mehr zu verstehen, was du da alles zusammen geschrieben hast."* Deshalb beginnt die Statusspalte jeder Zeile so, in dieser Reihenfolge:
+
+1. **Das Urteil, fett, als Erstes:** `**offen, …**`, `**behoben in 7.2.0.NNN, …**` oder `**erledigt, …**`. Die Werkzeuge (`tools/offene-befunde.pl`, `tools/pruefe-regressionstest.pl`, `tools/pruefe-behoben-belegt.pl`) lesen genau dieses erste Fettgedruckte. Am 23.10.2026 stand dort einmal `**Kurz: …**` — und E-142 und E-144 fielen still aus den Listen der offenen Befunde ([L-54.1](../Befunde/LEKTOR-54.md#l-54.1)).
+2. **Danach höchstens drei Sätze ohne Kürzel:** was der Anwender gemerkt hat, ob Gregor noch etwas tun muss, was noch fehlt.
+3. **Erst dann die Herleitung** — Messungen, Zeilennummern, Prüferkennungen.
+
 ## Die Kürzel — was die Buchstaben vor der Nummer bedeuten
 
 Diese Datei führt **16 Nummernkreise**. Bis zum 22.10.2026 stand nirgends, was
