@@ -330,9 +330,12 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-143](BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
+| **[E-142](BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen liegt danach doppelt da — als Kopie i… | **nie gemessen** | zweierlei, und das zweite ist Gregors Entscheidung. Erstens die Fehlmeldung — sie fällt mit der Berichtigung aus [E-141](#e-141) von selbst weg. Zw… |
+| **[E-141](BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Berichtigung in `tocdoc.cpp:3134` — die Klammer um den Oder-Teil ziehen, so dass die Anzahlprüfung für **beide** Seiten gilt. Sie schließt Fe… |
 | **[E-140](BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt bei jeder Gelegenheit wieder … | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
-| **[E-138](BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | der Hinweis in [Doku/ANWENDER.md](../Doku/ANWENDER.md) und in der `LIESMICH.txt` des Pakets — **das ZIP vor dem Entpacken** entsperren (Rechtsklick … |
+| **[E-138](BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](../Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
 | **[E-137](BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | **nie gemessen** | die Messung, was Eudora tatsaechlich beendet - dass der Befehl unbehandelt bleibt, erklaert nur, dass nichts geschieht, nicht dass das Programm zugeht… |
 | **[E-136](BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
@@ -405,7 +408,7 @@ gebaut.
   Die Reihenfolge steht in [AUFGABEN.md](AUFGABEN.md) unter A2, nach
   Häufigkeit des Wegs sortiert.
 - **Neun Zeigerstellen** aus [X-3](BEFUNDE.md#x-3) ([AUFGABEN.md](AUFGABEN.md), D3a).
-- [**E-14**](BEFUNDE.md#e-14) — die Zusicherung beim Start, der X1-Suchindex werde neu angelegt.
+- [**E-14**](BEFUNDE.md#e-14) — **am 23.10.2026 erledigt** (aus neun Mailverzeichnissen gemessen, je eine Erasing-Zeile in der ersten Sitzung). Die Zusicherung beim Start, der X1-Suchindex werde neu angelegt.
   Auf einem frischen Mailverzeichnis ist das der normale erste Lauf; ein
   echter Befund wird es erst, wenn die Meldung auch beim **zweiten** Start
   kommt.
