@@ -29,9 +29,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen (`compmsgd.cpp:2167`) und den Fehler einmal am Programm sehen. |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
-| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen liegt danach doppelt da — als Kopie i… | **nie gemessen** | zweierlei, und das zweite ist Gregors Entscheidung. Erstens die Fehlmeldung — sie fällt mit der Berichtigung aus [E-141](#e-141) von selbst weg. Zw… |
 | **[E-141](Intern/BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Berichtigung in `tocdoc.cpp:3134` — die Klammer um den Oder-Teil ziehen, so dass die Anzahlprüfung für **beide** Seiten gilt. Sie schließt Fe… |
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt bei jeder Gelegenheit wieder … | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
@@ -100,6 +98,29 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## Seit 7.2.0.122, noch ohne Paket — Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+
+**Gemergt am 23.10.2026 (PR #157 und #158), noch nicht als Paket gebaut;
+die Fassungsnummer bleibt bis dahin 7.2.0.122.** Beim nächsten Paket wird
+dieser Abschnitt zu 7.2.0.123.
+
+* **[E-116](Intern/BEFUNDE.md#e-116) — ein Bild mit `width="35px"` wird nicht
+  mehr riesig breit.** Die Breite wurde Zeichen für Zeichen gelesen, auch über
+  die Einheit hinweg: aus `35px` wurde 3508, aus `35.5` 3645. Jetzt endet das
+  Lesen an der ersten Nicht-Ziffer, führende Leerzeichen werden übersprungen
+  (`PGHTMIMP.CPP`, `decimal_value_percent`). Testsuite **280 Tests, 280
+  bestanden**; gegen den alten Stand fallen die neuen Fälle um. **Am laufenden
+  Programm noch nicht gesehen** — deshalb im Befund „eingebaut", nicht
+  „behoben".
+* **[E-130](Intern/BEFUNDE.md#e-130) — nach dem Bauen sind die fünf
+  mitgelieferten DLLs von QUALCOMM nicht mehr verändert.** Der Bindeschritt nach
+  dem Bau (`BinTools\BindExe.bat`) lief über alle DLLs in `Bin\Release`, auch
+  über `DirServ`, `EudoraBk`, `ISock`, `Ldap` und `Ph`, und schrieb Prüfsumme und
+  Zeitstempel hinein. Er bindet jetzt nur die acht eigenen Bauergebnisse; die
+  fünf DLLs im Repo sind wieder die Originale und gleichen denen im Paket.
+  Gemessen: Release-Bau 134 s, 0 Fehler, danach keine der fünf als geändert.
+  Für den Anwender ändert sich nichts.
 
 ## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
 
