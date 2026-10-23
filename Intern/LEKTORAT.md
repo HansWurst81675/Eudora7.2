@@ -1805,6 +1805,34 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Neunundfünfzigster Durchgang — nach PR #157, #158 und #159 (E-116, E-130, Entscheidungen vom Abend), 23.10.2026 (Bericht: `Befunde/LEKTOR-54.md`)
+
+**19 Funde** — 6 veraltet, 5 Widersprüche, 4 unvollständig, 3 falsch, 1 Form.
+Geprüft wurde der ganze Bestand, nicht der Diff.
+
+**Der schwerste Fund steckt in der neuen Kurzform selbst**
+([L-54.1](../Befunde/LEKTOR-54.md#l-54.1), [L-54.2](../Befunde/LEKTOR-54.md#l-54.2)).
+Drei Befundzeilen beginnen seit heute mit *„Kurz: …"*. Die Werkzeuge lesen
+das erste Fettgedruckte und suchen darin *offen* oder ein führendes
+*behoben*. Folge, gemessen: [E-142](BEFUNDE.md#e-142) und
+[E-144](BEFUNDE.md#e-144), beide heute von Gregor am Programm bestätigt,
+fielen aus den erzeugten Listen *Noch offen*, während `offene-befunde.pl`
+*„in beiden Listen gleich"* meldete. [E-130](BEFUNDE.md#e-130) ging auf
+*behoben*, ohne dass die Regressionsschranke es bemerkte.
+
+**Gregors Entscheidungen vom Abend stehen fast nur in `WEITERMACHEN.md`.**
+`ZIEL.md` nennt AN-1, E-130 und E-133 noch *„nicht entschieden"*, die
+Versionsregel 7.2.1.<Buildnummer> steht in keiner der Dateien, die
+*„7.2.1.0"* sagen. `BEFUNDE.md` verlangt den Test-Rückstand weiter vor dem
+Release. `WEITERMACHEN.md` hat vier Einstiegsblöcke von heute, die Marke
+*HIER WEITERMACHEN* trägt der älteste, und zwei Blöcke nennen verschiedene
+Reihenfolgen für E-113/E-119 und den übrigen Rückstand
+([L-54.16](../Befunde/LEKTOR-54.md#l-54.16)).
+
+Von den elf offenen Funden aus LEKTOR-53 sind zwei erledigt, vier zum Teil,
+fünf bleiben. Vier Fragen an Gregor, darunter die Marke des Releases und ob
+das nächste Paket schon 7.2.1.123 heißt.
+
 ## Achtundfünfzigster Durchgang — nach PR #155 (E-125 an 1.0.122 geprüft), 23.10.2026 (Bericht: `Befunde/LEKTOR-53.md`)
 
 **21 Funde** — 7 falsch, 6 veraltet, 5 Widersprüche, 2 unvollständig, 1 Form.

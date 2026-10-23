@@ -14,11 +14,6 @@ Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
 > **Diese Tabelle wird erzeugt.** `tools/offene-befunde.pl` setzt sie aus den
 > Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) und weist im `pre-commit`
 > ab, wenn sie nicht stimmt. Von Hand eintragen lohnt nicht.
->
-> Bis zum 22.10.2026 stand hier eine handgepflegte Liste. Sie nannte **fünf
-> Befunde als offen, die in ihrer eigenen Statusspalte „Behoben" sagten**
-> ([E-112](Intern/BEFUNDE.md#e-112), [E-115](Intern/BEFUNDE.md#e-115), [E-117](Intern/BEFUNDE.md#e-117), [E-118](Intern/BEFUNDE.md#e-118), [E-68](Intern/BEFUNDE.md#e-68)), und **zehn offene fehlten ganz**. Eine
-> Liste, die beides kann, ist schlimmer als keine.
 
 Die Spalte **was noch fehlt** sagt, was zu tun bleibt — nicht, was schon
 erledigt ist. Die Messung und die Begründung stehen bei jedem Befund in
@@ -29,7 +24,9 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen (`compmsgd.cpp:2167`) und den Fehler einmal am Programm sehen. |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
+| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | **nie gemessen** | zweierlei, und das zweite ist Gregors Entscheidung. Erstens die Fehlmeldung — sie fällt mit der Berichtigung aus [E-141](#e-141) von selbst weg. Zw… |
 | **[E-141](Intern/BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Berichtigung in `tocdoc.cpp:3134` — die Klammer um den Oder-Teil ziehen, so dass die Anzahlprüfung für **beide** Seiten gilt. Sie schließt Fe… |
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt bei jeder Gelegenheit wieder … | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
