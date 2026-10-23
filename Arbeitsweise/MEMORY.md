@@ -120,3 +120,4 @@
 - [CHRONIST 23.10.2026](CHRONIST-2026-10-23.md) — zwei neue Lehren, Rückstrich-Fälle 19–21, und die vier entscheidenden Messungen kamen von Gregor
 - [Stand 23.10.2026 abends](stand-23-10-2026-abend.md) — Repo gesichert, aber die Berichtigung des Testplan-Kopfes fehlt; was Gregor als nächstes erwartet
 - [Kritische sind kein Release-Blocker](entscheidung-kritische-nicht-release-blocker.md) — Gregor 23.10.: E-122/123/124/126/129/136 halten 7.2.1.0 nicht auf; beim Einarbeiten von LEKTOR-53 ins Repo
+- [Stand 23.10.2026 spät](stand-23-10-2026-spaet.md) — PR 156, BILDBREITE abgebrochen (Dateien im Baum wt-bildbreite), Regressionstests zuerst
