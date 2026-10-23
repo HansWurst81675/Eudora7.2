@@ -1,11 +1,14 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-22 20:25:54
-freigabe=Gregor am 22.10.2026: 'du kannst auch deine tests starten, ich halte mich zurueck'
-faelle=5
-bestanden=5
+zeit=2026-10-23 14:54:52
+freigabe=Gregor am 23.10.2026: 'gut, dann fuehre den test aus und schreib den test report.'
+faelle=8
+bestanden=8
 fehlgeschlagen=0
 fall=[ ok ] E-131a   ohne MRUFloatXPos=-2147483648
 fall=[ ok ] E-131b   ohne MRUFloatYPos=-2147483648
 fall=[ ok ] E-131c   E-131 Leistenposition:
 fall=[ ok ] E-121    ablage-dateien=1
 fall=[ ok ] E-118    E-118 Bild:
+fall=[ ok ] E-125a   E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0
+fall=[ ok ] E-125b   E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1
+fall=[ ok ] E-125c   E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out

@@ -17,7 +17,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 13 von 18 erfüllt, 5 offen.** Diese Übersicht wird aus den
+**Stand: 14 von 18 erfüllt, 4 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -29,7 +29,6 @@ beschädigt, steht oben.
 | **E-113** | ich | alles — von Gregor angeordnet; die Vorbedingung E-112 ist seit 7.2.0.85 behoben, der Befund ist damit an der Reihe. Billig wäre ein Deckel beim Umb… | eine Nachricht mit einem Bild, das breiter ist als das Fenster. Rot: das Bild läuft rechts hinaus. Grün: es ist auf die Fensterbreite eingepasst. Danach Fenstergröße ändern und noch ein… |
 | **E-119** | ich | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… | `Testdaten/` um eine Nachricht mit `data:`-Bild ergänzen, darauf antworten. Rot: grauer Kasten im Verfassenfenster. Grün: das Bild. **Zuletzt belegt am Quelltext: 22.10.2026 an 7.2.0.121**… |
 | **E-116** | ich | Einbau und Messung — der Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694` (auf eine folgende Ziffer prüfen und sonst abbrechen) ist nicht eingebaut, … | Testsuite: `width="35px"` muss 35 ergeben, nicht 3508; `width="35.5"` 35, nicht 3645. Dazu eine Prüfnachricht, auf der das Bild vorher zu breit war. **Zuletzt belegt am Quelltext: 22.10.202… |
-| **E-125** | ? | Gregors Lauf am Programm. Der Weg geht über Ziehen-und-Ablegen und endet in einem modalen Dialog; der Prüfstand kann ihn nicht auslösen. Die vier S… | — **nicht aufgeschrieben** |
 
 <!-- ziel-stand: Ende -->
 

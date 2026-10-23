@@ -118,3 +118,4 @@
 - [Test prüft den Ausstieg](test-prueft-den-ausstieg.md) — ein Test, der nur die neue Meldung sucht, lässt den ganzen Fehler zurück; 277 von 277 grün mit wiederhergestelltem Befund
 - [Befund gegen die Quelle lesen](befund-gegen-die-quelle-lesen.md) — widerlegt wird der Prüferbericht, nicht die Zusammenfassung; aus „Block 4a ist tot" war „der Kern ist tot" geworden
 - [CHRONIST 23.10.2026](CHRONIST-2026-10-23.md) — zwei neue Lehren, Rückstrich-Fälle 19–21, und die vier entscheidenden Messungen kamen von Gregor
+- [Stand 23.10.2026 abends](stand-23-10-2026-abend.md) — Repo gesichert, aber die Berichtigung des Testplan-Kopfes fehlt; was Gregor als nächstes erwartet
