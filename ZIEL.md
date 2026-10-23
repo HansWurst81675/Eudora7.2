@@ -17,7 +17,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 11 von 17 erfüllt, 6 offen.** Diese Übersicht wird aus den
+**Stand: 12 von 18 erfüllt, 6 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -30,7 +30,7 @@ beschädigt, steht oben.
 | **E-113** | ich | alles — von Gregor angeordnet; die Vorbedingung E-112 ist seit 7.2.0.85 behoben, der Befund ist damit an der Reihe. Billig wäre ein Deckel beim Umb… | eine Nachricht mit einem Bild, das breiter ist als das Fenster. Rot: das Bild läuft rechts hinaus. Grün: es ist auf die Fensterbreite eingepasst. Danach Fenstergröße ändern und noch ein… |
 | **E-119** | ich | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… | `Testdaten/` um eine Nachricht mit `data:`-Bild ergänzen, darauf antworten. Rot: grauer Kasten im Verfassenfenster. Grün: das Bild. **Zuletzt belegt am Quelltext: 22.10.2026 an 7.2.0.121**… |
 | **E-116** | ich | Einbau und Messung — der Vorschlag des PRÜFERS vor `PGHTMIMP.CPP:3694` (auf eine folgende Ziffer prüfen und sonst abbrechen) ist nicht eingebaut, … | Testsuite: `width="35px"` muss 35 ergeben, nicht 3508; `width="35.5"` 35, nicht 3645. Dazu eine Prüfnachricht, auf der das Bild vorher zu breit war. **Zuletzt belegt am Quelltext: 22.10.202… |
-| **E-14** | ich | die eine Messung, die entscheidet — Eudora zweimal hintereinander auf **demselben gewachsenen** Mailverzeichnis starten und beim zweiten Mal auf `Se… | eine Messung, kein Einbau. Schritte: ein Testverzeichnis mit gewachsenem Postfach nehmen, Eudora starten, beenden, **sofort wieder starten**. Beim zweiten Start auf die Zusicherung `SearchMa… |
+| **E-125** | ? | Gregors Lauf am Programm. Der Weg geht über Ziehen-und-Ablegen und endet in einem modalen Dialog; der Prüfstand kann ihn nicht auslösen. Die vier S… | — **nicht aufgeschrieben** |
 
 <!-- ziel-stand: Ende -->
 
@@ -45,14 +45,15 @@ beschädigt, steht oben.
 | Post wird verfälscht | [E-118](Intern/BEFUNDE.md#e-118) | HTML-Mail im IMAP-Ordner als Quelltext, lokale Kopie weg (**Teil 2 – eingebettete Bilder – von Gregor am 14.10.2026 an 1.0.90 bestätigt; eingebaut in 7.2.0.89, von Gregor am 14.10.2026 an 1.0.89 bestätigt**) |
 | Post wird verfälscht | [E-69](Intern/BEFUNDE.md#e-69) | Filterlauf bricht im Release lautlos ab, meldet Erfolg (**behoben in 7.2.0.106, nachgebessert in 7.2.0.109 und 7.2.0.110 – ein Sammeleintrag statt einer Meldung je Nachricht, [PRÜFER-36](Befunde/PRUEFER-36.md) P3 und [PRÜFER-38](Befunde/PRUEFER-38.md) R1–R3; am Prüfstand gemessen, von Gregor noch nicht bestätigt**) |
 | Post wird verfälscht | [E-101](Intern/BEFUNDE.md#e-101) | gespeicherte Datei in anderen Programmen unbrauchbar (**offen.** Dritter Teil eingebaut in 7.2.0.107, nie geschnürt; nach [PRÜFER-37](Befunde/PRUEFER-37.md) ist der Kern auf dem einzigen Aufrufweg **tot** – F2 –, **F1, F3 und F4 sind in 7.2.0.110 behoben**, offen bleibt allein F2) |
-| Kriterium 2 | [E-105](Intern/BEFUNDE.md#e-105) | versteckte Abschnitte doppelt (eingebaut in 7.2.0.88) |
+| Kriterium 2 | [E-105](Intern/BEFUNDE.md#e-105) | versteckte Abschnitte doppelt (**behoben in 7.2.0.88, von Gregor am 22.10.2026 an 1.0.120 bestätigt**) |
 | Kriterium 2 | [E-77](Intern/BEFUNDE.md#e-77) | IMAP-Ordnernamen mit Umlauten roh |
 | Kriterium 2 | [E-113](Intern/BEFUNDE.md#e-113) | breite Bilder laufen rechts hinaus |
 | Kriterium 2 | [E-119](Intern/BEFUNDE.md#e-119) | `data:`-Bilder als grauer Kasten |
 | Kriterium 2 | [E-116](Intern/BEFUNDE.md#e-116) | `35px` falsch gelesen |
 | Kriterium 2 | [E-95](Intern/BEFUNDE.md#e-95), [E-96](Intern/BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Doctolib- und FairToner-Nachricht — **am 14.10.2026 an 1.0.87 bestätigt** |
-| Kriterium 4 | [E-111](Intern/BEFUNDE.md#e-111) | `resolve_URL` schreibt ein Byte hinter das Feld |
-| Kriterium 4 | [E-14](Intern/BEFUNDE.md#e-14) | Zusicherung beim Start auf frischem Mailverzeichnis — klären |
+| Kriterium 4 | [E-111](Intern/BEFUNDE.md#e-111) | `resolve_URL` schreibt ein Byte hinter das Feld (**behoben in 7.2.0.121**, 246 Tests mit Gegenprobe; ausgelöst gesehen wurde es nie) |
+| Kriterium 4 | [E-14](Intern/BEFUNDE.md#e-14) | Zusicherung beim Start auf frischem Mailverzeichnis (**erledigt am 23.10.2026**: aus neun Mailverzeichnissen gemessen, 59 Sitzungen, 9 Erasing-Zeilen — je eine, immer in der ersten Sitzung. Kein Fehler, der normale erste Lauf) |
+| Post wird verfälscht | [E-125](Intern/BEFUNDE.md#e-125) | Ziehen einer empfangenen Nachricht nach `Out` legte eine neue Nachricht an und meldete im selben Zug, es sei nichts übertragen worden (**gebaut in 7.2.0.122** nach Gregors Entscheidung B: der Weg wird abgelehnt, mit Hinweis auf *Message → Send Again*; 277 Tests, zweimal gegengetestet. **Offen bis zu Gregors Lauf**, [TESTPLAN M3](Intern/TESTPLAN.md#m3-e125)) |
 
 **Ausdrücklich nicht Voraussetzung:** [E-114](Intern/BEFUNDE.md#e-114), [E-78](Intern/BEFUNDE.md#e-78), [E-47](Intern/BEFUNDE.md#e-47), [E-67](Intern/BEFUNDE.md#e-67) (Korrektur seit 7.2.0.43, am 17.10.2026 gemessen), [E-98](Intern/BEFUNDE.md#e-98), [E-39](Intern/BEFUNDE.md#e-39), die
 zurückgestellte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/BEFUNDE.md#r-1).

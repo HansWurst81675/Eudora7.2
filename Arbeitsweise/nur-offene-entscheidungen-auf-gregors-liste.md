@@ -21,7 +21,7 @@ er bereits entschieden hat, ist es Arbeit — meine.
 * **E-128** — *„die Entscheidung über den **eigenen** Vorschlag"*: mein
   Vorschlag, nicht seiner. Eine HTML-Datei als `.txt` zu speichern ist falsch,
   da gibt es nichts abzuwägen.
-* **E-124** — wartet auf Microsoft, nicht auf ihn.
+* **E-124** — wartet nicht auf ihn: der Vorgang bei Microsoft ist seit dem 22.10.2026 **abgewiesen** (zu viele Dateien im Upload), der nächste Handgriff ist unserer.
 
 Seine Frage darauf: *„willst du mich beschäftigen mit dingen, die bereits gefixt
 oder entschieden sind? warum?"*

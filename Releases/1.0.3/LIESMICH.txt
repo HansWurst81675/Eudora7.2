@@ -1,6 +1,34 @@
 Eudora 7.2 — Paket 1.0.3 (Release-Bau)
 ======================================
 
+ZUERST LESEN: WINDOWS BLOCKIERT DEN START DER HERUNTERGELADENEN EXE
+-------------------------------------------------------------------
+
+Laesst sich Eudora.exe nicht per Doppelklick starten, waehrend
+"Eudora starten.cmd" laeuft, liegt es NICHT an Eudora. Windows haengt an
+jede aus dem Netz geladene Datei die Markierung "stammt von einem anderen
+Computer" (Mark of the Web) und verweigert ausfuehrbaren Dateien damit den
+Start. Der Explorer vererbt die Markierung beim Auspacken an JEDE Datei im
+ZIP.
+
+  AM BESTEN VORHER:  Rechtsklick auf die heruntergeladene .zip ->
+                     Eigenschaften -> unten das Kaestchen "Zulassen"
+                     ankreuzen -> OK -> DANN ERST auspacken.
+
+  SCHON AUSGEPACKT:  in PowerShell
+                     Get-ChildItem -Recurse '<Verzeichnis>' | Unblock-File
+
+  NACHSEHEN:         Get-Item '<Verzeichnis>\Eudora.exe' -Stream *
+                     Steht dort "Zone.Identifier", ist es die Markierung.
+
+Das Kaestchen "Zulassen" bei einer EINZELNEN Datei hilft nur dieser einen;
+die DLLs daneben tragen die Markierung weiter. Gefuehrt als Befund E-138.
+
+Nicht zu verwechseln mit dem Defender-Fehlalarm (Befund E-124): der ENTFERNT
+die Datei und meldet Trojan:Win32/Bearfoos.A!ml. Hier wird nichts entfernt,
+der Start wird nur verweigert.
+
+
 Eudora 7.1 aus dem Quellcode der Computer-History-Museum-Freigabe, neu
 uebersetzt mit Visual Studio 2022.
 

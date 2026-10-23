@@ -60,7 +60,12 @@ static void Test_E125_DieStelle(const char* szEudoraDir)
 
 	// Der alte Stand ist weg: es wird nicht mehr gefragt, ob trotzdem
 	// uebertragen werden soll.
-	TT_CHECK_MSG(!QT_Enthaelt(pCode, "AlertDialog(IDD_STRIP_HEADERS)"),
+	// PRUEFER-45 K9: NICHT auf die Aufrufform pruefen. QT_LeerraumZusammen
+	// zieht Leerraum auf EIN Leerzeichen zusammen, es wird nicht entfernt -
+	// "AlertDialog( IDD_STRIP_HEADERS )" traefe die Nadel also nicht, und der
+	// alte Stand kaeme gruen durch. Der Bezeichner allein steht im Code sonst
+	// nirgends (der erklaerende Kommentar ist da schon weggeworfen).
+	TT_CHECK_MSG(!QT_Enthaelt(pCode, "IDD_STRIP_HEADERS"),
 				 "die alte Rueckfrage IDD_STRIP_HEADERS ist zurueck - "
 				 "damit legt Eudora wieder eine neue Nachricht an");
 	TT_CHECK_MSG(!QT_Enthaelt(pCode, "StripHeaders"),
@@ -78,6 +83,37 @@ static void Test_E125_DieStelle(const char* szEudoraDir)
 	TT_CHECK_MSG(!QT_Enthaelt(pCode, "if (ToOut) {"),
 				 "die Ablehnung trifft jetzt AUCH verfasste Nachrichten - "
 				 "damit laesst sich nichts mehr zum Senden einreihen");
+
+	// PRUEFER-45 K1 - DAS WICHTIGSTE AN DIESEM TESTFALL. Am 23.10.2026
+	// gegengetestet: wird allein die Zeile "break;" geloescht, ist der ganze
+	// Befund zurueck (nach dem Hinweis laeuft der Ablauf weiter in den
+	// ToOut-Zweig, Sum->SendAgain legt wieder eine neue Nachricht in Out an) -
+	// und die Pruefungen oben meldeten trotzdem 277 von 277 bestanden. Der
+	// Hinweis allein ist eben keine Ablehnung; erst der Ausstieg ist es.
+	TT_CHECK_MSG(QT_Enthaelt(pCode, "AlertDialog(IDD_XFER_TO_OUT_REFUSED); break;"),
+				 "auf den Hinweis folgt kein break - Eudora laeuft weiter und legt "
+				 "wieder eine neue Nachricht in Out an");
+
+	// Und die Reihenfolge: steht die Ablehnung hinter dem Anlegen, wirkt sie
+	// nicht mehr, obwohl jede einzelne Zeichenkette oben noch zu finden waere.
+	{
+		const long	lAblehnung = QT_Stelle(pCode, "AlertDialog(IDD_XFER_TO_OUT_REFUSED);");
+		const long	lSendAgain = QT_Stelle(pCode, "Sum->SendAgain(");
+
+		TT_CHECK_MSG(lAblehnung >= 0 && lSendAgain >= 0 && lAblehnung < lSendAgain,
+					 "die Ablehnung steht hinter dem Anlegen der neuen Nachricht - "
+					 "damit kommt sie zu spaet");
+	}
+
+	// PRUEFER-45 K2: nach der Ablehnung darf die IMAP-Nachbearbeitung nicht
+	// anlaufen. Sonst kommt bei einer IMAP-QUELLE zusaetzlich die alte
+	// Meldung "No messages were transferred!" - genau die Haelfte des
+	// Befundes, die hier abgestellt werden sollte.
+	TT_CHECK_MSG(QT_Enthaelt(pCode, "E125Abgelehnt = TRUE;"),
+				 "der Merker E125Abgelehnt wird nicht mehr gesetzt");
+	TT_CHECK_MSG(QT_Enthaelt(pCode, "if ( !E125Abgelehnt &&"),
+				 "die IMAP-Nachbearbeitung fragt den Merker nicht mehr ab - bei einer "
+				 "IMAP-Quelle kommt dann wieder 'No messages were transferred!'");
 
 	// Die Spurmarke, an der sich der Weg im Protokoll wiederfinden laesst.
 	TT_CHECK_MSG(QT_Enthaelt(pCode, "E-125 Xfer nach Out abgelehnt:"),
@@ -110,6 +146,14 @@ static void Test_E125_DieRessource(const char* szEudoraDir)
 
 	TT_CHECK_MSG(QT_Enthaelt(pKopf, "#define IDD_XFER_TO_OUT_REFUSED"),
 				 "die Kennung fehlt in resource.h");
+
+	// PRUEFER-45 K8: vorhanden genuegt nicht, sie muss EINDEUTIG sein. Der
+	// Ressourcen-Editor setzt _APS_NEXT_RESOURCE_VALUE beim Speichern neu;
+	// wird 8117 ein zweites Mal vergeben, zeigt AlertDialog den falschen
+	// Dialog, und die Pruefung oben bliebe trotzdem gruen.
+	TT_CHECK_MSG(QT_Zaehle(pKopf, " 8117") == 1,
+				 "die Kennung 8117 ist doppelt vergeben - AlertDialog zeigt dann "
+				 "den falschen Dialog");
 	TT_CHECK_MSG(QT_Enthaelt(pRes, "IDD_XFER_TO_OUT_REFUSED DIALOGEX"),
 				 "der Dialog fehlt in EudoraRes.rc");
 

@@ -95,7 +95,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.121** / `VERSION` **1.0.121** — nicht geschnürt: [E-111](Intern/BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus (246 Tests, 246 bestanden, mit Gegenprobe). **Veröffentlicht ist `v1.0.120`** (21.10.2026, 19:07:37 UTC) — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)). Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), was zur Fassung 7.2.1.0 noch fehlt oben in [ZIEL.md](ZIEL.md).*
+*Stand **7.2.0.122** / `VERSION` **1.0.122** — nicht geschnürt: [E-125](Intern/BEFUNDE.md#e-125), Ziehen einer empfangenen Nachricht nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen (277 Tests, 277 bestanden, zweimal gegengetestet); davor in 7.2.0.121 [E-111](Intern/BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus (246 Tests, mit Gegenprobe). **Veröffentlicht ist `v1.0.120`** (21.10.2026, 19:07:37 UTC) — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)). Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), was zur Fassung 7.2.1.0 noch fehlt oben in [ZIEL.md](ZIEL.md).*
 
 ### Was geht
 
@@ -143,6 +143,7 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 
 | Was passiert | Was kann verlorengehen | Was hilft | Befund |
 |---|---|---|---|
+| **Nach dem Herunterladen von GitHub startet `Eudora.exe` nicht per Doppelklick** — nur der Umweg über `Eudora starten.cmd` geht. Windows hängt beim Auspacken an jede Datei die Markierung *„stammt von einem anderen Computer“* (*Mark of the Web*) | nichts — das Programm startet nur nicht | **ZIP vor dem Auspacken entsperren**: Rechtsklick auf die `.zip` → Eigenschaften → *Zulassen*. Schon ausgepackt: siehe unten | [E-138](Intern/BEFUNDE.md#e-138) |
 | Läuft eine Fassung **vor 7.2.0.113** neben einer vorhandenen Eudora oder Hermes 7.1, schreibt sie `MRUFloatXPos=-2147483648` – eine ungültige Fensterposition – in die gemeinsam benutzte `Eudora.ini`. Der Melder berichtet, dass sein Hermes 7.1 danach beim Start abstürzte (`EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`) | nichts von Ihrer Post – aber möglicherweise die **Benutzbarkeit der vorhandenen Installation** | **Behoben in 7.2.0.113, seit `v1.0.113` veröffentlicht:** diese Fassung schreibt den Wert nicht mehr, am Prüfstand rot und grün gemessen. **Zwei Einschränkungen:** eine `Eudora.ini`, die den Wert schon trägt, wird erst beim nächsten Sichern durch unsere Fassung berichtigt – wer sie nicht mehr startet, berichtigt sie von Hand oder spielt die Sicherung zurück. Und **dass dieser Wert der Grund des Absturzes war, ist nicht belegt** ([PRÜFER-40](Befunde/PRUEFER-40.md#k1) K1: `-2147483648` ist `CW_USEDEFAULT`, das MFC selbst setzt und beim Lesen wieder abfängt); belegt ist nur, dass wir ihn schreiben. **Sicherheitshalber weiter:** `Eudora.ini` und Mailverzeichnis sichern, bevor diese Fassung neben einer vorhandenen Installation läuft. Von außen gemeldet ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102), 18.10.2026, an `v1.0.101`) | [E-131](Intern/BEFUNDE.md#e-131) |
 | Eine Nachricht, die der Filter nicht lesen kann, wird still übersprungen | nichts geht verloren – **diese eine Nachricht** bleibt ungefiltert liegen, die übrigen werden weiter gefiltert (am Quelltext gelesen für *Filter Messages*, [LEKTOR-41](Befunde/LEKTOR-41.md)) | nach dem Filtern stichprobenartig nachsehen; ab 7.2.0.106 (seit `v1.0.112` veröffentlicht) steht die Nachricht mit Betreff und Grund im Fenster *Task Errors*, ab 7.2.0.110 nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden | [E-69](Intern/BEFUNDE.md#e-69) |
 | Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | die Nachricht im Postfach lassen oder weiterleiten statt speichern. **In 7.2.0.107 bis 7.2.0.109 — alle drei nie als Paket geschnürt — war es für Post in `windows-1251`, `koi8-r` oder `iso-8859-2` schlechter als in `v1.0.101`; ab 7.2.0.110 nicht mehr** ([PRÜFER-37](Befunde/PRUEFER-37.md) F3/F4 behoben). Bei Latin-1- und UTF-8-Post trat das nie auf | [E-101](Intern/BEFUNDE.md#e-101) |
@@ -150,23 +151,58 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 | Wird die gerade benutzte Persönlichkeit gelöscht, können Reste ihrer Einstellungen wiederkommen | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | vorher auf eine andere Persönlichkeit wechseln | [E-39](Intern/BEFUNDE.md#e-39) |
 | Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-126](Intern/BEFUNDE.md#e-126) |
 | Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab 7.2.0.104 (seit `v1.0.112` veröffentlicht) wartet Eudora beim Beenden selbst, bis das Hochladen fertig ist; ab 7.2.0.108 wird nach fünf Minuten **nicht** mehr erzwungen beendet, sondern das Beenden aufgegeben — das Fenster bleibt offen und der Grund steht in der Statuszeile. Nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](Intern/BEFUNDE.md#e-123) |
-| War der IMAP-Ordner seit dem Start **noch nie geöffnet**, fehlen die eben dorthin verschobenen Mails in seiner Liste, bis man ihn noch einmal schließt und öffnet | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](Intern/BEFUNDE.md#e-127) |
+| War der IMAP-Ordner seit dem Start **noch nie geöffnet**, konnten die eben dorthin verschobenen Mails in seiner Liste fehlen, bis man ihn noch einmal schloss und öffnete. **Am 23.10.2026 in zwei Läufen an 7.2.0.120 nicht mehr aufgetreten; die Ursache wurde nie gefunden** — wer es sieht, bitte melden | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](Intern/BEFUNDE.md#e-127) |
 | Wird **ohne Serververbindung** in einen IMAP-Ordner verschoben und sofort beendet, zeigt der Zielordner danach nur einen Teil der Nachrichten | nichts – die Nachrichten stehen weiter im Ausgangspostfach | *Rechtsklick auf das Postfach → Show Deleted Messages* macht sie wieder sichtbar, *Message → UnDelete* holt sie zurück; *Message → Purge Messages* dabei **nicht** benutzen – das entfernt sie | [E-129](Intern/BEFUNDE.md#e-129) |
 | **Verzeichnisdienste** (LDAP, Ph, EudoraBk) und S/MIME fehlen — Dialog *„Directory Services unavailable“*. **Das eigene Adressbuch ist davon nicht betroffen** und arbeitet | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](Intern/BEFUNDE.md#e-47) |
 | Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | – | [E-119](Intern/BEFUNDE.md#e-119) |
 | Sehr breite Bilder laufen rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | – | [E-113](Intern/BEFUNDE.md#e-113), [E-116](Intern/BEFUNDE.md#e-116) |
 | In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nichts | – | [E-122](Intern/BEFUNDE.md#e-122) |
 | IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nichts | – | [E-77](Intern/BEFUNDE.md#e-77) |
-| Emoji in Betreffzeilen erscheinen als `?` | nichts | – | [E-90](Intern/BEFUNDE.md#e-90) |
+| Emoji in Betreffzeilen erscheinen gar nicht — sie fallen beim Abrufen ersatzlos weg (seit 7.2.0.59; davor standen zwei `?` je Emoji) | nichts | – | [E-90](Intern/BEFUNDE.md#e-90) |
 | Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nichts | es gilt die zuletzt gewählte Einstellung | [E-98](Intern/BEFUNDE.md#e-98) |
 | Eine Nachricht aus einem IMAP-Ordner nach `Out` gezogen wird nicht verschoben: in `Out` entsteht eine neue Nachricht mit `<br>` im Betreff und in den Kopfzeilen, dazu die Meldung *„No messages were transferred!“* | nichts – das Original bleibt im IMAP-Ordner; wer die neue Nachricht sendet, schickt sie mit kaputtem Empfänger | Nachrichten nicht aus einem IMAP-Ordner nach `Out` ziehen; so entstandene Einträge in `Out` nicht senden, sondern löschen | [E-125](Intern/BEFUNDE.md#e-125) |
 | Der Filterbericht bleibt nach einem Filterlauf leer | nichts | – | [E-71](Intern/BEFUNDE.md#e-71) |
-| Ein gelöstes, vorher angedocktes Fenster kann einen leeren Bereich hinterlassen | nichts | Fenster einmal neu anordnen | [E-114](Intern/BEFUNDE.md#e-114) |
 | Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nichts | siehe [Windows Defender meldet Eudora als Trojaner](Doku/ANWENDER.md#windows-defender-meldet-eudora-als-trojaner) | [E-124](Intern/BEFUNDE.md#e-124) |
 
 **Ihre Post sichern.** Eudora legt alles im Verzeichnis `Mailverzeichnis`
 neben dem Programm ab. Wer es vor dem ersten Start einer neuen Fassung kopiert,
 kann jederzeit zurück.
+
+### Wenn Windows den Start blockiert (*Mark of the Web*)
+
+Lädt man ein ZIP aus dem Netz, merkt sich Windows die Herkunft in einem
+Alternativdatenstrom `Zone.Identifier` — und der Explorer vererbt ihn beim
+Auspacken an **jede** einzelne Datei. Eine `.exe` wird damit blockiert, eine
+`.cmd` nicht; deshalb läuft `Eudora starten.cmd` und `Eudora.exe` nicht.
+**Das ist kein Fehler von Eudora 7.2**, sondern eine Windows-Vorkehrung.
+
+**Am besten vorher:** Rechtsklick auf die heruntergeladene `.zip` →
+*Eigenschaften* → unten das Kästchen *Zulassen* ankreuzen → *OK* — **dann
+erst auspacken**. So bekommt keine der rund 50 Dateien die Markierung.
+
+**Schon ausgepackt?** In PowerShell:
+
+```powershell
+Get-ChildItem -Recurse 'C:\Pfad\zum\Eudora72-Verzeichnis' | Unblock-File
+```
+
+**Nachsehen, ob es wirklich daran liegt:**
+
+```powershell
+Get-Item 'C:\Pfad\zum\Eudora72-Verzeichnis\Eudora.exe' -Stream *
+```
+
+Steht dort ein Strom `Zone.Identifier`, ist es die Markierung;
+`Get-Content ... -Stream Zone.Identifier` zeigt sogar die Herkunfts-URL.
+Nach dem Entsperren ist der Strom weg und der Doppelklick startet.
+
+> Das Kästchen *Zulassen* im Eigenschaften-Dialog einer **einzelnen** Datei
+> hilft nur dieser einen — die DLLs daneben tragen die Markierung weiter.
+
+> **Nicht zu verwechseln mit dem Defender-Fehlalarm**
+> ([E-124](Intern/BEFUNDE.md#e-124)): der entfernt die Datei und meldet
+> `Trojan:Win32/Bearfoos.A!ml`. Hier wird nichts entfernt, der Start wird nur
+> verweigert.
 
 ## Was es kann
 

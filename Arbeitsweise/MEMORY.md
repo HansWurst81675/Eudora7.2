@@ -108,3 +108,10 @@
 - [CHRONIST 21.10.2026 c](CHRONIST-2026-10-21c.md) — Laufbericht Issue 102 / Release 1.0.120: zwei neue Lehren, vier Nachträge, Werkzeuge pruefe-aussenverweise.pl und pruefe-haken-aktuell.pl; der installierte pre-commit kennt vier Schranken nicht, nicht drei
 - [Stand 22.10.2026 abends](stand-22-10-2026-abend.md) — was nach dem letzten Merge offen blieb und in KEINER Repo-Datei steht: Pfadschranke in messen-e123-abbruch.ps1, PRUEFERs Loch in QT_RueckgabeGenutzt, LEKTOR-51, das E-124-Ergebnis
 - [Nur offene Entscheidungen auf Gregors Liste](nur-offene-entscheidungen-auf-gregors-liste.md) — wer entscheidet, ist die Entscheidung gefallen, was fehlt noch; dreimal am 22.10. falsch einsortiert
+- [Außenwirkung ist der Maßstab](aussenwirkung-ist-der-massstab.md) — 43 Schranken grün, während in der Wurzel 21 Dateien mit 25.532 Zeilen lagen; was von außen sichtbar ist, misst keine davon
+- [Liste aus einer Quelle](liste-aus-einer-quelle.md) — wer dieselbe Liste zweimal von Hand führt, führt sie einmal falsch; „Noch offen" nannte fünf Befunde offen, die sich selbst behoben nannten
+- [Einstufung ist keine Auskunft](einstufung-ist-keine-auskunft.md) — „teilweise, Wirkung belegt" sagt nicht, was noch zu tun ist; 23 von 40 offenen Befunden nannten nur ihre Einstufung
+- [Gemergt heißt nicht auf main](gemergt-heisst-nicht-auf-main.md) — GitHub zeigte #134 und #135 als merged, main enthielt #135 trotzdem nicht; der Maßstab ist der Serverstand, nicht die Anzeige
+- [Rückfrage ist keine Messung](rueckfrage-ist-keine-messung.md) — Gregor nach der Bedeutung unserer eigenen Nummernkreise zu fragen ist keine Messung, sondern eine Rückgabe meiner Aufgabe
+- [CHRONIST 22.10.2026](CHRONIST-2026-10-22.md) — Laufbericht Aufräumtag (Umzug nach Intern/ und Doku/): fünf neue Lehren
+- [CHRONIST 12.10.2026](CHRONIST-2026-10-12.md) — Laufbericht: vier Nachträge zu bestehenden Lehren, und warum sie nicht direkt ins Gedächtnis gingen
