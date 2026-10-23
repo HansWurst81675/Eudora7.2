@@ -178,6 +178,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 
 | `lektor-52-und-pruefer-46` | 23.10.2026 | **Von Gregor bestaetigt** (*"lektor-52-und-pruefer-46 ist ok"*). Die 14 Funde aus [LEKTOR-52](../Befunde/LEKTOR-52.md) und die drei neuen Befunde aus [PRUEFER-46](../Befunde/PRUEFER-46.md) einarbeiten: [E-141](../Intern/BEFUNDE.md#e-141) (Klammerfehler mit EXPUNGE-Folge), [E-142](../Intern/BEFUNDE.md#e-142) (Entwurf aus IMAP nach `Out`), [E-143](../Intern/BEFUNDE.md#e-143) (N Dialoge aus Filtern), dazu der fertige Testfall fuer die E-101-Pruefluecke |
 | `e-125-urteil-und-testplan` | 23.10.2026 | **Von Gregor bestaetigt** (*"branch paßt"*). Gregors Urteil zu [E-125](../Intern/BEFUNDE.md#e-125) an 1.0.122 eingetragen, die von ihm abgelehnte Gegenprobe am Pruefstand gefahren (`tools/messen-e125.ps1`, Regressionsfaelle `E-125a` bis `c`, Bericht `Intern/TESTBERICHT-E125.md`), den Kopf von `Intern/TESTPLAN.md` und Schritt 4 von M3 neu geschrieben |
+| `lektor-53-und-pruefer-47` | 23.10.2026 | **Von Gregor bestaetigt** (*"beide namen passen, leg los"*). Die 21 Funde aus [LEKTOR-53](../Befunde/LEKTOR-53.md) und die Funde aus [PRUEFER-47](../Befunde/PRUEFER-47.md) einarbeiten, dazu der neue Befund [E-144](../Intern/BEFUNDE.md#e-144), Gregors Entscheidung zu den sechs kritischen Randfaellen und seine vom CHRONIST belegten Bestaetigungen des Starttests ([E-132](../Intern/BEFUNDE.md#e-132)) |
+| `e-116-bildbreite-px` | 23.10.2026 | **Von Gregor bestaetigt** (*"beide namen passen, leg los"*). [E-116](../Intern/BEFUNDE.md#e-116): `width="35px"` wird als 3508 gelesen; `decimal_value_percent` in `PGHTMIMP.CPP` bricht an der ersten Nicht-Ziffer ab, mit Testfall |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
