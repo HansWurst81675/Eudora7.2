@@ -87,6 +87,7 @@ eine Datei liest, liest diese.
 | [einigkeit-ist-kein-beweis](einigkeit-ist-kein-beweis.md) | Dokumente gegeneinander zu prüfen findet nur Widersprüche; der Maßstab muss von außen kommen |
 | [einstufung-ist-keine-auskunft](einstufung-ist-keine-auskunft.md) | \"teilweise, Wirkung belegt\" sagt nicht, was noch zu tun ist - am 22.10.2026 nannten 23 von 40 offenen Befunden nur ihre Einstufung, acht davon mit einem einzigen Wort |
 | [einwurf-ist-ein-messwert](einwurf-ist-ein-messwert.md) | 54 Prozent von Gregors Nachrichten kamen mitten in den laufenden Zug - das misst fehlenden Zwischenstand, nicht Beteiligung |
+| [entscheidung-kritische-nicht-release-blocker](entscheidung-kritische-nicht-release-blocker.md) | Gregor 23.10.2026 - die sechs offenen \"kritischen\" Befunde E-122, E-123, E-124, E-126, E-129, E-136 halten 7.2.1.0 NICHT auf (\"unkritisch, randfaelle\"); noch nicht im Repo eingetragen |
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |
 | [erfolgsmeldung-aus-dem-ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) | Ein Skript darf Erfolg nur melden, wenn es das Ergebnis gemessen hat - mein Perl-Einzeiler schrieb 'eingefuegt', ohne etwas einzufuegen |
 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) | Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern |
