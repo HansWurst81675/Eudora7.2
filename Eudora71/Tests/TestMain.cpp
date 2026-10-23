@@ -31,6 +31,7 @@ void RunE131Tests(void);
 void RunE132Tests(void);
 void RunE112MetadateiTests(void);
 void RunE105Tests(void);
+void RunE116Tests(void);
 void RunE118Tests(void);
 void RunE24Tests(const char* szEudoraDir);
 void RunZeichenWegeTests(const char* szEudoraDir);
@@ -131,6 +132,7 @@ int main(int argc, char* argv[])
 	RunE132Tests();
 	RunE112MetadateiTests();
 	RunE105Tests();
+	RunE116Tests();
 	RunE118Tests();
 	RunE24Tests(szEudoraDir);
 	RunZeichenWegeTests(szEudoraDir);

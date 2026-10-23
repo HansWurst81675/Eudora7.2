@@ -4004,6 +4004,14 @@ static long decimal_value_percent (pg_char_ptr param, long max_for_percent)
    value = 0;
    index = 0;
    
+   /* E-116: fuehrende Leerzeichen und Tabs ueberspringen. Vorher ergab " 35"
+   nur zufaellig 35 (' ' & 0x0F = 0); mit dem Abbruch unten wuerde es sonst 0. */
+   while (param[index] == ' ' || param[index] == '\t')
+      ++index;
+   
+   param += index;      // E-116: das Vorzeichen steht hinter den Leerzeichen
+   index = 0;
+   
    if (param[index] == '-')
       ++index;
    
@@ -4017,6 +4025,12 @@ static long decimal_value_percent (pg_char_ptr param, long max_for_percent)
          value = (max_for_percent * value) / 100;
          break;
       }
+
+      /* E-116: an der ersten Nicht-Ziffer abbrechen, wie numeric_value oben.
+      Vorher wurde jedes Zeichen mit & 0x0F als Ziffer gezaehlt: "35px" ergab
+      3508, "35.5" ergab 3645 - und seit E-112 wird das Bild so breit gezeichnet. */
+      if (digit < '0' || digit > '9')
+         break;
 
       digit &= 0x000F;
       value *= 10;

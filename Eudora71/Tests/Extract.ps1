@@ -269,6 +269,16 @@ $pFn = Find-Line $im '^int E105Schritt\s*\(' $pStart
 $pEnd = Find-Line $im '^\}\s*$' $pFn
 Write-Region $im $pStart $pEnd (Join-Path $OutDir "pghtmimp_e105.inc") $imPath
 
+# ------------------------------------------------------- PGHTMIMP.CPP (E-116)
+# Region P2: decimal_value_percent - liest die Breite aus <img width="...">.
+# "35px" ergab 3508, "35.5" ergab 3645, weil jedes Zeichen mit & 0x0F als
+# Ziffer gezaehlt wurde. Seit E-112 wird das Bild auf diese Breite gezeichnet.
+# Das Muster schliesst den Prototyp oben in der Datei aus (er endet auf ";").
+# Einziger Aufrufer: das width-Attribut von <img> in derselben Datei.
+$p2Start = Find-Line $im '^static long decimal_value_percent\s*\([^;]*$' 0
+$p2End = Find-Line $im '^\}\s*$' $p2Start
+Write-Region $im $p2Start $p2End (Join-Path $OutDir "pghtmimp_e116.inc") $imPath
+
 # ------------------------------------------------- ImapAppend.cpp (E-118)
 # Region Q: E118Huelle und E118Achtbit - erkennt Eudoras lokale HTML-Huelle
 # <x-html>...</x-html> beim Hochladen in einen IMAP-Ordner. Ohne sie ging

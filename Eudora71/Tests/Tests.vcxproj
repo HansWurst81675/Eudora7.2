@@ -108,6 +108,8 @@
     <ClCompile Include="TestE112Metadatei.cpp" />
     <ClCompile Include="UnderTestE105.cpp" />
     <ClCompile Include="TestE105.cpp" />
+    <ClCompile Include="UnderTestE116.cpp" />
+    <ClCompile Include="TestE116.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />
     <ClCompile Include="TestE118.cpp" />
     <ClCompile Include="Quelltext.cpp" />
@@ -130,6 +132,7 @@
     <ClInclude Include="UnderTestE101.h" />
     <ClInclude Include="UnderTestE112Meta.h" />
     <ClInclude Include="UnderTestE105.h" />
+    <ClInclude Include="UnderTestE116.h" />
     <ClInclude Include="UnderTestE118.h" />
     <ClInclude Include="Quelltext.h" />
     <ClInclude Include="UnderTestE24.h" />
