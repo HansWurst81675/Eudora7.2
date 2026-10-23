@@ -17,7 +17,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 12 von 18 erfüllt, 6 offen.** Diese Übersicht wird aus den
+**Stand: 13 von 18 erfüllt, 5 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -25,7 +25,6 @@ beschädigt, steht oben.
 
 | | wer | Was noch fehlt | Wie zu prüfen |
 |---|---|---|---|
-| **E-101** | ich | allein **F2** — `StripTabooHeaders` entfernt die `Content-Type`-Zeile, bevor der Kern sie setzen kann; auf dem einzigen Aufrufweg ist er damit tot (… | Testsuite plus eine echte Nachricht: HTML-Mail über *File → Save As* sichern und die Datei in einem Browser öffnen. Rot: Umlaute als Ersatzzeichen, weil die `Content-Type`-Zeile fehlt. G… |
 | **E-77** | ich | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in `ImapMailbox::… | am eigenen IMAP-Prüfserver (`tools/imap-pruefserver.pl`). Einen Ordner `Entwürfe` anlegen, abrufen, in der Postfachliste nachsehen. Rot: `Entw&APw-rfe`. Grün: `Entwürfe`. |
 | **E-113** | ich | alles — von Gregor angeordnet; die Vorbedingung E-112 ist seit 7.2.0.85 behoben, der Befund ist damit an der Reihe. Billig wäre ein Deckel beim Umb… | eine Nachricht mit einem Bild, das breiter ist als das Fenster. Rot: das Bild läuft rechts hinaus. Grün: es ist auf die Fensterbreite eingepasst. Danach Fenstergröße ändern und noch ein… |
 | **E-119** | ich | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… | `Testdaten/` um eine Nachricht mit `data:`-Bild ergänzen, darauf antworten. Rot: grauer Kasten im Verfassenfenster. Grün: das Bild. **Zuletzt belegt am Quelltext: 22.10.2026 an 7.2.0.121**… |
