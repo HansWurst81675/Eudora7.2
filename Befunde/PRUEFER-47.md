@@ -15,7 +15,7 @@ was sie messen soll.** Die Bedienung über das Menü *Transfer* endet im selben
 grünes E-125a ist ohne die Sperre nicht zu haben: in den Dateien des Laufs
 steht, dass der Entwurf durch den Zweig hinter der Sperre gegangen ist. **Kein
 Fund hält ein Release auf.** Acht Funde: einer ist ein neuer Befund am
-erlaubten Weg — **E-144**, ein Entwurf verliert beim Zurückschieben nach `Out`
+erlaubten Weg — **[E-144](../Intern/BEFUNDE.md#e-144)**, ein Entwurf verliert beim Zurückschieben nach `Out`
 die Antwortbezüge, im Original genauso. Vier sind Lücken im Prüfstand, die
 heute nichts verfälschen, aber den nächsten Fall verfälschen können. Drei sind
 falsche Sätze im Bericht.
@@ -433,13 +433,13 @@ Messskript den Kopfblock vor und nach der Gegenprobe vergleichen, ohne
   Verzeichnisse unter `C:\Temp`.
 * Kein Eudora gestartet, kein Fenster, nichts gebaut.
 * `perl tools/befund-suchen.pl` zu `bXferActive` (→ [E-141](../Intern/BEFUNDE.md#e-141), schon erfasst) und
-  zu `SendAgain` (→ [E-125](../Intern/BEFUNDE.md#e-125), [E-142](../Intern/BEFUNDE.md#e-142); Antwortbezüge nicht erfasst → E-144).
+  zu `SendAgain` (→ [E-125](../Intern/BEFUNDE.md#e-125), [E-142](../Intern/BEFUNDE.md#e-142); Antwortbezüge nicht erfasst → [E-144](../Intern/BEFUNDE.md#e-144)).
 
 ## Übersicht
 
 | Fund | Was passiert | Schwere | Hält ein Release auf? |
 |---|---|---|---|
-| [K2](#k2) = **E-144** | Antwortentwurf verliert `In-Reply-To`/`References` beim Zurückschieben nach `Out` | wichtig (Kopfzeilen, nicht die Nachricht) | nein — ungeändert seit dem ersten Stand |
+| [K2](#k2) = **[E-144](../Intern/BEFUNDE.md#e-144)** | Antwortentwurf verliert `In-Reply-To`/`References` beim Zurückschieben nach `Out` | wichtig (Kopfzeilen, nicht die Nachricht) | nein — ungeändert seit dem ersten Stand |
 | [K1](#k1) | E-125b erkennt die Ablehnung nur zusammen mit E-125c | gering (Prüfstand) | nein |
 | [K3](#k3) | Pfadschranke löst Verzeichnisverbindungen nicht auf; Löschen vor der Instanzprüfung | gering (heute keine Verbindung vorhanden) | nein |
 | [K4](#k4) | Prozessfilter `C:\Temp\E125` trifft `E125-alt` | gering (Fehlalarm in testlauf) | nein |
@@ -448,5 +448,5 @@ Messskript den Kopfblock vor und nach der Gegenprobe vergleichen, ohne
 | [K7](#k7) | 453 Spurmarken stammen nicht aus dem gemeldeten Lauf (dort 162) | Doku | nein |
 | [K8](#k8) | „der Entwurf steht wieder in Out" — es ist eine neu angelegte Kopie | Doku | nein |
 
-**E-144 vergeben** (für K2). **E-145 nicht vergeben.** Eingetragen in
-`Intern/BEFUNDE.md` ist E-144 noch nicht — das gehört nicht zu meinem Auftrag.
+**[E-144](../Intern/BEFUNDE.md#e-144) vergeben** (für K2). **E-145 nicht vergeben.** Eingetragen in
+`Intern/BEFUNDE.md` ist [E-144](../Intern/BEFUNDE.md#e-144) noch nicht — das gehört nicht zu meinem Auftrag.
