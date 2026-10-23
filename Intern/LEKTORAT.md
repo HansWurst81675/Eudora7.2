@@ -1782,6 +1782,29 @@ berichtigt. **Die Schranke aus
 [L-49.1](../Befunde/LEKTOR-49.md#l-49.1) gefangen, den schwersten Fund dieses
 Durchgangs.
 
+## Siebenundfünfzigster Durchgang — Gegenprüfung meiner E-101-Urteilsdrehung, 23.10.2026 (Bericht: `Befunde/LEKTOR-51b.md`)
+
+**Auftrag, wörtlich so gestellt:** *„Deine Aufgabe ist, meine Begründung zu widerlegen zu
+versuchen. Nicht sie zu bestätigen.“ An dieser einen Urteilsdrehung hing eine
+Auslieferung: durch sie meldete `tools/pruefe-datenverlust.pl` kein offener Weg
+mehr.
+
+**Ergebnis: das Paket darf gebaut werden — aber meine Begründung trug nicht.**
+Ich hatte nicht F2 widerlegt, sondern eine **falsche Umschreibung von F2**, die
+in `Intern/BEFUNDE.md` selbst stand. [PRUEFER-37](../Befunde/PRUEFER-37.md) sagt
+nicht „der Kern ist tot“, sondern „**Block 4a** ist tot“ (`:41`) und nennt den
+Ergänzungszweig selbst (`:248`). **F2 besteht fort** — das Tor `if ( bHatContentType )`
+(`msgutils.cpp:4276`) ist für jede empfangene Nachricht zu.
+
+**Warum der Riegel trotzdem fallen darf:** der Datenverlust in dieser Zeile ist
+**P-28**, behoben in 7.2.0.69 und von PRUEFER-37 in 23 Fällen gegengeprüft. F2
+trägt dort ausdrücklich *„hoch (Wirkung), **kein Schaden**“* und hat den Riegel
+nie inhaltlich begründet — es stand nur in derselben Tabellenzeile.
+
+Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
+([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
+einzigen Fall mit taboo-geschnittenem Kopf.
+
 ## Sechsundfünfzigster Durchgang — Bestandsprüfung nach dem E-125-Bau, 23.10.2026 (Bericht: `Befunde/LEKTOR-51.md`)
 
 **22 Funde an 29 Dateien** — 9 falsch, 8 veraltet, 5 unvollständig. Geprüft

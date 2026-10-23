@@ -330,6 +330,8 @@ nicht selbst messen kann*.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-140](BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
+| **[E-139](BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt bei jeder Gelegenheit wieder … | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | der Hinweis in [Doku/ANWENDER.md](../Doku/ANWENDER.md) und in der `LIESMICH.txt` des Pakets — **das ZIP vor dem Entpacken** entsperren (Rechtsklick … |
 | **[E-137](BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | **nie gemessen** | die Messung, was Eudora tatsaechlich beendet - dass der Befehl unbehandelt bleibt, erklaert nur, dass nichts geschieht, nicht dass das Programm zugeht… |
 | **[E-136](BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
