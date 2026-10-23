@@ -243,9 +243,19 @@ $b .= "| Stufe | Zahl |\n|---|---|\n";
 $b .= "| kritisch | $zahl{kritisch} |\n| wichtig | $zahl{wichtig} |\n";
 $b .= "| unkritisch | $zahl{unkritisch} |\n| werkzeug | $zahl{werkzeug} |\n\n";
 $b .= "Von den **$k_alle kritischen** Befunden haben\n\n";
+# KEINE AUFTEILUNG, SONDERN ZWEI GRUPPEN UND EINE UEBERSCHNEIDUNG
+# (23.10.2026, nach LEKTOR L-51.3). Die drei Zeilen lasen sich wie eine
+# Aufteilung, und ihre Summe 16+1+51 ergab 68 statt 67 - LEKTOR hat daraus
+# geschlossen, die Zahl sei falsch. Sie ist es nicht: die manuelle Zeile
+# UEBERSCHNEIDET sich mit der automatischen (E-132 hat beides). Gesagt
+# wurde das nirgends, also stand da eine Rechnung, die nicht aufgeht.
 $b .= "* **" . ($k_ges  // '?') . "** einen automatischen Testfall,\n";
-$b .= "* **" . ($k_man  // '?') . "** einen manuellen Fall im [Testplan](../Intern/TESTPLAN.md),\n";
-$b .= "* **" . ($k_ohne // '?') . "** bisher **keine Pruefung**.\n\n";
+$b .= "* **" . ($k_ohne // '?') . "** bisher **keine Pruefung**.\n";
+$b .= "\nDazu **" . ($k_man // '?') . "** mit einem manuellen Fall im "
+    . "[Testplan](../Intern/TESTPLAN.md) \x{2014} diese Zahl **ueberschneidet sich** mit der "
+    . "ersten Zeile, ein Befund kann beides haben (E-132 hat beides). Die Aufteilung sind "
+    . "die ersten beiden Zeilen, und sie geht auf: "
+    . (($k_ges // 0) + ($k_ohne // 0)) . " von $k_alle.\n\n";
 $b .= "Die letzte Zahl ist der Rueckstand. Solange sie nicht null ist, sagt ein\n";
 $b .= "gruener Bericht nicht, dass nichts kaputt ist - er sagt, dass nichts von dem\n";
 $b .= "kaputt ist, was geprueft wird.\n\n";
