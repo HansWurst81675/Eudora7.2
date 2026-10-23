@@ -123,3 +123,4 @@
 - [Stand 23.10.2026 spät](stand-23-10-2026-spaet.md) — PR 156, BILDBREITE abgebrochen (Dateien im Baum wt-bildbreite), Regressionstests zuerst
 - [Vereinbartes vor Neuem](vereinbartes-vor-neuem.md) — vereinbarte Voraussetzungen (Regressionstests vor 7.2.1.0) vor jedem neuen Thema; Gregor musste am 23.10. nachfragen
 - [Befund in Klartext](befund-in-klartext.md) — Gregor versteht BEFUNDE.md nicht mehr; jede Zeile vorn drei Sätze ohne Kürzel, Herleitung dahinter; was er mangels Post nicht testen kann, stelle ich nach
+- [Testschritt nennt den Ort](testschritt-nennt-den-ort.md) — jedes Postfach in einer Anweisung eindeutig (lokal oder IMAP); am 23.10. traf Gregors Lauf deshalb E-142 statt E-144
