@@ -390,3 +390,43 @@ mit abgeschalteter Regel 5 rot; die echte `PAKETE.md`-Zeile von 06:10 weist
 sie in einem Wegwerf-Repo ab, berichtigt lässt sie sie durch. Für die beiden
 Perl-Fallen gibt es keine Schranke: sie stehen in Wegwerfskripten im
 Scratchpad, die kein Haken sieht.
+
+## Neunzehnter und zwanzigster Fall, 23.10.2026: beide außerhalb der Schranke
+
+Gregor am 23.10.2026, nachdem es zweimal in einer Stunde passiert war:
+*„wie oft hast du denn seit dem beginn des projektes irgendwelche zeichen
+(backslash) verloren? das ist ja jetzt irgendwie ungünstig, kostet uns jedes
+mal zeit!"*
+
+Gezählt: **20 Fälle seit dem 06.09.2026**, davon 18 in dieser Datei schon
+aufgeschrieben. Die beiden neuen während des Baus von E-125:
+
+| Absicht | Weg | Ergebnis |
+|---|---|---|
+| Die Projektmappe bauen | `powershell -File tools\bauen.ps1` **über das Bash-Werkzeug** | PowerShell bekam `toolsbauen.ps1` und meldete *„Das Argument … ist nicht vorhanden"*. Der Lauf endete mit **Rückgabe 0** — ein falsches Grün, das nur aufgefallen ist, weil ich die Ausgabe gelesen habe statt den Rückgabewert |
+| In `EudoraRes.rc` eine `LTEXT`-Zeile mit den **wörtlichen** Zeichen `\r\n` schreiben | `\r\n` in einem Hier-Dokument, das ein Perl-Skript schreibt | Im Perl-Quelltext stand nur noch `\r\n`, Perl machte daraus **echte CR/LF**. Die Zeichenkette der Ressource war damit über drei Zeilen zerrissen. Gefunden an der Byte-Messung: `CRLF 0` → `CRLF 2` |
+
+**Why:** `tools/pruefe-rueckstrich.pl` hat in beiden Fällen nichts gemeldet —
+zu Recht, denn sie liegen außerhalb ihres Umfangs. Sie liest den **Zuwachs
+einer `.md`**. Fall 19 schrieb überhaupt keine Datei, der Verlust lag im
+Argument eines Befehls; Fall 20 schrieb eine `.rc`. Eine Schranke, die nur
+einen von drei Wegen bewacht, erzeugt genau das Gefühl, das Gregor beschreibt:
+es ist aufgeschrieben, es gibt ein Werkzeug, und es passiert trotzdem weiter
+([[schranke-gehoert-in-den-haken]]).
+
+**How to apply, ab sofort:**
+
+- **Kein Windows-Pfad mit Rückstrich durch das Bash-Werkzeug.** Windows und
+  PowerShell nehmen den Schrägstrich überall an, wo ein Pfad steht:
+  `tools/bauen.ps1` statt `tools\bauen.ps1`. Damit entfällt Fall 19 als Klasse,
+  ohne dass irgendetwas zu prüfen wäre.
+- **Der Rückgabewert eines Bauskripts allein ist kein Ergebnis.** Gelesen wird
+  die Ausgabe ([[erfolgsmeldung-aus-dem-ergebnis]]). In Fall 19 stand
+  `Rückgabe 0` über einer Fehlermeldung.
+- **Ein wörtlicher Rückstrich gehört nie in ein Hier-Dokument, das Quelltext
+  schreibt.** Entweder `chr(92)` im Perl-Skript, oder — besser — die Stelle so
+  formulieren, dass sie ohne Rückstrich auskommt. In Fall 20 war die Lösung
+  eine `LTEXT`-Zeile ohne Zeilenumbruch: der Dialog bricht den Text selbst um.
+- **Die Byte-Messung nach jedem Schreibzugriff bleibt die Fangstelle, die
+  wirklich greift.** Sie hat Fall 20 gefangen, und zwar sofort
+  ([[zeilenenden-nach-jedem-schreibzugriff-messen]]).

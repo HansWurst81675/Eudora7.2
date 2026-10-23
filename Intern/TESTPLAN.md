@@ -574,6 +574,31 @@ das Suchsystem gar nichts ins Protokoll.
 **Schritt 4 ist der wichtigere.** Ohne ihn weiß niemand, ob Schritt 2 grün
 war, weil alles stimmt, oder weil die Stelle gar nicht erreicht wurde.
 
+### <a id="m3-e125"></a>M3 — E-125: Ziehen nach `Out` muss abgelehnt werden
+
+**Warum manuell.** Der Weg geht über Ziehen-und-Ablegen zwischen zwei
+Postfachfenstern und endet in einem modalen Dialog. Der Prüfstand kann ihn
+nicht auslösen. Was sich automatisch prüfen lässt, ist die **Stelle** im
+Quelltext und die Ressource — das tun die beiden Testfälle in
+`Eudora71/Tests/TestE125.cpp` (gegengetestet: gegen den alten Stand fallen
+beide um, bei einer zu weiten Bedingung `if (ToOut)` fällt der erste mit der
+Begründung *„trifft jetzt AUCH verfasste Nachrichten"*).
+
+**Vorbereitung.** Ein Konto mit Post im Eingang und ein `Out`-Postfach.
+In der `Eudora.ini` muss `LogLevel` die Maske **32768** (`DEBUG_MASK_MISC`)
+enthalten, sonst fehlt die Spurmarke.
+
+| Schritt | Was zu tun ist | Was herauskommen muss |
+|---|---|---|
+| 1 | Eine **empfangene** Nachricht aus `In` (oder einem IMAP-Ordner) nach `Out` ziehen | Der Hinweis *„Messages can't be transferred to the Out mailbox. To send this message again, open it and choose Message > Send Again."* mit **einem** Knopf (OK). **Kein** *„Transfer anyway?"* |
+| 2 | OK drücken, dann `Out` ansehen | `Out` enthält **keine** neue Nachricht. Es erscheint **kein** *„No messages were transferred!"* |
+| 3 | Ins `eudora.log` sehen | Eine Zeile `E-125 Xfer nach Out abgelehnt: quelle=… ziel=Out kopie=0 einzeln=…` |
+| 4 | **Gegenprobe:** eine **selbst verfasste**, noch nicht gesendete Nachricht (Entwurf) nach `Out` ziehen | Das muss **weiterhin gehen** — die Nachricht wird zum Senden eingereiht, kein Hinweisdialog, keine `E-125`-Zeile im Protokoll |
+
+**Schritt 4 ist der wichtigere.** Ohne ihn ist nicht zu unterscheiden, ob die
+Ablehnung den richtigen Fall trifft oder einfach jedes Ziehen nach `Out`
+abwürgt — und damit das Einreihen zum Senden kaputtmacht.
+
 ## Teil D — Wie dein Urteil ins Repo kommt
 
 Ein Urteil zählt nur mit **Paketnummer**. Ohne sie ist es wertlos — das ist

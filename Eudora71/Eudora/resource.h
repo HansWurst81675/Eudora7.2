@@ -182,6 +182,7 @@
 #define IDD_QUERY_DELETE                275
 #define IDD_STRIP_HEADERS               276
 #define IDD_SELF_TRANSFER               277
+#define IDD_XFER_TO_OUT_REFUSED         8117
 #define IDD_CHANGE_QUEUEING             278
 #define IDD_SEND_QUEUED                 279
 #define IDD_SEND_QUEUED_12              280
@@ -4471,7 +4472,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        8117
+#define _APS_NEXT_RESOURCE_VALUE        8118
 #define _APS_NEXT_COMMAND_VALUE         8093
 #define _APS_NEXT_CONTROL_VALUE         8318
 #define _APS_NEXT_SYMED_VALUE           8077

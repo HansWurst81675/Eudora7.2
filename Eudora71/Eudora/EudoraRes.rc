@@ -2038,6 +2038,19 @@ BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,4,45,20,20
 END
 
+IDD_XFER_TO_OUT_REFUSED DIALOGEX 0, 0, 220, 85
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | 
+    WS_CAPTION | WS_SYSMENU
+CAPTION "Transfer to Out mailbox"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,85,65,50,14
+    LTEXT           "Messages can't be transferred to the Out mailbox.  To send this message again, open it and choose Message > Send Again.",
+                    IDC_ALERT_TEXT,37,8,175,50
+    ICON            32515,IDC_ICON1,4,8,20,20
+    ICON            IDR_MAINFRAME,IDC_STATIC,4,59,20,20
+END
+
 IDD_CHANGE_QUEUEING DIALOGEX 0, 0, 175, 145
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CONTEXTHELP | WS_POPUP | 
     WS_VISIBLE | WS_CAPTION | WS_SYSMENU
