@@ -1805,6 +1805,19 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Achtundfünfzigster Durchgang — nach PR #155 (E-125 an 1.0.122 geprüft), 23.10.2026 (Bericht: `Befunde/LEKTOR-53.md`)
+
+**21 Funde** — 7 falsch, 6 veraltet, 5 Widersprüche, 2 unvollständig, 1 Form.
+Geprüft wurde der ganze Bestand, nicht der Diff. In den sechs Dateien, die
+PR #155 angefasst hat, steht Gregors Test von [E-125](BEFUNDE.md#e-125)
+richtig. **Fünf weitere sagen noch, der Test fehle**
+([L-53.1](../Befunde/LEKTOR-53.md#l-53.1) bis
+[L-53.5](../Befunde/LEKTOR-53.md#l-53.5)). Am Maßstab für 7.2.1.0 hat sich von
+acht vorgelegten Widerspruchskandidaten sechs bestätigt, einer zum Teil,
+einer nicht. Dazu sechs Fragen an Gregor, darunter der Name des Releases
+([L-53.16](../Befunde/LEKTOR-53.md#l-53.16): `release-veroeffentlichen.ps1`
+kann keine Marke `v7.2.1.0` erzeugen).
+
 ## Siebenundfünfzigster Durchgang — nach dem Paket 1.0.122, 23.10.2026 (Bericht: `Befunde/LEKTOR-52.md`)
 
 **14 Funde** — 5 falsch, 6 veraltet, 2 unvollständig, 1 Form. Geprüft wurden

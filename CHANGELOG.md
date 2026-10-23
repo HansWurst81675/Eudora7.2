@@ -29,6 +29,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen (`compmsgd.cpp:2167`) und den Fehler einmal am Programm sehen. |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
 | **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen liegt danach doppelt da — als Kopie i… | **nie gemessen** | zweierlei, und das zweite ist Gregors Entscheidung. Erstens die Fehlmeldung — sie fällt mit der Berichtigung aus [E-141](#e-141) von selbst weg. Zw… |
 | **[E-141](Intern/BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Berichtigung in `tocdoc.cpp:3134` — die Klammer um den Oder-Teil ziehen, so dass die Anzahlprüfung für **beide** Seiten gilt. Sie schließt Fe… |
@@ -103,7 +104,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
 
-**Übersetzt am 23.10.2026 und als Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.122-release` bereitgestellt; kein ZIP, nicht veröffentlicht.** 277 Tests, 277 bestanden.
+**Übersetzt am 23.10.2026, als Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.122-release` bereitgestellt und als ZIP geschnürt; nicht veröffentlicht.** 277 Tests, 277 bestanden.
 
 **Was der Anwender merkt.** Zieht er eine **empfangene** Nachricht nach `Out`,
 kommt ein Hinweis mit **einem** Knopf:
@@ -151,11 +152,12 @@ gefunden** — die erste Fassung war halb, und der Test dazu war blind:
   IMAP-Merker und die Eindeutigkeit der Ressourcenkennung. Beide Gegenproben
   erneut gefahren, beide rot.
 
-**Was noch fehlt:** Gregors Lauf am Programm. Der Weg geht über
-Ziehen-und-Ablegen und endet in einem modalen Dialog, den der Prüfstand nicht
-auslösen kann. Die vier Schritte stehen als
-[TESTPLAN M3](Intern/TESTPLAN.md#m3-e125); Schritt 4 ist die Gegenprobe mit
-einem Entwurf.
+**Geprüft am 23.10.2026.** Gregor hat an 1.0.122 bestätigt, dass eine
+empfangene Nachricht abgelehnt wird. Die Gegenprobe mit einem Entwurf fährt
+der Prüfstand über das Menü *Transfer*, als Regressionsfälle `E-125a` bis
+`E-125c`; gegen 7.2.0.120 werden zwei der drei rot, die Gegenprobe bleibt dort
+erwartungsgemäß grün. Einzelheiten im
+[Testbericht](Intern/TESTBERICHT-E125.md).
 
 ## 7.2.0.121 — `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus ([E-111](Intern/BEFUNDE.md#e-111))
 
