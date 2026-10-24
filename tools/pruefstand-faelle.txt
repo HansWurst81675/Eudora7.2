@@ -148,3 +148,34 @@ E-118 | C:\Temp\E118 | 60 | log | E-118 Bild: | | Testdaten/e118-eingebettetes-b
 E-125a | C:\Temp\E125 | 120 | messung | E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0 | | | messen=tools\messen-e125.ps1
 E-125b | C:\Temp\E125 | 120 | messung | E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1 | | | messen=tools\messen-e125.ps1
 E-125c | C:\Temp\E125 | 120 | log | E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out | E-125 Xfer nach Out abgelehnt: quelle=Trash | | messen=tools\messen-e125.ps1
+# -------------------------------------------------------------------------
+# Bilddarstellung - Gregor am 23.10.2026: "ich denke, wir sollen zuminstest
+# die regression tests haben, die mit der darstellung der bilder zu tun
+# haben. so koennen wir sie dann alle ausfuehren, nachdem du mit E-113 und
+# E-119 fertig bist. um zu pruefen, dass nichts kaputt ging."
+# -------------------------------------------------------------------------
+# tools/messen-bild.ps1 stellt fuenf Pruefnachrichten aus Testdaten/ per POP
+# zu, oeffnet jede und leitet sie weiter. Die Werte unten sind am 24.10.2026
+# an 7.2.0.122 (Bau mit E-116) gemessen und GLEICH an 7.2.0.120 - sie sind
+# der Stand, der nach E-113 und E-119 noch stehen muss.
+#
+# Pruefstand C:\Temp\EBILD: Paket plus aktueller Bau, Konto pruef@127.0.0.1
+# auf POP-Port 11110, SSLReceiveUse=0 (ohne das will Eudora verschluesselt
+# abholen und bekommt "connection refused"), SavePassword=1,
+# SavePasswordText=eA==, LogLevel=58527.
+#
+# NICHT abgedeckt, am 24.10.2026 gemessen: (1) E-116 - auch 7.2.0.120 malt
+# width="35px" als 35x35; auf dem Weg Oeffnen/Weiterleiten sieht Paige den
+# Wert offenbar schon ohne Einheit. (2) In der E-112-Nachricht erscheinen
+# 250x96 und 70x70 nicht im Protokoll - an 7.2.0.120 genauso, also keine
+# Verschlechterung, aber ungeklaert.
+E-103p | C:\Temp\EBILD | 240 | log | E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64 | | | messen=tools\messen-bild.ps1
+E-112p | C:\Temp\EBILD | 240 | log | E-112 Metadatei: angegeben=35x35 Datei=330x327 gemalt=35x35 | | | messen=tools\messen-bild.ps1
+E-112f2 | C:\Temp\EBILD | 240 | log | E-112 Metadatei: angegeben=150x0 Datei=985x378 gemalt=150x58 | | | messen=tools\messen-bild.ps1
+E-112n1 | C:\Temp\EBILD | 240 | log | E-112 Metadatei: angegeben=600x0 Datei=985x378 gemalt=600x230 | | | messen=tools\messen-bild.ps1
+E-112h | C:\Temp\EBILD | 240 | log | E-112 Metadatei: angegeben=0x600 Datei=330x327 gemalt=606x600 | | | messen=tools\messen-bild.ps1
+E-106p | C:\Temp\EBILD | 240 | log | E-106 groesser als angegeben: attr=35x35 quelle=330x327 | | | messen=tools\messen-bild.ps1
+E-110p | C:\Temp\EBILD | 240 | log | E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1 | | | messen=tools\messen-bild.ps1
+E-105p | C:\Temp\EBILD | 240 | log | E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet | | | messen=tools\messen-bild.ps1
+E-108p | C:\Temp\EBILD | 240 | log | Logging shutdown | Exception | | messen=tools\messen-bild.ps1
+BILD-lauf | C:\Temp\EBILD | 240 | messung | BILD ERGEBNIS abgeholt=5 geoeffnet=5 weitergeleitet=5 | | | messen=tools\messen-bild.ps1
