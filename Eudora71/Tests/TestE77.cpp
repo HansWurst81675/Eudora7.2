@@ -12,6 +12,7 @@
 
 #include "TinyTest.h"
 #include "UnderTestE77.h"
+#include "Quelltext.h"
 
 static void Hin(const char* szServer, const char* szAnzeige)
 {
@@ -51,6 +52,60 @@ void RunE77Tests(void)
 		TT_CHECK_MSG(!E77Utf7Dekodieren("&Ti0-", szAus, sizeof(szAus)), "U+4E2D muss als nicht darstellbar scheitern");
 		TT_CHECK_MSG(!E77Utf7Dekodieren("Entw&APw", szAus, sizeof(szAus)), "ein Abschnitt ohne \"-\" muss scheitern");
 		TT_CHECK_MSG(!E77Utf7Kodieren("Entw\xFCrfe", szAus, 5), "zu kleiner Puffer muss scheitern");
+	}
+	TT_EndTest();
+}
+
+// E-77 Umbenennen (PRUEFER-49 K1, K2): der Server bekam beim Umbenennen den
+// kodierten Namen, Eudora fuehrte den Ordner danach aber unter dem
+// UNKODIERTEN weiter (UpdateAfterRename) und schickte ihn beim naechsten
+// Zugriff - am Pruefstand gemessen: SELECT "Ablage-\xE4", vom Server
+// abgelehnt. Beim Umbenennen von INBOX wurde gar nicht kodiert. Beide Stellen
+// sitzen in Funktionen, die ohne Konto und Fenster nicht aufzurufen sind;
+// geprueft wird deshalb der QUELLTEXT ohne Kommentare. Am Verhalten misst
+// es tools\messen-e77-umbenennen.ps1 (Pruefstandsfall E-77d).
+void RunE77QuelltextTests(const char* szEudoraDir)
+{
+	TT_Suite("E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext)");
+
+	TT_BeginTest("E-77 K1: UpdateAfterRename fuehrt den kodierten Namen");
+	{
+		char* pCode = QT_LiesNurCode(szEudoraDir, "..\\EuImap\\src\\QCImapMailboxDirector.cpp");
+		if (!pCode) { TT_Fail("QCImapMailboxDirector.cpp nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
+		char* pRumpf = QT_Abschnitt(pCode, "BOOL QCMailboxDirector::UpdateAfterRename (QCImapMailboxCommand",
+										   "pImapCommand->SetImapName (szNewFullImapName);");
+		TT_CHECK_MSG(pRumpf != NULL, "UpdateAfterRename bis SetImapName nicht gefunden");
+		if (pRumpf)
+		{
+			TT_CHECK_MSG(QT_Enthaelt(pRumpf, "szNewFullImapName = E77ImapNameFuerServer(pNewName);"),
+						 "oberste Ebene: der gefuehrte Name ist nicht mehr kodiert");
+			TT_CHECK_MSG(QT_Enthaelt(pRumpf, "szNewFullImapName += E77ImapNameFuerServer(pNewName);"),
+						 "Unterordner: der gefuehrte Name ist nicht mehr kodiert");
+			TT_CHECK_MSG(!QT_Enthaelt(pRumpf, "= pNewName;"),
+						 "der getippte Name geht wieder roh in den IMAP-Namen");
+			free(pRumpf);
+		}
+		free(pCode);
+	}
+	TT_EndTest();
+
+	TT_BeginTest("E-77 K2: RenameMailbox kodiert an allen fuenf Stellen, INBOX eingeschlossen");
+	{
+		char* pCode = QT_LiesNurCode(szEudoraDir, "..\\EuImap\\src\\ImapAccount.cpp");
+		if (!pCode) { TT_Fail("ImapAccount.cpp nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
+		char* pRumpf = QT_Abschnitt(pCode, "BOOL CImapAccount::RenameMailbox(", "BOOL CImapAccount::RenameMailboxOnServer(");
+		TT_CHECK_MSG(pRumpf != NULL, "CImapAccount::RenameMailbox nicht gefunden");
+		if (pRumpf)
+		{
+			TT_CHECK_MSG(QT_Zaehle(pRumpf, "E77ImapNameFuerServer(szNewImapName)") == 5,
+						 "nicht alle fuenf Stellen (INBOX zweimal, ohne Trenner, oberste Ebene, Unterordner) kodieren");
+			TT_CHECK_MSG(!QT_Enthaelt(pRumpf, "= szNewImapName;"),
+						 "INBOX: der neue Name geht wieder roh an den Server");
+			TT_CHECK_MSG(!QT_Enthaelt(pRumpf, "prefix + szNewImapName;"),
+						 "INBOX mit Praefix: der neue Name geht wieder roh an den Server");
+			free(pRumpf);
+		}
+		free(pCode);
 	}
 	TT_EndTest();
 }

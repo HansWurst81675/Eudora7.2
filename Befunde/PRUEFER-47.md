@@ -448,5 +448,5 @@ Messskript den Kopfblock vor und nach der Gegenprobe vergleichen, ohne
 | [K7](#k7) | 453 Spurmarken stammen nicht aus dem gemeldeten Lauf (dort 162) | Doku | nein |
 | [K8](#k8) | „der Entwurf steht wieder in Out" — es ist eine neu angelegte Kopie | Doku | nein |
 
-**[E-144](../Intern/BEFUNDE.md#e-144) vergeben** (für K2). **E-145 nicht vergeben.** Eingetragen in
+**[E-144](../Intern/BEFUNDE.md#e-144) vergeben** (für K2). **[E-145](../Intern/BEFUNDE.md#e-145) nicht vergeben.** Eingetragen in
 `Intern/BEFUNDE.md` ist [E-144](../Intern/BEFUNDE.md#e-144) noch nicht — das gehört nicht zu meinem Auftrag.

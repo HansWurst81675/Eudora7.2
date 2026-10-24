@@ -202,3 +202,11 @@ E-119c | C:\Temp\EBILD | 240 | log | data-2eaa4a58.png laenge=1574 | | | messen=
 E-77a | C:\Temp\E77 | 40 | messung | E77 ERGEBNIS roh=0 dekodiert=2 | | | messen=tools\messen-e77.ps1
 E-77b | C:\Temp\E77 | 40 | log | E-77 Ordnername: server="Entw&APw-rfe" | | | messen=tools\messen-e77.ps1
 E-77c | C:\Temp\E77 | 40 | log | E-77 Ordnername: server="Gel&APY-scht" | | | messen=tools\messen-e77.ps1
+# E-77 Umbenennen (24.10.2026, PRUEFER-49 K1): "Ablage" im Postfachbaum in
+# "Ablage-ae" umbenennen, dann oeffnen. tools/messen-e77-umbenennen.ps1 startet
+# dafuer selbst den IMAP-Pruefserver (Port 1143), der jetzt RENAME kennt und
+# rohe 8-Bit-Namen wie ein echter Server ablehnt. Gemessen an 7.2.0.122 vor
+# der Behebung: RENAME ging kodiert hinaus, danach SELECT "Ablage-\xE4" ->
+# BAD, mboxlist.lst fuehrte den rohen Namen - rot. Nach der Behebung: SELECT
+# Ablage-&AOQ- -> OK. Pruefstand C:\Temp\E77U ist eine Kopie von C:\Temp\E77.
+E-77d | C:\Temp\E77U | 40 | messung | E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0 | 8-BIT IM POSTFACHNAMEN | | messen=tools\messen-e77-umbenennen.ps1

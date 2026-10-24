@@ -2995,7 +2995,7 @@ BOOL CImapAccount::RenameMailbox(QCImapMailboxCommand *pImapCommand,
 	if (strOldImapName.CompareNoCase ( CRString (IDS_IMAP_RAW_INBOX_NAME) ) == 0)
 	{
 		// The default.
-		strNewFullImapName = szNewImapName;
+		strNewFullImapName = E77ImapNameFuerServer(szNewImapName);   // BEFUND E-77 (PRUEFER-49 K2)
 
 		// For INBOX, the delimiter is the account's delimiter.
 		//
@@ -3010,7 +3010,7 @@ BOOL CImapAccount::RenameMailbox(QCImapMailboxCommand *pImapCommand,
 			if (cDelimiter && prefix.Right ( 1 ) != cDelimiter)
 				prefix += cDelimiter;
 
-			strNewFullImapName = prefix + szNewImapName;
+			strNewFullImapName = prefix + E77ImapNameFuerServer(szNewImapName);   // BEFUND E-77 (PRUEFER-49 K2)
 		}
 	}
 	else
