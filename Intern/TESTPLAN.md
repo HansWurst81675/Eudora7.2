@@ -13,7 +13,7 @@ sagte nicht, wie man überhaupt einen Entwurf außerhalb von `Out` bekommt. Ich
 habe sie am selben Tag am Prüfstand gefahren. Sie läuft jetzt bei jedem
 Regressionslauf automatisch mit, und die Schritte in M3 sind neu geschrieben.
 
-**Vor dem Release 7.2.1.0** bleiben die Fälle aus [Teil M](#m1-e132) von Hand
+**Vor dem Release 7.2.1** bleiben die Fälle M1 und M3 aus [Teil M](#m1-e132) von Hand
 zu fahren.
 
 **Die drei Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
@@ -624,8 +624,9 @@ als ein einziger Satz, *„eine selbst verfasste, noch nicht gesendete Nachricht
 nicht durchführbar abgelehnt.
 
 **Was nicht ins Paket gehört, aber hierher:** ein Entwurf aus einem
-**IMAP**-Ordner nach `Out` liegt danach doppelt da
-([E-142](BEFUNDE.md#e-142)). Deshalb in 4b das lokale `Trash`.
+**IMAP**-Ordner nach `Out` ergibt dort eine **leere** Nachricht und die
+Meldung *„No messages were transferred!"* ([E-142](BEFUNDE.md#e-142), von
+Gregor am 23.10.2026 genau so gesehen). Deshalb in 4b das **lokale** `Trash`.
 
 ## Teil D — Wie dein Urteil ins Repo kommt
 

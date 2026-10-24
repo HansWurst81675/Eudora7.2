@@ -544,6 +544,13 @@ schranke pruefe-behoben-ausgeliefert.pl || exit $?
 #      (Arbeitsweise/schranke-gehoert-in-den-haken.md).
 schranke offene-befunde.pl || exit $?
 
+# 19c. Jede neu geschriebene Befundzeile beginnt mit ihrem Urteil. Seit dem
+#      24.10.2026: am 23.10.2026 begannen E-142 und E-144 mit "**Kurz: ...**",
+#      und offene-befunde.pl (19b) sah sie nicht mehr - es liest das erste
+#      Fettgedruckte als Urteil (LEKTOR-54, L-54.1). Gregor: "stelle sicher,
+#      dass neu geschriebene ziele nicht uebersehen werden."
+schranke pruefe-befund-anfang.pl || exit $?
+
 # 15b. Keine persoenlichen Daten in Testdaten/. Gregor am 18.09.2026, als er
 #      das Verzeichnis angeordnet hat: "aber: keine persoenlichen inhalte
 #      (mail adresse oder namen)." Die Testnachrichten stammen aus seinem

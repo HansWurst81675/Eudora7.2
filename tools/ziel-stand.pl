@@ -122,7 +122,9 @@ for my $zeile (split /\n/, $befunde) {
 }
 
 # --- 2. Die Zeilen des Massstabs -----------------------------------------
-my ($tab) = $zieltext =~ /## Maßstab für die Fassung 7\.2\.1\.0(.*?)\*\*Ausdrücklich nicht/s
+# Die Ueberschrift hiess bis zum 24.10.2026 "... Fassung 7.2.1.0"; seit Gregors
+# Versionsregel (7.2.1.<Buildnummer>) "... Fassung 7.2.1". Beide werden erkannt.
+my ($tab) = $zieltext =~ /## Maßstab für die Fassung 7\.2\.1(?:\.0)?\b(.*?)\*\*Ausdrücklich nicht/s
     or die "  ziel-stand: die Massstabstabelle ist nicht zu finden.\n";
 # DEN EIGENEN BLOCK WEGWERFEN (22.10.2026). Der erzeugte Stand steht INNERHALB
 # des Abschnitts; ohne diese Zeile zaehlt das Werkzeug seine eigene Ausgabe als

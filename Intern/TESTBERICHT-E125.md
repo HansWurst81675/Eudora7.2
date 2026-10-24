@@ -57,7 +57,8 @@ wenn er zurückkommt.
   * [E-141](BEFUNDE.md#e-141): Eine Übertragung nach `Out` stößt die ganze
     IMAP-Nachbearbeitung an.
   * [E-142](BEFUNDE.md#e-142): Ein IMAP-Entwurf, der nach `Out` gezogen wird,
-    liegt danach doppelt da.
+    ergibt dort eine leere Nachricht (von Gregor am 23.10.2026 gesehen; hier
+    stand zuerst „liegt danach doppelt da").
   * [E-143](BEFUNDE.md#e-143): Aus der Suche und aus Filtern kommt der Hinweis
     einmal je Nachricht.
 * **Nebenbei gesehen:** Beim Speichern des Entwurfs kam jedes Mal der Hinweis
