@@ -1805,6 +1805,40 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Einundsechzigster Durchgang — nach PR #166 bis #169 (E-77 Umbenennen, Regressionstests, Gregors Entscheidungen vom 24.10.2026), 24.10.2026 (Bericht: `Befunde/LEKTOR-56.md`)
+
+**10 neue Funde**: 2 falsch, 1 Widerspruch, 3 veraltet, 4 unvollständig.
+Von den 19 Funden aus LEKTOR-55 sind 2 erledigt, 4 teilweise und 13 offen.
+Geprüft wurde der ganze Bestand (60 MDs ohne `Arbeitsweise/` und
+`Befunde/`), nicht der Diff.
+
+**Der schwerste Fund: Der Maßstab meldet „Alle Zeilen des Maßstabs sind
+erfüllt"** ([L-56.1](../Befunde/LEKTOR-56.md#l-56.1)). LEKTOR-55 hatte das
+für den Tag vorhergesagt, an dem E-116 geschlossen wird, und Gregor hat das
+Schließen am 24.10.2026 entschieden. In derselben Datei heißen Kriterium 2
+und 4 weiter *„fast"*. Gregors Abnahme hat nicht stattgefunden, und vier der
+als erfüllt gezählten Behebungen stecken in keinem Paket.
+
+**E-142** (ein Entwurf aus einem IMAP-Ordner ergibt in `Out` eine leere
+Nachricht): Gregor hat einen Hinweis statt einer Behebung entschieden. Das
+steht nur angehängt am Ende der Zeile. Urteil, Kurzsatz (*„Verloren geht
+nichts"*) und beide erzeugten Listen verlangen weiter *„Ursache messen, dann
+beheben"*. Der Hinweis steht in keiner Arbeitsliste, und die README nennt
+den Fall nicht ([L-56.2](../Befunde/LEKTOR-56.md#l-56.2)).
+
+**Sechs Lücken aus PRÜFER-49** stehen nur in Zeilen, die *behoben* heißen,
+und zählen deshalb nirgends ([L-56.6](../Befunde/LEKTOR-56.md#l-56.6)). Eine
+davon, K3, tritt mit dem Paket 7.2.0.123 erst auf: Ältere gespeicherte
+Nachrichten mit Ablage in einen Umlaut-Ordner legen ihre Kopie ohne Meldung
+nicht mehr ab.
+
+**`Releases/PRUEFBERICHT.md`** nennt ein Paket 1.0.121, das nie geschnürt
+wurde, und ist seit dem 23.10.2026 um 08:00 nicht neu erzeugt. Der Grund:
+Kein Werkzeug ruft `pruefbericht.pl` auf. Die Datei zeigt nur Zahlen, keine
+Tests ([L-56.7](../Befunde/LEKTOR-56.md#l-56.7)).
+
+Eine Frage an Gregor: der Name der Marke auf GitHub.
+
 ## Sechzigster Durchgang — vor dem Paket 7.2.0.123, nach PR #161 bis #165 (E-77, E-113, E-116, E-119, E-130), 24.10.2026 (Bericht: `Befunde/LEKTOR-55.md`)
 
 **19 Funde** — 5 veraltet, 5 Widersprüche, 5 unvollständig, 3 falsch, 1 Form.
