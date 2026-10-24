@@ -57,7 +57,7 @@ Die Reihenfolge ist wichtig, und sie ist kurz:
    [WEITERMACHEN.md](Intern/WEITERMACHEN.md) nennt zu jedem Punkt **was noch fehlt**,
    nicht nur, wie er eingestuft ist.
 3. **[ZIEL.md](ZIEL.md)** — woran „fertig" gemessen wird. Neun Kriterien plus
-   der Maßstab für die Fassung 7.2.1.0. **ZIEL.md ist die Quelle**; widerspricht
+   der Maßstab für die Fassung 7.2.1. **ZIEL.md ist die Quelle**; widerspricht
    ihr eine andere Datei, weist `tools/doku-pruefen.pl` den Commit ab.
 
 Mehr braucht es zum Anfangen nicht.
@@ -72,7 +72,7 @@ da, nicht zum Lesen.
 |---|---|
 | [README.md](README.md) | diese Datei: Einstieg und Wegweiser |
 | [Doku/](Doku) | Benutzung, Bauen, Mitarbeiten, technischer Hintergrund |
-| [ZIEL.md](ZIEL.md) | woran „fertig" gemessen wird — **und was zur Fassung 7.2.1.0 noch fehlt**, ganz oben, erzeugt |
+| [ZIEL.md](ZIEL.md) | woran „fertig" gemessen wird — **und was zur Fassung 7.2.1 noch fehlt**, ganz oben, erzeugt |
 | [CHANGELOG.md](CHANGELOG.md) | was sich je Fassung geändert hat, und die erzeugte Liste der offenen Befunde |
 | [MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md) | gemeldete Fehler von außen, mit Stand (auf Englisch) |
 | [LICENSE](LICENSE) | wer es wie benutzen darf |
@@ -95,7 +95,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.122** / `VERSION` **1.0.122** — geschnürt als Paket 1.0.122 (23.10.2026), am selben Tag von Gregor und am Prüfstand geprüft ([Testbericht](Intern/TESTBERICHT-E125.md)): [E-125](Intern/BEFUNDE.md#e-125), Ziehen einer empfangenen Nachricht nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen (277 Tests, 277 bestanden, zweimal gegengetestet); davor in 7.2.0.121 [E-111](Intern/BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus (246 Tests, mit Gegenprobe). **Veröffentlicht ist `v1.0.120`** (21.10.2026, 19:07:37 UTC) — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)). Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), was zur Fassung 7.2.1.0 noch fehlt oben in [ZIEL.md](ZIEL.md).*
+*Stand **7.2.0.122** / `VERSION` **1.0.122** — geschnürt als Paket 1.0.122 (23.10.2026), am selben Tag von Gregor und am Prüfstand geprüft ([Testbericht](Intern/TESTBERICHT-E125.md)): [E-125](Intern/BEFUNDE.md#e-125), Ziehen einer empfangenen Nachricht nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen (277 Tests, 277 bestanden, zweimal gegengetestet); davor in 7.2.0.121 [E-111](Intern/BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus (246 Tests, mit Gegenprobe). **Veröffentlicht ist `v1.0.120`** (21.10.2026, 19:07:37 UTC) — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)). Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), was zur Fassung 7.2.1 noch fehlt oben in [ZIEL.md](ZIEL.md).*
 
 ### Was geht
 
@@ -132,7 +132,7 @@ mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)); und es wird ke
 ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrieben
 ([E-131](Intern/BEFUNDE.md#e-131)).
 
-**Was zur Fassung 7.2.1.0 noch fehlt, steht erzeugt ganz oben in
+**Was zur Fassung 7.2.1 noch fehlt, steht erzeugt ganz oben in
 [ZIEL.md](ZIEL.md)** — dort und nur dort, mit der Angabe, wer es prüft.
 
 ### Bekannte Fehler

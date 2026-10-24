@@ -34,7 +34,7 @@ Bezugscommit; wer sie weiterverwendet, misst nach.
 > Der erste Abruf überhaupt war am 31.08.2026 ([E-1](BEFUNDE.md#e-1),
 > [E-3](BEFUNDE.md#e-3)): 159 Nachrichten, damals über Port 110 mit STARTTLS.
 >
-> **Was zur Fassung 7.2.1.0 noch fehlt, steht erzeugt ganz oben in
+> **Was zur Fassung 7.2.1 noch fehlt, steht erzeugt ganz oben in
 > [ZIEL.md](../ZIEL.md)** — dort und nur dort, mit der Angabe, wer es prüft.
 > Diese Kurzfassung zählt es bewusst **nicht** mit auf: bis zum 22.10.2026
 > stand hier [E-86](BEFUNDE.md#e-86) als offen, obwohl er seit **7.2.0.55**
