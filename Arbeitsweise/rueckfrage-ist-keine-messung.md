@@ -91,3 +91,5 @@ vergeben hatte.
 5. **Wer ein Kuerzel vergibt, schreibt im selben Commit auf, wofuer es
    steht.** Sonst ist in acht Wochen niemand mehr da, der es weiss — auch
    nicht der, der es vergeben hat ([[wissen-gehoert-in-dateien]]).
+
+**Nachtrag 24.10.2026 — Einstufungen sind meine Aufgabe.** Ich habe aus LEKTOR-55 die Frage „Ist E-142 kritisch?" an Gregor weitergegeben, wie schon LEKTOR-54 vorher. Gregor: *„was haben wir zu E-142 vereinbart? warum fragst du dann nach?"* Vereinbart war nichts — aber die Einstufung hat er mir am 22.10.2026 übertragen (*„markiere diejenigen, die du als kritisch betrachtest"*). Eine Frage aus einem Agentenbericht wird vor dem Weitergeben geprüft: Ist es wirklich seine Entscheidung (Produktverhalten, Release, Namen), oder eine, die er mir übertragen hat (Einstufung, Reihenfolge der Tests, Form der Doku)? Nur das Erste geht an ihn.
