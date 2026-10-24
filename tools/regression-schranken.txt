@@ -40,6 +40,11 @@ E-61 | pruefe-nachrichtenschleife.pl | Eudora71/OTShim/OTShim.cpp | if (msg.mess
 # E-34: QCChildToolBar::GetButton prueft den Index, bevor es m_btns liest.
 E-34 | pruefe-fensterbau.pl | Eudora71/Eudora/QCChildToolBar.cpp | if ( iIndex < 0 || iIndex >= GetBtnCount() ) ==> if ( 0 )
 
+# E-35: der zweite Strg-N starb, weil OnUserUpdateImmediateSend den
+# Rueckgabewert von GetButton blind dereferenzierte (seit E-34 NULL statt
+# Ausnahme). Der Rueckfall nimmt die NULL-Pruefung des Sendeknopfs heraus.
+E-35 | pruefe-fensterbau.pl | Eudora71/Eudora/CompMessageFrame.cpp | \t\t\tif (pSendeKnopf)\n ==> \t\t\tif (1)\n
+
 # E-16: Absturz beim Verfassen - m_btns[iIndex] griff daneben; dieselbe
 # Indexschranke in GetButton wie bei E-34 (die Schranke nennt beide).
 E-16 | pruefe-fensterbau.pl | Eudora71/Eudora/QCChildToolBar.cpp | if ( iIndex < 0 || iIndex >= GetBtnCount() ) ==> if ( 0 )

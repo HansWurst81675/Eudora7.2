@@ -184,6 +184,18 @@ BILD-lauf | C:\Temp\EBILD | 240 | messung | BILD ERGEBNIS abgeholt=7 geoeffnet=7
 # 718 breit (Fenster 771); der Banner 985x378 muss als 718x276 kommen.
 # Gegen den Bau ohne Deckel: "gemalt=985x378", der Fall ist rot.
 E-113p | C:\Temp\EBILD | 240 | log | Datei=985x378 gemalt=718x276 | Datei=985x378 gemalt=985x378 | | messen=tools\messen-bild.ps1
+# E-113 Variante B wird NICHT gebaut (Gregor 24.10.2026: "passt so"), soll
+# aber einen Regressionsfall haben ("ich moechte dann auch zu B einen
+# regression test haben"). messen-bild.ps1 zieht das Verfassen-Fenster der
+# weitergeleiteten E-113-Nachricht schmaler (gemessen: 771 -> 420 Punkte) und
+# zaehlt die Zeilen "E-112 Metadatei: angegeben=0x0 Datei=985x378" vorher und
+# nachher. Festgehalten ist das vereinbarte Verhalten: Eudora lebt, das Bild
+# wird nicht neu berechnet. probe=ok ist die Positivprobe: vor dem
+# Schmalerziehen steht die Zeile mindestens einmal im Protokoll, es wird also
+# waehrend des Laufs geschrieben. (Ein fester Wert vorher=2 war falsch - die
+# Zahl war am 24.10.2026 einmal 2, einmal 1.)
+E-113b | C:\Temp\EBILD | 240 | messung | BILD E113B | | | messen=tools\messen-bild.ps1
+E-113b2 | C:\Temp\EBILD | 240 | messung | neu=0 lebt=1 probe=ok | | | messen=tools\messen-bild.ps1
 # E-119 (24.10.2026): Bilder als data:-Adresse im HTML. Vor der Behebung
 # meldete der Lader "E-110 Laden: src=data:... datei=0 intern=-1" (grauer
 # Kasten), und das lange Bild (1552 Zeichen) kam gar nicht an. Gegen den

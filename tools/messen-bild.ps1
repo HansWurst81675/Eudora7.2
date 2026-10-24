@@ -86,6 +86,7 @@ public class WinBild {
   [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
   [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out R r);
+  [DllImport("user32.dll")] public static extern bool SetWindowPos(IntPtr h, IntPtr nach, int x, int y, int cx, int cy, uint f);
   [DllImport("user32.dll")] public static extern IntPtr SendMessageA(IntPtr h, uint m, IntPtr w, IntPtr l);
   [DllImport("user32.dll")] public static extern bool PostMessageA(IntPtr h, uint m, IntPtr w, IntPtr l);
   [DllImport("user32.dll")] public static extern IntPtr GetMenu(IntPtr h);
@@ -225,6 +226,33 @@ for ($i = 0; $i -lt $n; $i++) {
     $verfassen = Aktiv $mdi
     if ($verfassen -ne $lesen) {
         $weiter++
+        # E-113 Variante B (Gregor 24.10.2026: B wird nicht gebaut - "passt so" -,
+        # aber "ich moechte dann auch zu B einen regression test haben"): das
+        # Verfassen-Fenster schmaler ziehen. Festgehalten wird das vereinbarte
+        # Verhalten: Eudora lebt, und das Bild wird NICHT neu berechnet - keine
+        # weitere Zeile "E-112 Metadatei" fuer die Datei 985x378. Kommt doch
+        # eine, hat sich das Verhalten geaendert (gewollt oder nicht).
+        if ((Tx $lesen) -match 'E-113') {
+            $logPfad = Join-Path $voll 'Mailverzeichnis\eudora.log'
+            $muster = 'E-112 Metadatei: angegeben=0x0 Datei=985x378'
+            $vorher = @(Select-String -LiteralPath $logPfad -Pattern $muster -ErrorAction SilentlyContinue).Count
+            $r1 = New-Object WinBild+R; [void][WinBild]::GetWindowRect($verfassen, [ref]$r1)
+            [void][WinBild]::SendMessageA($mdi, 0x0223, $verfassen, [IntPtr]::Zero)          # WM_MDIRESTORE
+            [void][WinBild]::SetWindowPos($verfassen, [IntPtr]::Zero, 0, 0, 420, 480, 0x0016)   # NOMOVE|NOZORDER|NOACTIVATE
+            Start-Sleep -Seconds 3
+            $r2 = New-Object WinBild+R; [void][WinBild]::GetWindowRect($verfassen, [ref]$r2)
+            $nachher = @(Select-String -LiteralPath $logPfad -Pattern $muster -ErrorAction SilentlyContinue).Count
+            $proz[0].Refresh()
+            $lebt = if ($proz[0].HasExited) { 0 } else { 1 }
+            # probe=ok: vor dem Schmalerziehen steht die Zeile mindestens einmal
+            # im Protokoll - sonst liest die Messung nichts mit, und neu=0
+            # waere kein Befund. Die genaue Zahl schwankt von Lauf zu Lauf
+            # (gemessen 24.10.2026: einmal 2, einmal 1) und ist kein Pruefwert.
+            $probe = if ($vorher -ge 1) { 'ok' } else { 'LEER' }
+            Write-Host ("BILD E113B breite {0} -> {1}, metadatei vorher={2} nachher={3} neu={4} lebt={5} probe={6}" -f
+                ($r1.Ri - $r1.L), ($r2.Ri - $r2.L), $vorher, $nachher, ($nachher - $vorher), $lebt, $probe)
+            $null = Dialoge $pp
+        }
         [void][WinBild]::PostMessageA($verfassen, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)   # WM_CLOSE
         Start-Sleep -Milliseconds 1500
         $null = Dialoge $pp '^(No|Nein)$'        # "Save changes?" -> Nein
