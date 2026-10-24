@@ -62,7 +62,10 @@ static void Test_E18(const char* szEudoraDir)
 // gegenueber der Paige32.dll von 2005. Der Typ muss fest 32 Bit breit sein.
 static void Test_E31(const char* szEudoraDir)
 {
-	TT_BeginTest("E-31: pg_time_t ist fest 32 Bit breit");
+	// E-27 (Strg-N beendet Eudora lautlos, 0xC00000FD in Paige32.dll) hat
+	// genau diese Ursache - BEFUNDE.md: "Ursache gefunden und behoben: E-31".
+	// Dieser Fall ist damit auch der Regressionstest zu E-27.
+	TT_BeginTest("E-31 (Ursache von E-27): pg_time_t ist fest 32 Bit breit");
 	char* pCode = QT_LiesNurCode(szEudoraDir, "..\\PaigeDLL\\PGHEADER\\CPUDEFS.H");
 	if (!pCode) { TT_Fail("CPUDEFS.H nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
 	TT_CHECK_MSG(QT_Enthaelt(pCode, "typedef long pg_time_t;"),
@@ -74,10 +77,47 @@ static void Test_E31(const char* szEudoraDir)
 	TT_EndTest();
 }
 
+// E-25: Absturz im Kontoassistenten beim Klick auf "Weiter" (0xC0000374,
+// Heap beschaedigt). NSImportClass::LocateNetscapePrefsFile gab mit
+// DeleteCharListTree(&FileList) den Listenknoten des AUFRUFERS frei, legte
+// sich einen neuen an - FileList ist ein Zeiger nach Wert - und der Aufrufer
+// LoadNSAccounts las danach freigegebenen Speicher und gab ihn ein zweites
+// Mal frei. Die Behebung leert den Knoten des Aufrufers nur. Dazu im selben
+// Befund: tempbuffer[128] nahm einen vollen Pfad auf.
+static void Test_E25(const char* szEudoraDir)
+{
+	TT_BeginTest("E-25: LocateNetscapePrefsFile gibt den Knoten des Aufrufers nicht frei");
+	char* pCode = QT_LiesNurCode(szEudoraDir, "..\\Importers\\NSImport\\NSImportClass.cpp");
+	if (!pCode) { TT_Fail("NSImportClass.cpp nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
+	char* pRumpf = QT_Abschnitt(pCode, "BOOL NSImportClass::LocateNetscapePrefsFile(", "NSImportClass::GetFilesInDirectory(");
+	TT_CHECK_MSG(pRumpf != NULL, "NSImportClass::LocateNetscapePrefsFile nicht gefunden");
+	if (pRumpf)
+	{
+		TT_CHECK_MSG(!QT_Enthaelt(pRumpf, "DeleteCharListTree(&FileList);"),
+					 "der Knoten des Aufrufers wird wieder freigegeben - Doppelfreigabe in LoadNSAccounts");
+		// Mit fuehrendem Leerzeichen: "csPrefsFileList = DEBUG_NEW
+		// CCharArrList;" steht zu Recht zweimal im Rumpf und enthaelt die
+		// Zeichenkette sonst als Teilstueck (erster Lauf am 24.10.2026: rot
+		// auf dem behobenen Stand).
+		TT_CHECK_MSG(!QT_Enthaelt(pRumpf, " FileList = DEBUG_NEW CCharArrList;"),
+					 "FileList wird wieder neu angelegt - der Aufrufer sieht den neuen Knoten nie");
+		TT_CHECK_MSG(QT_Enthaelt(pRumpf, "DeleteCharListTree(&(FileList->pNext));"),
+					 "der Knoten des Aufrufers wird nicht mehr geleert");
+		free(pRumpf);
+	}
+	char* pLaden = QT_Abschnitt(pCode, "bool NSImportClass::LoadNSAccounts()", "LocateNetscapePrefsFile(csPrefsFileList);");
+	TT_CHECK_MSG(pLaden != NULL && QT_Enthaelt(pLaden, "char tempbuffer[_MAX_PATH + _MAX_FNAME + _MAX_EXT];"),
+				 "tempbuffer in LoadNSAccounts ist nicht mehr so gross wie ein voller Pfad");
+	if (pLaden) free(pLaden);
+	free(pCode);
+	TT_EndTest();
+}
+
 void RunSpeicherfehlerTests(const char* szEudoraDir)
 {
-	TT_Suite("Speicherfehler E-18, E-20, E-31 (Regressionstests)");
+	TT_Suite("Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests)");
 	Test_E20(szEudoraDir);
 	Test_E18(szEudoraDir);
+	Test_E25(szEudoraDir);
 	Test_E31(szEudoraDir);
 }
