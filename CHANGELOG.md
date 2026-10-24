@@ -24,6 +24,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-148](Intern/BEFUNDE.md#e-148)** | Eudora vertraut vier eMudhra-Wurzelzertifikaten, unter denen am 20.10.2026 acht kompromitt… | **nie gemessen** | die vier Wurzeln aus der Liste nehmen (`Releases/1.0/rootcerts-erzeugen.ps1` mit Ausschlussliste, neue `Releases/1.0/rootcerts.p7b` samt `.sha256`), v… |
 | **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
@@ -124,7 +125,11 @@ dieser Abschnitt zu 7.2.0.123.
   Import das Bild **vor** dem Kürzen in eine Datei unter `Embedded` und gibt
   dem Lader deren Pfad (`PGHTMIMP.CPP`, `E119DataNachDatei`). Am Prüfstand
   erst rot, dann grün gemessen; die abgelegten Dateien sind byte-gleich mit
-  den Originalbildern. Neue Regressionsfälle `E-119a` bis `c`.
+  den Originalbildern. Neue Regressionsfälle `E-119a` bis `c`. **Nachtrag:** zwei
+  Nachrichten mit demselben Bild teilten sich die Bilddatei, und das endgültige
+  Löschen der einen nahm der anderen das Bild ([PRÜFER-49 K5](Befunde/PRUEFER-49.md#k5)).
+  Jetzt bekommt jede Nachricht beim Speichern eine eigene Kopie; am Prüfstand
+  erst rot, dann grün gemessen, Regressionsfall `E-119d`.
 * **[E-113](Intern/BEFUNDE.md#e-113) — ein Bild, das breiter ist als das
   Verfassen-Fenster, läuft nicht mehr rechts hinaus.** Es wird beim Laden auf
   die Breite des Textbereichs verkleinert, ohne verzerrt zu werden

@@ -196,6 +196,14 @@ E-113p | C:\Temp\EBILD | 240 | log | Datei=985x378 gemalt=718x276 | Datei=985x37
 # Zahl war am 24.10.2026 einmal 2, einmal 1.)
 E-113b | C:\Temp\EBILD | 240 | messung | BILD E113B | | | messen=tools\messen-bild.ps1
 E-113b2 | C:\Temp\EBILD | 240 | messung | neu=0 lebt=1 probe=ok | | | messen=tools\messen-bild.ps1
+# E-119 K5 (PRUEFER-49): zwei Weiterleitungen derselben Nachricht mit
+# data:-Bild teilten sich die Bilddatei; das endgueltige Loeschen der einen
+# nahm der anderen das Bild. tools/messen-e119-geteilt.ps1: zweimal
+# weiterleiten und speichern, einen Entwurf ueber Trash endgueltig loeschen,
+# dann je Nachricht in Out.mbx pruefen, ob ALLE ihre Bilder noch da sind.
+# Gemessen am 24.10.2026: alter Bau vollstaendig=0 (rot), Behebung
+# vollstaendig=1. Pruefstand C:\Temp\E119K ist eine Kopie von C:\Temp\EBILD.
+E-119d | C:\Temp\E119K | 120 | messung | vollstaendig=1 probe=ok | | | messen=tools\messen-e119-geteilt.ps1
 # E-119 (24.10.2026): Bilder als data:-Adresse im HTML. Vor der Behebung
 # meldete der Lader "E-110 Laden: src=data:... datei=0 intern=-1" (grauer
 # Kasten), und das lange Bild (1552 Zeichen) kam gar nicht an. Gegen den

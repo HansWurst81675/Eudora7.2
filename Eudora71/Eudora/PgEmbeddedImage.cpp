@@ -63,6 +63,7 @@ DAMAGE. */
 // Eudora utilities
 //#include "guiutils.h"
 #include "fileutil.h"
+#include "rs.h"                // BEFUND E-119 K5: CRString(IDS_EMBEDDED_FOLDER)
 #include "HTMLUtils.h"
 #include "qcgraphics.h"
 
@@ -1067,6 +1068,96 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
     return fRet;
 }
 
+// BEFUND E-119 K5 (PRUEFER-49): E119DataNachDatei (PGHTMIMP.CPP) legt ein
+// Bild aus einer data:-Adresse als EINE Datei je Bildinhalt ab:
+// <EudoraDir>Embedded\data-<Pruefsumme>.<endung>. Beim Speichern einer
+// Antwort oder Weiterleitung trug make_new_part_from_file diese Datei als
+// Teil der Nachricht ein, OHNE sie zu kopieren. Zwei Nachrichten mit
+// demselben Bild teilten sich so eine Datei, und das endgueltige Loeschen
+// EINER davon (DeleteEmbeddedObjects, tocdoc.cpp) loeschte das Bild beider.
+// Gemessen am 24.10.2026 am Pruefstand C:\Temp\E119K
+// (tools/messen-e119-geteilt.ps1): zweimal weiterleiten und speichern, einen
+// Entwurf ueber Trash endgueltig loeschen - der andere verweist auf zwei
+// Dateien, beide fehlen.
+//
+// Jetzt bekommt jede Nachricht eine eigene Kopie ueber NewPart - genau so,
+// wie make_it_schmookie es fuer cid:-Bilder schon immer tut.
+
+// Liegt die Datei hinter dieser file://-Adresse unter Embedded und heisst
+// data-*? Nur solche Dateien sind geteilt; alles andere bleibt beim alten Weg.
+static bool E119IstDataDatei( const char* pUri )
+{
+    char path[MAX_PATH] = "";
+    char kopie[MAX_PATH] = "";
+    if ( !pUri || strlen( pUri ) >= sizeof( kopie ) )
+        return false;
+    strcpy( kopie, pUri );
+    clean_filepath( kopie, path );
+
+    CString szEmbedded;
+    szEmbedded.Format( "%s%s\\", (const char*)EudoraDir, (const char*)CRString(IDS_EMBEDDED_FOLDER) );
+    if ( strnicmp( path, szEmbedded, szEmbedded.GetLength() ) != 0 )
+        return false;
+
+    const char* pName = path + szEmbedded.GetLength();
+    return ( strnicmp( pName, "data-", 5 ) == 0 ) && ( strchr( pName, '\\' ) == NULL );
+}
+
+// Kopiert die Datei hinter pUri in einen neuen Teil der Nachricht und
+// liefert dessen cid. Scheitert die Kopie, bleibt es beim alten Weg (die
+// Datei wird geteilt) - das Bild ist dann wenigstens da, wie vor K5.
+static void E119KopieAlsTeil( QCMessage* pM, char* pUri, char* cid )
+{
+    char path[MAX_PATH] = "";
+    clean_filepath( pUri, path );
+
+    const char* pEndung = strrchr( path, '.' );
+    pEndung = pEndung ? pEndung + 1 : "png";
+
+    bool bKopiert = false;
+    FILE* pQuelle = fopen( path, "rb" );
+    QCMimePart* pNeu = NULL;
+    if ( pQuelle )
+        pM->NewPart( pEndung, &pNeu );
+
+    if ( pQuelle && pNeu )
+    {
+        char puffer[ 8192 ];
+        size_t nGelesen = 0;
+        bKopiert = true;
+        while ( (nGelesen = fread( puffer, 1, sizeof( puffer ), pQuelle )) > 0 )
+        {
+            INT32 nGeschrieben = 0;
+            if ( FAILED( pNeu->Write( puffer, (INT32)nGelesen, &nGeschrieben ) ) || nGeschrieben != (INT32)nGelesen )
+            {
+                bKopiert = false;
+                break;
+            }
+        }
+        if ( ferror( pQuelle ) )
+            bKopiert = false;
+        pNeu->Close();
+
+        CString csCID;
+        pNeu->GetCID( csCID );
+        if ( bKopiert && !csCID.IsEmpty() )
+            strcpy( cid, csCID );
+        else if ( !csCID.IsEmpty() )
+            pM->RemovePart( csCID );
+        delete pNeu;
+    }
+    if ( pQuelle )
+        fclose( pQuelle );
+
+    char szSpur[ MAX_PATH + 96 ];
+    _snprintf( szSpur, sizeof( szSpur ) - 1, "E-119 K5 Kopie: quelle=%s kopiert=%d", path, bKopiert ? 1 : 0 );
+    szSpur[ sizeof( szSpur ) - 1 ] = 0;
+    PutDebugLog( DEBUG_MASK_MISC, szSpur );
+
+    if ( !bKopiert )
+        make_new_part_from_file( pM, pUri, cid, false );
+}
+
 // UGLY: boy, the last-minute hacks are starting to pile up. this routine needs
 // to be reworked a little, as it is getting a bit ugly. we also need to
 // decide on the type/subtype "stuff" for sure before we go too much further.
@@ -1125,7 +1216,11 @@ bool PgSaveUrlImage(paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr p
 				{
                     bool	bIsEmoticon = ( (pEmbed->type & EMBED_EMOTICON_FLAG) != 0 );
 
-					make_new_part_from_file(pM, pUri, cid, bIsEmoticon);
+					// BEFUND E-119 K5: data-Dateien unter Embedded werden kopiert, nicht geteilt.
+					if ( !bIsEmoticon && E119IstDataDatei( pUri ) )
+						E119KopieAlsTeil( pM, pUri, cid );
+					else
+						make_new_part_from_file(pM, pUri, cid, bIsEmoticon);
 				}
             }
 
