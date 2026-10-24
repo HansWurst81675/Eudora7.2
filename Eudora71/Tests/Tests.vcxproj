@@ -116,6 +116,7 @@
     <ClCompile Include="UnderTestE77.cpp" />
     <ClCompile Include="TestE77.cpp" />
     <ClCompile Include="TestSpeicherfehler.cpp" />
+    <ClCompile Include="TestStartfehler.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />
     <ClCompile Include="TestE118.cpp" />
     <ClCompile Include="Quelltext.cpp" />

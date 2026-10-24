@@ -42,6 +42,7 @@ void RunE113Tests(void);
 void RunE77Tests(void);
 void RunSpeicherfehlerTests(const char* szEudoraDir);
 void RunE77QuelltextTests(const char* szEudoraDir);
+void RunStartfehlerTests(const char* szEudoraDir);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -148,6 +149,7 @@ int main(int argc, char* argv[])
 	RunE130Tests(szEudoraDir);
 	RunSpeicherfehlerTests(szEudoraDir);
 	RunE77QuelltextTests(szEudoraDir);
+	RunStartfehlerTests(szEudoraDir);
 
 	iFailed = TT_Summary();
 	return iFailed;
