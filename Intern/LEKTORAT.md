@@ -1805,6 +1805,42 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Sechzigster Durchgang — vor dem Paket 7.2.0.123, nach PR #161 bis #165 (E-77, E-113, E-116, E-119, E-130), 24.10.2026 (Bericht: `Befunde/LEKTOR-55.md`)
+
+**19 Funde** — 5 veraltet, 5 Widersprüche, 5 unvollständig, 3 falsch, 1 Form.
+Geprüft wurde der ganze Bestand (182 MDs ohne `Arbeitsweise/`), nicht der Diff.
+
+**Der schwerste Fund: Für Gregors eine Testsitzung am Kandidaten gibt es
+keinen Plan** ([L-55.12](../Befunde/LEKTOR-55.md#l-55.12)). `TESTPLAN.md` ist
+der Plan für 1.0.122 und sagt *„Im Moment nichts"*. Für *„Gregors Test aller
+neun Kriterien"*, den `ZIEL.md` vor dem Release verlangt, steht dort kein
+einziger Schritt (gemessen: `grep -i kriteri` → nichts). Der Bericht enthält
+die Liste: sieben Punkte für Gregor, darunter zwei, die nur bei ihm messbar
+sind. E-77 muss einen Ordner mit Umlaut auf seinem GMX anlegen und
+umbenennen, E-119 eine Weiterleitung mit `data:`-Bild wirklich senden.
+
+**„18 von 19 erfüllt" zählt Zeilen ohne offenen Befund**
+([L-55.10](../Befunde/LEKTOR-55.md#l-55.10)). Darunter sind drei Behebungen
+in keinem Paket. Würde E-116 geschlossen, meldete der Maßstab *„alle
+erfüllt"*, während zwei Kriterien *fast* heißen. E-116 selbst kann niemand
+schließen: Der Fehler war am Programm auch an der alten Fassung nicht zu
+sehen ([L-55.11](../Befunde/LEKTOR-55.md#l-55.11)). Das ist eine Frage an
+Gregor.
+
+Die fünf Behebungen stehen im CHANGELOG richtig. Ihre Befundzeilen sagen
+noch *„auf dem Zweig"*, und dahinter steht *„Was noch fehlt: die Behebung"*.
+Einstieg, Aufgaben, Maßstab (Zeile 2a) und `ANWENDER.md` nennen E-77 und E-119
+weiter offen. `pruefe-befundurteile.pl` sieht die Form *„(E-77, offen)"* in
+dieser Richtung nicht ([L-55.7](../Befunde/LEKTOR-55.md#l-55.7)).
+Variante B von E-113, von Gregor angeordnet, steht in keiner Liste mehr
+([L-55.8](../Befunde/LEKTOR-55.md#l-55.8)).
+
+Aus LEKTOR-54 ist [L-54.18](../Befunde/LEKTOR-54.md#l-54.18) erledigt, vier
+zum Teil, [L-54.7](../Befunde/LEKTOR-54.md#l-54.7) und
+[L-54.15](../Befunde/LEKTOR-54.md#l-54.15) bleiben. Von LEKTOR-53 bleiben
+sieben. Fünf Fragen an Gregor, darunter: Wird der Kandidat schon als 7.2.1
+gebaut, oder veröffentlichen wir einen Bau, den er nicht gestartet hat?
+
 ## Neunundfünfzigster Durchgang — nach PR #157, #158 und #159 (E-116, E-130, Entscheidungen vom Abend), 23.10.2026 (Bericht: `Befunde/LEKTOR-54.md`)
 
 **19 Funde** — 6 veraltet, 5 Widersprüche, 4 unvollständig, 3 falsch, 1 Form.
