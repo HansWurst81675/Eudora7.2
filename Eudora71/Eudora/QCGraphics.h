@@ -17,7 +17,7 @@ bool CreateJpegFromIcon(HICON hIcon, LPCSTR filename, COLORREF BackColor);
 bool CreateJpegFromBitmap( CBitmap* pBitmap, LPCSTR filename );
 SECImage* LoadImage(LPCSTR pURL, int TransparencySysColor = COLOR_3DFACE);
 bool MetafileFromImage(LPCSTR pURL, QCMetaFileInfo* pMFI, int TransparencySysColor = COLOR_3DFACE,
-					   long nAngabeBreite = 0, long nAngabeHoehe = 0);
+					   long nAngabeBreite = 0, long nAngabeHoehe = 0, long nMaxBreite = 0);
 bool IsEudoraPaletteCurrent(void);
 bool BlitToDevice(SECImage* pImage, CDC* pCDC);
 

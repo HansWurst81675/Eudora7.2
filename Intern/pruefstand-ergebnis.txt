@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-24 12:04:36
+zeit=2026-10-24 12:46:13
 freigabe=Gregor am 24.10.2026: 'du kannst deine instanzen zum testen starten. ich mache nichts.'
-faelle=18
-bestanden=18
+faelle=22
+bestanden=22
 fehlgeschlagen=0
 fall=[ ok ] E-131a   ohne MRUFloatXPos=-2147483648
 fall=[ ok ] E-131b   ohne MRUFloatYPos=-2147483648
@@ -21,4 +21,8 @@ fall=[ ok ] E-106p   E-106 groesser als angegeben: attr=35x35 quelle=330x327
 fall=[ ok ] E-110p   E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1
 fall=[ ok ] E-105p   E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet
 fall=[ ok ] E-108p   Logging shutdown
-fall=[ ok ] BILD-lauf BILD ERGEBNIS abgeholt=5 geoeffnet=5 weitergeleitet=5
+fall=[ ok ] BILD-lauf BILD ERGEBNIS abgeholt=7 geoeffnet=7 weitergeleitet=7
+fall=[ ok ] E-113p   Datei=985x378 gemalt=718x276
+fall=[ ok ] E-119a   data-db1b9f48.png faden=1 ok=1
+fall=[ ok ] E-119b   E-119 data-Bild als Datei:
+fall=[ ok ] E-119c   data-2eaa4a58.png laenge=1574

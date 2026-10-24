@@ -36,7 +36,8 @@ $NACHRICHTEN = @(
     'Testdaten\e118-eingebettetes-bild.eml',
     'Testdaten\e103-bild-ohne-groessenangabe.eml',
     'Testdaten\e105-handyfassung-versteckt.eml',
-    'Testdaten\e119-data-bild.eml'
+    'Testdaten\e119-data-bild.eml',
+    'Testdaten\e113-breites-bild.eml'
 )
 
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')

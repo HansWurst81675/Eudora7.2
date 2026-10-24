@@ -247,6 +247,12 @@ $nStart = Find-Line $em '^void E112Zielrechteck\s*\(' 0
 $nEnd = Find-Line $em '^\}\s*$' $nStart
 Write-Region $em $nStart $nEnd (Join-Path $OutDir "pgembedded_e112.inc") $embPath
 
+# Region N2: E113Deckeln - wird ein zu breites Bild auf den Textbereich
+# verkleinert? Steht gleich hinter E112Zielrechteck, ohne Paige-Typen.
+$nStart = Find-Line $em '^void E113Deckeln\s*\(' 0
+$nEnd = Find-Line $em '^\}\s*$' $nStart
+Write-Region $em $nStart $nEnd (Join-Path $OutDir "pgembedded_e113.inc") $embPath
+
 # Region O: E112MetadateiAusDIB - in welcher Groesse wird das Bild GEZEICHNET?
 # Region N prueft nur die Regel. Die stimmte seit 7.2.0.76, und trotzdem lag
 # bei Gregor an 1.0.76 und 1.0.84 das Logo ueber dem Text: Paige spielt die

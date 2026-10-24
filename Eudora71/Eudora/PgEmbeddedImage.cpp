@@ -412,8 +412,52 @@ void E112Zielrechteck( long nAttrBreite, long nAttrHoehe,
 	}
 }
 
+//
+// BEFUND E-113: Bilder, die breiter sind als der Platz, laufen rechts hinaus.
+//
+// Gregor am 18.09.2026: "müssen die hard codiert sein? oder kann man es
+// dynamisch ausrechnen, je nach aktueller fenster größe, dann anteilig?" -
+// "ok, erst A, dann B". Das hier ist A: beim Laden wird das Rechteck aus
+// E112Zielrechteck auf die Breite des Textbereichs gedeckelt, BEIDE Masse im
+// selben Verhaeltnis, sonst verzerrt es. B (beim Ziehen am Fenster neu
+// rechnen) ist nicht gebaut.
+//
+// Eigene Funktion ohne Paige, damit die Testsuite sie pruefen kann
+// (Tests/TestE113.cpp). nMaxBreite <= 0 heisst: keine Grenze bekannt.
+//
+void E113Deckeln( long nMaxBreite, long* pnBreite, long* pnHoehe )
+{
+	if ( !pnBreite || !pnHoehe || nMaxBreite <= 0 )
+		return;
+	if ( *pnBreite <= nMaxBreite || *pnBreite <= 0 )
+		return;
+
+	*pnHoehe  = ( *pnHoehe * nMaxBreite + *pnBreite / 2 ) / *pnBreite;
+	if ( *pnHoehe < 1 )
+		*pnHoehe = 1;
+	*pnBreite = nMaxBreite;
+}
+
+// Breite des Textbereichs, so wie der HTML-Import sie fuer prozentuale
+// Breiten rechnet (PGHTMIMP.CPP, page_width): Umbruchbereich minus Raender.
+// Unter 50 Punkten gilt sie als unbekannt - lieber keine Grenze als ein Bild
+// auf Briefmarkengroesse.
+static long E113Seitenbreite( paige_rec_ptr pg )
+{
+	if ( !pg )
+		return 0;
+	rectangle bounds;
+	GetMemoryRecord( pg->wrap_area, 1, &bounds );
+	long nBreite = bounds.bot_right.h - bounds.top_left.h;
+	if ( pg->doc_info.attributes & USE_MARGINS_BIT )
+		nBreite -= ( pg->doc_info.margins.top_left.h + pg->doc_info.margins.bot_right.h );
+	return ( nBreite >= 50 ) ? nBreite : 0;
+}
+
 bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr embed,bool bAllowThreadedFetch )
 {
+    // BEFUND E-113: die Breite, auf die ein Bild hoechstens gezeichnet wird.
+    const long nE113Seite = E113Seitenbreite( pg );
     // BEFUND E-106: was die Datei WIRKLICH misst. 0 heisst: nicht gemessen.
     long    nEchtBreite = 0;
     long    nEchtHoehe  = 0;
@@ -541,7 +585,7 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
                 // denn source_* wird darunter ueberschrieben.
                 long nAngabeB = (long) pUrlImage->source_width;
                 long nAngabeH = (long) pUrlImage->source_height;
-                if (MetafileFromImage( filePath, &mfi, TransparencySysColor, nAngabeB, nAngabeH ))
+                if (MetafileFromImage( filePath, &mfi, TransparencySysColor, nAngabeB, nAngabeH, nE113Seite ))
                 {
                     //
                     // BEFUND E-106: die ECHTE Dateigroesse merken, auch wenn
@@ -563,6 +607,17 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
                     	long nGemaltB = 0, nGemaltH = 0;
                     	E112Zielrechteck( nAngabeB, nAngabeH,
                     					  nEchtBreite, nEchtHoehe, &nGemaltB, &nGemaltH );
+                    	{
+                    		// BEFUND E-113: auf die Breite des Textbereichs deckeln -
+                    		// dieselbe Rechnung wie in MetafileFromImage, sonst laufen
+                    		// Metadatei und Zeilenumbruch auseinander (E-106).
+                    		long nVorB = nGemaltB, nVorH = nGemaltH;
+                    		E113Deckeln( nE113Seite, &nGemaltB, &nGemaltH );
+                    		CString szE113;
+                    		szE113.Format( "E-113 Deckel: seite=%ld vorher=%ldx%ld nachher=%ldx%ld",
+                    					   nE113Seite, nVorB, nVorH, nGemaltB, nGemaltH );
+                    		PutDebugLog( DEBUG_MASK_MISC, szE113 );
+                    	}
                     	CString szE112;
                     	szE112.Format( "E-112 Metadatei: angegeben=%ldx%ld Datei=%ldx%ld gemalt=%ldx%ld",
                     				   nAngabeB, nAngabeH,
@@ -906,6 +961,7 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 					E112Zielrechteck( (long) embed->width, (long) embed->height,
 									  nEchtBreite, nEchtHoehe,
 									  &nRahmenBreite, &nRahmenHoehe );
+					E113Deckeln( nE113Seite, &nRahmenBreite, &nRahmenHoehe );   // BEFUND E-113
 
 					if ( nRahmenBreite > 0 && nRahmenHoehe > 0 )
 					{
