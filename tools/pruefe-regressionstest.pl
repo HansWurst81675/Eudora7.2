@@ -135,7 +135,7 @@ sub ist_manuell {
 
 # --- Bestand zaehlen ------------------------------------------------------
 my (@ohne_behoben, $gesamt, $mit, $manuell);
-my (@ohne_stufe, @krit_ohne, @datenverlust_nicht_kritisch, %stufen, $krit, $krit_test, $krit_man, $man_gesamt);
+my (@ohne_stufe, @krit_ohne, @krit_ueber_ok, @krit_ueber_offen,@datenverlust_nicht_kritisch, %stufen, $krit, $krit_test, $krit_man, $man_gesamt);
 my %gesehen;
 $_ = 0 for ($gesamt, $mit, $manuell, $krit, $krit_test, $krit_man, $man_gesamt);
 for my $zeile (split /\n/, $befunde) {
@@ -183,11 +183,26 @@ for my $zeile (split /\n/, $befunde) {
     # ist (LEKTOR, L-50.9). Gezaehlt wird deshalb unabhaengig.
     $man_gesamt++ if $man;
 
+    # UEBERHOLT HEISST: KEIN EIGENER TEST (Gregor 24.10.2026: "die
+    # ueberholten muessen ja nicht extra getestet werden, nicht wahr?").
+    # Ein Befund mit dem Urteil "**ueberholt** durch E-6/E-8" hatte nie eine
+    # eigene Ursache. Er gilt als gedeckt, wenn EINE der genannten Ursachen
+    # gedeckt ist - sonst steht er in einer eigenen Liste mit der Ursache,
+    # deren Test fehlt. Doppelte Tests fuer dieselbe Ursache gibt es nicht
+    # ("doppelte tests machen keinen sinn").
+    my @ursachen;
+    if ($urteil =~ /\*\*\s*(?:\xc3\xbc|ue)berholt\s*\*\*\s*durch\s+((?:E-\d+)(?:\s*\/\s*E-\d+)*)/i) {
+        @ursachen = map { uc } ($1 =~ /(E-\d+)/gi);
+    }
+    my $ueber_gedeckt = grep { hat_test($_) } @ursachen;
+
     if (defined $stufe and $stufe eq 'kritisch') {
         $krit++;
         $krit_man++ if $man;
         if    ($hat) { $krit_test++ }
         elsif ($man) { }
+        elsif (@ursachen and $ueber_gedeckt) { $krit_test++; push @krit_ueber_ok, uc($id) . '->' . join('/', @ursachen) }
+        elsif (@ursachen) { push @krit_ueber_offen, uc($id) . '->' . join('/', @ursachen) }
         else         { push @krit_ohne, uc $id }
     }
 
@@ -259,6 +274,14 @@ printf "    OHNE jede Pruefung           %3d   <- Rueckstand\n", scalar @krit_oh
 if (@krit_ohne) {
     my @a = @krit_ohne;
     while (@a) { printf "      %s\n", join(' ', splice(@a, 0, 10)) }
+}
+if (@krit_ueber_ok) {
+    printf "    davon ueber die Ursache gedeckt %d (\"ueberholt durch\", kein eigener Test)\n", scalar @krit_ueber_ok;
+    printf "      %s\n", join(' ', @krit_ueber_ok);
+}
+if (@krit_ueber_offen) {
+    printf "    ueberholt, Ursache ohne Test %3d   <- der Test gehoert zur Ursache\n", scalar @krit_ueber_offen;
+    printf "      %s\n", join(' ', @krit_ueber_offen);
 }
 printf "  ------------------------------------------------------------\n";
 
