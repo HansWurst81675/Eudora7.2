@@ -41,7 +41,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-123](Intern/BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | 22.10.2026 an 7.2.0.121 | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
 | **[E-122](Intern/BEFUNDE.md#e-122)** | Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone v… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Berichtigung selbst — `ImapMailbox.cpp:4281` übergibt `CSummary::m_Seconds` an `append_date`, das echtes UTC erwartet, während `m_Seconds` UTC… |
 | **[E-116](Intern/BEFUNDE.md#e-116)** | width="35px" wird als 3508 gelesen — eine Größenangabe mit Einheit oder Nachkommastell… | 23.10.2026 an 7.2.0.122 (Quelltext) | die Messung am laufenden Programm — **am laufenden Programm noch nicht gesehen**, es fehlt eine Prüfnachricht mit `<img width="35px">`, auf der das… |
-| **[E-113](Intern/BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… | 22.10.2026 an 7.2.0.121 (Quelltext) | alles — von Gregor angeordnet; die Vorbedingung E-112 ist seit 7.2.0.85 behoben, der Befund ist damit an der Reihe. Billig wäre ein Deckel beim Umb… |
 | **[E-109](Intern/BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… | 22.10.2026 an 7.2.0.121 (Quelltext) | die drei Forderungen sind nicht umgesetzt — je Schranke ein Testfall für ihre **bekannte Grenze**, eine Unterscheidung zwischen *geprüft und frei*… |
 | **[E-98](Intern/BEFUNDE.md#e-98)** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… | 22.10.2026 an 7.2.0.121 (Quelltext) | zweierlei ist nicht gemessen — welche Vorgabe für *Kopfzeilen einschließen* und *Absätze raten* tatsächlich greift, solange die Kästchen fehlen… |
 | **[E-92](Intern/BEFUNDE.md#e-92)** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… | 22.10.2026 an 7.2.0.121 (Quelltext) | unsere eigene Seite — ein Vergleichsbild aus Eudora zur selben Nachricht liegt nicht vor, es ist also offen, ob unser Weiterleitungskopf überhaupt … |
@@ -95,7 +94,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122, noch ohne Paket — Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+## Seit 7.2.0.122, noch ohne Paket — zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
 
 **Gemergt am 23.10.2026 (PR #157 und #158), noch nicht als Paket gebaut;
 die Fassungsnummer bleibt bis dahin 7.2.0.122.** Beim nächsten Paket wird
@@ -127,6 +126,13 @@ dieser Abschnitt zu 7.2.0.123.
   dem Lader deren Pfad (`PGHTMIMP.CPP`, `E119DataNachDatei`). Am Prüfstand
   erst rot, dann grün gemessen; die abgelegten Dateien sind byte-gleich mit
   den Originalbildern. Neue Regressionsfälle `E-119a` bis `c`.
+* **[E-113](Intern/BEFUNDE.md#e-113) — ein Bild, das breiter ist als das
+  Verfassen-Fenster, läuft nicht mehr rechts hinaus.** Es wird beim Laden auf
+  die Breite des Textbereichs verkleinert, ohne verzerrt zu werden
+  (`E113Deckeln`, `PgEmbeddedImage.cpp`). Am Prüfstand gemessen: ein Banner
+  985×378 kam vorher in voller Breite, jetzt als 718×276. Wird das Fenster
+  danach schmaler gezogen, passt sich das Bild **nicht** an (Variante B,
+  nicht gebaut). Testsuite 284/284, Regressionsfall `E-113p`.
 
 ## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
 
