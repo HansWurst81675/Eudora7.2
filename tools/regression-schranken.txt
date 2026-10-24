@@ -59,9 +59,12 @@ E-73 | pruefe-filter-serverloeschung.pl | Eudora71/Eudora/filtersd.cpp | _T("Set
 # Rueckschalter; jetzt fragt der Junk-Weg FilterDarfVomServerLoeschen.
 E-74 | pruefe-filter-serverloeschung.pl | Eudora71/Eudora/JunkMail.cpp | \t\t\t FilterDarfVomServerLoeschen("Junk", pSum->GetSubject(), "Junk-Filteraktion"))) ==> \t\t\t TRUE))
 
-# NICHT hier: E-43 (SECControlBar zweimal definiert, pruefe-waechter.pl).
-# Gemessen am 24.10.2026: entfernt man "#define __SBARDOCK_H__" in
-# OTShim/OTShim.h, bleibt pruefe-waechter.pl gruen - vermutlich greift die
-# Regel dann gar nicht, weil keine Ersatzdatei den Waechter mehr setzt. Eine
-# Rueckfallprobe, die rot wird, ist noch nicht gefunden; bis dahin zaehlt
-# E-43 nicht als gedeckt.
+# E-43: SECControlBar war zweimal definiert, weil OTShim_Werkzeugleiste.h das
+# OT501-Original sbarcore.h hinter "#ifndef __SBARCORE_H__" einband - den
+# Waechter setzt aber OTShim.h. Die Behebung bindet OTShim.h selbst ein.
+# Der Rueckfall stellt die alte Einbindung wieder her.
+# (Erster Versuch am 24.10.2026, "#define __SBARDOCK_H__" in OTShim.h zu
+# entfernen, blieb gruen: dann setzt keine Ersatzdatei den Waechter mehr, und
+# die Regel greift zu Recht nicht. Das war die falsche Probe, nicht die
+# falsche Schranke.)
+E-43 | pruefe-waechter.pl | Eudora71/OTShim/OTShim_Werkzeugleiste.h | #include "OTShim.h"\t\t\t// SECControlBar (ERSATZ) und __SBARCORE_H__ ==> #ifndef __SBARCORE_H__\n#include "sbarcore.h"\n#endif
