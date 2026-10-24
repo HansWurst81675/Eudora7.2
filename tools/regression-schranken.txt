@@ -1,0 +1,70 @@
+# regression-schranken.txt - Schranken im pre-commit, die als Regressionstest
+# fuer einen Befund zaehlen.
+#
+# Gelesen von tools/schranken-gegenprobe.pl (faehrt die Rueckfallprobe) und
+# tools/pruefe-regressionstest.pl (zaehlt die Kennung als gedeckt, wenn die
+# Schranke im pre-commit steht). Eine Zeile gehoert nur hierher, wenn die
+# Rueckfallprobe ROT geworden ist - gemessen, nicht vermutet.
+#
+# Format: Kennung | Schranke | Datei | Rueckfall: alt ==> neu
+#   alt muss genau einmal in der Datei vorkommen; \t steht fuer Tabulator.
+#   Der Rueckfall nimmt die Behebung zurueck, so knapp wie moeglich.
+#
+# Angelegt am 24.10.2026, als Gregor den Rueckstand an Regressionstests
+# angeordnet hat: "dann wuerde ich den branch einfach
+# fehlende_regression_tests_implementieren nennen und dort alle restlichen
+# tests einbauen".
+
+# E-42: zwoelf Aufraeumschritte beim Beenden laufen durch AUFRAEUMEN, damit
+# ein Fehler in einem Schritt nicht die uebrigen abbricht.
+E-42 | pruefe-beenden.pl | Eudora71/Eudora/mainfrm.cpp | AUFRAEUMEN("CloseImapConnections", CImapMailMgr::CloseImapConnections()); ==> CImapMailMgr::CloseImapConnections();
+
+# E-41: Alt-F4 und das Kreuz (SC_CLOSE) laufen abgesichert durch TRY.
+E-41 | pruefe-beenden.pl | Eudora71/Eudora/mainfrm.cpp | \t\tBOOL bSystemwegOk = TRUE;\n\t\tTRY ==> \t\tBOOL bSystemwegOk = TRUE;\n\t\tif (1)
+
+# E-40: eine Rueckfrage, die sich nicht oeffnen laesst, galt als "Abbrechen"
+# und hielt Eudora offen; der default-Zweig von SaveModified setzt fort.
+E-40 | pruefe-beenden.pl | Eudora71/Eudora/doc.cpp | \t\t\tPutDebugLog(DEBUG_MASK_MISC, strMeldung);\n\t\t} ==> \t\t\tPutDebugLog(DEBUG_MASK_MISC, strMeldung);\n\t\t\treturn (FALSE);\n\t\t}
+
+# E-45: QCWorkbook::OnClose darf NICHT durch AUFRAEUMEN laufen - sonst bleibt
+# nach einem Fehler ein Prozess ohne Fenster uebrig.
+E-45 | pruefe-beenden.pl | Eudora71/Eudora/mainfrm.cpp | \t\tQCWorkbook::OnClose(); ==> \t\tAUFRAEUMEN("QCWorkbook::OnClose", QCWorkbook::OnClose());
+
+# E-62: die eigenen Nachrichtenschleifen in Eudoras Quellen stellen WM_QUIT
+# zurueck (hier die Warteschleife in SyncPlayMedia, guiutils.cpp).
+E-62 | pruefe-nachrichtenschleife.pl | Eudora71/Eudora/guiutils.cpp | \t\t\tif (msg.message == WM_QUIT) ==> \t\t\tif (msg.message == WM_NULL)
+
+# E-61: Splitter::Track stellt WM_QUIT zurueck, statt es zu verschlucken.
+E-61 | pruefe-nachrichtenschleife.pl | Eudora71/OTShim/OTShim.cpp | if (msg.message == WM_QUIT) ==> if (msg.message == WM_NULL)
+
+# E-34: QCChildToolBar::GetButton prueft den Index, bevor es m_btns liest.
+E-34 | pruefe-fensterbau.pl | Eudora71/Eudora/QCChildToolBar.cpp | if ( iIndex < 0 || iIndex >= GetBtnCount() ) ==> if ( 0 )
+
+# E-16: Absturz beim Verfassen - m_btns[iIndex] griff daneben; dieselbe
+# Indexschranke in GetButton wie bei E-34 (die Schranke nennt beide).
+E-16 | pruefe-fensterbau.pl | Eudora71/Eudora/QCChildToolBar.cpp | if ( iIndex < 0 || iIndex >= GetBtnCount() ) ==> if ( 0 )
+
+# E-36: UpdateMoodMailButton prueft das Ergebnis von GetButton auf NULL.
+E-36 | pruefe-fensterbau.pl | Eudora71/Eudora/PgCompMsgView.cpp | if (pStimmung && pStimmung->GetScore() != nScore) ==> if (pStimmung->GetScore() != nScore)
+
+# E-68: eine Filterregel mit mehr als fuenf Aktionen schrieb hinter das Ende
+# von m_Actions; die Grenze verwirft die ueberzaehlige Zeile.
+E-68 | pruefe-filter-aktionsgrenze.pl | Eudora71/Eudora/filtersd.cpp | if (filt && i >= NUM_FILT_ACTS && IstAktionsSchluesselwort(Keyword)) ==> if (0)
+
+# E-73: eine Filteraktion loeschte Post auf dem Server; der Rueckschalter
+# FilterMayDeleteFromServer steht per Vorgabe auf 0.
+E-73 | pruefe-filter-serverloeschung.pl | Eudora71/Eudora/filtersd.cpp | _T("Settings"), _T("FilterMayDeleteFromServer"), 0, INIPath); ==> _T("Settings"), _T("FilterMayDeleteFromServer"), 1, INIPath);
+
+# E-74: "Delete fetched junk" loeschte aus einer Filteraktion heraus ohne
+# Rueckschalter; jetzt fragt der Junk-Weg FilterDarfVomServerLoeschen.
+E-74 | pruefe-filter-serverloeschung.pl | Eudora71/Eudora/JunkMail.cpp | \t\t\t FilterDarfVomServerLoeschen("Junk", pSum->GetSubject(), "Junk-Filteraktion"))) ==> \t\t\t TRUE))
+
+# E-43: SECControlBar war zweimal definiert, weil OTShim_Werkzeugleiste.h das
+# OT501-Original sbarcore.h hinter "#ifndef __SBARCORE_H__" einband - den
+# Waechter setzt aber OTShim.h. Die Behebung bindet OTShim.h selbst ein.
+# Der Rueckfall stellt die alte Einbindung wieder her.
+# (Erster Versuch am 24.10.2026, "#define __SBARDOCK_H__" in OTShim.h zu
+# entfernen, blieb gruen: dann setzt keine Ersatzdatei den Waechter mehr, und
+# die Regel greift zu Recht nicht. Das war die falsche Probe, nicht die
+# falsche Schranke.)
+E-43 | pruefe-waechter.pl | Eudora71/OTShim/OTShim_Werkzeugleiste.h | #include "OTShim.h"\t\t\t// SECControlBar (ERSATZ) und __SBARCORE_H__ ==> #ifndef __SBARCORE_H__\n#include "sbarcore.h"\n#endif
