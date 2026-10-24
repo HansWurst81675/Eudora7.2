@@ -17,7 +17,7 @@ neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 17 von 19 erfüllt, 2 offen.** Diese Übersicht wird aus den
+**Stand: 18 von 19 erfüllt, 1 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -25,7 +25,6 @@ beschädigt, steht oben.
 
 | | wer | Was noch fehlt | Wie zu prüfen |
 |---|---|---|---|
-| **E-77** | ich | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in `ImapMailbox::… | am eigenen IMAP-Prüfserver (`tools/imap-pruefserver.pl`). Einen Ordner `Entwürfe` anlegen, abrufen, in der Postfachliste nachsehen. Rot: `Entw&APw-rfe`. Grün: `Entwürfe`. |
 | **E-116** | ich | die Messung am laufenden Programm — **am laufenden Programm noch nicht gesehen**, es fehlt eine Prüfnachricht mit `<img width="35px">`, auf der das… | Prüfnachricht mit `width="35px"` und `width="35.5"` in der gebauten Fassung öffnen; das Bild muss 35 Pixel breit sein, nicht über die Fensterbreite laufen. **Zuletzt belegt am Quelltext: … |
 
 <!-- ziel-stand: Ende -->

@@ -47,7 +47,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-91](Intern/BEFUNDE.md#e-91)** | zitierte Bereiche stehen bündig im Text, ohne Randbalken und Einrückung — auf Gregors … | 22.10.2026 an 7.2.0.121 (Quelltext) | die **Messung selbst** — ungeklärt ist, ob Gregors Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` tru… |
 | **[E-90](Intern/BEFUNDE.md#e-90)** | Emoji in Betreffzeilen fallen ersatzlos weg (bis 7.2.0.58: sie erschienen als ?) — Grego… | 22.10.2026 an 7.2.0.121 (Quelltext) | nichts, was für sich zu beheben wäre — `?` ist die bessere von zwei Möglichkeiten, solange Eudora durchgehend ANSI/MBCS gebaut ist (Begründung i… |
 | **[E-78](Intern/BEFUNDE.md#e-78)** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… | 22.10.2026 an 7.2.0.121 | die Auswertung der vorhandenen Spurmarken und danach die Behebung — `E-78 nach SetDockState` und `E-78 vor/nach LoadWazooBarConfig` (`mainfrm.cpp`, … |
-| **[E-77](Intern/BEFUNDE.md#e-77)** | IMAP-Postfachnamen mit Umlauten werden roh angezeigt — Entw&APw-rfe statt *Entwürfe*, G… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Behebung — eine Dekodierung von modifiziertem UTF-7 gibt es in `Eudora71/` nirgends; der rohe Name geht aus der `LIST`-Antwort in `ImapMailbox::… |
 | **[E-71](Intern/BEFUNDE.md#e-71)** | der Filterbericht ist nach einem Filterlauf leer | 22.10.2026 an 7.2.0.121 (Quelltext) | nicht die Behebung, sondern Gregors Freigabe — er hat ihn ausdrücklich auf die nächste Fassung geschoben. Die Messung steht fertig da: in `CFilter… |
 | **[E-47](Intern/BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … | 22.10.2026 an 7.2.0.121 (Quelltext) | eine Entscheidung, keine Behebung — `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nie als Redistributable veröffentlicht, `RegisterCOMObjects()` sche… |
 | **[E-39](Intern/BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Bestätigung am laufenden Programm — belegt ist nur der Quelltext (`persona.cpp:565-566` und `:179-198`, `rs.cpp:1237-1250`). Zu fahren wäre: d… |
@@ -94,7 +93,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122, noch ohne Paket — zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+## Seit 7.2.0.122, noch ohne Paket — IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
 
 **Gemergt am 23.10.2026 (PR #157 und #158), noch nicht als Paket gebaut;
 die Fassungsnummer bleibt bis dahin 7.2.0.122.** Beim nächsten Paket wird
@@ -133,6 +132,13 @@ dieser Abschnitt zu 7.2.0.123.
   985×378 kam vorher in voller Breite, jetzt als 718×276. Wird das Fenster
   danach schmaler gezogen, passt sich das Bild **nicht** an (Variante B,
   nicht gebaut). Testsuite 284/284, Regressionsfall `E-113p`.
+* **[E-77](Intern/BEFUNDE.md#e-77) — IMAP-Ordner mit Umlauten heißen richtig.**
+  GMX schickt Ordnernamen wie vorgeschrieben in modifiziertem UTF-7
+  (`Entw&APw-rfe`); Eudora hat das nie übersetzt. Jetzt zeigt es „Entwürfe" und
+  „Gelöscht"; beim Anlegen und Umbenennen wird der Name für den Server wieder
+  kodiert. Servername, lokale Verzeichnisse und Filter bleiben unverändert. Am
+  Prüfstand erst rot, dann grün gemessen; Testsuite 286/286, Regressionsfälle
+  `E-77a` bis `c`. Anlegen und Umbenennen sind nur in der Testsuite geprüft.
 
 ## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
 

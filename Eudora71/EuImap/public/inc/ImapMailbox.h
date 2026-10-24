@@ -523,6 +523,12 @@ BOOL ImapCopyAttachmentFile (LPCSTR pSourceAttachmentDir, LPCSTR pTargetMailboxD
 BOOL GetUniqueTempFilepath (LPCSTR pParentDir, LPCSTR pBaseName, CString &NewName);
 void FormulateFriendlyImapName (LPCSTR pImapName, TCHAR DelimiterChar, CString& FriendlyName);
 
+// BEFUND E-77: modifiziertes UTF-7 der IMAP-Postfachnamen (RFC 3501, 5.1.3).
+BOOL E77Utf7Dekodieren(const char* pIn, char* pOut, int nOut);
+BOOL E77Utf7Kodieren(const char* pIn, char* pOut, int nOut);
+CString E77ImapNameZurAnzeige(LPCSTR pImapName);
+CString E77ImapNameFuerServer(LPCSTR pName);
+
 BOOL RenameMboxDirAndContents (LPCSTR pOldDirpath, ImapMailboxNode *pNode, CString& szNewDirname, LPCSTR pNewParentDir = NULL);
 
 BOOL RenameInternalMailboxFiles (LPCSTR pOldDirPathname, LPCSTR pNewDirPathname);

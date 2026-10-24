@@ -2650,7 +2650,7 @@ QCImapMailboxCommand* CImapAccount::CreateMailbox(LPCSTR szName,
 			strNewImapName += cDelimiter;
 		}
 	}
-	strNewImapName += strNewMailboxName;
+	strNewImapName += E77ImapNameFuerServer(strNewMailboxName);   // BEFUND E-77
 
 	// The newly formed IMAP name must not be empty.
 	if (strNewImapName.IsEmpty())
@@ -3023,7 +3023,7 @@ BOOL CImapAccount::RenameMailbox(QCImapMailboxCommand *pImapCommand,
 		if (cDelimiter == '\0')
 		{
 			// No hierarchy. Use basename as is.
-			strNewFullImapName = szNewImapName;
+			strNewFullImapName = E77ImapNameFuerServer(szNewImapName);   // BEFUND E-77
 		}
 		else
 		{
@@ -3034,13 +3034,13 @@ BOOL CImapAccount::RenameMailbox(QCImapMailboxCommand *pImapCommand,
 			if (nc < 0)
 			{
 				// Top level. Use as is.
-				strNewFullImapName = szNewImapName;
+				strNewFullImapName = E77ImapNameFuerServer(szNewImapName);   // BEFUND E-77
 			}
 			else
 			{
 				// Replace basename.
 				strNewFullImapName = strNewFullImapName.Left (nc + 1);
-				strNewFullImapName += szNewImapName;
+				strNewFullImapName += E77ImapNameFuerServer(szNewImapName);   // BEFUND E-77
 			}
 		}
 	}

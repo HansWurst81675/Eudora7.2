@@ -247,6 +247,16 @@ $nStart = Find-Line $em '^void E112Zielrechteck\s*\(' 0
 $nEnd = Find-Line $em '^\}\s*$' $nStart
 Write-Region $em $nStart $nEnd (Join-Path $OutDir "pgembedded_e112.inc") $embPath
 
+# Region P3: E-77 - modifiziertes UTF-7 der IMAP-Postfachnamen. Von der
+# Hilfsfunktion E77Base64Wert bis zum Ende von E77Utf7Kodieren, alles aus
+# der echten Quelle.
+$imbPath = Join-Path $SrcDir "..\EuImap\src\ImapMailbox.cpp"
+$imb = Read-Lines $imbPath
+$nStart = Find-Line $imb '^static int E77Base64Wert\s*\(' 0
+$nKod = Find-Line $imb '^BOOL E77Utf7Kodieren\s*\(' $nStart
+$nEnd = Find-Line $imb '^\}\s*$' $nKod
+Write-Region $imb $nStart $nEnd (Join-Path $OutDir "imapmailbox_e77.inc") $imbPath
+
 # Region N2: E113Deckeln - wird ein zu breites Bild auf den Textbereich
 # verkleinert? Steht gleich hinter E112Zielrechteck, ohne Paige-Typen.
 $nStart = Find-Line $em '^void E113Deckeln\s*\(' 0

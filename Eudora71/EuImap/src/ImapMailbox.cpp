@@ -6995,6 +6995,156 @@ BOOL RemoveLocalDirectory (LPCSTR pPathname, BOOL RemoveChildren)
 // Write the result into FriendlyName.
 // END FUNCTION
 
+//
+// BEFUND E-77: IMAP-Postfachnamen mit Umlauten wurden roh angezeigt,
+// "Entw&APw-rfe" statt "Entwuerfe". IMAP kodiert Nicht-ASCII in Postfachnamen
+// als MODIFIZIERTES UTF-7 (RFC 3501, Abschnitt 5.1.3): "&" leitet einen
+// Base64-Abschnitt aus UTF-16BE ein, "-" beendet ihn, "/" ist durch ","
+// ersetzt, "&-" steht fuer ein einzelnes "&". Eudora hat das nie dekodiert.
+//
+// Zwei reine Funktionen ohne MFC, damit die Testsuite sie pruefen kann
+// (Tests/TestE77.cpp). Eudora arbeitet in Windows-1252; ein Zeichen, das es
+// dort nicht gibt, laesst die Dekodierung scheitern - dann bleibt der Name
+// roh stehen. Lieber "Entw&APw-rfe" als ein falscher Name. Rueckgabe FALSE
+// heisst immer: pOut ist unbrauchbar, der Aufrufer nimmt den Eingang.
+//
+static int E77Base64Wert(char c)
+{
+	if (c >= 'A' && c <= 'Z') return c - 'A';
+	if (c >= 'a' && c <= 'z') return c - 'a' + 26;
+	if (c >= '0' && c <= '9') return c - '0' + 52;
+	if (c == '+') return 62;
+	if (c == ',') return 63;
+	return -1;
+}
+
+BOOL E77Utf7Dekodieren(const char* pIn, char* pOut, int nOut)
+{
+	int o = 0;
+	if (!pIn || !pOut || nOut < 1)
+		return FALSE;
+	while (*pIn)
+	{
+		if (*pIn != '&')
+		{
+			if (o + 1 >= nOut) return FALSE;
+			pOut[o++] = *pIn++;
+			continue;
+		}
+		++pIn;
+		if (*pIn == '-')                   // "&-" ist ein "&"
+		{
+			if (o + 1 >= nOut) return FALSE;
+			pOut[o++] = '&';
+			++pIn;
+			continue;
+		}
+		// Base64-Abschnitt bis "-": Bits sammeln, je 16 Bit ein UTF-16-Zeichen.
+		WCHAR wPuffer[256];
+		int   nW = 0;
+		unsigned long nBits = 0;
+		int   nBitZahl = 0;
+		while (*pIn && *pIn != '-')
+		{
+			int v = E77Base64Wert(*pIn++);
+			if (v < 0) return FALSE;
+			nBits = (nBits << 6) | (unsigned long)v;
+			nBitZahl += 6;
+			if (nBitZahl >= 16)
+			{
+				nBitZahl -= 16;
+				if (nW >= 255) return FALSE;
+				wPuffer[nW++] = (WCHAR)((nBits >> nBitZahl) & 0xFFFF);
+			}
+		}
+		if (*pIn != '-' || nW == 0) return FALSE;
+		++pIn;
+		// Ins Windows-1252; ein Zeichen, das es dort nicht gibt, bricht ab.
+		BOOL bErsatz = FALSE;
+		int n = ::WideCharToMultiByte(1252, 0, wPuffer, nW, pOut + o, nOut - o - 1, NULL, &bErsatz);
+		if (n <= 0 || bErsatz) return FALSE;
+		o += n;
+	}
+	pOut[o] = 0;
+	return TRUE;
+}
+
+BOOL E77Utf7Kodieren(const char* pIn, char* pOut, int nOut)
+{
+	static const char szB64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+,";
+	int o = 0;
+	if (!pIn || !pOut || nOut < 1)
+		return FALSE;
+	while (*pIn)
+	{
+		unsigned char c = (unsigned char)*pIn;
+		if (c >= 0x20 && c <= 0x7E)
+		{
+			if (c == '&')
+			{
+				if (o + 2 >= nOut) return FALSE;
+				pOut[o++] = '&';
+				pOut[o++] = '-';
+			}
+			else
+			{
+				if (o + 1 >= nOut) return FALSE;
+				pOut[o++] = (char)c;
+			}
+			++pIn;
+			continue;
+		}
+		// Einen Lauf von Zeichen ausserhalb von ASCII sammeln und kodieren.
+		const char* pLauf = pIn;
+		while (*pIn && !((unsigned char)*pIn >= 0x20 && (unsigned char)*pIn <= 0x7E))
+			++pIn;
+		WCHAR wPuffer[256];
+		int nW = ::MultiByteToWideChar(1252, 0, pLauf, (int)(pIn - pLauf), wPuffer, 256);
+		if (nW <= 0) return FALSE;
+		if (o + 1 >= nOut) return FALSE;
+		pOut[o++] = '&';
+		unsigned long nBits = 0;
+		int nBitZahl = 0;
+		for (int i = 0; i < nW; ++i)
+		{
+			nBits = (nBits << 16) | (unsigned long)wPuffer[i];
+			nBitZahl += 16;
+			while (nBitZahl >= 6)
+			{
+				nBitZahl -= 6;
+				if (o + 1 >= nOut) return FALSE;
+				pOut[o++] = szB64[(nBits >> nBitZahl) & 0x3F];
+			}
+		}
+		if (nBitZahl > 0)
+		{
+			if (o + 1 >= nOut) return FALSE;
+			pOut[o++] = szB64[(nBits << (6 - nBitZahl)) & 0x3F];
+		}
+		if (o + 1 >= nOut) return FALSE;
+		pOut[o++] = '-';
+	}
+	pOut[o] = 0;
+	return TRUE;
+}
+
+// Bequeme Huellen fuer die Aufrufer in EuImap: bei Misserfolg der Eingang.
+CString E77ImapNameZurAnzeige(LPCSTR pImapName)
+{
+	char szAus[1024];
+	if (pImapName && E77Utf7Dekodieren(pImapName, szAus, sizeof(szAus)))
+		return CString(szAus);
+	return CString(pImapName ? pImapName : "");
+}
+
+CString E77ImapNameFuerServer(LPCSTR pName)
+{
+	char szAus[1024];
+	if (pName && E77Utf7Kodieren(pName, szAus, sizeof(szAus)))
+		return CString(szAus);
+	return CString(pName ? pName : "");
+}
+
 void FormulateFriendlyImapName (LPCSTR pImapName, TCHAR DelimiterChar, CString& FriendlyName)
 {
 
@@ -7019,6 +7169,17 @@ void FormulateFriendlyImapName (LPCSTR pImapName, TCHAR DelimiterChar, CString& 
 			int i = FriendlyName.ReverseFind (DelimiterChar);
 			if (i >= 0)
 				FriendlyName = FriendlyName.Mid (i + 1);
+		}
+
+		// BEFUND E-77: der Anzeigename ist dekodiert; der Servername
+		// (m_szImapName) und das lokale Verzeichnis bleiben, wie sie sind.
+		CString szRoh = FriendlyName;
+		FriendlyName = E77ImapNameZurAnzeige(szRoh);
+		if (FriendlyName != szRoh)
+		{
+			CString szSpur;
+			szSpur.Format("E-77 Ordnername: server=\"%s\" anzeige=\"%s\"", (LPCSTR)szRoh, (LPCSTR)FriendlyName);
+			PutDebugLog(DEBUG_MASK_MISC, szSpur);
 		}
 	}
 }
