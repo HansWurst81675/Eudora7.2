@@ -42,7 +42,7 @@ Eintrag zu [E-77](../Intern/BEFUNDE.md#e-77)**: der Eintrag sagt, Umbenennen
 sei kodiert. Das stimmt nur für den Server, nicht für Eudora selbst.
 [K1](#k1) ist eine Behebung in zwei Zeilen.
 
-**Neue E-Kennung: E-145** ([K11](#k11), `Base64Decoder` liest bei Bytes über
+**Neue E-Kennung: [E-145](../Intern/BEFUNDE.md#e-145)** ([K11](#k11), `Base64Decoder` liest bei Bytes über
 127 vor seiner Tabelle, Originalfehler von QUALCOMM). **E-146 bleibt frei.**
 Alle anderen Funde gehören zu [E-77](../Intern/BEFUNDE.md#e-77),
 [E-113](../Intern/BEFUNDE.md#e-113) oder [E-119](../Intern/BEFUNDE.md#e-119).
@@ -542,7 +542,7 @@ fremde Bytes aus einem HTML-Attribut ankommen.
 
 **Behebung:** `g_Decode[(unsigned char)*In]`, eine Zeile. Prüffall in
 `Tests/` mit `"QQ\xE4=="`: Das Byte muss als ungültig zählen, die Ausgabe
-`A` bleiben. **Gering.** Kennung **E-145** ist hiermit vergeben, aber noch
+`A` bleiben. **Gering.** Kennung **[E-145](../Intern/BEFUNDE.md#e-145)** ist hiermit vergeben, aber noch
 nicht in `Intern/BEFUNDE.md` eingetragen; das gehört nicht zu meinem
 Auftrag.
 
@@ -599,7 +599,7 @@ Auftrag.
 | [K4](#k4) | [E-77](../Intern/BEFUNDE.md#e-77): Grenzfälle (U+0000 leer, doppelte Kodierung roher Namen, Rückfall auf rohe Bytes, `&` im Menü) | gering | nein |
 | [K8](#k8) | [E-119](../Intern/BEFUNDE.md#e-119): halbe Datei bleibt für immer, FNV-Kollision zeigt das falsche Bild | gering | nein |
 | [K10](#k10) | [E-113](../Intern/BEFUNDE.md#e-113): QuickTime-Weg ohne Deckel; Absender-Fensterbreite geht zum Empfänger | gering / Hinweis | nein |
-| [K11](#k11) | **E-145 (neu)**: `Base64Decoder` liest bei Bytes über 127 vor der Tabelle | gering, Original | nein |
+| [K11](#k11) | **[E-145](../Intern/BEFUNDE.md#e-145) (neu)**: `Base64Decoder` liest bei Bytes über 127 vor der Tabelle | gering, Original | nein |
 
-**Vergeben: E-145. Frei: E-146.** Eingetragen in `Intern/BEFUNDE.md` ist
+**Vergeben: [E-145](../Intern/BEFUNDE.md#e-145). Frei: E-146.** Eingetragen in `Intern/BEFUNDE.md` ist
 nichts.

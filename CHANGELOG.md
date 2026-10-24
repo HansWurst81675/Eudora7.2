@@ -24,6 +24,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
 | **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | **nie gemessen** | die Ursache der leeren Kopie messen (Spurmarke beim Lesen der IMAP-Quelle, Vorschlag in PRÜFER-48), dann beheben. Außerdem, aus der ersten Fassung, … |

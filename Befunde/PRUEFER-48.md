@@ -19,7 +19,7 @@ Lauf hat dieselbe Funktion einen lokalen Entwurf vollständig kopiert
 ([K7](#k7)). Für [E-144](../Intern/BEFUNDE.md#e-144) gibt es eine Behebung in zwei Zeilen, in
 `summary.cpp`, nicht in `compmsgd.cpp` ([K8](#k8)).
 
-**Kein Fund hält ein Release auf.** Neue E-Kennungen: **keine.** E-145 und
+**Kein Fund hält ein Release auf.** Neue E-Kennungen: **keine.** [E-145](../Intern/BEFUNDE.md#e-145) und
 E-146 sind nicht vergeben. Alle Funde gehören zu bestehenden Befunden
 (`perl tools/befund-suchen.pl` zu `Paige32.dll`, `EuMemMgr.dll`, `BindExe`,
 `decimal_value_percent`, `numeric_value` und `SendAgain` vorher gelaufen).
@@ -526,6 +526,6 @@ Release auf**, denn das Verhalten ist so seit dem ersten Stand.
 | [K3](#k3) | „acht eigene" sind acht von zwölf | Doku | nein |
 | [K6](#k6) | Höhe 0 aus `" 35"` zeichnet keinen Strich | keine | nein |
 
-**Keine neue E-Kennung vergeben**, E-145 und E-146 bleiben frei. Alle Funde
+**Keine neue E-Kennung vergeben**, [E-145](../Intern/BEFUNDE.md#e-145) und E-146 bleiben frei. Alle Funde
 gehören zu [E-116](../Intern/BEFUNDE.md#e-116), [E-130](../Intern/BEFUNDE.md#e-130), [E-142](../Intern/BEFUNDE.md#e-142) oder [E-144](../Intern/BEFUNDE.md#e-144). Eingetragen in `Intern/BEFUNDE.md`
 ist nichts, das gehört nicht zu meinem Auftrag.
