@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 23.10.2026.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 24.10.2026.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
@@ -360,7 +360,6 @@ nicht selbst messen kann*.
 | **[E-124](BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 23.10.2026 an 7.2.0.121 | der Vorgang bei Microsoft ist **abgewiesen** (zu viele Dateien im Upload, siehe die Messung unten) — nachzuholen ist eine **neue** Einreichung mit *… |
 | **[E-123](BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | 22.10.2026 an 7.2.0.121 | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
 | **[E-122](BEFUNDE.md#e-122)** | Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone v… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Berichtigung selbst — `ImapMailbox.cpp:4281` übergibt `CSummary::m_Seconds` an `append_date`, das echtes UTC erwartet, während `m_Seconds` UTC… |
-| **[E-119](BEFUNDE.md#e-119)** | Bilder, die als data:-Adresse im HTML stecken, erscheinen beim Antworten und Weiterleiten … | 22.10.2026 an 7.2.0.121 (Quelltext) | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… |
 | **[E-116](BEFUNDE.md#e-116)** | width="35px" wird als 3508 gelesen — eine Größenangabe mit Einheit oder Nachkommastell… | 23.10.2026 an 7.2.0.122 (Quelltext) | die Messung am laufenden Programm — **am laufenden Programm noch nicht gesehen**, es fehlt eine Prüfnachricht mit `<img width="35px">`, auf der das… |
 | **[E-113](BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… | 22.10.2026 an 7.2.0.121 (Quelltext) | alles — von Gregor angeordnet; die Vorbedingung E-112 ist seit 7.2.0.85 behoben, der Befund ist damit an der Reihe. Billig wäre ein Deckel beim Umb… |
 | **[E-109](BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… | 22.10.2026 an 7.2.0.121 (Quelltext) | die drei Forderungen sind nicht umgesetzt — je Schranke ein Testfall für ihre **bekannte Grenze**, eine Unterscheidung zwischen *geprüft und frei*… |

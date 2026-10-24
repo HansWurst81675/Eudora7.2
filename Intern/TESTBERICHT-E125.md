@@ -1,6 +1,6 @@
 # Testbericht E-125 — Verschieben nach `Out`, Paket 1.0.122
 
-**Stand 23.10.2026.** Geprüft ist Programmversion **7.2.0.122** aus Paket
+**Stand 24.10.2026** (Test vom 23.10.2026, am 24.10.2026 nach PRÜFER-47 und LEKTOR-54 berichtigt). Geprüft ist Programmversion **7.2.0.122** aus Paket
 **1.0.122**. Der Befund steht in [BEFUNDE.md](BEFUNDE.md#e-125), die Schritte
 für den Handtest in [TESTPLAN.md](TESTPLAN.md#m3-e125).
 
