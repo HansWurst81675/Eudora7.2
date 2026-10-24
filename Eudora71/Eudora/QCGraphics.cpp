@@ -157,8 +157,11 @@ HMETAFILE E112MetadateiAusDIB( const BITMAPINFO* pBMI, const void* pBits,
 	return ::CloseMetaFile( hdc );
 }
 
+// BEFUND E-113: Deckel auf die Breite des Textbereichs (PgEmbeddedImage.cpp).
+void E113Deckeln( long nMaxBreite, long* pnBreite, long* pnHoehe );
+
 bool MetafileFromImage(LPCSTR pURL, QCMetaFileInfo* pMFI, int TransparencySysColor /*= COLOR_3DFACE*/,
-					   long nAngabeBreite /*= 0*/, long nAngabeHoehe /*= 0*/)
+					   long nAngabeBreite /*= 0*/, long nAngabeHoehe /*= 0*/, long nMaxBreite /*= 0*/)
 {
 	HMETAFILE hm = 0;
 
@@ -175,6 +178,7 @@ bool MetafileFromImage(LPCSTR pURL, QCMetaFileInfo* pMFI, int TransparencySysCol
 		E112Zielrechteck( nAngabeBreite, nAngabeHoehe,
 						  (long) pImage->m_dwWidth, (long) pImage->m_dwHeight,
 						  &nZielBreite, &nZielHoehe );
+		E113Deckeln( nMaxBreite, &nZielBreite, &nZielHoehe );   // BEFUND E-113
 		hm = E112MetadateiAusDIB( pImage->m_lpBMI, pImage->m_lpSrcBits,
 								  (long) pImage->m_dwWidth, (long) pImage->m_dwHeight,
 								  nZielBreite, nZielHoehe );
