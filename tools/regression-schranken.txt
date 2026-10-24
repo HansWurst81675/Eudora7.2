@@ -22,6 +22,18 @@ E-42 | pruefe-beenden.pl | Eudora71/Eudora/mainfrm.cpp | AUFRAEUMEN("CloseImapCo
 # E-41: Alt-F4 und das Kreuz (SC_CLOSE) laufen abgesichert durch TRY.
 E-41 | pruefe-beenden.pl | Eudora71/Eudora/mainfrm.cpp | \t\tBOOL bSystemwegOk = TRUE;\n\t\tTRY ==> \t\tBOOL bSystemwegOk = TRUE;\n\t\tif (1)
 
+# E-40: eine Rueckfrage, die sich nicht oeffnen laesst, galt als "Abbrechen"
+# und hielt Eudora offen; der default-Zweig von SaveModified setzt fort.
+E-40 | pruefe-beenden.pl | Eudora71/Eudora/doc.cpp | \t\t\tPutDebugLog(DEBUG_MASK_MISC, strMeldung);\n\t\t} ==> \t\t\tPutDebugLog(DEBUG_MASK_MISC, strMeldung);\n\t\t\treturn (FALSE);\n\t\t}
+
+# E-45: QCWorkbook::OnClose darf NICHT durch AUFRAEUMEN laufen - sonst bleibt
+# nach einem Fehler ein Prozess ohne Fenster uebrig.
+E-45 | pruefe-beenden.pl | Eudora71/Eudora/mainfrm.cpp | \t\tQCWorkbook::OnClose(); ==> \t\tAUFRAEUMEN("QCWorkbook::OnClose", QCWorkbook::OnClose());
+
+# E-62: die eigenen Nachrichtenschleifen in Eudoras Quellen stellen WM_QUIT
+# zurueck (hier die Warteschleife in SyncPlayMedia, guiutils.cpp).
+E-62 | pruefe-nachrichtenschleife.pl | Eudora71/Eudora/guiutils.cpp | \t\t\tif (msg.message == WM_QUIT) ==> \t\t\tif (msg.message == WM_NULL)
+
 # E-61: Splitter::Track stellt WM_QUIT zurueck, statt es zu verschlucken.
 E-61 | pruefe-nachrichtenschleife.pl | Eudora71/OTShim/OTShim.cpp | if (msg.message == WM_QUIT) ==> if (msg.message == WM_NULL)
 
