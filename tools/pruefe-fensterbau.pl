@@ -174,7 +174,12 @@ my @geprueft;
             # geprueft werden.
             my $bis = ($i + 6 > $#zeilen) ? $#zeilen : $i + 6;
             my $fenster = join("\n", @zeilen[$i .. $bis]);
-            next if $fenster =~ /\bif\s*\([^)]*\b\Q$name\E\b/;
+            # Als Pruefung zaehlt nur der Name ALLEIN in der Bedingung oder mit
+            # &&, ||, != NULL, == NULL verknuepft - NICHT "name->...". Bis zum
+            # 24.10.2026 genuegte jedes "if (... name", und die Rueckfallprobe
+            # zu E-36 lief gruen durch: "if (pStimmung->GetScore() != nScore)"
+            # ist ein Zugriff, keine Pruefung (tools/schranken-gegenprobe.pl).
+            next if $fenster =~ /\bif\s*\([^;{]*?(?<![\w>.])\Q$name\E\s*(?:&&|\|\||\)|[!=]=\s*(?:NULL|0|nullptr)\b)/;
             next if $fenster =~ /\bif\s*\(\s*!\s*\Q$name\E\b/;
 
             push @ungeprueft, sprintf("%s:%d (%s ungeprueft)",

@@ -40,6 +40,13 @@ E-61 | pruefe-nachrichtenschleife.pl | Eudora71/OTShim/OTShim.cpp | if (msg.mess
 # E-34: QCChildToolBar::GetButton prueft den Index, bevor es m_btns liest.
 E-34 | pruefe-fensterbau.pl | Eudora71/Eudora/QCChildToolBar.cpp | if ( iIndex < 0 || iIndex >= GetBtnCount() ) ==> if ( 0 )
 
+# E-16: Absturz beim Verfassen - m_btns[iIndex] griff daneben; dieselbe
+# Indexschranke in GetButton wie bei E-34 (die Schranke nennt beide).
+E-16 | pruefe-fensterbau.pl | Eudora71/Eudora/QCChildToolBar.cpp | if ( iIndex < 0 || iIndex >= GetBtnCount() ) ==> if ( 0 )
+
+# E-36: UpdateMoodMailButton prueft das Ergebnis von GetButton auf NULL.
+E-36 | pruefe-fensterbau.pl | Eudora71/Eudora/PgCompMsgView.cpp | if (pStimmung && pStimmung->GetScore() != nScore) ==> if (pStimmung->GetScore() != nScore)
+
 # E-68: eine Filterregel mit mehr als fuenf Aktionen schrieb hinter das Ende
 # von m_Actions; die Grenze verwirft die ueberzaehlige Zeile.
 E-68 | pruefe-filter-aktionsgrenze.pl | Eudora71/Eudora/filtersd.cpp | if (filt && i >= NUM_FILT_ACTS && IstAktionsSchluesselwort(Keyword)) ==> if (0)
