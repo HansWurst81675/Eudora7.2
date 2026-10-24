@@ -86,6 +86,26 @@ for my $f (glob("$wurzel/Eudora71/Tests/*.cpp")) {
     }
 }
 
+# SCHRANKEN IM PRE-COMMIT ZAEHLEN AUCH (24.10.2026). Eine Schranke, die den
+# Quelltext bewacht und beim Rueckfall abweist, ist ein Regressionstest - sie
+# laeuft sogar bei jedem Commit. Gezaehlt wird aber nur, was in
+# tools/regression-schranken.txt steht (dort nur nach einer ROTEN
+# Rueckfallprobe mit tools/schranken-gegenprobe.pl) UND im pre-commit
+# eingehaengt ist. Eine Schranke, die nur im Verzeichnis liegt, prueft nichts
+# (Arbeitsweise/schranke-gehoert-in-den-haken.md).
+{
+    my $liste = lies("$wurzel/tools/regression-schranken.txt");
+    my $haken = lies("$wurzel/tools/hooks-einrichten.sh") // '';
+    if (defined $liste) {
+        for my $z (split /\n/, $liste) {
+            next if $z =~ /^\s*(#|$)/;
+            my ($k, $s) = map { s/^\s+|\s+$//gr } (split /\|/, $z)[0, 1];
+            next unless defined $s and $haken =~ /^schranke \Q$s\E\b/m;
+            $tests .= " $k ";
+        }
+    }
+}
+
 sub hat_test {
     my ($id) = @_;
     my $gross = uc $id;
