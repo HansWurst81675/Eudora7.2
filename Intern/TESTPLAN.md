@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.0.122 / `VERSION` 1.0.122, Stand 23.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.122 / `VERSION` 1.0.122, Stand 24.10.2026
 
 > **Bei dir liegt Paket 1.0.122** (`C:\Users\Gregor\Eudora72-1.0.122-release`,
 > seit 23.10.2026 um 12:00). Veröffentlicht ist `v1.0.120`.

@@ -9,6 +9,8 @@ from the PaigeImportFilter class. */
 // E-95-Messung, 15.09.2026 - siehe die Spurmarke weiter unten.
 #include "resource.h"
 #include "rs.h"
+#include "fileutil.h"   // E-119: EudoraDir, FileExistsMT
+#include "Base64.h"     // E-119: Base64Decoder
 #include "debug.h"
 
 #include "Paige.h"
@@ -3608,6 +3610,102 @@ pg_boolean PaigeHTMLImportFilter::BreakLine (pg_boolean unconditional, pg_boolea
 }
 
 
+/* E-119: ein Bild, das als data:-Adresse im HTML steckt ("data:image/png;base64,..."),
+erschien beim Antworten und Weiterleiten als grauer Kasten. Der Bildlader kennt nur
+cid:, file:// und Netzadressen; fuer data: fand er nichts (Protokoll: "E-110 Laden:
+src=data:... datei=0 intern=-1"). Dazu kuerzt ProcessAttributes jeden Attributwert auf
+kMaxAttributeSize-1 Zeichen, ein laengeres Bild kam also nie vollstaendig an.
+
+E119DataNachDatei dekodiert die Daten deshalb HIER, vor dem Kuerzen, in eine Datei unter
+Embedded und liefert "file://<Pfad>" zurueck, das der Lader direkt oeffnet
+(PgEmbeddedImage.cpp, is_filepath_url). Gleiche Daten ergeben denselben Dateinamen, ein
+Bild wird also nicht bei jedem Oeffnen neu abgelegt. Nur Bildtypen; alles andere bleibt
+wie es war. */
+
+static pg_boolean E119DataNachDatei (const char* szWert, long nLaenge, char* szAus, long nAusGroesse)
+{
+   static const struct { const char* szTyp; const char* szEndung; } aTypen[] = {
+      { "image/png", "png" }, { "image/jpeg", "jpg" }, { "image/jpg", "jpg" },
+      { "image/gif", "gif" }, { "image/bmp", "bmp" }
+   };
+   const char*    szEndung = NULL;
+   const char*    pDaten;
+   long           nDaten;
+   int            i;
+
+   if (nLaenge < 6 || _strnicmp(szWert, "data:", 5) != 0)
+      return FALSE;
+
+   for (i = 0; i < (int)(sizeof(aTypen) / sizeof(aTypen[0])); ++i) {
+      size_t n = strlen(aTypen[i].szTyp);
+      if ((long)(5 + n) < nLaenge && _strnicmp(szWert + 5, aTypen[i].szTyp, n) == 0
+            && (szWert[5 + n] == ';' || szWert[5 + n] == ',')) {
+         szEndung = aTypen[i].szEndung;
+         break;
+      }
+   }
+   if (!szEndung)
+      return FALSE;
+
+   // Nur Base64; ",base64," muss vor den Daten stehen.
+   pDaten = NULL;
+   for (i = 5; i + 7 < nLaenge; ++i) {
+      if (szWert[i] == ',') {
+         if (i >= 7 && _strnicmp(szWert + i - 7, ";base64", 7) == 0)
+            pDaten = szWert + i + 1;
+         break;
+      }
+   }
+   if (!pDaten)
+      return FALSE;
+   nDaten = nLaenge - (long)(pDaten - szWert);
+   if (nDaten <= 0)
+      return FALSE;
+
+   // Dateiname aus einer Pruefsumme der Daten (FNV-1a, 32 Bit).
+   unsigned long nHash = 2166136261UL;
+   for (i = 0; i < nDaten; ++i) {
+      nHash ^= (unsigned char)pDaten[i];
+      nHash *= 16777619UL;
+   }
+
+   CString szPfad;
+   szPfad.Format("%s%s\\data-%08lx.%s", (const char*)EudoraDir,
+      (const char*)CRString(IDS_EMBEDDED_FOLDER), nHash, szEndung);
+
+   if (szPfad.GetLength() + 8 >= nAusGroesse || szPfad.GetLength() + 8 >= 511)
+      return FALSE;
+
+   if (!FileExistsMT(szPfad)) {
+      char* pBin = DEBUG_NEW_NOTHROW char[nDaten + 4];
+      if (!pBin)
+         return FALSE;
+      Base64Decoder  d64;
+      LONG           nBin = 0;
+      d64.Init();
+      d64.Decode(pDaten, nDaten, pBin, nBin);
+
+      FILE* f = fopen(szPfad, "wb");
+      if (!f || nBin <= 0) {
+         if (f) fclose(f);
+         delete [] pBin;
+         return FALSE;
+      }
+      fwrite(pBin, 1, (size_t)nBin, f);
+      fclose(f);
+      delete [] pBin;
+   }
+
+   CString szSpur;
+   szSpur.Format("E-119 data-Bild als Datei: %s laenge=%ld", (const char*)szPfad, nLaenge);
+   PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+   _snprintf(szAus, nAusGroesse - 1, "file://%s", (const char*)szPfad);
+   szAus[nAusGroesse - 1] = 0;
+   return TRUE;
+}
+
+
 /* ProcessAttributes scans the input stream until it sees an end-tag char, processing
 all the attributes in the process. The command_type indicates the type of tag we are
 dealing with. */
@@ -3632,6 +3730,13 @@ void PaigeHTMLImportFilter::ProcessAttributes (pg_char_ptr attribute_table, shor
             
             if ((command = GetNextToken(&arg_size)) != NULL) {
                
+               // E-119: data:-Bild VOR dem Kuerzen in eine Datei schreiben.
+               char szE119Datei[kMaxAttributeSize];
+               if (E119DataNachDatei((const char*)command, (long)arg_size, szE119Datei, sizeof(szE119Datei))) {
+                  command = (pg_char_ptr)szE119Datei;
+                  arg_size = (pg_short_t)strlen(szE119Datei);
+               }
+
                if (arg_size >= kMaxAttributeSize)
                   arg_size = kMaxAttributeSize -1;
                

@@ -40,7 +40,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-124](Intern/BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 23.10.2026 an 7.2.0.121 | der Vorgang bei Microsoft ist **abgewiesen** (zu viele Dateien im Upload, siehe die Messung unten) — nachzuholen ist eine **neue** Einreichung mit *… |
 | **[E-123](Intern/BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | 22.10.2026 an 7.2.0.121 | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
 | **[E-122](Intern/BEFUNDE.md#e-122)** | Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone v… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Berichtigung selbst — `ImapMailbox.cpp:4281` übergibt `CSummary::m_Seconds` an `append_date`, das echtes UTC erwartet, während `m_Seconds` UTC… |
-| **[E-119](Intern/BEFUNDE.md#e-119)** | Bilder, die als data:-Adresse im HTML stecken, erscheinen beim Antworten und Weiterleiten … | 22.10.2026 an 7.2.0.121 (Quelltext) | der Einbau — die Base64-Daten müssen **vor** `PGHTMIMP.CPP:3317` (beim Zerlegen des `<img>`-Tags) in eine Datei unter `Embedded` dekodiert und `src… |
 | **[E-116](Intern/BEFUNDE.md#e-116)** | width="35px" wird als 3508 gelesen — eine Größenangabe mit Einheit oder Nachkommastell… | 23.10.2026 an 7.2.0.122 (Quelltext) | die Messung am laufenden Programm — **am laufenden Programm noch nicht gesehen**, es fehlt eine Prüfnachricht mit `<img width="35px">`, auf der das… |
 | **[E-113](Intern/BEFUNDE.md#e-113)** | Bilder, die breiter sind als das Fenster, laufen rechts hinaus — statt anteilig eingepas… | 22.10.2026 an 7.2.0.121 (Quelltext) | alles — von Gregor angeordnet; die Vorbedingung E-112 ist seit 7.2.0.85 behoben, der Befund ist damit an der Reihe. Billig wäre ein Deckel beim Umb… |
 | **[E-109](Intern/BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… | 22.10.2026 an 7.2.0.121 (Quelltext) | die drei Forderungen sind nicht umgesetzt — je Schranke ein Testfall für ihre **bekannte Grenze**, eine Unterscheidung zwischen *geprüft und frei*… |
@@ -96,7 +95,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122, noch ohne Paket — Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+## Seit 7.2.0.122, noch ohne Paket — Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
 
 **Gemergt am 23.10.2026 (PR #157 und #158), noch nicht als Paket gebaut;
 die Fassungsnummer bleibt bis dahin 7.2.0.122.** Beim nächsten Paket wird
@@ -117,7 +116,17 @@ dieser Abschnitt zu 7.2.0.123.
   Zeitstempel hinein. Er bindet jetzt nur die acht eigenen Bauergebnisse; die
   fünf DLLs im Repo sind wieder die Originale und gleichen denen im Paket.
   Gemessen: Release-Bau 134 s, 0 Fehler, danach keine der fünf als geändert.
-  Für den Anwender ändert sich nichts.
+  Für den Anwender ändert sich nichts. **Nachtrag 24.10.2026:** es waren
+  zwölf, nicht fünf ([PRÜFER-48](Befunde/PRUEFER-48.md) K1) — alle zwölf sind
+  jetzt im Original, und `TestE130.cpp` hält es fest.
+* **[E-119](Intern/BEFUNDE.md#e-119) — ein Bild, das direkt im HTML steckt,
+  erscheint beim Antworten und Weiterleiten nicht mehr als grauer Kasten.**
+  Solche Bilder (`data:image/...;base64,...`) kannte der Bildlader nicht, und
+  der HTML-Import kürzte den Wert vorher auf 1023 Zeichen. Jetzt schreibt der
+  Import das Bild **vor** dem Kürzen in eine Datei unter `Embedded` und gibt
+  dem Lader deren Pfad (`PGHTMIMP.CPP`, `E119DataNachDatei`). Am Prüfstand
+  erst rot, dann grün gemessen; die abgelegten Dateien sind byte-gleich mit
+  den Originalbildern. Neue Regressionsfälle `E-119a` bis `c`.
 
 ## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
 

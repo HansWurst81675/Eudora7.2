@@ -178,4 +178,11 @@ E-106p | C:\Temp\EBILD | 240 | log | E-106 groesser als angegeben: attr=35x35 qu
 E-110p | C:\Temp\EBILD | 240 | log | E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1 | | | messen=tools\messen-bild.ps1
 E-105p | C:\Temp\EBILD | 240 | log | E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet | | | messen=tools\messen-bild.ps1
 E-108p | C:\Temp\EBILD | 240 | log | Logging shutdown | Exception | | messen=tools\messen-bild.ps1
-BILD-lauf | C:\Temp\EBILD | 240 | messung | BILD ERGEBNIS abgeholt=5 geoeffnet=5 weitergeleitet=5 | | | messen=tools\messen-bild.ps1
+BILD-lauf | C:\Temp\EBILD | 240 | messung | BILD ERGEBNIS abgeholt=6 geoeffnet=6 weitergeleitet=6 | | | messen=tools\messen-bild.ps1
+# E-119 (24.10.2026): Bilder als data:-Adresse im HTML. Vor der Behebung
+# meldete der Lader "E-110 Laden: src=data:... datei=0 intern=-1" (grauer
+# Kasten), und das lange Bild (1552 Zeichen) kam gar nicht an. Gegen den
+# Bau ohne Behebung sind alle drei Faelle rot (gemessen am 24.10.2026).
+E-119a | C:\Temp\EBILD | 240 | log | data-db1b9f48.png faden=1 ok=1 | E-110 Laden: src=data: | | messen=tools\messen-bild.ps1
+E-119b | C:\Temp\EBILD | 240 | log | E-119 data-Bild als Datei: | | | messen=tools\messen-bild.ps1
+E-119c | C:\Temp\EBILD | 240 | log | data-2eaa4a58.png laenge=1574 | | | messen=tools\messen-bild.ps1
