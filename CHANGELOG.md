@@ -139,7 +139,11 @@ dieser Abschnitt zu 7.2.0.123.
   „Gelöscht"; beim Anlegen und Umbenennen wird der Name für den Server wieder
   kodiert. Servername, lokale Verzeichnisse und Filter bleiben unverändert. Am
   Prüfstand erst rot, dann grün gemessen; Testsuite 286/286, Regressionsfälle
-  `E-77a` bis `c`. Anlegen und Umbenennen sind nur in der Testsuite geprüft.
+  `E-77a` bis `c`. Nachtrag: nach dem Umbenennen führte Eudora den Ordner unter
+  dem unkodierten Namen weiter, der nächste Zugriff ging ins Leere
+  ([PRÜFER-49 K1](Befunde/PRUEFER-49.md#k1)) — behoben, am Prüfstand erst rot, dann
+  grün, Regressionsfall `E-77d`, Testsuite 291/291. Anlegen ist nur in der
+  Testsuite geprüft.
 
 ## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
 

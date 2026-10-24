@@ -50,6 +50,12 @@ use IO::Select;
 # das Postfach "Ablage"; SELECT/STATUS darauf zaehlen die hochgeladenen
 # Nachrichten, FETCH liefert sie.
 #
+# RENAME (seit 24.10.2026, Befund E-77, PRUEFER-49 K1): "tag RENAME alt neu"
+# benennt in der Ordnerliste um, die LIST/LSUB danach melden. SELECT, EXAMINE
+# und STATUS auf einen Namen, der nicht in der Liste steht, bekommen NO und
+# eine Zeile "!! UNBEKANNTES POSTFACH" - so wird sichtbar, wenn Eudora nach
+# dem Umbenennen einen anderen Namen benutzt als den, den es geschickt hat.
+#
 # Er hoert NUR auf 127.0.0.1. Von aussen ist er nicht erreichbar.
 #
 # WAS ER NICHT IST: eine vollstaendige IMAP-Umsetzung. Er kann genau so
@@ -160,6 +166,9 @@ my %gesehen;            # Befehl -> Anzahl
 my @ablage;             # per APPEND hochgeladene Nachrichten (Postfach "Ablage")
 my %gewaehlt;           # Verbindung -> gewaehltes Postfach
 my $append_nr = 0;      # laufende Nummer der Ablagedateien
+my $unbekannt = 0;      # Zugriffe auf ein Postfach, das es nicht gibt
+# Ordnerliste, wie der Server sie fuehrt (modifiziertes UTF-7, RFC 3501 5.1.3).
+my @ordner = ('INBOX', 'Entw&APw-rfe', 'Gel&APY-scht', 'Ablage');
 
 # E-121 (Gregor an 1.0.95): im Ordner "Ablage" liegt schon eine FREMDE Nachricht,
 # deren UID gleich der lokalen Kennung der zu verschiebenden Mail ist (bei Gregor
@@ -199,6 +208,16 @@ sub liste_fuer {
     my ($name) = @_;
     return ($name =~ /^Ablage$/i) ? \@ablage : \@nachrichten;
 }
+# Steht das Postfach in der Ordnerliste? INBOX ohne Ruecksicht auf Gross/klein.
+sub ordner_index {
+    my ($name) = @_;
+    for my $i (0 .. $#ordner) {
+        return $i if $ordner[$i] eq $name or (uc $name eq 'INBOX' and uc $ordner[$i] eq 'INBOX');
+    }
+    return -1;
+}
+# Bytes ueber 127 sichtbar machen, damit das Protokoll ASCII bleibt.
+sub sichtbar_bytes { my ($s) = @_; $s =~ s/([\x80-\xff])/sprintf('\\x%02X', ord $1)/ge; return $s }
 
 while (time < $ende) {
     my @bereit = $sel->can_read(2);
@@ -240,7 +259,7 @@ while (time < $ende) {
         # Kennwoerter nicht mitschreiben.
         my $sichtbar = $zeile;
         $sichtbar =~ s/^(\S+\s+LOGIN\s+\S+\s+).*$/$1<Kennwort nicht protokolliert>/i;
-        notiz("  <- $sichtbar");
+        notiz("  <- " . sichtbar_bytes($sichtbar));
 
         my ($marke, $befehl, $rest) = $zeile =~ /^(\S+)\s+(\S+)\s*(.*)$/;
         $marke  = '*' unless defined $marke;
@@ -259,11 +278,39 @@ while (time < $ende) {
             $antwort = "$marke OK angemeldet";
         }
         elsif ($B eq 'LIST' or $B eq 'LSUB') {
-            print $h "* $B (\\HasNoChildren) \"/\" \"INBOX\"\r\n";
-            print $h "* $B (\\HasNoChildren) \"/\" \"Entw&APw-rfe\"\r\n";
-            print $h "* $B (\\HasNoChildren) \"/\" \"Gel&APY-scht\"\r\n";
-            print $h "* $B (\\HasNoChildren) \"/\" \"Ablage\"\r\n";
+            print $h "* $B (\\HasNoChildren) \"/\" \"$_\"\r\n" for @ordner;
             $antwort = "$marke OK $B";
+        }
+        elsif (($B eq q{RENAME} or $B eq q{SELECT} or $B eq q{EXAMINE} or $B eq q{STATUS} or $B eq q{CREATE})
+               and $rest =~ /[\x80-\xff]/) {
+            # RFC 3501 5.1.3: Postfachnamen sind 7 Bit. Ein echter Server lehnt
+            # rohe Umlaute ab - so tat es Eudora vor E-77 beim Umbenennen.
+            $unbekannt++;
+            notiz("  !! 8-BIT IM POSTFACHNAMEN bei $B: " . sichtbar_bytes($rest));
+            $antwort = "$marke BAD $B: Postfachname nicht 7 Bit (RFC 3501 5.1.3)";
+        }
+        elsif ($B eq 'RENAME') {
+            my $alt = postfach_name($rest);
+            my $danach = $rest;
+            $danach =~ s/^(?:"(?:[^"\\]|\\.)*"|\S+)\s*//;
+            my $neu = postfach_name($danach);
+            my $i = ordner_index($alt);
+            if ($i < 0) {
+                $unbekannt++;
+                notiz('  !! UNBEKANNTES POSTFACH bei RENAME: "' . sichtbar_bytes($alt) . '"');
+                $antwort = "$marke NO [NONEXISTENT] RENAME: kein Postfach";
+            }
+            else {
+                $ordner[$i] = $neu;
+                notiz('  RENAME: "' . sichtbar_bytes($alt) . '" -> "' . sichtbar_bytes($neu) . '"');
+                $antwort = "$marke OK RENAME";
+            }
+        }
+        elsif (($B eq 'SELECT' or $B eq 'EXAMINE' or $B eq 'STATUS')
+               and ordner_index(postfach_name($rest)) < 0) {
+            $unbekannt++;
+            notiz("  !! UNBEKANNTES POSTFACH bei $B: \"" . sichtbar_bytes(postfach_name($rest)) . '"');
+            $antwort = "$marke NO [NONEXISTENT] $B: kein Postfach";
         }
         elsif ($B eq 'SELECT' or $B eq 'EXAMINE') {
             $gewaehlt{$h} = postfach_name($rest);
@@ -418,6 +465,8 @@ for my $b (sort keys %gesehen) {
 }
 notiz(sprintf('  \\Deleted verlangt      %d', $loeschen));
 notiz(sprintf('  EXPUNGE verlangt       %d', $expunge));
+notiz(sprintf('  unbekannte Postfaecher %d', $unbekannt));
+notiz('  Ordner am Ende: ' . join(', ', map { sichtbar_bytes($_) } @ordner));
 notiz('');
 
 if ($loeschen == 0 && $expunge == 0) {

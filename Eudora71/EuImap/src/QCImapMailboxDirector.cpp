@@ -2513,13 +2513,13 @@ BOOL QCMailboxDirector::UpdateAfterRename (QCImapMailboxCommand *pImapCommand, L
 	if (nc < 0)
 	{
 		// This is a top level mailbox. Replace complete name.
-		szNewFullImapName = pNewName;
+		szNewFullImapName = E77ImapNameFuerServer(pNewName);   // BEFUND E-77 (PRUEFER-49 K1): wie an den Server geschickt
 	}
 	else
 	{
 		// Replace basename.
 		szNewFullImapName = szNewFullImapName.Left (nc + 1);
-		szNewFullImapName += pNewName;
+		szNewFullImapName += E77ImapNameFuerServer(pNewName);   // BEFUND E-77 (PRUEFER-49 K1)
 	}
 
 	// Set the new full IMAP name.
