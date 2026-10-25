@@ -59,6 +59,75 @@ static void Test_E20(void)
 	const unsigned int aEndeSoll[]    = { 1, 2, 3, 4 };
 	E20_Pruefe("Einfuegen am Ende nicht auswertbar", aMitteVorher, 3, 4, 3, aEndeSoll, 4);
 	TT_EndTest();
+
+	// Die zweite E-20-Behebung sitzt im Bildlisten-Block von NotifyInsertedCol
+	// (PRUEFER-52 K2: auf den Originalstand gesetzt, blieb alles gruen).
+	TT_BeginTest("E-20: NotifyInsertedCol hinter dem Feldende bleibt in allen vier Feldern");
+	unsigned int aLaengen[4] = { 0, 0, 0, 0 };
+	bool bHeil = false, bAusnahme = false;
+	E20SpalteEinfuegen(1, 3, aLaengen, &bHeil, &bAusnahme);
+	TT_CHECK_MSG(!bAusnahme, "NotifyInsertedCol wirft");
+	TT_CHECK_MSG(bHeil, "NotifyInsertedCol schreibt hinter das Ende eines Spaltenfeldes");
+	TT_CHECK_MSG(aLaengen[0] == 4 && aLaengen[1] == 4 && aLaengen[2] == 4 && aLaengen[3] == 4,
+				 "nach dem Einfuegen an Spalte 3 haben die Felder nicht die Laenge 4");
+	TT_EndTest();
+}
+
+// E-150: das Gegenstueck beim Loeschen (PRUEFER-52 K1). Im Fenster "Task
+// Status" koennen die Spaltenfelder kuerzer sein als die Zahl der Spalten;
+// wird eine Spalte dahinter geloescht, schrieben DeleteArr und der
+// Bildlisten-Block in NotifyDeletedCol hinter das neue Feld. Eine Spalte
+// ohne Eintrag hat nichts zu loeschen - das Feld bleibt, wie es ist.
+static void E150_Pruefe(const char* szFall, const unsigned int* pVorher, unsigned int nVorher,
+						unsigned int nIdx, const unsigned int* pSoll, unsigned int nSoll)
+{
+	E20Ergebnis Erg;
+	const bool bAuswertbar = E150Loeschen(pVorher, nVorher, nIdx, &Erg);
+	TT_CHECK_MSG(bAuswertbar, szFall);
+	if (!bAuswertbar)
+		return;
+	TT_CHECK_MSG(!Erg.bAusnahme, "DeleteArr wirft (nLen - 1 vorzeichenlos riesig)");
+	if (Erg.bAusnahme)
+		return;
+	TT_CHECK_MSG(Erg.bStreifenHeil, "DeleteArr schreibt hinter das Ende des Feldes");
+	TT_CHECK_MSG(Erg.nLen == nSoll, "nLen nach dem Loeschen stimmt nicht");
+	if (Erg.nLen == nSoll)
+		for (unsigned int k = 0; k < nSoll; k++)
+			TT_CHECK_MSG(Erg.aWerte[k] == pSoll[k], "falscher Eintrag nach dem Loeschen");
+}
+
+static void Test_E150(void)
+{
+	TT_BeginTest("E-150: DeleteArr in der Mitte und am Ende loescht richtig");
+	const unsigned int aVier[] = { 10, 11, 12, 13 };
+	const unsigned int aOhneEins[] = { 10, 12, 13 };
+	E150_Pruefe("Loeschen in der Mitte nicht auswertbar", aVier, 4, 1, aOhneEins, 3);
+	const unsigned int aOhneLetzte[] = { 10, 11, 12 };
+	E150_Pruefe("Loeschen am Ende nicht auswertbar", aVier, 4, 3, aOhneLetzte, 3);
+	TT_EndTest();
+
+	TT_BeginTest("E-150: DeleteArr hinter dem Feldende laesst das Feld unberuehrt");
+	const unsigned int aZwei[] = { 7, 8 };
+	E150_Pruefe("Loeschen an Index 2 bei Laenge 2 nicht auswertbar", aZwei, 2, 2, aZwei, 2);
+	E150_Pruefe("Loeschen an Index 3 bei Laenge 2 nicht auswertbar", aZwei, 2, 3, aZwei, 2);
+	E150_Pruefe("Loeschen bei Laenge 0 nicht auswertbar", aZwei, 0, 0, aZwei, 0);
+	TT_EndTest();
+
+	TT_BeginTest("E-150: NotifyDeletedCol hinter dem Feldende (Task-Status-Weg)");
+	// Der Weg aus PRUEFER-52 K1: Felder der Laenge 1, Spalte 1 wird geloescht.
+	unsigned int aLaengen[4] = { 0, 0, 0, 0 };
+	bool bHeil = false, bAusnahme = false;
+	E150SpalteLoeschen(1, 1, aLaengen, &bHeil, &bAusnahme);
+	TT_CHECK_MSG(!bAusnahme, "NotifyDeletedCol wirft");
+	TT_CHECK_MSG(bHeil, "NotifyDeletedCol schreibt hinter das Ende eines Spaltenfeldes");
+	TT_CHECK_MSG(aLaengen[0] == 1 && aLaengen[1] == 1 && aLaengen[2] == 1 && aLaengen[3] == 1,
+				 "eine Spalte ohne Eintrag hat die Felder verkuerzt");
+	// Gegenprobe: eine vorhandene Spalte wird weiter geloescht.
+	E150SpalteLoeschen(3, 1, aLaengen, &bHeil, &bAusnahme);
+	TT_CHECK_MSG(!bAusnahme && bHeil, "Loeschen einer vorhandenen Spalte beschaedigt ein Feld");
+	TT_CHECK_MSG(aLaengen[0] == 2 && aLaengen[1] == 2 && aLaengen[2] == 2 && aLaengen[3] == 2,
+				 "eine vorhandene Spalte wurde nicht aus allen vier Feldern geloescht");
+	TT_EndTest();
 }
 
 // E-18: das Persoenlichkeitsmenue im Kopfzeilenfenster dereferenzierte pFld
@@ -140,6 +209,7 @@ void RunSpeicherfehlerTests(const char* szEudoraDir)
 {
 	TT_Suite("Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests)");
 	Test_E20();
+	Test_E150();
 	Test_E18(szEudoraDir);
 	Test_E25(szEudoraDir);
 	Test_E31(szEudoraDir);

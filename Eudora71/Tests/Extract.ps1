@@ -433,3 +433,26 @@ $lc = Read-Lines $lcPath
 $vStart = Find-Line $lc '^void CListCtrlEx::InsertArr\(' 0
 $vEnd = Find-Line $lc '^\}\s*$' $vStart
 Write-Region $lc $vStart $vEnd (Join-Path $OutDir "listctrlex_e20.inc") $lcPath
+
+# Region V2/V3: CListCtrlEx::DeleteArr und NotifyDeletedCol - das Loeschen
+# einer Spalte (Befund E-150, PRUEFER-52 K1: das Gegenstueck zu E-20). Die
+# beiden stehen nicht hintereinander (NotifyInsertedCol liegt dazwischen),
+# deshalb zwei Dateien.
+$v2Start = Find-Line $lc '^void CListCtrlEx::DeleteArr\(' 0
+$v2End = Find-Line $lc '^\}\s*$' $v2Start
+Write-Region $lc $v2Start $v2End (Join-Path $OutDir "listctrlex_e150.inc") $lcPath
+$v3Start = Find-Line $lc '^void CListCtrlEx::NotifyDeletedCol\(' 0
+$v3End = Find-Line $lc '^\}\s*$' $v3Start
+Write-Region $lc $v3Start $v3End (Join-Path $OutDir "listctrlex_e150b.inc") $lcPath
+# Region V4: CListCtrlEx::NotifyInsertedCol - die zweite E-20-Behebung (der
+# Bildlisten-Block). PRUEFER-52 K2: sie auf den Originalstand zurueckgesetzt,
+# blieb die Testsammlung gruen.
+$v4Start = Find-Line $lc '^void CListCtrlEx::NotifyInsertedCol\(' 0
+$v4End = Find-Line $lc '^\}\s*$' $v4Start
+Write-Region $lc $v4Start $v4End (Join-Path $OutDir "listctrlex_e20b.inc") $lcPath
+# Region V5: die Anzeigekonstanten aus ListCtrlEx.h, die NotifyInsertedCol
+# benutzt - geschnitten statt abgeschrieben.
+$lchPath = Join-Path $SrcDir "ListCtrlEx.h"
+$lch = Read-Lines $lchPath
+$v5Start = Find-Line $lch '^#define\s+LVEX_DISPLAY_NORMAL\b' 0
+Write-Region $lch $v5Start $v5Start (Join-Path $OutDir "listctrlex_konst.inc") $lchPath

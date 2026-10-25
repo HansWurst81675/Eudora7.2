@@ -1385,6 +1385,15 @@ void CListCtrlEx::DeleteArr(unsigned int *& pArr, unsigned int &nLen, unsigned i
 {
 	if (pArr)
 	{
+		// Befund E-150 (PRUEFER-52 K1), das Gegenstueck zu E-20: die Felder
+		// koennen kuerzer sein als die Zahl der Spalten (sie entstehen erst mit
+		// einer Bildspalte). Liegt nIdx hinter dem Feldende, gibt es nichts zu
+		// loeschen - frueher wurde mit [nLen - 1] angelegt und bis nIdx kopiert,
+		// also hinter das neue Feld geschrieben; bei nLen = 0 ergab nLen - 1
+		// vorzeichenlos 0xFFFFFFFF.
+		if (nIdx >= nLen)
+			return;
+
 		unsigned int *pTemp = DEBUG_NEW unsigned int [nLen - 1];
 
 		for (unsigned int i=0; i<nIdx; i++)
@@ -1436,7 +1445,9 @@ void CListCtrlEx::NotifyDeletedCol(unsigned int nCol)
 	DeleteArr(m_ImageHeightArr, m_ImageHeightArrLen, nCol);
 	DeleteArr(m_ImageWidthArr, m_ImageWidthArrLen, nCol);
 
-	if (m_DispImageListArr)
+	// Befund E-150, wie in DeleteArr: eine Spalte hinter dem Feldende hat
+	// keinen Eintrag in der Bildliste.
+	if (m_DispImageListArr && nCol < m_DispImageListArrLen)
 	{
 		CImageList **pTemp = DEBUG_NEW CImageList *[m_DispImageListArrLen - 1];
 
