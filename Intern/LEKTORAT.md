@@ -1805,6 +1805,47 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Zweiundsechzigster Durchgang — nach PR #170 bis #172 und PRÜFER-50 (E-119 K5, E-148, Prüfbericht, neue Haken), 25.10.2026 (Bericht: `Befunde/LEKTOR-57.md`)
+
+**10 neue Funde**: 3 falsch, 3 veraltet, 3 unvollständig, 1 Form.
+Von den 10 Funden aus LEKTOR-56 sind 0 erledigt, 2 teilweise und 8 offen.
+Geprüft wurde der ganze Bestand (alle MDs ohne `Arbeitsweise/` und
+`Befunde/`), nicht der Diff.
+
+**Der schwerste Fund: Der neue Sitzungsbeginn-Haken nennt keinen offenen
+Befund** ([L-57.1](../Befunde/LEKTOR-57.md#l-57.1)). `CLAUDE.md` Abschnitt 1
+sagt, `offene-befunde.pl` *„nennt jeden Befund"*. Gemessen gibt es nur
+Zahlen aus (*„38 offen, 11 nie gemessen"*), und der Haken reicht nur diese
+weiter. Gerade dieser Schritt soll verhindern, dass ein Agent einen
+beschriebenen Fehler neu erarbeitet, wie bei E-85. `CLAUDE.md` erwähnt
+die Haken nicht.
+
+**Die PR-Schranke für den LEKTOR öffnet sich mit dem Gerüst seines
+Berichts** ([L-57.2](../Befunde/LEKTOR-57.md#l-57.2)). Gemessen an diesem
+Lauf: Nach dem Commit *„LEKTOR-57: Geruest"* meldet `rollen-faellig.pl` den
+LEKTOR *aktuell*. Sie lässt einen PR außerdem durch, wenn die Sitzung nicht
+in der Wurzel steht oder der Befehl in Anführungszeichen steckt (gemessen
+mit einer Kopie).
+
+**Die Zählung der Regressionstests übersieht Prüfstandsfälle mit
+Buchstaben** ([L-57.3](../Befunde/LEKTOR-57.md#l-57.3)). `E-108p`, `E-106p`
+und `E-119a` bis `d` zählen nicht. Gemessen: 61 statt 58 Befunde mit Test,
+und E-108 (Absturz beim Antworten, kritisch) stünde nicht mehr *ohne jede
+Prüfung*. Der Prüfbericht vom Morgen ist schon wieder überholt. Seine
+Zeilen zu E-35 und E-62 sind mit den Schranken gemessen, die PRÜFER-50 als
+blind nachgewiesen hat, und zählen trotzdem
+([L-57.4](../Befunde/LEKTOR-57.md#l-57.4)).
+
+Dazu: Acht PRÜFER-50-Funde stehen in keiner Liste. Das „Als Nächstes" in
+`WEITERMACHEN.md` ist abgearbeitet. Für das Paket 7.2.0.123 gibt es keinen
+Testplan, obwohl E-148 nur dort mit Eudora selbst gemessen werden kann. Die
+README rät Besitzern älterer Pakete, die neue Zertifikatsdatei einzulegen.
+Mit Eudora erprobt hat das niemand.
+
+Eine neue Frage an Gregor: Soll die Behebung von E-148 (kompromittierte
+eMudhra-Zertifikate) vor 7.2.1 veröffentlicht werden? Dazu weiter der Name
+der Marke auf GitHub.
+
 ## Einundsechzigster Durchgang — nach PR #166 bis #169 (E-77 Umbenennen, Regressionstests, Gregors Entscheidungen vom 24.10.2026), 24.10.2026 (Bericht: `Befunde/LEKTOR-56.md`)
 
 **10 neue Funde**: 2 falsch, 1 Widerspruch, 3 veraltet, 4 unvollständig.
