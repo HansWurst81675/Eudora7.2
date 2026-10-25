@@ -3,14 +3,16 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.0.122` (Paketnummer `1.0.122`) |
-| **Commit** | `ac3f2f29` (Arbeitsbaum sauber) |
-| **Erstellt** | 2026-10-25 09:39 |
+| **Commit** | `b4c207e4` — **Arbeitsbaum nicht sauber** (2 Dateien) |
+| **Erstellt** | 2026-10-25 10:46 |
 | **Gesamturteil** | **BESTANDEN** |
+
+Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.122 / Paket 1.0.122+9402f257 2026-10-25 09:31`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
-| Unit-Tests (`EudoraTests.exe`) | 295 | 295 | 0 |  |
-| Schranken mit Rueckfallprobe | 14 | 14 | 0 | |
+| Unit-Tests (`EudoraTests.exe`) | 296 | 296 | 0 |  |
+| Schranken mit Rueckfallprobe | 18 | 18 | 0 | |
 | Pruefstand (Oberflaeche) | 29 | 29 | 0 | 0 an anderem Bau, 0 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
@@ -40,9 +42,9 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-25 09:39** gegen den Quelltext von Commit `ac3f2f29`.
+Gelaufen am **2026-10-25 10:46** gegen den Quelltext von Commit `b4c207e4*`.
 
-<details><summary>Alle 295 Unit-Tests einzeln</summary>
+<details><summary>Alle 296 Unit-Tests einzeln</summary>
 
 | Bereich | Test | Ergebnis |
 |---|---|---|
@@ -332,7 +334,8 @@ Gelaufen am **2026-10-25 09:39** gegen den Quelltext von Commit `ac3f2f29`.
 | E-125: Ziehen nach Out wird abgelehnt statt eine neue Nachricht anzulegen | E-125: der Hinweisdialog ist eine Ressource und keine Frage | ok |
 | E-130: Fremd-DLLs bleiben ungebunden | E-130: keine der zwoelf Fremd-DLLs in Bin\Release ist gebunden | ok |
 | E-130: Fremd-DLLs bleiben ungebunden | E-130: BindExe.bat bindet keine Fremd-DLL | ok |
-| Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-20: InsertArr legt das Feld gross genug fuer nIdx an | ok |
+| Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-20: InsertArr hinter dem Ende (nIdx > nLen) bleibt im Feld | ok |
+| Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-20: InsertArr in der Mitte und am Ende verschiebt richtig | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-18: pFld wird vor dem Zugriff auf NULL geprueft | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-25: LocateNetscapePrefsFile gibt den Knoten des Aufrufers nicht frei | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-31 (Ursache von E-27): pg_time_t ist fest 32 Bit breit | ok |
@@ -350,7 +353,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-25 09:39** gegen Commit `ac3f2f29`.
+Gelaufen am **2026-10-25 10:46** gegen Commit `b4c207e4*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -359,9 +362,13 @@ Gelaufen am **2026-10-25 09:39** gegen Commit `ac3f2f29`.
 | E-40 | `pruefe-beenden.pl` | ok | vorher=0 rueckfall=1 danach=0 |
 | E-45 | `pruefe-beenden.pl` | ok | vorher=0 rueckfall=1 danach=0 |
 | E-62 | `pruefe-nachrichtenschleife.pl` | ok | vorher=0 rueckfall=1 danach=0 |
+| E-62#2 | `pruefe-nachrichtenschleife.pl` | ok | vorher=0 rueckfall=1 danach=0 |
 | E-61 | `pruefe-nachrichtenschleife.pl` | ok | vorher=0 rueckfall=1 danach=0 |
 | E-34 | `pruefe-fensterbau.pl` | ok | vorher=0 rueckfall=1 danach=0 |
 | E-35 | `pruefe-fensterbau.pl` | ok | vorher=0 rueckfall=1 danach=0 |
+| E-35#2 | `pruefe-fensterbau.pl` | ok | vorher=0 rueckfall=1 danach=0 |
+| E-35#3 | `pruefe-fensterbau.pl` | ok | vorher=0 rueckfall=1 danach=0 |
+| E-35#4 | `pruefe-fensterbau.pl` | ok | vorher=0 rueckfall=1 danach=0 |
 | E-16 | `pruefe-fensterbau.pl` | ok | vorher=0 rueckfall=1 danach=0 |
 | E-36 | `pruefe-fensterbau.pl` | ok | vorher=0 rueckfall=1 danach=0 |
 | E-68 | `pruefe-filter-aktionsgrenze.pl` | ok | vorher=0 rueckfall=1 danach=0 |
@@ -410,7 +417,7 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 
 ## 4. Deckung der kritischen Befunde
 
-Von **68** kritischen Befunden haben **40** einen Test, **26** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: S-1 S-8 V-1 AN-1 E-2 E-3 E-23 E-32 E-51 E-60 E-64 E-67 E-72 E-82 E-97 E-99 E-100 E-120 E-122 E-123 E-124 E-126 E-129 E-136 E-133 E-39.
+Von **68** kritischen Befunden haben **39** einen Test, **27** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: S-1 S-8 V-1 AN-1 E-2 E-3 E-23 E-32 E-51 E-60 E-64 E-67 E-72 E-82 E-97 E-99 E-100 E-108 E-120 E-122 E-123 E-124 E-126 E-129 E-136 E-133 E-39.
 
 Solange diese Zahl nicht null ist, sagt ein gruener Bericht nicht, dass
 nichts kaputt ist — er sagt, dass nichts von dem kaputt ist, was geprueft

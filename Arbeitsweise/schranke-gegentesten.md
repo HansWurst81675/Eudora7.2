@@ -338,3 +338,5 @@ echte Löschung, Inhalt nur im eigenen Gegenstück — **Mangel**. Am Bestand
 desselben Abends: PRÜFER-Baum 6 Dateien / 0 verloren (jetzt Hinweis),
 LEKTOR-Baum 5 Dateien, die es wirklich nirgends gibt — die werden jetzt
 **namentlich** genannt, was die alte Fassung nicht tat.
+
+**Nachtrag 25.10.2026 — der Rückbau muss den Bau mitnehmen.** Nach der K2-Gegenprobe (`exit(0)` in `TestMain.cpp`) habe ich die Datei mit `cp -p` zurückkopiert: byte-gleich, aber mit dem **alten Zeitstempel**. MSBuild hielt `TestMain.obj` für aktuell, die EXE behielt das `exit(0)`, und `RunTests.cmd` meldete „Fehlgeschlagene Tests: 0“ nach 286 von 296. Gefunden nur, weil die Ergebniszeile fehlte. **How to apply:** nach jeder Gegenprobe an einer übersetzten Quelle `touch` auf die Datei und neu bauen, dann die **Zahl** der Tests gegen den Stand davor halten, nicht nur „0 rot“.
