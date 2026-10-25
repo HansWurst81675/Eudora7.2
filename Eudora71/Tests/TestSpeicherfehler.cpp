@@ -3,9 +3,10 @@
 // (E-18, E-20, E-31), alle als kritisch eingestuft.
 //
 // Angelegt am 24.10.2026 im Zweig fehlende_regression_tests_implementieren:
-// Gregor hat den Rueckstand an Regressionstests angeordnet. Alle drei Fehler
-// sitzen an Stellen, die ohne Fenster nicht aufzurufen sind (ein MFC-
-// Listenfeld, ein Kopfzeilenfenster, eine Paige-Kopfdatei). Geprueft wird
+// Gregor hat den Rueckstand an Regressionstests angeordnet. E-20 wird seit
+// 25.10.2026 aufgerufen (UnderTestE20.cpp, PRUEFER-50 K1). Die anderen Fehler
+// sitzen an Stellen, die ohne Fenster nicht aufzurufen sind (ein
+// Kopfzeilenfenster, eine Paige-Kopfdatei). Geprueft wird
 // deshalb der QUELLTEXT ohne Kommentare - und jeder Fall ist gegengetestet:
 // mit dem alten Stand wird er rot (Messung in der Commit-Nachricht).
 //
@@ -14,27 +15,49 @@
 
 #include "TinyTest.h"
 #include "Quelltext.h"
+#include "UnderTestE20.h"
 
 // E-20: CListCtrlEx::InsertArr legte das neue Feld mit [nLen + 1] an,
 // schrieb aber bis pTemp[nIdx] - und nIdx kann groesser sein als nLen
-// (Gregor am 05.09.2026, als eine zweite Persoenlichkeit entstand). Die
-// Groesse muss das Maximum aus nIdx + 1 und nLen + 1 sein.
-static void Test_E20(const char* szEudoraDir)
+// (Gregor am 05.09.2026, als eine zweite Persoenlichkeit entstand).
+//
+// Seit 25.10.2026 (PRUEFER-50 K1) wird die Funktion AUFGERUFEN, nicht ihr
+// Quelltext gelesen: der Quelltexttest blieb gruen mit dem alten Ueberlauf
+// in anderer Schreibweise. Der Aufruf laeuft ueber UnderTestE20.cpp, das
+// jedes Feld mit einem Schutzstreifen anlegt.
+static void E20_Pruefe(const char* szFall, const unsigned int* pVorher, unsigned int nVorher,
+					   unsigned int nDefault, unsigned int nIdx,
+					   const unsigned int* pSoll, unsigned int nSoll)
 {
-	TT_BeginTest("E-20: InsertArr legt das Feld gross genug fuer nIdx an");
-	char* pCode = QT_LiesNurCode(szEudoraDir, "ListCtrlEx.cpp");
-	if (!pCode) { TT_Fail("ListCtrlEx.cpp nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
-	char* pRumpf = QT_Abschnitt(pCode, "void CListCtrlEx::InsertArr(", "void CListCtrlEx::NotifyInsertedCol(");
-	TT_CHECK_MSG(pRumpf != NULL, "CListCtrlEx::InsertArr nicht gefunden");
-	if (pRumpf)
-	{
-		TT_CHECK_MSG(QT_Enthaelt(pRumpf, "((nIdx + 1) > (nLen + 1)) ? (nIdx + 1) : (nLen + 1)"),
-					 "die Feldgroesse ist nicht mehr das Maximum aus nIdx + 1 und nLen + 1");
-		TT_CHECK_MSG(!QT_Enthaelt(pRumpf, "unsigned int [nLen + 1]"),
-					 "das Feld wird wieder mit [nLen + 1] angelegt - Schreiben hinter das Ende");
-		free(pRumpf);
-	}
-	free(pCode);
+	E20Ergebnis Erg;
+	const bool bAuswertbar = E20Einfuegen(pVorher, nVorher, nDefault, nIdx, &Erg);
+	TT_CHECK_MSG(bAuswertbar, szFall);
+	if (!bAuswertbar)
+		return;
+	TT_CHECK_MSG(Erg.bStreifenHeil, "InsertArr schreibt hinter das Ende des neuen Feldes");
+	TT_CHECK_MSG(Erg.nLen * sizeof(unsigned int) <= Erg.nAngefordert,
+				 "nLen ist groesser als das angelegte Feld");
+	TT_CHECK_MSG(Erg.nLen == nSoll, "nLen nach dem Einfuegen stimmt nicht");
+	if (Erg.nLen == nSoll)
+		for (unsigned int k = 0; k < nSoll; k++)
+			TT_CHECK_MSG(Erg.aWerte[k] == pSoll[k],
+						 "falscher Eintrag nach dem Einfuegen (0xABABABAB: hinter dem alten Feld gelesen)");
+}
+
+static void Test_E20(void)
+{
+	TT_BeginTest("E-20: InsertArr hinter dem Ende (nIdx > nLen) bleibt im Feld");
+	const unsigned int aVorher[] = { 7, 8 };
+	const unsigned int aSoll[]   = { 7, 8, 9, 9, 9, 9 };
+	E20_Pruefe("Einfuegen an Index 5 bei Laenge 2 nicht auswertbar", aVorher, 2, 9, 5, aSoll, 6);
+	TT_EndTest();
+
+	TT_BeginTest("E-20: InsertArr in der Mitte und am Ende verschiebt richtig");
+	const unsigned int aMitteVorher[] = { 1, 2, 3 };
+	const unsigned int aMitteSoll[]   = { 1, 0, 2, 3 };
+	E20_Pruefe("Einfuegen in der Mitte nicht auswertbar", aMitteVorher, 3, 0, 1, aMitteSoll, 4);
+	const unsigned int aEndeSoll[]    = { 1, 2, 3, 4 };
+	E20_Pruefe("Einfuegen am Ende nicht auswertbar", aMitteVorher, 3, 4, 3, aEndeSoll, 4);
 	TT_EndTest();
 }
 
@@ -116,7 +139,7 @@ static void Test_E25(const char* szEudoraDir)
 void RunSpeicherfehlerTests(const char* szEudoraDir)
 {
 	TT_Suite("Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests)");
-	Test_E20(szEudoraDir);
+	Test_E20();
 	Test_E18(szEudoraDir);
 	Test_E25(szEudoraDir);
 	Test_E31(szEudoraDir);
