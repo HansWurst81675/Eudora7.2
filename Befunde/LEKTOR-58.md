@@ -71,14 +71,16 @@ Die Ausgaben sind nicht als Urteil übernommen.
 | `perl tools/pruefe-tabellenzeilen.pl` | ohne Angabe: *„278 Dateien, keine gebrochene Tabellenzeile."*; mit `Intern/BEFUNDE.md`: *„GEBROCHENE TABELLENZEILE … Intern/BEFUNDE.md:381"* | dass der Bestandslauf `Intern/` nicht liest ([L-58.1](#l-58.1)) |
 | `perl tools/rollen-faellig.pl --nur-melden` | vor meinem ersten Commit: LEKTOR, PRUEFER und CHRONIST fällig (*„LEKTOR ist faellig: seit seinem Bericht (7aa6580) haben sich 7 Datei(en) …"*) | — |
 
-**Sichern war in diesem Lauf nicht möglich (gemessen).** Der Commit-Haken
-spiegelt die Lehren aus dem Gedächtnis des Hauptagenten nach `Arbeitsweise/`
-(`lehren-spiegeln.pl`). Danach weist `lehren-schranken.pl` ab: *„MANGEL: -
+**Sichern war lange nicht möglich (gemessen).** Der Commit-Haken spiegelt
+die Lehren aus dem Gedächtnis des Hauptagenten nach `Arbeitsweise/`
+(`lehren-spiegeln.pl`). Danach wies `lehren-schranken.pl` ab: *„MANGEL: -
 Arbeitsweise/entscheidung-e148-release-7-2-0-123.md -
-Arbeitsweise/zwischendateien-ins-scratchpad.md"*. Beide Dateien haben keine
+Arbeitsweise/zwischendateien-ins-scratchpad.md"*. Beiden Dateien fehlte die
 Zeile `Schranke:`. Beide sind heute neu und stammen vom Hauptagenten. Ohne
-sie bricht der Spiegel den Commit ab, mit ihnen die Lehrenschranke. Ich
-ändere sie nicht und umgehe den Haken nicht.
+sie brach der Spiegel den Commit ab, mit ihnen die Lehrenschranke. Erst als
+der Hauptagent die Zeilen ergänzt hatte, ging der Spiegel durch, als eigener
+Commit `4a8df4bb` (mit der neu gesetzten Übersicht `Arbeitsweise/README.md`).
+Den Haken habe ich nicht umgangen.
 
 ---
 
@@ -343,8 +345,8 @@ steht sie also nirgends. `WEITERMACHEN.md` ist seit `7aa65800` unverändert.
 nicht, dass dieses Paket veröffentlicht wird. Damit hängen jetzt drei offene
 Punkte am Paket 7.2.0.123, das nach außen geht: der Testplan mit [E-148](../Intern/BEFUNDE.md#e-148)
 ([L-57.8](LEKTOR-57.md#l-57.8)), der CHANGELOG-Satz ([L-58.3](#l-58.3)) und
-die Markenfrage. Die Lehrdatei selbst konnte nicht eingecheckt werden
-(siehe *Mechanisch zuerst*).
+die Markenfrage. Die Lehrdatei liegt seit `4a8df4bb` in `Arbeitsweise/`. Eine
+Lehre ist aber kein Arbeitsplan.
 
 **Vorschlag:** Die Entscheidung mit Datum und Wortlaut in
 `WEITERMACHEN.md` unter *„Entschieden am 25.10.2026"* und als neues

@@ -1834,9 +1834,10 @@ Programmverhalten zu E-119. E-108 zählt jetzt über einen Fall, den sein
 Befund „nicht nachgestellt" nennt. Gregors Entscheidung, E-148 mit 7.2.0.123
 zu veröffentlichen, steht in keiner Repo-Datei.
 
-Sichern ging in diesem Lauf nicht. Der Commit-Haken spiegelt zwei neue
-Lehren des Hauptagenten ohne Zeile `Schranke:` in den Arbeitsbaum, und
-`lehren-schranken.pl` weist dann ab.
+Der Gerüst-Commit hing lange: Der Commit-Haken spiegelte zwei neue Lehren
+des Hauptagenten ohne Zeile `Schranke:` in den Arbeitsbaum, und
+`lehren-schranken.pl` wies ab. Nachdem der Hauptagent die Zeilen ergänzt
+hatte, ging der Spiegel als eigener Commit `4a8df4bb` durch.
 
 Eine neue Frage an Gregor: Soll Eudora melden, wenn es die
 Zertifikatsliste aus dem Mailverzeichnis nimmt? Dazu weiter der Name der Marke.
