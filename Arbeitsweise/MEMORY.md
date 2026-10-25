@@ -119,3 +119,6 @@
 - [Marke v7.2.1.<n>](entscheidung-marke-v7-2-1.md) — Gregor 25.10. (mehrfach): GitHub-Marke v7.2.1.<n>, z. B. v7.2.1.123; nicht wieder fragen
 - [Gekürzte Ausgabe ist kein Ergebnis](gekuerzte-ausgabe-ist-kein-ergebnis.md) — head/tail/grep auf eigener Ausgabe drehte dreimal ein Urteil um: „E-142 nichts vereinbart", Commit-Abweisung als exit 0; Fehlen zählen, git nie in eine Pipe
 - [CHRONIST 25.10.2026](CHRONIST-2026-10-25.md) — Lauf über 23.–25.10.: eine neue Lehre, zehn Nachträge; rollen-faellig.pl:140 zählt jede gespiegelte Lehre als CHRONIST-Bericht
+- [Stand 25.10.2026 abends](stand-25-10-2026-abend.md) — nach 25-10b: E-132 als Prüfstandsfall (Gregor testet nur bis Schritt 4), Logzeile, LEKTOR-61, dann Testpaket 7.2.0.123
+- [Vor 7.2.1 beheben](entscheidung-vor-7-2-1-beheben.md) — Gregor 25.10.: E-137, E-142 (Hinweis), E-146 beheben; E-144/143/139/136, AN-1 in die README
+- [Gegenprobe einmal beim Bau](gegenprobe-einmal-beim-bau.md) — Gregor 25.10.: rot ohne Fix nur einmal beim Anlegen eines Tests; danach genügt grün

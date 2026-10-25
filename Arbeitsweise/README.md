@@ -93,6 +93,7 @@ eine Datei liest, liest diese.
 | [entscheidung-kritische-nicht-release-blocker](entscheidung-kritische-nicht-release-blocker.md) | Gregor 23.10.2026 - die sechs offenen \"kritischen\" Befunde E-122, E-123, E-124, E-126, E-129, E-136 halten 7.2.1.0 NICHT auf (\"unkritisch, randfaelle\"); noch nicht im Repo eingetragen |
 | [entscheidung-marke-v7-2-1](entscheidung-marke-v7-2-1.md) | Die GitHub-Marke fuer Releases heisst v7.2.1.<n> (z. B. v7.2.1.123), nicht v1.0.<n> - entschieden, nicht wieder fragen |
 | [entscheidung-rootcerts-logzeile](entscheidung-rootcerts-logzeile.md) | Gregor 25.10.2026 - Eudora schreibt eine Zeile in eudora.log, aus welchem Verzeichnis rootcerts.p7b geladen wurde (Mailverzeichnis vor Programmverzeichnis) |
+| [entscheidung-vor-7-2-1-beheben](entscheidung-vor-7-2-1-beheben.md) | Gregor 25.10.2026 - vor 7.2.1 beheben E-137, E-142 (Hinweis), E-146; in die README als bekannte Fehler E-144, E-143, E-139, E-136, AN-1 (IMAP-Endung) |
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |
 | [erfolgsmeldung-aus-dem-ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) | Ein Skript darf Erfolg nur melden, wenn es das Ergebnis gemessen hat - mein Perl-Einzeiler schrieb 'eingefuegt', ohne etwas einzufuegen |
 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) | Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern |
@@ -106,6 +107,7 @@ eine Datei liest, liest diese.
 | [fund-ganz-abhaken](fund-ganz-abhaken.md) | Vor der Behebung eines Fundes seine Punkte als Liste abhaken (tools/fund-punkte.pl): N1 wurde nur in einer Richtung behoben, obwohl PRÜFER-23 die Gegenrichtung im selben Abschnitt nannte |
 | [funktion-bringt-ihre-vorbedingung-mit](funktion-bringt-ihre-vorbedingung-mit.md) | Wer eine bewaehrte Funktion in einen neuen Weg einbaut, uebernimmt ihre Vorbedingungen und Nebenwirkungen - ISOTranslate nullt ein Byte hinter dem Bereich |
 | [funktionsbug-vor-buchfuehrung](funktionsbug-vor-buchfuehrung.md) | Wartet Gregor auf eine Behebung, läuft sie im Vordergrund zuerst; Buchführung (Doku, Aufräumen, Merges der Rollen) geht in den Hintergrund oder danach |
+| [gegenprobe-einmal-beim-bau](gegenprobe-einmal-beim-bau.md) | Die rote Gegenprobe (Test ohne Fix muss rot werden) gehoert einmal zum BAU eines Tests; im laufenden Betrieb genuegt gruen |
 | [gegenprobe-umdrehen](gegenprobe-umdrehen.md) | Nicht pruefen, ob der gewuenschte Zustand erscheint, sondern ob der umgekehrte Wert durchkommt; Gregors Technik vom 07.09.2026 |
 | [gekuerzte-ausgabe-ist-kein-ergebnis](gekuerzte-ausgabe-ist-kein-ergebnis.md) | Was ich mit head, tail, cut oder grep aus meiner eigenen Ausgabe herausschneide, kann ich nicht als 'nicht vorhanden' oder 'erfolgreich' melden - am 24./25.10.2026 wurde so aus einer aufgeschriebenen Entscheidung 'nichts vereinbart' und aus einer Commit-Abweisung ein Erfolg |
 | [gemeinsame-dateien-gegen-alles-messen](gemeinsame-dateien-gegen-alles-messen.md) | Änderungen an gemeinsam benutzten Dateien gegen die ganze Solution messen, nicht nur gegen das eigene Projekt |
@@ -151,6 +153,7 @@ eine Datei liest, liest diese.
 | [stand-23-10-2026-abend](stand-23-10-2026-abend.md) | Was am 23.10.2026 beim Abschalten offen blieb und in KEINER Repo-Datei steht - die fertige Berichtigung des Testplan-Kopfes, der Zweigname, und was Gregor als naechstes erwartet |
 | [stand-23-10-2026-spaet](stand-23-10-2026-spaet.md) | Stand beim Abschalten am 23.10.2026 spaet - PR 156 offen, BILDBREITE (E-116) mitten in der Arbeit abgebrochen, Regressionstest-Rueckstand ist der erste Schritt |
 | [stand-24-10-2026-spaet](stand-24-10-2026-spaet.md) | Stand beim Abschalten am 24.10.2026 spaet - PRUEFER-50 nur als Zwischenstand gesichert, E-148 als naechstes, angleichen.sh will \"main\" |
+| [stand-25-10-2026-abend](stand-25-10-2026-abend.md) | Was nach agenten-befunde-25-10b als Naechstes kommt - E-132 als Pruefstandsfall, TESTPLAN M1, LEKTOR-61-Funde, Logzeile rootcerts; noch nicht im Repo |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
 | [test-prueft-den-ausstieg](test-prueft-den-ausstieg.md) | Ein Regressionstest, der nur die neue Meldung sucht und nicht den Ausstieg, laesst den ganzen Fehler zurueck - 277 von 277 gruen mit vollstaendig wiederhergestelltem Befund |
 | [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md) | Ein Testdatum muss nicht nur den Fehler treffen, sondern jede Schranke auf dem Weg zur Messstelle ueberleben - 550 Spam message rejected |
