@@ -1805,6 +1805,43 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Dreiundsechzigster Durchgang — Nachlauf nach LEKTOR-57 (E-148-Nachtrag, PRÜFER-51, nachgeschärfte Haken), 25.10.2026 (Bericht: `Befunde/LEKTOR-58.md`)
+
+**7 neue Funde**: 2 falsch, 1 veraltet, 2 unvollständig, 2 Form.
+Von den 10 Funden aus LEKTOR-57 sind 2 erledigt, 5 teilweise und 3 offen.
+Schwerpunkt waren die seit LEKTOR-57 geänderten Dateien, gehalten gegen Code
+und Bestand.
+
+**Der schwerste Fund: Die Schranke gegen zerbrochene Tabellenzeilen liest
+`Intern/` nicht** ([L-58.1](../Befunde/LEKTOR-58.md#l-58.1)). Ihre feste
+Verzeichnisliste stammt von vor dem Umzug am 22.10.2026. Gemessen: Der
+Bestandslauf meldet nichts, gezielt auf `BEFUNDE.md` angesetzt meldet sie
+die Zeile 381, die der E-148-Nachtrag heute zerbrochen hat.
+
+**121 Tabellenzeilen stehen hinter einer Leerzeile außerhalb ihrer
+Tabelle** ([L-58.2](../Befunde/LEKTOR-58.md#l-58.2)). Betroffen sind 12
+Befunde in `BEFUNDE.md`, darunter das offene E-39, 25 Werkzeuge in
+`WERKZEUGE.md` (zwei Leerzeilen von heute) und 84 Zweige in `ZWEIGE.md`.
+
+**E-148 sagt im CHANGELOG noch, was die README berichtigt hat**
+([L-58.3](../Befunde/LEKTOR-58.md#l-58.3)). Dort heißt es weiter *„gemessen
+und werden weiter angenommen"*, obwohl nur OpenSSL gemessen hat. Daraus
+entstehen die Notizen zu 7.2.0.123. Die README nennt außerdem an einer Stelle
+noch das Programmverzeichnis als Ort der Liste.
+
+Dazu: Sieben PRÜFER-51-Funde stehen in keiner Liste, K8 davon ist
+Programmverhalten zu E-119. E-108 zählt jetzt über einen Fall, den sein
+Befund „nicht nachgestellt" nennt. Gregors Entscheidung, E-148 mit 7.2.0.123
+zu veröffentlichen, steht in keiner Repo-Datei.
+
+Der Gerüst-Commit hing lange: Der Commit-Haken spiegelte zwei neue Lehren
+des Hauptagenten ohne Zeile `Schranke:` in den Arbeitsbaum, und
+`lehren-schranken.pl` wies ab. Nachdem der Hauptagent die Zeilen ergänzt
+hatte, ging der Spiegel als eigener Commit `4a8df4bb` durch.
+
+Eine neue Frage an Gregor: Soll Eudora melden, wenn es die
+Zertifikatsliste aus dem Mailverzeichnis nimmt? Dazu weiter der Name der Marke.
+
 ## Zweiundsechzigster Durchgang — nach PR #170 bis #172 und PRÜFER-50 (E-119 K5, E-148, Prüfbericht, neue Haken), 25.10.2026 (Bericht: `Befunde/LEKTOR-57.md`)
 
 **10 neue Funde**: 3 falsch, 3 veraltet, 3 unvollständig, 1 Form.
