@@ -3,16 +3,16 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.0.122` (Paketnummer `1.0.122`) |
-| **Commit** | `ed0d53a2` — **Arbeitsbaum nicht sauber** (1 Dateien) |
-| **Erstellt** | 2026-10-25 19:44 |
+| **Commit** | `ec468df6` (Arbeitsbaum sauber) |
+| **Erstellt** | 2026-10-25 19:47 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 09 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 08 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
 | Pruefstand, 32 Faelle, 10 Eudora-Starts | 5 min 06 s | voller Lauf, Ende 2026-10-25 19:43:58 |
 | **zusammen** | **5 min 22 s** | |
 
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-25 19:44** gegen den Quelltext von Commit `ed0d53a2*`.
+Gelaufen am **2026-10-25 19:47** gegen den Quelltext von Commit `ec468df6`.
 
 <details><summary>Alle 302 Unit-Tests einzeln</summary>
 
@@ -368,7 +368,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-25 19:44** gegen Commit `ed0d53a2*`.
+Gelaufen am **2026-10-25 19:47** gegen Commit `ec468df6`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
