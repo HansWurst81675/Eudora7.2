@@ -95,11 +95,22 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122, noch ohne Paket — IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+## Seit 7.2.0.122 auf `main`, kommt mit dem Testpaket 7.2.0.123 — Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
 
-**Gemergt am 23.10.2026 (PR #157 und #158), noch nicht als Paket gebaut;
-die Fassungsnummer bleibt bis dahin 7.2.0.122.** Beim nächsten Paket wird
-dieser Abschnitt zu 7.2.0.123.
+**Auf `main` seit PR #157 (23.10.2026) bis PR #174 (25.10.2026), aber noch in
+keinem Paket zum Herunterladen.** Das Programm meldet deshalb weiter die
+Fassung 7.2.0.122. Alles in diesem Abschnitt kommt mit dem nächsten
+**Testpaket 7.2.0.123** zu Gregors lokalem Test; veröffentlicht wird es erst
+mit dem Release **7.2.1.<n>**. Beim Bau des Testpakets wird dieser Abschnitt
+zu 7.2.0.123.
+
+* **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
+  „Task Status" überschreibt keinen Speicher mehr.** Die Liste führt zu jeder
+  Spalte kleine Zusatzfelder, die kürzer sein können als die Zahl der Spalten;
+  wurde eine Spalte dahinter gelöscht, schrieb Eudora 4 Byte hinter das Feld
+  (Original von QUALCOMM, Gegenstück zu [E-20](Intern/BEFUNDE.md#e-20)). Jetzt gibt es dann nichts zu
+  löschen (`ListCtrlEx.cpp`). Regressionstest ruft die Funktionen mit
+  Schutzstreifen auf; 301 Tests, 301 bestanden.
 
 * **[E-148](Intern/BEFUNDE.md#e-148) — Eudora vertraut den kompromittierten
   eMudhra-Zertifikaten nicht mehr.** Am 20.10.2026 wurden acht

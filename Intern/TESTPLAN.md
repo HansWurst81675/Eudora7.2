@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.0.122 / `VERSION` 1.0.122, Stand 24.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.122 / `VERSION` 1.0.122, Stand 25.10.2026
 
 > **Bei dir liegt Paket 1.0.122** (`C:\Users\Gregor\Eudora72-1.0.122-release`,
 > seit 23.10.2026 um 12:00). Veröffentlicht ist `v1.0.120`.
@@ -248,7 +248,7 @@ Mit der **Paketnummer** — der des Pakets, das du wirklich gestartet hast:
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
-Eigene Tests dieser Fassung: **277 Tests, 277 bestanden** (Stand 7.2.0.122, 23.10.2026). Diese Zahl war am 23.10.2026 zum dritten Mal veraltet ([L-51.16](../Befunde/LEKTOR-51.md)); sie gehört aus `tools/pruefbericht.pl` erzeugt, nicht von Hand gepflegt.
+Eigene Tests dieser Fassung: siehe [Releases/PRUEFBERICHT.md](../Releases/PRUEFBERICHT.md) — dort je Test mit Bau und Zeit (am 25.10.2026: **301 Tests, 301 bestanden** auf `796369bb`). Die Zahl stand hier bis zum 25.10.2026 von Hand und war vier Mal veraltet ([L-51.16](../Befunde/LEKTOR-51.md)); sie gehört aus `tools/pruefbericht.pl` erzeugt, nicht von Hand gepflegt.
 
 ---
 
