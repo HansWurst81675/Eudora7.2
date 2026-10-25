@@ -84,7 +84,7 @@ for my $n (1 .. 4) { push @teile, $1 if $vh =~ /^#define\s+EUDORA_VERSION$n\s+(\
 my $quellstand = @teile == 4 ? join('.', @teile) : '(nicht gefunden)';
 
 my $commit = `git -C "$wurzel" rev-parse --short HEAD 2>&1`; chomp $commit;
-my $schmutz = `git -C "$wurzel" status --porcelain -- . ":(exclude)Releases/PRUEFBERICHT.md" ":(exclude)Releases/pruefbericht-tests.tsv" 2>&1`;
+my $schmutz = `git -C "$wurzel" status --porcelain -- . ":(exclude)Releases/PRUEFBERICHT.md" ":(exclude)Releases/pruefbericht-tests.tsv" ":(exclude)Intern/pruefstand-buch.tsv" ":(exclude)Intern/pruefstand-ergebnis.txt" ":(exclude)tools/TESTLAEUFE.md" 2>&1`;
 my $offen = () = $schmutz =~ /\n/g;
 my $stand = $commit . ($offen ? '*' : '');
 
