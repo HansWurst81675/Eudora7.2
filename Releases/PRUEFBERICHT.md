@@ -3,18 +3,18 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.0.122` (Paketnummer `1.0.122`) |
-| **Commit** | `796369bb` — **Arbeitsbaum nicht sauber** (6 Dateien) |
-| **Erstellt** | 2026-10-25 18:09 |
+| **Commit** | `718509c0` (Arbeitsbaum sauber) |
+| **Erstellt** | 2026-10-25 18:13 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 08 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 09 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
 | Pruefstand, 32 Faelle, 10 Eudora-Starts | 5 min 05 s | voller Lauf, Ende 2026-10-25 18:08:45 |
-| **zusammen** | **5 min 22 s** | |
+| **zusammen** | **5 min 20 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-25 18:09** gegen den Quelltext von Commit `796369bb*`.
+Gelaufen am **2026-10-25 18:13** gegen den Quelltext von Commit `718509c0`.
 
 <details><summary>Alle 301 Unit-Tests einzeln</summary>
 
@@ -367,7 +367,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-25 18:09** gegen Commit `796369bb*`.
+Gelaufen am **2026-10-25 18:13** gegen Commit `718509c0`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -435,7 +435,7 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 
 ## 4. Deckung der kritischen Befunde
 
-Von **69** kritischen Befunden haben **45** einen Test, **22** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: S-1 S-8 V-1 AN-1 E-2 E-3 E-23 E-32 E-51 E-60 E-64 E-72 E-82 E-120 E-122 E-123 E-124 E-126 E-129 E-136 E-133 E-39.
+Von **69** kritischen Befunden haben **46** einen Test, **21** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: S-1 S-8 V-1 AN-1 E-2 E-3 E-23 E-32 E-60 E-64 E-72 E-82 E-120 E-122 E-123 E-124 E-126 E-129 E-136 E-133 E-39.
 
 Solange diese Zahl nicht null ist, sagt ein gruener Bericht nicht, dass
 nichts kaputt ist — er sagt, dass nichts von dem kaputt ist, was geprueft
