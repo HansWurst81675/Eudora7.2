@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-24 13:01:16
-freigabe=Gregor am 24.10.2026: 'du kannst deine instanzen zum testen starten. ich mache nichts.'
-faelle=25
-bestanden=25
+zeit=2026-10-25 09:37:12
+freigabe=Gregor am 25.10.2026: 'ich halte mich mit dem testen zurueck, du bist dran und kannst starten und pruefen.' - voller Lauf fuer den Pruefbericht
+faelle=29
+bestanden=29
 fehlgeschlagen=0
 fall=[ ok ] E-131a   ohne MRUFloatXPos=-2147483648
 fall=[ ok ] E-131b   ohne MRUFloatYPos=-2147483648
@@ -23,9 +23,13 @@ fall=[ ok ] E-105p   E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet
 fall=[ ok ] E-108p   Logging shutdown
 fall=[ ok ] BILD-lauf BILD ERGEBNIS abgeholt=7 geoeffnet=7 weitergeleitet=7
 fall=[ ok ] E-113p   Datei=985x378 gemalt=718x276
+fall=[ ok ] E-113b   BILD E113B
+fall=[ ok ] E-113b2  neu=0 lebt=1 probe=ok
 fall=[ ok ] E-119a   data-db1b9f48.png faden=1 ok=1
 fall=[ ok ] E-119b   E-119 data-Bild als Datei:
 fall=[ ok ] E-119c   data-2eaa4a58.png laenge=1574
+fall=[ ok ] E-119d   vollstaendig=1 probe=ok
 fall=[ ok ] E-77a    E77 ERGEBNIS roh=0 dekodiert=2
 fall=[ ok ] E-77b    E-77 Ordnername: server="Entw&APw-rfe"
 fall=[ ok ] E-77c    E-77 Ordnername: server="Gel&APY-scht"
+fall=[ ok ] E-77d    E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0

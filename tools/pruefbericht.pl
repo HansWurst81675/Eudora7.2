@@ -1,281 +1,326 @@
 #!/usr/bin/perl
-use strict;
-use warnings;
-
-# pruefbericht.pl - erzeugt Releases/PRUEFBERICHT.md
+# pruefbericht.pl - erzeugt Releases/PRUEFBERICHT.md und das Testbuch
+# Releases/pruefbericht-tests.tsv, oder vergleicht den heutigen Stand damit.
 #
-#   perl tools/pruefbericht.pl              Bericht schreiben
-#   perl tools/pruefbericht.pl --zeigen     nur ausgeben, nichts schreiben
+#   perl tools/pruefbericht.pl              Tests fahren, Bericht und Buch schreiben
+#   perl tools/pruefbericht.pl --zeigen     dasselbe, aber nichts schreiben
+#   perl tools/pruefbericht.pl --vergleich  Tests fahren und mit dem EINGECHECKTEN
+#                                           Buch vergleichen - nichts schreiben
+#   perl tools/pruefbericht.pl --ohne-bau   die Testsammlung nicht neu bauen
 #
-# Rueckgabe: 0 = geschrieben, 1 = es fehlt eine Messung, 2 = Aufrufproblem.
+# Rueckgabe: 0 = alles gruen bzw. nichts neu rot, 1 = rot oder unvollstaendig
+# bzw. neu rot, 2 = Aufrufproblem.
 #
 # ---------------------------------------------------------------------------
 # WARUM ES DIESES WERKZEUG GIBT
 # ---------------------------------------------------------------------------
 #
-# Gregor am 22.10.2026:
+# Gregor am 22.10.2026: "am ende schreiben wir ein reinen report mit
+# versionsnummer, datum, testergebnissen usw. = pruefbericht. und haengen ihn
+# mit rein ins repo."
 #
-#     "am ende schreiben wir ein reinen report mit versionsnummer, datum,
-#      testergebnissen usw. = pruefbericht. und haengen ihn mit rein ins repo."
+# Am 24.10.2026, an der ersten Fassung: "version 0.121? wo ist der inhalt? wo
+# sehe ich die tests? warum nicht schon 0.122?" - und dann, was er braucht:
+#
+#     "ich wollte im pruefbericht etwas mehr details sehen: welcher test ist
+#      wann mit welchem build gelaufen."
+#
+#     "es geht beim test report = pruefbericht darum, wenn jemand das repo
+#      clone und weiter entwickelt, dann moechte er die tests evtl. per hand
+#      starten und sehen, was nicht geht (z.b. nach seiner aenderung). also
+#      ein vergleich vorher - nachher"
+#
+# Die erste Fassung zeigte nur Summen und wurde von keinem Werkzeug
+# aufgerufen; das Paket 1.0.122 kam ohne Bericht heraus (LEKTOR-56, L-56.7).
+# Jetzt: jeder Test einzeln mit Zeitpunkt und Bau, ein maschinenlesbares Buch
+# als "vorher", --vergleich fuer das "nachher", und paket-bauen.ps1 ruft
+# dieses Werkzeug auf.
 #
 # ---------------------------------------------------------------------------
-# WAS DIESER BERICHT NICHT TUT
+# WOHER DIE ERGEBNISSE KOMMEN
 # ---------------------------------------------------------------------------
 #
-# Er fuehrt die Tests NICHT selbst aus. Er LIEST, was die beiden Laeufe
-# hinterlassen haben:
+#   Unit-Tests   EudoraTests.exe wird HIER gefahren (vorher gebaut, ausser
+#                mit --ohne-bau). Die Tests lesen den Quelltext im
+#                Arbeitsbaum - ihr "Bau" ist also der Commit, plus Sternchen,
+#                wenn der Baum nicht sauber war.
+#   Schranken    tools/schranken-gegenprobe.pl wird HIER gefahren: jede
+#                Schranke aus tools/regression-schranken.txt muss ihren
+#                Rueckfall abweisen.
+#   Pruefstand   wird NICHT hier gefahren - der Lauf oeffnet Fenster und
+#                braucht Gregors Freigabe mit dem heutigen Datum (CLAUDE.md,
+#                Abschnitt 4). Gelesen wird Intern/pruefstand-buch.tsv, das
+#                tools/pruefstand-lauf.ps1 je Fall fortschreibt: Ergebnis,
+#                Zeitpunkt, Pruefstand und die Baukennung aus dessen
+#                Eudora.exe. Ein Fall, der an einer ANDEREN Fassung lief als
+#                dem Quellstand, oder der im Buch fehlt, zaehlt nicht als
+#                gruen (LEKTOR L-50.1, PRUEFER Fund 4a vom 22.10.2026).
 #
-#   Unit-Tests          tools/pruefe-tests-gruen.pl --ohne-bau (wird gerufen)
-#   Oberflaechentests   Intern/pruefstand-ergebnis.txt, abgelegt von
-#                       tools/pruefstand-lauf.ps1
-#
-# Der Oberflaechenlauf oeffnet Fenster und braucht Gregors Freigabe mit dem
-# heutigen Datum; ein Berichtsgenerator darf so etwas nicht ausloesen
-# (CLAUDE.md, Abschnitt 4). Fehlt das Ergebnis oder ist es AELTER als die
-# gebaute Eudora.exe, schreibt der Bericht das hin und gibt 1 zurueck -
-# er behauptet nichts Gruenes, das niemand gemessen hat
-# (Arbeitsweise/ausbleiben-ist-kein-befund.md).
+# Kodierung: reines ASCII im Quelltext; der Bericht ist UTF-8 ohne BOM mit LF.
 
-my $zeigen = 0;
+use strict;
+use warnings;
+
+my ($zeigen, $vergleich, $ohne_bau) = (0, 0, 0);
 for my $a (@ARGV) {
-    if    ($a eq '--zeigen') { $zeigen = 1 }
+    if    ($a eq '--zeigen')    { $zeigen = 1 }
+    elsif ($a eq '--vergleich') { $vergleich = 1 }
+    elsif ($a eq '--ohne-bau')  { $ohne_bau = 1 }
     else { print "  unbekannt: $a\n"; exit 2 }
 }
 
 my $wurzel = -f 'VERSION' ? '.' : '..';
-unless (-f "$wurzel/VERSION") {
-    print "  pruefbericht: aus der Wurzel aufrufen.\n";
-    exit 2;
-}
+unless (-f "$wurzel/VERSION") { print "  pruefbericht: aus der Wurzel aufrufen.\n"; exit 2 }
 
 sub lies { my ($d) = @_; open my $h, '<:raw', $d or return undef; local $/; my $t = <$h>; close $h; $t }
+sub zelle { my ($s) = @_; $s //= ''; $s =~ s/\|/\\|/g; $s =~ s/[\r\n\t]+/ /g; return $s }
 
-# --- Fassung -------------------------------------------------------------
+# --- Fassung und Stand ---------------------------------------------------
 my $paket = lies("$wurzel/VERSION") // '';
 $paket =~ s/\s+//g;
-
-my $quellstand = '';
 my $vh = lies("$wurzel/Eudora71/Version.h") // '';
 my @teile;
-for my $n (1 .. 4) {
-    push @teile, $1 if $vh =~ /^#define\s+EUDORA_VERSION$n\s+(\d+)/m;
-}
-$quellstand = join('.', @teile) if @teile == 4;
-$quellstand ||= '(nicht gefunden)';
+for my $n (1 .. 4) { push @teile, $1 if $vh =~ /^#define\s+EUDORA_VERSION$n\s+(\d+)/m }
+my $quellstand = @teile == 4 ? join('.', @teile) : '(nicht gefunden)';
 
-my $commit = `git -C "$wurzel" rev-parse --short HEAD 2>&1`;
-chomp $commit;
-my $schmutzig = `git -C "$wurzel" status --porcelain 2>&1`;
-my $anzahl_offen = () = $schmutzig =~ /\n/g;
+my $commit = `git -C "$wurzel" rev-parse --short HEAD 2>&1`; chomp $commit;
+my $schmutz = `git -C "$wurzel" status --porcelain -- . ":(exclude)Releases/PRUEFBERICHT.md" ":(exclude)Releases/pruefbericht-tests.tsv" ":(exclude)Intern/pruefstand-buch.tsv" ":(exclude)Intern/pruefstand-ergebnis.txt" ":(exclude)tools/TESTLAEUFE.md" 2>&1`;
+my $offen = () = $schmutz =~ /\n/g;
+my $stand = $commit . ($offen ? '*' : '');
 
 my @t = localtime;
-my $heute = sprintf('%04d-%02d-%02d', $t[5] + 1900, $t[4] + 1, $t[3]);
 my $jetzt = sprintf('%04d-%02d-%02d %02d:%02d', $t[5] + 1900, $t[4] + 1, $t[3], $t[2], $t[1]);
 
-# --- Unit-Tests ----------------------------------------------------------
-my $unit = `perl "$wurzel/tools/pruefe-tests-gruen.pl" --ohne-bau 2>&1`;
-my ($u_ges, $u_gut, $u_schlecht);
-if ($unit =~ /Tests\s+(\d+)/)          { $u_ges      = $1 }
-if ($unit =~ /bestanden\s+(\d+)/)      { $u_gut      = $1 }
-if ($unit =~ /fehlgeschlagen\s+(\d+)/) { $u_schlecht = $1 }
-my @u_fehl = $unit =~ /^\s*\[FEHL\]\s*(.+)$/mg;
-
-# --- Oberflaechentests ---------------------------------------------------
-my $pfad = "$wurzel/Intern/pruefstand-ergebnis.txt";
-my $ober = lies($pfad);
-# PowerShell schreibt die Datei mit CRLF; dieser Bericht ist eine .md und
-# muss reine LF haben (CLAUDE.md, Abschnitt 5). Sonst wandern 6 CR in die
-# Ausgabe - genau so gemessen am 22.10.2026.
-$ober =~ s/\r//g if defined $ober;
-my (%o, @o_faelle);
-if (defined $ober) {
-    for my $z (split /\n/, $ober) {
-        next if $z =~ /^\s*#/;
-        if ($z =~ /^fall=(.*)$/)        { push @o_faelle, $1; next }
-        if ($z =~ /^([a-z]+)=(.*)$/)    { $o{$1} = $2 }
-    }
-}
-
-# Ist das Ergebnis aelter als die gebaute EXE? Dann ist es kalt.
-my $kalt = 0;
-my ($exe) = grep { -f $_ } (
-    "$wurzel/Eudora71/Bin/Release/Eudora.exe",
-    "$wurzel/Eudora71/Bin/Debug/Eudora.exe",
-);
-if (defined $ober and $exe) {
-    $kalt = 1 if (stat($pfad))[9] < (stat($exe))[9];
-}
-
-# --- Welche Fassung lief in jedem Pruefstand? ----------------------------
-#
-# AM 22.10.2026 GELERNT (LEKTOR, L-50.1). Dieser Bericht trug in der Kopfzeile
-# "Quellstand 7.2.0.121" und "BESTANDEN", und zwei seiner sechs gruenen Faelle
-# waren an einem Paket 7.2.0.106 vom 17.10. gemessen - der Pruefstand
-# C:\Temp\E118 stand noch auf der alten Fassung. Ein gruener Bericht ueber
-# eine Fassung, die nicht gelaufen ist, ist genau die Art Luege, gegen die es
-# ihn gibt.
-#
-# Geprueft wird deshalb HIER, wo die Behauptung gemacht wird, und nicht nur
-# im Laeufer: fuer jedes Verzeichnis aus pruefstand-faelle.txt wird die
-# Dateiversion der Eudora.exe gelesen und gegen den Quellstand gehalten.
-# Weicht eine ab, nennt der Bericht sie und das Gesamturteil faellt.
-my (@stand_alt, @stand_ok);
-my $faelle_soll = 0;
+# --- 1. Unit-Tests: bauen und fahren --------------------------------------
+my @unit;      # [bereich, name, ergebnis]
+my $unit_lief = 0;
 {
-    my $faelle = lies("$wurzel/tools/pruefstand-faelle.txt") // '';
-    my %verz;
-    for my $z (split /\n/, $faelle) {
+    unless ($ohne_bau) {
+        my $bau = `perl "$wurzel/tools/pruefe-tests-gruen.pl" 2>&1`;
+        # Das Urteil zaehlt hier nicht - die Einzelzeilen kommen gleich aus
+        # dem Programm selbst. Gebaut muss es sein.
+    }
+    my $exe = "$wurzel/Eudora71/Tests/Build/Debug/EudoraTests.exe";
+    if (-f $exe) {
+        (my $win = $exe) =~ s{/}{\\}g;
+        my $aus = `"$win" 2>&1`;
+        my $bereich = '';
+        my @z = split /\r?\n/, $aus;
+        for my $i (0 .. $#z) {
+            # Ein Bereich steht zwischen zwei Gleichheitszeichen-Linien.
+            if ($i > 0 and $z[$i - 1] =~ /^=+$/ and $z[$i] !~ /^=+$/ and $i + 1 <= $#z and $z[$i + 1] =~ /^=+$/) {
+                ($bereich = $z[$i]) =~ s/^\s+|\s+$//g;
+                next;
+            }
+            if ($z[$i] =~ /^\[(ok|FEHL)\s*\]\s+(.+?)\s*$/) {
+                push @unit, [$bereich, $2, $1 eq 'ok' ? 'ok' : 'FEHL'];
+                $unit_lief = 1;
+            }
+        }
+    }
+}
+my $unit_fehl = grep { $_->[2] ne 'ok' } @unit;
+
+# --- 2. Schranken mit Rueckfallprobe --------------------------------------
+my @schranke;  # [kennung, schranke, ergebnis, text]
+{
+    my $aus = `perl "$wurzel/tools/schranken-gegenprobe.pl" 2>&1`;
+    for my $z (split /\r?\n/, $aus) {
+        next unless $z =~ /^\s*\[\s*(ok|FEHL|[a-z]+)\s*\]\s+(\S+)\s+(\S+)\s+(.*)$/;
+        push @schranke, [$2, $3, $1 eq 'ok' ? 'ok' : 'FEHL', $4];
+    }
+}
+my $schranke_fehl = grep { $_->[2] ne 'ok' } @schranke;
+
+# --- 3. Pruefstand: das Buch lesen ---------------------------------------
+my (@soll, %muss);
+{
+    my $f = lies("$wurzel/tools/pruefstand-faelle.txt") // '';
+    for my $z (split /\n/, $f) {
         next if $z =~ /^\s*(#|$)/;
-        # -1, sonst wirft split die leeren Felder am Zeilenende weg und die
-        # achtfeldrige Zeile kommt als siebenfeldrige an.
-        my @f = split /\|/, $z, -1;
-        next unless @f >= 8;
-        my $v = $f[1]; $v =~ s/^\s+|\s+$//g;
-        $verz{$v} = 1 if length $v;
-        $faelle_soll++;
+        my @sp = split /\|/, $z, -1;
+        next unless @sp >= 8;
+        my ($k, $m, $d) = map { s/^\s+|\s+$//gr } @sp[0, 4, 5];
+        push @soll, $k;
+        $muss{$k} = length $m ? $m : "ohne $d";
     }
-    for my $v (sort keys %verz) {
-        # NICHT "$v\\Eudora.exe" schreiben: in einer Perl-Zeichenkette ist
-        # \E eine Steuerfolge (Ende von \Q), aus C:\Temp\E118 wuerde
-        # C:\Temp udora.exe. Am 22.10.2026 genau daran gescheitert - die
-        # Pruefung lief ins Leere und meldete nichts, also schien alles gut.
-        (my $slash = $v) =~ s{\\}{/}g;
-        my $exe = $slash . '/Eudora.exe';
-        next unless -f $exe;
-        my $ps = qq{powershell -NoProfile -Command "(Get-Item '$v\\Eudora.exe').VersionInfo.FileVersion"};
-        my $fv = `$ps 2>&1`;
-        $fv =~ s/\s+//g;
-        next unless $fv =~ /^\d+(\.\d+){3}$/;
-        if ($fv eq $quellstand) { push @stand_ok,  "$v ($fv)" }
-        else                    { push @stand_alt, "$v traegt $fv, Quellstand ist $quellstand" }
+}
+my %buch;      # kennung -> [ergebnis, zeit, pruefstand, bau, gemessen]
+{
+    my $b = lies("$wurzel/Intern/pruefstand-buch.tsv");
+    if (defined $b) {
+        $b =~ s/^\x{FEFF}//; $b =~ s/^\xEF\xBB\xBF//;
+        for my $z (split /\r?\n/, $b) {
+            next if $z =~ /^#/ or $z eq '';
+            my @f = split /\t/, $z, -1;
+            $buch{$f[0]} = [@f[1 .. 5]];
+        }
     }
+}
+my (@stand_zeilen, $st_gruen, $st_rot, $st_fehlt, $st_alt);
+$_ = 0 for ($st_gruen, $st_rot, $st_fehlt, $st_alt);
+for my $k (@soll) {
+    my $e = $buch{$k};
+    if (!$e) { push @stand_zeilen, [$k, 'NIE GELAUFEN', '', '', '', $muss{$k}]; $st_fehlt++; next }
+    my ($erg, $zeit, $verz, $bau) = @$e;
+    my ($fassung) = ($bau // '') =~ /^Eudora (\d+\.\d+\.\d+\.\d+)/;
+    my $anders = (!$fassung or $fassung ne $quellstand) ? 1 : 0;
+    my $zeigen_erg = $erg eq 'ok' ? 'ok' : 'FEHL';
+    if    ($erg ne 'ok') { $st_rot++ }
+    elsif ($anders)      { $st_alt++; $zeigen_erg = 'ok, ANDERER BAU' }
+    else                 { $st_gruen++ }
+    push @stand_zeilen, [$k, $zeigen_erg, $zeit, $verz, $bau, $muss{$k}];
 }
 
-# --- Einstufung ----------------------------------------------------------
-my $reg = `perl "$wurzel/tools/pruefe-regressionstest.pl" 2>&1`;
-my %zahl;
-for my $k (qw(kritisch wichtig unkritisch werkzeug)) {
-    $zahl{$k} = ($reg =~ /^\s*\Q$k\E\s+(\d+)/m) ? $1 : '?';
+# --- Das Testbuch: eine Zeile je Test, Grundlage fuer den Vergleich -------
+# Spalten: art, kennung, ergebnis, zeit, bau. Sortiert, damit ein Diff im
+# Repository lesbar bleibt.
+my @buchzeilen;
+for my $u (@unit)     { push @buchzeilen, join("\t", 'unit', "$u->[0] / $u->[1]", $u->[2], $jetzt, "Quelltext $stand") }
+for my $s (@schranke) { push @buchzeilen, join("\t", 'schranke', "$s->[0] ($s->[1])", $s->[2], $jetzt, "Quelltext $stand") }
+for my $z (@stand_zeilen) { push @buchzeilen, join("\t", 'pruefstand', $z->[0], $z->[1], $z->[2], $z->[4]) }
+@buchzeilen = sort @buchzeilen;
+
+# --- --vergleich: heutiger Stand gegen das eingecheckte Buch --------------
+if ($vergleich) {
+    my $vorher = `git -C "$wurzel" show HEAD:Releases/pruefbericht-tests.tsv 2>&1`;
+    if ($? != 0) { print "  Kein eingechecktes Testbuch (Releases/pruefbericht-tests.tsv) - nichts zu vergleichen.\n"; exit 2 }
+    my (%alt, %neu);
+    for my $z (split /\r?\n/, $vorher) { next if $z =~ /^#/ or $z eq ''; my @f = split /\t/, $z; $alt{"$f[0]\t$f[1]"} = $f[2] }
+    for my $z (@buchzeilen)             { my @f = split /\t/, $z; $neu{"$f[0]\t$f[1]"} = $f[2] }
+    my (@neu_rot, @neu_gruen, @neu_da, @weg, $gleich);
+    $gleich = 0;
+    for my $k (sort keys %neu) {
+        my $n = $neu{$k} =~ /^ok/ ? 'ok' : 'rot';
+        if (!exists $alt{$k}) { push @neu_da, "$k ($neu{$k})"; push @neu_rot, $k if $n eq 'rot'; next }
+        my $a = $alt{$k} =~ /^ok/ ? 'ok' : 'rot';
+        if    ($a eq 'ok'  and $n eq 'rot') { push @neu_rot, $k }
+        elsif ($a eq 'rot' and $n eq 'ok')  { push @neu_gruen, $k }
+        else                                { $gleich++ }
+    }
+    for my $k (sort keys %alt) { push @weg, $k unless exists $neu{$k} }
+    my $zeig = sub {
+        my ($titel, @l) = @_;
+        printf "  %-34s %d\n", $titel, scalar @l;
+        for my $x (@l) { (my $y = $x) =~ s/\t/  /g; print "      $y\n" }
+    };
+    print "\n  Vergleich mit dem eingecheckten Testbuch (Commit $commit)\n";
+    print "  ------------------------------------------------------------\n";
+    $zeig->('NEU ROT (vorher gruen oder neu)', @neu_rot);
+    $zeig->('neu gruen (vorher rot)', @neu_gruen);
+    $zeig->('neu hinzugekommen', @neu_da);
+    $zeig->('weggefallen', @weg);
+    printf "  %-34s %d\n", 'unveraendert', $gleich;
+    print "  ------------------------------------------------------------\n";
+    print "  Pruefstandsfaelle werden hier nicht gefahren, sondern aus\n";
+    print "  Intern/pruefstand-buch.tsv gelesen - nach einer Aenderung am\n";
+    print "  Programm vorher tools/pruefstand-lauf.ps1 fahren.\n\n";
+    exit(@neu_rot ? 1 : 0);
 }
-my ($k_ges)  = $reg =~ /mit Testfall im Pruefstand\s+(\d+) von (\d+)/;
-my $k_alle   = $2 // '?';
-my ($k_man)  = $reg =~ /zusaetzlich manuell im Plan\s+(\d+)/;
+
+# --- Deckung der kritischen Befunde ---------------------------------------
+my $reg = `perl "$wurzel/tools/pruefe-regressionstest.pl" 2>&1`;
+my ($k_ges, $k_alle) = $reg =~ /mit Testfall im Pruefstand\s+(\d+) von (\d+)/;
 my ($k_ohne) = $reg =~ /OHNE jede Pruefung\s+(\d+)/;
+my ($k_liste) = $reg =~ /OHNE jede Pruefung\s+\d+[^\n]*\n((?:\s{6}\S[^\n]*\n)+)/;
+$k_liste = join(' ', grep { length } split /\s+/, $k_liste // '');
+
+# --- Urteil --------------------------------------------------------------
+my $gruen = ($unit_lief and !$unit_fehl and !$schranke_fehl and !$st_rot and !$st_fehlt and !$st_alt) ? 1 : 0;
+my $urteil = $gruen ? 'BESTANDEN'
+           : ($unit_fehl or $schranke_fehl or $st_rot) ? 'FEHLGESCHLAGEN'
+           : 'NICHT VOLLSTAENDIG';
 
 # --- Bericht -------------------------------------------------------------
-my $gruen_unit  = (defined $u_schlecht and $u_schlecht == 0) ? 1 : 0;
-# TEILLAUF IST KEIN LAUF (22.10.2026, PRUEFER Fund 4a).
-# pruefstand-lauf.ps1 -Nur E-131 schreibt dieselbe Ergebnisdatei wie der
-# volle Lauf und UEBERSCHREIBT ihn damit. Ohne diese Pruefung sagte der
-# Bericht BESTANDEN, obwohl fuenf von sechs Faellen nie gemessen wurden -
-# gemessen von PRUEFER mit einer gestellten Datei "faelle=1".
-my $unvollstaendig = (defined $ober and $faelle_soll
-                      and ($o{faelle} // 0) < $faelle_soll) ? 1 : 0;
-
-my $gruen_ober  = (defined $ober and ($o{fehlgeschlagen} // 1) == 0
-                   and !$kalt and !@stand_alt and !$unvollstaendig) ? 1 : 0;
-my $urteil = ($gruen_unit && $gruen_ober) ? 'BESTANDEN' : 'NICHT VOLLSTAENDIG';
-
 my $b = '';
 $b .= "# Pruefbericht Eudora 7.2\n\n";
 $b .= "| | |\n|---|---|\n";
-$b .= "| **Paketfassung** | `$paket` |\n";
-$b .= "| **Quellstand** | `$quellstand` |\n";
-$b .= "| **Commit** | `$commit`" . ($anzahl_offen ? " (**Arbeitsbaum nicht sauber**: $anzahl_offen Dateien geaendert)" : " (Arbeitsbaum sauber)") . " |\n";
+$b .= "| **Quellstand** | `$quellstand` (Paketnummer `$paket`) |\n";
+$b .= "| **Commit** | `$commit`" . ($offen ? " \x{2014} **Arbeitsbaum nicht sauber** ($offen Dateien)" : " (Arbeitsbaum sauber)") . " |\n";
 $b .= "| **Erstellt** | $jetzt |\n";
 $b .= "| **Gesamturteil** | **$urteil** |\n\n";
 
-$b .= "Erzeugt von `tools/pruefbericht.pl`. Er fuehrt die Tests nicht selbst aus,\n";
-$b .= "sondern liest, was die Laeufe hinterlassen haben - was nicht gemessen wurde,\n";
-$b .= "steht hier als nicht gemessen und nicht als gruen.\n\n";
+$b .= "| Art | Tests | gruen | rot | sonst |\n|---|---|---|---|---|\n";
+$b .= sprintf("| Unit-Tests (`EudoraTests.exe`) | %d | %d | %d | %s |\n", scalar @unit, @unit - $unit_fehl, $unit_fehl, $unit_lief ? '' : '**nicht gelaufen**');
+$b .= sprintf("| Schranken mit Rueckfallprobe | %d | %d | %d | |\n", scalar @schranke, @schranke - $schranke_fehl, $schranke_fehl);
+$b .= sprintf("| Pruefstand (Oberflaeche) | %d | %d | %d | %d an anderem Bau, %d nie gelaufen |\n\n", scalar @soll, $st_gruen, $st_rot, $st_alt, $st_fehlt);
 
-$b .= "## 1. Unit-Tests (`EudoraTests.exe`)\n\n";
-if (defined $u_ges) {
-    $b .= "| Tests | bestanden | fehlgeschlagen |\n|---|---|---|\n";
-    $b .= "| $u_ges | $u_gut | $u_schlecht |\n\n";
-    if (@u_fehl) { $b .= "Fehlgeschlagen:\n\n"; $b .= "* $_\n" for @u_fehl; $b .= "\n" }
+$b .= "Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit\n";
+$b .= "Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in\n";
+$b .= "[`pruefbericht-tests.tsv`](pruefbericht-tests.tsv) \x{2014} das ist der Stand *vorher*\n";
+$b .= "fuer den Vergleich.\n\n";
+
+$b .= "## Nach einer eigenen Aenderung: vorher und nachher vergleichen\n\n";
+$b .= "```\nperl tools/pruefbericht.pl --vergleich\n```\n\n";
+$b .= "baut und faehrt die Unit-Tests und die Schranken, liest die Pruefstandsfaelle\n";
+$b .= "aus `Intern/pruefstand-buch.tsv` und vergleicht alles mit diesem eingecheckten\n";
+$b .= "Stand: **neu rot**, neu gruen, neu hinzugekommen, weggefallen. Rueckgabe 1,\n";
+$b .= "sobald etwas neu rot ist. Geschrieben wird dabei nichts.\n\n";
+$b .= "Die Pruefstandsfaelle oeffnen Eudora-Fenster und laufen deshalb nur auf\n";
+$b .= "Anforderung, je Fall an einem eigenen Verzeichnis unter `C:\\Temp`:\n\n";
+$b .= "```\npowershell -ExecutionPolicy Bypass -File tools\\pruefstand-lauf.ps1 -Freigabe \"<wer, wann>\"\n```\n\n";
+$b .= "Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.\n\n";
+
+$b .= "## 1. Unit-Tests\n\n";
+if ($unit_lief) {
+    $b .= "Gelaufen am **$jetzt** gegen den Quelltext von Commit `$stand`.\n\n";
+    $b .= "<details><summary>Alle " . scalar(@unit) . " Unit-Tests einzeln</summary>\n\n";
+    $b .= "| Bereich | Test | Ergebnis |\n|---|---|---|\n";
+    $b .= "| " . zelle($_->[0]) . " | " . zelle($_->[1]) . " | " . ($_->[2] eq 'ok' ? 'ok' : '**FEHL**') . " |\n" for @unit;
+    $b .= "\n</details>\n\n";
+    if ($unit_fehl) { $b .= "**Rot:**\n\n"; $b .= "* " . zelle("$_->[0] / $_->[1]") . "\n" for grep { $_->[2] ne 'ok' } @unit; $b .= "\n" }
 } else {
-    $b .= "**Nicht gemessen** - `pruefe-tests-gruen.pl --ohne-bau` lieferte keine Ergebniszeile.\n\n";
+    $b .= "**Nicht gelaufen** \x{2014} `EudoraTests.exe` fehlt oder lieferte keine Ergebniszeile.\n\n";
 }
 
-$b .= "## 2. Regressionstests ueber die Oberflaeche (`pruefstand-lauf.ps1`)\n\n";
-if (!defined $ober) {
-    $b .= "**Nicht gemessen.** `Intern/pruefstand-ergebnis.txt` fehlt. Der Lauf oeffnet\n";
-    $b .= "Fenster und braucht Gregors Freigabe mit dem heutigen Datum; dieser Bericht\n";
-    $b .= "loest ihn nicht selbst aus.\n\n";
-} else {
-    $b .= "**Das Ergebnis ist AELTER als die gebaute `Eudora.exe`** - es gilt fuer einen\n"
-        . "frueheren Stand und zaehlt fuer dieses Paket nicht.\n\n" if $kalt;
-    $b .= "Gefahren am $o{zeit}, Freigabe: *\"$o{freigabe}\"*\n\n" if $o{zeit};
-    if ($unvollstaendig) {
-        $b .= sprintf("**TEILLAUF - nur %d von %d Faellen sind gemessen.** Die Fallliste\n"
-                    . "`tools/pruefstand-faelle.txt` fuehrt %d Faelle; das abgelegte Ergebnis\n"
-                    . "nennt %d. Wahrscheinlich lief `pruefstand-lauf.ps1` mit `-Nur` und hat\n"
-                    . "das vollstaendige Ergebnis ueberschrieben. Dieses Gruen gilt nicht.\n\n",
-                      ($o{faelle} // 0), $faelle_soll, $faelle_soll, ($o{faelle} // 0));
-    }
-    if (@stand_alt) {
-        $b .= "**ACHTUNG - nicht alle Pruefstaende tragen den Quellstand.** Die Faelle\n";
-        $b .= "in diesen Verzeichnissen wurden an einer ANDEREN Fassung gemessen, ihr\n";
-        $b .= "Gruen gilt fuer dieses Paket also nicht:\n\n";
-        $b .= "* $_\n" for @stand_alt;
-        $b .= "\nGemessen an der Dateiversion der jeweiligen `Eudora.exe`.\n\n";
-    } elsif (@stand_ok) {
-        $b .= "Alle Pruefstaende tragen den Quellstand `$quellstand` (an der\n";
-        $b .= "Dateiversion ihrer `Eudora.exe` gemessen).\n\n";
-    }
-    $b .= "| Faelle | bestanden | fehlgeschlagen |\n|---|---|---|\n";
-    $b .= "| " . ($o{faelle} // '?') . " | " . ($o{bestanden} // '?') . " | " . ($o{fehlgeschlagen} // '?') . " |\n\n";
-    if (@o_faelle) {
-        $b .= "```\n";
-        $b .= "$_\n" for @o_faelle;
-        $b .= "```\n\n";
-    }
+$b .= "## 2. Schranken mit Rueckfallprobe\n\n";
+$b .= "Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren\n";
+$b .= "Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die\n";
+$b .= "Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt\n";
+$b .= "(`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).\n";
+$b .= "Gelaufen am **$jetzt** gegen Commit `$stand`.\n\n";
+$b .= "| Befund | Schranke | Ergebnis | gemessen |\n|---|---|---|---|\n";
+$b .= "| " . zelle($_->[0]) . " | `" . zelle($_->[1]) . "` | " . ($_->[2] eq 'ok' ? 'ok' : '**FEHL**') . " | " . zelle($_->[3]) . " |\n" for @schranke;
+$b .= "\n";
+
+$b .= "## 3. Regressionstests ueber die Oberflaeche (Pruefstand)\n\n";
+$b .= "Je Fall der **letzte** Lauf. *Bau* ist die Kennung aus der `Eudora.exe` des\n";
+$b .= "Pruefstands (Fassung, Paket, Commit; ein `*` heisst: mit uncommitteten\n";
+$b .= "Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `$quellstand`\n";
+$b .= "lief, zaehlt fuer diesen Stand nicht als gruen.\n\n";
+$b .= "| Fall | Ergebnis | gelaufen am | Pruefstand | Bau | erwartet |\n|---|---|---|---|---|---|\n";
+for my $z (@stand_zeilen) {
+    my $e = $z->[1] eq 'ok' ? 'ok' : "**$z->[1]**";
+    $b .= "| $z->[0] | $e | " . zelle($z->[2]) . " | `" . zelle($z->[3]) . "` | " . zelle($z->[4]) . " | `" . zelle($z->[5]) . "` |\n";
 }
+$b .= "\n";
 
-$b .= "## 3. Deckung der kritischen Befunde\n\n";
-$b .= "Was *kritisch* heisst, steht in [BEFUNDE.md](../Intern/BEFUNDE.md) unter\n";
-$b .= "*Die Stufe*: Post oder Einstellungen gehen verloren oder werden still\n";
-$b .= "beschaedigt, eine fremde Installation nimmt Schaden, das Programm stuerzt ab,\n";
-$b .= "startet nicht oder haengt, eine Nachricht geht falsch hinaus oder kommt\n";
-$b .= "falsch an, Sicherheit.\n\n";
-$b .= "| Stufe | Zahl |\n|---|---|\n";
-$b .= "| kritisch | $zahl{kritisch} |\n| wichtig | $zahl{wichtig} |\n";
-$b .= "| unkritisch | $zahl{unkritisch} |\n| werkzeug | $zahl{werkzeug} |\n\n";
-$b .= "Von den **$k_alle kritischen** Befunden haben\n\n";
-# KEINE AUFTEILUNG, SONDERN ZWEI GRUPPEN UND EINE UEBERSCHNEIDUNG
-# (23.10.2026, nach LEKTOR L-51.3). Die drei Zeilen lasen sich wie eine
-# Aufteilung, und ihre Summe 16+1+51 ergab 68 statt 67 - LEKTOR hat daraus
-# geschlossen, die Zahl sei falsch. Sie ist es nicht: die manuelle Zeile
-# UEBERSCHNEIDET sich mit der automatischen (E-132 hat beides). Gesagt
-# wurde das nirgends, also stand da eine Rechnung, die nicht aufgeht.
-$b .= "* **" . ($k_ges  // '?') . "** einen automatischen Testfall,\n";
-$b .= "* **" . ($k_ohne // '?') . "** bisher **keine Pruefung**.\n";
-$b .= "\nDazu **" . ($k_man // '?') . "** mit einem manuellen Fall im "
-    . "[Testplan](../Intern/TESTPLAN.md) \x{2014} diese Zahl **ueberschneidet sich** mit der "
-    . "ersten Zeile, ein Befund kann beides haben (E-132 hat beides). Die Aufteilung sind "
-    . "die ersten beiden Zeilen, und sie geht auf: "
-    . (($k_ges // 0) + ($k_ohne // 0)) . " von $k_alle.\n\n";
-$b .= "Die letzte Zahl ist der Rueckstand. Solange sie nicht null ist, sagt ein\n";
-$b .= "gruener Bericht nicht, dass nichts kaputt ist - er sagt, dass nichts von dem\n";
-$b .= "kaputt ist, was geprueft wird.\n\n";
+$b .= "## 4. Deckung der kritischen Befunde\n\n";
+$b .= "Von **" . ($k_alle // '?') . "** kritischen Befunden haben **" . ($k_ges // '?') . "** einen Test, **"
+    . ($k_ohne // '?') . "** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: "
+    . ($k_liste || '-') . ".\n\n";
+$b .= "Solange diese Zahl nicht null ist, sagt ein gruener Bericht nicht, dass\n";
+$b .= "nichts kaputt ist \x{2014} er sagt, dass nichts von dem kaputt ist, was geprueft\n";
+$b .= "wird.\n\n";
 
-$b .= "## 4. Was dieser Bericht nicht abdeckt\n\n";
-$b .= "* Die manuellen Faelle in [TESTPLAN.md](../Intern/TESTPLAN.md), Teil M -\n";
-$b .= "  sie muessen vor einem Release von Hand gefahren und dort abgehakt werden.\n";
-$b .= "* Alles, was keinen Testfall hat (siehe Abschnitt 3).\n";
+$b .= "## 5. Was dieser Bericht nicht abdeckt\n\n";
+$b .= "* Die manuellen Faelle in [TESTPLAN.md](../Intern/TESTPLAN.md), Teil M.\n";
+$b .= "* Alles, was keinen Test hat (Abschnitt 4).\n";
 $b .= "* Ein Release gilt erst nach **Gregors eigenem Lauf** und seiner Zustimmung\n";
-$b .= "  (CLAUDE.md, Abschnitt 4) - dieser Bericht ersetzt das nicht.\n";
+$b .= "  (CLAUDE.md, Abschnitt 4) \x{2014} dieser Bericht ersetzt das nicht.\n";
 
-if ($zeigen) { print $b; exit(($gruen_unit && $gruen_ober) ? 0 : 1) }
+my $rc = $gruen ? 0 : 1;
+if ($zeigen) { binmode STDOUT, ':encoding(UTF-8)'; print $b; exit $rc }
 
-my $ziel = "$wurzel/Releases/PRUEFBERICHT.md";
-# Der Bericht enthaelt Gedankenstriche aus \x{2014}; ohne Kodierschicht
-# meldet Perl "Wide character in print" und schreibt sie zwar richtig,
-# aber auf Verdacht. Mit :encoding(UTF-8) ist es ausgesprochen - die Datei
-# ist UTF-8 ohne BOM mit reinen LF (CLAUDE.md, Abschnitt 5).
-open my $o, '>:encoding(UTF-8)', $ziel or do { print "  $ziel nicht schreibbar: $!\n"; exit 2 };
-print $o $b;
-close $o;
-print "  Releases/PRUEFBERICHT.md geschrieben - Urteil: $urteil\n";
-exit(($gruen_unit && $gruen_ober) ? 0 : 1);
+for my $paar (["$wurzel/Releases/PRUEFBERICHT.md", $b],
+              ["$wurzel/Releases/pruefbericht-tests.tsv",
+               "# Erzeugt von tools/pruefbericht.pl am $jetzt fuer $quellstand, Commit $stand - nicht von Hand aendern.\n"
+             . "# art\tkennung\tergebnis\tzeit\tbau\n" . join('', map { "$_\n" } @buchzeilen)]) {
+    open my $o, '>:encoding(UTF-8)', $paar->[0] or do { print "  $paar->[0] nicht schreibbar: $!\n"; exit 2 };
+    print $o $paar->[1];
+    close $o;
+}
+printf "  Releases/PRUEFBERICHT.md und pruefbericht-tests.tsv geschrieben - %s\n", $urteil;
+printf "  Unit %d (%d rot), Schranken %d (%d rot), Pruefstand %d (%d rot, %d anderer Bau, %d nie gelaufen)\n",
+    scalar @unit, $unit_fehl, scalar @schranke, $schranke_fehl, scalar @soll, $st_rot, $st_alt, $st_fehlt;
+exit $rc;

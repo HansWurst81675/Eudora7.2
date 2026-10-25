@@ -303,4 +303,44 @@ $zeilen += "fehlgeschlagen=" + $fehl
 foreach ($m in $meldungen) { $zeilen += "fall=" + $m.Trim() }
 [IO.File]::WriteAllLines($ergebnisdatei, $zeilen, (New-Object Text.UTF8Encoding $false))
 
+# ERGEBNISBUCH JE FALL (25.10.2026). Gregor am 24.10.2026: "ich wollte im
+# pruefbericht etwas mehr details sehen: welcher test ist wann mit welchem
+# build gelaufen." pruefstand-ergebnis.txt kennt nur den LETZTEN Lauf als
+# Ganzes - ein Teillauf mit -Nur ueberschreibt ihn (PRUEFER Fund 4a,
+# 22.10.2026). Das Buch fuehrt dagegen jeden Fall einzeln: ein Lauf ersetzt
+# nur die Zeilen der Faelle, die er gefahren hat, und jede Zeile nennt den
+# Bau, gelesen aus der Eudora.exe des Pruefstands (EUDORA_BAU_KENNUNG aus
+# BuildKennung.h - Fassung, Paket, Commit; ein Sternchen heisst: mit
+# uncommitteten Aenderungen gebaut). Gelesen von tools/pruefbericht.pl.
+function BauKennung([string] $verz) {
+    $exe = Join-Path $verz 'Eudora.exe'
+    if (-not (Test-Path -LiteralPath $exe)) { return '(keine Eudora.exe)' }
+    $text = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($exe))
+    $m = [regex]::Match($text, 'Eudora \d+\.\d+\.\d+\.\d+ / Paket [0-9.]+\+[0-9a-f]+\*? \d{4}-\d\d-\d\d \d\d:\d\d')
+    if ($m.Success) { return $m.Value } else { return '(Baukennung nicht gefunden)' }
+}
+$buchdatei = Join-Path $wurzel 'Intern\pruefstand-buch.tsv'
+$buch = @{}
+if (Test-Path -LiteralPath $buchdatei) {
+    foreach ($z in [IO.File]::ReadAllLines($buchdatei)) {
+        if ($z -eq '' -or $z.StartsWith('#')) { continue }
+        $buch[$z.Split("`t")[0]] = $z
+    }
+}
+$bauJeVerz = @{}
+$buchZeit = Get-Date -Format 'yyyy-MM-dd HH:mm:ss'
+foreach ($m in $meldungen) {
+    if ($m -notmatch '\[\s*(ok|FEHL)\s*\]\s+(\S+)\s*(.*)$') { continue }
+    $erg = $Matches[1]; $k = $Matches[2]; $text = $Matches[3].Trim() -replace "`t", ' '
+    $f = $liste | Where-Object { $_.Kennung -eq $k } | Select-Object -First 1
+    if (-not $f) { continue }
+    if (-not $bauJeVerz.ContainsKey($f.Verzeichnis)) { $bauJeVerz[$f.Verzeichnis] = BauKennung $f.Verzeichnis }
+    $buch[$k] = (@($k, $erg, $buchZeit, $f.Verzeichnis, $bauJeVerz[$f.Verzeichnis], $text) -join "`t")
+}
+$buchZeilen = @('# Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern. Je Fall der letzte Lauf.',
+                "# kennung`tergebnis`tzeit`tpruefstand`tbau`tgemessen")
+$buchZeilen += ($buch.Keys | Sort-Object | ForEach-Object { $buch[$_] })
+[IO.File]::WriteAllLines($buchdatei, [string[]]$buchZeilen, (New-Object Text.UTF8Encoding $false))
+Write-Host ("  Ergebnisbuch: {0} Faelle in Intern\pruefstand-buch.tsv ({1} in diesem Lauf)" -f $buch.Count, $liste.Count)
+
 exit $fehl

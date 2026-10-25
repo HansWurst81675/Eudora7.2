@@ -288,7 +288,7 @@ static void Test_E12_LaufwerksrelativerPfad(void)
 	char*	pDatei = NULL;
 	DWORD	dwRet;
 
-	TT_BeginTest("E-12: \"C:Name\" ist nicht absolut - GetLongPathName merkt das nicht");
+	TT_BeginTest("E-12: \"C:Name\" ist laufwerksrelativ, nicht absolut - GetLongPathName merkt das nicht");
 
 	// Der zweite, verdeckte Teil von E-12. CheckMailDirectory baute aus
 	// einem Pfad ohne Laufwerksbuchstaben "C:Mailverzeichnis" zusammen und
