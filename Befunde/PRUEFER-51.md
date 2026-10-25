@@ -59,7 +59,7 @@ einen Bau, an dem kein Oberflächentest gelaufen ist ([K1](#k1)). Die anderen
 Funde betreffen Prüfungen und Werkzeuge. Sie gehören vor **7.2.1.0**, für das
 alle Regressionstests laufen und bestehen müssen.
 
-**Neue E-Kennungen: keine. E-147 und E-149 bleiben frei.** [K6](#k6) gehört zu
+**Neue E-Kennungen: keine. [E-147](../Intern/BEFUNDE.md#e-147) und E-149 bleiben frei.** [K6](#k6) gehört zu
 [E-148](../Intern/BEFUNDE.md#e-148), [K8](#k8) zu
 [E-119](../Intern/BEFUNDE.md#e-119). Eingetragen in `Intern/BEFUNDE.md` ist
 nichts. Vorher gelaufen: `perl tools/befund-suchen.pl` zu
@@ -491,5 +491,5 @@ Prüfung, die nichts schützt.
 | [K11](#k11) | Ergebnisbuch: alle Fälle eines Laufs tragen die Endzeit des Laufs | gering | nein |
 | [K10](#k10) | Entwürfe aus 1.0.110–1.0.122 tragen die geteilte Datei weiter (Vermutung) | Hinweis | nein |
 
-**Vergeben: keine. Frei: E-147, E-149.** Eingetragen in `Intern/BEFUNDE.md`
+**Vergeben: keine. Frei: [E-147](../Intern/BEFUNDE.md#e-147), E-149.** Eingetragen in `Intern/BEFUNDE.md`
 ist nichts.

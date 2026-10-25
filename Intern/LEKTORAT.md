@@ -1805,6 +1805,76 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Dreiundsiebzigster Durchgang — Mikrolauf: Gregors Entscheidung zu PRÜFER-57 K2 in E-137, 25.10.2026 (Bericht: `Befunde/LEKTOR-68.md`)
+
+Geprüft nur den Satz aus `75c71096` in E-137 (`BEFUNDE.md:390`) gegen
+`mainfrm.cpp:3433-3445` und PRÜFER-57 K2: der Block fragt nur
+`ID_FILE_CLOSE`, gleich ob Menü, Kürzel oder Knopf, und kehrt vor der
+Umschalt-Abfrage in `doc.cpp:139` zurück (belegt). **Nichts Falsches, keine
+Funde.** Keine neue Frage an Gregor.
+
+## Zweiundsiebzigster Durchgang — Mikrolauf: L-66.1 und L-66.2 in E-137, 25.10.2026 (Bericht: `Befunde/LEKTOR-67.md`)
+
+Geprüft nur die Zeile E-137 (`BEFUNDE.md:390`) gegen `mainfrm.cpp`. Beide
+Funde sind erledigt: die Behebung steht am Anfang von `OnCommand`
+(`mainfrm.cpp:3433-3445`), die erste Fassung in `OnCmdMsg` als entfernt,
+„Was noch fehlt" nennt Gregors Prüfung im Testpaket (gemessen). **Nichts
+Falsches.** Ein Hinweis ([L-67.1](../Befunde/LEKTOR-67.md#l-67.1)). Keine
+neue Frage an Gregor.
+
+## Einundsiebzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 2909af0c, 25.10.2026 (Bericht: `Befunde/LEKTOR-66.md`)
+
+Geprüft nur die `.md`-Änderungen aus `410c3b51`, `78f2ad2a`, `c2207fc8`,
+`d5455410`: E-137 nach `OnCommand` verlegt (PRÜFER-56 K1), Prüfbericht
+302/19/32 auf `78f2ad2a`. Kopf von E-137, CHANGELOG, WEITERMACHEN Punkt 2
+und Prüfbericht decken sich mit dem Code; L-65.1 und L-65.2 sind erledigt
+(gemessen). **Falsch ist eine Aussage:** der Absatz *Behebung* in
+`BEFUNDE.md:390` nennt weiter `OnCmdMsg` und eine MDI-Abfrage, der Code
+fängt in `OnCommand` ab (`mainfrm.cpp:3433-3445`) und fragt kein MDI mehr
+ab ([L-66.1](../Befunde/LEKTOR-66.md#l-66.1)). Ein Hinweis
+([L-66.2](../Befunde/LEKTOR-66.md#l-66.2)). Keine neue Frage an Gregor.
+
+## Siebzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 45e704f4, 25.10.2026 (Bericht: `Befunde/LEKTOR-65.md`)
+
+Geprüft nur die `.md`-Änderungen aus `346a5ec0`, `424966f6`, `0074f287`,
+`39d348d8`: E-137 nachgebessert nach PRÜFER-55, LEKTOR-64 eingeholt,
+Prüfbericht 302/19/32 auf `424966f6`. L-64.1 und L-64.2 sind erledigt, die
+E-137-Beschreibung deckt sich mit dem Code, die Prüfbericht-Zahlen gehen auf
+(gemessen). **Falsch ist eine Aussage:** `BEFUNDE.md:390` nennt die Spurmarke
+noch mit „angedockte", der Code schreibt sie seit `424966f6` ohne
+([L-65.1](../Befunde/LEKTOR-65.md#l-65.1)). Ein Hinweis
+([L-65.2](../Befunde/LEKTOR-65.md#l-65.2)). Keine neue Frage an Gregor.
+
+## Neunundsechzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 206b3a08, 25.10.2026 (Bericht: `Befunde/LEKTOR-64.md`)
+
+Geprüft nur `b5d3bcf9`, `ed0d53a2`, `ec468df6`, `2742bd6e`: E-137 behoben,
+E-147 neu, Berichtigungen aus LEKTOR-63, Prüfbericht 302/19/32. Die Zitate
+aus Issue #102, die E-137-Codestellen und die Prüfbericht-Zahlen stimmen
+(gemessen). **Falsch sind zwei Aussagen:** `WEITERMACHEN.md:135` nennt
+E-137 noch als nächsten Schritt, obwohl `ed0d53a2` es behoben hat
+([L-64.1](../Befunde/LEKTOR-64.md#l-64.1)), und E-147 nennt Rays
+BSD-3-Clause „dieselbe wie unser Repo", obwohl unsere einen
+Patentausschluss trägt ([L-64.2](../Befunde/LEKTOR-64.md#l-64.2)); die
+Erlaubnis zum Einbau bleibt davon unberührt. Ein Hinweis
+([L-64.3](../Befunde/LEKTOR-64.md#l-64.3)). Keine neue Frage an Gregor.
+
+## Achtundsechzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 900a2312, 25.10.2026 (Bericht: `Befunde/LEKTOR-63.md`)
+
+Gregor fragte, was aus „keine Lügen auf main" geworden ist. Geprüft sind nur
+die fünf Commits auf `RC1_vorbereiten` seit `900a2312`. **Die Berichtigungen
+stimmen:** der neue TESTPLAN-Text zu E-132 deckt sich mit `eudora.cpp`, die
+PR-Nummern im CHANGELOG-Kopf stimmen, kein Stand-Kopf behauptet Falsches;
+„ohne Paket", „277 Tests" und der alte Schritt 5 stehen nirgends mehr falsch.
+
+**6 Funde: 1 falsch, 2 ungenau, 3 Hinweise.** Falsch ist die Reihenfolge im
+neuen `WEITERMACHEN.md`-Block: sie nennt die E-100-INI-Messung noch blind und
+als ersten Schritt, obwohl `9a4cc0e1` sie behoben hat
+([L-63.1](../Befunde/LEKTOR-63.md#l-63.1)). Ungenau sind der E-150-Wortlaut
+im CHANGELOG, der Quelltextherleitung als beobachtetes Verhalten erzählt
+([L-63.2](../Befunde/LEKTOR-63.md#l-63.2)), und „Behoben ab 7.2.0.123" in
+der README, einer Fassung, die nie veröffentlicht wird
+([L-63.3](../Befunde/LEKTOR-63.md#l-63.3)). Keine neue Frage an Gregor.
+
 ## Siebenundsechzigster Durchgang — Mikrolauf: Commits 85554d91 und 9d135576, 25.10.2026 (Bericht: `Befunde/LEKTOR-62.md`)
 
 Nur zwei Commits: die `ZIEL.md`-Zeilen zu E-77, E-113, E-119, E-116 und das

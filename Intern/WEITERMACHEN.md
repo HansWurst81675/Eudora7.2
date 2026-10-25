@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 24.10.2026.** `main` ist gesperrt und wird nur von Gregor per
+**Stand 25.10.2026.** `main` ist gesperrt und wird nur von Gregor per
 Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 (siehe [AGENTEN.md](AGENTEN.md)).
 
@@ -129,6 +129,16 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
+> **Stand 25.10.2026 abends – HIER WEITERMACHEN, Zweig `RC1_vorbereiten`** (gilt vor dem Block darunter). Auf `main`: PR #174 (E-150, Regressionstests E-51/E-97/E-100/E-99/E-67, Prüfbericht mit Dauer). **Entschieden von Gregor am 25.10.2026** — hier eingetragen, damit es nicht wieder gefragt wird:
+>
+> 1. **Was 7.2.1.x heißt** — ohne Einschränkung weitergebbar außer den README-Punkten, alles implementiert und getestet, Testergebnisse im Repo, Tests dürfen nachkommen (wörtlich in [ZIEL.md](../ZIEL.md)). **7.2.0.123 ist nur das Testpaket**, veröffentlicht wird **7.2.1.\<n\>** mit der Marke **`v7.2.1.<n>`**.
+> 2. **Vor 7.2.1 beheben:** [E-137](BEFUNDE.md#e-137) — **eingebaut am 25.10.2026, am Programm noch nicht gemessen** (`mainfrm.cpp` `OnCommand`, Test `TestE137.cpp`; Gregor prüft im Testpaket — die erste Fassung griff nicht, PRÜFER-56 K1) — *„sollte z.b. nur das filter fenster geschlossen werden. alternativ mit Ctrl-L (wie öffnen, so wieder schließen)"*: Strg+W versteckt nur die Wazoo-Leiste; [E-142](BEFUNDE.md#e-142) — der vereinbarte Hinweis; [E-146](BEFUNDE.md#e-146) (*„plus: e-146"*), dazu „Server lehnt Umbenennen ab". **In die README unter „Bekannte Fehler":** [E-144](BEFUNDE.md#e-144), [E-143](BEFUNDE.md#e-143), [E-139](BEFUNDE.md#e-139), [E-136](BEFUNDE.md#e-136), [AN-1](BEFUNDE.md#an-1) (Endung über IMAP).
+> 3. **Logzeile** in `eudora.log`, aus welchem Verzeichnis `rootcerts.p7b` geladen wurde (*„zeile im log, ja"*).
+> 4. **E-132:** Gregor testet nur Schritt 1–4 (*„schritt 5 geht nicht"* — Schritt 4 merkt sich die Antwort in der `DEudora.ini`); der ganze Weg wird ein Prüfstandsfall.
+> 5. **Regressionstests:** die rote Probe ohne Behebung nur einmal beim Anlegen eines Tests, danach genügt grün.
+>
+> **Reihenfolge:** [PRÜFER-53 K4](../Befunde/PRUEFER-53.md) ist **erledigt** (`9a4cc0e1`: die INI wird jetzt nach dem Beenden gelesen, gemessen 19:09); als Nächstes von 2. noch E-142 und E-146, dann 3.–4., dann die Funde aus [LEKTOR-61](../Befunde/LEKTOR-61.md), dann Testpaket 7.2.0.123 für Gregor.
+>
 > **Stand 24.10.2026 – HIER WEITERMACHEN** (ersetzt die vier Blöcke vom 23.10.2026, [L-54.16](../Befunde/LEKTOR-54.md#l-54.16)). Quellstand **7.2.0.122** — auf `main` stecken aber schon [E-116](BEFUNDE.md#e-116) und [E-130](BEFUNDE.md#e-130), die beim nächsten Paket **7.2.0.123** dazukommen (Gregor: *„wir haben noch keine 7.2.1. version, bleiben also bei 0.123"*). Veröffentlicht ist `v1.0.120`.
 >
 > **Die Reihenfolge** (Gregor, 23.10.2026: *„ich denke, wir sollen zuminstest die regression tests haben, die mit der darstellung der bilder zu tun haben. so können wir sie dann alle ausführen, nachdem du mit E-113 und E-119 fertig bist."*):
@@ -349,6 +359,7 @@ nicht selbst messen kann*.
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
 | **[E-151](BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
+| **[E-147](BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
 | **[E-146](BEFUNDE.md#e-146)** | Nach dem Umbenennen eines IMAP-Ordners führt Eudora ihn unter einem anderen Namen als der… | **nie gemessen** | eine Rechnung statt zwei — `UpdateAfterRename` (`QCImapMailboxDirector.cpp:2516`) übernimmt den Namen, den `RenameMailbox` (`ImapAccount.cpp:2998-3… |
 | **[E-145](BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](../Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
@@ -358,7 +369,6 @@ nicht selbst messen kann*.
 | **[E-140](BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt bei jeder Gelegenheit wieder … | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](../Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
-| **[E-137](BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | **nie gemessen** | die Messung, was Eudora tatsaechlich beendet - dass der Befehl unbehandelt bleibt, erklaert nur, dass nichts geschieht, nicht dass das Programm zugeht… |
 | **[E-136](BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |

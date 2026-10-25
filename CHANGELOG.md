@@ -25,6 +25,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
+| **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
 | **[E-146](Intern/BEFUNDE.md#e-146)** | Nach dem Umbenennen eines IMAP-Ordners führt Eudora ihn unter einem anderen Namen als der… | **nie gemessen** | eine Rechnung statt zwei — `UpdateAfterRename` (`QCImapMailboxDirector.cpp:2516`) übernimmt den Namen, den `RenameMailbox` (`ImapAccount.cpp:2998-3… |
 | **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
@@ -34,7 +35,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt bei jeder Gelegenheit wieder … | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
-| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | **nie gemessen** | die Messung, was Eudora tatsaechlich beendet - dass der Befehl unbehandelt bleibt, erklaert nur, dass nichts geschieht, nicht dass das Programm zugeht… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
@@ -95,11 +95,30 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122, noch ohne Paket — IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+## Seit 7.2.0.122 auf `main`, kommt mit dem Testpaket 7.2.0.123 — Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137), noch nicht am Programm gemessen), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
 
-**Gemergt am 23.10.2026 (PR #157 und #158), noch nicht als Paket gebaut;
-die Fassungsnummer bleibt bis dahin 7.2.0.122.** Beim nächsten Paket wird
-dieser Abschnitt zu 7.2.0.123.
+**Auf `main` seit PR #157 (23.10.2026) bis PR #174 (25.10.2026), aber noch in
+keinem Paket zum Herunterladen.** Das Programm meldet deshalb weiter die
+Fassung 7.2.0.122. Alles in diesem Abschnitt kommt mit dem nächsten
+**Testpaket 7.2.0.123** zu Gregors lokalem Test; veröffentlicht wird es erst
+mit dem Release **7.2.1.<n>**. Beim Bau des Testpakets wird dieser Abschnitt
+zu 7.2.0.123.
+
+* **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W in einer angedockten Leiste (Adressbuch,
+  Filter, …) soll nicht mehr ganz Eudora beenden, sondern nur diese Leiste
+  verstecken** (eingebaut, am laufenden Programm noch nicht gemessen) — wie Rechtsklick auf den Rahmen → *Hide*; angedockt wie schwebend.
+  Danach geht der Schwerpunkt an das aktive Fenster, ein zweites Strg+W
+  schließt also wie gewohnt das Postfach. Regressionstest am Quelltext
+  (302 Tests, 302 bestanden); am laufenden Programm prüft es Gregor im Testpaket.
+
+* **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
+  „Task Status" überschreibt keinen Speicher mehr.** Die Liste führt zu jeder
+  Spalte kleine Zusatzfelder, die kürzer sein können als die Zahl der Spalten;
+  wurde eine Spalte dahinter gelöscht, schreibt der Code 4 Byte hinter das Feld
+  (gemessen am herausgeschnittenen Code mit Schutzstreifen, im laufenden
+  Programm nicht nachgestellt; Quelltext so von QUALCOMM, Gegenstück zu [E-20](Intern/BEFUNDE.md#e-20)). Jetzt gibt es dann nichts zu
+  löschen (`ListCtrlEx.cpp`). Regressionstest ruft die Funktionen mit
+  Schutzstreifen auf; 301 Tests, 301 bestanden.
 
 * **[E-148](Intern/BEFUNDE.md#e-148) — Eudora vertraut den kompromittierten
   eMudhra-Zertifikaten nicht mehr.** Am 20.10.2026 wurden acht

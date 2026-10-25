@@ -57,3 +57,7 @@ unbelegt.
 - **Eine Berichtigung ist eine neue Behauptung und braucht eine neue Messung.**
   Sie darf nicht aus derselben Quelle stammen, die den ersten Fehler erzeugt
   hat.
+
+## Nachtrag 25.10.2026 abends (CHRONIST): Gregors Wort in einen Codeweg übersetzt, den es nicht gibt
+
+Zeiten MEZ. Um 19:20:27 bat ich Gregor, das Filterfenster einzuordnen: *„(a) angedockt … (b) frei schwebend … (c) als Fenster innerhalb des Eudora-Arbeitsbereichs, wie ein Postfach"*. Er antwortete um 19:30:39: *„ja, war angedockt. beim nicht angedockten fenster wird es ganz regulär geschlossen, sonst nicht."* Daraus wurde um 19:30:56 *„**Nicht angedockt, also als eigenes Fenster** … fängt `QCControlBarWorksheet::OnCmdMdiClose` den Befehl ab"*. Derselbe Satz ging in den Code-Kommentar, in `BEFUNDE.md` und ins CHANGELOG (*„Als eigenes Fenster im Arbeitsbereich schloss Strg+W schon richtig"*). PRUEFER-55 K1 (19:56, am Quelltext belegt): In diesem Bau kann eine Leiste nie ein MDI-Fenster werden. `IsMDIChild` ist in der Ersatzschicht immer FALSE (`OTShim.cpp:372-376`). Gregors „nicht angedockt" war also (b), und Option (c) hätte es in der Frage gar nicht geben dürfen. **How to apply, zusätzlich:** Gregors Beobachtung wird in seinen Worten weitergegeben („nicht angedockt"). Eine Zuordnung zu einem Codeweg ist eine Behauptung und braucht einen Beleg am Quelltext, dass dieser Weg im Bau erreichbar ist. Auch eine Auswahlfrage an Gregor bietet nur Fälle an, die der Bau herstellen kann ([[erst-pruefen-dann-anweisen]]).
