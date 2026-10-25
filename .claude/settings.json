@@ -1,0 +1,29 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "perl tools/sitzungsbeginn.pl",
+            "timeout": 120,
+            "statusMessage": "Lage zu Sitzungsbeginn: offene Befunde, faellige Rollen, Ungesichertes"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "perl tools/haken-pr-lektor.pl",
+            "timeout": 60,
+            "statusMessage": "Pruefe: ist der LEKTOR vor dem PR gelaufen?"
+          }
+        ]
+      }
+    ]
+  }
+}

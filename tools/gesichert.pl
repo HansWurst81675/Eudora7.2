@@ -473,9 +473,19 @@ if (@baeume) {
                          . "Es geht nichts verloren";
         }
 
+        # Ein abgeloester HEAD, der vollstaendig in origin/main steckt, ist ein
+        # geparkter Agentenbaum, kein Risiko (25.10.2026: wt-chronist und
+        # wt-bildbreite standen so und erzeugten bei jedem Lauf eine
+        # Dauermeldung, die echte Meldungen zudeckte). Nur wenn der HEAD
+        # Commits traegt, die nirgends sonst liegen, ist es ein Mangel.
         if ($b->{abgeloest}) {
-            push @sagen,  "abgeloester HEAD";
-            push @mangel, "Arbeitsbaum $p steht auf abgeloestem HEAD";
+            my (undef, $rc_geparkt) = git_lauf('-C', $p, 'merge-base', '--is-ancestor', 'HEAD', 'origin/main');
+            if ($rc_geparkt == 0) {
+                push @sagen, "geparkt auf main";
+            } else {
+                push @sagen,  "abgeloester HEAD";
+                push @mangel, "Arbeitsbaum $p steht auf abgeloestem HEAD mit Commits, die nicht in origin/main stecken";
+            }
         }
         elsif (length $b->{branch}) {
             my $bn = $b->{branch};
