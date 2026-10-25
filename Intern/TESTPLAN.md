@@ -547,12 +547,12 @@ damit sie in der Registry unter
 
 | Schritt | Was zu tun ist | Was herauskommen muss |
 |---|---|---|
-| 1 | **`Eudora.exe` doppelklicken** — nicht `Eudora starten.cmd`, denn das übergibt das Verzeichnis und schneidet den Weg ab | Eine Rückfrage erscheint: Eudora hat ein vorhandenes Mailverzeichnis gefunden |
-| 2 | Die Vorauswahl ansehen, **ohne** zu klicken | **„Eigenes anlegen" ist vorgewählt.** Ein unbedachtes Enter darf nichts an der fremden Installation ändern |
-| 3 | *Abbrechen* wählen | Das Programm endet. Die fremde `Eudora.ini` ist **unverändert** (SHA256 vorher/nachher vergleichen) |
-| 4 | Neu starten, *Eigenes anlegen* wählen | Im Protokoll steht `E-132 Startverzeichnis: … fremd=1`, danach `eigenes gewaehlt="…"`. Die fremde `Eudora.ini` ist **unverändert** |
-| 5 | Neu starten, *Vorhandenes benutzen* wählen | Im Protokoll steht `fremdes bewusst uebernommen`. Jetzt **darf** sich die fremde Installation ändern — das ist die bewusste Entscheidung des Anwenders |
-| 6 | **Gegenprobe:** `Eudora starten.cmd` benutzen | **Keine** Rückfrage; das Paket arbeitet in seinem eigenen `Mailverzeichnis\` |
+| 1 | **`Eudora.exe` doppelklicken** — nicht `Eudora starten.cmd`, denn das übergibt das Verzeichnis und schneidet den Weg ab | Eine Rückfrage erscheint: *„Eudora found an existing mail folder that belongs to another installation"* mit drei Knöpfen **Yes**, **No**, **Cancel** |
+| 2 | Die Vorauswahl ansehen, **ohne** zu klicken | **No** ist vorgewählt (= eigenes Verzeichnis anlegen). Ein unbedachtes Enter darf nichts an der fremden Installation ändern |
+| 3 | **Cancel** wählen | Das Programm endet. Die fremde `Eudora.ini` ist **unverändert** (SHA256 vorher/nachher vergleichen) |
+| 4 | Neu starten, **No** wählen | Eudora startet mit einem eigenen Mailverzeichnis neben dem Programm. Im Protokoll stehen `E-132 Startverzeichnis: … fremd=1` und danach `E-132 Startverzeichnis: eigenes gewaehlt="…"`. Die fremde `Eudora.ini` ist **unverändert** |
+
+**Hier endet der Handtest (Gregor, 25.10.2026: *„ich teste nur bis schritt 4. schritt 5 geht nicht."*).** Den früheren Schritt 5 (*Yes* wählen) gibt es so nicht: Schritt 4 **merkt sich** die Antwort — Eudora schreibt `E132Abgelehnt=<Verzeichnis>` in die `DEudora.ini` neben dem Programm (`eudora.cpp:4241`), und jeder weitere Start liest sie und fragt **nicht** mehr (`:4191`, Protokoll: `E-132 Startverzeichnis: gemerkte Antwort Nein`). Der Weg *Yes* und das Wiederholen der Rückfrage werden ein **automatischer Prüfstandsfall**, der die gemerkte Antwort zwischen den Schritten zurücksetzt (Zweig `RC1_vorbereiten`). Die alte Gegenprobe mit `Eudora starten.cmd` (keine Rückfrage) prüft jeder gewöhnliche Prüfstandslauf ohnehin bei jedem Start.
 
 **Wenn Schritt 2 oder 3 anders ausgeht, ist der Schaden aus
 [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102) zurück**
