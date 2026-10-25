@@ -113,3 +113,5 @@
 - [Stand 24.10.2026 spät](stand-24-10-2026-spaet.md) — PRUEFER-50 nur Zwischenstand, E-146 nicht eingetragen; als Nächstes E-148; angleichen.sh will `main`
 - [Pakete sammeln](pakete-sammeln.md) — kein Sonderbau für eine einzelne Behebung; Gregor testet mehreres in einem Paket
 - [Testschritt nennt den Ort](testschritt-nennt-den-ort.md) — jedes Postfach in einer Anweisung eindeutig (lokal oder IMAP); am 23.10. traf …
+- [Zwischendateien ins Scratchpad](zwischendateien-ins-scratchpad.md) — nie nach $TEMP (Gregors Temp-Ordner); am 25.10. lagen dort 19 Dateien von mir
+- [E-148 als Release 7.2.0.123](entscheidung-e148-release-7-2-0-123.md) — Gregor 25.10.: nach seinem Test veröffentlichen, nicht bis 7.2.1 warten; Tag-Frage noch offen
