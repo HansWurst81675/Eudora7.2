@@ -463,8 +463,8 @@ eMudhra"* setzen, oder auf die Prüfsumme verweisen statt auf eine Zahl.
 
 Der Verweis führt zu einem Befund, den es zur Zeit des Berichts nicht gab
 und der mit diesen Berichten nichts zu tun hat. `PRUEFER-50.md:64` und
-`:584` (*„E-147 bleibt frei"*) werden beim nächsten Lauf genauso verlinkt,
-sobald E-147 vergeben ist.
+`:584` (*„[E-147](../Intern/BEFUNDE.md#e-147) bleibt frei"*) werden beim nächsten Lauf genauso verlinkt,
+sobald [E-147](../Intern/BEFUNDE.md#e-147) vergeben ist.
 
 **Gemessen an diesem Bericht:** Ich hatte die vier Stellen oben als reinen
 Text zitiert. Der Commit-Haken wies ab (*„MANGEL - 4 Kennung(en) sind kein

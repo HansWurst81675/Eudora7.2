@@ -61,7 +61,7 @@ nicht sieht, besteht dort auch.
 **Neue E-Kennung: [E-146](../Intern/BEFUNDE.md#e-146)** ([K8](#k8),
 Umbenennen bildet den Namen in Eudora anders als für den Server, wenn der
 Server kein Trennzeichen hat oder INBOX mit Präfix umbenannt wird;
-Originalfehler von QUALCOMM). **E-147 bleibt frei.** Eingetragen in
+Originalfehler von QUALCOMM). **[E-147](../Intern/BEFUNDE.md#e-147) bleibt frei.** Eingetragen in
 `Intern/BEFUNDE.md` ist nichts. Vorher gelaufen: `perl
 tools/befund-suchen.pl` zu `UpdateAfterRename`, `RenameMailbox`,
 `ReverseFind`, `InsertArr`, `LocateNetscapePrefsFile`,
@@ -581,5 +581,5 @@ und **am Quelltext belegt** (überholt: `grep` statt „alle Ursachen",
 | [K10](#k10) | `E-77d` verlangt keinen `SELECT`; Prüfserver prüft Namen nur bei vier Befehlen | gering | nein |
 | [K13](#k13) | [S-2](../Intern/BEFUNDE.md#s-2) über die Projektdatei; „überholt" genügt eine Ursache | gering / Hinweis | nein |
 
-**Vergeben: [E-146](../Intern/BEFUNDE.md#e-146). Frei: E-147.** Eingetragen in
+**Vergeben: [E-146](../Intern/BEFUNDE.md#e-146). Frei: [E-147](../Intern/BEFUNDE.md#e-147).** Eingetragen in
 `Intern/BEFUNDE.md` ist nichts.

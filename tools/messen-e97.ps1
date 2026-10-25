@@ -143,7 +143,10 @@ function Dialoge($pp, [string] $Knopf = '^(OK)$') {
         Write-Host ("E97 DIALOG [{0}] {1} | Knoepfe: {2}" -f $d.Text, ($texte -join ' '), (($knoepfe | ForEach-Object { $_.T }) -join ', '))
         $b = $knoepfe | Where-Object { $_.T -match $Knopf } | Select-Object -First 1
         if ($b) { [void][E97]::PostMessageA($b.H, 0x00F5, [IntPtr]::Zero, [IntPtr]::Zero) }   # BM_CLICK
-        else    { [void][E97]::PostMessageA($d.H, 0x0111, [IntPtr]1, [IntPtr]::Zero) }       # IDOK
+        # Kein passender Knopf: ABBRECHEN, nie blind OK - bei "Send Queued
+        # Messages" hiesse OK "Send them, then quit" (mainfrm.cpp:5396-5398),
+        # also echte Post verschicken (PRUEFER-54 K2).
+        else    { [void][E97]::PostMessageA($d.H, 0x0111, [IntPtr]2, [IntPtr]::Zero) }       # IDCANCEL
         Start-Sleep -Milliseconds 800
         $n++
     }
@@ -258,16 +261,24 @@ if ($lebt2) {
 # nicht geschrieben waren. Jetzt beendet das Skript Eudora selbst
 # (testlauf.ps1:343 ueberspringt dann sein eigenes Beenden) und liest danach.
 # Endet Eudora nicht, heisst das Ergebnis "ungemessen", nie "ok".
+# PRUEFER-54 K1: ein ABSTURZ beim Beenden ist kein Schreiben - der Prozess
+# ist dann auch weg. Gezaehlt wird deshalb nur, wenn die Eudora.ini nach dem
+# Schliessbefehl NEU geschrieben wurde (Zeitstempel spaeter als vorher).
 $iniOk = 'ungemessen'
+$ini = Join-Path $md 'Eudora.ini'
+$vorher = (Get-Item -LiteralPath $ini).LastWriteTimeUtc
 if ($lebt2) {
+    Start-Sleep -Milliseconds 1100      # Zeitstempelaufloesung: "neu" muss unterscheidbar sein
     [void][E97]::PostMessageA($haupt, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)   # WM_CLOSE
     for ($i = 0; $i -lt 60 -and (Lebt $pp); $i++) {
-        if ($i % 4 -eq 3) { [void](Dialoge $pp '^(No|Nein|Don.t Save|OK)$') }
+        if ($i % 4 -eq 3) { [void](Dialoge $pp '^(No|Nein|Don.t Save|Just quit|OK)$') }
         Start-Sleep -Milliseconds 500
     }
 }
-if (-not (Lebt $pp)) {
-    $ini = Join-Path $md 'Eudora.ini'
+$neu = (Get-Item -LiteralPath $ini).LastWriteTimeUtc -gt $vorher
+if ((Lebt $pp) -or -not $neu) {
+    Write-Host ("E100 Eudora endet nicht oder schrieb die Eudora.ini nicht neu (lebt={0} neu={1}) - INI-Teil NICHT gemessen" -f [int](Lebt $pp), [int]$neu)
+} else {
     $iniOk = 'ok'
     foreach ($z in (Get-Content -LiteralPath $ini)) {
         if ($z -match '^(IncludeHeaders|GuessParagraphs)=(.*)$' -and $Matches[2] -notmatch '^[01]$') {
@@ -275,7 +286,5 @@ if (-not (Lebt $pp)) {
         }
     }
     Write-Host 'E100 Eudora beendet, Eudora.ini nach dem Schreiben gelesen'
-} else {
-    Write-Host 'E100 Eudora endet nicht - INI-Teil NICHT gemessen'
 }
 Write-Host ("E100 ERGEBNIS dialog={0} lebt={1} ini={2}" -f $dialog2, $lebt2, $iniOk)

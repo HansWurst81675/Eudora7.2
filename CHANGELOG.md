@@ -25,6 +25,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
+| **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
 | **[E-146](Intern/BEFUNDE.md#e-146)** | Nach dem Umbenennen eines IMAP-Ordners führt Eudora ihn unter einem anderen Namen als der… | **nie gemessen** | eine Rechnung statt zwei — `UpdateAfterRename` (`QCImapMailboxDirector.cpp:2516`) übernimmt den Namen, den `RenameMailbox` (`ImapAccount.cpp:2998-3… |
 | **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
@@ -107,8 +108,9 @@ zu 7.2.0.123.
 * **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
   „Task Status" überschreibt keinen Speicher mehr.** Die Liste führt zu jeder
   Spalte kleine Zusatzfelder, die kürzer sein können als die Zahl der Spalten;
-  wurde eine Spalte dahinter gelöscht, schrieb Eudora 4 Byte hinter das Feld
-  (Original von QUALCOMM, Gegenstück zu [E-20](Intern/BEFUNDE.md#e-20)). Jetzt gibt es dann nichts zu
+  wurde eine Spalte dahinter gelöscht, schreibt der Code 4 Byte hinter das Feld
+  (gemessen am herausgeschnittenen Code mit Schutzstreifen, im laufenden
+  Programm nicht nachgestellt; Quelltext so von QUALCOMM, Gegenstück zu [E-20](Intern/BEFUNDE.md#e-20)). Jetzt gibt es dann nichts zu
   löschen (`ListCtrlEx.cpp`). Regressionstest ruft die Funktionen mit
   Schutzstreifen auf; 301 Tests, 301 bestanden.
 

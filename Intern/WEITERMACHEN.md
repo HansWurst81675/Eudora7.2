@@ -137,7 +137,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 > 4. **E-132:** Gregor testet nur Schritt 1–4 (*„schritt 5 geht nicht"* — Schritt 4 merkt sich die Antwort in der `DEudora.ini`); der ganze Weg wird ein Prüfstandsfall.
 > 5. **Regressionstests:** die rote Probe ohne Behebung nur einmal beim Anlegen eines Tests, danach genügt grün.
 >
-> **Reihenfolge:** zuerst [PRÜFER-53 K4](../Befunde/PRUEFER-53.md) (der Prüfbericht führt den INI-Teil von E-100 als geprüft, gelesen wird aber vor dem Schreiben), dann 2.–4., dann die Funde aus [LEKTOR-61](../Befunde/LEKTOR-61.md), dann Testpaket 7.2.0.123 für Gregor.
+> **Reihenfolge:** [PRÜFER-53 K4](../Befunde/PRUEFER-53.md) ist **erledigt** (`9a4cc0e1`: die INI wird jetzt nach dem Beenden gelesen, gemessen 19:09); als Nächstes 2.–4., dann die Funde aus [LEKTOR-61](../Befunde/LEKTOR-61.md), dann Testpaket 7.2.0.123 für Gregor.
 >
 > **Stand 24.10.2026 – HIER WEITERMACHEN** (ersetzt die vier Blöcke vom 23.10.2026, [L-54.16](../Befunde/LEKTOR-54.md#l-54.16)). Quellstand **7.2.0.122** — auf `main` stecken aber schon [E-116](BEFUNDE.md#e-116) und [E-130](BEFUNDE.md#e-130), die beim nächsten Paket **7.2.0.123** dazukommen (Gregor: *„wir haben noch keine 7.2.1. version, bleiben also bei 0.123"*). Veröffentlicht ist `v1.0.120`.
 >
@@ -359,6 +359,7 @@ nicht selbst messen kann*.
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
 | **[E-151](BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
+| **[E-147](BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
 | **[E-146](BEFUNDE.md#e-146)** | Nach dem Umbenennen eines IMAP-Ordners führt Eudora ihn unter einem anderen Namen als der… | **nie gemessen** | eine Rechnung statt zwei — `UpdateAfterRename` (`QCImapMailboxDirector.cpp:2516`) übernimmt den Namen, den `RenameMailbox` (`ImapAccount.cpp:2998-3… |
 | **[E-145](BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](../Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
