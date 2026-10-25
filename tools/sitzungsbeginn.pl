@@ -32,6 +32,26 @@ for my $z (split /\n/, $ob) {
     print "  $1\n" if $z =~ /^\s*(offen laut Intern\/BEFUNDE\.md\s+\d+.*|davon NIE gemessen\s+\d+.*|\d+ offene Befunde, in beiden Listen.*|MANGEL.*)$/;
 }
 
+# Die Kennungen selbst, nicht nur die Zahl (LEKTOR-57 L-57.1: der Schritt, der
+# eine Wiederholung von E-85 verhindern soll, nannte keine einzige Kennung).
+# Quelle ist der erzeugte Block in Intern/WEITERMACHEN.md - offene-befunde.pl
+# hat ihn eben gegen Intern/BEFUNDE.md gehalten.
+if (open my $h, '<:encoding(UTF-8)', "$w/Intern/WEITERMACHEN.md") {
+    binmode STDOUT, ':encoding(UTF-8)';
+    my $drin = 0;
+    while (my $z = <$h>) {
+        if ($z =~ /offene-befunde: Anfang/) { $drin = 1; next }
+        last if $z =~ /offene-befunde: Ende/;
+        next unless $drin and $z =~ /^\|\s*\*\*\[([A-Z0-9]+-[\w.]+)\]\([^)]*\)\*\*\s*\|\s*([^|]*?)\s*\|\s*([^|]*?)\s*\|/;
+        my ($k, $was, $gem) = ($1, $2, $3);
+        $was =~ s/\[([^\]]*)\]\([^)]*\)/$1/g;
+        $was =~ s/[*`]//g;
+        $was = substr($was, 0, 100) . "\x{2026}" if length $was > 100;
+        printf "    %-7s %s%s\n", $k, $was, ($gem =~ /nie gemessen/ ? ' [nie gemessen]' : '');
+    }
+    close $h;
+}
+
 my $rf = lauf("perl \"$w/tools/rollen-faellig.pl\" --nur-melden");
 my @faellig = $rf =~ /^\s*-\s*((?:LEKTOR|PRUEFER|CHRONIST) ist faellig[^\n]*)/mg;
 if (@faellig) { print "  FAELLIG: $_\n" for @faellig }

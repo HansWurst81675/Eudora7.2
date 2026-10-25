@@ -20,7 +20,7 @@
 # Ausweg: den LEKTOR ueber den Zweig laufen lassen und seinen Bericht in den
 # Zweig holen. Danach ist er nicht mehr faellig.
 #
-# Gegenprobe: perl tools/haken-pr-lektor.pl --selbsttest (10 Faelle, beide Richtungen).
+# Gegenprobe: perl tools/haken-pr-lektor.pl --selbsttest (13 Faelle, beide Richtungen).
 #
 # Kodierung: reines ASCII.
 use strict;
@@ -48,7 +48,20 @@ exit 0 unless $kommando =~ /\bgh[ \t]+pr[ \t]+create\b/;
 # lesen laesst, haelt auf.
 my $wurzel = "$FindBin::Bin/..";
 my $aus = `cd "$wurzel" && perl tools/rollen-faellig.pl --nur-melden 2>&1`;
+# Zwei Formen: in der Tabelle ("LEKTOR    aktuell ..." / "faellig, aber
+# beauftragt ...") oder als Punkt unter FAELLIG ("- LEKTOR ist faellig: ...").
 my ($lektor) = $aus =~ /^\s*LEKTOR\s+(\S[^\n]*)/m;
+($lektor) = $aus =~ /^\s*-\s*LEKTOR (ist faellig[^\n]*)/m unless defined $lektor;
+# Ein eingetragener LEKTOR laeuft noch. Sein frueh gesichertes Geruest macht
+# ihn fuer rollen-faellig.pl schon "aktuell" (LEKTOR-57 L-57.2, gemessen am
+# eigenen Lauf) - der Bericht ist dann aber leer. Erst nach --fertig frei.
+# Die Tabelle als Ganzes lesen ($/ ist oben fuer stdin abgeschaltet) und je
+# Zeile mit /m suchen - die erste Fassung las sie als eine Zeile und fand nie
+# etwas (gemessen 25.10.2026 mit einer eingetragenen Probezeile).
+my $laufen = lies_datei("$wurzel/tools/AGENTEN-LAUFEN.md");
+if ($laufen =~ /^\|\s*LEKTOR\s*\|\s*([^|]+?)\s*\|/m) {
+    $lektor = "laeuft noch (eingetragen seit $1, tools/AGENTEN-LAUFEN.md) - erst den Bericht einholen und --fertig LEKTOR";
+}
 if (!defined $lektor or $lektor !~ /^aktuell\b/) {
     print STDERR "KEIN PR: LEKTOR " . ($lektor // "- Stand nicht lesbar:\n$aus") . "\n\n"
                . "Regel seit 06.09.2026 (Arbeitsweise/daueraufgaben-brauchen-einen-takt.md):\n"
@@ -70,9 +83,25 @@ sub nur_befehle {
     my ($t) = @_;
     $t =~ s/<<-?[ \t]*(['"]?)(\w+)\1([^\n]*)\n.*?^[ \t]*\2[ \t]*$/$3/msg;
     $t =~ s/@(['"])[ \t]*\n.*?^\1@//msg;
+    # Was hinter -c, -Command oder eval in Anfuehrungszeichen steht, wird
+    # AUSGEFUEHRT, nicht mitgenommen (LEKTOR-57 L-57.2: bash -c "..." ging
+    # durch). Diese Zeichenketten bleiben stehen, ohne ihre Anfuehrungszeichen.
+    my @ausgefuehrt;
+    while ($t =~ /(?:^|[\s;&|(])(?:-c|-Command|eval)\s+(?:'([^']*)'|"((?:\\.|[^"\\])*)")/g) {
+        push @ausgefuehrt, defined $1 ? $1 : $2;
+    }
     $t =~ s/'[^']*'//g;
     $t =~ s/"(?:\\.|[^"\\])*"//g;
-    return $t;
+    return join("\n", $t, @ausgefuehrt);
+}
+
+sub lies_datei {
+    my ($d) = @_;
+    open my $h, '<:raw', $d or return '';
+    local $/;
+    my $t = <$h>;
+    close $h;
+    return $t // '';
 }
 
 sub selbsttest {
@@ -88,6 +117,9 @@ sub selbsttest {
         [0, "git commit -m '$w spaeter'"],
         [0, "\$m = \@'\n$w\n'\@; git commit -m \$m"],
         [0, "gh pr list"],
+        [1, "bash -c \"$w --title x\""],
+        [1, "powershell -Command '$w'"],
+        [0, "git commit -m \"bash -c spaeter\""],
     );
     my $rot = 0;
     for my $i (0 .. $#f) {
