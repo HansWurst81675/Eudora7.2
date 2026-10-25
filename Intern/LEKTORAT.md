@@ -1805,6 +1805,23 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Siebenundsechzigster Durchgang — Mikrolauf: Commits 85554d91 und 9d135576, 25.10.2026 (Bericht: `Befunde/LEKTOR-62.md`)
+
+Nur zwei Commits: die `ZIEL.md`-Zeilen zu E-77, E-113, E-119, E-116 und das
+Einholen von CHRONIST-2026-10-25 samt Änderung an `tools/rollen-faellig.pl`.
+**Die `ZIEL.md`-Zeilen stimmen** — PR-Nummern, Testdateien, Prüfstandsfälle
+und der grüne Lauf auf `796369bb` sind jeweils nachgewiesen.
+
+**4 Funde: 2 falsch, 1 ungenau, 1 Hinweis.** Derselbe Commit, der
+`rollen-faellig.pl` berichtigt, trägt drei Texte ein, die den Fehler noch als
+unbehobenen Vorschlag beschreiben, mit Zeilennummern, die jetzt auf einen
+Kommentar zeigen ([L-62.1](../Befunde/LEKTOR-62.md#l-62.1)). Der
+Kopfkommentar des Werkzeugs nennt für den CHRONIST einen falschen Bereich und
+einen falschen Bericht ([L-62.2](../Befunde/LEKTOR-62.md#l-62.2)). Als
+„letzter CHRONIST-Lauf" gilt ein Einarbeitungs-Commit, und die neue Regel
+zählt solche Commits weiter mit ([L-62.3](../Befunde/LEKTOR-62.md#l-62.3)).
+Keine neue Frage an Gregor.
+
 ## Sechsundsechzigster Durchgang — Bestand gegen die Release-Definition vom 25.10.2026, seit 40f4cbae (Bericht: `Befunde/LEKTOR-61.md`)
 
 Voller Durchgang über die `.md` außer `Arbeitsweise/` und `Befunde/`, gehalten
