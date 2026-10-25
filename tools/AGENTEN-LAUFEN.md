@@ -9,5 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-10-25 18:16 | LEKTOR-61.md: alle MDs gegen den Bestand, seit 40f4cbae |
 | PRUEFER | 2026-10-25 18:16 | PRUEFER-53.md: Aenderungen seit 3040aea3 gegen die Quelle, Kennungen E-152 und E-153 |
