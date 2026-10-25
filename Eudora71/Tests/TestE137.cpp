@@ -47,6 +47,25 @@ void RunE137Tests(const char* szEudoraDir)
 					 "es fehlt die Bedingung 'keine MDI-Leiste' - als MDI-Fenster schliesst OnCmdMdiClose richtig");
 		TT_CHECK_MSG(lHide > lNurLeiste,
 					 "die Leiste bekommt nicht ID_SEC_HIDE (der Weg von Rechtsklick -> Hide)");
+		// Nachgeschaerft nach PRUEFER-55 K2: vier von fuenf Rueckfallproben
+		// blieben gruen. Jetzt auch: der Befehl selbst (CN_COMMAND), die
+		// Leiste aus GetWazooBarWithFocus, nur sichtbar, die Ausfuehrung nur
+		// ohne pHandlerInfo, und der Schwerpunkt geht ans aktive Fenster (K3).
+		TT_CHECK_MSG(lAbfangen >= 0 && QT_Stelle(pRumpf + lAbfangen, "nCode == CN_COMMAND") >= 0
+					 && lAbfangen + QT_Stelle(pRumpf + lAbfangen, "nCode == CN_COMMAND") < lNurLeiste,
+					 "die Bedingung nennt CN_COMMAND nicht mehr - der Befehl selbst wuerde nicht abgefangen");
+		const long lLeiste = QT_Stelle(pRumpf, "CWazooBar* pFokusLeiste = m_WazooBarMgr.GetWazooBarWithFocus();");
+		TT_CHECK_MSG(lLeiste > lAbfangen && lLeiste < lNurLeiste,
+					 "die Leiste kommt nicht mehr aus GetWazooBarWithFocus");
+		TT_CHECK_MSG(QT_Stelle(pRumpf, "pFokusLeiste->IsWindowVisible()") > lLeiste,
+					 "es fehlt die Bedingung 'Leiste sichtbar' (PRUEFER-55 K3)");
+		const long lOhneInfo = QT_Stelle(pRumpf, "if (pHandlerInfo == NULL)");
+		TT_CHECK_MSG(lOhneInfo > lNurLeiste && lOhneInfo < lHide,
+					 "ID_SEC_HIDE steht nicht im Zweig 'pHandlerInfo == NULL' - die Abfrage wuerde schon verstecken");
+		const long lFokus = QT_Stelle(pRumpf, "pAktiv->SetFocus();");
+		TT_CHECK_MSG(lFokus > lHide && lFokus < lWeiter,
+					 "nach dem Verstecken bekommt das aktive Fenster den Schwerpunkt nicht (PRUEFER-55 K3)");
+
 		// return TRUE muss nach dem Verstecken stehen und VOR der Weitergabe
 		// an das Wazoo-Fenster - sonst laeuft der Befehl dorthin weiter.
 		const long lZurueck = (lHide >= 0) ? QT_Stelle(pRumpf + lHide, "return TRUE;") : -1;

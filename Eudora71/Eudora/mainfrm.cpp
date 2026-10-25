@@ -3461,21 +3461,30 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 	// einer ANGEDOCKTEN Wazoo-Leiste (Adressbuch, Filter, ...) beendete ganz
 	// Eudora. Gregor am 23.10.2026: "das filter fenster (ctrl-L) kann man
 	// nicht mit ctrl-w wie jedes andere mail-fenster schliessen, dabei wird
-	// ganz eudora geschlossen." Am 25.10.2026 eingegrenzt: nur angedockt;
-	// als eigenes Fenster im Arbeitsbereich schliesst QCControlBarWorksheet::
-	// OnCmdMdiClose (workbook.cpp:245) die Leiste richtig. Gregors Vorgabe:
-	// "sollte z.b. nur das filter fenster geschlossen werden".
+	// ganz eudora geschlossen." Am 25.10.2026 eingegrenzt: angedockt beendet
+	// es Eudora, nicht angedockt (schwebend) schloss es die Leiste. Gregors
+	// Vorgabe: "sollte z.b. nur das filter fenster geschlossen werden".
 	//
-	// Angedockt oder schwebend nimmt keiner der Behandler den Befehl an
-	// (BEFUNDE.md E-137). Deshalb wird er HIER abgefangen, bevor er weiter
-	// geroutet wird: die Leiste mit dem Schwerpunkt bekommt ID_SEC_HIDE -
-	// genau das, was der Rechtsklick auf den Rahmen -> Hide ausloest
-	// (SECControlBar::OnHide, OTShim.cpp) - und der Befehl ist erledigt.
+	// Wer Eudora beendete, ist nicht gemessen; auf dem Weg nimmt keiner der
+	// Behandler den Befehl fuer eine Leiste an (BEFUNDE.md E-137). Deshalb
+	// wird er HIER abgefangen, bevor er weiter geroutet wird: eine sichtbare
+	// Leiste mit dem Schwerpunkt bekommt ID_SEC_HIDE - genau das, was der
+	// Rechtsklick auf den Rahmen -> Hide ausloest (SECControlBar::OnHide,
+	// OTShim.cpp) -, angedockt wie schwebend. Eine Leiste als MDI-Fenster gibt
+	// es in diesem Bau nicht (IsMDIChild ist in der Ersatzschicht immer FALSE,
+	// PRUEFER-55 K1); die Abfrage bleibt fuer den Fall, dass Stufe 2 der
+	// Ersatzschicht sie nachliefert - dann schliesst
+	// QCControlBarWorksheet::OnCmdMdiClose (workbook.cpp) sie selbst.
+	//
+	// Danach bekommt das aktive MDI-Fenster den Schwerpunkt; sonst bliebe er
+	// in der unsichtbaren Leiste, und ein zweites Strg-W liefe ins Leere
+	// (PRUEFER-55 K3).
 	//
 	if (nID == ID_FILE_CLOSE && (nCode == CN_COMMAND || nCode == CN_UPDATE_COMMAND_UI))
 	{
 		CWazooBar* pFokusLeiste = m_WazooBarMgr.GetWazooBarWithFocus();
-		if (pFokusLeiste && pFokusLeiste->GetSafeHwnd() && !pFokusLeiste->IsMDIChild())
+		if (pFokusLeiste && pFokusLeiste->GetSafeHwnd() && pFokusLeiste->IsWindowVisible()
+			&& !pFokusLeiste->IsMDIChild())
 		{
 			if (nCode == CN_UPDATE_COMMAND_UI)
 			{
@@ -3485,8 +3494,11 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 			}
 			if (pHandlerInfo == NULL)
 			{
-				PutDebugLog(DEBUG_MASK_MISC, "E-137 Strg-W: angedockte Wazoo-Leiste wird versteckt statt Eudora zu beenden");
+				PutDebugLog(DEBUG_MASK_MISC, "E-137 Strg-W: Wazoo-Leiste wird versteckt statt Eudora zu beenden");
 				pFokusLeiste->PostMessage(WM_COMMAND, ID_SEC_HIDE, 0);
+				CMDIChildWnd* pAktiv = MDIGetActive();
+				if (pAktiv && pAktiv->IsWindowVisible())
+					pAktiv->SetFocus();
 			}
 			return TRUE;
 		}

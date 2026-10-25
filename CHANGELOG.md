@@ -106,8 +106,9 @@ zu 7.2.0.123.
 
 * **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W in einer angedockten Leiste (Adressbuch,
   Filter, …) beendet nicht mehr ganz Eudora, sondern versteckt nur diese
-  Leiste** — wie Rechtsklick auf den Rahmen → *Hide*. Als eigenes Fenster im
-  Arbeitsbereich schloss Strg+W schon richtig. Regressionstest am Quelltext
+  Leiste** — wie Rechtsklick auf den Rahmen → *Hide*; angedockt wie schwebend.
+  Danach geht der Schwerpunkt an das aktive Fenster, ein zweites Strg+W
+  schließt also wie gewohnt das Postfach. Regressionstest am Quelltext
   (302 Tests, 302 bestanden); am laufenden Programm prüft es Gregor im Testpaket.
 
 * **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
