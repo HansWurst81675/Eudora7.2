@@ -240,7 +240,14 @@ $lebt2 = [int](Lebt $pp)
 if ($lebt2) {
     [void][E97]::PostMessageA($verfassen, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)   # WM_CLOSE
     Start-Sleep -Milliseconds 1200
-    [void](Dialoge $pp '^(No|Nein|Don.t Save)$')
+    # "Save changes?" mit Nein, danach kann der Hinweis zur Rechtschreib-
+    # pruefung folgen (E-139). Bleibt einer stehen, laesst sich Eudora am
+    # Ende nicht mehr per WM_CLOSE beenden und wird abgeschossen - gemessen
+    # 25.10.2026, das Protokoll war dann beim Auslesen noch gesperrt.
+    for ($r = 0; $r -lt 4; $r++) {
+        if ((Dialoge $pp '^(No|Nein|Don.t Save|OK)$') -eq 0) { break }
+        Start-Sleep -Milliseconds 600
+    }
 }
 
 # --- 3. Die beiden INI-Werte aus E-100 Teil 2 --------------------------------

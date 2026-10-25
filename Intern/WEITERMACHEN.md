@@ -143,7 +143,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 >
 > **Entschieden am 23.10.2026** (stehen auch in `ZIEL.md` bzw. den Befundzeilen): das Release heißt `7.2.1.<laufende Buildnummer>`; für die Adressbuch-Taste ist nichts mehr zu tun, auch keine Doku; [AN-1](BEFUNDE.md#an-1) später (*„aufschreiben, jetzt nicht"*); [E-133](BEFUNDE.md#e-133) bleibt offen mit der Umgehung über `Eudora starten.cmd` in der README; die sechs Randfälle E-122, E-123, E-124, E-126, E-129, E-136 halten das Release nicht auf; die Release-Notizen nennen den Rückstand an Regressionstests, das Release wartet nicht darauf; Teil M des Testplans nur einmal vor 7.2.1, M2 (Suchindex) deaktiviert, nicht gelöscht. Befundzeilen beginnen mit dem Urteil (Schranke `tools/pruefe-befund-anfang.pl`).
 >
-> **Offen an Gregor:** heißt die Marke auf GitHub `v7.2.1.<n>` oder weiter `v1.0.<n>`?
+> **Entschieden (Gregor, 25.10.2026, nicht zum ersten Mal):** die Marke auf GitHub heißt **`v7.2.1.<n>`**, also z. B. `v7.2.1.123` — *„haben wir schon mehrfach besprochen, mit beispielen."* `tools/release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` und muss vor dem Veröffentlichen darauf umgestellt werden ([L-53.16](../Befunde/LEKTOR-53.md#l-53.16)).
 >
 > **Kleinere Reste:** `tools/bauen.ps1:1262` findet `perl` aus PowerShell nicht und meldet Rückgabe 1 trotz gelungenem Bau. `tools/arbeitsbaum-frei.pl --belegen` bucht nicht den aktuellen Baum, sondern den ersten freien (am 23.10.2026 zweimal falsch, einmal sogar den Hauptbaum) — `.git/agenten-zuteilung` danach von Hand prüfen. [E-141](BEFUNDE.md#e-141) ist nicht bestätigt: Gregors Protokoll schreibt die IMAP-Befehle nicht mit.
 

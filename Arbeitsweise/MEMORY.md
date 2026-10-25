@@ -116,3 +116,4 @@
 - [Zwischendateien ins Scratchpad](zwischendateien-ins-scratchpad.md) — nie nach $TEMP (Gregors Temp-Ordner); am 25.10. lagen dort 19 Dateien von mir
 - [E-148 als Release 7.2.0.123](entscheidung-e148-release-7-2-0-123.md) — Gregor 25.10.: nach seinem Test veröffentlichen, nicht bis 7.2.1 warten; Tag-Frage noch offen
 - [Logzeile für rootcerts.p7b](entscheidung-rootcerts-logzeile.md) — Gregor 25.10.: eudora.log nennt, aus welchem Verzeichnis die Zertifikatsliste kam; Zweig 25-10b
+- [Marke v7.2.1.<n>](entscheidung-marke-v7-2-1.md) — Gregor 25.10. (mehrfach): GitHub-Marke v7.2.1.<n>, z. B. v7.2.1.123; nicht wieder fragen

@@ -92,6 +92,7 @@ my @t = localtime;
 my $jetzt = sprintf('%04d-%02d-%02d %02d:%02d', $t[5] + 1900, $t[4] + 1, $t[3], $t[2], $t[1]);
 
 # --- 1. Unit-Tests: bauen und fahren --------------------------------------
+my $t_unit = time;
 my @unit;      # [bereich, name, ergebnis]
 my $unit_lief = 0;
 my @unvollstaendig;  # Gruende, warum ein Teil nicht vollstaendig lief
@@ -137,8 +138,10 @@ my @unvollstaendig;  # Gruende, warum ein Teil nicht vollstaendig lief
     }
 }
 my $unit_fehl = grep { $_->[2] ne 'ok' } @unit;
+my $dauer_unit = time - $t_unit;
 
 # --- 2. Schranken mit Rueckfallprobe --------------------------------------
+my $t_schranke = time;
 my @schranke;  # [kennung, schranke, ergebnis, text]
 {
     my $aus = `perl "$wurzel/tools/schranken-gegenprobe.pl" 2>&1`;
@@ -159,6 +162,7 @@ my @schranke;  # [kennung, schranke, ergebnis, text]
         if @schranke != $soll;
 }
 my $schranke_fehl = grep { $_->[2] ne 'ok' } @schranke;
+my $dauer_schranke = time - $t_schranke;
 
 # --- 3. Pruefstand: das Buch lesen ---------------------------------------
 my (@soll, %muss);
@@ -288,6 +292,29 @@ $b .= "| **Gesamturteil** | **$urteil** |\n\n";
 if (@unvollstaendig) {
     $b .= "**Nicht vollstaendig gelaufen:**\n\n";
     $b .= "- $_\n" for @unvollstaendig;
+    $b .= "\n";
+}
+# DAUER (Gregor am 25.10.2026: "miss auch, wie lange der test in etwa
+# dauert, das tragen wir bei den pruefberichten ein"). Unit-Tests und
+# Schranken misst dieser Lauf selbst, den Pruefstand liest er aus
+# Intern/pruefstand-dauer.txt (letzter VOLLER Lauf von pruefstand-lauf.ps1).
+{
+    my %pd;
+    for my $z (split /\r?\n/, lies("$wurzel/Intern/pruefstand-dauer.txt") // '') {
+        $pd{$1} = $2 if $z =~ /^(\w+)\t(.*)$/;
+    }
+    my $mmss = sub { my $s = shift; return sprintf('%d min %02d s', int($s / 60), $s % 60) };
+    $b .= "**Dauer** \x{2014} wer die Tests selbst faehrt, braucht etwa:\n\n";
+    $b .= "| Teil | Dauer | gemessen |\n|---|---|---|\n";
+    $b .= sprintf("| Unit-Tests bauen und fahren | %s | dieser Lauf |\n", $mmss->($dauer_unit));
+    $b .= sprintf("| Schranken mit Rueckfallprobe | %s | dieser Lauf |\n", $mmss->($dauer_schranke));
+    if (defined $pd{sekunden}) {
+        $b .= sprintf("| Pruefstand, %d Faelle, %d Eudora-Starts | %s | voller Lauf, Ende %s |\n",
+                      $pd{faelle} // 0, $pd{starts} // 0, $mmss->($pd{sekunden}), $pd{ende} // '?');
+        $b .= sprintf("| **zusammen** | **%s** | |\n", $mmss->($dauer_unit + $dauer_schranke + $pd{sekunden}));
+    } else {
+        $b .= "| Pruefstand | **nicht gemessen** \x{2014} `Intern/pruefstand-dauer.txt` fehlt | |\n";
+    }
     $b .= "\n";
 }
 if (length $bin_kennung) {

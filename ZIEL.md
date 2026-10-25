@@ -54,7 +54,7 @@ zurückgestellte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/
 
 **Vor dem Release:** die Tabelle der Kriterien neu messen (ihre Urteile
 stammen von 7.2.0.55), dann Gregors Test aller neun Kriterien an einem frischen
-Paket, erst danach die Marke. Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); ob die Marke auf GitHub `v7.2.1.<n>` oder weiter `v1.0.<n>` heißt, ist offen. `release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` ([L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
+Paket, erst danach die Marke. Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` und wird vorher umgestellt ([L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
 
 
 ## Regressionstests — Anordnung vom 22.10.2026
