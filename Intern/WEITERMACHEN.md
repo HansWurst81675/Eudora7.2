@@ -129,6 +129,16 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 
 ## Der nächste Schritt
 
+> **Stand 25.10.2026 abends – HIER WEITERMACHEN, Zweig `RC1_vorbereiten`** (gilt vor dem Block darunter). Auf `main`: PR #174 (E-150, Regressionstests E-51/E-97/E-100/E-99/E-67, Prüfbericht mit Dauer). **Entschieden von Gregor am 25.10.2026** — hier eingetragen, damit es nicht wieder gefragt wird:
+>
+> 1. **Was 7.2.1.x heißt** — ohne Einschränkung weitergebbar außer den README-Punkten, alles implementiert und getestet, Testergebnisse im Repo, Tests dürfen nachkommen (wörtlich in [ZIEL.md](../ZIEL.md)). **7.2.0.123 ist nur das Testpaket**, veröffentlicht wird **7.2.1.\<n\>** mit der Marke **`v7.2.1.<n>`**.
+> 2. **Vor 7.2.1 beheben:** [E-137](BEFUNDE.md#e-137) — *„sollte z.b. nur das filter fenster geschlossen werden. alternativ mit Ctrl-L (wie öffnen, so wieder schließen)"*: Strg+W versteckt nur die Wazoo-Leiste; [E-142](BEFUNDE.md#e-142) — der vereinbarte Hinweis; [E-146](BEFUNDE.md#e-146) (*„plus: e-146"*), dazu „Server lehnt Umbenennen ab". **In die README unter „Bekannte Fehler":** [E-144](BEFUNDE.md#e-144), [E-143](BEFUNDE.md#e-143), [E-139](BEFUNDE.md#e-139), [E-136](BEFUNDE.md#e-136), [AN-1](BEFUNDE.md#an-1) (Endung über IMAP).
+> 3. **Logzeile** in `eudora.log`, aus welchem Verzeichnis `rootcerts.p7b` geladen wurde (*„zeile im log, ja"*).
+> 4. **E-132:** Gregor testet nur Schritt 1–4 (*„schritt 5 geht nicht"* — Schritt 4 merkt sich die Antwort in der `DEudora.ini`); der ganze Weg wird ein Prüfstandsfall.
+> 5. **Regressionstests:** die rote Probe ohne Behebung nur einmal beim Anlegen eines Tests, danach genügt grün.
+>
+> **Reihenfolge:** zuerst [PRÜFER-53 K4](../Befunde/PRUEFER-53.md) (der Prüfbericht führt den INI-Teil von E-100 als geprüft, gelesen wird aber vor dem Schreiben), dann 2.–4., dann die Funde aus [LEKTOR-61](../Befunde/LEKTOR-61.md), dann Testpaket 7.2.0.123 für Gregor.
+>
 > **Stand 24.10.2026 – HIER WEITERMACHEN** (ersetzt die vier Blöcke vom 23.10.2026, [L-54.16](../Befunde/LEKTOR-54.md#l-54.16)). Quellstand **7.2.0.122** — auf `main` stecken aber schon [E-116](BEFUNDE.md#e-116) und [E-130](BEFUNDE.md#e-130), die beim nächsten Paket **7.2.0.123** dazukommen (Gregor: *„wir haben noch keine 7.2.1. version, bleiben also bei 0.123"*). Veröffentlicht ist `v1.0.120`.
 >
 > **Die Reihenfolge** (Gregor, 23.10.2026: *„ich denke, wir sollen zuminstest die regression tests haben, die mit der darstellung der bilder zu tun haben. so können wir sie dann alle ausführen, nachdem du mit E-113 und E-119 fertig bist."*):
