@@ -122,6 +122,28 @@ sub pruefe_text {
                     . 'auswerten und die Schleife verlassen.';
     }
 
+    # 1b. Unbegrenztes Warten IN einer eigenen Schleife (25.10.2026).
+    #
+    #    E-51 war genau das: die Ziehschleife wartete, bis eine Nachricht
+    #    kam - und kam keine, war Eudora tot. Die Behebung wartet hoechstens
+    #    100 ms (MsgWaitForMultipleObjects mit Zeitangabe) und prueft dann
+    #    die Maustaste. Regel 1 sah nur GetMessage; ein WaitMessage() an
+    #    derselben Stelle liess sie durch (gemessen: Rueckgabe 0). Eine
+    #    Funktion, die selbst Nachrichten entnimmt (PeekMessage mit
+    #    PM_REMOVE), darf nicht ohne Zeitangabe warten.
+    for my $f (@f) {
+        next unless $f->{text} =~ /\bPeekMessage\s*\([^;]*PM_REMOVE/;
+        while ($f->{text} =~ /\b(WaitMessage\s*\(\s*\)|MsgWaitForMultipleObjects(?:Ex)?\s*\([^;]*\bINFINITE\b[^;]*\))/g) {
+            my $aufruf = $1;
+            my $wo     = $f->{ab} + pos($f->{text});
+            my $zeile  = 1 + (() = substr($t, 0, $wo) =~ /\n/g);
+            push @mangel, "$kurz:$zeile unbegrenztes Warten in einer eigenen Nachrichtenschleife ($aufruf). "
+                        . 'Kommt die erwartete Nachricht nie, ist das Programm tot (Befund E-51). '
+                        . 'MsgWaitForMultipleObjects mit einer Zeitangabe nehmen und danach die '
+                        . 'Abbruchgruende selbst pruefen.';
+        }
+    }
+
     for my $f (@f) {
         my $rumpf = $f->{text};
         my $nimmt = ($rumpf =~ /\bPeekMessage\s*\([^;]*PM_REMOVE/s)

@@ -268,6 +268,14 @@ foreach ($g in $gruppen) {
         $was = ''
         if ($f.Muss -ne '' -and $text.IndexOf($f.Muss, [StringComparison]::Ordinal) -lt 0) {
             $ok = $false; $was = "fehlt in {0}: {1}" -f $f.Quelle, $f.Muss
+            # Was das Messskript STATT der erwarteten Zeile meldete - sonst
+            # sagt ein rotes Ergebnis nicht, ob Eudora abstuerzte oder der
+            # Messweg nicht griff (gemessen 25.10.2026 an der E-97-Gegenprobe:
+            # nur "fehlt in messung", der Absturz stand erst in Exception.log).
+            if ($f.Quelle -eq 'messung' -and $messtext) {
+                $letzte = @($messtext -split "`n" | Where-Object { $_.Trim() } | Select-Object -Last 4)
+                $was += "`n             gemeldet: " + ($letzte -join "`n                       ")
+            }
         }
         if ($ok -and $f.DarfNicht -ne '' -and $text.IndexOf($f.DarfNicht, [StringComparison]::Ordinal) -ge 0) {
             $ok = $false; $was = "steht in {0}, darf nicht: {1}" -f $f.Quelle, $f.DarfNicht

@@ -96,6 +96,42 @@ static void E150_Pruefe(const char* szFall, const unsigned int* pVorher, unsigne
 			TT_CHECK_MSG(Erg.aWerte[k] == pSoll[k], "falscher Eintrag nach dem Loeschen");
 }
 
+// E-99 (Datenverlust): wer einen Antwortentwurf sicherte und danach sendete,
+// verlor seinen getippten Text. HasChanged() heisst "seit dem letzten
+// Sichern getippt"; beim zweiten Durchlauf durch ExportMessage kam FALSE an,
+// und das aufgehobene Original ueberschrieb den Text. Die Behebung ist ein
+// Merker am Verfassendokument, der EINRASTET. ExportMessage ist zu gross zum
+// Herausschneiden - geprueft wird deshalb der Code ohne Kommentare, an den
+// drei Stellen, die zusammen das Einrasten ausmachen.
+static void Test_E99(const char* szEudoraDir)
+{
+	TT_BeginTest("E-99: der Merker 'Anwender hat getippt' rastet ein und wird uebergeben");
+	char* pPg = QT_LiesNurCode(szEudoraDir, "PgMsgView.cpp");
+	char* pCd = QT_LiesNurCode(szEudoraDir, "compmsgd.cpp");
+	if (!pPg || !pCd)
+	{
+		TT_Fail("PgMsgView.cpp oder compmsgd.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		free(pPg); free(pCd); TT_EndTest(); return;
+	}
+	QT_LeerraumZusammen(pPg);
+	QT_LeerraumZusammen(pCd);
+	const long lSetzen = QT_Stelle(pPg, "if ( HasChanged() ) pComp->m_bE88AnwenderHatGetippt = TRUE;");
+	const long lAufruf = QT_Stelle(pPg, "E88OriginalEinsetzen(");
+	TT_CHECK_MSG(lSetzen >= 0, "der Merker wird nicht mehr aus HasChanged() gesetzt");
+	TT_CHECK_MSG(lAufruf >= 0, "der Aufruf E88OriginalEinsetzen ist nicht zu finden");
+	TT_CHECK_MSG(lSetzen < lAufruf, "der Merker wird erst NACH E88OriginalEinsetzen gesetzt");
+	TT_CHECK_MSG(QT_Enthaelt(pPg, "pComp->m_ResponseType, pComp->m_bE88AnwenderHatGetippt,"),
+				 "E88OriginalEinsetzen bekommt nicht den eingerasteten Merker (etwa wieder HasChanged())");
+	// Einrasten heisst: nur der Konstruktor setzt ihn zurueck.
+	TT_CHECK_MSG(QT_Zaehle(pPg, "m_bE88AnwenderHatGetippt = FALSE") == 0,
+				 "ExportMessage setzt den Merker zurueck - er rastet nicht mehr ein");
+	TT_CHECK_MSG(QT_Zaehle(pCd, "m_bE88AnwenderHatGetippt = FALSE") == 1,
+				 "der Merker wird im Verfassendokument nicht genau einmal (im Konstruktor) vorbelegt");
+	free(pPg);
+	free(pCd);
+	TT_EndTest();
+}
+
 static void Test_E150(void)
 {
 	TT_BeginTest("E-150: DeleteArr in der Mitte und am Ende loescht richtig");
@@ -210,6 +246,7 @@ void RunSpeicherfehlerTests(const char* szEudoraDir)
 	TT_Suite("Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests)");
 	Test_E20();
 	Test_E150();
+	Test_E99(szEudoraDir);
 	Test_E18(szEudoraDir);
 	Test_E25(szEudoraDir);
 	Test_E31(szEudoraDir);
