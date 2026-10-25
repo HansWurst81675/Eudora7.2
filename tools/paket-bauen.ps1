@@ -66,7 +66,11 @@ param(
     # Agent ABSICHTLICH weiterlaeuft und seine Arbeit nicht in dieses Paket
     # gehoert - am 14.09.2026 hat Gregor den Bau ausdruecklich angewiesen
     # ("bau 1.0.53"), waehrend PRUEFER an einem anderen Befund arbeitete.
-    [string]$AgentLaeuftAbsichtlich = ''
+    [string]$AgentLaeuftAbsichtlich = '',
+    # Baut auch, wenn der Pruefbericht nicht BESTANDEN meldet (ein Test rot,
+    # ein Pruefstandsfall an einem anderen Bau oder nie gelaufen). Braucht
+    # eine Begruendung, die ins Protokoll geht.
+    [string]$OhnePruefbericht = ''
 )
 
 # --- Schranke: kein Paket bei offenem Datenverlustweg ----------------------
@@ -412,6 +416,41 @@ if (Test-Path -LiteralPath $agentenpruefer) {
   }
 }
 
+# --- Schranke: kein Paket ohne Pruefbericht ---------------------------------
+#
+# Gregor am 24.10.2026 an Releases/PRUEFBERICHT.md: "version 0.121? wo ist der
+# inhalt? wo sehe ich die tests? warum nicht schon 0.122?" - der Bericht wurde
+# von keinem Werkzeug aufgerufen, das Paket 1.0.122 kam ohne ihn heraus
+# (LEKTOR-56, L-56.7). Jetzt erzeugt jeder Paketbau ihn neu: Unit-Tests und
+# Schranken werden gefahren, die Pruefstandsfaelle aus dem Ergebnisbuch
+# gelesen. Meldet er nicht BESTANDEN, gibt es kein Paket - ausser mit
+# -OhnePruefbericht "<Begruendung>". Der Bericht kommt mit ins Paket.
+$berichtWerkzeug = Join-Path $PSScriptRoot 'pruefbericht.pl'
+$perlP = (Get-Command perl -ErrorAction Ignore).Source
+if (-not $perlP) {
+  foreach ($k in @('C:\Program Files\Git\usr\bin\perl.exe', 'C:\Program Files (x86)\Git\usr\bin\perl.exe', 'C:\Strawberry\perl\bin\perl.exe')) {
+    if (Test-Path -LiteralPath $k) { $perlP = $k; break }
+  }
+}
+if (-not $perlP) { Write-Host ''; Write-Host '  KEIN PAKET: perl nicht gefunden, der Pruefbericht konnte nicht entstehen.'; Write-Host ''; exit 1 }
+Push-Location (Split-Path -Parent $PSScriptRoot)
+& $perlP ($berichtWerkzeug -replace '\\', '/')
+$berichtRc = $LASTEXITCODE
+Pop-Location
+if ($berichtRc -ne 0) {
+  if ($OhnePruefbericht) {
+    Write-Host "  Pruefbericht meldet nicht BESTANDEN - trotzdem gebaut: $OhnePruefbericht"
+  } else {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Der Pruefbericht meldet nicht BESTANDEN - siehe'
+    Write-Host '  Releases\PRUEFBERICHT.md. Meist fehlt ein voller Pruefstandslauf am'
+    Write-Host '  aktuellen Bau: tools\pruefstaende-auffrischen.ps1, dann'
+    Write-Host '  tools\pruefstand-lauf.ps1. Bewusst ohne: -OhnePruefbericht "<warum>"'
+    Write-Host ''
+    exit 1
+  }
+}
+
 $ErrorActionPreference = 'Stop'
 
 $wurzel = Split-Path -Parent $PSScriptRoot
@@ -450,6 +489,10 @@ function Weg([string]$name) {
 Write-Host ''
 Write-Host 'Wurzelzertifikate (E-148)'
 Nimm (Join-Path $wurzel 'Releases\1.0\rootcerts.p7b') 'rootcerts.p7b'
+
+Write-Host ''
+Write-Host 'Pruefbericht dieses Stands (Gregor: "wo sehe ich die tests?")'
+Nimm (Join-Path $wurzel 'Releases\PRUEFBERICHT.md') 'PRUEFBERICHT.md'
 
 if ($AusBauverzeichnis) {
   $binBau = Join-Path $wurzel ('Eudora71\Bin\' + $Bauart)
