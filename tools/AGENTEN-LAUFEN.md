@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-10-25 20:11 | PRUEFER-56.md: Aenderungen seit 39244831 gegen die Quelle, Kennungen E-154 und E-155 |
