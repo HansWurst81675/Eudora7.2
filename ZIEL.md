@@ -15,6 +15,30 @@ eingebaut sein müssen. **7.2.1 ist die erste Fassung ohne Vorbehalt für den
 täglichen Gebrauch.** Neue Funktionen gehören nicht dazu. Maßstab sind alle
 neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
+> **Gregor am 25.10.2026:** *„also ein release 7.2.1.x ist eine version, die
+> wir jedem, der es benutzen möchte, ohne einschränkungen geben können. bis
+> auf die paar themen, die in readme stehen. wir haben darin also alles
+> implementiert und getestet. die tests ergebnisse müssen im repo
+> dokumentiert werden. die tests selbst können erst später nachgeliefert
+> werden."*
+
+Daraus folgt für jedes 7.2.1.x:
+
+1. **Weitergabe ohne Einschränkung** — außer den Punkten, die die
+   [README](README.md) ausdrücklich nennt. Was dort nicht steht, muss gehen.
+2. **Alles implementiert und getestet** — getestet heißt hier: am Paket
+   gelaufen, von mir am Prüfstand und von Gregor an seinem lokalen Test.
+3. **Die Testergebnisse stehen im Repo** — [Releases/PRUEFBERICHT.md](Releases/PRUEFBERICHT.md)
+   für alles Automatische (Unit-Tests, Schranken, Prüfstand, je mit Bau und
+   Dauer) und die Ergebnisse von Gregors Test je Kriterium. Ein Release ohne
+   dokumentierte Ergebnisse gibt es nicht.
+4. **Fehlende automatische Tests** dürfen nachgeliefert werden; die
+   Release-Notizen nennen den Rückstand (siehe *Regressionstests* unten).
+
+Zwischenstände wie **7.2.0.123** sind Testpakete für Gregors lokalen Test,
+keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
+`v7.2.1.<n>`.
+
 <!-- ziel-stand: Anfang -->
 
 **Stand: 19 von 19 erfüllt, 0 offen.** Diese Übersicht wird aus den
