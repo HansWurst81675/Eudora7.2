@@ -26,6 +26,7 @@
 use strict;
 use warnings;
 use JSON::PP;
+use FindBin;
 
 selbsttest() if ($ARGV[0] // '') eq '--selbsttest';
 
@@ -39,11 +40,17 @@ my $roh = !defined $j->{tool_input}{command};
 my $kommando = $roh ? $ein : nur_befehle($j->{tool_input}{command});
 exit 0 unless $kommando =~ /\bgh[ \t]+pr[ \t]+create\b/;
 
-my $wurzel = $j->{cwd} // '.';
-$wurzel =~ s{\\}{/}g;
-my $aus = `perl "$wurzel/tools/rollen-faellig.pl" --nur-melden 2>&1`;
-if ($aus =~ /^\s*-\s*(LEKTOR ist faellig[^\n]*)/m) {
-    print STDERR "KEIN PR: $1\n\n"
+# Die Wurzel kommt vom Ort dieses Skripts, nicht aus dem Arbeitsverzeichnis.
+# Gemessen 25.10.2026: aus Eudora71/ heraus fand der Haken rollen-faellig.pl
+# nicht, las eine leere Antwort als "nicht faellig" und liess ein PR-Anlegen
+# durch. Und nur die Zeile "LEKTOR aktuell" laesst durch - "faellig, aber
+# beauftragt" heisst: sein Bericht liegt noch nicht im Zweig. Was sich nicht
+# lesen laesst, haelt auf.
+my $wurzel = "$FindBin::Bin/..";
+my $aus = `cd "$wurzel" && perl tools/rollen-faellig.pl --nur-melden 2>&1`;
+my ($lektor) = $aus =~ /^\s*LEKTOR\s+(\S[^\n]*)/m;
+if (!defined $lektor or $lektor !~ /^aktuell\b/) {
+    print STDERR "KEIN PR: LEKTOR " . ($lektor // "- Stand nicht lesbar:\n$aus") . "\n\n"
                . "Regel seit 06.09.2026 (Arbeitsweise/daueraufgaben-brauchen-einen-takt.md):\n"
                . "LEKTOR laeuft VOR jedem PR, den Gregor mergen soll. Erst den LEKTOR ueber den\n"
                . "Zweig laufen lassen und seinen Bericht in den Zweig holen, dann den PR anlegen.\n";

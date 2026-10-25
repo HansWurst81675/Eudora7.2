@@ -13,8 +13,12 @@
 # Kodierung: reines ASCII.
 use strict;
 use warnings;
+use FindBin;
 
-my $w = -f 'VERSION' ? '.' : '..';
+# Wurzel vom Ort des Skripts, nicht vom Arbeitsverzeichnis (gemessen 25.10.2026
+# an haken-pr-lektor.pl: aus Eudora71/ heraus lief der Haken ins Leere).
+my $w = "$FindBin::Bin/..";
+chdir $w;
 sub lauf { my ($c) = @_; my $a = `$c 2>&1`; return $a // '' }
 
 print "Lage zu Sitzungsbeginn (tools/sitzungsbeginn.pl, CLAUDE.md Abschnitte 1 und 3):\n";
