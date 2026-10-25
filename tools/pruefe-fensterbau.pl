@@ -141,49 +141,77 @@ my @geprueft;
                   glob("$wurzel/Eudora71/Eudora/*.cpp");
     my $aufrufe = 0;
     my @ungeprueft;
+    # JE ANWEISUNG, NICHT JE ZEILE (25.10.2026, PRUEFER-50 K2). Die alte Regel
+    # arbeitete zeilenweise: den Namen suchte sie nur zwei Zeilen zurueck und
+    # uebersprang den Aufruf OHNE MELDUNG, wenn sie keinen fand; "->" erkannte
+    # sie nur auf derselben Zeile; und eine Pruefung NACH dem Zugriff zaehlte
+    # auch. Drei Rueckfaelle kamen so durch, darunter das QUALCOMM-Original,
+    # nur umbrochen (tools/regression-schranken.txt, E-35 R1 bis R3). Jetzt:
+    #   1. die ganze Anweisung um den Aufruf herum (bis ";") wird gelesen;
+    #   2. folgt auf "GetButton(...)" samt Typumwandlung ein "->", ist das
+    #      ein Zugriff ohne Pruefung - gleich, auf welcher Zeile;
+    #   3. ohne Namen, dem das Ergebnis zugewiesen wird, wird GEMELDET;
+    #   4. mit Namen muss eine Pruefung auf NULL VOR dem ersten "name->"
+    #      stehen (gesucht bis zum Ende der Funktion).
     for my $rel (@dateien) {
         my $t = lies($rel);
         next unless defined $t;
-        my @zeilen = split /\n/, ohne_kommentare($t);
-        for my $i (0 .. $#zeilen) {
-            next unless $zeilen[$i] =~ /->GetButton\s*\(/;
+        my $c = ohne_kommentare($t);
+        while ($c =~ /->GetButton\s*\(/g) {
+            my $p = $-[0];
+            my $auf = $+[0] - 1;             # Position der oeffnenden Klammer
             $aufrufe++;
+            my $zeile = 1 + (() = substr($c, 0, $p) =~ /\n/g);
 
-            # Den Namen der Variablen holen, in die das Ergebnis geht. Ohne
-            # ihn muesste das Werkzeug Namen raten - am 07.09.2026 hat es
-            # deshalb eine korrekt abgesicherte Stelle gemeldet, weil die
-            # Variable nicht "...Button" hiess (pSendeKnopf).
-            my $name;
-            for my $j (($i >= 2 ? $i - 2 : 0) .. $i) {
-                if ($zeilen[$j] =~ /(\w+)\s*=\s*$/ || $zeilen[$j] =~ /(\w+)\s*=[^=]/) {
-                    $name = $1;
-                }
+            # Anweisungsbeginn: letztes ; { } davor. Anweisungsende: ";"
+            # auf Klammertiefe null danach.
+            my $vorne = substr($c, 0, $p);
+            my $anf = 0;
+            $anf = $+[0] while $vorne =~ /[;{}]/g;
+            my ($tiefe, $ende, $zu) = (0, undef, undef);
+            for my $i ($auf .. length($c) - 1) {
+                my $z = substr($c, $i, 1);
+                if    ($z eq '(') { $tiefe++ }
+                elsif ($z eq ')') { $tiefe--; $zu = $i if !defined $zu and $tiefe == 0 }
+                elsif ($z eq ';' and $tiefe <= 0) { $ende = $i; last }
             }
+            $ende //= length($c) - 1;
+            my $anw = substr($c, $anf, $ende - $anf);
 
-            # Sonderfall: der Rueckgabewert wird direkt dereferenziert, ohne
-            # ihn irgendwo abzulegen. Das ist immer ein Mangel.
-            if ($zeilen[$i] =~ /GetButton\s*\([^;]*\)\s*\)?\s*->/) {
-                push @ungeprueft, sprintf("%s:%d (direkt dereferenziert)",
-                                          nurname($rel), $i + 1);
+            # 2. Direkt dereferenziert? Nach der schliessenden Klammer des
+            #    Aufrufs duerfen nur Leerraum und weitere ")" stehen, dann "->".
+            if (defined $zu and substr($c, $zu + 1, $ende - $zu) =~ /^[\s)]*->/) {
+                push @ungeprueft, sprintf("%s:%d (direkt dereferenziert)", nurname($rel), $zeile);
                 next;
             }
 
-            next unless defined $name;
+            # 3. Name der Variablen, der das Ergebnis zugewiesen wird.
+            my ($name) = $anw =~ /(\w+)\s*=(?!=)[^;]*->GetButton\s*\(/s;
+            if (!defined $name) {
+                push @ungeprueft, sprintf("%s:%d (Ergebnis keiner Variablen zugewiesen - nicht pruefbar)",
+                                          nurname($rel), $zeile);
+                next;
+            }
 
-            # In den naechsten sechs Zeilen muss dieser Name auf NULL
-            # geprueft werden.
-            my $bis = ($i + 6 > $#zeilen) ? $#zeilen : $i + 6;
-            my $fenster = join("\n", @zeilen[$i .. $bis]);
+            # 4. Pruefung vor dem ersten Zugriff, gesucht bis zum Ende der
+            #    Funktion (erste Zeile, die mit "}" beginnt).
+            my $rest = substr($c, $ende);
+            my $fe = index($rest, "\n}");
+            $rest = substr($rest, 0, $fe) if $fe >= 0;
+            my $zugriff = $rest =~ /\b\Q$name\E\s*->/ ? $-[0] : -1;
+            my $pruef = -1;
             # Als Pruefung zaehlt nur der Name ALLEIN in der Bedingung oder mit
-            # &&, ||, != NULL, == NULL verknuepft - NICHT "name->...". Bis zum
-            # 24.10.2026 genuegte jedes "if (... name", und die Rueckfallprobe
-            # zu E-36 lief gruen durch: "if (pStimmung->GetScore() != nScore)"
-            # ist ein Zugriff, keine Pruefung (tools/schranken-gegenprobe.pl).
-            next if $fenster =~ /\bif\s*\([^;{]*?(?<![\w>.])\Q$name\E\s*(?:&&|\|\||\)|[!=]=\s*(?:NULL|0|nullptr)\b)/;
-            next if $fenster =~ /\bif\s*\(\s*!\s*\Q$name\E\b/;
-
-            push @ungeprueft, sprintf("%s:%d (%s ungeprueft)",
-                                      nurname($rel), $i + 1, $name);
+            # &&, ||, != NULL, == NULL verknuepft - NICHT "name->..." (E-36,
+            # 24.10.2026: "if (pStimmung->GetScore() != nScore)" ist ein
+            # Zugriff, keine Pruefung).
+            if ($rest =~ /\bif\s*\([^;{]*?(?<![\w>.])\Q$name\E\s*(?:&&|\|\||\)|[!=]=\s*(?:NULL|0|nullptr)\b)/
+             || $rest =~ /\bif\s*\(\s*!\s*\Q$name\E\b/) {
+                $pruef = $-[0];
+            }
+            next if $zugriff < 0;                          # nie benutzt: harmlos
+            next if $pruef >= 0 and $pruef < $zugriff;     # erst geprueft, dann benutzt
+            push @ungeprueft, sprintf("%s:%d (%s %s)", nurname($rel), $zeile, $name,
+                                      $pruef < 0 ? 'ungeprueft' : 'erst benutzt, dann geprueft');
         }
     }
     push @geprueft, sprintf("E-34  GetButton-Aufrufe: %d, davon ohne NULL-Pruefung: %d",
