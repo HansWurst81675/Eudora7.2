@@ -251,11 +251,31 @@ if ($lebt2) {
 }
 
 # --- 3. Die beiden INI-Werte aus E-100 Teil 2 --------------------------------
-$ini = Join-Path $md 'Eudora.ini'
-$iniOk = 'ok'
-foreach ($z in (Get-Content -LiteralPath $ini)) {
-    if ($z -match '^(IncludeHeaders|GuessParagraphs)=(.*)$' -and $Matches[2] -notmatch '^[01]$') {
-        $iniOk = "falsch($($Matches[1])=$($Matches[2]))"
+# ERST NACH DEM BEENDEN lesen (PRUEFER-53 K4): SetIniShort setzt nur den
+# Zwischenspeicher (rs.cpp:643-646), auf die Platte kommt es mit
+# FlushINIFile beim Beenden. Bis zum 25.10.2026 las dieses Skript die Datei,
+# waehrend Eudora noch lief, und meldete "ini=ok" ueber Werte, die noch gar
+# nicht geschrieben waren. Jetzt beendet das Skript Eudora selbst
+# (testlauf.ps1:343 ueberspringt dann sein eigenes Beenden) und liest danach.
+# Endet Eudora nicht, heisst das Ergebnis "ungemessen", nie "ok".
+$iniOk = 'ungemessen'
+if ($lebt2) {
+    [void][E97]::PostMessageA($haupt, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)   # WM_CLOSE
+    for ($i = 0; $i -lt 60 -and (Lebt $pp); $i++) {
+        if ($i % 4 -eq 3) { [void](Dialoge $pp '^(No|Nein|Don.t Save|OK)$') }
+        Start-Sleep -Milliseconds 500
     }
+}
+if (-not (Lebt $pp)) {
+    $ini = Join-Path $md 'Eudora.ini'
+    $iniOk = 'ok'
+    foreach ($z in (Get-Content -LiteralPath $ini)) {
+        if ($z -match '^(IncludeHeaders|GuessParagraphs)=(.*)$' -and $Matches[2] -notmatch '^[01]$') {
+            $iniOk = "falsch($($Matches[1])=$($Matches[2]))"
+        }
+    }
+    Write-Host 'E100 Eudora beendet, Eudora.ini nach dem Schreiben gelesen'
+} else {
+    Write-Host 'E100 Eudora endet nicht - INI-Teil NICHT gemessen'
 }
 Write-Host ("E100 ERGEBNIS dialog={0} lebt={1} ini={2}" -f $dialog2, $lebt2, $iniOk)

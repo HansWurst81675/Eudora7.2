@@ -1,7 +1,7 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern. Je Fall der letzte Lauf.
 # kennung	ergebnis	zeit	pruefstand	bau	gemessen
 BILD-lauf	ok	2026-10-25 18:08:44	C:\Temp\EBILD	Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57	BILD ERGEBNIS abgeholt=7 geoeffnet=7 weitergeleitet=7
-E-100	ok	2026-10-25 18:08:44	C:\Temp\E97	Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57	E100 ERGEBNIS dialog=1 lebt=1 ini=ok
+E-100	ok	2026-10-25 19:09:48	C:\Temp\E97	Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57	E100 ERGEBNIS dialog=1 lebt=1 ini=ok
 E-103p	ok	2026-10-25 18:08:44	C:\Temp\EBILD	Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57	E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64
 E-105p	ok	2026-10-25 18:08:44	C:\Temp\EBILD	Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57	E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet
 E-106p	ok	2026-10-25 18:08:44	C:\Temp\EBILD	Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57	E-106 groesser als angegeben: attr=35x35 quelle=330x327

@@ -70,3 +70,5 @@ beide Male durch dieselbe Frage.
   lohnt es sich auch nicht, es in den Chat zu schreiben.
 - **Die Antwort auf „steht es in X?" wird gelesen, nicht erinnert** —
   `grep` auf die Datei, bevor ich „ja" sage.
+
+**Nachtrag 25.10.2026 — Vereinbarung schlägt Ablaufregel.** Gregor sagte um ~18:40 *„e-132: ich teste nur bis schritt 4. schritt 5 geht nicht."*; ich notierte es nur im Gedächtnis und schob die Berichtigung von TESTPLAN M1 „auf den nächsten Zweig", um den laufenden LEKTOR nicht wieder fällig zu machen. Gregor zweimal: *„immer noch nicht korrigiert"* und *„haben wir ja so vereinbart - warum ist es nicht drin?"*. **How to apply:** Eine Vereinbarung mit Gregor wird SOFORT in die Datei geschrieben, die sie betrifft — auch wenn danach ein LEKTOR-Lauf mehr nötig ist. Die Regel „Formfunde in den nächsten Zweig" gilt nur für Funde der Agenten, nie für Gregors Absprachen.

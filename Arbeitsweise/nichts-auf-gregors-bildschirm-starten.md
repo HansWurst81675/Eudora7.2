@@ -151,3 +151,5 @@ wird im Moment des Messens erfunden. Geprüft wird jetzt von der anderen
 Seite, an der Spur, die das Programm selbst legt:
 `tools/pruefe-startwege.pl` hält die `eudora.log` jedes Prüfstands unter
 `C:\Temp` gegen `tools/TESTLAEUFE.md` ([[jeder-start-ins-protokoll]]).
+
+**Nachtrag 25.10.2026 — vor jedem Prüfstandslauf ansagen.** Gregor: *„wenn du was testen willst, sag erstmal bescheid, damit wir uns nicht gegenseitig stören. hat bisher gut funktioniert, seit neulich aber nicht mehr."* Seine Freigabe vom Morgen (*„du bist dran und kannst starten und prüfen"*) ist **keine** Dauererlaubnis, ohne Ansage zu starten ([[erlaubnis-nicht-hineinlesen]]). Am 25.10. liefen über zehn Prüfstandsläufe ohne Ansage, zuletzt während er selbst arbeitete. **How to apply:** Vor JEDEM Start von `pruefstand-lauf.ps1`, `testlauf.ps1` oder einem Eudora aus `C:\Temp`: eine Zeile an Gregor — was, wie lange, wie viele Fenster — und auf sein Okay warten. Unit-Tests und Schranken (kein Fenster) brauchen keine Ansage.
