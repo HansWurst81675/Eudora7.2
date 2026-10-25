@@ -74,6 +74,7 @@ da, nicht zum Lesen.
 | [Doku/](Doku) | Benutzung, Bauen, Mitarbeiten, technischer Hintergrund |
 | [ZIEL.md](ZIEL.md) | woran „fertig" gemessen wird — **und was zur Fassung 7.2.1 noch fehlt**, ganz oben, erzeugt |
 | [CHANGELOG.md](CHANGELOG.md) | was sich je Fassung geändert hat, und die erzeugte Liste der offenen Befunde |
+| [Releases/PRUEFBERICHT.md](Releases/PRUEFBERICHT.md) | **jeder Test** mit Ergebnis, Zeitpunkt und Bau — Unit-Tests, Schranken, Prüfstandsfälle. Nach einer eigenen Änderung vergleicht `perl tools/pruefbericht.pl --vergleich` mit diesem Stand und nennt, was neu rot ist |
 | [MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md) | gemeldete Fehler von außen, mit Stand (auf Englisch) |
 | [LICENSE](LICENSE) | wer es wie benutzen darf |
 | [CLAUDE.md](CLAUDE.md) | was ein Agent **vor** dem ersten Handgriff tut |
@@ -84,7 +85,7 @@ da, nicht zum Lesen.
 | [WEITERMACHEN.md](Intern/WEITERMACHEN.md) | der nächste Schritt |
 | [AUFGABEN.md](Intern/AUFGABEN.md), [TESTPLAN.md](Intern/TESTPLAN.md) | Arbeitspakete und Prüfpunkte |
 | [PORTIERUNG.md](Intern/PORTIERUNG.md) | Portierungstagebuch |
-| [LEKTORAT.md](Intern/LEKTORAT.md), [PRUEFBERICHT.md](Intern/PRUEFBERICHT.md) | Berichte der Rollen LEKTOR und PRÜFER |
+| [LEKTORAT.md](Intern/LEKTORAT.md), [PRUEFBERICHT.md](Intern/PRUEFBERICHT.md) | Berichte der Rollen LEKTOR und PRÜFER (Archiv bis 30.08.2026 — nicht zu verwechseln mit dem Testbericht `Releases/PRUEFBERICHT.md`) |
 | [PRUEFUNG-BAU.md](Intern/PRUEFUNG-BAU.md), [PRUEFUNG-CODE.md](Intern/PRUEFUNG-CODE.md), [PRUEFUNG-BRANCH.md](Intern/PRUEFUNG-BRANCH.md) | Prüfanleitungen |
 | [FILTER.md](Intern/FILTER.md), [EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md), [STARTUMGEBUNG.md](Intern/STARTUMGEBUNG.md), [ABRUF-PRUEFEN.md](Intern/ABRUF-PRUEFEN.md) | Einzelthemen im Detail |
 | [AGENTEN.md](Intern/AGENTEN.md) | wie hier mit Agenten gearbeitet wird |
