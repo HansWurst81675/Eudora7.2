@@ -1805,6 +1805,21 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Vierundsechzigster Durchgang — Schlusslauf vor dem PR: Commit 62b0a80c, 25.10.2026 (Bericht: `Befunde/LEKTOR-59.md`)
+
+Nur der Commit `62b0a80c` war zu prüfen: die E-148-Berichtigung in
+`CHANGELOG.md` und `README.md`, die geflickten Tabellen und die erweiterte
+Tabellenschranke. Die Suchreihenfolge (Mailverzeichnis vor
+Programmverzeichnis) stimmt mit `QCSSLContext.cpp:403-404` überein, und
+CHANGELOG und README sagen jetzt dasselbe über die OpenSSL-Messung.
+
+**Zwei Funde, keiner hält den PR auf.** Der README-Rat für ältere Pakete
+sagt *„die alte Datei zurücklegen"*, lässt aber keine Sicherungskopie anlegen
+([L-59.1](../Befunde/LEKTOR-59.md#l-59.1)). Der Selbsttest der Tabellenschranke
+gibt *„14 muessen durchgehen, 6 muessen abweisen"* aus, gezählt sind 15 und 7;
+`WERKZEUGE.md:125` nennt in derselben Zeile 18 und 22 Fälle
+([L-59.2](../Befunde/LEKTOR-59.md#l-59.2)).
+
 ## Dreiundsechzigster Durchgang — Nachlauf nach LEKTOR-57 (E-148-Nachtrag, PRÜFER-51, nachgeschärfte Haken), 25.10.2026 (Bericht: `Befunde/LEKTOR-58.md`)
 
 **7 neue Funde**: 2 falsch, 1 veraltet, 2 unvollständig, 2 Form.
