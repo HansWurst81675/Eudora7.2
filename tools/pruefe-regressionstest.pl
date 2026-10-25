@@ -144,7 +144,10 @@ for my $f (glob("$wurzel/Eudora71/Tests/*.cpp")) {
 sub hat_test {
     my ($id) = @_;
     my $gross = uc $id;
-    return $tests =~ /\Q$gross\E\b/ ? 1 : 0;
+    # Fallnamen tragen Buchstaben am Ende (E-108p, E-119d) - "\b" sah sie
+    # nicht (LEKTOR-57 L-57.3). Es darf nur keine weitere Ziffer folgen:
+    # E-10 ist nicht E-108.
+    return $tests =~ /(?<![\w-])\Q$gross\E(?!\d)/ ? 1 : 0;
 }
 
 # --- Was manuell geprueft wird, zaehlt auch -------------------------------
