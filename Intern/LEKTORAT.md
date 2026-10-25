@@ -1805,6 +1805,15 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Zweiundsiebzigster Durchgang — Mikrolauf: L-66.1 und L-66.2 in E-137, 25.10.2026 (Bericht: `Befunde/LEKTOR-67.md`)
+
+Geprüft nur die Zeile E-137 (`BEFUNDE.md:390`) gegen `mainfrm.cpp`. Beide
+Funde sind erledigt: die Behebung steht am Anfang von `OnCommand`
+(`mainfrm.cpp:3433-3445`), die erste Fassung in `OnCmdMsg` als entfernt,
+„Was noch fehlt" nennt Gregors Prüfung im Testpaket (gemessen). **Nichts
+Falsches.** Ein Hinweis ([L-67.1](../Befunde/LEKTOR-67.md#l-67.1)). Keine
+neue Frage an Gregor.
+
 ## Einundsiebzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 2909af0c, 25.10.2026 (Bericht: `Befunde/LEKTOR-66.md`)
 
 Geprüft nur die `.md`-Änderungen aus `410c3b51`, `78f2ad2a`, `c2207fc8`,
