@@ -3,18 +3,18 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.0.122` (Paketnummer `1.0.122`) |
-| **Commit** | `718509c0` (Arbeitsbaum sauber) |
-| **Erstellt** | 2026-10-25 18:13 |
+| **Commit** | `414c456f` — **Arbeitsbaum nicht sauber** (2 Dateien) |
+| **Erstellt** | 2026-10-25 19:16 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 06 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 07 s | dieser Lauf |
 | Pruefstand, 32 Faelle, 10 Eudora-Starts | 5 min 05 s | voller Lauf, Ende 2026-10-25 18:08:45 |
-| **zusammen** | **5 min 20 s** | |
+| **zusammen** | **5 min 18 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-25 18:13** gegen den Quelltext von Commit `718509c0`.
+Gelaufen am **2026-10-25 19:16** gegen den Quelltext von Commit `414c456f*`.
 
 <details><summary>Alle 301 Unit-Tests einzeln</summary>
 
@@ -367,7 +367,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-25 18:13** gegen Commit `718509c0`.
+Gelaufen am **2026-10-25 19:16** gegen Commit `414c456f*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -430,7 +430,7 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-77c | ok | 2026-10-25 18:08:44 | `C:\Temp\E77` | Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57 | `E-77 Ordnername: server="Gel&APY-scht"` |
 | E-77d | ok | 2026-10-25 18:08:44 | `C:\Temp\E77U` | Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57 | `E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0` |
 | E-97 | ok | 2026-10-25 18:08:44 | `C:\Temp\E97` | Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
-| E-100 | ok | 2026-10-25 18:08:44 | `C:\Temp\E97` | Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
+| E-100 | ok | 2026-10-25 19:09:48 | `C:\Temp\E97` | Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
 | E-67 | ok | 2026-10-25 18:08:44 | `C:\Temp\E67` | Eudora 7.2.0.122 / Paket 1.0.122+796369bb 2026-10-25 17:57 | `verb-gespeichert=14 verb-auswahl=0` |
 
 ## 4. Deckung der kritischen Befunde
