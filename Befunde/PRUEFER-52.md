@@ -21,7 +21,7 @@
   **296 von 296 grün** ([K2](#k2)).
 * **Neuer Programmfehler, Spiegelbild von [E-20](../Intern/BEFUNDE.md#e-20): Beim Ausblenden einer Spalte
   im Fenster „Task Status“ kann Eudora hinter ein Feld schreiben** ([K1](#k1),
-  neue Kennung E-150). Wer dort Spalten ein- und ausschaltet, kann den Speicher
+  neue Kennung [E-150](../Intern/BEFUNDE.md#e-150)). Wer dort Spalten ein- und ausschaltet, kann den Speicher
   beschädigen. Das Ausblenden ist der Gegenweg zum Einblenden, also dem Weg,
   auf dem [E-20](../Intern/BEFUNDE.md#e-20) entstand. Gemessen habe ich das an der herausgeschnittenen
   Funktion: 4 Byte hinter einem Feld von 4 Byte überschrieben. Dass Eudora
@@ -62,7 +62,7 @@ vor **7.2.1.0**. Für das Paket gilt wie bei [PRUEFER-51](PRUEFER-51.md#pruefer-
 geschnürt, sonst gilt der Prüfbericht für eine andere EXE als die
 ausgelieferte ([K4](#k4)).
 
-**Neue E-Kennungen: E-150 vergeben ([K1](#k1)). E-151 bleibt frei.**
+**Neue E-Kennungen: [E-150](../Intern/BEFUNDE.md#e-150) vergeben ([K1](#k1)). [E-151](../Intern/BEFUNDE.md#e-151) bleibt frei.**
 Eingetragen in `Intern/BEFUNDE.md` ist nichts. Vorher gelaufen:
 `perl tools/befund-suchen.pl` zu `ListCtrlEx` ([E-20](../Intern/BEFUNDE.md#e-20)),
 `DeleteArr` (kein Befund) und `NotifyDeletedCol` (kein Befund). In
@@ -442,7 +442,7 @@ Quelltext belegt).
 
 | Fund | Was passiert | Schwere | Hält das Paket auf? |
 |---|---|---|---|
-| [K1](#k1) | E-150: Wird im Fenster „Task Status“ eine Spalte ausgeblendet, kann Eudora hinter ein Feld im Speicher schreiben. Spiegelbild von [E-20](../Intern/BEFUNDE.md#e-20), gemessen an der herausgeschnittenen Funktion (4 Byte überschrieben) | kritisch (Speicherfehler) | nein (Originalfehler; Gregor entscheidet, ob die kleine Behebung mitgeht) |
+| [K1](#k1) | [E-150](../Intern/BEFUNDE.md#e-150): Wird im Fenster „Task Status“ eine Spalte ausgeblendet, kann Eudora hinter ein Feld im Speicher schreiben. Spiegelbild von [E-20](../Intern/BEFUNDE.md#e-20), gemessen an der herausgeschnittenen Funktion (4 Byte überschrieben) | kritisch (Speicherfehler) | nein (Originalfehler; Gregor entscheidet, ob die kleine Behebung mitgeht) |
 | [K2](#k2) | Der E-20-Test bewacht nur `InsertArr`. Die zweite Behebung in `NotifyInsertedCol` lässt sich zurücksetzen, und es bleibt 296/296 grün | mittel | nein |
 | [K3](#k3) | `pruefe-regressionstest.pl` sieht seit den laufenden Nummern eine rote zweite, dritte oder vierte Schrankenprobe nicht. Gemessen: [E-35](../Intern/BEFUNDE.md#e-35) bleibt „gedeckt“ | wichtig (Prüfstand) | nein; vor 7.2.1.0 beheben |
 | [K4](#k4) | Fehlt die Release-EXE (frischer Klon), meldet der Prüfbericht BESTANDEN mit einem Fall an einem Bau vor der Behebung. Geprüfte und ausgelieferte EXE werden nirgends verglichen | wichtig (Prüfstand) | nein, wenn wie in `WEITERMACHEN.md:492` mit `-AusBauverzeichnis -Bauart Release` geschnürt wird |
@@ -450,5 +450,5 @@ Quelltext belegt).
 | [K6](#k6) | PR-Haken: `gh pr new`, Zeilenfortsetzung, `"$(gh pr create …)"`, `bash -lc` u. a. kommen durch | mittel | nein |
 | [PRUEFER-51 K4, K5, K7–K11](PRUEFER-51.md#k4) | bekannt, seit `c0bbacb5` unverändert | wie dort | nein |
 
-**Vergeben: E-150 ([K1](#k1)). Frei: E-151.** Eingetragen in
+**Vergeben: [E-150](../Intern/BEFUNDE.md#e-150) ([K1](#k1)). Frei: [E-151](../Intern/BEFUNDE.md#e-151).** Eingetragen in
 `Intern/BEFUNDE.md` ist nichts.

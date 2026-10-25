@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-25 09:37:12
-freigabe=Gregor am 25.10.2026: 'ich halte mich mit dem testen zurueck, du bist dran und kannst starten und pruefen.' - voller Lauf fuer den Pruefbericht
-faelle=29
-bestanden=29
+zeit=2026-10-25 18:08:44
+freigabe=Gregor am 25.10.2026: 'ich halte mich mit dem testen zurueck, du bist dran und kannst starten und pruefen.'
+faelle=32
+bestanden=32
 fehlgeschlagen=0
 fall=[ ok ] E-131a   ohne MRUFloatXPos=-2147483648
 fall=[ ok ] E-131b   ohne MRUFloatYPos=-2147483648
@@ -33,3 +33,6 @@ fall=[ ok ] E-77a    E77 ERGEBNIS roh=0 dekodiert=2
 fall=[ ok ] E-77b    E-77 Ordnername: server="Entw&APw-rfe"
 fall=[ ok ] E-77c    E-77 Ordnername: server="Gel&APY-scht"
 fall=[ ok ] E-77d    E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0
+fall=[ ok ] E-97     E97 ERGEBNIS dialog=1 lebt=1 datei=1
+fall=[ ok ] E-100    E100 ERGEBNIS dialog=1 lebt=1 ini=ok
+fall=[ ok ] E-67     verb-gespeichert=14 verb-auswahl=0

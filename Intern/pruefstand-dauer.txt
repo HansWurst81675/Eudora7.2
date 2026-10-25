@@ -1,0 +1,6 @@
+# Erzeugt von tools/pruefstand-lauf.ps1 - Dauer des letzten vollen Laufs.
+# Dieser Eintrag: nachgetragen aus den Zeitstempeln der Laufausgabe (18:03:39 bis 18:08:45), vor dem Einbau der Messung.
+ende	2026-10-25 18:08:45
+sekunden	305
+faelle	32
+starts	10

@@ -130,3 +130,9 @@ Formats** vorher wegwerfen:
 **Und:** eine Messung mit 18 von 20 Fehlalarmen ist keine Messung. Wer auf ihr
 Ergebnis hin **schreibt**, braucht vorher den Gegentest gegen den erlaubten
 Fall ([[schranke-gegentesten]]).
+
+## Nachtrag 25.10.2026 (CHRONIST): der PR-Haken las die eigene Commit-Nachricht
+
+`tools/haken-pr-lektor.pl` suchte in der ersten Fassung die Wortfolge `gh pr create` im ganzen Befehlstext. Um 10:32 MEZ wies er den Commit ab, der ihn selbst einführte — die Nachricht im Hier-Dokument erklärte, wogegen er schützt. Um 10:33 wies er auch die Korrektur ab, weil deren Ersatztext dieselbe Wortfolge enthielt; geschrieben wurde sie danach mit dem Write-Werkzeug (gemessen, Transkript `fa3529ec-…jsonl`). Dieselbe Ursache wie hier am 08.09.: die Schranke liest ihre eigene Begründung. Behoben: Hier-Dokumente, Here-Strings und Zeichenketten fallen vor der Suche weg; nach LEKTOR-57 zählen Zeichenketten hinter `-c`, `-Command` und `eval` wieder als ausgeführt.
+
+**How to apply, zusätzlich:** Das gilt nicht nur für Quelltext-Schranken, sondern auch für **Befehls-Haken**: erst den ausgeführten Teil vom zitierten trennen, dann suchen — und die Ausnahme sofort gegen einen Befehl testen, der den zitierten Teil doch ausführt (`bash -c "…"`).

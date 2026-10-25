@@ -123,6 +123,13 @@ if ($NurPruefen) {
 }
 
 # --- je Verzeichnis EIN Lauf ---------------------------------------------
+# Die Dauer gehoert in den Pruefbericht (Gregor am 25.10.2026: "miss auch,
+# wie lange der test in etwa dauert, das tragen wir bei den pruefberichten
+# ein"). Gemessen wird der ganze Lauf; geschrieben nach
+# Intern/pruefstand-dauer.txt, eine eigene Datei, damit sich das Format des
+# Ergebnisbuchs nicht aendert (Arbeitsweise/datenformat-aendern-heisst-alle-leser-messen.md).
+$uhr = [Diagnostics.Stopwatch]::StartNew()
+$starts = 0
 $bestanden = 0
 $fehl      = 0
 $meldungen = @()
@@ -172,6 +179,7 @@ foreach ($g in $gruppen) {
             }
             continue
         }
+        $starts++
         Write-Host ("    starte {0} mit {1} ({2} s, {3} Faelle)" -f $verz, (Split-Path -Leaf $eml), $sek, $hier.Count)
         & powershell -NoProfile -ExecutionPolicy Bypass -File $serie `
             -Freigabe $Freigabe -Eml $eml -Anzahl 1 -Verzeichnis $verz `
@@ -202,6 +210,7 @@ foreach ($g in $gruppen) {
             }
             $tlArgs += @('-MessenSkript', $skript)
         }
+        $starts++
         Write-Host ("    starte {0} ({1} s, {2} Faelle{3})" -f $verz, $sek, $hier.Count, $(if ($sch) { ", $sch" } else { '' }))
         $messtext = (& powershell -NoProfile -ExecutionPolicy Bypass -File $testlauf $tlArgs) -join "`n"
         $rc = $LASTEXITCODE
@@ -227,8 +236,20 @@ foreach ($g in $gruppen) {
         }
     }
 
-    if (Test-Path $log) { $logtext = [IO.File]::ReadAllText($log) }
-    if (Test-Path $ini) { $initext = [IO.File]::ReadAllText($ini) }
+    # Mit geteiltem Zugriff lesen: wird Eudora abgeschossen, haelt der
+    # sterbende Prozess die Datei noch einen Moment offen, und ReadAllText
+    # brach den ganzen Lauf mit einer Ausnahme ab (gemessen 25.10.2026, E-100).
+    function LiesGeteilt([string] $pfad) {
+        for ($v = 0; $v -lt 10; $v++) {
+            try {
+                $fs = New-Object IO.FileStream($pfad, [IO.FileMode]::Open, [IO.FileAccess]::Read, [IO.FileShare]::ReadWrite)
+                try { return (New-Object IO.StreamReader($fs)).ReadToEnd() } finally { $fs.Dispose() }
+            } catch { Start-Sleep -Milliseconds 500 }
+        }
+        return ''
+    }
+    if (Test-Path $log) { $logtext = LiesGeteilt $log }
+    if (Test-Path $ini) { $initext = LiesGeteilt $ini }
 
     if ($logtext -eq '') {
         # Positivprobe: ohne Protokoll hat nichts gemessen, und ein Fall,
@@ -268,6 +289,14 @@ foreach ($g in $gruppen) {
         $was = ''
         if ($f.Muss -ne '' -and $text.IndexOf($f.Muss, [StringComparison]::Ordinal) -lt 0) {
             $ok = $false; $was = "fehlt in {0}: {1}" -f $f.Quelle, $f.Muss
+            # Was das Messskript STATT der erwarteten Zeile meldete - sonst
+            # sagt ein rotes Ergebnis nicht, ob Eudora abstuerzte oder der
+            # Messweg nicht griff (gemessen 25.10.2026 an der E-97-Gegenprobe:
+            # nur "fehlt in messung", der Absturz stand erst in Exception.log).
+            if ($f.Quelle -eq 'messung' -and $messtext) {
+                $letzte = @($messtext -split "`n" | Where-Object { $_.Trim() } | Select-Object -Last 4)
+                $was += "`n             gemeldet: " + ($letzte -join "`n                       ")
+            }
         }
         if ($ok -and $f.DarfNicht -ne '' -and $text.IndexOf($f.DarfNicht, [StringComparison]::Ordinal) -ge 0) {
             $ok = $false; $was = "steht in {0}, darf nicht: {1}" -f $f.Quelle, $f.DarfNicht
@@ -342,5 +371,19 @@ $buchZeilen = @('# Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aender
 $buchZeilen += ($buch.Keys | Sort-Object | ForEach-Object { $buch[$_] })
 [IO.File]::WriteAllLines($buchdatei, [string[]]$buchZeilen, (New-Object Text.UTF8Encoding $false))
 Write-Host ("  Ergebnisbuch: {0} Faelle in Intern\pruefstand-buch.tsv ({1} in diesem Lauf)" -f $buch.Count, $liste.Count)
+
+$uhr.Stop()
+$dauer = [int]$uhr.Elapsed.TotalSeconds
+Write-Host ("  Dauer: {0} min {1:00} s fuer {2} Faelle, {3} Eudora-Starts" -f [int][math]::Floor($dauer / 60), ($dauer % 60), $liste.Count, $starts)
+# Nur ein VOLLER Lauf (ohne -Nur) ist die Dauer, die im Pruefbericht steht.
+if (-not $Nur) {
+    $dauerdatei = Join-Path (Split-Path -Parent $PSScriptRoot) 'Intern\pruefstand-dauer.txt'
+    $z = @('# Erzeugt von tools/pruefstand-lauf.ps1 - Dauer des letzten vollen Laufs.',
+           ("ende`t{0}" -f (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')),
+           ("sekunden`t{0}" -f $dauer),
+           ("faelle`t{0}" -f $liste.Count),
+           ("starts`t{0}" -f $starts))
+    [IO.File]::WriteAllLines($dauerdatei, [string[]]$z, (New-Object Text.UTF8Encoding $false))
+}
 
 exit $fehl

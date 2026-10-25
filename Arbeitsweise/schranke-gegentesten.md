@@ -340,3 +340,14 @@ LEKTOR-Baum 5 Dateien, die es wirklich nirgends gibt — die werden jetzt
 **namentlich** genannt, was die alte Fassung nicht tat.
 
 **Nachtrag 25.10.2026 — der Rückbau muss den Bau mitnehmen.** Nach der K2-Gegenprobe (`exit(0)` in `TestMain.cpp`) habe ich die Datei mit `cp -p` zurückkopiert: byte-gleich, aber mit dem **alten Zeitstempel**. MSBuild hielt `TestMain.obj` für aktuell, die EXE behielt das `exit(0)`, und `RunTests.cmd` meldete „Fehlgeschlagene Tests: 0“ nach 286 von 296. Gefunden nur, weil die Ergebniszeile fehlte. **How to apply:** nach jeder Gegenprobe an einer übersetzten Quelle `touch` auf die Datei und neu bauen, dann die **Zahl** der Tests gegen den Stand davor halten, nicht nur „0 rot“.
+
+## Nachtrag 25.10.2026 (CHRONIST): ein Haken, der nur aus der Wurzel getestet war
+
+`tools/haken-pr-lektor.pl` (PreToolUse, `.claude/settings.json`) wurde um 10:26 MEZ gebaut und in der Repo-Wurzel gegengetestet. Gemessen am selben Vormittag, Transkript `fa3529ec-…jsonl`:
+
+1. **Aus einem Unterverzeichnis blockierte er alles.** Eingetragen war `perl tools/haken-pr-lektor.pl`, relativ. Nach einem `cd …/Eudora71/Tests` um 10:38:10 meldete jeder weitere Bash-Aufruf *„PreToolUse:Bash hook error: … Can't open perl script "tools/haken-pr-lektor.pl""* — Perl gibt dafür **2** zurück, und 2 heißt für Claude Code „abweisen". Drei Aufrufe abgewiesen, bis `$CLAUDE_PROJECT_DIR` eingetragen war (10:38:22).
+2. **Drinnen hätte er durchgelassen.** Die Wurzel kam aus `cwd` des Aufrufs; aus `Eudora71/` fand er `rollen-faellig.pl` nicht, las die leere Antwort als „nicht fällig" und gab 0. Ebenso ließ unlesbares JSON vor der Nachbesserung durch. Behoben über `FindBin` und Rückfall auf den Rohtext (*fail-closed*).
+
+Der gleiche Fehler hat also beide Richtungen gleichzeitig: die Hülle schloss zu viel, der Kern zu wenig.
+
+**How to apply, zusätzlich:** Jeder neue Haken wird gegengetestet (a) aus der Wurzel, (b) **aus einem Unterverzeichnis**, (c) mit fehlendem oder kaputtem Hilfswerkzeug und (d) mit unlesbarer Eingabe. Für (c) und (d) gilt: abweisen und den Grund nennen, nie stumm durchlassen ([[ausbleiben-ist-kein-befund]]). Die Hakenzeile in `settings.json` nennt ihr Skript über `$CLAUDE_PROJECT_DIR`, nie relativ.

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-10-16T08:54:47.888Z
+  modified: 2026-10-25T17:20:07.952Z
 ---
 
 Schranke: tools/rollen-faellig.pl UND tools/pruefe-doku-takt.pl, beide in tools/paket-bauen.ps1 eingehängt (seit 11.09.2026)
@@ -203,3 +203,21 @@ ihn in `ausser` ein.
 ## Nachtrag 25.10.2026: die Regel vergessen und als neu angeboten
 
 Gregor fragte: *„prüfer und lektor laufen immer wieder im hintergrund, sobald es was neuest gemerged wurde?"* Ich antwortete „nein, nicht von selbst" und bot die Regel als **Vorschlag** an. Gregor: *„die regel gibt es bereits, hast du mir früher schon zugesichert. jetzt doch nicht?"* — PRs #170, #171 und #172 gingen ohne LEKTOR-Lauf vor dem Push heraus. **Vor dem Satz „Regel X gibt es nicht" diese Datei aufschlagen.** Und: vor `gh pr create` steht der LEKTOR-Lauf über den Zweig, mit seinem Bericht im selben PR.
+
+## Nachtrag 24./25.10.2026 (CHRONIST): der CHRONIST sah zwei Tage lang „aktuell" aus
+
+Zeiten MEZ, Transkript `fa3529ec-…jsonl`.
+
+Gregor am 25.10.2026 um 18:07: *„wenn es was zum mergen gibt, melde dich. lektor und prüfer sind durch? auch der chronist?"* Der CHRONIST war seit dem 23.10.2026 13:03 MESZ (`d1760537`, `CHRONIST-2026-10-23.md`) nicht gelaufen; gestartet wurde er um 18:08, **eine Minute nach der Frage** — dasselbe Maß wie am 08.09.
+
+**Warum die Schranke schwieg (gemessen):** `tools/rollen-faellig.pl` meldete um 16:45 *„CHRONIST aktuell (Bericht 0adceca, seither 0 Dateien in seinem Bereich)"*. `0adceca` ist „LEKTOR-59 eingeholt" — kein CHRONIST-Bericht. Vorher hielt das Werkzeug `dbe4684` (Regressionstests), `507734c` (E-142-Einstufung) und `3b48d9b` (Prüfbericht) für CHRONIST-Berichte. Seit `d1760537` haben **20 Commits** eine Datei unter `Arbeitsweise/` berührt, jeder davon setzte den Zähler zurück; gezählt gegen den echten letzten Bericht wären **59 Dateien** in seinem Bereich fällig gewesen.
+
+Der Mechanismus, belegt am Quelltext:
+- `tools/rollen-faellig.pl:140` — `bericht => 'Arbeitsweise/*.md'`: jede `.md` unter `Arbeitsweise/` gilt als CHRONIST-Bericht.
+- `tools/rollen-faellig.pl:152` — `git log -1 -- $r->{bericht}`: der jüngste Commit, der irgendeine solche Datei berührt.
+- `tools/hooks-einrichten.sh:197` — `schranke lehren-spiegeln.pl` im Commit-Haken spiegelt und **stagt** jede geänderte Gedächtnisdatei nach `Arbeitsweise/`. Jeder Commit nach einer neuen Lehre des Hauptagenten wird damit zum „CHRONIST-Bericht".
+- Der Kopfkommentar `tools/rollen-faellig.pl:29-30` verspricht etwas anderes: *„der juengste Commit, der die hoechste vorhandene Berichtsdatei der Rolle angelegt oder geaendert hat"*. Der Code sucht nicht die höchste Datei.
+
+**Behebung (nicht von mir gemacht, Vorschlag):** `bericht => 'Arbeitsweise/CHRONIST-*.md'`, Gegenprobe in beide Richtungen: gegen HEAD vom 25.10. muss der CHRONIST fällig sein (59 Dateien seit `d1760537`), nach einem Commit, der nur eine gespiegelte Lehre ändert, ebenfalls; nach einem Commit mit neuem `CHRONIST-*.md` aktuell. Siehe [[messziel-am-merkmal-erkennen]].
+
+**LEKTOR und PRUEFER an denselben Tagen:** Gregor musste am 25.10. um 10:22 fragen (*„prüfer und lektor laufen immer wieder im hintergrund, sobald es was neuest gemerged wurde?"*), um 10:25 *„wsa hilft mir, daß du den fehler bestätigst, wenn du ihn jedes mal erneut wiederholst?"* und um 10:26 *„ich habe den eindruck, du hast deiene eigenen tools nicht wirklich im griff! verbessere es!"*. Die Antwort war diesmal ein Werkzeug statt eines Vorsatzes: `tools/haken-pr-lektor.pl` als PreToolUse-Haken. Gemessen: Live-Probe um 10:56 mit fälligem LEKTOR, Rückgabe 2 (*„KEIN PR: LEKTOR ist faellig …"*). Um 11:00 wurde kein PR versucht, sondern gleich ein Kurzlauf des LEKTOR gestartet, weil er nach späten Änderungen an README, `CLAUDE.md` und `AGENTEN.md` wieder fällig war — ob das am Haken lag oder am Vorsatz, ist nicht zu trennen (belegt, nicht gemessen). Seine zwei Kinderkrankheiten stehen in [[schranke-gegentesten]] und [[schranke-liest-nur-code]]. **Für den CHRONIST gibt es keinen solchen Haken** — er hängt weiter an `rollen-faellig.pl`, und das ist blind (oben).

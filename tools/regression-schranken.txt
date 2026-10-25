@@ -89,3 +89,7 @@ E-74 | pruefe-filter-serverloeschung.pl | Eudora71/Eudora/JunkMail.cpp | \t\t\t 
 # die Regel greift zu Recht nicht. Das war die falsche Probe, nicht die
 # falsche Schranke.)
 E-43 | pruefe-waechter.pl | Eudora71/OTShim/OTShim_Werkzeugleiste.h | #include "OTShim.h"\t\t\t// SECControlBar (ERSATZ) und __SBARCORE_H__ ==> #ifndef __SBARCORE_H__\n#include "sbarcore.h"\n#endif
+
+# E-51 (25.10.2026): die Ziehschleife wartete ohne Zeitschranke - kam keine
+# Nachricht, war Eudora tot. Regel 1b der Schranke (vorher blind: Rueckgabe 0).
+E-51 | pruefe-nachrichtenschleife.pl | Eudora71/OTShim/OTShim.cpp | ::MsgWaitForMultipleObjects(0, NULL, FALSE, 100, QS_ALLINPUT); ==> ::WaitMessage();

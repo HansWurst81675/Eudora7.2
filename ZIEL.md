@@ -15,6 +15,30 @@ eingebaut sein müssen. **7.2.1 ist die erste Fassung ohne Vorbehalt für den
 täglichen Gebrauch.** Neue Funktionen gehören nicht dazu. Maßstab sind alle
 neun Kriterien unten, und zwar **erfüllt**, nicht „fast“.
 
+> **Gregor am 25.10.2026:** *„also ein release 7.2.1.x ist eine version, die
+> wir jedem, der es benutzen möchte, ohne einschränkungen geben können. bis
+> auf die paar themen, die in readme stehen. wir haben darin also alles
+> implementiert und getestet. die tests ergebnisse müssen im repo
+> dokumentiert werden. die tests selbst können erst später nachgeliefert
+> werden."*
+
+Daraus folgt für jedes 7.2.1.x:
+
+1. **Weitergabe ohne Einschränkung** — außer den Punkten, die die
+   [README](README.md) ausdrücklich nennt. Was dort nicht steht, muss gehen.
+2. **Alles implementiert und getestet** — getestet heißt hier: am Paket
+   gelaufen, von mir am Prüfstand und von Gregor an seinem lokalen Test.
+3. **Die Testergebnisse stehen im Repo** — [Releases/PRUEFBERICHT.md](Releases/PRUEFBERICHT.md)
+   für alles Automatische (Unit-Tests, Schranken, Prüfstand, je mit Bau und
+   Dauer) und die Ergebnisse von Gregors Test je Kriterium. Ein Release ohne
+   dokumentierte Ergebnisse gibt es nicht.
+4. **Fehlende automatische Tests** dürfen nachgeliefert werden; die
+   Release-Notizen nennen den Rückstand (siehe *Regressionstests* unten).
+
+Zwischenstände wie **7.2.0.123** sind Testpakete für Gregors lokalen Test,
+keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
+`v7.2.1.<n>`.
+
 <!-- ziel-stand: Anfang -->
 
 **Stand: 19 von 19 erfüllt, 0 offen.** Diese Übersicht wird aus den
@@ -40,10 +64,10 @@ beschädigt, steht oben.
 | Post wird verfälscht | [E-69](Intern/BEFUNDE.md#e-69) | Filterlauf bricht im Release lautlos ab, meldet Erfolg (**behoben in 7.2.0.106, nachgebessert in 7.2.0.109 und 7.2.0.110 – ein Sammeleintrag statt einer Meldung je Nachricht, [PRÜFER-36](Befunde/PRUEFER-36.md) P3 und [PRÜFER-38](Befunde/PRUEFER-38.md) R1–R3; am Prüfstand gemessen, von Gregor noch nicht bestätigt**) |
 | Post wird verfälscht | [E-101](Intern/BEFUNDE.md#e-101) | gespeicherte Datei in anderen Programmen unbrauchbar (**behoben, soweit es Datenverlust und Gregors Symptom betrifft** — [P-28](Befunde/PRUEFER-14.md#p-28) ist in 7.2.0.69 behoben und von [PRÜFER-37](Befunde/PRUEFER-37.md) in 23 Fällen gegengeprüft, die ergänzte Kopfzeile am 23.10.2026 an 7.2.0.120 an einer gespeicherten HTML-Nachricht belegt. **Nicht behoben, aber ohne Schaden:** F2 — der neue **Block 4a** (`msgutils.cpp:4276-4390`) läuft auf dem einzigen Aufrufweg nie, weil `StripTabooHeaders` die `Content-`-Zeilen vorher entfernt; Schwere laut PRÜFER-37 *„hoch (Wirkung), kein Schaden"*. Dritter Teil eingebaut in 7.2.0.107, nie geschnürt; **F1, F3 und F4 sind in 7.2.0.110 behoben**, offen bleibt allein F2) |
 | Kriterium 2 | [E-105](Intern/BEFUNDE.md#e-105) | versteckte Abschnitte doppelt (**behoben in 7.2.0.88, von Gregor am 22.10.2026 an 1.0.120 bestätigt**) |
-| Kriterium 2 | [E-77](Intern/BEFUNDE.md#e-77) | IMAP-Ordnernamen mit Umlauten roh |
-| Kriterium 2 | [E-113](Intern/BEFUNDE.md#e-113) | breite Bilder laufen rechts hinaus |
-| Kriterium 2 | [E-119](Intern/BEFUNDE.md#e-119) | `data:`-Bilder als grauer Kasten |
-| Kriterium 2 | [E-116](Intern/BEFUNDE.md#e-116) | `35px` falsch gelesen |
+| Kriterium 2 | [E-77](Intern/BEFUNDE.md#e-77) | IMAP-Ordnernamen mit Umlauten roh (**behoben**, auf `main` seit PR #165, das Umbenennen seit PR #168; kommt mit dem Testpaket 7.2.0.123 und dem Release 7.2.1.x; am Prüfstand erst rot, dann grün, auch das Umbenennen; Regressionstests `TestE77.cpp` und Prüfstandsfälle `E-77a` bis `E-77d`, zuletzt grün am 25.10.2026 auf `796369bb`; **von Gregor noch nicht bestätigt**) |
+| Kriterium 2 | [E-113](Intern/BEFUNDE.md#e-113) | breite Bilder laufen rechts hinaus (**behoben**, Variante A — Gregor: *„paßt so"*; auf `main` seit PR #164, kommt mit 7.2.0.123 und 7.2.1.x; am Prüfstand erst rot, dann grün; Regressionstests `TestE113.cpp` und Prüfstandsfälle `E-113p`, `E-113b`, `E-113b2`, zuletzt grün am 25.10.2026; **von Gregor noch nicht bestätigt**) |
+| Kriterium 2 | [E-119](Intern/BEFUNDE.md#e-119) | `data:`-Bilder als grauer Kasten (**behoben**, dazu der Datenverlust beim Löschen einer Nachricht, PRÜFER-49 K5; auf `main` seit PR #163, K5 seit PR #170, kommt mit 7.2.0.123 und 7.2.1.x; am Prüfstand erst rot, dann grün; Prüfstandsfälle `E-119a` bis `E-119d`, zuletzt grün am 25.10.2026; **von Gregor noch nicht bestätigt**) |
+| Kriterium 2 | [E-116](Intern/BEFUNDE.md#e-116) | `35px` falsch gelesen (**behoben**, seit PR #157 auf `main`, kommt mit 7.2.0.123 und 7.2.1.x; am laufenden Programm nicht nachstellbar — so geschlossen auf Gregors Entscheidung vom 24.10.2026; Regressionstest `TestE116.cpp`) |
 | Kriterium 2 | [E-95](Intern/BEFUNDE.md#e-95), [E-96](Intern/BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Doctolib- und FairToner-Nachricht — **am 14.10.2026 an 1.0.87 bestätigt** |
 | Kriterium 4 | [E-111](Intern/BEFUNDE.md#e-111) | `resolve_URL` schreibt ein Byte hinter das Feld (**behoben in 7.2.0.121**, 246 Tests mit Gegenprobe; ausgelöst gesehen wurde es nie) |
 | Kriterium 4 | [E-14](Intern/BEFUNDE.md#e-14) | Zusicherung beim Start auf frischem Mailverzeichnis (**erledigt am 23.10.2026**: aus neun Mailverzeichnissen gemessen, 59 Sitzungen, 9 Erasing-Zeilen — je eine, immer in der ersten Sitzung. Kein Fehler, der normale erste Lauf) |
@@ -54,7 +78,7 @@ zurückgestellte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/
 
 **Vor dem Release:** die Tabelle der Kriterien neu messen (ihre Urteile
 stammen von 7.2.0.55), dann Gregors Test aller neun Kriterien an einem frischen
-Paket, erst danach die Marke. Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); ob die Marke auf GitHub `v7.2.1.<n>` oder weiter `v1.0.<n>` heißt, ist offen. `release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` ([L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
+Paket, erst danach die Marke. Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` und wird vorher umgestellt ([L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
 
 
 ## Regressionstests — Anordnung vom 22.10.2026
