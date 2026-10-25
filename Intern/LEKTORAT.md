@@ -1805,6 +1805,17 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Siebzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 45e704f4, 25.10.2026 (Bericht: `Befunde/LEKTOR-65.md`)
+
+Geprüft nur die `.md`-Änderungen aus `346a5ec0`, `424966f6`, `0074f287`,
+`39d348d8`: E-137 nachgebessert nach PRÜFER-55, LEKTOR-64 eingeholt,
+Prüfbericht 302/19/32 auf `424966f6`. L-64.1 und L-64.2 sind erledigt, die
+E-137-Beschreibung deckt sich mit dem Code, die Prüfbericht-Zahlen gehen auf
+(gemessen). **Falsch ist eine Aussage:** `BEFUNDE.md:390` nennt die Spurmarke
+noch mit „angedockte", der Code schreibt sie seit `424966f6` ohne
+([L-65.1](../Befunde/LEKTOR-65.md#l-65.1)). Ein Hinweis
+([L-65.2](../Befunde/LEKTOR-65.md#l-65.2)). Keine neue Frage an Gregor.
+
 ## Neunundsechzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 206b3a08, 25.10.2026 (Bericht: `Befunde/LEKTOR-64.md`)
 
 Geprüft nur `b5d3bcf9`, `ed0d53a2`, `ec468df6`, `2742bd6e`: E-137 behoben,
