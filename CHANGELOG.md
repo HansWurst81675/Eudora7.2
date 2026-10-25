@@ -95,7 +95,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122 auf `main`, kommt mit dem Testpaket 7.2.0.123 — Strg+W beendet Eudora nicht mehr ([E-137](Intern/BEFUNDE.md#e-137)), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+## Seit 7.2.0.122 auf `main`, kommt mit dem Testpaket 7.2.0.123 — Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137), noch nicht am Programm gemessen), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
 
 **Auf `main` seit PR #157 (23.10.2026) bis PR #174 (25.10.2026), aber noch in
 keinem Paket zum Herunterladen.** Das Programm meldet deshalb weiter die
@@ -105,8 +105,8 @@ mit dem Release **7.2.1.<n>**. Beim Bau des Testpakets wird dieser Abschnitt
 zu 7.2.0.123.
 
 * **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W in einer angedockten Leiste (Adressbuch,
-  Filter, …) beendet nicht mehr ganz Eudora, sondern versteckt nur diese
-  Leiste** — wie Rechtsklick auf den Rahmen → *Hide*; angedockt wie schwebend.
+  Filter, …) soll nicht mehr ganz Eudora beenden, sondern nur diese Leiste
+  verstecken** (eingebaut, am laufenden Programm noch nicht gemessen) — wie Rechtsklick auf den Rahmen → *Hide*; angedockt wie schwebend.
   Danach geht der Schwerpunkt an das aktive Fenster, ein zweites Strg+W
   schließt also wie gewohnt das Postfach. Regressionstest am Quelltext
   (302 Tests, 302 bestanden); am laufenden Programm prüft es Gregor im Testpaket.

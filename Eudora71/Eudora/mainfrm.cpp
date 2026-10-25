@@ -3405,6 +3405,45 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	TRACE("CMainFrame::OnCommand -- got command %d (0x%X)\n", wCommandID, wCommandID);
 #endif
 
+	//
+	// BEFUND E-137: Strg-W (ID_FILE_CLOSE) mit dem Eingabeschwerpunkt in
+	// einer ANGEDOCKTEN Wazoo-Leiste (Adressbuch, Filter, ...) beendete ganz
+	// Eudora. Gregor am 23.10.2026: "das filter fenster (ctrl-L) kann man
+	// nicht mit ctrl-w wie jedes andere mail-fenster schliessen, dabei wird
+	// ganz eudora geschlossen." Am 25.10.2026 eingegrenzt: angedockt beendet
+	// es Eudora, schwebend schliesst es nur die Leiste. Gregors Vorgabe:
+	// "sollte z.b. nur das filter fenster geschlossen werden".
+	//
+	// DER WEG (PRUEFER-56 K1, am Quelltext belegt): unten gibt diese Funktion
+	// den Befehl an das Wazoo-Fenster mit dem Schwerpunkt; Filter und
+	// Adressbuch reichen ihn an ihr Dokument, und CDoc::OnFileClose
+	// (doc.cpp) schickt WM_CLOSE an den Rahmen der Ansicht. Angedockt ist
+	// dieser Rahmen CMainFrame - Eudora geht zu. Schwebend ist es der kleine
+	// Rahmen der Leiste - nur sie geht zu. Ist ein Postfach offen, nimmt bei
+	// den anderen Registern zuerst das aktive MDI-Fenster den Befehl.
+	//
+	// Deshalb wird Strg-W HIER abgefangen, vor jeder Weitergabe: hat eine
+	// sichtbare Wazoo-Leiste den Schwerpunkt, bekommt sie ID_SEC_HIDE - genau
+	// das, was der Rechtsklick auf den Rahmen -> Hide ausloest
+	// (SECControlBar::OnHide, OTShim.cpp) -, angedockt wie schwebend. Danach
+	// bekommt das aktive MDI-Fenster den Schwerpunkt; sonst bliebe er in der
+	// unsichtbaren Leiste (PRUEFER-55 K3). Die erste Fassung sass in
+	// OnCmdMsg und wurde nie erreicht (PRUEFER-56 K1).
+	//
+	if (wCommandID == ID_FILE_CLOSE)
+	{
+		CWazooBar* pFokusLeiste = m_WazooBarMgr.GetWazooBarWithFocus();
+		if (pFokusLeiste && pFokusLeiste->GetSafeHwnd() && pFokusLeiste->IsWindowVisible())
+		{
+			PutDebugLog(DEBUG_MASK_MISC, "E-137 Strg-W: Wazoo-Leiste wird versteckt statt Eudora zu beenden");
+			pFokusLeiste->PostMessage(WM_COMMAND, ID_SEC_HIDE, 0);
+			CMDIChildWnd* pAktiv = MDIGetActive();
+			if (pAktiv && pAktiv->IsWindowVisible())
+				pAktiv->SetFocus();
+			return TRUE;
+		}
+	}
+
 	CWazooWnd* pWazooWnd = GetWazooWindowWithFocus();
 	if (pWazooWnd)
 	{
@@ -3456,54 +3495,6 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 ////////////////////////////////////////////////////////////////////////
 BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
 {
-	//
-	// BEFUND E-137: Strg-W (ID_FILE_CLOSE) mit dem Eingabeschwerpunkt in
-	// einer ANGEDOCKTEN Wazoo-Leiste (Adressbuch, Filter, ...) beendete ganz
-	// Eudora. Gregor am 23.10.2026: "das filter fenster (ctrl-L) kann man
-	// nicht mit ctrl-w wie jedes andere mail-fenster schliessen, dabei wird
-	// ganz eudora geschlossen." Am 25.10.2026 eingegrenzt: angedockt beendet
-	// es Eudora, nicht angedockt (schwebend) schloss es die Leiste. Gregors
-	// Vorgabe: "sollte z.b. nur das filter fenster geschlossen werden".
-	//
-	// Wer Eudora beendete, ist nicht gemessen; auf dem Weg nimmt keiner der
-	// Behandler den Befehl fuer eine Leiste an (BEFUNDE.md E-137). Deshalb
-	// wird er HIER abgefangen, bevor er weiter geroutet wird: eine sichtbare
-	// Leiste mit dem Schwerpunkt bekommt ID_SEC_HIDE - genau das, was der
-	// Rechtsklick auf den Rahmen -> Hide ausloest (SECControlBar::OnHide,
-	// OTShim.cpp) -, angedockt wie schwebend. Eine Leiste als MDI-Fenster gibt
-	// es in diesem Bau nicht (IsMDIChild ist in der Ersatzschicht immer FALSE,
-	// PRUEFER-55 K1); die Abfrage bleibt fuer den Fall, dass Stufe 2 der
-	// Ersatzschicht sie nachliefert - dann schliesst
-	// QCControlBarWorksheet::OnCmdMdiClose (workbook.cpp) sie selbst.
-	//
-	// Danach bekommt das aktive MDI-Fenster den Schwerpunkt; sonst bliebe er
-	// in der unsichtbaren Leiste, und ein zweites Strg-W liefe ins Leere
-	// (PRUEFER-55 K3).
-	//
-	if (nID == ID_FILE_CLOSE && (nCode == CN_COMMAND || nCode == CN_UPDATE_COMMAND_UI))
-	{
-		CWazooBar* pFokusLeiste = m_WazooBarMgr.GetWazooBarWithFocus();
-		if (pFokusLeiste && pFokusLeiste->GetSafeHwnd() && pFokusLeiste->IsWindowVisible()
-			&& !pFokusLeiste->IsMDIChild())
-		{
-			if (nCode == CN_UPDATE_COMMAND_UI)
-			{
-				if (pExtra)
-					((CCmdUI*) pExtra)->Enable(TRUE);
-				return TRUE;
-			}
-			if (pHandlerInfo == NULL)
-			{
-				PutDebugLog(DEBUG_MASK_MISC, "E-137 Strg-W: Wazoo-Leiste wird versteckt statt Eudora zu beenden");
-				pFokusLeiste->PostMessage(WM_COMMAND, ID_SEC_HIDE, 0);
-				CMDIChildWnd* pAktiv = MDIGetActive();
-				if (pAktiv && pAktiv->IsWindowVisible())
-					pAktiv->SetFocus();
-			}
-			return TRUE;
-		}
-	}
-
 	//
 	// Root around to see if any Wazoo window has focus.
 	//
