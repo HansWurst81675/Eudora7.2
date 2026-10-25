@@ -90,6 +90,7 @@ eine Datei liest, liest diese.
 | [einwurf-ist-ein-messwert](einwurf-ist-ein-messwert.md) | 54 Prozent von Gregors Nachrichten kamen mitten in den laufenden Zug - das misst fehlenden Zwischenstand, nicht Beteiligung |
 | [entscheidung-e148-release-7-2-0-123](entscheidung-e148-release-7-2-0-123.md) | Gregor 25.10.2026 - E-148 (eMudhra-Wurzeln) kommt mit Paket 7.2.0.123 als Release, nach seinem lokalen Test; nicht bis 7.2.1 warten |
 | [entscheidung-kritische-nicht-release-blocker](entscheidung-kritische-nicht-release-blocker.md) | Gregor 23.10.2026 - die sechs offenen \"kritischen\" Befunde E-122, E-123, E-124, E-126, E-129, E-136 halten 7.2.1.0 NICHT auf (\"unkritisch, randfaelle\"); noch nicht im Repo eingetragen |
+| [entscheidung-rootcerts-logzeile](entscheidung-rootcerts-logzeile.md) | Gregor 25.10.2026 - Eudora schreibt eine Zeile in eudora.log, aus welchem Verzeichnis rootcerts.p7b geladen wurde (Mailverzeichnis vor Programmverzeichnis) |
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |
 | [erfolgsmeldung-aus-dem-ergebnis](erfolgsmeldung-aus-dem-ergebnis.md) | Ein Skript darf Erfolg nur melden, wenn es das Ergebnis gemessen hat - mein Perl-Einzeiler schrieb 'eingefuegt', ohne etwas einzufuegen |
 | [erlaubnis-nicht-hineinlesen](erlaubnis-nicht-hineinlesen.md) | Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern |
