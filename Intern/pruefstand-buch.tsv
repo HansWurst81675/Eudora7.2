@@ -1,6 +1,7 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern. Je Fall der letzte Lauf.
 # kennung	ergebnis	zeit	pruefstand	bau	gemessen
 BILD-lauf	ok	2026-10-25 09:37:12	C:\Temp\EBILD	Eudora 7.2.0.122 / Paket 1.0.122+9402f257 2026-10-25 09:31	BILD ERGEBNIS abgeholt=7 geoeffnet=7 weitergeleitet=7
+E-100	ok	2026-10-25 17:16:13	C:\Temp\E97	Eudora 7.2.0.122 / Paket 1.0.122+1e85186c 2026-10-25 17:08	E100 ERGEBNIS dialog=1 lebt=1 ini=ok
 E-103p	ok	2026-10-25 09:37:12	C:\Temp\EBILD	Eudora 7.2.0.122 / Paket 1.0.122+9402f257 2026-10-25 09:31	E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64
 E-105p	ok	2026-10-25 09:37:12	C:\Temp\EBILD	Eudora 7.2.0.122 / Paket 1.0.122+9402f257 2026-10-25 09:31	E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet
 E-106p	ok	2026-10-25 09:37:12	C:\Temp\EBILD	Eudora 7.2.0.122 / Paket 1.0.122+9402f257 2026-10-25 09:31	E-106 groesser als angegeben: attr=35x35 quelle=330x327
@@ -29,3 +30,4 @@ E-77a	ok	2026-10-25 09:37:12	C:\Temp\E77	Eudora 7.2.0.122 / Paket 1.0.122+9402f2
 E-77b	ok	2026-10-25 09:37:12	C:\Temp\E77	Eudora 7.2.0.122 / Paket 1.0.122+9402f257 2026-10-25 09:31	E-77 Ordnername: server="Entw&APw-rfe"
 E-77c	ok	2026-10-25 09:37:12	C:\Temp\E77	Eudora 7.2.0.122 / Paket 1.0.122+9402f257 2026-10-25 09:31	E-77 Ordnername: server="Gel&APY-scht"
 E-77d	ok	2026-10-25 09:37:12	C:\Temp\E77U	Eudora 7.2.0.122 / Paket 1.0.122+9402f257 2026-10-25 09:31	E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0
+E-97	FEHL	2026-10-25 17:19:52	C:\Temp\E97	Eudora 7.2.0.122 / Paket 1.0.122+1e85186c* 2026-10-25 17:17	fehlt in messung: E97 ERGEBNIS dialog=1 lebt=1 datei=1
