@@ -1805,6 +1805,19 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Neunundsechzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 206b3a08, 25.10.2026 (Bericht: `Befunde/LEKTOR-64.md`)
+
+Geprüft nur `b5d3bcf9`, `ed0d53a2`, `ec468df6`, `2742bd6e`: E-137 behoben,
+E-147 neu, Berichtigungen aus LEKTOR-63, Prüfbericht 302/19/32. Die Zitate
+aus Issue #102, die E-137-Codestellen und die Prüfbericht-Zahlen stimmen
+(gemessen). **Falsch sind zwei Aussagen:** `WEITERMACHEN.md:135` nennt
+E-137 noch als nächsten Schritt, obwohl `ed0d53a2` es behoben hat
+([L-64.1](../Befunde/LEKTOR-64.md#l-64.1)), und E-147 nennt Rays
+BSD-3-Clause „dieselbe wie unser Repo", obwohl unsere einen
+Patentausschluss trägt ([L-64.2](../Befunde/LEKTOR-64.md#l-64.2)); die
+Erlaubnis zum Einbau bleibt davon unberührt. Ein Hinweis
+([L-64.3](../Befunde/LEKTOR-64.md#l-64.3)). Keine neue Frage an Gregor.
+
 ## Achtundsechzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 900a2312, 25.10.2026 (Bericht: `Befunde/LEKTOR-63.md`)
 
 Gregor fragte, was aus „keine Lügen auf main" geworden ist. Geprüft sind nur
