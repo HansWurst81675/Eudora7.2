@@ -199,3 +199,7 @@ gefunden (LEKTOR-22).
 **How to apply:** Eine Datei, die ein Werkzeug als Nebenwirkung schreibt, gehört
 nicht in den Bereich einer Rolle. Wer einen neuen Protokollschreiber baut, trägt
 ihn in `ausser` ein.
+
+## Nachtrag 25.10.2026: die Regel vergessen und als neu angeboten
+
+Gregor fragte: *„prüfer und lektor laufen immer wieder im hintergrund, sobald es was neuest gemerged wurde?"* Ich antwortete „nein, nicht von selbst" und bot die Regel als **Vorschlag** an. Gregor: *„die regel gibt es bereits, hast du mir früher schon zugesichert. jetzt doch nicht?"* — PRs #170, #171 und #172 gingen ohne LEKTOR-Lauf vor dem Push heraus. **Vor dem Satz „Regel X gibt es nicht" diese Datei aufschlagen.** Und: vor `gh pr create` steht der LEKTOR-Lauf über den Zweig, mit seinem Bericht im selben PR.
