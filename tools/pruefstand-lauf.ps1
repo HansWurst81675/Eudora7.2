@@ -383,7 +383,9 @@ if (-not $Nur) {
            ("sekunden`t{0}" -f $dauer),
            ("faelle`t{0}" -f $liste.Count),
            ("starts`t{0}" -f $starts))
-    [IO.File]::WriteAllLines($dauerdatei, [string[]]$z, (New-Object Text.UTF8Encoding $false))
+    # Nur LF, wie die anderen Dateien in Intern/ (die erste Fassung schrieb
+    # CRLF, pruefe-bytes.pl sah danach eine komplett neu geschriebene Datei).
+    [IO.File]::WriteAllText($dauerdatei, (($z -join "`n") + "`n"), (New-Object Text.UTF8Encoding $false))
 }
 
 exit $fehl
