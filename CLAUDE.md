@@ -10,8 +10,16 @@ steht in [Arbeitsweise/README.md](Arbeitsweise/README.md).
 perl tools/offene-befunde.pl
 ```
 
-Das nennt jeden Befund, der in [BEFUNDE.md](Intern/BEFUNDE.md) als offen steht, und
-gleicht ihn gegen [WEITERMACHEN.md](Intern/WEITERMACHEN.md) ab.
+Das zählt die Befunde, die in [BEFUNDE.md](Intern/BEFUNDE.md) als offen stehen, und
+gleicht sie gegen [WEITERMACHEN.md](Intern/WEITERMACHEN.md) ab; die Liste mit
+Kennung und Klartext steht dort im erzeugten Block.
+
+**Seit dem 25.10.2026 läuft das von selbst:** der `SessionStart`-Haken in
+`.claude/settings.json` fährt `tools/sitzungsbeginn.pl` — offene Befunde **mit
+Kennung**, fällige Rollen, Ungesichertes, laufende Agenten. Die Ausgabe steht
+am Anfang des Kontexts; sie ist zu **lesen**, nicht nur zu empfangen. Ein
+zweiter Haken (`tools/haken-pr-lektor.pl`) weist `gh pr create` ab, solange
+der LEKTOR fällig ist oder noch läuft.
 
 **Warum das an erster Stelle steht.** Gregor am 14.09.2026:
 

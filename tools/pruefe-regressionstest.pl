@@ -56,10 +56,29 @@ unless (defined $befunde) {
 }
 
 # --- Welche Kennungen nennt der Pruefstand? -------------------------------
+# NUR CODE ZAEHLT, KEIN KOMMENTAR (25.10.2026, PRUEFER-50 K4). Bis hierher
+# wurde der ganze Text der Testdateien durchsucht - eine Kennung, die nur in
+# einem Kommentar stand ("siehe auch E-108"), galt als getestet. Gemessen:
+# sieben Kennungen waren so "gedeckt", darunter E-108 (kritisch, Absturz beim
+# Antworten) ohne jeden Test. Zeichenketten bleiben stehen: Testnamen
+# (TT_BeginTest("E-27 ...")) und Pruefmeldungen sind Teil des Tests.
+sub ohne_kommentare {
+    my ($t) = @_;
+    my $aus = '';
+    while (length $t) {
+        if    ($t =~ s/^("(?:[^"\\\n]|\\.)*")//s)  { $aus .= $1 }        # Zeichenkette
+        elsif ($t =~ s/^('(?:[^'\\\n]|\\.)*')//s)  { $aus .= $1 }        # Zeichen
+        elsif ($t =~ s{^//[^\n]*}{}s)             { }                    # Zeilenkommentar
+        elsif ($t =~ s{^/\*.*?\*/}{ }s)           { }                    # Blockkommentar
+        elsif ($t =~ s{^([^"'/]+|/)}{}s)          { $aus .= $1 }
+        else  { $aus .= substr($t, 0, 1, '') }
+    }
+    return $aus;
+}
 my $tests = '';
 for my $f (glob("$wurzel/Eudora71/Tests/*.cpp")) {
     my $t = lies($f);
-    $tests .= $t if defined $t;
+    $tests .= ohne_kommentare($t) if defined $t;
 }
 
 # DIE OBERFLAECHENFAELLE ZAEHLEN AUCH (22.10.2026, PRUEFER Fund 5).
@@ -96,11 +115,27 @@ for my $f (glob("$wurzel/Eudora71/Tests/*.cpp")) {
 {
     my $liste = lies("$wurzel/tools/regression-schranken.txt");
     my $haken = lies("$wurzel/tools/hooks-einrichten.sh") // '';
+    # NUR WAS ZULETZT GEMESSEN ABWIES (25.10.2026, PRUEFER-50 K12). Bis
+    # hierher zaehlte die Zeile in regression-schranken.txt, sobald die
+    # Schranke im Haken hing - ob die Rueckfallprobe HEUTE noch rot wird,
+    # fragte niemand. Jetzt zaehlt eine Kennung nur, wenn das Testbuch des
+    # Pruefberichts (Releases/pruefbericht-tests.tsv, von tools/pruefbericht.pl
+    # mit schranken-gegenprobe.pl gemessen) fuer sie keine rote und
+    # mindestens eine gruene Schrankenzeile fuehrt.
+    my (%schranke_ok, %schranke_rot);
+    my $buch = lies("$wurzel/Releases/pruefbericht-tests.tsv") // '';
+    for my $z (split /\r?\n/, $buch) {
+        my @f = split /\t/, $z;
+        next unless @f >= 3 and $f[0] eq 'schranke';
+        my ($k) = $f[1] =~ /^(\S+)/;
+        if ($f[2] eq 'ok') { $schranke_ok{$k} = 1 } else { $schranke_rot{$k} = 1 }
+    }
     if (defined $liste) {
         for my $z (split /\n/, $liste) {
             next if $z =~ /^\s*(#|$)/;
             my ($k, $s) = map { s/^\s+|\s+$//gr } (split /\|/, $z)[0, 1];
             next unless defined $s and $haken =~ /^schranke \Q$s\E\b/m;
+            next unless $schranke_ok{$k} and !$schranke_rot{$k};
             $tests .= " $k ";
         }
     }
@@ -109,7 +144,10 @@ for my $f (glob("$wurzel/Eudora71/Tests/*.cpp")) {
 sub hat_test {
     my ($id) = @_;
     my $gross = uc $id;
-    return $tests =~ /\Q$gross\E\b/ ? 1 : 0;
+    # Fallnamen tragen Buchstaben am Ende (E-108p, E-119d) - "\b" sah sie
+    # nicht (LEKTOR-57 L-57.3). Es darf nur keine weitere Ziffer folgen:
+    # E-10 ist nicht E-108.
+    return $tests =~ /(?<![\w-])\Q$gross\E(?!\d)/ ? 1 : 0;
 }
 
 # --- Was manuell geprueft wird, zaehlt auch -------------------------------

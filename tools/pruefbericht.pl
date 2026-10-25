@@ -94,16 +94,33 @@ my $jetzt = sprintf('%04d-%02d-%02d %02d:%02d', $t[5] + 1900, $t[4] + 1, $t[3], 
 # --- 1. Unit-Tests: bauen und fahren --------------------------------------
 my @unit;      # [bereich, name, ergebnis]
 my $unit_lief = 0;
+my @unvollstaendig;  # Gruende, warum ein Teil nicht vollstaendig lief
 {
+    my $bau_ok = 1;
     unless ($ohne_bau) {
         my $bau = `perl "$wurzel/tools/pruefe-tests-gruen.pl" 2>&1`;
-        # Das Urteil zaehlt hier nicht - die Einzelzeilen kommen gleich aus
-        # dem Programm selbst. Gebaut muss es sein.
+        # Rote Tests zaehlen gleich aus den Einzelzeilen. Fehlt aber die
+        # Zeile "Rueckgabewert", ist schon der BAU gescheitert - dann darf
+        # die alte EudoraTests.exe nicht als heutiger Stand gelten
+        # (PRUEFER-51 K2).
+        $bau_ok = ($? == 0 or $bau =~ /Rueckgabewert\s+\d+/) ? 1 : 0;
+        push @unvollstaendig, 'Bau der Testsammlung gescheitert - alte EudoraTests.exe nicht gefahren' unless $bau_ok;
     }
     my $exe = "$wurzel/Eudora71/Tests/Build/Debug/EudoraTests.exe";
-    if (-f $exe) {
+    if ($bau_ok and -f $exe) {
         (my $win = $exe) =~ s{/}{\\}g;
         my $aus = `"$win" 2>&1`;
+        my $rc = $? >> 8;
+        # Ergebniszeile, Rueckgabe und gezaehlte Zeilen muessen
+        # zusammenpassen. Gemessen PRUEFER-51 K2: ein exit(0) mitten im Lauf
+        # liess 240 von 295 Tests laufen, und der Bericht hiess BESTANDEN.
+        my ($n_ges, $n_ok, $n_fehl) = $aus =~ /Ergebnis:\s*(\d+) Tests,\s*(\d+) bestanden,\s*(\d+) fehlgeschlagen/;
+        my $n_zeilen = () = $aus =~ /^\[(?:ok|FEHL)\s*\]/mg;
+        if (!defined $n_ges) {
+            push @unvollstaendig, "EudoraTests.exe ohne Ergebniszeile beendet (Rueckgabe $rc, $n_zeilen Testzeilen)";
+        } elsif ($n_ges != $n_zeilen or $rc != $n_fehl) {
+            push @unvollstaendig, "EudoraTests.exe: Ergebniszeile $n_ges Tests / $n_fehl rot, gezaehlt $n_zeilen Zeilen, Rueckgabe $rc";
+        }
         my $bereich = '';
         my @z = split /\r?\n/, $aus;
         for my $i (0 .. $#z) {
@@ -125,10 +142,21 @@ my $unit_fehl = grep { $_->[2] ne 'ok' } @unit;
 my @schranke;  # [kennung, schranke, ergebnis, text]
 {
     my $aus = `perl "$wurzel/tools/schranken-gegenprobe.pl" 2>&1`;
+    my %nr;
     for my $z (split /\r?\n/, $aus) {
         next unless $z =~ /^\s*\[\s*(ok|FEHL|[a-z]+)\s*\]\s+(\S+)\s+(\S+)\s+(.*)$/;
-        push @schranke, [$2, $3, $1 eq 'ok' ? 'ok' : 'FEHL', $4];
+        # Mehrere Proben derselben Kennung und Schranke (E-35 R1-R3) bekommen
+        # eine laufende Nummer - sonst fallen sie im Vergleich zu einem
+        # Schluessel zusammen, und die gruene Zeile gewinnt (PRUEFER-51 K3).
+        my $n = ++$nr{"$2 $3"};
+        push @schranke, [$2 . ($n > 1 ? "#$n" : ''), $3, $1 eq 'ok' ? 'ok' : 'FEHL', $4];
     }
+    # Soll ist die Liste selbst, nicht das, was zurueckkam: keine Zeile hiess
+    # bisher "0 Schranken, gruen" (PRUEFER-51 K2).
+    my $liste = lies("$wurzel/tools/regression-schranken.txt") // '';
+    my $soll = grep { !/^\s*(#|$)/ } split /\r?\n/, $liste;
+    push @unvollstaendig, sprintf('Schranken-Gegenprobe: %d von %d Proben zurueckgemeldet', scalar @schranke, $soll)
+        if @schranke != $soll;
 }
 my $schranke_fehl = grep { $_->[2] ne 'ok' } @schranke;
 
@@ -157,14 +185,27 @@ my %buch;      # kennung -> [ergebnis, zeit, pruefstand, bau, gemessen]
         }
     }
 }
+# Massstab fuer "derselbe Bau": die Baukennung in Bin\Release\Eudora.exe, aus
+# der das Paket entsteht - Fassung, Commit, Sternchen und Zeit. Vorher reichte
+# die Fassungsnummer, und ein Lauf auf 054b6e66* (vor der Behebung von E-119)
+# galt als BESTANDEN (PRUEFER-51 K1). Ohne Release-Bau gilt die Fassung, aber
+# ein Sternchen (Bau aus unsauberem Baum) zaehlt nie als derselbe Bau.
+my $bin_kennung = '';
+{
+    my $exe = lies("$wurzel/Eudora71/Bin/Release/Eudora.exe") // '';
+    ($bin_kennung) = $exe =~ /(Eudora \d+\.\d+\.\d+\.\d+ \/ Paket [ -~]+)/;
+    $bin_kennung //= '';
+}
 my (@stand_zeilen, $st_gruen, $st_rot, $st_fehlt, $st_alt);
 $_ = 0 for ($st_gruen, $st_rot, $st_fehlt, $st_alt);
 for my $k (@soll) {
     my $e = $buch{$k};
     if (!$e) { push @stand_zeilen, [$k, 'NIE GELAUFEN', '', '', '', $muss{$k}]; $st_fehlt++; next }
     my ($erg, $zeit, $verz, $bau) = @$e;
-    my ($fassung) = ($bau // '') =~ /^Eudora (\d+\.\d+\.\d+\.\d+)/;
-    my $anders = (!$fassung or $fassung ne $quellstand) ? 1 : 0;
+    $bau //= '';
+    my ($fassung) = $bau =~ /^Eudora (\d+\.\d+\.\d+\.\d+)/;
+    my $anders = length $bin_kennung ? ($bau ne $bin_kennung ? 1 : 0)
+               : (!$fassung or $fassung ne $quellstand or $bau =~ /\*/) ? 1 : 0;
     my $zeigen_erg = $erg eq 'ok' ? 'ok' : 'FEHL';
     if    ($erg ne 'ok') { $st_rot++ }
     elsif ($anders)      { $st_alt++; $zeigen_erg = 'ok, ANDERER BAU' }
@@ -215,7 +256,12 @@ if ($vergleich) {
     print "  Pruefstandsfaelle werden hier nicht gefahren, sondern aus\n";
     print "  Intern/pruefstand-buch.tsv gelesen - nach einer Aenderung am\n";
     print "  Programm vorher tools/pruefstand-lauf.ps1 fahren.\n\n";
-    exit(@neu_rot ? 1 : 0);
+    if (@unvollstaendig) {
+        print "  NICHT VOLLSTAENDIG GELAUFEN:\n";
+        print "      $_\n" for @unvollstaendig;
+        print "\n";
+    }
+    exit((@neu_rot or @unvollstaendig) ? 1 : 0);
 }
 
 # --- Deckung der kritischen Befunde ---------------------------------------
@@ -226,7 +272,7 @@ my ($k_liste) = $reg =~ /OHNE jede Pruefung\s+\d+[^\n]*\n((?:\s{6}\S[^\n]*\n)+)/
 $k_liste = join(' ', grep { length } split /\s+/, $k_liste // '');
 
 # --- Urteil --------------------------------------------------------------
-my $gruen = ($unit_lief and !$unit_fehl and !$schranke_fehl and !$st_rot and !$st_fehlt and !$st_alt) ? 1 : 0;
+my $gruen = ($unit_lief and !@unvollstaendig and !$unit_fehl and !$schranke_fehl and !$st_rot and !$st_fehlt and !$st_alt) ? 1 : 0;
 my $urteil = $gruen ? 'BESTANDEN'
            : ($unit_fehl or $schranke_fehl or $st_rot) ? 'FEHLGESCHLAGEN'
            : 'NICHT VOLLSTAENDIG';
@@ -239,6 +285,15 @@ $b .= "| **Quellstand** | `$quellstand` (Paketnummer `$paket`) |\n";
 $b .= "| **Commit** | `$commit`" . ($offen ? " \x{2014} **Arbeitsbaum nicht sauber** ($offen Dateien)" : " (Arbeitsbaum sauber)") . " |\n";
 $b .= "| **Erstellt** | $jetzt |\n";
 $b .= "| **Gesamturteil** | **$urteil** |\n\n";
+if (@unvollstaendig) {
+    $b .= "**Nicht vollstaendig gelaufen:**\n\n";
+    $b .= "- $_\n" for @unvollstaendig;
+    $b .= "\n";
+}
+if (length $bin_kennung) {
+    $b .= "Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\\Bin\\Release`: `$bin_kennung`. "
+        . "Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.\n\n";
+}
 
 $b .= "| Art | Tests | gruen | rot | sonst |\n|---|---|---|---|---|\n";
 $b .= sprintf("| Unit-Tests (`EudoraTests.exe`) | %d | %d | %d | %s |\n", scalar @unit, @unit - $unit_fehl, $unit_fehl, $unit_lief ? '' : '**nicht gelaufen**');

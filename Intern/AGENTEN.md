@@ -166,6 +166,15 @@ hatte.
 1. **Aufgaben schneiden** — möglichst so, dass zwei Agenten nie dieselbe
    Quelldatei anfassen. Geht das nicht, laufen sie nacheinander.
 2. **Bäume buchen und Kennungen vergeben**, je Agent einer, im Auftrag genannt.
+   Für LEKTOR und PRUEFER erledigt das **ein** Aufruf seit dem 25.10.2026:
+   `perl tools/auftrag-rolle.pl LEKTOR|PRUEFER --basis <zweig> --seit <commit>`
+   — Arbeitsbaum prüfen, Zweig `wt/<rolle>-<datum>` mit Gegenstück anlegen,
+   Berichtsnummer und freie E-Kennungen vergeben, in `tools/AGENTEN-LAUFEN.md`
+   eintragen, Auftrag aus `tools/auftraege/<ROLLE>.txt` ausgeben. Von Hand
+   getippte Aufträge trugen am 24.10. in beiden Fällen einen falschen
+   Angleichbefehl. Nach dem Rücklauf: Bericht einholen, dann
+   `perl tools/agenten-laufen.pl --fertig <ROLLE>` — vorher lässt der PR-Haken
+   (`tools/haken-pr-lektor.pl`) keinen PR zu.
 3. **Starten.** Prüf- und Doku-Agenten mit der Auflage, nicht zu bauen.
 4. **Erkenntnisse weiterreichen**, statt selbst mitzuarbeiten.
 5. **Einsammeln**: Befunddateien zusammenführen, Zweige in Abhängigkeitsreihen-

@@ -34,6 +34,11 @@ E-45 | pruefe-beenden.pl | Eudora71/Eudora/mainfrm.cpp | \t\tQCWorkbook::OnClose
 # zurueck (hier die Warteschleife in SyncPlayMedia, guiutils.cpp).
 E-62 | pruefe-nachrichtenschleife.pl | Eudora71/Eudora/guiutils.cpp | \t\t\tif (msg.message == WM_QUIT) ==> \t\t\tif (msg.message == WM_NULL)
 
+# E-62, zweite Probe (PRUEFER-50 K3): die Abfrage bleibt, aber das
+# Zurueckstellen fehlt - WM_QUIT wird entnommen und nicht weitergegeben. Bis
+# zum 25.10.2026 blieb die Schranke dabei gruen; sie sah nur das Wort WM_QUIT.
+E-62 | pruefe-nachrichtenschleife.pl | Eudora71/Eudora/guiutils.cpp | \t\t\t::PostQuitMessage((int) msg.wParam);\n\t\t\treturn (FALSE); ==> \t\t\treturn (FALSE);
+
 # E-61: Splitter::Track stellt WM_QUIT zurueck, statt es zu verschlucken.
 E-61 | pruefe-nachrichtenschleife.pl | Eudora71/OTShim/OTShim.cpp | if (msg.message == WM_QUIT) ==> if (msg.message == WM_NULL)
 
@@ -44,6 +49,17 @@ E-34 | pruefe-fensterbau.pl | Eudora71/Eudora/QCChildToolBar.cpp | if ( iIndex <
 # Rueckgabewert von GetButton blind dereferenzierte (seit E-34 NULL statt
 # Ausnahme). Der Rueckfall nimmt die NULL-Pruefung des Sendeknopfs heraus.
 E-35 | pruefe-fensterbau.pl | Eudora71/Eudora/CompMessageFrame.cpp | \t\t\tif (pSendeKnopf)\n ==> \t\t\tif (1)\n
+
+# E-35, drei weitere Rueckfaelle (PRUEFER-50 K2) - bis zum 25.10.2026 liess
+# die zeilenweise GetButton-Regel alle drei durch:
+# R1 das Ergebnis direkt dereferenziert, "->" erst auf der Folgezeile (so
+#    stand es im QUALCOMM-Original, nur umbrochen)
+E-35 | pruefe-fensterbau.pl | Eudora71/Eudora/CompMessageFrame.cpp | \t\t\tpToolBar->Invalidate(nIndex);\n ==> \t\t\t((TBarSendButton*) pToolBar->GetButton(nIndex))\n\t\t\t\t->SetBPWarning(m_bBPWarning);\n\t\t\tpToolBar->Invalidate(nIndex);\n
+# R2 der Zugriff steht VOR der Pruefung
+E-35 | pruefe-fensterbau.pl | Eudora71/Eudora/CompMessageFrame.cpp | \n\t\t\tif (pSendeKnopf)\n ==> \n\t\t\tpSendeKnopf->SetBPWarning(m_bBPWarning);\n\t\t\tif (pSendeKnopf)\n
+# R3 die Zuweisung ueber mehr als zwei Zeilen, die Pruefung fehlt - die alte
+#    Regel fand keinen Namen und uebersprang den Aufruf ohne Meldung
+E-35 | pruefe-fensterbau.pl | Eudora71/Eudora/CompMessageFrame.cpp | \t\t\tTBarSendButton* pSendeKnopf =\n\t\t\t\t(TBarSendButton*) pToolBar->GetButton(nIndex);\n\n\t\t\tif (pSendeKnopf)\n ==> \t\t\tTBarSendButton* pSendeKnopf =\n\t\t\t\t(TBarSendButton*)\n\t\t\t\t\t\n\t\t\t\t\tpToolBar->GetButton(nIndex);\n\n\t\t\tif (1)\n
 
 # E-16: Absturz beim Verfassen - m_btns[iIndex] griff daneben; dieselbe
 # Indexschranke in GetButton wie bei E-34 (die Schranke nennt beide).

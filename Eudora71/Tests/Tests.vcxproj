@@ -102,6 +102,10 @@
     <ClCompile Include="TestE69.cpp" />
     <ClCompile Include="UnderTestE131.cpp" />
     <ClCompile Include="TestE131.cpp" />
+    <ClCompile Include="UnderTestE20.cpp">
+      <!-- wie Eudora.vcxproj: InsertArr benutzt die Laufvariable ueber die Schleife hinaus -->
+      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
+    </ClCompile>
     <ClCompile Include="UnderTestE132.cpp" />
     <ClCompile Include="TestE132.cpp" />
     <ClCompile Include="UnderTestE112Meta.cpp" />

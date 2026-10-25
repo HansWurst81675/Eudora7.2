@@ -144,7 +144,7 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 
 | Was passiert | Was kann verlorengehen | Was hilft | Befund |
 |---|---|---|---|
-| **Bis Paket 1.0.122: Eudora vertraut vier Wurzelzertifikaten der Zertifizierungsstelle eMudhra**, unter denen am 20.10.2026 acht kompromittierte Zwischenzertifikate bekannt wurden. Wer zwischen Eudora und dem Mailserver sitzt, könnte Eudora einen gefälschten Server vorspielen | **Zugangsdaten und Post**, wenn jemand den Netzverkehr umleitet (öffentliches WLAN, fremdes Netz) | **Behoben ab 7.2.0.123** – die vier Wurzeln sind aus der mitgelieferten Liste entfernt. Bis dahin: Eudora nicht in fremden Netzen benutzen, oder `rootcerts.p7b` im Programmverzeichnis durch die neue Datei ersetzen. Einzelheiten unten | [E-148](Intern/BEFUNDE.md#e-148) |
+| **Bis Paket 1.0.122: Eudora vertraut vier Wurzelzertifikaten der Zertifizierungsstelle eMudhra**, unter denen am 20.10.2026 acht kompromittierte Zwischenzertifikate bekannt wurden. Wer zwischen Eudora und dem Mailserver sitzt, könnte Eudora einen gefälschten Server vorspielen | **Zugangsdaten und Post**, wenn jemand den Netzverkehr umleitet (öffentliches WLAN, fremdes Netz) | **Behoben ab 7.2.0.123** – die vier Wurzeln sind aus der mitgelieferten Liste entfernt. Bis dahin: Eudora nicht in fremden Netzen benutzen, oder `rootcerts.p7b` im Programmverzeichnis durch die neue Datei ersetzen. Liegt eine eigene `rootcerts.p7b` im Mailverzeichnis, gilt **diese** – auch nach dem neuen Paket. Einzelheiten unten | [E-148](Intern/BEFUNDE.md#e-148) |
 | **Eudora startet per Doppelklick nicht, weil das zuletzt benutzte Mailverzeichnis gelöscht oder verschoben wurde** — Meldung *„The directory specified in the command line … doesn't exist or is not writable"* (Text aus `IDS_ERR_BAD_EUDORA_DIR`, gesetzt in `CheckMailDirectory`) | nichts — die Daten sind schon vorher weg, Eudora fasst nichts an | **`Eudora starten.cmd` benutzen.** Es übergibt das eigene Mailverzeichnis des Pakets und umgeht den gemerkten Pfad. Bleibt so, auf Gregors Entscheidung vom 21.10.2026: *„nur aufnehmen, nicht fixen"* | [E-133](Intern/BEFUNDE.md#e-133) |
 | **Nach dem Herunterladen von GitHub startet `Eudora.exe` nicht per Doppelklick** — nur der Umweg über `Eudora starten.cmd` geht. Windows hängt beim Auspacken an jede Datei die Markierung *„stammt von einem anderen Computer“* (*Mark of the Web*) | nichts — das Programm startet nur nicht | **ZIP vor dem Auspacken entsperren**: Rechtsklick auf die `.zip` → Eigenschaften → *Zulassen*. Schon ausgepackt: siehe unten | [E-138](Intern/BEFUNDE.md#e-138) |
 | Läuft eine Fassung **vor 7.2.0.113** neben einer vorhandenen Eudora oder Hermes 7.1, schreibt sie `MRUFloatXPos=-2147483648` – eine ungültige Fensterposition – in die gemeinsam benutzte `Eudora.ini`. Der Melder berichtet, dass sein Hermes 7.1 danach beim Start abstürzte (`EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`) | nichts von Ihrer Post – aber möglicherweise die **Benutzbarkeit der vorhandenen Installation** | **Behoben in 7.2.0.113, seit `v1.0.113` veröffentlicht:** diese Fassung schreibt den Wert nicht mehr, am Prüfstand rot und grün gemessen. **Zwei Einschränkungen:** eine `Eudora.ini`, die den Wert schon trägt, wird erst beim nächsten Sichern durch unsere Fassung berichtigt – wer sie nicht mehr startet, berichtigt sie von Hand oder spielt die Sicherung zurück. Und **dass dieser Wert der Grund des Absturzes war, ist nicht belegt** ([PRÜFER-40](Befunde/PRUEFER-40.md#k1) K1: `-2147483648` ist `CW_USEDEFAULT`, das MFC selbst setzt und beim Lesen wieder abfängt); belegt ist nur, dass wir ihn schreiben. **Sicherheitshalber weiter:** `Eudora.ini` und Mailverzeichnis sichern, bevor diese Fassung neben einer vorhandenen Installation läuft. Von außen gemeldet ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102), 18.10.2026, an `v1.0.101`) | [E-131](Intern/BEFUNDE.md#e-131) |
@@ -220,7 +220,8 @@ ausdrücklich vor Programmen, die **ihre eigene Liste** von
 Wurzelzertifikaten mitliefern — Eudora gehört dazu.
 
 **Warum Eudora betroffen war.** Eudora prüft Serverzertifikate nicht gegen
-Windows, sondern gegen die Datei `rootcerts.p7b` im Programmverzeichnis, und
+Windows, sondern gegen die Datei `rootcerts.p7b` — zuerst im Mailverzeichnis,
+sonst im Programmverzeichnis (siehe unten) —, und
 fragt keine Sperrlisten ab. Die Liste bis Paket 1.0.122 enthielt vier
 eMudhra-Wurzeln (*emSign Root CA – G1*, *– C1*, *emSign ECC Root CA – G3*,
 *– C3*). Ausnutzen lässt sich das nur, wenn jemand den Netzverkehr zwischen
@@ -233,15 +234,32 @@ mitgelieferten Liste entfernt: [`Releases/1.0/rootcerts.p7b`](Releases/1.0/rootc
 enthält jetzt 117 statt 121 Zertifikate, erzeugt von
 [`rootcerts-erzeugen.ps1`](Releases/1.0/rootcerts-erzeugen.ps1) mit einer
 Ausschlussliste, und der Paketbau legt diese Datei in jedes Paket. GMX und
-freenet (IMAP, POP3, SMTP) sind mit der neuen Liste gemessen und werden
-weiter angenommen — ihre Zertifikate stammen von der Telekom (T-TeleSec),
-nicht von eMudhra. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
+freenet (IMAP, POP3, SMTP) sind gegen die neue Liste mit **OpenSSL** gemessen
+und werden angenommen — ihre Zertifikate stammen von der Telekom (T-TeleSec),
+nicht von eMudhra. **Mit Eudora selbst** ist das erst im Paket 7.2.0.123 zu
+messen; bis dahin ist es eine Rechnung, keine Beobachtung am Programm. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
 zurückkommt ([E-148](Intern/BEFUNDE.md#e-148)).
 
-**Was Sie mit einem älteren Paket tun können:** `rootcerts.p7b` im
-Programmverzeichnis durch die neue Datei aus `Releases/1.0/` ersetzen
-(Eudora vorher beenden), oder Eudora bis zum neuen Paket nur im eigenen Netz
-benutzen.
+**Was Sie mit einem älteren Paket tun können:** Eudora beenden, die
+vorhandene `rootcerts.p7b` im Programmverzeichnis in `rootcerts.p7b.alt`
+umbenennen und die neue Datei aus `Releases/1.0/` hineinlegen — oder Eudora
+bis zum neuen Paket nur im eigenen Netz benutzen. Ob Eudora mit der neuen
+Datei bei Ihrem Anbieter weiter abruft, ist wie oben gesagt erst mit OpenSSL
+gemessen: nach dem Austausch einmal Mail abrufen. Meldet Eudora einen
+Zertifikatsfehler, die neue Datei löschen und `rootcerts.p7b.alt` wieder in
+`rootcerts.p7b` umbenennen — dann sind allerdings auch die vier
+eMudhra-Wurzeln wieder da, und für das fremde Netz gilt wieder die Vorsicht
+von oben.
+
+**Auch im Mailverzeichnis nachsehen.** Eudora sucht `rootcerts.p7b` zuerst im
+**Mailverzeichnis** (dort, wo `Eudora.ini` und die Postfächer liegen) und nur,
+wenn sie dort fehlt, im Programmverzeichnis — so hat QUALCOMM es gebaut, damit
+man die mitgelieferte Liste durch eine eigene ersetzen kann
+(`QCSSLContext.cpp`, `ChooseCertFileDirectory`). Das Paket legt dort keine
+solche Datei ab. Wer aber selbst einmal eine `rootcerts.p7b` ins
+Mailverzeichnis kopiert hat, behält **diese** Liste, auch mit dem neuen Paket:
+dort löschen oder ebenfalls durch die neue Datei ersetzen. Gefunden von
+[PRUEFER-51](Befunde/PRUEFER-51.md#pruefer-51) (K6).
 
 ## Was es kann
 

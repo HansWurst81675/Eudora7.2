@@ -422,3 +422,14 @@ $uStart = Find-Line $tv '^\s*static const char\s+szKompatibilitaet\[\]' 0
 # was los ist. Die Zeichenkette steht in der Zeile unter der Deklaration.
 $uEnd = (Find-Line $tv '^\s*static const char\s+szCharsetMeta\[\]' $uStart) + 1
 Write-Region $tv $uStart $uEnd (Join-Path $OutDir "tridentview_z2.inc") $tvPath
+
+# ------------------------------------------------------------ ListCtrlEx.cpp (E-20)
+# Region V: CListCtrlEx::InsertArr - das Einfuegen in die Spaltenfelder.
+# Reine Feldrechnung, ohne Fenster. UnderTestE20.cpp ruft sie mit einem
+# Schutzstreifen hinter jedem Feld auf (PRUEFER-50 K1: der Quelltexttest
+# blieb gruen mit dem alten Ueberlauf in anderer Schreibweise).
+$lcPath = Join-Path $SrcDir "ListCtrlEx.cpp"
+$lc = Read-Lines $lcPath
+$vStart = Find-Line $lc '^void CListCtrlEx::InsertArr\(' 0
+$vEnd = Find-Line $lc '^\}\s*$' $vStart
+Write-Region $lc $vStart $vEnd (Join-Path $OutDir "listctrlex_e20.inc") $lcPath

@@ -1805,6 +1805,109 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Fünfundsechzigster Durchgang — Mikrolauf: Commit 0adcecaf, 25.10.2026 (Bericht: `Befunde/LEKTOR-60.md`)
+
+Nur der Commit `0adcecaf` war zu prüfen, der die beiden Funde aus LEKTOR-59
+einholt. **Beide sind erledigt, kein neuer Fund.** Der README-Rat für ältere
+Pakete lässt jetzt vorher eine `rootcerts.p7b.alt` anlegen und sagt beim
+Rückweg, dass damit die vier eMudhra-Wurzeln zurückkommen
+([L-59.1](../Befunde/LEKTOR-59.md#l-59.1)). Der Selbsttest der
+Tabellenschranke zählt seine Aufteilung selbst (15/7), und `WERKZEUGE.md:125`
+nennt nur noch 22 Fälle ([L-59.2](../Befunde/LEKTOR-59.md#l-59.2)).
+
+## Vierundsechzigster Durchgang — Schlusslauf vor dem PR: Commit 62b0a80c, 25.10.2026 (Bericht: `Befunde/LEKTOR-59.md`)
+
+Nur der Commit `62b0a80c` war zu prüfen: die E-148-Berichtigung in
+`CHANGELOG.md` und `README.md`, die geflickten Tabellen und die erweiterte
+Tabellenschranke. Die Suchreihenfolge (Mailverzeichnis vor
+Programmverzeichnis) stimmt mit `QCSSLContext.cpp:403-404` überein, und
+CHANGELOG und README sagen jetzt dasselbe über die OpenSSL-Messung.
+
+**Zwei Funde, keiner hält den PR auf.** Der README-Rat für ältere Pakete
+sagt *„die alte Datei zurücklegen"*, lässt aber keine Sicherungskopie anlegen
+([L-59.1](../Befunde/LEKTOR-59.md#l-59.1)). Der Selbsttest der Tabellenschranke
+gibt *„14 muessen durchgehen, 6 muessen abweisen"* aus, gezählt sind 15 und 7;
+`WERKZEUGE.md:125` nennt in derselben Zeile 18 und 22 Fälle
+([L-59.2](../Befunde/LEKTOR-59.md#l-59.2)).
+
+## Dreiundsechzigster Durchgang — Nachlauf nach LEKTOR-57 (E-148-Nachtrag, PRÜFER-51, nachgeschärfte Haken), 25.10.2026 (Bericht: `Befunde/LEKTOR-58.md`)
+
+**7 neue Funde**: 2 falsch, 1 veraltet, 2 unvollständig, 2 Form.
+Von den 10 Funden aus LEKTOR-57 sind 2 erledigt, 5 teilweise und 3 offen.
+Schwerpunkt waren die seit LEKTOR-57 geänderten Dateien, gehalten gegen Code
+und Bestand.
+
+**Der schwerste Fund: Die Schranke gegen zerbrochene Tabellenzeilen liest
+`Intern/` nicht** ([L-58.1](../Befunde/LEKTOR-58.md#l-58.1)). Ihre feste
+Verzeichnisliste stammt von vor dem Umzug am 22.10.2026. Gemessen: Der
+Bestandslauf meldet nichts, gezielt auf `BEFUNDE.md` angesetzt meldet sie
+die Zeile 381, die der E-148-Nachtrag heute zerbrochen hat.
+
+**121 Tabellenzeilen stehen hinter einer Leerzeile außerhalb ihrer
+Tabelle** ([L-58.2](../Befunde/LEKTOR-58.md#l-58.2)). Betroffen sind 12
+Befunde in `BEFUNDE.md`, darunter das offene E-39, 25 Werkzeuge in
+`WERKZEUGE.md` (zwei Leerzeilen von heute) und 84 Zweige in `ZWEIGE.md`.
+
+**E-148 sagt im CHANGELOG noch, was die README berichtigt hat**
+([L-58.3](../Befunde/LEKTOR-58.md#l-58.3)). Dort heißt es weiter *„gemessen
+und werden weiter angenommen"*, obwohl nur OpenSSL gemessen hat. Daraus
+entstehen die Notizen zu 7.2.0.123. Die README nennt außerdem an einer Stelle
+noch das Programmverzeichnis als Ort der Liste.
+
+Dazu: Sieben PRÜFER-51-Funde stehen in keiner Liste, K8 davon ist
+Programmverhalten zu E-119. E-108 zählt jetzt über einen Fall, den sein
+Befund „nicht nachgestellt" nennt. Gregors Entscheidung, E-148 mit 7.2.0.123
+zu veröffentlichen, steht in keiner Repo-Datei.
+
+Der Gerüst-Commit hing lange: Der Commit-Haken spiegelte zwei neue Lehren
+des Hauptagenten ohne Zeile `Schranke:` in den Arbeitsbaum, und
+`lehren-schranken.pl` wies ab. Nachdem der Hauptagent die Zeilen ergänzt
+hatte, ging der Spiegel als eigener Commit `4a8df4bb` durch.
+
+Eine neue Frage an Gregor: Soll Eudora melden, wenn es die
+Zertifikatsliste aus dem Mailverzeichnis nimmt? Dazu weiter der Name der Marke.
+
+## Zweiundsechzigster Durchgang — nach PR #170 bis #172 und PRÜFER-50 (E-119 K5, E-148, Prüfbericht, neue Haken), 25.10.2026 (Bericht: `Befunde/LEKTOR-57.md`)
+
+**10 neue Funde**: 3 falsch, 3 veraltet, 3 unvollständig, 1 Form.
+Von den 10 Funden aus LEKTOR-56 sind 0 erledigt, 2 teilweise und 8 offen.
+Geprüft wurde der ganze Bestand (alle MDs ohne `Arbeitsweise/` und
+`Befunde/`), nicht der Diff.
+
+**Der schwerste Fund: Der neue Sitzungsbeginn-Haken nennt keinen offenen
+Befund** ([L-57.1](../Befunde/LEKTOR-57.md#l-57.1)). `CLAUDE.md` Abschnitt 1
+sagt, `offene-befunde.pl` *„nennt jeden Befund"*. Gemessen gibt es nur
+Zahlen aus (*„38 offen, 11 nie gemessen"*), und der Haken reicht nur diese
+weiter. Gerade dieser Schritt soll verhindern, dass ein Agent einen
+beschriebenen Fehler neu erarbeitet, wie bei E-85. `CLAUDE.md` erwähnt
+die Haken nicht.
+
+**Die PR-Schranke für den LEKTOR öffnet sich mit dem Gerüst seines
+Berichts** ([L-57.2](../Befunde/LEKTOR-57.md#l-57.2)). Gemessen an diesem
+Lauf: Nach dem Commit *„LEKTOR-57: Geruest"* meldet `rollen-faellig.pl` den
+LEKTOR *aktuell*. Sie lässt einen PR außerdem durch, wenn die Sitzung nicht
+in der Wurzel steht oder der Befehl in Anführungszeichen steckt (gemessen
+mit einer Kopie).
+
+**Die Zählung der Regressionstests übersieht Prüfstandsfälle mit
+Buchstaben** ([L-57.3](../Befunde/LEKTOR-57.md#l-57.3)). `E-108p`, `E-106p`
+und `E-119a` bis `d` zählen nicht. Gemessen: 61 statt 58 Befunde mit Test,
+und E-108 (Absturz beim Antworten, kritisch) stünde nicht mehr *ohne jede
+Prüfung*. Der Prüfbericht vom Morgen ist schon wieder überholt. Seine
+Zeilen zu E-35 und E-62 sind mit den Schranken gemessen, die PRÜFER-50 als
+blind nachgewiesen hat, und zählen trotzdem
+([L-57.4](../Befunde/LEKTOR-57.md#l-57.4)).
+
+Dazu: Acht PRÜFER-50-Funde stehen in keiner Liste. Das „Als Nächstes" in
+`WEITERMACHEN.md` ist abgearbeitet. Für das Paket 7.2.0.123 gibt es keinen
+Testplan, obwohl E-148 nur dort mit Eudora selbst gemessen werden kann. Die
+README rät Besitzern älterer Pakete, die neue Zertifikatsdatei einzulegen.
+Mit Eudora erprobt hat das niemand.
+
+Eine neue Frage an Gregor: Soll die Behebung von E-148 (kompromittierte
+eMudhra-Zertifikate) vor 7.2.1 veröffentlicht werden? Dazu weiter der Name
+der Marke auf GitHub.
+
 ## Einundsechzigster Durchgang — nach PR #166 bis #169 (E-77 Umbenennen, Regressionstests, Gregors Entscheidungen vom 24.10.2026), 24.10.2026 (Bericht: `Befunde/LEKTOR-56.md`)
 
 **10 neue Funde**: 2 falsch, 1 Widerspruch, 3 veraltet, 4 unvollständig.

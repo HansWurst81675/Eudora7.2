@@ -134,8 +134,21 @@ sub pruefe_text {
         $name =~ s/\s+$//;
         $name = substr($name, 0, 70);
 
-        if ($rumpf =~ /\bWM_QUIT\b/) {
+        # WM_QUIT ERWAEHNEN IST NICHT ZURUECKSTELLEN (25.10.2026, PRUEFER-50
+        # K3). Bis hierher genuegte das Wort: wer ::PostQuitMessage aus dem
+        # Abfrageblock entfernte, blieb gruen - gemessen in EscapePressed
+        # (guiutils.cpp), wortwoertlich der Fehler aus E-62 ("die Aufforderung
+        # zu beenden war damit weg"). Jetzt muss NACH der ersten Erwaehnung
+        # von WM_QUIT ein PostQuitMessage stehen; alle acht bekannten
+        # Schleifen tun das (gemessen am 25.10.2026).
+        my $quit = $rumpf =~ /\bWM_QUIT\b/ ? $-[0] : -1;
+        if ($quit >= 0 and substr($rumpf, $quit) =~ /\bPostQuitMessage\s*\(/) {
             push @gesehen, sprintf('%-32s %s', "$kurz:$zeile", $name);
+        }
+        elsif ($quit >= 0) {
+            push @mangel, "$kurz:$zeile fragt WM_QUIT ab, stellt es aber nicht mit "
+                        . "PostQuitMessage zurueck: $name - die entnommene "
+                        . 'Aufforderung zu beenden ist weg (Befund E-62, PRUEFER-50 K3).';
         }
         else {
             push @mangel, "$kurz:$zeile entnimmt Nachrichten (PM_REMOVE oder "
