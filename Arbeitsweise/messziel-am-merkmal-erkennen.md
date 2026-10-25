@@ -95,3 +95,9 @@ die PowerShell-Kommentare entfernt (`s/#.*$//`), fraß die Fensterklasse
 gebaut ist — ein Messziel, das die eigene Prüfung nicht erkennt
 ([[schranke-liest-nur-code]]). Behoben mit einem Rückblick auf ein
 Leerzeichen (`s/(?<=\s)#.*$//`), der Grund steht als Kommentar an der Stelle.
+
+## Nachtrag 25.10.2026 (CHRONIST): dieselbe Falle in der Rollenbuchführung
+
+`tools/rollen-faellig.pl:140` erkennt einen CHRONIST-Bericht an `Arbeitsweise/*.md` — an einem Ort, den **jede** gespiegelte Lehre teilt, nicht am Merkmal des Berichts (`CHRONIST-<datum>.md`). Gemessen: zwischen dem 23.10. 13:03 MESZ und dem 25.10. 16:39 MEZ haben 20 Commits diesen Ort berührt, keiner davon war ein CHRONIST-Lauf, und das Werkzeug meldete „aktuell". Wie bei `#32770`: das Werkzeug misst etwas, gibt eine plausible Antwort und sieht aus wie ein Ergebnis. Einzelheiten und Vorschlag in [[daueraufgaben-brauchen-einen-takt]], Nachtrag 24./25.10.2026.
+
+**How to apply, zusätzlich:** Wer einer Rolle oder einem Ereignis ein Erkennungsmuster gibt, prüft, **wer sonst noch** dorthin schreibt — hier der Commit-Haken (`lehren-spiegeln.pl`), der Hauptagent und der LEKTOR.

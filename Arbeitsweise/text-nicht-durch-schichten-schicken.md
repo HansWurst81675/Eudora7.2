@@ -430,3 +430,16 @@ es ist aufgeschrieben, es gibt ein Werkzeug, und es passiert trotzdem weiter
 - **Die Byte-Messung nach jedem Schreibzugriff bleibt die Fangstelle, die
   wirklich greift.** Sie hat Fall 20 gefangen, und zwar sofort
   ([[zeilenenden-nach-jedem-schreibzugriff-messen]]).
+
+## Nachtrag 24./25.10.2026 (CHRONIST): zwei Wiederholungen bekannter Fälle, beide mit Regel in dieser Datei
+
+Zeiten MEZ, Transkript `fa3529ec-…jsonl`, gemessen.
+
+| Zeit | Was | Welche Regel hier schon stand | Folge |
+|---|---|---|---|
+| 25.10. 10:49 und 10:57 | Ersatztext per `BEGIN{local $/; open …; $T=<$h>; chomp $T}` eingelesen | 14.10.: *„Unter `-0` … den Zeilenumbruch mit `s/\n\z//` entfernen, nicht mit `chomp`"* — mit `$/` = undef entfernt `chomp` nichts. Nachgemessen am 25.10.: Datei `abc\n` so eingelesen und `chomp`t hat danach **4** Zeichen | der Zeilenumbruch des Hier-Dokuments landete mitten in der E-148-Tabellenzeile (`Intern/BEFUNDE.md:380-381`, LEKTOR-58 L-58.1) und in `tools/WERKZEUGE.md` (LEKTOR-58: zwei Leerzeilen von diesem Tag). Gefunden hat es der LEKTOR um 16:27, nicht ich — die Tabellenschranke las `Intern/` nicht |
+| 25.10. 17:07 | `powershell -File tools\bauen.ps1` über das Bash-Werkzeug | 23.10., Fall 19: *„Kein Windows-Pfad mit Rückstrich durch das Bash-Werkzeug"* — zwei Tage alt | PowerShell bekam `toolsbauen.ps1`; drinnen `bau rc=127`, der Hintergrundlauf meldete trotzdem *„[exited with code 0]"*. Gefunden um 17:08, weil ich die Ausgabe gelesen habe |
+
+Nach der Zählung im CHRONIST-Bericht vom 23.10. (21 Fälle) ist der zweite Fall der **22. Rückstrichverlust**. Beide Regeln standen hier, beide wurden nicht angewendet; beide Befehle lagen außerhalb jeder Schranke (Wegwerfbefehle). Die zweite Zeile ist zugleich ein Fall von [[gekuerzte-ausgabe-ist-kein-ergebnis]]: ein Rückgabewert, der nicht der des Bauskripts war.
+
+**How to apply, zusätzlich:** Ersatztext nicht mehr selbst einlesen, sondern `tools/ersetze-bereich.pl` (steht oben als Schranke und wurde an diesen beiden Tagen nicht benutzt). Wer doch einen Einzeiler schreibt: `$T =~ s/\n\z//`, nie `chomp` innerhalb von `local $/`.

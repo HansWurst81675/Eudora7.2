@@ -137,7 +137,13 @@ my @rollen = (
         # Fehlalarmtyp wie bei gesichert.pl am selben Tag
         # (Arbeitsweise/schranke-gegentesten.md).
         ausser  => qr{^tools/(?:AGENTEN-LAUFEN|TESTLAEUFE)\.md$|(?i:\.(?:dll|exe|lib|obj|pdb|idb|exp|res|zip|ico|bmp|png|jpg|gif|tlb|ocx|sbr|tlog))$},
-        bericht => 'Arbeitsweise/*.md',
+        # Nur ein CHRONIST-Bericht ist ein CHRONIST-Lauf. Vorher zaehlte jede
+        # Datei unter Arbeitsweise/ - und lehren-spiegeln.pl spiegelt bei JEDEM
+        # Commit die Gedaechtnisdateien dorthin. Gemessen 25.10.2026: vom
+        # 23.10. bis 25.10. lief kein CHRONIST, das Werkzeug meldete trotzdem
+        # 'aktuell, 0 Dateien' (CHRONIST-2026-10-25, gegen d1760537 waeren es
+        # 59 Dateien gewesen).
+        bericht => 'Arbeitsweise/CHRONIST-*.md',
         auftrag => 'Den Chat seit dem letzten Lauf auswerten, Lehren anlegen und ergaenzen.',
     },
 );

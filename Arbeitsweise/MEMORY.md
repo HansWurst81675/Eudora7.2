@@ -117,3 +117,5 @@
 - [E-148 im Release 7.2.1.x](entscheidung-e148-release-7-2-0-123.md) — Gregor 25.10.: veroeffentlicht mit 7.2.1.<n> nach seinem Test; 7.2.0.123 ist nur Testpaket
 - [Logzeile für rootcerts.p7b](entscheidung-rootcerts-logzeile.md) — Gregor 25.10.: eudora.log nennt, aus welchem Verzeichnis die Zertifikatsliste kam; Zweig 25-10b
 - [Marke v7.2.1.<n>](entscheidung-marke-v7-2-1.md) — Gregor 25.10. (mehrfach): GitHub-Marke v7.2.1.<n>, z. B. v7.2.1.123; nicht wieder fragen
+- [Gekürzte Ausgabe ist kein Ergebnis](gekuerzte-ausgabe-ist-kein-ergebnis.md) — head/tail/grep auf eigener Ausgabe drehte dreimal ein Urteil um: „E-142 nichts vereinbart", Commit-Abweisung als exit 0; Fehlen zählen, git nie in eine Pipe
+- [CHRONIST 25.10.2026](CHRONIST-2026-10-25.md) — Lauf über 23.–25.10.: eine neue Lehre, zehn Nachträge; rollen-faellig.pl:140 zählt jede gespiegelte Lehre als CHRONIST-Bericht
