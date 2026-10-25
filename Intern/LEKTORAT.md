@@ -1805,6 +1805,23 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Achtundsechzigster Durchgang — Kurzlauf „keine Lügen auf main", Commits seit 900a2312, 25.10.2026 (Bericht: `Befunde/LEKTOR-63.md`)
+
+Gregor fragte, was aus „keine Lügen auf main" geworden ist. Geprüft sind nur
+die fünf Commits auf `RC1_vorbereiten` seit `900a2312`. **Die Berichtigungen
+stimmen:** der neue TESTPLAN-Text zu E-132 deckt sich mit `eudora.cpp`, die
+PR-Nummern im CHANGELOG-Kopf stimmen, kein Stand-Kopf behauptet Falsches;
+„ohne Paket", „277 Tests" und der alte Schritt 5 stehen nirgends mehr falsch.
+
+**6 Funde: 1 falsch, 2 ungenau, 3 Hinweise.** Falsch ist die Reihenfolge im
+neuen `WEITERMACHEN.md`-Block: sie nennt die E-100-INI-Messung noch blind und
+als ersten Schritt, obwohl `9a4cc0e1` sie behoben hat
+([L-63.1](../Befunde/LEKTOR-63.md#l-63.1)). Ungenau sind der E-150-Wortlaut
+im CHANGELOG, der Quelltextherleitung als beobachtetes Verhalten erzählt
+([L-63.2](../Befunde/LEKTOR-63.md#l-63.2)), und „Behoben ab 7.2.0.123" in
+der README, einer Fassung, die nie veröffentlicht wird
+([L-63.3](../Befunde/LEKTOR-63.md#l-63.3)). Keine neue Frage an Gregor.
+
 ## Siebenundsechzigster Durchgang — Mikrolauf: Commits 85554d91 und 9d135576, 25.10.2026 (Bericht: `Befunde/LEKTOR-62.md`)
 
 Nur zwei Commits: die `ZIEL.md`-Zeilen zu E-77, E-113, E-119, E-116 und das
