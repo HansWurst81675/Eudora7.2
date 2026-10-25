@@ -103,7 +103,10 @@ Eudora-Problem — die richtige Angabe steht in der Kontoübersicht bei freenet.
 Im selben Verzeichnis wie `Eudora.exe`:
 
 - `QCSSL.dll` — Prüfsumme muss mit `ab55281a` beginnen (QCSSL 1.0.1)
-- `rootcerts.p7b` — der Wurzelzertifikatsspeicher, 121 Zertifikate
+- `rootcerts.p7b` — der Wurzelzertifikatsspeicher, **117** Zertifikate ab
+  7.2.0.123 (bis 1.0.122: 121, darunter die vier eMudhra-Wurzeln aus
+  [E-148](BEFUNDE.md#e-148)). Liegt eine eigene `rootcerts.p7b` im
+  **Mailverzeichnis**, nimmt Eudora diese zuerst.
 
 Prüfen:
 

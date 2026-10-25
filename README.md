@@ -233,9 +233,10 @@ mitgelieferten Liste entfernt: [`Releases/1.0/rootcerts.p7b`](Releases/1.0/rootc
 enthält jetzt 117 statt 121 Zertifikate, erzeugt von
 [`rootcerts-erzeugen.ps1`](Releases/1.0/rootcerts-erzeugen.ps1) mit einer
 Ausschlussliste, und der Paketbau legt diese Datei in jedes Paket. GMX und
-freenet (IMAP, POP3, SMTP) sind mit der neuen Liste gemessen und werden
-weiter angenommen — ihre Zertifikate stammen von der Telekom (T-TeleSec),
-nicht von eMudhra. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
+freenet (IMAP, POP3, SMTP) sind gegen die neue Liste mit **OpenSSL** gemessen
+und werden angenommen — ihre Zertifikate stammen von der Telekom (T-TeleSec),
+nicht von eMudhra. **Mit Eudora selbst** ist das erst im Paket 7.2.0.123 zu
+messen; bis dahin ist es eine Rechnung, keine Beobachtung am Programm. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
 zurückkommt ([E-148](Intern/BEFUNDE.md#e-148)).
 
 **Was Sie mit einem älteren Paket tun können:** `rootcerts.p7b` im
