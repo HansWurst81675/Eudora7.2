@@ -1,5 +1,5 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-25 20:08:04
+zeit=2026-10-25 20:31:24
 freigabe=Gregor am 25.10.2026: 'du kannst testen, ich muss es nur wissen.'
 faelle=32
 bestanden=32
