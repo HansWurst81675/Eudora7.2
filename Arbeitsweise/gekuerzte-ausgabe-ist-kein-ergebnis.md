@@ -36,3 +36,7 @@ Schranke: keine - die Filter stehen in Wegwerfbefehlen, die kein Commit-Haken si
 2. **`git commit` und `git push` nie in eine Pipe.** Ausgabe in eine Datei im Scratchpad, `echo "rc=$?"` direkt dahinter, dann die Datei durchsuchen.
 3. **„[exited with code 0]" eines Hintergrundlaufs ist der Rückgabewert des letzten Befehls der Kette**, nicht des Bauskripts. Wer den echten will, gibt ihn selbst aus und liest ihn.
 4. **Wer etwas Bestimmtes herausfiltert, sucht auch nach dem Gegenteil** — bei einem Commit nach der Commit-Kennung, bei einer Suche nach der Trefferzahl ([[gegenprobe-umdrehen]]).
+
+## Nachtrag 25.10.2026 abends (CHRONIST): Fall 4, eine Stunde nach dieser Lehre
+
+19:19:53 MEZ: `ls LICENSE*; head -5 LICENSE` im eigenen Repo. Die fünf Zeilen enthalten nur die Copyright-Vermerke (gemessen am Transkript). 19:20:15 im Chat: *„Lizenz: BSD-3-Clause … Das ist **dieselbe Lizenz wie unser Repo**."* Am selben Abend stand derselbe Satz in E-147. LEKTOR-64 (19:53): Unsere Lizenz schließt Patentrechte aus (`LICENSE:8`, `:20`), sie heißt im Repo selbst „BSD-3-Clause mit Patentausschluss" (`LICENSE:39`, `README.md:310`), und GitHub meldet `NOASSERTION`. Die Folgerung „Einbau erlaubt" hielt, die Begründung nicht. **Regel 1 dieser Lehre in neuer Form:** Wer zwei Dinge für „gleich" erklärt, liest beide ganz. Von der einen Seite den SPDX-Namen zu lesen und von der anderen den Kopf ist kein Vergleich.

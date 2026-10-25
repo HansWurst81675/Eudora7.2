@@ -122,3 +122,5 @@
 - [Stand 25.10.2026 abends](stand-25-10-2026-abend.md) — nach 25-10b: E-132 als Prüfstandsfall (Gregor testet nur bis Schritt 4), Logzeile, LEKTOR-61, dann Testpaket 7.2.0.123
 - [Vor 7.2.1 beheben](entscheidung-vor-7-2-1-beheben.md) — Gregor 25.10.: E-137, E-142 (Hinweis), E-146 beheben; E-144/143/139/136, AN-1 in die README
 - [Gegenprobe einmal beim Bau](gegenprobe-einmal-beim-bau.md) — Gregor 25.10.: rot ohne Fix nur einmal beim Anlegen eines Tests; danach genügt grün
+- [Einschränkung im PR ist kein Ja](einschraenkung-im-pr-ist-kein-ja.md) — PR #174 trug drei bekannte Unwahrheiten nach main, eine als „Einschränkung“ offengelegt; Aufschub eines Funds nur mit Gregors Ja zu genau diesem Fund
+- [CHRONIST 25.10.2026 abends](CHRONIST-2026-10-25b.md) — 18:08–19:56: eine neue Lehre, dreizehn Nachträge; Ansage- und Kürzungslehre in derselben Stunde gebrochen

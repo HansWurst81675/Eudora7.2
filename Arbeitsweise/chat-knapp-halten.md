@@ -129,3 +129,15 @@ Werkzeugaufrufen, und er musste es zusammensuchen.
 - **„Ich prüfe das und trage es nach" ist ein Versprechen.** Es kommt sofort
   in `WEITERMACHEN.md` oder wird nicht gegeben. Offen seit 14.10.2026
   06:05: E-95/E-96 gegen E-112 prüfen und `TESTPLAN.md` C3 berichtigen.
+
+## Nachtrag 25.10.2026 abends (CHRONIST): drei Fragen, zwölf Minuten, keine Zeile Text
+
+Zeiten MEZ, gemessen mit `tools/verlauf-messen.pl` ab 18:08: 44 Nachrichten von Gregor, 29 davon Einwürfe (65 %). Zwischen 19:08:30 und 19:20:15 schrieb ich **keine einzige Textzeile**. In der Zeit kamen von Gregor:
+
+| Zeit | Gregor | Was er bekam |
+|---|---|---|
+| 19:06:12 | *„prüfer und lektor durch? angesetzt?"* | keine Antwort. LEKTOR-63 und PRUEFER-54 starteten um 19:19 ohne Meldung |
+| 19:12:32 | *„was heißt hier "ohne paket"? sind wir bei der post?"* | einen Commit um 19:13, keinen Satz |
+| 19:13:40 | *„was ist aus "keine lügen auf main" geworden? gilt nicht mehr?"* | 10 Werkzeugaufrufe, 0 Text (Werkzeug: „18:13:40 10 WZ / 0 Text", UTC). Eine Antwort auf die Frage, ob die Regel gilt, kam nie |
+
+Die Regel vom 14.10. (*„Eine direkte Frage Gregors wird im ersten Satz beantwortet"*) stand hier. Gebrochen wurde sie, weil ich die Berichtigung für die Antwort hielt. Für Gregor ist ein Commit keine Antwort, denn er sieht ihn erst beim nächsten PR. **How to apply, zusätzlich:** Auf eine Ja-oder-Nein-Frage folgt zuerst eine Zeile mit Ja oder Nein, auch wenn die Arbeit daran sofort beginnt. Bei „gilt X nicht mehr?" lautet die Antwort *„Doch, X gilt. Ich habe es mit … verletzt"* ([[einschraenkung-im-pr-ist-kein-ja]]).

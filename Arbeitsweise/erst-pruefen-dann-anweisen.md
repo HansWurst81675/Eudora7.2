@@ -126,3 +126,11 @@ Gregor in der Zwischenzeit fragte, was er tun soll.
   das vor dem Schreiben mit einem `grep` belegt — mit Fundstelle.
 - **Widerruf vor Hakenpflege.** Ist eine Anweisung an Gregor widerlegt,
   ist der Widerruf die nächste Nachricht. Der Commit kann warten.
+
+## Nachtrag 25.10.2026 abends (CHRONIST): ein Handtest, der aus einem gescheiterten Prüfstandsfall entstand
+
+Zeiten MEZ. Gregor um 18:27:03: *„TESTPLAN.md#m1 … ist nicht korrekt: nach schritt 4 wird schritt 5 ohne weiteres nicht mehr möglich sein. bestätige."* Um 18:27:25: *„warum ist es ein manueller test? das kannst du doch anhand der schritte auch überprüfen, nicht wahr?"* Und um 18:28:20: *„ist es nicht schon auf dem prüfstand getestet worden?"*
+
+Belegt an meiner Antwort von 18:28:39 und am Commit `da0590b2`: Am 22.10. lief E-132 zweimal als Prüfstandsfall und scheiterte, weil der Läufer auf das Hauptfenster wartete und davor die Rückfrage stand. Statt das Messskript zu erweitern, habe ich den Fall herausgenommen und als **Handtest M1** an Gregor gegeben. Geschrieben war er nach der Absicht, nicht nach dem Code. Schritt 4 merkt sich die Antwort (`E132Abgelehnt` in `DEudora.ini`, `eudora.cpp:4241`), also fragt der nächste Start in Schritt 5 gar nicht mehr. Die Knöpfe „Eigenes anlegen / Vorhandenes benutzen" gab es im Dialog nie, er hat `MB_YESNOCANCEL`. Beides stand drei Tage auf `main`, bis Gregor es beim Ausführen fand.
+
+**How to apply, zusätzlich:** Ein Fall, der am Prüfstand scheitert, wird nicht dadurch erledigt, dass er zum Handtest wird. Das verschiebt die Messung nur auf den, der am wenigsten Zeit hat ([[pruefstand-nicht-bequemer-als-die-wirklichkeit]]). Muss es doch ein Handtest sein, wird jeder Schritt vorher einmal am Prüfstand oder am Quelltext durchgegangen: Knopfbeschriftung aus der Ressource bzw. dem `MessageBox`-Aufruf, Folgezustand aus dem Code.

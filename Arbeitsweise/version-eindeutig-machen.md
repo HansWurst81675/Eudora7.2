@@ -191,3 +191,12 @@ Beleg, mit dem ein Befund geschlossen wird.
 - **Geht das nicht, gehört die Prüfsumme in den Befund:** *„mit Behebung
   `8dabda73`, ausgeliefert `b52792cd`"*. Ein Verzeichnisname ist eine
   Behauptung über die Datei, eine Prüfsumme ist die Datei.
+
+## Nachtrag 25.10.2026 abends (CHRONIST): „ist E-148 auf dem 0.122-Build behoben?"
+
+Gregor fragte am 25.10.2026 abends: *„ist e-148 bereits auf dem 0.122 build behoben? oder erst im 0.123?"* Die ehrliche Antwort ist „kommt darauf an, welcher 0.122". Belegt am Repo:
+
+- Das **Paket 1.0.122** (Gregors `Eudora72-1.0.122-release`) enthält E-148 **nicht**. `Intern/ABRUF-PRUEFEN.md:107`: *„bis 1.0.122: 121 [Zertifikate], darunter die vier eMudhra-Wurzeln"*.
+- Jeder Bau von `main` seit PR #171 enthält es und meldet sich trotzdem als **7.2.0.122**. `CHANGELOG.md:98ff`: *„Das Programm meldet deshalb weiter die Fassung 7.2.0.122."* Am Prüfstand stand im Titel *„Eudora 7.2.0.122 / Paket 1.0.122+796369bb"*, also ein Paketname, den es für diesen Bau nicht gibt.
+
+Unterscheiden lassen sich die beiden nur am Commit hinter dem `+`. Das ist dieselbe Falle wie am 21.10., diesmal aber in Gregors Sicht: Er sieht „0.122" und weiß nicht, welcher Stand es ist. Vermutung: Seine Frage kam genau daher. **How to apply, zusätzlich:** Ein Bau, der nicht das Paket ist, nennt sich nicht „Paket 1.0.122". Er nennt sich „Bau nach 1.0.122" oder trägt die nächste Nummer mit Kürzel (Vorschlag). Bis dahin beantwortet jede Auskunft an Gregor die Frage nach dem Paket getrennt von der nach dem Bau.

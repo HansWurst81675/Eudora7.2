@@ -86,3 +86,7 @@ gefuehrt wird.
 5. **Die Probe heisst: welchen Wert aendere ich, damit beide Stellen sich
    mitaendern?** Gibt es keinen, sind es zwei Wahrheiten
    ([[einigkeit-ist-kein-beweis]]).
+
+## Nachtrag 25.10.2026 abends (CHRONIST): die Handliste in WEITERMACHEN überholt, zweimal in einer Stunde
+
+Zeiten MEZ, belegt an LEKTOR-63 und LEKTOR-64. `Intern/WEITERMACHEN.md` führt zwei Listen: den erzeugten Block der offenen Befunde (`offene-befunde.pl -schreiben`) und von Hand „Als Nächstes 1., 2., …". Um 19:06 schrieb ich in die Handliste *„1. PRÜFER-53 K4"* und behob K4 um 19:09–19:11. Die Handliste blieb stehen, das ist L-63.1. Um 19:37 behob ich E-137. Der erzeugte Block verlor die Zeile, die Handliste behielt *„2. Vor 7.2.1 beheben: E-137 …"*, das ist L-64.1. LEKTOR-64 dazu: *„Wer dort einsteigt, arbeitet E-137 ein zweites Mal aus."* Das ist Punkt 4 oben, nur in der Übergabedatei. **How to apply, zusätzlich:** Wer einen Punkt der Handliste erledigt, streicht ihn im selben Commit wie die Behebung. Besser ist, die Handliste nennt nur Kennungen, und `offene-befunde.pl` meldet jede Kennung der Handliste, die in `BEFUNDE.md` als behoben steht (Vorschlag, nicht gebaut). Das ist zugleich der Hauptgrund für die LEKTOR-Schleife dieses Abends ([[einschraenkung-im-pr-ist-kein-ja]]).

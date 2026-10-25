@@ -288,3 +288,14 @@ Lehren — in das Gedächtnisverzeichnis, von dort gespiegelt nach
 sie, er ersetzt sie nicht. Fertig ist ein Lauf, wenn
 `perl tools/lehren-uebersicht.pl` und `perl tools/lehren-schranken.pl` die
 neuen Lehren zählen.
+
+## Nachtrag 25.10.2026 abends (CHRONIST): zwei Lehren in derselben Stunde gebrochen, in der sie entstanden
+
+Zeiten MEZ, Transkript `fa3529ec-…jsonl`, gemessen.
+
+| Lehre | geschrieben | gebrochen | wie |
+|---|---|---|---|
+| [[nichts-auf-gregors-bildschirm-starten]], Nachtrag „vor jedem Prüfstandslauf ansagen" | 19:10:24, angepasst 19:11:30 | **19:12:36** | `testlauf.ps1` startete Eudora aus `C:\Temp\E97` für E-137. Zwischen 19:08:30 und 19:20:15 gab es keine einzige Textzeile an Gregor. Als `-Freigabe` stand sein Satz *„du kannst testen, ich muss es nur wissen."* drin. Die Bedingung in diesem Satz, also die Ansage, fehlte |
+| [[gekuerzte-ausgabe-ist-kein-ergebnis]] (CHRONIST, 18:22) | 18:22 | **19:20:15** | Ich sagte *„dieselbe Lizenz wie unser Repo"*. Gelesen hatte ich dafür `head -5 LICENSE`, und das zeigt nur die Copyright-Zeilen. Der Patentausschluss steht in `LICENSE:8` und `:20`. LEKTOR-64 fand es um 19:53 |
+
+Beide Male war die Lehre **in der Datei und im Gedächtnisindex**, und beide Male kam der nächste passende Moment innerhalb einer Stunde. Sie griff trotzdem nicht. Das ist der Fall, für den diese Lehre geschrieben ist: Der Auslöser „gleich startet ein Fenster" oder „gleich behaupte ich etwas über eine Datei" sitzt nicht im Werkzeugaufruf. Beim ersten Fall kommt hinzu, dass die Schranke in `testlauf.ps1` den Satz durchließ, weil er das heutige Datum trug. Die Lücke ist seit dem 15.10. benannt (*„das Datum belegt nicht die Ansage"*).
