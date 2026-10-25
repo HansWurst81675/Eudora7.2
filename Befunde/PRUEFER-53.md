@@ -480,7 +480,7 @@ Abschnitt 6 nennt, habe ich nicht neu nachgesehen.
 * Der Commit-Haken verlangte zwei Dinge: die vom Hauptagenten gespiegelten
   Dateien in `Arbeitsweise/` und eine neu erzeugte Lehrentabelle
   (`perl tools/lehren-uebersicht.pl -schreiben`). Beides steht in einem
-  eigenen Commit (`6abd7d4c`), getrennt von diesem Bericht.
+  eigenen Commits (`6abd7d4c`, `410e0819`), getrennt von diesem Bericht.
 
 ## Übersicht
 
