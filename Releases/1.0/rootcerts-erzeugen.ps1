@@ -23,10 +23,20 @@
 # die Mozilla-CA-Liste in der Aufbereitung des curl-Projekts (cacert.pem).
 # Alternativ direkt von https://curl.se/ca/cacert.pem beziehen.
 
+#
+# AUSSCHLUSS (Befund E-148, 24.10.2026): Zertifizierungsstellen, denen Eudora
+# NICHT mehr vertrauen darf, auch wenn die Quelle sie noch fuehrt. Am
+# 20.10.2026 wurden acht Zwischenzertifikate von eMudhra mit Schluesseln von
+# 3 bis 8 Bit bekannt (Ars Technica, "The Internet goes on high alert after
+# discovery of 8 compromised TLS certs"); Browser sperrten sie am selben Tag.
+# Eudora prueft keine Sperrlisten - der einzige Schutz ist, die Wurzeln
+# darueber nicht mitzuliefern. Verglichen wird mit dem Subject (regulaerer
+# Ausdruck), jede Ausnahme wird beim Erzeugen namentlich ausgegeben.
 [CmdletBinding()]
 param(
     [string]$Quelle = "$env:ProgramFiles\Git\mingw64\etc\ssl\certs\ca-bundle.crt",
-    [string]$Ziel   = ''
+    [string]$Ziel   = '',
+    [string]$Ausschluss = 'O=eMudhra'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -65,6 +75,12 @@ foreach ($t in $treffer) {
     if ($cert.NotAfter.ToUniversalTime() -lt $jetzt -or
         $cert.NotBefore.ToUniversalTime() -gt $jetzt) {
         [void]$uebersprungen.Add("$($cert.Subject) (gueltig bis $($cert.NotAfter.ToUniversalTime().ToString('yyyy-MM-dd')))")
+        continue
+    }
+
+    # Ausgeschlossene Zertifizierungsstellen (E-148) bleiben draussen.
+    if ($Ausschluss -and $cert.Subject -match $Ausschluss) {
+        [void]$uebersprungen.Add("$($cert.Subject) (AUSGESCHLOSSEN, E-148)")
         continue
     }
 

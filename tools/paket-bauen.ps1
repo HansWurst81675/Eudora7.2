@@ -441,6 +441,16 @@ function Weg([string]$name) {
   if (Test-Path -LiteralPath $z) { Remove-Item -Force -LiteralPath $z; Write-Host ("  {0,-28} entfernt" -f $name) }
 }
 
+# BEFUND E-148 (24.10.2026): die Grundlage traegt rootcerts.p7b vom 30.08.2026
+# mit vier eMudhra-Wurzeln, unter denen am 20.10.2026 acht kompromittierte
+# Zwischenzertifikate bekannt wurden. QCSSL prueft keine Sperrlisten; die
+# Datei aus Releases\1.0 (erzeugt von rootcerts-erzeugen.ps1 mit
+# Ausschlussliste) wird deshalb IMMER darueber gelegt - unabhaengig davon,
+# ob aus dem Bauverzeichnis gepackt wird. Bewacht von TestE148.cpp.
+Write-Host ''
+Write-Host 'Wurzelzertifikate (E-148)'
+Nimm (Join-Path $wurzel 'Releases\1.0\rootcerts.p7b') 'rootcerts.p7b'
+
 if ($AusBauverzeichnis) {
   $binBau = Join-Path $wurzel ('Eudora71\Bin\' + $Bauart)
   if (-not (Test-Path -LiteralPath $binBau)) { throw "kein Bauverzeichnis: $binBau" }
