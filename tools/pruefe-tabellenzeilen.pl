@@ -6,7 +6,7 @@ use warnings;
 #
 #   perl tools/pruefe-tabellenzeilen.pl                 # Bestand: alle .md
 #   perl tools/pruefe-tabellenzeilen.pl <datei> ...     # nur diese Dateien
-#   perl tools/pruefe-tabellenzeilen.pl --selbsttest    # 12 Faelle, beide Richtungen
+#   perl tools/pruefe-tabellenzeilen.pl --selbsttest    # 22 Faelle, beide Richtungen
 #   perl tools/pruefe-tabellenzeilen.pl --hinweis       # meldet, weist nie ab
 #
 # Rueckgabe: 0 = keine gebrochene Zeile, 1 = MANGEL, 2 = Aufrufproblem.
@@ -57,6 +57,11 @@ unless (@dateien) {
     push @dateien, sort glob('tools/*.md');
     push @dateien, sort glob('Arbeitsweise/*.md');
     push @dateien, sort glob('Releases/*.md');
+    # Seit dem Umzug am 22.10.2026 liegen BEFUNDE.md und WEITERMACHEN.md in
+    # Intern/ - die Liste kannte das Verzeichnis nicht, und die Schranke war
+    # fuer genau diese Tabellen blind (LEKTOR-58 L-58.1).
+    push @dateien, sort glob(q{Intern/*.md});
+    push @dateien, sort glob(q{Doku/*.md});
 }
 
 my @mangel;
@@ -100,7 +105,28 @@ sub pruefe_text {
         if ($z =~ /^\s*(?:```|~~~)/) { $im_code = !$im_code; $in_tabelle = 0; next }
         next if $im_code;
 
-        if ($z =~ /^\s*$/) { $in_tabelle = 0; next }
+        # LEERZEILE MITTEN IN DER TABELLE (25.10.2026, LEKTOR-58 L-58.2).
+        # Folgt auf die Leerzeile wieder eine Tabellenzeile, die KEINE neue
+        # Tabelle beginnt (keine Trennzeile darunter), steht sie samt allem
+        # Folgenden ausserhalb ihrer Tabelle und wird Fliesstext. Gemessen:
+        # 16 solche Stellen in BEFUNDE.md, WERKZEUGE.md und ZWEIGE.md, zwei
+        # davon an diesem Tag durch einen Ersatztext mit Zeilenumbruch.
+        if ($z =~ /^\s*$/) {
+            if ($in_tabelle) {
+                my $n1 = $i + 1 <= $#$zeilen ? $zeilen->[$i + 1] : '';
+                my $n2 = $i + 2 <= $#$zeilen ? $zeilen->[$i + 2] : '';
+                if ($n1 =~ /^\s*\|/ and $n2 !~ /^\s*\|[\s:|-]+\|?\s*$/) {
+                    (my $t = $n1) =~ s/\r?\n\z//;
+                    push @funde, {
+                        datei => $datei, zeile => $nr, text => $t,
+                        davor => (defined $letzte_zeile ? $letzte_zeile : ''),
+                        grund => 'Leerzeile mitten in der Tabelle - die Zeilen dahinter fallen heraus',
+                    };
+                }
+            }
+            $in_tabelle = 0;
+            next;
+        }
 
         if ($z =~ /^\s*\|/) {
             # EINE ZEILE, DIE NUR AUS STRICHEN BESTEHT (22.10.2026).
@@ -191,6 +217,8 @@ sub selbsttest {
         [ 'DER ECHTE FEHLER 2 (BEFUNDE:308)', "| a | b |\n|---|---|\n| 1 | abgerissen\n |\n| 2 | y |\n", 1 ],
         [ 'Trennzeile darf nicht anschlagen',  "| a | b |\n|---|---|\n| 1 | 2 |\n", 0 ],
         [ 'Bruch nach dem Code-Block',    "```\nirgendwas\n```\n\n| a | b |\n|---|---|\n| 1 | x\nrest\n", 1 ],
+        [ 'Leerzeile mitten in der Tabelle (WERKZEUGE:140)', "| a | b |\n|---|---|\n| 1 | 2 |\n\n| 3 | 4 |\n", 1 ],
+        [ 'Leerzeile vor einer NEUEN Tabelle',               "| a | b |\n|---|---|\n| 1 | 2 |\n\n| c | d |\n|---|---|\n| 3 | 4 |\n", 0 ],
     );
 
     my ($gut, $schlecht) = (0, 0);

@@ -220,7 +220,8 @@ ausdrücklich vor Programmen, die **ihre eigene Liste** von
 Wurzelzertifikaten mitliefern — Eudora gehört dazu.
 
 **Warum Eudora betroffen war.** Eudora prüft Serverzertifikate nicht gegen
-Windows, sondern gegen die Datei `rootcerts.p7b` im Programmverzeichnis, und
+Windows, sondern gegen die Datei `rootcerts.p7b` — zuerst im Mailverzeichnis,
+sonst im Programmverzeichnis (siehe unten) —, und
 fragt keine Sperrlisten ab. Die Liste bis Paket 1.0.122 enthielt vier
 eMudhra-Wurzeln (*emSign Root CA – G1*, *– C1*, *emSign ECC Root CA – G3*,
 *– C3*). Ausnutzen lässt sich das nur, wenn jemand den Netzverkehr zwischen
@@ -242,7 +243,9 @@ zurückkommt ([E-148](Intern/BEFUNDE.md#e-148)).
 **Was Sie mit einem älteren Paket tun können:** `rootcerts.p7b` im
 Programmverzeichnis durch die neue Datei aus `Releases/1.0/` ersetzen
 (Eudora vorher beenden), oder Eudora bis zum neuen Paket nur im eigenen Netz
-benutzen.
+benutzen. Ob Eudora mit der neuen Datei bei Ihrem Anbieter weiter abruft, ist
+wie oben gesagt erst mit OpenSSL gemessen: nach dem Austausch einmal Mail
+abrufen; meldet Eudora einen Zertifikatsfehler, die alte Datei zurücklegen.
 
 **Auch im Mailverzeichnis nachsehen.** Eudora sucht `rootcerts.p7b` zuerst im
 **Mailverzeichnis** (dort, wo `Eudora.ini` und die Postfächer liegen) und nur,

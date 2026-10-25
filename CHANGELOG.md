@@ -106,8 +106,10 @@ dieser Abschnitt zu 7.2.0.123.
   mitgelieferte Liste `rootcerts.p7b` enthielt vier eMudhra-Wurzeln darüber,
   und Eudora prüft keine Sperrlisten. Die neue Liste hat 117 statt 121
   Zertifikate (`Releases/1.0/rootcerts-erzeugen.ps1` mit Ausschlussliste), der
-  Paketbau legt sie in jedes Paket. GMX und freenet sind mit der neuen Liste
-  gemessen und werden weiter angenommen. Einzelheiten in der README.
+  Paketbau legt sie in jedes Paket. GMX und freenet werden mit der neuen Liste
+  angenommen — gemessen mit OpenSSL; mit Eudora selbst wird es im Paket
+  7.2.0.123 gemessen. Eine eigene `rootcerts.p7b` im Mailverzeichnis hat
+  Vorrang vor der mitgelieferten. Einzelheiten in der README.
 
 * **[E-116](Intern/BEFUNDE.md#e-116) — ein Bild mit `width="35px"` wird nicht
   mehr riesig breit.** Die Breite wurde Zeichen für Zeichen gelesen, auch über
