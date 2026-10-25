@@ -56,10 +56,29 @@ unless (defined $befunde) {
 }
 
 # --- Welche Kennungen nennt der Pruefstand? -------------------------------
+# NUR CODE ZAEHLT, KEIN KOMMENTAR (25.10.2026, PRUEFER-50 K4). Bis hierher
+# wurde der ganze Text der Testdateien durchsucht - eine Kennung, die nur in
+# einem Kommentar stand ("siehe auch E-108"), galt als getestet. Gemessen:
+# sieben Kennungen waren so "gedeckt", darunter E-108 (kritisch, Absturz beim
+# Antworten) ohne jeden Test. Zeichenketten bleiben stehen: Testnamen
+# (TT_BeginTest("E-27 ...")) und Pruefmeldungen sind Teil des Tests.
+sub ohne_kommentare {
+    my ($t) = @_;
+    my $aus = '';
+    while (length $t) {
+        if    ($t =~ s/^("(?:[^"\\\n]|\\.)*")//s)  { $aus .= $1 }        # Zeichenkette
+        elsif ($t =~ s/^('(?:[^'\\\n]|\\.)*')//s)  { $aus .= $1 }        # Zeichen
+        elsif ($t =~ s{^//[^\n]*}{}s)             { }                    # Zeilenkommentar
+        elsif ($t =~ s{^/\*.*?\*/}{ }s)           { }                    # Blockkommentar
+        elsif ($t =~ s{^([^"'/]+|/)}{}s)          { $aus .= $1 }
+        else  { $aus .= substr($t, 0, 1, '') }
+    }
+    return $aus;
+}
 my $tests = '';
 for my $f (glob("$wurzel/Eudora71/Tests/*.cpp")) {
     my $t = lies($f);
-    $tests .= $t if defined $t;
+    $tests .= ohne_kommentare($t) if defined $t;
 }
 
 # DIE OBERFLAECHENFAELLE ZAEHLEN AUCH (22.10.2026, PRUEFER Fund 5).

@@ -24,6 +24,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-146](Intern/BEFUNDE.md#e-146)** | Nach dem Umbenennen eines IMAP-Ordners führt Eudora ihn unter einem anderen Namen als der… | **nie gemessen** | eine Rechnung statt zwei — `UpdateAfterRename` (`QCImapMailboxDirector.cpp:2516`) übernimmt den Namen, den `RenameMailbox` (`ImapAccount.cpp:2998-3… |
 | **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |

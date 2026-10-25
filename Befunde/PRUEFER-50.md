@@ -19,7 +19,7 @@ dazu (`imap-pruefserver.pl`, `messen-e77-umbenennen.ps1`, `messen-bild.ps1`,
   QUALCOMM und nicht von [E-77](../Intern/BEFUNDE.md#e-77): ein Server ohne
   Trennzeichen (gemessen: aus `Ablage` wird in Eudora `AblageAblage-&AOQ-`)
   und INBOX bei einem Konto mit Ordnerpräfix ([K8](#k8), neu
-  **E-146**). Lehnt der Server die Umbenennung
+  **[E-146](../Intern/BEFUNDE.md#e-146)**). Lehnt der Server die Umbenennung
   ab oder bricht die Verbindung ab, bleibt der Ordner in Eudora umbenannt und
   auf dem Server nicht ([K9](#k9)).
 * **Die Testsuite ist grün: 293 Tests, 293 bestanden** (gemessen). **Aber
@@ -58,7 +58,7 @@ Programm. Sie gehören aber vor **7.2.1.0**, für das Gregor angeordnet hat,
 dass alle Regressionstests laufen und bestehen: ein Test, der den Fehler
 nicht sieht, besteht dort auch.
 
-**Neue E-Kennung: E-146** ([K8](#k8),
+**Neue E-Kennung: [E-146](../Intern/BEFUNDE.md#e-146)** ([K8](#k8),
 Umbenennen bildet den Namen in Eudora anders als für den Server, wenn der
 Server kein Trennzeichen hat oder INBOX mit Präfix umbenannt wird;
 Originalfehler von QUALCOMM). **E-147 bleibt frei.** Eingetragen in
@@ -576,10 +576,10 @@ und **am Quelltext belegt** (überholt: `grep` statt „alle Ursachen",
 | [K11](#k11) | `E-113b2` grün, auch wenn das Fenster nicht schmaler wurde | mittel | nein |
 | [K12](#k12) | Schranken zählen als Test ohne laufende Rückfallprobe; Rückgabe 2 zählt als Abweisung | mittel | nein |
 | [K6](#k6) | [E-18](../Intern/BEFUNDE.md#e-18): Reihenfolge statt Wirkung | gering | nein |
-| [K8](#k8) | **E-146 (neu)**: Umbenennen ohne Trenner oder INBOX mit Präfix führt anderen Namen als der Server (Original) | gering | nein |
+| [K8](#k8) | **[E-146](../Intern/BEFUNDE.md#e-146) (neu)**: Umbenennen ohne Trenner oder INBOX mit Präfix führt anderen Namen als der Server (Original) | gering | nein |
 | [K9](#k9) | Umbenennen scheitert am Server, Eudora bleibt umbenannt (Original) | gering | nein |
 | [K10](#k10) | `E-77d` verlangt keinen `SELECT`; Prüfserver prüft Namen nur bei vier Befehlen | gering | nein |
 | [K13](#k13) | [S-2](../Intern/BEFUNDE.md#s-2) über die Projektdatei; „überholt" genügt eine Ursache | gering / Hinweis | nein |
 
-**Vergeben: E-146. Frei: E-147.** Eingetragen in
+**Vergeben: [E-146](../Intern/BEFUNDE.md#e-146). Frei: E-147.** Eingetragen in
 `Intern/BEFUNDE.md` ist nichts.

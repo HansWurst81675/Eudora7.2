@@ -43,7 +43,7 @@ sei kodiert. Das stimmt nur für den Server, nicht für Eudora selbst.
 [K1](#k1) ist eine Behebung in zwei Zeilen.
 
 **Neue E-Kennung: [E-145](../Intern/BEFUNDE.md#e-145)** ([K11](#k11), `Base64Decoder` liest bei Bytes über
-127 vor seiner Tabelle, Originalfehler von QUALCOMM). **E-146 bleibt frei.**
+127 vor seiner Tabelle, Originalfehler von QUALCOMM). **[E-146](../Intern/BEFUNDE.md#e-146) bleibt frei.**
 Alle anderen Funde gehören zu [E-77](../Intern/BEFUNDE.md#e-77),
 [E-113](../Intern/BEFUNDE.md#e-113) oder [E-119](../Intern/BEFUNDE.md#e-119).
 Vorher gelaufen: `perl tools/befund-suchen.pl` zu `Base64.cpp`, `g_Decode`,
@@ -601,5 +601,5 @@ Auftrag.
 | [K10](#k10) | [E-113](../Intern/BEFUNDE.md#e-113): QuickTime-Weg ohne Deckel; Absender-Fensterbreite geht zum Empfänger | gering / Hinweis | nein |
 | [K11](#k11) | **[E-145](../Intern/BEFUNDE.md#e-145) (neu)**: `Base64Decoder` liest bei Bytes über 127 vor der Tabelle | gering, Original | nein |
 
-**Vergeben: [E-145](../Intern/BEFUNDE.md#e-145). Frei: E-146.** Eingetragen in `Intern/BEFUNDE.md` ist
+**Vergeben: [E-145](../Intern/BEFUNDE.md#e-145). Frei: [E-146](../Intern/BEFUNDE.md#e-146).** Eingetragen in `Intern/BEFUNDE.md` ist
 nichts.
