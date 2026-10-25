@@ -39,3 +39,13 @@ Punkt in meine Arbeitsliste, mit der Fundstelle aus dem Befund. Verwandt:
 [[ausreisser-ist-der-befund]], [[kuerzel-im-chat-uebersetzen]].
 
 Schranke: keine - der Fehler entsteht beim Sortieren im Gespraech, nicht in einer Datei. Es gibt kein Artefakt, gegen das sich mechanisch pruefen liesse, ob ich einen Punkt zu Recht auf Gregors Liste gesetzt habe. Geprueft wird er dort, wo er auffaellt: wenn Gregor zurueckfragt.
+
+## Nachtrag 24./25.10.2026 (CHRONIST): beantwortete Fragen ein zweites Mal gestellt
+
+Gemessen, Zeiten MESZ. Am 24.10. um 13:27–13:29 beantwortete Gregor die fünf Fragen aus LEKTOR-55 (*„1. ok"*, *„2. e-116 ok"*, *„3. e-113 ok"*, *„e-142: hinweis in readme + FAQ: erst prüfen, dann lsöchen."*). Ich habe jede Antwort sofort in `stand-23-10-2026-spaet.md` angehängt. Nach dem VM-Absturz, in der neuen Sitzung um 22:26, legte ich ihm *„Die Fragen aus LEKTOR-55 … fünf Fragen, die nur Sie entscheiden können"* noch einmal vor. Gregor um 22:30: *„zu 3: e-113 muß ich nachlesen, weiß ich gerade nicht … zu 5: muß nachlesen, was E-142 ist"*, um 22:35 *„was haben wir zu E-142 vereinbart? warum fragst du dann nach?"*, um 22:37 *„e-142 stimmt nicht, was du sagst"*.
+
+**Why:** Die Antworten lagen in einer **Übergabenotiz**, die Fragen im **LEKTOR-Bericht**. Wer die Fragen las, sah sie dort offen. Der Ort der Antwort war nicht der Ort der Frage. Seit dem 25.10. entstehen dafür eigene Dateien `entscheidung-*.md` (E-148, Logzeile) — das ist die richtige Richtung.
+
+**How to apply, zusätzlich:** Eine Antwort Gregors auf eine Frage aus einem Rollenbericht wird **neben die Frage** geschrieben (in den Bericht oder in die Befundzeile) und als `entscheidung-*.md` festgehalten; nicht nur an eine Übergabenotiz gehängt. Bevor ich eine Frageliste vorlege, suche ich jede Kennung in `memory/` **ohne** `head` ([[gekuerzte-ausgabe-ist-kein-ergebnis]]).
+
+**Und noch einmal am 25.10. um 18:10 MEZ**, während dieses CHRONIST-Laufs: *„zu 7: v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."* Gemessen, wo es schon stand: 23.10. 22:52 MESZ *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer …)"*; 24.10. 13:28 von mir in `stand-23-10-2026-spaet.md` notiert (*„Marke `v7.2.1.123`"*); 24.10. 22:30 *„zu 1: die hintere nummer ergibt sich aus dem aktuellen build"*. Trotzdem führte Commit `2222420d` (24.10. 22:34) die Marke in `WEITERMACHEN.md` unter *„Offen an Gregor"*, und von dort kam sie in die Zusammenfassung der Kompaktierung (*„Open decision for Gregor only: GitHub tag naming"*) und zurück auf seine Liste. Eine einmal falsch als offen eingetragene Frage überlebt jede Übergabe. Der Hauptagent hat daraufhin `entscheidung-marke-v7-2-1.md` angelegt.
