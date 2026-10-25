@@ -115,11 +115,27 @@ for my $f (glob("$wurzel/Eudora71/Tests/*.cpp")) {
 {
     my $liste = lies("$wurzel/tools/regression-schranken.txt");
     my $haken = lies("$wurzel/tools/hooks-einrichten.sh") // '';
+    # NUR WAS ZULETZT GEMESSEN ABWIES (25.10.2026, PRUEFER-50 K12). Bis
+    # hierher zaehlte die Zeile in regression-schranken.txt, sobald die
+    # Schranke im Haken hing - ob die Rueckfallprobe HEUTE noch rot wird,
+    # fragte niemand. Jetzt zaehlt eine Kennung nur, wenn das Testbuch des
+    # Pruefberichts (Releases/pruefbericht-tests.tsv, von tools/pruefbericht.pl
+    # mit schranken-gegenprobe.pl gemessen) fuer sie keine rote und
+    # mindestens eine gruene Schrankenzeile fuehrt.
+    my (%schranke_ok, %schranke_rot);
+    my $buch = lies("$wurzel/Releases/pruefbericht-tests.tsv") // '';
+    for my $z (split /\r?\n/, $buch) {
+        my @f = split /\t/, $z;
+        next unless @f >= 3 and $f[0] eq 'schranke';
+        my ($k) = $f[1] =~ /^(\S+)/;
+        if ($f[2] eq 'ok') { $schranke_ok{$k} = 1 } else { $schranke_rot{$k} = 1 }
+    }
     if (defined $liste) {
         for my $z (split /\n/, $liste) {
             next if $z =~ /^\s*(#|$)/;
             my ($k, $s) = map { s/^\s+|\s+$//gr } (split /\|/, $z)[0, 1];
             next unless defined $s and $haken =~ /^schranke \Q$s\E\b/m;
+            next unless $schranke_ok{$k} and !$schranke_rot{$k};
             $tests .= " $k ";
         }
     }

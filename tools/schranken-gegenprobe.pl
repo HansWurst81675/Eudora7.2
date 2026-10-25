@@ -91,7 +91,11 @@ for my $z (split /\n/, $liste) {
         exit 2;
     }
     my $rc2 = schranke($schranke);
-    my $gut = ($rc0 == 0 && $rc1 != 0 && $rc2 == 0);
+    # Nur Rueckgabe 1 ist eine Abweisung. Bis zum 25.10.2026 galt jeder Wert
+    # ungleich 0 - auch 2 (Aufruffehler) oder ein Perl-Abbruch; eine Schranke,
+    # die am Rueckfall abstuerzt, sah aus wie eine, die ihn findet
+    # (PRUEFER-50 K12).
+    my $gut = ($rc0 == 0 && $rc1 == 1 && $rc2 == 0);
     $gut ? $ok++ : $fehl++;
     printf "    [%s] %-6s %-34s vorher=%d rueckfall=%d danach=%d\n",
         ($gut ? ' ok ' : 'FEHL'), $k, $schranke, $rc0, $rc1, $rc2;
