@@ -236,6 +236,9 @@ sub selbsttest {
     }
     print "  ------------------------------------------------------------\n";
     printf "    %d Faelle, %d richtig, %d falsch\n", $gut + $schlecht, $gut, $schlecht;
-    print "    (14 muessen durchgehen, 6 muessen abweisen)\n";
+    # Aus der Liste gezaehlt, nicht von Hand: die feste Angabe "14/6" blieb
+    # stehen, als zwei Faelle dazukamen (LEKTOR-59 L-59.2).
+    my $abweisen = grep { $_->[2] > 0 } @faelle;
+    printf "    (%d muessen durchgehen, %d muessen abweisen)\n", @faelle - $abweisen, $abweisen;
     return $schlecht ? 1 : 0;
 }

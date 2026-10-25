@@ -240,12 +240,16 @@ nicht von eMudhra. **Mit Eudora selbst** ist das erst im Paket 7.2.0.123 zu
 messen; bis dahin ist es eine Rechnung, keine Beobachtung am Programm. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
 zurückkommt ([E-148](Intern/BEFUNDE.md#e-148)).
 
-**Was Sie mit einem älteren Paket tun können:** `rootcerts.p7b` im
-Programmverzeichnis durch die neue Datei aus `Releases/1.0/` ersetzen
-(Eudora vorher beenden), oder Eudora bis zum neuen Paket nur im eigenen Netz
-benutzen. Ob Eudora mit der neuen Datei bei Ihrem Anbieter weiter abruft, ist
-wie oben gesagt erst mit OpenSSL gemessen: nach dem Austausch einmal Mail
-abrufen; meldet Eudora einen Zertifikatsfehler, die alte Datei zurücklegen.
+**Was Sie mit einem älteren Paket tun können:** Eudora beenden, die
+vorhandene `rootcerts.p7b` im Programmverzeichnis in `rootcerts.p7b.alt`
+umbenennen und die neue Datei aus `Releases/1.0/` hineinlegen — oder Eudora
+bis zum neuen Paket nur im eigenen Netz benutzen. Ob Eudora mit der neuen
+Datei bei Ihrem Anbieter weiter abruft, ist wie oben gesagt erst mit OpenSSL
+gemessen: nach dem Austausch einmal Mail abrufen. Meldet Eudora einen
+Zertifikatsfehler, die neue Datei löschen und `rootcerts.p7b.alt` wieder in
+`rootcerts.p7b` umbenennen — dann sind allerdings auch die vier
+eMudhra-Wurzeln wieder da, und für das fremde Netz gilt wieder die Vorsicht
+von oben.
 
 **Auch im Mailverzeichnis nachsehen.** Eudora sucht `rootcerts.p7b` zuerst im
 **Mailverzeichnis** (dort, wo `Eudora.ini` und die Postfächer liegen) und nur,
