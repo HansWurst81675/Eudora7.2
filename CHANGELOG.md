@@ -35,7 +35,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt bei jeder Gelegenheit wieder … | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
-| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | **nie gemessen** | die Messung, was Eudora tatsaechlich beendet - dass der Befehl unbehandelt bleibt, erklaert nur, dass nichts geschieht, nicht dass das Programm zugeht… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
@@ -96,7 +95,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122 auf `main`, kommt mit dem Testpaket 7.2.0.123 — Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+## Seit 7.2.0.122 auf `main`, kommt mit dem Testpaket 7.2.0.123 — Strg+W beendet Eudora nicht mehr ([E-137](Intern/BEFUNDE.md#e-137)), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
 
 **Auf `main` seit PR #157 (23.10.2026) bis PR #174 (25.10.2026), aber noch in
 keinem Paket zum Herunterladen.** Das Programm meldet deshalb weiter die
@@ -104,6 +103,12 @@ Fassung 7.2.0.122. Alles in diesem Abschnitt kommt mit dem nächsten
 **Testpaket 7.2.0.123** zu Gregors lokalem Test; veröffentlicht wird es erst
 mit dem Release **7.2.1.<n>**. Beim Bau des Testpakets wird dieser Abschnitt
 zu 7.2.0.123.
+
+* **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W in einer angedockten Leiste (Adressbuch,
+  Filter, …) beendet nicht mehr ganz Eudora, sondern versteckt nur diese
+  Leiste** — wie Rechtsklick auf den Rahmen → *Hide*. Als eigenes Fenster im
+  Arbeitsbereich schloss Strg+W schon richtig. Regressionstest am Quelltext
+  (302 Tests, 302 bestanden); am laufenden Programm prüft es Gregor im Testpaket.
 
 * **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
   „Task Status" überschreibt keinen Speicher mehr.** Die Liste führt zu jeder
