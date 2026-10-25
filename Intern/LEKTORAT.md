@@ -1805,6 +1805,14 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Dreiundsiebzigster Durchgang — Mikrolauf: Gregors Entscheidung zu PRÜFER-57 K2 in E-137, 25.10.2026 (Bericht: `Befunde/LEKTOR-68.md`)
+
+Geprüft nur den Satz aus `75c71096` in E-137 (`BEFUNDE.md:390`) gegen
+`mainfrm.cpp:3433-3445` und PRÜFER-57 K2: der Block fragt nur
+`ID_FILE_CLOSE`, gleich ob Menü, Kürzel oder Knopf, und kehrt vor der
+Umschalt-Abfrage in `doc.cpp:139` zurück (belegt). **Nichts Falsches, keine
+Funde.** Keine neue Frage an Gregor.
+
 ## Zweiundsiebzigster Durchgang — Mikrolauf: L-66.1 und L-66.2 in E-137, 25.10.2026 (Bericht: `Befunde/LEKTOR-67.md`)
 
 Geprüft nur die Zeile E-137 (`BEFUNDE.md:390`) gegen `mainfrm.cpp`. Beide
