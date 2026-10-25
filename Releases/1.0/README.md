@@ -9,7 +9,7 @@ aus und bringt sie damit auf aktuelle Verschlüsselung.
 |---|---|---|
 | `QCSSL.dll` | 2,8 MB | Eudoras SSL/TLS-Schicht, neu gebaut gegen OpenSSL 3.5.8 LTS |
 | `QCSSL.dll.sha256` | | Prüfsumme zum Abgleich |
-| `rootcerts.p7b` | 126 KB | Wurzelzertifikatsspeicher, 121 aktuelle Zertifizierungsstellen |
+| `rootcerts.p7b` | 123 KB | Wurzelzertifikatsspeicher, 117 Zertifizierungsstellen (seit 25.10.2026 ohne die vier von eMudhra, [E-148](../../Intern/BEFUNDE.md#e-148)) |
 | `rootcerts.p7b.sha256` | | Prüfsumme zum Abgleich |
 | `rootcerts-erzeugen.ps1` | | Skript, das `rootcerts.p7b` erzeugt — der Bauweg zum Nachvollziehen |
 
@@ -59,7 +59,7 @@ Nachgemessen am 29.08.2026 mit OpenSSL 3.5.7:
 |---|---|---|
 | `InstallersForEudora/Eudora7.1/Data/win32/rootcerts.p7b` (was der Installer verteilt) | 30 | 17 |
 | `Eudora71/Bin/Release/rootcerts.p7b` (was im Build-Verzeichnis liegt) | 19 | 8 |
-| **`rootcerts.p7b` aus diesem Release** | **121** | **0** |
+| **`rootcerts.p7b` aus diesem Release** | **121** (seit 25.10.2026: **117**, ohne eMudhra) | **0** |
 
 Das neueste Zertifikat im Original-Speicher ist von **2004**. Die 13 noch gültigen sind
 alte VeriSign- und GeoTrust-Wurzeln, die längst keine Serverzertifikate mehr ausstellen.
@@ -90,7 +90,7 @@ Quelle ist die **Mozilla-CA-Liste** in der Aufbereitung des curl-Projekts
 
 - Datei: `C:\Program Files\Git\mingw64\etc\ssl\certs\ca-bundle.crt`
 - SHA256: `f345ac0d7dbd1a584dd80ff96eb2919e8dac68e962db2e7111401b434e888493`
-- Inhalt: 121 Zertifikate, davon 0 abgelaufen
+- Inhalt: 121 Zertifikate, davon 0 abgelaufen; davon 4 von eMudhra, die seit dem 25.10.2026 ausgeschlossen werden ([E-148](../../Intern/BEFUNDE.md#e-148), Parameter `-Ausschluss` des Skripts)
 - Dieselbe Liste gibt es direkt bei <https://curl.se/ca/cacert.pem>
 
 Daraus erzeugt `rootcerts-erzeugen.ps1` die Datei. Das Skript liest die PEM-Blöcke,
@@ -113,13 +113,13 @@ powershell -ExecutionPolicy Bypass -File rootcerts-erzeugen.ps1
   DER-kodiertes `pkcs7-signedData`. (Die neue Datei nutzt die lange Längenform —
   `hl=5` statt `hl=4` —, weil sie größer als 64 KB ist. Das ist reguläres DER.)
 - **Lesbarkeit mit OpenSSL:** `openssl pkcs7 -inform DER -print_certs` listet
-  121 Zertifikate auf.
+  121 Zertifikate auf (seit 25.10.2026: 117).
 - **Lesbarkeit auf Eudoras Weg:** derselbe Aufruf, den `CertificateStore::LoadFromFile`
   macht — `CertOpenStore(CERT_STORE_PROV_FILENAME_A, X509_ASN_ENCODING, …)` —, öffnet
-  die Datei und zählt darin 121 Zertifikate.
+  die Datei und zählt darin 121 Zertifikate (seit 25.10.2026: 117, geprüft von `Eudora71/Tests/TestE148.cpp`).
 - **Wirkung:** die vier Mailserver oben, Tabelle darüber.
 - **Reproduzierbarkeit:** ein zweiter Lauf des Skripts über dieselbe Quelle liefert eine
-  byte-identische Datei, SHA256 `b7b0739a8339c41944a9a4f9d72664cba207e414e0c867b869d4be48c44a62e7`.
+  byte-identische Datei, SHA256 `b7b0739a8339c41944a9a4f9d72664cba207e414e0c867b869d4be48c44a62e7`; mit Ausschluss (25.10.2026) ebenso, SHA256 `07fea9d218b7339aa1fecd45f6e730f6575479969d8885cfde07923e64a8148d`, zweimal erzeugt und verglichen.
 
 ### Was ungeprüft war — und seit dem 06.09.2026 belegt ist
 
