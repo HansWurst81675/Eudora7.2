@@ -49,7 +49,8 @@ my $baum = abs_path('..') . '/Eudora7.2-wt-' . lc $rolle;
 (my $baum_win = $baum) =~ s{/}{\\}g;
 $baum_win =~ s{^\\([a-z])\\}{\U$1\E:\\};
 
-sub git { my $c = join ' ', map { "\"$_\"" } @_; my $a = `git $c 2>&1`; chomp $a; return ($a, $? >> 8) }
+sub lauf { my $c = join ' ', map { "\"$_\"" } @_; my $a = `$c 2>&1`; chomp $a; return ($a, $? >> 8) }
+sub git { return lauf('git', @_) }
 sub lies { my ($d) = @_; open my $h, '<:raw', $d or return ''; local $/; my $t = <$h>; close $h; $t }
 
 git('fetch', '-q', 'origin');
@@ -73,9 +74,23 @@ my $bericht = "$rolle-" . ($max + 1) . ".md";
 # --- Freie E-Kennungen (PRUEFER): ueber BEFUNDE.md UND alle Berichte -------
 my $kennungen = '';
 if ($rolle eq 'PRUEFER') {
+    # Massstab sind die Anker der Urteilstabelle. Berichte - auch die auf den
+    # Rollenzweigen, die noch nicht eingearbeitet sind - heben die Zahl nur im
+    # lueckenlosen Anschluss (hoechstens 5 weiter): LEKTOR-9 und LEKTOR-48
+    # nennen "E-999" als erfundenes Beispiel, und der erste Stand schlug
+    # deshalb E-1000 vor (gemessen 25.10.2026). Vergebene, aber noch nicht
+    # berichtete Kennungen stehen in tools/AGENTEN-LAUFEN.md und zaehlen mit.
     my $emax = 0;
-    for my $t (lies('Intern/BEFUNDE.md'), map { lies($_) } glob('Befunde/*.md')) {
-        while ($t =~ /\bE-(\d+)\b/g) { $emax = $1 if $1 > $emax }
+    my $tab = lies('Intern/BEFUNDE.md');
+    while ($tab =~ /<a id="e-(\d+)"><\/a>/g) { $emax = $1 if $1 > $emax }
+    my %genannt;
+    for my $t (lies("tools/AGENTEN-LAUFEN.md"), map({ lies($_) } glob(q{Befunde/*.md})),
+               map { (git('grep', '-h', '-o', '-E', 'E-[0-9]+', $_, '--', 'Befunde/'))[0] } split /\n/, $zweige) {
+        $genannt{$1} = 1 while $t =~ /\bE-(\d+)\b/g;
+    }
+    for (my $weiter = 1; $weiter; ) {
+        $weiter = 0;
+        for my $n ($emax + 1 .. $emax + 5) { if ($genannt{$n}) { $emax = $n; $weiter = 1 } }
     }
     $kennungen = 'E-' . ($emax + 1) . ' und E-' . ($emax + 2);
 }
@@ -116,8 +131,11 @@ unless ($nur_zeigen) {
     $rc1 == 0 or do { print STDERR "Zweig anlegen gescheitert: $sw\n"; exit 1 };
     my ($pu, $rc2) = git('-C', $baum, 'push', '-q', '-u', 'origin', $zweig);
     $rc2 == 0 or do { print STDERR "Push gescheitert: $pu\n"; exit 1 };
-    my $kurz = ($rolle eq 'PRUEFER' ? "$bericht: Aenderungen seit $seit gegen die Quelle" : "$bericht: alle MDs gegen den Bestand, seit $seit");
-    system('perl', 'tools/agenten-laufen.pl', '--start', $rolle, $kurz);
+    my $kurz = ($rolle eq 'PRUEFER' ? "$bericht: Aenderungen seit $seit gegen die Quelle, Kennungen $kennungen" : "$bericht: alle MDs gegen den Bestand, seit $seit");
+    # Ausgabe nach stderr: stdout ist der Auftrag (gemessen beim ersten
+    # Ernstlauf 25.10.2026 - "LEKTOR eingetragen" stand als erste Zeile darin).
+    my ($ein) = lauf('perl', 'tools/agenten-laufen.pl', '--start', $rolle, $kurz);
+    print STDERR "$ein\n";
     print STDERR "  eingerichtet: $baum auf $zweig, Bericht $bericht" . ($kennungen ? ", Kennungen $kennungen" : '') . "\n\n";
 }
 print $vorlage;
