@@ -1805,6 +1805,16 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Fünfundsechzigster Durchgang — Mikrolauf: Commit 0adcecaf, 25.10.2026 (Bericht: `Befunde/LEKTOR-60.md`)
+
+Nur der Commit `0adcecaf` war zu prüfen, der die beiden Funde aus LEKTOR-59
+einholt. **Beide sind erledigt, kein neuer Fund.** Der README-Rat für ältere
+Pakete lässt jetzt vorher eine `rootcerts.p7b.alt` anlegen und sagt beim
+Rückweg, dass damit die vier eMudhra-Wurzeln zurückkommen
+([L-59.1](../Befunde/LEKTOR-59.md#l-59.1)). Der Selbsttest der
+Tabellenschranke zählt seine Aufteilung selbst (15/7), und `WERKZEUGE.md:125`
+nennt nur noch 22 Fälle ([L-59.2](../Befunde/LEKTOR-59.md#l-59.2)).
+
 ## Vierundsechzigster Durchgang — Schlusslauf vor dem PR: Commit 62b0a80c, 25.10.2026 (Bericht: `Befunde/LEKTOR-59.md`)
 
 Nur der Commit `62b0a80c` war zu prüfen: die E-148-Berichtigung in
