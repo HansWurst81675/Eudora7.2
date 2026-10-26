@@ -98,4 +98,43 @@ void RunE137Tests(const char* szEudoraDir)
 	free(pBar);
 	free(pKopf);
 	TT_EndTest();
+
+	// Dritter Teil (Gregor am Testpaket 7.2.0.124, T1): ein Klick auf
+	// Titelzeile oder Rand des SCHWEBENDEN Fensters trifft den kleinen Rahmen
+	// QCMiniDockFrameWnd, nicht die Leiste - CWazooBar::OnMouseActivate sah
+	// ihn nie, und Strg+W schloss wieder die Mail. Der Rahmen holt den Fokus
+	// jetzt selbst in die Leiste, fuer jede Trefferzone ausser HTCLIENT.
+	TT_BeginTest("E-137: ein Klick auf Titelzeile oder Rand einer schwebenden Leiste gibt ihr den Tastaturfokus");
+	char* pWb = QT_LiesNurCode(szEudoraDir, "workbook.cpp");
+	char* pWbKopf = QT_LiesNurCode(szEudoraDir, "workbook.h");
+	if (!pWb || !pWbKopf) { TT_Fail("workbook.cpp oder workbook.h nicht lesbar - ungeprueft ist nicht gruen"); free(pWb); free(pWbKopf); TT_EndTest(); return; }
+	QT_LeerraumZusammen(pWb);
+	QT_LeerraumZusammen(pWbKopf);
+	char* pKlasse = QT_Abschnitt(pWbKopf, "class QCMiniDockFrameWnd : public SECMiniDockFrameWnd", "DECLARE_MESSAGE_MAP()");
+	TT_CHECK_MSG(pKlasse && QT_Enthaelt(pKlasse, "afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);"),
+				 "QCMiniDockFrameWnd deklariert OnMouseActivate nicht");
+	free(pKlasse);
+	char* pMap = QT_Abschnitt(pWb, "BEGIN_MESSAGE_MAP(QCMiniDockFrameWnd, SECMiniDockFrameWnd)", "END_MESSAGE_MAP()");
+	TT_CHECK_MSG(pMap && QT_Enthaelt(pMap, "ON_WM_MOUSEACTIVATE()"),
+				 "OnMouseActivate steht nicht in der Message-Map von QCMiniDockFrameWnd - es liefe nie");
+	free(pMap);
+	char* pRahmen = QT_Abschnitt(pWb, "int QCMiniDockFrameWnd::OnMouseActivate(", "return nErgebnis; }");
+	TT_CHECK_MSG(pRahmen != NULL, "QCMiniDockFrameWnd::OnMouseActivate nicht gefunden");
+	if (pRahmen)
+	{
+		const long lBasis = QT_Stelle(pRahmen, "SECMiniDockFrameWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);");
+		const long lZone  = QT_Stelle(pRahmen, "if (nHitTest != HTCLIENT) {");
+		const long lSuche = QT_Stelle(pRahmen, "DYNAMIC_DOWNCAST(CWazooBar,");
+		const long lWenn  = QT_Stelle(pRahmen, "if (pLeiste && (!pFokus || !pLeiste->IsChild(pFokus))) {");
+		const long lSetze = QT_Stelle(pRahmen, "pWazooWnd->SetFocus();");
+		TT_CHECK_MSG(lBasis >= 0, "die Basisklasse wird nicht mehr gerufen - Ziehen und Aktivieren des Rahmens fielen weg");
+		TT_CHECK_MSG(lZone > lBasis, "der Rahmen behandelt nicht gezielt die Klicks ausserhalb der Leiste (HTCLIENT bleibt bei CWazooBar)");
+		TT_CHECK_MSG(lSuche > lZone, "der Rahmen sucht die Leiste in sich nicht");
+		TT_CHECK_MSG(lWenn > lSuche && lSetze > lWenn,
+					 "der Fokus wird nicht oder nicht nur dann gesetzt, wenn er ausserhalb der Leiste liegt");
+		free(pRahmen);
+	}
+	free(pWb);
+	free(pWbKopf);
+	TT_EndTest();
 }

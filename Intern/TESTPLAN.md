@@ -28,7 +28,7 @@ starten. In der Titelzeile muss **7.2.0.124** und **Paket 1.0.124** stehen.
 
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
-| T1 | — | | |
+| T1 | **nein** | 26.10.2026 | Gregor: *„FAILED: CTRL-W schließt nicht filter fenster“*, geklickt *„mal oben, mal seitlich“* (Titelzeile und Rand des schwebenden Fensters). Klicks **in** die Leiste wirkten (Protokoll dreimal `E-137 Strg-W`). Ursache und Behebung: [E-137](BEFUNDE.md#e-137), dritter Teil |
 | T2 | — | | |
 | T3 | — | | |
 | T4 | — | | |

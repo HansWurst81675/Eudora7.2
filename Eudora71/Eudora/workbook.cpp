@@ -37,6 +37,7 @@ DAMAGE. */
 #include "QCGraphics.h"
 #include "utils.h"
 #include "WazooBar.h"
+#include "debug.h"		// PutDebugLog, E-137
 #include "guiutils.h"
 
 
@@ -530,6 +531,7 @@ void QCControlBarWorksheet::OnClose()
 BEGIN_MESSAGE_MAP(QCMiniDockFrameWnd, SECMiniDockFrameWnd)
 	//{{AFX_MSG_MAP(QCMiniDockFrameWnd)
 	//}}AFX_MSG_MAP
+	ON_WM_MOUSEACTIVATE()	// E-137
 END_MESSAGE_MAP()
 
 
@@ -539,6 +541,59 @@ QCMiniDockFrameWnd::QCMiniDockFrameWnd()
 
 QCMiniDockFrameWnd::~QCMiniDockFrameWnd()
 {
+}
+
+
+////////////////////////////////////////////////////////////////////////
+// OnMouseActivate [protected]
+//
+// E-137, dritter Teil (Gregor am Testpaket 7.2.0.124, 26.10.2026, T1):
+// "CTRL-W schliesst nicht filter fenster" - geklickt hatte er "mal oben,
+// mal seitlich", also auf die Titelzeile und den Rand des SCHWEBENDEN
+// Fensters. Das ist dieser kleine Rahmen, nicht die Leiste darin;
+// CWazooBar::OnMouseActivate sah den Klick nie, der Fokus blieb in der
+// Mail, und Strg+W schloss sie. Die drei Klicks IN die Leiste davor
+// wirkten (eudora.log: dreimal "E-137 Klick in Wazoo-Leiste" und gleich
+// danach "E-137 Strg-W").
+//
+// Hier wird deshalb jeder Klick auf den Rahmen (Titelzeile, Rand, Ecke)
+// wie ein Klick in die Leiste behandelt: liegt der Fokus ausserhalb der
+// schwebenden Leiste, bekommt ihn ihr aktives Wazoo-Fenster. Klicks IN
+// die Leiste (HTCLIENT, von der Leiste an den Rahmen weitergereicht)
+// bleiben bei CWazooBar::OnMouseActivate.
+////////////////////////////////////////////////////////////////////////
+int QCMiniDockFrameWnd::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
+{
+	const int nErgebnis = SECMiniDockFrameWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);
+
+	if (nHitTest != HTCLIENT)
+	{
+		CWazooBar* pLeiste = NULL;
+		for (CWnd* pKind = GetWindow(GW_CHILD); pKind && !pLeiste; pKind = pKind->GetWindow(GW_HWNDNEXT))
+		{
+			for (CWnd* pEnkel = pKind->GetWindow(GW_CHILD); pEnkel && !pLeiste; pEnkel = pEnkel->GetWindow(GW_HWNDNEXT))
+			{
+				CWazooBar* pKandidat = DYNAMIC_DOWNCAST(CWazooBar, CWnd::FromHandlePermanent(pEnkel->GetSafeHwnd()));
+				if (pKandidat && pKandidat->IsWindowVisible())
+					pLeiste = pKandidat;
+			}
+		}
+
+		CWnd* pFokus = CWnd::GetFocus();
+		if (pLeiste && (!pFokus || !pLeiste->IsChild(pFokus)))
+		{
+			CWazooWnd* pWazooWnd = pLeiste->GetActiveWazooWindow();
+			if (pWazooWnd && pWazooWnd->GetSafeHwnd())
+			{
+				CString strSpur;
+				strSpur.Format("E-137 Klick auf den Rahmen der schwebenden Leiste: Fokus geht in die Leiste (Trefferzone %u)", nHitTest);
+				PutDebugLog(DEBUG_MASK_MISC, strSpur);
+				pWazooWnd->SetFocus();
+			}
+		}
+	}
+
+	return nErgebnis;
 }
 
 
