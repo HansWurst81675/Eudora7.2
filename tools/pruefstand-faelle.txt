@@ -241,3 +241,12 @@ E-100 | C:\Temp\E97 | 120 | messung | E100 ERGEBNIS dialog=1 lebt=1 ini=ok | ABG
 # blossen Oeffnen des Filterfensters nicht zu "matches regexp" werden. Die
 # Spurmarke zeigt den Mechanismus: mit dem Fehler waehlt das Feld 14 (ungueltig).
 E-67 | C:\Temp\E67 | 60 | log | verb-gespeichert=14 verb-auswahl=0 | verb-auswahl=14 | | messen=tools\messen-e67.ps1
+
+# ZIEL 2/4 (26.10.2026): die Meldung "Encountered an improper argument" beim
+# Anzeigen. Seit dem 26.10. schreibt Eudora jede Ausnahme aus einer
+# Fensterbotschaft als "Ausnahme in Fensterbotschaft (ZIEL 2/4)" ins
+# Protokoll (eudora.cpp, CEudoraApp::ProcessWndProcException). EBILD zeigt,
+# beantwortet und leitet die meisten Nachrichten weiter - dort darf keine
+# solche Zeile entstehen. "Logging shutdown" ist die Positivprobe: das
+# Protokoll wurde bis zum Ende geschrieben.
+ZIEL24 | C:\Temp\EBILD | 240 | log | Logging shutdown | Ausnahme in Fensterbotschaft | | messen=tools\messen-bild.ps1

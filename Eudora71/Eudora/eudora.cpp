@@ -2026,6 +2026,41 @@ void CEudoraApp::SaveStdProfileSettings()
 	CWinApp::SaveStdProfileSettings();
 }
 
+////////////////////////////////////////////////////////////////////////
+// ProcessWndProcException [public, virtual]
+//
+// SPURMARKE zu ZIEL.md Kriterium 2 und 4 (26.10.2026). Eine Ausnahme, die
+// aus der Behandlung einer Fensterbotschaft bis hierher durchschlaegt,
+// zeigt die MFC als Meldung - etwa "Encountered an improper argument." -,
+// und Eudora schrieb sie nirgends mit. Gregor hat die Meldung seit E-43
+// nicht mehr gesehen; ob sie wirklich verschwunden ist, laesst sich nur
+// messen, wenn jedes Auftreten im eudora.log steht (0 Treffer in seinen
+// Protokollen bewiesen nichts - es gab keine Zeile, die sie haette schreiben
+// koennen). Das Verhalten bleibt unveraendert: danach zeigt die MFC die
+// Meldung wie bisher.
+////////////////////////////////////////////////////////////////////////
+LRESULT CEudoraApp::ProcessWndProcException(CException* e, const MSG* pMsg)
+{
+	TCHAR szText[256] = "";
+	if (e)
+		e->GetErrorMessage(szText, sizeof(szText) / sizeof(TCHAR));
+
+	TCHAR szKlasse[64] = "";
+	if (pMsg && pMsg->hwnd)
+		::GetClassName(pMsg->hwnd, szKlasse, sizeof(szKlasse) / sizeof(TCHAR));
+
+	CString szSpur;
+	szSpur.Format("Ausnahme in Fensterbotschaft (ZIEL 2/4): text=\"%s\" art=%s nachricht=0x%04X wparam=0x%X fenster=\"%s\"",
+				  szText,
+				  (e ? e->GetRuntimeClass()->m_lpszClassName : "?"),
+				  (pMsg ? pMsg->message : 0),
+				  (pMsg ? (UINT) pMsg->wParam : 0),
+				  szKlasse);
+	PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+	return CWinApp::ProcessWndProcException(e, pMsg);
+}
+
 int CEudoraApp::ExitInstance()
 {
 	// BEFUND E-33: letzte Spurmarke des Beenden-Weges. ExitInstance wird erst

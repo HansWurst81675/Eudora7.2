@@ -42,6 +42,7 @@ void RunE113Tests(void);
 void RunE77Tests(void);
 void RunSpeicherfehlerTests(const char* szEudoraDir);
 void RunE137Tests(const char* szEudoraDir);
+void RunAusnahmeSpurTests(const char* szEudoraDir);
 void RunE77QuelltextTests(const char* szEudoraDir);
 void RunStartfehlerTests(const char* szEudoraDir);
 void RunE148Tests(const char* szEudoraDir);
@@ -151,6 +152,7 @@ int main(int argc, char* argv[])
 	RunE130Tests(szEudoraDir);
 	RunSpeicherfehlerTests(szEudoraDir);
 	RunE137Tests(szEudoraDir);
+	RunAusnahmeSpurTests(szEudoraDir);
 	RunE77QuelltextTests(szEudoraDir);
 	RunStartfehlerTests(szEudoraDir);
 	RunE148Tests(szEudoraDir);

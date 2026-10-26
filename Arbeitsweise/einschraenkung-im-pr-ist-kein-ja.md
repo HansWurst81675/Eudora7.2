@@ -54,3 +54,16 @@ Gregors Frage dahinter lautet: Wird ein Zweig so je fertig? Gemessen an den vier
 **Vorschlag für die Schranke (nicht gebaut):** `haken-pr-lektor.pl` liest zusätzlich den jüngsten `Befunde/LEKTOR-*.md` und `PRUEFER-*.md` im Zweig. Er weist ab, wenn ein Fund mit „falsch" oder „wichtig" in keinem späteren Commit-Betreff des Zweigs vorkommt und keine Zeile `Gregor-Ja: <Fund>` in der PR-Beschreibung steht. Gegenprobe: der Stand vor PR #174 (L-62.1, L-62.2, K4 offen) muss abgewiesen werden.
 
 Verwandt: [[review-sieht-nur-den-diff]], [[erlaubnis-nicht-hineinlesen]], [[fertig-heisst-fertig]], [[daueraufgaben-brauchen-einen-takt]].
+
+## Nachtrag 25.10.2026 spät (CHRONIST): wie die Schleife auslief
+
+Gemessen an den Berichten, Zeiten MEZ. Fortsetzung der Tabelle oben:
+
+| Lauf | falsch-Funde | Woher |
+|---|---|---|
+| LEKTOR-65 (20:14) | 1 | Spurmarke in E-137, die der Code seit `424966f6` (20:00) anders schreibt |
+| LEKTOR-66 (20:37) | 1 | E-137 nannte nach der Verlegung (`78f2ad2a`, 20:23) noch `OnCmdMsg` |
+| LEKTOR-67 (20:43) | 0 | nur ein Hinweis |
+| LEKTOR-68 (20:47) | 0 | ein einzelner Satz, Gregors Entscheidung zu K2 |
+
+Diesmal kam PR #175 erst, als der letzte LEKTOR nichts Falsches mehr fand und der einzige Entscheidungspunkt aus PRUEFER-57 beantwortet war. Diese Entscheidung (K2) hat Gregor mit *„a) ist ok.“* (20:43:59) getroffen, bevor der PR kam. Die Regel dieser Lehre hat also gewirkt. Der Satz „erst Zustand, dann beschreiben“ oben erklärt aber nur einen der fünf Funde zwischen LEKTOR-63 und -66. Die anderen vier sind Code, zu dem der Text nicht mitgezogen wurde. Das steht jetzt in [[doku-parallel-nicht-hinterher]] (Nachtrag 25.10. spät).
