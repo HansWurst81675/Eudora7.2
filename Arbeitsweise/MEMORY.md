@@ -127,3 +127,4 @@
 - [CHRONIST 26.10.2026](CHRONIST-2026-10-26.md) — Lauf über 25.10. 19:56 bis 26.10. 07:18: keine neue Lehre, neun Nachträge; E-137-Test las nur OnCmdMsg, Ansage-Regel nach 17 Min gebrochen
 - [Message-ID: kein Befund](entscheidung-message-id-kein-befund.md) — Gregor 25.10.: RFC-5322-Randfälle in AssignMessageId nicht aufnehmen; steht noch in keiner Repo-Datei, dazu ungeprüfter sprintf-Hinweis
 - [Eine Stelle, dann verlinken](eine-stelle-dann-verlinken.md) — Gregor 26.10.: jede Information nur an einer Stelle, andere MDs verlinken; Doppelungen vom 26.10. nach dem Testpaket zurückbauen
+- [Nur der Testplan zählt](nur-testplan-zaehlt.md) — Gregor 26.10.: testet nur, was in Intern/TESTPLAN.md steht; Anweisungen erst ins Repo, im Chat nur der Verweis

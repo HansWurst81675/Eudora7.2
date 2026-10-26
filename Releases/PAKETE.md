@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 25.10.2026, seit dem 23.10.2026 kein neues Paket (Nummern bis 1.0.122 verzeichnet, geschnürt ist bis 1.0.122; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../Intern/BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.120** als `v1.0.120` am 21.10.2026 um 19:07:37 UTC (Marke `30feeae2`, auf GitHub *Latest*) — es trägt 1.0.118, 1.0.119 und 1.0.120 —, davor **1.0.117** als `v1.0.117` am selben Tag um 07:56:56 UTC (Marke `f546b004`), davor **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 26.10.2026 (Nummern bis 1.0.125 verzeichnet, geschnürt ist bis 1.0.125; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../Intern/BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.120** als `v1.0.120` am 21.10.2026 um 19:07:37 UTC (Marke `30feeae2`, auf GitHub *Latest*) — es trägt 1.0.118, 1.0.119 und 1.0.120 —, davor **1.0.117** als `v1.0.117` am selben Tag um 07:56:56 UTC (Marke `f546b004`), davor **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -156,9 +156,42 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.125 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.125, Zweig `0.123_ergebnisse`
+
+**Geschnürt am 26.10.2026 um 20:56 und als Testverzeichnis abgelegt; nicht veröffentlicht.**
+Für Gregors Kurztest ([TESTPLAN U1–U4](../Intern/TESTPLAN.md)) vor dem Release 7.2.1.
+
+| | |
+|---|---|
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-1.0.125-release`, neben seinem 1.0.124, das unangetastet bleibt. Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` mit `LogLevel=58527`; Gregor kopiert seine Daten aus 1.0.124 hinein |
+| ZIP | `Releases/Eudora72-1.0.125-release.zip`, 9.125.690 Byte. SHA-256 `017753d0adeaee3ee9b123a64fb20763a12b1e15e10a31ebfa6e5b216c40c7a7` |
+| Gegen den Bau gemessen | `Eudora.exe` und `EudoraRes.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `7.2.0.125 / Paket 1.0.125+46707a76`, mit `cmp` gemessen); die Spurmarke `E-137 Klick auf den Rahmen der schwebenden Leiste` steht in der `Eudora.exe` |
+| Geprüft vorher | 312 Unit-Tests, 19 Schranken, 36 Prüfstandsfälle, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md), Gesamturteil BESTANDEN) |
+| `paket-pruefen.ps1` | keine Fehler; 39 ausführbare Dateien, keine enthält eine Debug-Laufzeit |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen`: [PRÜFER-60](../Befunde/PRUEFER-60.md) und [LEKTOR-80](../Befunde/LEKTOR-80.md) waren gelaufen und eingearbeitet; danach nur Versionssprung, die Include-Korrektur zu E-137 und der Testplan; fällig blieb der CHRONIST, der nur Lehren betrifft |
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.125.
+
+## 1.0.124 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.124, Zweig `0.123_ergebnisse`
+
+**Geschnürt am 26.10.2026 um 13:10 und als Testverzeichnis abgelegt; nicht veröffentlicht.**
+Für Gregors Kurztest ([TESTPLAN T1–T6](../Intern/TESTPLAN.md)) vor dem Release 7.2.1.
+
+| | |
+|---|---|
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-1.0.124-release`, neben seinem 1.0.123, das unangetastet bleibt. Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` mit `LogLevel=58527`; Gregor kopiert seine Daten wie bei 1.0.123 hinein |
+| ZIP | `Releases/Eudora72-1.0.124-release.zip`, 9.125.660 Byte. SHA-256 `a568d7b6a3ae7f13834d5e290fe4d2f47ad7620f0998d6bc9ca24a42cb44a3c1` |
+| Gegen den Bau gemessen | `Eudora.exe` und `EudoraRes.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `7.2.0.124 / Paket 1.0.124+8bdab960`, 3.027.968 Byte, mit `cmp` gemessen); Schritt 8 des Paketbaus hat sechs weitere Programmdateien aus dem Release-Bau ersetzt, 33 waren schon gleich ([E-156](../Intern/BEFUNDE.md#e-156)) |
+| Geprüft vorher | 311 Unit-Tests, 19 Schranken, 36 Prüfstandsfälle, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md), Gesamturteil BESTANDEN) |
+| `paket-pruefen.ps1` | keine Fehler; **39 ausführbare Dateien, keine enthält eine Debug-Laufzeit** (die Prüfung aus E-156); Kriterium 0 *„startet ohne Nachinstallation“*; 4 bekannte Warnungen wie bei 1.0.123 |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen`: [LEKTOR-74](../Befunde/LEKTOR-74.md) und [PRÜFER-59](../Befunde/PRUEFER-59.md) waren gelaufen; vor dem Schnüren eingearbeitet sind die vier „falsch“-Funde (L-74.1 bis L-74.4) und die Funde zu E-158 und E-159; fällig blieb der CHRONIST, der nur Lehren betrifft |
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.124.
+
 ## 1.0.123 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.123, Zweig `vor-testpaket-7.2.0.123`
 
 **Geschnürt am 26.10.2026 um 09:18 und als Testverzeichnis abgelegt; nicht veröffentlicht.**
+Von Gregor am 26.10.2026 getestet, Ergebnis: [TESTPLAN.md](../Intern/TESTPLAN.md#ergebnis-7-2-0-123).
 Für Gregors Test vor dem Release 7.2.1.
 
 | | |
@@ -167,7 +200,7 @@ Für Gregors Test vor dem Release 7.2.1.
 | ZIP | `Releases/Eudora72-1.0.123-release.zip`, 9.542.254 Byte. SHA-256 `cf3c780236b0ce0e82ff4dc6c43fdf53ced354b2a351b52065ff9994e9a1fca4` |
 | Gegen den Bau gemessen | `Eudora.exe` und `EudoraRes.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `7.2.0.123 / Paket 1.0.123+82372232`, 3.027.456 Byte); die Bau-Kennung, die Spurmarke `Ausnahme ausserhalb einer Fensterbotschaft` und der E-142-Hinweistext (UTF-16 in `EudoraRes.dll`) sind enthalten; `rootcerts.p7b` gleich `Releases/1.0/rootcerts.p7b` (ohne eMudhra) |
 | Geprüft vorher | 308 Unit-Tests, 19 Schranken, 35 Prüfstandsfälle, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md)) |
-| `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„startet ohne Nachinstallation: JA"*, 4 bekannte Warnungen (MFC71/MSVCP71 fehlen, zwei 16-Bit-Altlasten) |
+| `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„startet ohne Nachinstallation: JA"*, 4 bekannte Warnungen (MFC71/MSVCP71 fehlen, zwei 16-Bit-Altlasten). Das galt für die damalige Fassung des Werkzeugs; die Debug-Prüfung kam am 26.10.2026 mit [E-156](../Intern/BEFUNDE.md#e-156) dazu und meldet an diesem Paket 6 FEHLER |
 | Rollenschranke | gebaut mit `-RollenSindGelaufen`: LEKTOR-70 und PRÜFER-58 waren gelaufen, fällig nur durch das Einarbeiten ihrer Funde |
 
 Inhalt: siehe [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.123; Prüfanleitung in

@@ -1805,6 +1805,216 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Achtundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-82 vor dem PR des Zweigs `0.123_ergebnisse` nach `main`, 26.10.2026 (Bericht: `Befunde/LEKTOR-83.md`)
+
+Lauf über `5a8e549..ce780458` (ein Commit, zwei `.md`, 3 Zeilen).
+**0 Funde.** L-82.1 bis L-82.3 sind erledigt: E-124 trennt jetzt die
+Messung vom 26.10.2026 (Schutzverlauf) von der Lesung der Vorgangsseite
+am 23.10.2026 (`Intern/BEFUNDE.md:370`, gleich
+`Releases/DEFENDER-FEHLALARM.md:3`); E-142 sagt, die *No*-Vorwahl sei am
+Programm noch nicht gesehen, nur im Unit-Test belegt
+(`Intern/BEFUNDE.md:378`); `CHANGELOG.md:78` nennt Kriterium 6 an 7.2.0.124
+mit T3 bestätigt, gleich `ZIEL.md:201`. Für Gregor offen: was vor der Marke
+`v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio.
+
+## Siebenundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-81 vor dem PR des Zweigs `0.123_ergebnisse` nach `main`, 26.10.2026 (Bericht: `Befunde/LEKTOR-82.md`)
+
+Lauf über `e6fedc9..aeb79aa4` (ein Commit, acht `.md`, 17 Zeilen).
+**3 Funde** (0 falsch, 1 veraltet, 2 unklar). L-81.2 bis L-81.10 sind
+erledigt, L-81.1 bis auf eine Zeile. Nichts gibt etwas als bestätigt aus,
+das nicht bestätigt ist; Kriterium 4 heißt mit dem offenen E-159 begründet
+weiter *fast*. Unklar: in E-124 hängt am neuen Datum *„Zuletzt gemessen:
+26.10.2026“* noch der Halbsatz *„aus der Vorgangsseite gelesen“*, die seit
+dem 22.10.2026 niemand neu gelesen hat (`Intern/BEFUNDE.md:370`,
+[L-82.1](../Befunde/LEKTOR-82.md#l-82.1)); E-142 nennt die *No*-Vorwahl
+*„an 1.0.124 geprüft (T4, T6)“*, obwohl die Rückfrage in T4 nicht kam und
+T6 etwas anderes prüft (`Intern/BEFUNDE.md:378`,
+[L-82.2](../Befunde/LEKTOR-82.md#l-82.2)). Veraltet: `CHANGELOG.md:78`
+führt Kriterium 6 noch als *„an 7.2.0.123 nicht bestanden“* ohne T3 an
+7.2.0.124 ([L-82.3](../Befunde/LEKTOR-82.md#l-82.3)). Für Gregor offen: was
+vor der Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio.
+
+## Sechsundachtzigster Durchgang — Prüfung vor dem PR des Zweigs `0.123_ergebnisse` nach `main`: Kurztest 7.2.0.124 abgeschlossen, Entscheidungen 12–14, Fassung 7.2.0.125, 26.10.2026 (Bericht: `Befunde/LEKTOR-81.md`)
+
+Lauf über `f11f17f..1e819254` (14 Commits). **10 Funde** (0 falsch,
+7 veraltet, 3 unklar). L-80.1 bis L-80.9 sind erledigt bis auf einen Rest von
+L-80.4. Paket 1.0.125 stimmt mit `Releases/PAKETE.md` (Größe, SHA-256, `cmp`
+gegen den Bau, Spurmarke, `LogLevel`). Nichts gibt E-137 dritter Teil als
+bestätigt aus. Veraltet: E-156 und Kriterium 4 warten in `BEFUNDE.md:384`,
+`ZIEL.md:72,199` und `CHANGELOG.md:77` noch auf T5, das *ja* ist — Kriterium
+6 ist nach demselben Kurztest nachgezogen, 4 nicht
+([L-81.1](../Befunde/LEKTOR-81.md#l-81.1)); das E-137-Urteil nennt Paket
+1.0.125 nicht ([L-81.2](../Befunde/LEKTOR-81.md#l-81.2)); E-142 und
+Entscheidung 12 sagen noch, *Send Again* sei ungeprüft
+([L-81.4](../Befunde/LEKTOR-81.md#l-81.4)); TESTPLAN T4 *„entscheidet
+Gregor“* ([L-81.5](../Befunde/LEKTOR-81.md#l-81.5)); E-124 *Zuletzt
+gemessen 23.10.* trotz Messung an 1.0.124
+([L-81.6](../Befunde/LEKTOR-81.md#l-81.6)); `README.md:137` *„beide
+Fassungen“* bei dreien ([L-81.7](../Befunde/LEKTOR-81.md#l-81.7));
+`README.md:164` kündigt die E-119-Behebung für 7.2.0.124 an
+([L-81.8](../Befunde/LEKTOR-81.md#l-81.8)); `PAKETE.md:178` *„T1–T5“*
+([L-81.10](../Befunde/LEKTOR-81.md#l-81.10)). Unklar: E-137 verlangt
+Titelzeile und Rand auch angedockt, U1–U3 prüfen nur schwebend
+([L-81.3](../Befunde/LEKTOR-81.md#l-81.3)); `Doku/ANWENDER.md:223-224`
+*„bisher“* keine Code-Signatur nach Entscheidung 14
+([L-81.9](../Befunde/LEKTOR-81.md#l-81.9)). Für Gregor offen: was vor der
+Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio.
+
+## Fünfundachtzigster Durchgang — Prüfung vor dem PR des Zweigs `0.123_ergebnisse` nach `main`: Kurztest an 7.2.0.124, E-137 dritter Teil, Nachtrag E-142, 26.10.2026 (Bericht: `Befunde/LEKTOR-80.md`)
+
+Lauf über `caf337b..e119d6ab` (7 Commits). **9 Funde** (1 falsch,
+5 veraltet, 3 unklar). L-79.1 und L-79.2 sind erledigt, L-79.3 (Doppelung)
+nicht. Kein Text gibt E-137 oder E-142 als für 7.2.0.124 bestätigt aus.
+Falsch: E-137 ist seit `0b0b50de` aus den erzeugten Listen offener Befunde
+in `CHANGELOG.md` und `Intern/WEITERMACHEN.md` verschwunden — ein kursives
+Zitat im fettgedruckten Urteil (`Intern/BEFUNDE.md:395`) lässt
+`tools/offene-befunde.pl` *„schwebenden“* als Urteil lesen, und das Werkzeug
+meldet trotzdem *„in beiden Listen gleich“*
+([L-80.1](../Befunde/LEKTOR-80.md#l-80.1)). Veraltet: E-137 kennt den
+zweiten Durchgang von T1 nicht ([L-80.2](../Befunde/LEKTOR-80.md#l-80.2));
+E-119 und E-158 warten in `BEFUNDE.md` und `ZIEL.md` noch auf die
+Bestätigung, die T2 und T3 gegeben haben, `ZIEL.md` zählt deshalb *„24 von
+25“* ([L-80.3](../Befunde/LEKTOR-80.md#l-80.3)); E-142 erwartet noch T4 und
+sagt *„vor 7.2.1 nichts“* neben Gregors offener Entscheidung
+([L-80.4](../Befunde/LEKTOR-80.md#l-80.4)); `WEITERMACHEN:132` nennt T3 und
+T4 als noch zu fahren ([L-80.7](../Befunde/LEKTOR-80.md#l-80.7));
+`PAKETE.md:6` sagt, 1.0.124 folge noch
+([L-80.8](../Befunde/LEKTOR-80.md#l-80.8)). Unklar: `README.md:172` (*„ab
+7.2.1 fragt Eudora nach“*) gegen T4, wo die Ablehnung kam
+([L-80.5](../Befunde/LEKTOR-80.md#l-80.5)); der dritte Teil von E-137 geht
+mit Nummer 7.2.0.124 und ohne CHANGELOG-Satz nach `main`
+([L-80.6](../Befunde/LEKTOR-80.md#l-80.6)); die neue Lehre
+`nur-testplan-zaehlt` nennt `pruefe-tabellenzeilen.pl`, das ihre Regel nicht
+prüft ([L-80.9](../Befunde/LEKTOR-80.md#l-80.9)). Für Gregor offen: was vor
+der Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio, und
+ob ein aus IMAP neu geladener Entwurf wieder als Entwurf gelten soll (T4).
+
+## Vierundachtzigster Durchgang — Kurzprüfung der Berichtigung zu LEKTOR-78 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-79.md`)
+
+Lauf über `6c4cfd7..50f073b7` (ein Commit, `Intern/WEITERMACHEN.md` und
+`Intern/AUFGABEN.md`). **3 Funde** (1 falsch, 1 veraltet, 1 Doppelung).
+L-78.1 ist erledigt; die zwei neuen Absätze verlinken richtig auf `ZIEL.md`
+und den Anker `#ergebnis-7-2-0-123`, und alles aus der gelöschten Tabelle
+steht in `ZIEL.md:185-205`. Falsch: `Intern/AUFGABEN.md:145-151` führt eine
+zweite, undatierte Kriterientabelle vom 09.09.2026 (Kriterium 6 *erfüllt*,
+4 *fast* wegen der Meldung), die der Commit stehen ließ
+([L-79.1](../Befunde/LEKTOR-79.md#l-79.1)). Veraltet: das Linkziel
+`Intern/TESTPLAN.md:120` sagt noch *„Wird nach deiner Rückmeldung
+ausgefüllt“* ([L-79.2](../Befunde/LEKTOR-79.md#l-79.2)). Doppelung:
+`Intern/WEITERMACHEN.md:67-68` wiederholt die Entstehung der Kriterien aus
+`ZIEL.md` ([L-79.3](../Befunde/LEKTOR-79.md#l-79.3)). Für Gregor weiter
+offen: was vor der Marke `v7.2.1.N` getestet sein muss, einschließlich
+Kriterium 0.
+
+## Dreiundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-77 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-78.md`)
+
+Lauf über `28deabd..678e8475` (ein Commit, `ZIEL.md`, drei Zeilen).
+**1 Fund** (1 falsch). L-77.1 bis L-77.3 sind erledigt: Kriterium 3 nennt
+jetzt nur den Abruf mit übernommenen Konten, Kriterium 8 nur das Menü
+*Window*, und die Zusammenfassung führt Kriterium 0 ausdrücklich auf den
+Test ohne Visual Studio vom 06.09.2026 zurück — alle drei stimmen mit
+`TESTPLAN.md` und mit Zeile 0 und dem Maßstab in `ZIEL.md`. Falsch:
+`Intern/WEITERMACHEN.md:65-82` führt die Kriterien weiter mit dem Stand von
+vor dem Test an 7.2.0.123 (Kriterium 6 *erfüllt*, 2 *fast*, die Meldung
+„Encountered an improper argument“ *neu zu messen*) und widerspricht damit
+der berichtigten Zusammenfassung in `ZIEL.md:207-209`
+([L-78.1](../Befunde/LEKTOR-78.md#l-78.1)); Vorschlag: durch einen Verweis
+auf `ZIEL.md` ersetzen. Für Gregor weiter offen: was vor der Marke
+`v7.2.1.N` getestet sein muss, einschließlich Kriterium 0.
+
+## Zweiundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-76 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-77.md`)
+
+Lauf über `469cf36..950ced8e` (Entscheidung 11 und die Berichtigungen zu
+LEKTOR-76; vier `.md`, zehn Zeilen). **3 Funde** (0 falsch, 3 unklar).
+L-76.1 bis L-76.3 sind erledigt; die Klammer an E-157 (Prüfstand verbog
+Gregors Registry) gibt PRÜFER-59 jetzt wörtlich wieder. Die neuen Sätze
+„an 7.2.0.123 von Gregor erneut bestätigt“ in `ZIEL.md` stimmen für die
+Kriterien 1, 5 und 7. Unklar: bei Kriterium 3 prüfte K3 nur den Abruf mit
+übernommenen Konten, und die Bemerkung zum hängenden freenet-Abruf fehlt
+([L-77.1](../Befunde/LEKTOR-77.md#l-77.1)); bei Kriterium 8 prüfte K8 nur
+das Menü *Window*, nicht die Registerkartenleiste
+([L-77.2](../Befunde/LEKTOR-77.md#l-77.2)); `ZIEL.md:207-208` zählt
+Kriterium 0 als an 7.2.0.123 belegt, die Zeile 0 nennt — richtig — nur den
+Test ohne Visual Studio vom 06.09.2026
+([L-77.3](../Befunde/LEKTOR-77.md#l-77.3)). Keiner hält den PR auf. Für
+Gregor weiter offen: was vor der Marke `v7.2.1.N` getestet sein muss,
+einschließlich Kriterium 0.
+
+## Einundachtzigster Durchgang — Nachprüfung der Berichtigungen zu LEKTOR-75 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-76.md`)
+
+Lauf über `1a3a285..e6de8a5a` (ein Commit, sechs `.md`, acht Zeilen).
+**3 Funde** (1 falsch, 2 unklar). L-75.1 bis L-75.6 sind an ihrer Stelle
+berichtigt; bei L-75.2 zeigen die erzeugten Listen weiter nur die Marke.
+Falsch: `PAKETE.md:171` sagt zu 1.0.124, der Rest der LEKTOR-74-Funde sei
+nach dem Schnüren eingearbeitet worden — es ist danach keiner mehr
+eingearbeitet, drei sind offen ([L-76.1](../Befunde/LEKTOR-76.md#l-76.1)).
+Unklar: die neue Klammer an E-157 (Prüfstand verbog Gregors Registry) nennt
+„2 Registry-Werte“ und schreibt sie PRÜFER-59 zu, die Zahl steht aber
+nirgends im Repo; in der Sache stimmt sie mit PRÜFER-59 überein
+([L-76.2](../Befunde/LEKTOR-76.md#l-76.2)); `ZIEL.md:87-88` sagt „neu
+messen“ und „neu gemessen“ in einem Satz
+([L-76.3](../Befunde/LEKTOR-76.md#l-76.3)). Keiner hält den PR auf. Für
+Gregor weiter offen: ob der Kurztest den Maßstab „alle neun Kriterien“
+erfüllt, und die README-Frage zu `v1.0.120`.
+
+## Achtzigster Durchgang — Nachprüfung vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-75.md`)
+
+Lauf über `705d15b..3ca94aaf` (LEKTOR-74 eingearbeitet, Paket 1.0.124
+geschnürt). **6 Funde** (0 falsch, 3 veraltet, 3 unklar). Von L-74.1 bis
+L-74.12 sind sechs erledigt, drei teilweise, drei offen; die vier Stellen,
+die vor dem Schnüren zu berichtigen waren, sind berichtigt. Das Paket stimmt
+mit `PAKETE.md` (Größe, SHA-256, Uhrzeit, Byte-Gleichheit mit dem Bau
+nachgemessen). Die HTML-Weiterleitung zu E-158 (sichtbares `</x-html>`) ist
+gemessen und hat den richtigen Weg getroffen (`Fassung=ORIGINAL` im
+Prüfstandsprotokoll). Veraltet: „HIER WEITERMACHEN“ nennt als Nächstes noch
+das Einarbeiten und das Schnüren
+([L-75.1](../Befunde/LEKTOR-75.md#l-75.1)); `ZIEL.md` Zeile 2a heißt „offen“
+unter einem erfüllten Kriterium 2 ([L-75.3](../Befunde/LEKTOR-75.md#l-75.3));
+der CHANGELOG nennt Kriterium 4 ohne den Absturz an 7.2.0.123
+([L-75.4](../Befunde/LEKTOR-75.md#l-75.4)). Unklar: die Marke „zuletzt
+gemessen an 7.2.0.124“ an E-157 (Prüfstand verbog die Registry), obwohl die
+Zählung für 7.2.0.124 erst nach Gregors Test möglich ist
+([L-75.2](../Befunde/LEKTOR-75.md#l-75.2)). Für Gregor weiter offen: ob der
+Kurztest den Maßstab „alle neun Kriterien“ erfüllt, und die README-Frage zu
+`v1.0.120`.
+
+## Neunundsiebzigster Durchgang — Bestand vor dem Testpaket 7.2.0.124, nach LEKTOR-73 und PRUEFER-59, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-74.md`)
+
+Lauf über `b26abf7..31a9b110`. **12 Funde** (4 falsch, 3 veraltet, 4 unklar,
+1 Doppelung). Von L-73.1 bis L-73.11 sind sechs erledigt, fünf teilweise; der
+Werkzeugfehler aus L-73.1 ist behoben, `ZIEL.md` meldet richtig *„24 von 25
+erfüllt“*. **Vor dem Schnüren zu berichtigen:** die Kriterientabelle in
+`ZIEL.md` nennt Kriterium 6 erfüllt und Kriterium 4 „fast“, obwohl beide an
+7.2.0.123 *nein* waren ([L-74.1](../Befunde/LEKTOR-74.md#l-74.1)); E-148
+(eMudhra-Zertifikate) sagt in derselben Zeile „mit Eudora gemessen“ und
+„nicht gemessen“, README und ZIEL folgen der zweiten
+([L-74.2](../Befunde/LEKTOR-74.md#l-74.2)); E-142 (Entwurf aus IMAP nach
+`Out`) heißt „am Programm noch NICHT gemessen“ trotz N3
+([L-74.3](../Befunde/LEKTOR-74.md#l-74.3)); die erzeugten Listen zeigen bei
+fünf gemessenen Befunden „nie gemessen“ oder den 22.10.
+([L-74.4](../Befunde/LEKTOR-74.md#l-74.4)). Von PRUEFER-59 stehen nur K5, K6
+und K11 im Bestand. Für Gregor: ob der Kurztest an 7.2.0.124 zusammen mit dem
+Test an 7.2.0.123 den Maßstab „alle neun Kriterien an einem frischen Paket“
+erfüllt, und weiter die README-Frage zu `v1.0.120`.
+
+## Achtundsiebzigster Durchgang — Gregors Ergebnisse an 7.2.0.123 und der Kurztest 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-73.md`)
+
+Lauf über `d83e4de6..8bdab960`. **11 Funde** (6 falsch, 3 unvollständig,
+2 Hinweise). Von L-72.1 bis L-72.5 ist einer erledigt, drei offen (zwei davon
+durch den Abschluss des Tests gegenstandslos), L-72.1 ist gewachsen.
+**`ZIEL.md` meldet „25 von 25 erfüllt“, obwohl E-119 offen ist** — beide
+Werkzeuge lesen *„widerlegt“* im Urteil als erledigt, E-119 fehlt auch in den
+Listen der offenen Befunde ([L-73.1](../Befunde/LEKTOR-73.md#l-73.1), dieselbe
+Klasse wie L-16.1). Gregors Bestätigungen vom 26.10.2026 stehen nur in der
+Ergebnistabelle; E-77, E-113, E-137, E-146 und E-148 heißen anderswo weiter
+„noch nicht bestätigt“ ([L-73.2](../Befunde/LEKTOR-73.md#l-73.2)). Drei
+Stand-Zeilen nennen 7.2.0.123, der Block „HIER WEITERMACHEN“ schickt zu PR und
+Test von 7.2.0.123, K4 ist trotz des Absturzes von 10:05 leer, und Tabelle und
+E-137 widersprechen sich über *angedockt*/*abgedockt*. Der Kurztest stimmt mit
+dem Code; T1 und T4 fehlt je eine Voraussetzung. Gemessen: das veröffentlichte
+`v1.0.120` trägt die sechs Testfassungen aus E-156 — ob die README dazu einen
+Satz bekommt, entscheidet Gregor.
+
 ## Siebenundsiebzigster Durchgang — Einarbeitung von LEKTOR-71 (`ce28be3b`) und Teil 0 der Prüfanleitung, 26.10.2026 (Bericht: `Befunde/LEKTOR-72.md`)
 
 Sehr kurzer Lauf vor dem PR, nur über `ce28be3b`. **5 Funde** (0 falsch,

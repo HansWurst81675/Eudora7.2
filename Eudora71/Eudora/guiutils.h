@@ -84,6 +84,7 @@ int YesNoDialog(UINT WarnID, UINT responseID, UINT StringID, ...);
 
 // A Yes/no dialog without an INI dependancies or checkbox
 int YesNoDialogPlain(UINT StringID, ...);
+int YesNoDialogPlainNeinVorgewaehlt(UINT StringID, ...);	// E-142: No ist Standardknopf
 
 // Is the file in the attachment directory?
 bool	IsInAttachmentDir(

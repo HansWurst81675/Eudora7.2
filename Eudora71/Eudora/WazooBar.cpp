@@ -14,6 +14,7 @@
 #include "resource.h"
 #include "rs.h"
 #include "utils.h"
+#include "debug.h"		// PutDebugLog, E-137
 
 #include "workbook.h" // QCControlBarWorksheet
 
@@ -48,6 +49,7 @@ BEGIN_MESSAGE_MAP(CWazooBar, SECControlBar)
 	ON_WM_ERASEBKGND()
 	ON_WM_TIMER()
 	ON_WM_WINDOWPOSCHANGING()
+	ON_WM_MOUSEACTIVATE()	// E-137
 	ON_MESSAGE(TCM_TABSEL, OnTabSelect)
 	ON_COMMAND(ID_SEC_MDIFLOAT, OnCmdSECMDIFloat)
 	ON_COMMAND(ID_WAZOO_TAB_ON_TOP, OnTabsOnTop)
@@ -1936,3 +1938,40 @@ void CWazooBarOleDropTarget::OnDragLeave(CWnd* pWnd)
 	}
 }
 
+
+
+////////////////////////////////////////////////////////////////////////
+// OnMouseActivate [protected]
+//
+// E-137, zweiter Teil (Gregor am Testpaket 7.2.0.123, 26.10.2026): "mail
+// auswaehlen, dann filter fenster (abgedockt) anklicken, ctrl-W: schliesst
+// mail fenster, nicht filter fenster". Strg+W versteckt eine Leiste nur,
+// wenn der TASTATURFOKUS in ihr liegt (CMainFrame::OnCommand,
+// GetWazooBarWithFocus). Ein Klick auf eine Stelle ohne eigenes
+// Eingabefeld - Beschriftung, leere Flaeche - liess den Fokus aber in der
+// Mail. Gregors Entscheidung: "dann aber A" (beheben).
+//
+// WM_MOUSEACTIVATE reicht Windows von jedem angeklickten Kind an alle
+// Eltern weiter, bevor der Klick verarbeitet wird; die Leiste sieht also
+// jeden Klick in sich, auch auf Beschriftungen. Liegt der Fokus dann noch
+// ausserhalb, bekommt ihn das aktive Wazoo-Fenster; CWazooWnd::OnSetFocus
+// gibt ihn an das zuletzt benutzte Feld darin weiter. Ein Klick auf ein
+// Eingabefeld setzt den Fokus danach wie gewohnt dorthin.
+////////////////////////////////////////////////////////////////////////
+int CWazooBar::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
+{
+	const int nErgebnis = SECControlBar::OnMouseActivate(pDesktopWnd, nHitTest, message);
+
+	CWnd* pFokus = CWnd::GetFocus();
+	if (!pFokus || !IsChild(pFokus))
+	{
+		CWazooWnd* pWazooWnd = GetActiveWazooWindow();
+		if (pWazooWnd && pWazooWnd->GetSafeHwnd())
+		{
+			PutDebugLog(DEBUG_MASK_MISC, "E-137 Klick in Wazoo-Leiste: Fokus geht in die Leiste");
+			pWazooWnd->SetFocus();
+		}
+	}
+
+	return nErgebnis;
+}

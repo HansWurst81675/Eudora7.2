@@ -24,22 +24,25 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
+| **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
 | **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
 | **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
-| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | **nie gemessen** | vor 7.2.1 nichts — vereinbart ist der Hinweis, und der ist eingebaut. **Nach 7.2.1:** die Ursache der leeren Kopie messen (Spurmarke beim Lesen der … |
+| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 | vor 7.2.1 nichts — Gregors Entscheidung 13 (26.10.2026): *Send Again* aus IMAP ergibt eine leere Mail (T6), das kommt erst nach 7.2.1 dran; Entwürf… |
 | **[E-141](Intern/BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Berichtigung in `tocdoc.cpp:3134` — die Klammer um den Oder-Teil ziehen, so dass die Anzahlprüfung für **beide** Seiten gilt. Sie schließt Fe… |
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt nach jedem Programmstart einmal… | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
+| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | 26.10.2026 an 7.2.0.124 | Gregors Prüfung an 1.0.125: Klick auf Titelzeile und Rand der **schwebenden** Leiste (U1, U2) und auf eine Beschriftung der **angedockten** Leiste (U… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
 | **[E-128](Intern/BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | 23.10.2026 an 7.2.0.120 | die Entscheidung über den eigenen Vorschlag und dann sein Einbau — die Vorgabeendung aus dem Inhalt ableiten (`.html`, `.eml`, `.txt`) und den Date… |
 | **[E-126](Intern/BEFUNDE.md#e-126)** | Eine gesendete Mail, die genau während eines Abgleichs des Ziel-IMAP-Ordners dorthin vers… | 23.10.2026 an 7.2.0.121 (Quelltext) | jede Messung — die Vermutung aus [PRÜFER-33](Befunde/PRUEFER-33.md) Q1 ist nie beobachtet worden, weder bei Gregor noch am Prüfstand, und dort … |
-| **[E-124](Intern/BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 23.10.2026 an 7.2.0.121 | der Vorgang bei Microsoft ist **abgewiesen** (zu viele Dateien im Upload, siehe die Messung unten) — nachzuholen ist eine **neue** Einreichung mit *… |
+| **[E-124](Intern/BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 26.10.2026 an 7.2.0.124 | der Vorgang bei Microsoft ist **abgewiesen** (zu viele Dateien im Upload, siehe die Messung unten) — nachzuholen ist eine **neue** Einreichung mit *… |
 | **[E-123](Intern/BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | 22.10.2026 an 7.2.0.121 | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
 | **[E-122](Intern/BEFUNDE.md#e-122)** | Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone v… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Berichtigung selbst — `ImapMailbox.cpp:4281` übergibt `CSummary::m_Seconds` an `append_date`, das echtes UTC erwartet, während `m_Seconds` UTC… |
 | **[E-109](Intern/BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… | 22.10.2026 an 7.2.0.121 (Quelltext) | die drei Forderungen sind nicht umgesetzt — je Schranke ein Testfall für ihre **bekannte Grenze**, eine Unterscheidung zwischen *geprüft und frei*… |
@@ -70,9 +73,9 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | | |
 |---|---|
 | **Kriterien 0, 1 und 3** aus [ZIEL.md](ZIEL.md) | erfüllt: Bau aus frischem Klon, Start ohne Nachinstallieren auf einem Rechner ohne Visual Studio, Mailabruf über POP3/TLS 1.3 auf Port 995 |
-| **Kriterium 2** (Darstellung) | *fast* — offen ist die Meldung „Encountered an improper argument" beim **Anzeigen** mancher Nachrichten. **Neu zu messen** seit 7.2.0.24: sie stammt aus derselben Quelle wie [E-34](Intern/BEFUNDE.md#e-34)/[E-43](Intern/BEFUNDE.md#e-43) |
-| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen), das Beenden läuft sauber (Kriterium 7), und die Fehlerklasse hinter [E-34](Intern/BEFUNDE.md#e-34)/[E-37](Intern/BEFUNDE.md#e-37)/[E-43](Intern/BEFUNDE.md#e-43) ist seit 7.2.0.24 an der Wurzel weg |
-| **Kriterien 5 und 6** (Mail schreiben, senden, weiterleiten) | **erfüllt** — von Gregor am 07.09.2026 bestätigt: *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."*, mit Bildschirmfoto |
+| **Kriterium 2** (Darstellung) | **erfüllt** — die Meldung „Encountered an improper argument" kam in Gregors Test an 7.2.0.123 nicht; Stand je Kriterium: [ZIEL.md](ZIEL.md) |
+| **Kriterium 4** (keine Abstürze) | *fast* — Strg-N stürzt nicht mehr ab (fünfmal nachgemessen), das Beenden läuft sauber (Kriterium 7), und die Fehlerklasse hinter [E-34](Intern/BEFUNDE.md#e-34)/[E-37](Intern/BEFUNDE.md#e-37)/[E-43](Intern/BEFUNDE.md#e-43) ist seit 7.2.0.24 an der Wurzel weg; an 7.2.0.124 null Abstürze in Gregors Kurztest (T5); offen [E-159](Intern/BEFUNDE.md#e-159); an 7.2.0.123 ein Absturz durch Debug-Fassungen im Paket ([E-156](Intern/BEFUNDE.md#e-156)), für 7.2.0.124 behoben (Stand in [ZIEL.md](ZIEL.md)) |
+| **Kriterien 5 und 6** (Mail schreiben, senden, weiterleiten) | **erfüllt** bis 7.2.0.122, Kriterium 6 an 7.2.0.123 nicht bestanden und an 7.2.0.124 von Gregor bestätigt (Kurztest T3; [E-158](Intern/BEFUNDE.md#e-158), Stand in [ZIEL.md](ZIEL.md)) — von Gregor am 07.09.2026 bestätigt: *„mail können jetzt abgeschickt werden."* und *„weiterleitung funktioniert übrigens."*, mit Bildschirmfoto |
 | **Kriterium 8** (Fensterliste) | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf, und die Registerkartenleiste am unteren Rand ist da; der Klick auf eine Karte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü (**A-3** / [**E-48**](Intern/BEFUNDE.md#e-48)) |
 | **Kriterium 7** (Beenden) | **erfüllt** — von Gregor am 08.09.2026 an Paket 1.0.22 bestätigt: *„schließen klappt jetzt."* Alle drei Wege beenden: *File → Exit*, Alt-F4 und das Kreuz ([E-40](Intern/BEFUNDE.md#e-40), [E-41](Intern/BEFUNDE.md#e-41), [E-42](Intern/BEFUNDE.md#e-42), ergänzt um [E-45](Intern/BEFUNDE.md#e-45)) |
 | [**A-1**](Intern/BEFUNDE.md#a-1) (Vorgaben für ein neu angelegtes Konto) | **erfüllt** — *„default werte beim neuen persona konto für 'leave message on server' greifen."* |
@@ -94,9 +97,51 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## 7.2.0.123 — Testpaket für Gregors Test vor dem Release 7.2.1: Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137), noch nicht am Programm gemessen), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130)), Hinweis bei Entwurf aus IMAP nach `Out` ([E-142](Intern/BEFUNDE.md#e-142)), Umbenennen von IMAP-Ordnern ([E-146](Intern/BEFUNDE.md#e-146)), Protokollzeilen zu „improper argument“, zu Ausnahmen außerhalb von Fensterbotschaften ([E-154](Intern/BEFUNDE.md#e-154)) und zu `rootcerts.p7b`
+## 7.2.0.125 — Testpaket: Strg+W nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste ([E-137](Intern/BEFUNDE.md#e-137))
 
-**Quellstand 7.2.0.123, Paket 1.0.123 — Testpaket, noch nicht bestätigt.** Auf
+**Quellstand 7.2.0.125, Paket 1.0.125 — Testpaket, noch nicht getestet.** Gregors
+Kurztest an 7.2.0.124 ([TESTPLAN](Intern/TESTPLAN.md)) fand, dass Strg+W wieder die
+Mail schloss, wenn er zuvor auf die Titelzeile oder den Rand des schwebenden
+Filterfensters geklickt hatte.
+
+* **[E-137](Intern/BEFUNDE.md#e-137) — ein Klick auf Titelzeile, Rand oder Ecke einer
+  schwebenden Leiste holt jetzt den Tastaturfokus in die Leiste**, Strg+W
+  versteckt dann die Leiste statt die Mail zu schließen. Ausgenommen ist der
+  Schließknopf der Leiste. Unit-Test `TestE137.cpp` (312 Tests, 312 bestanden;
+  ohne die Behebung 311/312); nachgerechnet von [PRÜFER-60](Befunde/PRUEFER-60.md).
+
+## 7.2.0.124 — Testpaket mit den Funden aus Gregors Test an 7.2.0.123 ([E-156](Intern/BEFUNDE.md#e-156), [E-158](Intern/BEFUNDE.md#e-158), [E-119](Intern/BEFUNDE.md#e-119), [E-137](Intern/BEFUNDE.md#e-137), [E-142](Intern/BEFUNDE.md#e-142))
+
+**Quellstand 7.2.0.124, Paket 1.0.124 — Testpaket, von Gregor im Kurztest geprüft ([TESTPLAN](Intern/TESTPLAN.md)).** Der dritte Teil von [E-137](Intern/BEFUNDE.md#e-137) kam nach dem Schnüren dazu und steht unter 7.2.0.125. Gregor hat
+7.2.0.123 am 26.10.2026 getestet ([TESTPLAN.md](Intern/TESTPLAN.md), Ergebnistabelle):
+15 Punkte bestanden, drei nicht. Diese Fassung behebt die drei und zwei Lücken,
+die dabei auffielen. Prüfanleitung für den Kurztest: [TESTPLAN.md](Intern/TESTPLAN.md), oben.
+
+* **[E-156](Intern/BEFUNDE.md#e-156) — keine Debug-Fassungen mehr im Paket.** Sechs
+  Hilfsdateien (`NSImport.eif`, `OEImport.eif`, `OLImport.eif`, `EuShlExt.dll`,
+  `EudoraNS.dll`, `swEudora.exe`) waren seit August Testfassungen; Eudora stürzte
+  deshalb gelegentlich ab (34 Mal in Gregors Paketen, laut Windows). Jetzt kommt
+  jede Programmdatei aus dem fertigen Bau, und der Paketbau weist jede
+  Testfassung ab.
+* **[E-119](Intern/BEFUNDE.md#e-119) zweiter Teil — große Bilder im HTML kommen beim
+  Antworten und Weiterleiten vollständig an.** Über 48 KB wurden sie bisher
+  abgeschnitten und erschienen als Fläche mit Streifen.
+* **[E-158](Intern/BEFUNDE.md#e-158) — beim Weiterleiten einer Textmail steht am Ende
+  kein `</x-html>` mehr.**
+* **[E-137](Intern/BEFUNDE.md#e-137) zweiter Teil — Strg+W versteckt eine Leiste auch
+  dann, wenn vorher auf eine Beschriftung oder leere Fläche in ihr geklickt
+  wurde.**
+* **[E-142](Intern/BEFUNDE.md#e-142) — die Rückfrage beim Ziehen eines Entwurfs aus
+  einem IMAP-Ordner nach `Out` wählt jetzt *No* vor.** Am Programm nicht gezeigt: in Gregors
+  Kurztest T4 kam statt der Rückfrage die Ablehnung, weil der Entwurf vorher vom Server neu
+  geladen war; nichts ging verloren (Entscheidung 12).
+* Für Entwickler: der Prüfstand setzt Gregors Registry nach jedem Lauf zurück und
+  wertet Abstürze aus dem Windows-Ereignisprotokoll aus ([E-157](Intern/BEFUNDE.md#e-157)).
+  Unit-Tests: 311 Tests, 311 bestanden.
+
+## 7.2.0.123 — Testpaket für Gregors Test vor dem Release 7.2.1: Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137)), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130)), Hinweis bei Entwurf aus IMAP nach `Out` ([E-142](Intern/BEFUNDE.md#e-142)), Umbenennen von IMAP-Ordnern ([E-146](Intern/BEFUNDE.md#e-146)), Protokollzeilen zu „improper argument“, zu Ausnahmen außerhalb von Fensterbotschaften ([E-154](Intern/BEFUNDE.md#e-154)) und zu `rootcerts.p7b`
+
+**Quellstand 7.2.0.123, Paket 1.0.123 — Testpaket, von Gregor am 26.10.2026 getestet ([Ergebnis](Intern/TESTPLAN.md#ergebnis-7-2-0-123)).** Auf
 `main` seit PR #157 (23.10.2026) bis PR #175 (25.10.2026); [E-142](Intern/BEFUNDE.md#e-142), [E-146](Intern/BEFUNDE.md#e-146), [E-154](Intern/BEFUNDE.md#e-154)
 und die Protokollzeilen kommen mit dem PR aus dem Zweig
 `vor-testpaket-7.2.0.123`. Das Paket geht zu Gregors lokalem Test
@@ -6126,8 +6171,8 @@ Gemessen vorher `GetBtnCount=24/24 m_btns.GetSize=0/0`, nachher `24/24` gegen
 **Was bleibt:** die Meldung beim **Anzeigen** mancher Nachrichten ist damit
 **neu zu messen** — gut möglich, dass sie mit verschwunden ist. Reproduzierbar
 war sie über *Find Messages* mit einem Treffer. **Erst messen, dann suchen.**
-Sie ist der einzige Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt*
-heißen.
+Sie war damals der einzige Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt*
+hießen; heute: [ZIEL.md](ZIEL.md).
 
 ### 5. Die Altlast, die niemand bauen kann
 

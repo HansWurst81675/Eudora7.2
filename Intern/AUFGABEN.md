@@ -1,6 +1,6 @@
 # Aufgaben für die nächste Sitzung
 
-**Stand 26.10.2026**, Quellstand **7.2.0.123** / `VERSION` **1.0.123** — das Testpaket für Gregors Test vor dem Release 7.2.1. Darin alles auf `main` bis PR #175 (E-77, E-113, E-116, E-119, E-130, E-137, E-148, E-150) und aus dem Zweig `vor-testpaket-7.2.0.123`: der Hinweis zu E-142, E-146, E-154 und die Protokollzeilen zu „improper argument“ und `rootcerts.p7b`; Prüfanleitung in [TESTPLAN.md](TESTPLAN.md). Davor Quellstand 7.2.0.122, geschnürt am 23.10.2026, am selben Tag von Gregor und am Prüfstand geprüft ([Testbericht](TESTBERICHT-E125.md)): [E-125](BEFUNDE.md#e-125), Ziehen einer empfangenen Nachricht nach `Out` wird abgelehnt (277 Tests, zweimal gegengetestet); davor in 7.2.0.121 [E-111](BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus; die Längenschranke verglich mit `==` statt `>=` **und prüft erst nach dem Schreiben**, bei `nMaxLength` 0 oder 1 lief die Schleife bis zum Quellende durch. 246 Tests, 246 bestanden; Gegenprobe am alten Stand 245 von 246. Davor **7.2.0.120** / **1.0.120**, veröffentlicht als `v1.0.120` — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135)). **Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](../CHANGELOG.md)**, was zur Fassung 7.2.1 noch fehlt oben in [ZIEL.md](../ZIEL.md).
+**Stand 26.10.2026**, Quellstand **7.2.0.125** / `VERSION` **1.0.125** — Testpaket mit dem dritten Teil von [E-137](BEFUNDE.md#e-137) ([CHANGELOG](../CHANGELOG.md), Abschnitt 7.2.0.125). Davor 7.2.0.124, Testpaket mit den Behebungen aus Gregors Test an 7.2.0.123 ([E-156](BEFUNDE.md#e-156), [E-158](BEFUNDE.md#e-158), dazu Nachbesserungen an E-119, E-137, E-142; [CHANGELOG](../CHANGELOG.md), Abschnitt 7.2.0.124). Davor 7.2.0.123, das Testpaket für Gregors Test vor dem Release 7.2.1. Darin alles auf `main` bis PR #175 (E-77, E-113, E-116, E-119, E-130, E-137, E-148, E-150) und aus dem Zweig `vor-testpaket-7.2.0.123`: der Hinweis zu E-142, E-146, E-154 und die Protokollzeilen zu „improper argument“ und `rootcerts.p7b`; Prüfanleitung in [TESTPLAN.md](TESTPLAN.md). Davor Quellstand 7.2.0.122, geschnürt am 23.10.2026, am selben Tag von Gregor und am Prüfstand geprüft ([Testbericht](TESTBERICHT-E125.md)): [E-125](BEFUNDE.md#e-125), Ziehen einer empfangenen Nachricht nach `Out` wird abgelehnt (277 Tests, zweimal gegengetestet); davor in 7.2.0.121 [E-111](BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus; die Längenschranke verglich mit `==` statt `>=` **und prüft erst nach dem Schreiben**, bei `nMaxLength` 0 oder 1 lief die Schleife bis zum Quellende durch. 246 Tests, 246 bestanden; Gegenprobe am alten Stand 245 von 246. Davor **7.2.0.120** / **1.0.120**, veröffentlicht als `v1.0.120` — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](BEFUNDE.md#e-135)). **Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](../CHANGELOG.md)**, was zur Fassung 7.2.1 noch fehlt oben in [ZIEL.md](../ZIEL.md).
 (`grep EUDORA_BUILD_VERSION Eudora71/Version.h`, `cat VERSION`). Der Einstieg
 ist [WEITERMACHEN.md](WEITERMACHEN.md), die Fassungsgeschichte mit allen
 Messungen [CHANGELOG.md](../CHANGELOG.md), der Maßstab [ZIEL.md](../ZIEL.md). `main`
@@ -18,14 +18,8 @@ ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 > **neu:** [E-114](BEFUNDE.md#e-114) und [E-115](BEFUNDE.md#e-115). Was unten als *wartet* steht, ist der
 > Stand davor; die Urteile mit Zitat stehen in [BEFUNDE.md](BEFUNDE.md).
 
-**Alle neun Kriterien aus [ZIEL.md](../ZIEL.md) sind entweder erfüllt oder haben
-eine gebaute Behebung.** Sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind
-fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
-improper argument" beim **Anzeigen** mancher Nachrichten; **Kriterium 2 fehlt
-darüber hinaus** [**E-86**](BEFUNDE.md#e-86) (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77)
-(IMAP-Postfachnamen roh) — beides steht in `ZIEL.md` in der eigenen Zeile
-**2a**. Bis zum 14.09.2026 stand hier „beiden fehlt **dasselbe**", und das
-stimmte seit der Aufteilung von Kriterium 2 nicht mehr.
+**Der Stand der neun Kriterien** steht an einer Stelle, in [ZIEL.md](../ZIEL.md) — seit dem
+26.10.2026 mit Gregors Ergebnis an 7.2.0.123 ([Ergebnistabelle](TESTPLAN.md#ergebnis-7-2-0-123)).
 
 **Dazu warteten sechs frische Behebungen auf sein Urteil** *(Stand vor dem 13.10.2026 — [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) sind seither von Gregor an 1.0.84 bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen; offen bleiben [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96))*: [**E-85**](BEFUNDE.md#e-85) (Umlaute
 über IMAP, 7.2.0.52, am laufenden Programm belegt), [**E-83**](BEFUNDE.md#e-83) (Eudora liess
@@ -148,13 +142,8 @@ ausdrücklich nicht zu benutzen.
 > Vermerke genannt. Es waren also **sechs** Dokumente, und zwei blieben
 > stehen. Beide sind jetzt berichtigt.
 
-| # | | Stand |
-|---|---|---|
-| 4 | **Keine Abstürze** | *fast* — Strg-N fünfmal ohne Absturz gemessen, das Beenden ist erledigt (Kriterium 7), und mit [**E-43**](BEFUNDE.md#e-43) sind [**E-37**](BEFUNDE.md#e-37) und [**E-38**](BEFUNDE.md#e-38) weggefallen. Offen: die Meldung beim Anzeigen mancher Nachrichten |
-| 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** — Gregor am 07.09.2026: *„mail können jetzt abgeschickt werden."* |
-| 6 | **Eine Mail weiterleiten** | **erfüllt** — Gregor am 07.09.2026: *„weiterleitung funktioniert übrigens."* |
-| 7 | ***File → Exit*** beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026: *„schließen klappt jetzt."* Alle drei Wege: Menü, Alt-F4, Kreuz |
-| 8 | Offene Fenster sichtbar und auswählbar | **erfüllt** — Gregor am 09.09.2026: der Klick auf eine Registerkarte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window* (**A-3** / [**E-48**](BEFUNDE.md#e-48)) |
+Der Stand der Kriterien steht in [ZIEL.md](../ZIEL.md); hier stand bis zum 26.10.2026
+eine Tabelle mit dem Stand vom 09.09.2026.
 
 **Was sich am 09.09.2026 geändert hat.** Gregor hat **A-3** bestätigt und damit
 Kriterium 8 geschlossen, und er hat die Höhenänderung des unteren Bereichs
@@ -243,8 +232,9 @@ Nebenbei-Beobachten: friert etwas ein, ist es ein Befund.
 
 ### 2. Die Meldung „Encountered an improper argument" beim Anzeigen
 
-**Das ist der letzte bekannte Fehler, den ein Anwender merkt** — und der
-einzige Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt* heißen.
+**Erledigt mit Gregors Test an 7.2.0.123:** die Meldung kam nicht, im Protokoll
+steht keine Ausnahme-Zeile ([TESTPLAN K2](TESTPLAN.md#ergebnis-7-2-0-123)); den Stand der Kriterien
+führt [ZIEL.md](../ZIEL.md). Was folgt, war der Plan davor.
 
 MFCs Text für `CInvalidArgException`, **dieselbe Fehlerklasse wie [E-34](BEFUNDE.md#e-34) und
 [E-43](BEFUNDE.md#e-43)**, andere Aufrufstelle. **Neu zu messen, seit [E-43](BEFUNDE.md#e-43) an der Wurzel behoben

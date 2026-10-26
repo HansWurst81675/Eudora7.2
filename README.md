@@ -1,5 +1,7 @@
 # Eudora 7.2
 
+**Deutsch | [English](README.en.md)**
+
 <!-- pruefstand: eceeecf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
@@ -96,7 +98,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.123** / `VERSION` **1.0.123** — Testpaket für Gregors Test vor dem Release 7.2.1; was darin neu ist, steht im [CHANGELOG, Abschnitt 7.2.0.123](CHANGELOG.md). Veröffentlicht ist `v1.0.120`.*
+*Stand **7.2.0.125** / `VERSION` **1.0.125** — Testpaket mit dem dritten Teil von [E-137](Intern/BEFUNDE.md#e-137) (Strg+W nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste), vor dem Release 7.2.1; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.0.125, 7.2.0.124 und 7.2.0.123. Veröffentlicht ist `v1.0.120`.*
 
 ### Was geht
 
@@ -133,8 +135,9 @@ mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)); und es wird ke
 ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrieben
 ([E-131](Intern/BEFUNDE.md#e-131)).
 
-**Neu im Testpaket 7.2.0.123** (noch nicht veröffentlicht, kommt mit dem Release 7.2.1):
-steht an einer Stelle, im [CHANGELOG unter 7.2.0.123](CHANGELOG.md) — darunter
+**Neu in den Testpaketen 7.2.0.123 bis 7.2.0.125** (noch nicht veröffentlicht, kommt mit dem Release 7.2.1):
+steht an einer Stelle, im [CHANGELOG](CHANGELOG.md) unter diesen drei Fassungen — darunter
+[E-156](Intern/BEFUNDE.md#e-156), [E-158](Intern/BEFUNDE.md#e-158),
 [E-137](Intern/BEFUNDE.md#e-137), [E-146](Intern/BEFUNDE.md#e-146), [E-77](Intern/BEFUNDE.md#e-77), [E-113](Intern/BEFUNDE.md#e-113), [E-119](Intern/BEFUNDE.md#e-119), [E-148](Intern/BEFUNDE.md#e-148), [E-150](Intern/BEFUNDE.md#e-150), [E-130](Intern/BEFUNDE.md#e-130), [E-154](Intern/BEFUNDE.md#e-154).
 
 **Was zur Fassung 7.2.1 noch fehlt, steht erzeugt ganz oben in
@@ -160,7 +163,7 @@ Die zweite Spalte sagt, was dabei verlorengehen oder verfälscht werden kann;
 | War der IMAP-Ordner seit dem Start **noch nie geöffnet**, konnten die eben dorthin verschobenen Mails in seiner Liste fehlen, bis man ihn noch einmal schloss und öffnete. **Am 23.10.2026 in zwei Läufen an 7.2.0.120 nicht mehr aufgetreten; die Ursache wurde nie gefunden** — wer es sieht, bitte melden | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](Intern/BEFUNDE.md#e-127) |
 | Wird **ohne Serververbindung** in einen IMAP-Ordner verschoben und sofort beendet, zeigt der Zielordner danach nur einen Teil der Nachrichten | nichts – die Nachrichten stehen weiter im Ausgangspostfach | *Rechtsklick auf das Postfach → Show Deleted Messages* macht sie wieder sichtbar, *Message → UnDelete* holt sie zurück; *Message → Purge Messages* dabei **nicht** benutzen – das entfernt sie | [E-129](Intern/BEFUNDE.md#e-129) |
 | **Verzeichnisdienste** (LDAP, Ph, EudoraBk) und S/MIME fehlen — Dialog *„Directory Services unavailable“*. **Das eigene Adressbuch ist davon nicht betroffen** und arbeitet | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](Intern/BEFUNDE.md#e-47) |
-| **Bis Paket 1.0.122:** Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten als grauer Kasten | nichts | **Behoben ab dem Release 7.2.1** (schon im Testpaket 7.2.0.123) | [E-119](Intern/BEFUNDE.md#e-119) |
+| Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten **bis Paket 1.0.122** als grauer Kasten; **im Testpaket 7.2.0.123** kleine Bilder richtig, Bilder über 48 KB verstümmelt (grüne oder graue Fläche mit Streifen) | nichts – die Nachricht selbst bleibt unverändert | die Behebung für große Bilder ist im Testpaket 7.2.0.124, von Gregor bestätigt, und kommt mit dem Release 7.2.1 | [E-119](Intern/BEFUNDE.md#e-119) |
 | **Bis Paket 1.0.122:** sehr breite Bilder laufen im Verfassen-Fenster rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | **Behoben ab dem Release 7.2.1** (schon im Testpaket 7.2.0.123): ein zu breites Bild wird beim Laden auf die Fensterbreite verkleinert | [E-113](Intern/BEFUNDE.md#e-113), [E-116](Intern/BEFUNDE.md#e-116) |
 | In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nichts | – | [E-122](Intern/BEFUNDE.md#e-122) |
 | **Bis Paket 1.0.122:** IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nichts | **Behoben ab dem Release 7.2.1** (schon im Testpaket 7.2.0.123), auch beim Anlegen und Umbenennen | [E-77](Intern/BEFUNDE.md#e-77) |
@@ -168,7 +171,7 @@ Die zweite Spalte sagt, was dabei verlorengehen oder verfälscht werden kann;
 | Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nichts | es gilt die zuletzt gewählte Einstellung | [E-98](Intern/BEFUNDE.md#e-98) |
 | **Bis `v1.0.120`:** eine Nachricht aus einem IMAP-Ordner nach `Out` gezogen wird nicht verschoben: in `Out` entsteht eine neue Nachricht mit `<br>` im Betreff und in den Kopfzeilen, dazu die Meldung *„No messages were transferred!“* | nichts – das Original bleibt im IMAP-Ordner; wer die neue Nachricht sendet, schickt sie mit kaputtem Empfänger | Nachrichten nicht aus einem IMAP-Ordner nach `Out` ziehen; so entstandene Einträge in `Out` nicht senden, sondern löschen. **Ab Paket 1.0.122** lehnt Eudora das Ziehen mit einem Hinweis ab | [E-125](Intern/BEFUNDE.md#e-125) |
 | Wird eine Nachricht mit Emoji oder mit Zeichen außerhalb des westeuropäischen Zeichensatzes in Eudora gespeichert (*Strg+S*), werden diese Zeichen zu Fragezeichen – obwohl sie vorher richtig angezeigt wurden. Gemessen an einem Emoji, das das Plug-in EudoraUnicodeFix als HTML-Entität geschrieben hatte; für andere Schriften erschlossen | **diese Zeichen** in der gespeicherten Nachricht, nicht rückgängig zu machen | solche Nachrichten nicht bearbeiten und speichern; vorher das Postfach sichern | [E-136](Intern/BEFUNDE.md#e-136) |
-| Ein Entwurf aus einem **IMAP-Ordner** nach `Out` gezogen ergibt in `Out` eine **leere** Nachricht (ohne Empfänger, Betreff und Text); das Original bleibt im IMAP-Ordner. Ab dem Release 7.2.1 fragt Eudora vorher nach und weist darauf hin | der **Entwurf**, wenn man das Original im IMAP-Ordner löscht, weil man es für verschoben hält | das Original im IMAP-Ordner erst löschen, wenn die Kopie in `Out` geprüft ist; ist sie leer, die Kopie löschen und den Text aus dem Original in eine neue Nachricht übernehmen. Nach *Ja* meldet Eudora weiter *„No messages were transferred!“* ([E-141](Intern/BEFUNDE.md#e-141)) | [E-142](Intern/BEFUNDE.md#e-142) |
+| Ein Entwurf aus einem **IMAP-Ordner** nach `Out` gezogen ergibt in `Out` eine **leere** Nachricht (ohne Empfänger, Betreff und Text); das Original bleibt im IMAP-Ordner. Ab dem Release 7.2.1 fragt Eudora vorher nach und weist darauf hin; hat Eudora den Entwurf inzwischen neu vom Server geladen, lehnt es das Verschieben ab, und auch *Message → Send Again* ergibt dann eine leere Mail. **Entwürfe daher im lokalen Postfach `Out` lassen** (*File → Save*, Strg+S) und nicht in einen IMAP-Ordner verschieben | der **Entwurf**, wenn man das Original im IMAP-Ordner löscht, weil man es für verschoben hält | das Original im IMAP-Ordner erst löschen, wenn die Kopie in `Out` geprüft ist; ist sie leer, die Kopie löschen und den Text aus dem Original in eine neue Nachricht übernehmen. Nach *Ja* meldet Eudora weiter *„No messages were transferred!“* ([E-141](Intern/BEFUNDE.md#e-141)) | [E-142](Intern/BEFUNDE.md#e-142) |
 | Ein Antwortentwurf, der aus einem lokalen Postfach (etwa `Trash`) zurück nach `Out` gezogen wird, verliert die Angabe, worauf er antwortet (`In-Reply-To`, `References`) – beim Empfänger hängt die Antwort nicht mehr im Gesprächsfaden | nichts – Text und Betreff bleiben, nur die Zuordnung zum Gesprächsfaden fehlt | Antwortentwürfe nicht aus `Out` herausziehen; sonst die Antwort neu aus der ursprünglichen Nachricht anlegen | [E-144](Intern/BEFUNDE.md#e-144) |
 | Ein **Filter** mit Ziel `Out` oder ein Verschieben vieler Treffer aus dem **Suchfenster** nach `Out` zeigt den Hinweis je Nachricht – zwanzig Treffer, zwanzig Dialoge; ein solcher Filter hält den automatischen Mailabruf vermutlich an, bis man klickt (am Quelltext gelesen, nicht gemessen) | nichts | keinen Filter mit Ziel `Out` anlegen; aus dem Suchfenster nicht nach `Out` verschieben | [E-143](Intern/BEFUNDE.md#e-143) |
 | Die Meldung, dass die Rechtschreibprüfung in dieser Fassung fehlt, kommt nach jedem Programmstart einmal wieder – es gibt kein Kästchen *„Nicht mehr anzeigen"* | nichts | mit *OK* wegklicken | [E-139](Intern/BEFUNDE.md#e-139) |
@@ -249,8 +252,8 @@ enthält jetzt 117 statt 121 Zertifikate, erzeugt von
 Ausschlussliste, und der Paketbau legt diese Datei in jedes Paket. GMX und
 freenet (IMAP, POP3, SMTP) sind gegen die neue Liste mit **OpenSSL** gemessen
 und werden angenommen — ihre Zertifikate stammen von der Telekom (T-TeleSec),
-nicht von eMudhra. **Mit Eudora selbst** ist das erst mit dem Testpaket 7.2.0.123 zu
-messen; bis dahin ist es eine Rechnung, keine Beobachtung am Programm. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
+nicht von eMudhra. **Mit Eudora selbst** hat Gregor es am Testpaket 7.2.0.123 gemessen:
+Abruf ohne Zertifikatsfehler. Dass Eudora eine eMudhra-Kette ablehnt, bleibt eine Rechnung. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
 zurückkommt ([E-148](Intern/BEFUNDE.md#e-148)).
 
 **Was Sie mit einem älteren Paket tun können:** Eudora beenden, die

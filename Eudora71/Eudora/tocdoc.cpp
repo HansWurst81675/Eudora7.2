@@ -2785,7 +2785,7 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 		if (ToOut && IsImapToc() && !E142Gefragt)
 		{
 			E142Gefragt = TRUE;
-			const BOOL bWeiter = (YesNoDialogPlain(IDS_WARN_IMAP_DRAFT_TO_OUT) == IDOK);
+			const BOOL bWeiter = (YesNoDialogPlainNeinVorgewaehlt(IDS_WARN_IMAP_DRAFT_TO_OUT) == IDOK);	// No vorgewaehlt (Gregor 26.10.2026)
 			{
 				CString szSpur;
 				szSpur.Format("E-142 Hinweis Entwurf aus IMAP nach Out: quelle=%s antwort=%s",

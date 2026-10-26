@@ -135,6 +135,7 @@ eine Datei liest, liest diese.
 | [nie-stillstehen](nie-stillstehen.md) | Leerlauf ist der teuerste Fehler dieses Projekts — im Hintergrund bauen, weiterarbeiten, ungefragt melden |
 | [nummer-erst-beim-schnueren](nummer-erst-beim-schnueren.md) | Ein Paketeintrag heisst "gebaut", bevor es ein Paket gibt - 1.0.107, .108 und .109 mussten alle drei nachtraeglich in "nie geschnuert" umgeschrieben werden |
 | [nur-offene-entscheidungen-auf-gregors-liste](nur-offene-entscheidungen-auf-gregors-liste.md) | Auf Gregors Liste kommt ein Punkt nur, wenn ein Satz IHN nennt und die Entscheidung noch offen ist - sonst ist es meine Arbeit |
+| [nur-testplan-zaehlt](nur-testplan-zaehlt.md) | Gregor testet nur noch, was in Intern/TESTPLAN.md im Repo steht; Testanweisungen im Chat zählen nicht |
 | [original-ist-eine-messung](original-ist-eine-messung.md) | „Originalfehler\" ist eine Aussage über ein Verhalten, nicht über Quelltext - in einer Portierung ist die unveränderte Quelle gerade der Ort, an dem Verhalten lautlos umkippt |
 | [paket-gegen-den-bau-messen](paket-gegen-den-bau-messen.md) | Was im Paket liegt, ist nicht automatisch das, was ich gebaut habe - jede Datei im Paket gegen das Bauverzeichnis messen, bevor Gregor sie bekommt |
 | [pakete-sammeln](pakete-sammeln.md) | Kein Testpaket für eine einzelne Behebung anbieten; Gregor testet mehrere Sachen zusammen in einem Bau |

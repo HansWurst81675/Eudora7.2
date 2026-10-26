@@ -161,6 +161,7 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(QCMiniDockFrameWnd)
 	//}}AFX_MSG
+	afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);	// E-137
 	DECLARE_MESSAGE_MAP()
 };
 

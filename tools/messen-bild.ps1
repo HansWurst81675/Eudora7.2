@@ -37,7 +37,10 @@ $NACHRICHTEN = @(
     'Testdaten\e103-bild-ohne-groessenangabe.eml',
     'Testdaten\e105-handyfassung-versteckt.eml',
     'Testdaten\e119-data-bild.eml',
-    'Testdaten\e113-breites-bild.eml'
+    'Testdaten\e113-breites-bild.eml',
+    # E-119 zweiter Teil (26.10.2026): src-Wert 78.519 Zeichen, ueber dem
+    # 16-Bit-Zaehler arg_size - vorher kamen nur 12.983 an.
+    'Testdaten\e119-grosses-data-bild.eml'
 )
 
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')

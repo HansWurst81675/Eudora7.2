@@ -1,11 +1,68 @@
-# Testplan für Gregor — Quellstand 7.2.0.123 / `VERSION` 1.0.123, Stand 26.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.125 / `VERSION` 1.0.125, Stand 26.10.2026
 
-> **Testpaket 7.2.0.123** (Paket 1.0.123) — es kommt nach
-> `C:\Users\Gregor\Eudora72-1.0.123-release`, neben dein 1.0.122, das
-> unangetastet bleibt. Veröffentlicht ist `v1.0.120`. Nach deinem Test und
-> deinem Ja wird daraus das Release **7.2.1.<n>**.
+> **Testpaket 7.2.0.125** (Paket 1.0.125) — Kurztest direkt hierunter. Die
+> Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen, ihre Ergebnisse stehen
+> weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Test und deinem Ja
+> wird das Release **7.2.1.<n>** gebaut.
 
-## Was jetzt zu testen ist — Testpaket 7.2.0.123
+## Was jetzt zu testen ist — Testpaket 7.2.0.125 (Kurztest)
+
+> Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.125-release`, neben dein
+> 1.0.124. Geprüft wird nur, was sich gegenüber 7.2.0.124 geändert hat.
+
+**Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.124-release\Mailverzeichnis`
+nach `C:\Users\Gregor\Eudora72-1.0.125-release\Mailverzeichnis` kopieren, **ohne**
+`eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
+starten. In der Titelzeile muss **7.2.0.125** und **Paket 1.0.125** stehen.
+
+| Nr. | Was | Wo | Was zu tun ist | Was herauskommen muss |
+|---|---|---|---|---|
+| U1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail aus `In` geöffnet | das Filterfenster öffnen (*Tools → Filters*) und abdocken, so dass es **schwebt**; erst in die Mail klicken, dann auf die **Titelzeile** des Filterfensters klicken, dann **Strg+W** | nur das Filterfenster verschwindet, die Mail bleibt offen |
+| U2 | [E-137](BEFUNDE.md#e-137) | wie U1 | Filterfenster wieder öffnen (schwebend); erst in die Mail klicken, dann auf den **Rand** des Filterfensters klicken, dann **Strg+W** | wie U1 |
+| U3 | [E-137](BEFUNDE.md#e-137) | wie U1 | Filterfenster wieder öffnen und **andocken**; erst in die Mail klicken, dann auf eine **Beschriftung** im Filterfenster (etwa „Match“), dann **Strg+W** | wie U1 |
+| U4 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.125-release` sein |
+
+### <a id="ergebnis-7-2-0-125"></a>Ergebnis am Testpaket 7.2.0.125
+
+| Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
+|---|---|---|---|
+| U1 | — | | |
+| U2 | — | | |
+| U3 | — | | |
+| U4 | — | | |
+
+## Kurztest 7.2.0.124 — abgeschlossen
+
+> Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.124-release`, neben dein
+> 1.0.123. Geprüft wird nur, was sich gegenüber 7.2.0.123 geändert hat; alles
+> andere hast du an 7.2.0.123 bestätigt (Ergebnistabelle unten).
+
+**Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.123-release\Mailverzeichnis`
+nach `C:\Users\Gregor\Eudora72-1.0.124-release\Mailverzeichnis` kopieren, **ohne**
+`eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
+starten. In der Titelzeile muss **7.2.0.124** und **Paket 1.0.124** stehen.
+
+| Nr. | Was | Wo | Was zu tun ist | Was herauskommen muss |
+|---|---|---|---|---|
+| T1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail aus `In` geöffnet | das Filterfenster öffnen (*Tools → Filters*), auf eine **Beschriftung** darin klicken (etwa „Match“), dann **Strg+W** — einmal angedockt, einmal schwebend (abgedockt) | nur das Filterfenster verschwindet, die Mail bleibt offen |
+| T2 | [E-119](BEFUNDE.md#e-119) | lokal | auf die Polizeitag-Mail antworten (das große grüne Bild von heute) | das Bild erscheint vollständig, keine Fläche mit Streifen |
+| T3 | [E-158](BEFUNDE.md#e-158) | lokal | eine **Text**mail (etwa *„mail an mich“*) an dich selbst weiterleiten und abrufen | am Ende der angekommenen Mail steht **kein** `</x-html>` |
+| T4 | [E-142](BEFUNDE.md#e-142) | **IMAP** *Gelöscht* | einen Entwurf anlegen (*Message → New Message*, an dich selbst, *File → Save*, Fenster schließen — er liegt in `Out`), in *Gelöscht* ziehen, dann zurück nach `Out` ziehen | die Rückfrage kommt, **No** ist vorgewählt; **Enter** drücken: nichts passiert. Entwurf danach löschen |
+| T5 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.124-release` sein |
+| T6 | [E-142](BEFUNDE.md#e-142), Entscheidung 12 | **IMAP** *Gelöscht* | den Entwurf aus T4 (liegt noch in *Gelöscht*) **öffnen**, dann *Message → Send Again* | es öffnet sich eine neue Mail mit Empfänger, Betreff und Text des Entwurfs; *Send* schickt sie ab, sie kommt bei dir an. Danach den Entwurf in *Gelöscht* löschen |
+
+### <a id="ergebnis-7-2-0-124"></a>Ergebnis am Testpaket 7.2.0.124
+
+| Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
+|---|---|---|---|
+| T1 | **ja** im zweiten Durchgang, **nein** im ersten | 26.10.2026 | Zweiter Durchgang: Gregor *„E-137, T1 PASSED“*; Protokoll sechsmal `E-137 Strg-W: Wazoo-Leiste wird versteckt`. Erster Durchgang: Gregor: *„FAILED: CTRL-W schließt nicht filter fenster“*, geklickt *„mal oben, mal seitlich“* (Titelzeile und Rand des schwebenden Fensters). Klicks **in** die Leiste wirkten (Protokoll dreimal `E-137 Strg-W`). Ursache und Behebung: [E-137](BEFUNDE.md#e-137), dritter Teil |
+| T2 | **ja** | 26.10.2026 | Gregors Bild: Antwort auf die Polizeitag-Mail, das große grüne Bild steht vollständig, keine Streifen. Protokoll: `E-119 data-Bild als Datei: …data-8e094058.jpg laenge=201951` — mehr als 65.535 Zeichen, an 7.2.0.123 wurde genau dort abgeschnitten ([E-119](BEFUNDE.md#e-119)). Im selben Bild die bekannte Meldung zur Rechtschreibprüfung ([E-139](BEFUNDE.md#e-139)) |
+| T3 | **ja** | 26.10.2026 | Gregor: *„E-158: PASS“* — die weitergeleitete Textmail endet ohne `</x-html>` ([E-158](BEFUNDE.md#e-158)) |
+| T4 | **nein** | 26.10.2026 | Gregor: neue Mail angelegt, nach IMAP *Gelöscht* verschoben, zurück nach `Out` — statt der Rückfrage kam *„Messages can't be transferred to the Out mailbox“* (Gregors Bild). Gemessen in Gregors `eudora.log` an 1.0.124 (26.10.2026): neuer Entwurf gespeichert (Programmzeit 14:12, `E-88 … Fassung=EDITOR`), nach IMAP *Gelöscht* hochgeladen (14:30, `E-121 Hochgeladen: ergebnis=1 neue-uid=15`), danach den Ordner geöffnet und die Nachricht vom Server neu geladen (14:50, `1 message(s) left to download`), dann das Zurückziehen nach `Out` abgelehnt (15:01, `E-125 Xfer nach Out abgelehnt: quelle=Gelöscht (<Dominant>)`) — Eudora hielt sie nicht mehr für einen Entwurf, die E-142-Rückfrage kam deshalb nicht. Nichts ging verloren, das Original liegt weiter in *Gelöscht*. Vermutung, nicht gemessen: beim Neuladen vom Server geht die Entwurfsmarke verloren; an 1.0.123 (TESTPLAN N3) kam die Rückfrage, vermutlich weil die Nachricht noch nicht neu geladen war. Entschieden: Entscheidungen 12 und 13 in [WEITERMACHEN](WEITERMACHEN.md) — die Ablehnung bleibt, Entwürfe bleiben in `Out` ([E-142](BEFUNDE.md#e-142)) |
+| T5 | **ja** | 26.10.2026 | Gregors Test an 1.0.124 abgeschlossen (eudora.log bis 20:11, drei Programmläufe); Windows-Ereignisprotokoll (Anwendung, Ereignis 1000) ab 13:00: **0** Abstürze aus `Eudora72-1.0.124-release`; im Protokoll keine Zeile `Ausnahme` |
+| T6 | **nein** | 26.10.2026 | Gregor am 26.10.2026 an 1.0.124: *„message -> send again liefert eine leere mail.“* (Gregors Bild: neue Mail ohne Empfänger, Betreff und Text, nur der Absender). Die Bedingung aus Entscheidung 12 ist damit **nicht** erfüllt: ein aus IMAP neu geladener Entwurf lässt sich weder nach `Out` ziehen noch per *Send Again* verschicken. Das Original liegt weiter im IMAP-Ordner. |
+
+## Testpaket 7.2.0.123 — abgeschlossen am 26.10.2026
 
 **Starten mit `Eudora starten.cmd`** im neuen Verzeichnis — **einzige Ausnahme ist
 Teil 0 A**, dort wird `Eudora.exe` doppelgeklickt. In der
@@ -88,31 +145,33 @@ Teil 1 und Teil 2 in beliebiger Reihenfolge.
 
 ### <a id="ergebnis-7-2-0-123"></a>Ergebnis am Testpaket 7.2.0.123 — je Kriterium
 
-*Wird nach deiner Rückmeldung ausgefüllt. Ohne diese Tabelle gibt es kein
+*Ausgefüllt am 26.10.2026 nach deiner Rückmeldung. Ohne diese Tabelle gäbe es kein
 Release 7.2.1 (ZIEL.md: „Ein Release ohne dokumentierte Ergebnisse gibt es
 nicht").*
 
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
-| K0/K1 | — | | |
-| K2 | — | | |
-| K3 | — | | |
-| K4 | — | | |
-| K5 | — | | |
-| K6 | — | | |
-| K7 | — | | |
-| K8 | — | | |
-| N1 | — | | |
-| N1b | — | | |
-| N2 | — | | |
-| N3 | — | | |
-| N4 | — | | |
-| N5 | — | | |
-| N6 | — | | |
-| N7 | — | | |
-| M1 | — | | |
-| M3 | — | | |
+| K0/K1 | **ja** | 26.10.2026 | Titelzeile *„Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 - Eudora72-1.0.123-release“* (Gregors Bild) |
+| K2 | **ja** | 26.10.2026 | Gregor: *„keine meldung“*; im `eudora.log` keine Zeile `Ausnahme …`, daneben Marken derselben Klasse (`E-137 Strg-W`, `rootcerts.p7b geladen aus:`) — die leere Spur zählt also |
+| K3 | **ja**, mit Bemerkung | 26.10.2026 | GMX über IMAP sofort; freenet über POP: der erste Versuch zu `194.97.208.37:995` hing über eine Minute ohne jede Protokollzeile, bis Gregor ihn stoppte; der zweite über `194.97.208.36:995` kam in 19 s durch. Kein Zertifikatsfehler. Ursache des Hängens nicht gemessen |
+| K4 | **nein** | 26.10.2026 | Windows verzeichnete um 10:05 einen Absturz von `Eudora72-1.0.123-release\Eudora.exe` in `ucrtbased.dll` (von Gregor nicht bemerkt); Ursache Debug-Fassungen im Paket ([E-156](BEFUNDE.md#e-156)), behoben für 7.2.0.124 |
+| K5 | **ja**, mit Befund | 26.10.2026 | Gregor: *„k5: PASSED, am ende der mail steht aber: </x-html>“* — betrifft die weitergeleitete Mail, nicht diese: siehe K6 und [E-158](BEFUNDE.md#e-158) |
+| K6 | **nein** | 26.10.2026 | die weitergeleitete Mail endet mit sichtbarem `</x-html>` (Gregors Bild); Ursache [E-158](BEFUNDE.md#e-158), behoben für 7.2.0.124 |
+| K7 | **ja** | 26.10.2026 | Gregor: *„läßt sich beenden“*; Protokoll endet mit `Logging shutdown` |
+| K8 | **ja** | 26.10.2026 | Gregor: *„K8: PASSED“* |
+| N1 | **ja**, mit Bemerkung | 26.10.2026 | Gregor: *„e-137 PASSED“*; Protokoll dreimal `E-137 Strg-W`. Einmal griff Strg+W im schwebenden (abgedockten) Filterfenster nicht (keine E-137-Zeile), von Gregor nachgestellt: Mail auswählen, dann ins schwebende Filterfenster klicken, Strg+W schließt das Mailfenster — der zweite Teil von [E-137](BEFUNDE.md#e-137); die Behebung ist in 7.2.0.124 eingebaut, am Programm noch nicht gemessen (Kurztest T1) |
+| N1b | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
+| N2 | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
+| N3 | **ja** | 26.10.2026 | Rückfrage mit dem neuen Text aus dem IMAP-Ordner *Gelöscht* (Gregors Bild), *No* gedrückt; Protokoll `E-142 Hinweis Entwurf aus IMAP nach Out: quelle=Gelöscht (<Dominant>) antwort=nein`, danach kein *„No messages were transferred!“*. Vorgewählt ist *Yes* |
+| N4 | **ja** | 26.10.2026 | *Entwürfe* und *Gelöscht* mit Umlauten (Gregors Bild); Protokoll `E-77 Ordnername: server="Entw&APw-rfe"` |
+| N5 | **ja** | 26.10.2026 | Gregor: *„E-146: PASSED“*, *„E-77 PASSED“*; zweiter Durchlauf mit `Temp1_öüß_20261026_1052` (anlegen, Mail hinein und heraus, löschen) im Protokoll ohne Fehler. Einmal meldete ein älterer Ordner `Temp2_ÖÄÜß_b` beim Abgleich *„unknown folder“* — nicht nachgestellt |
+| N6 | **ja** | 26.10.2026 | Gregor: *„E-113 passed“*; Protokoll: `E-113 Deckel: seite=477 vorher=600x80 nachher=477x64` und vier weitere, Seitenverhältnis erhalten |
+| N7 | **nein** | 26.10.2026 | beim Antworten erschien ein großes `data:`-Bild als grüne Fläche mit Streifen (Gregors Bild); Ursache gefunden ([E-119](BEFUNDE.md#e-119) zweiter Teil, 16-Bit-Zähler), behoben für 7.2.0.124 |
+| M1 | **ja** | 26.10.2026 | Schritt 1 Rückfrage (Bild), 2 *No* vorgewählt (Bild), 3 *Cancel*: die genannte fremde `Eudora.ini` (`C:\Temp\E67`, siehe Bemerkung unten) unverändert seit 08:57:34, Gregors 1.0.122 ebenfalls; 4 Protokoll `E-132 Startverzeichnis: gefunden="…Eudora72-1.0.122-release\Mailverzeichnis" … fremd=1` und `eigenes gewaehlt="…Eudora72-1.0.123-release\Mailverzeichnis"` |
+| M3 | **ja** | 26.10.2026 | Hinweis erschien (Gregors Bild), kein *„No messages were transferred!“*, Protokoll `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out kopie=0 einzeln=0`; Schritt 4 (Entwurf über das lokale `Trash` zurück nach `Out`) laut Gregor *„sollte passen“*, im Protokoll ab 11:15 keine `E-125`-Zeile |
 | Protokoll | — | | von mir gelesen: aus M1 die Zeilen `E-132 Startverzeichnis: … fremd=1` und `E-132 Startverzeichnis: eigenes gewaehlt=…`; **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
+
+**Beim Test gefunden (26.10.2026):** Die erste M1-Rückfrage nannte `C:\Temp\E67\Mailverzeichnis`, einen meiner Prüfstände. Jeder Eudora-Start schreibt `HKCU\Software\Qualcomm\Eudora\CommandLine\Current`, auch die Starts des Prüfstands auf Gregors Rechner; mein letzter Start um 08:57 hatte den Eintrag auf `C:\Temp\E67` gesetzt. Seit 7.2.0.114 fragt Eudora vorher; Hermes 7.1 oder ein Eudora vor 7.2.0.114 würde per Doppelklick still in diesem Prüfstand arbeiten. Der Prüfstand muss den Eintrag sichern und zurückschreiben ([E-157](BEFUNDE.md#e-157), seit 26.10.2026 im Prüfstand behoben).
 
 **Die Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
 [C10](#c10) (die Auswahlbox) und [C9](#c9) (das Adressbuch) hast du am

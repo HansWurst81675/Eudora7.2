@@ -3731,8 +3731,24 @@ void PaigeHTMLImportFilter::ProcessAttributes (pg_char_ptr attribute_table, shor
             if ((command = GetNextToken(&arg_size)) != NULL) {
                
                // E-119: data:-Bild VOR dem Kuerzen in eine Datei schreiben.
+               //
+               // E-119, zweiter Teil (Gregor am Testpaket 7.2.0.123, 26.10.2026: das
+               // Bild in der Antwort war eine gruene Flaeche mit Streifen). arg_size
+               // ist ein pg_short_t, 16 Bit; GetNextToken zaehlt damit die Zeichen des
+               // Werts, und ab 65536 laeuft die Zahl ueber. Ein data:-Bild ueber
+               // 48 KB kam deshalb nur mit (Laenge mod 65536) Zeichen an - gemessen:
+               // laenge=5343, 3990 Byte JPEG ohne Endmarke. Die Laenge wird hier
+               // deshalb selbst gemessen: bis zum schliessenden Anfuehrungszeichen,
+               // ohne Anfuehrungszeichen bis zum Leerzeichen. GetNextToken hat
+               // attribute_index schon richtig weitergesetzt; falsch war nur die Zahl.
+               long nE119Laenge = (long)arg_size;
+               if (command > attribute_ptr && _strnicmp((const char*)command, "data:", 5) == 0) {
+                  const pg_char cEnde = (command[-1] == '"' || command[-1] == '\'') ? command[-1] : (pg_char)' ';
+                  const char* pE119Ende = strchr((const char*)command, (int)cEnde);
+                  nE119Laenge = pE119Ende ? (long)(pE119Ende - (const char*)command) : (long)strlen((const char*)command);
+               }
                char szE119Datei[kMaxAttributeSize];
-               if (E119DataNachDatei((const char*)command, (long)arg_size, szE119Datei, sizeof(szE119Datei))) {
+               if (E119DataNachDatei((const char*)command, nE119Laenge, szE119Datei, sizeof(szE119Datei))) {
                   command = (pg_char_ptr)szE119Datei;
                   arg_size = (pg_short_t)strlen(szE119Datei);
                }
