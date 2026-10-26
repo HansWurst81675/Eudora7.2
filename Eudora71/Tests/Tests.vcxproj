@@ -123,6 +123,7 @@
     <ClCompile Include="TestE137.cpp" />
     <ClCompile Include="TestAusnahmeSpur.cpp" />
     <ClCompile Include="TestE142.cpp" />
+    <ClCompile Include="TestRootCertsLog.cpp" />
     <ClCompile Include="TestStartfehler.cpp" />
     <ClCompile Include="TestE148.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />

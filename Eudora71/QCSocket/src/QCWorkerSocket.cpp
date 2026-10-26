@@ -1958,6 +1958,41 @@ long QCWorkerSocket::SocketWriteCallback(void*, int, const char *pcBuf, int iLen
 	return iLen;
 }
 
+//
+// Logzeile fuer rootcerts.p7b - Gregor am 25.10.2026: "zeile im log, ja".
+// eudora.log soll nennen, aus welchem Verzeichnis die Liste der
+// Wurzelzertifikate geladen wurde. Seit E-148 zaehlt das: eine eigene
+// rootcerts.p7b im Mailverzeichnis hat Vorrang vor der mitgelieferten im
+// Programmverzeichnis, auch nach einem neuen Paket.
+//
+// QCSSL hat kein eigenes Protokoll. ChooseCertFileDirectory
+// (QCSSLContext.cpp) ersetzt aber in m_RootCertStoreDir die beiden
+// Kandidaten "Mailverzeichnis\r\nProgrammverzeichnis" durch das gewaehlte
+// Verzeichnis - hier wird also die Wahl von QCSSL selbst gelesen, nicht
+// nachgerechnet. Steht dort noch "\r\n", ist QCSSL vorher ausgestiegen,
+// und es wurde keine Liste geladen.
+//
+// Einmal je Programmlauf; sonst stuende die Zeile bei jedem Abruf da.
+//
+static void ProtokolliereRootCertsVerzeichnis(const QCSSLReference* pRef)
+{
+	static LONG s_lGeschrieben = 0;
+	if (!pRef)
+		return;
+	const CString& szDir = pRef->m_CertificateInfo.m_RootCertStoreDir;
+	if (szDir.IsEmpty() || szDir.Find("\r\n") >= 0)
+		return;
+	if (InterlockedExchange(&s_lGeschrieben, 1) != 0)
+		return;
+	const CString szDatei = szDir + "rootcerts.p7b";
+	const BOOL bDa = (::GetFileAttributes(szDatei) != INVALID_FILE_ATTRIBUTES);
+	CString szSpur;
+	szSpur.Format("rootcerts.p7b geladen aus: %s (%s)", (LPCTSTR) szDatei,
+				  (bDa ? "vorhanden" : "FEHLT - keine Wurzelzertifikate geladen"));
+	PutDebugLog(DEBUG_MASK_MISC, szSpur);
+}
+
+
 bool QCWorkerSocket::InitializeQCSSL()
 {
 	g_bSSLHandshakeDone = false;
@@ -1974,6 +2009,7 @@ bool QCWorkerSocket::InitializeQCSSL()
 		bool bSuccess = false;
 		if (g_fnQCSSLBeginSession)
 			bSuccess = g_fnQCSSLBeginSession(m_pSSLReference);
+		ProtokolliereRootCertsVerzeichnis(m_pSSLReference);
 		CTaskInfoMT *pTaskInfo = (CTaskInfoMT*) m_Settings->GetTaskInfo();
 		if(pTaskInfo)
 		{

@@ -126,6 +126,13 @@ zu 7.2.0.123.
   sonst unverändert. Prüfstandsfall `ZIEL24` verlangt, dass auf dem
   Bilder-Prüfstand keine solche Zeile entsteht.
 
+* **`eudora.log` nennt, aus welchem Verzeichnis `rootcerts.p7b` geladen
+  wurde** ([E-148](Intern/BEFUNDE.md#e-148); eingebaut, am laufenden Programm
+  noch nicht gemessen). Eine eigene Liste im Mailverzeichnis hat Vorrang vor
+  der mitgelieferten; die Zeile `rootcerts.p7b geladen aus: …` zeigt nach dem
+  ersten verschlüsselten Abruf, welche gilt. Regressionstest am Quelltext
+  (305 Tests, 305 bestanden).
+
 * **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
   „Task Status" überschreibt keinen Speicher mehr.** Die Liste führt zu jeder
   Spalte kleine Zusatzfelder, die kürzer sein können als die Zahl der Spalten;

@@ -267,6 +267,14 @@ Mailverzeichnis kopiert hat, behält **diese** Liste, auch mit dem neuen Paket:
 dort löschen oder ebenfalls durch die neue Datei ersetzen. Gefunden von
 [PRUEFER-51](Befunde/PRUEFER-51.md#pruefer-51) (K6).
 
+**Welche Liste gilt, steht ab dem Release 7.2.1 im Protokoll.** Beim ersten
+verschlüsselten Abruf nach dem Start schreibt Eudora eine Zeile wie
+`rootcerts.p7b geladen aus: C:\…\Mailverzeichnis\rootcerts.p7b (vorhanden)`
+in die Datei `eudora.log` im Mailverzeichnis. Steht dort das
+Mailverzeichnis, gilt Ihre eigene Liste; steht dort das Programmverzeichnis,
+die mitgelieferte. *„FEHLT"* heißt: in keinem der beiden Verzeichnisse liegt
+eine `rootcerts.p7b`, und Eudora hat keine Liste, gegen die es Serverzertifikate prüfen kann.
+
 ## Was es kann
 
 * **Mail abrufen und verschicken** über POP3 und SMTP mit **TLS 1.3** — das
