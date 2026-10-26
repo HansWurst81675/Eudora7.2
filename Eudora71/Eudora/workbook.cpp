@@ -552,35 +552,32 @@ QCMiniDockFrameWnd::~QCMiniDockFrameWnd()
 // mal seitlich", also auf die Titelzeile und den Rand des SCHWEBENDEN
 // Fensters. Das ist dieser kleine Rahmen, nicht die Leiste darin;
 // CWazooBar::OnMouseActivate sah den Klick nie, der Fokus blieb in der
-// Mail, und Strg+W schloss sie. Die drei Klicks IN die Leiste davor
-// wirkten (eudora.log: dreimal "E-137 Klick in Wazoo-Leiste" und gleich
-// danach "E-137 Strg-W").
+// Mail, und Strg+W schloss sie. Die Klicks IN die Leiste davor wirkten
+// (eudora.log: "E-137 Klick in Wazoo-Leiste" und gleich danach
+// "E-137 Strg-W").
 //
-// Hier wird deshalb jeder Klick auf den Rahmen (Titelzeile, Rand, Ecke)
+// Hier wird deshalb ein Klick auf den Rahmen (Titelzeile, Rand, Ecke)
 // wie ein Klick in die Leiste behandelt: liegt der Fokus ausserhalb der
-// schwebenden Leiste, bekommt ihn ihr aktives Wazoo-Fenster. Klicks IN
-// die Leiste (HTCLIENT, von der Leiste an den Rahmen weitergereicht)
-// bleiben bei CWazooBar::OnMouseActivate.
+// schwebenden Leiste, bekommt ihn ihr aktives Wazoo-Fenster. Die Leiste
+// kommt wie in RecalcLayout direkt aus m_wndSECDockBar (PRUEFER-60 K5).
+//
+// Klicks IN die Leiste erreichen den Rahmen gar nicht: schwebend gibt
+// CControlBar::OnMouseActivate MA_NOACTIVATE zurueck, ohne an die Eltern
+// weiterzureichen (barcore.cpp, PRUEFER-60 K5). Die Abfrage auf HTCLIENT
+// ist nur eine Absicherung. Ausgenommen ist der Schliessknopf (HTCLOSE):
+// die Leiste verschwindet gleich danach, der Fokus gehoert dann nicht
+// hinein (PRUEFER-60 K4).
 ////////////////////////////////////////////////////////////////////////
 int QCMiniDockFrameWnd::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
 {
 	const int nErgebnis = SECMiniDockFrameWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);
 
-	if (nHitTest != HTCLIENT)
+	if (nHitTest != HTCLIENT && nHitTest != HTCLOSE)
 	{
-		CWazooBar* pLeiste = NULL;
-		for (CWnd* pKind = GetWindow(GW_CHILD); pKind && !pLeiste; pKind = pKind->GetWindow(GW_HWNDNEXT))
-		{
-			for (CWnd* pEnkel = pKind->GetWindow(GW_CHILD); pEnkel && !pLeiste; pEnkel = pEnkel->GetWindow(GW_HWNDNEXT))
-			{
-				CWazooBar* pKandidat = DYNAMIC_DOWNCAST(CWazooBar, CWnd::FromHandlePermanent(pEnkel->GetSafeHwnd()));
-				if (pKandidat && pKandidat->IsWindowVisible())
-					pLeiste = pKandidat;
-			}
-		}
+		CWazooBar* pLeiste = DYNAMIC_DOWNCAST(CWazooBar, m_wndSECDockBar.GetFirstControlBar());
 
 		CWnd* pFokus = CWnd::GetFocus();
-		if (pLeiste && (!pFokus || !pLeiste->IsChild(pFokus)))
+		if (pLeiste && pLeiste->IsWindowVisible() && (!pFokus || !pLeiste->IsChild(pFokus)))
 		{
 			CWazooWnd* pWazooWnd = pLeiste->GetActiveWazooWindow();
 			if (pWazooWnd && pWazooWnd->GetSafeHwnd())

@@ -123,13 +123,13 @@ void RunE137Tests(const char* szEudoraDir)
 	if (pRahmen)
 	{
 		const long lBasis = QT_Stelle(pRahmen, "SECMiniDockFrameWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);");
-		const long lZone  = QT_Stelle(pRahmen, "if (nHitTest != HTCLIENT) {");
-		const long lSuche = QT_Stelle(pRahmen, "DYNAMIC_DOWNCAST(CWazooBar,");
-		const long lWenn  = QT_Stelle(pRahmen, "if (pLeiste && (!pFokus || !pLeiste->IsChild(pFokus))) {");
+		const long lZone  = QT_Stelle(pRahmen, "if (nHitTest != HTCLIENT && nHitTest != HTCLOSE) {");
+		const long lSuche = QT_Stelle(pRahmen, "CWazooBar* pLeiste = DYNAMIC_DOWNCAST(CWazooBar, m_wndSECDockBar.GetFirstControlBar());");
+		const long lWenn  = QT_Stelle(pRahmen, "if (pLeiste && pLeiste->IsWindowVisible() && (!pFokus || !pLeiste->IsChild(pFokus))) {");
 		const long lSetze = QT_Stelle(pRahmen, "pWazooWnd->SetFocus();");
 		TT_CHECK_MSG(lBasis >= 0, "die Basisklasse wird nicht mehr gerufen - Ziehen und Aktivieren des Rahmens fielen weg");
-		TT_CHECK_MSG(lZone > lBasis, "der Rahmen behandelt nicht gezielt die Klicks ausserhalb der Leiste (HTCLIENT bleibt bei CWazooBar)");
-		TT_CHECK_MSG(lSuche > lZone, "der Rahmen sucht die Leiste in sich nicht");
+		TT_CHECK_MSG(lZone > lBasis, "der Rahmen behandelt nicht gezielt Titelzeile und Rand (HTCLIENT bleibt bei CWazooBar, HTCLOSE ausgenommen - PRUEFER-60 K4)");
+		TT_CHECK_MSG(lSuche > lZone, "der Rahmen holt die Leiste nicht aus m_wndSECDockBar (PRUEFER-60 K1/K5: eine eigene Suche blieb im Test gruen, auch wenn sie nie traf)");
 		TT_CHECK_MSG(lWenn > lSuche && lSetze > lWenn,
 					 "der Fokus wird nicht oder nicht nur dann gesetzt, wenn er ausserhalb der Leiste liegt");
 		free(pRahmen);
