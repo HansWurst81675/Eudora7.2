@@ -1805,6 +1805,25 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Neunundsiebzigster Durchgang — Bestand vor dem Testpaket 7.2.0.124, nach LEKTOR-73 und PRUEFER-59, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-74.md`)
+
+Lauf über `b26abf7..31a9b110`. **12 Funde** (4 falsch, 3 veraltet, 4 unklar,
+1 Doppelung). Von L-73.1 bis L-73.11 sind sechs erledigt, fünf teilweise; der
+Werkzeugfehler aus L-73.1 ist behoben, `ZIEL.md` meldet richtig *„24 von 25
+erfüllt“*. **Vor dem Schnüren zu berichtigen:** die Kriterientabelle in
+`ZIEL.md` nennt Kriterium 6 erfüllt und Kriterium 4 „fast“, obwohl beide an
+7.2.0.123 *nein* waren ([L-74.1](../Befunde/LEKTOR-74.md#l-74.1)); E-148
+(eMudhra-Zertifikate) sagt in derselben Zeile „mit Eudora gemessen“ und
+„nicht gemessen“, README und ZIEL folgen der zweiten
+([L-74.2](../Befunde/LEKTOR-74.md#l-74.2)); E-142 (Entwurf aus IMAP nach
+`Out`) heißt „am Programm noch NICHT gemessen“ trotz N3
+([L-74.3](../Befunde/LEKTOR-74.md#l-74.3)); die erzeugten Listen zeigen bei
+fünf gemessenen Befunden „nie gemessen“ oder den 22.10.
+([L-74.4](../Befunde/LEKTOR-74.md#l-74.4)). Von PRUEFER-59 stehen nur K5, K6
+und K11 im Bestand. Für Gregor: ob der Kurztest an 7.2.0.124 zusammen mit dem
+Test an 7.2.0.123 den Maßstab „alle neun Kriterien an einem frischen Paket“
+erfüllt, und weiter die README-Frage zu `v1.0.120`.
+
 ## Achtundsiebzigster Durchgang — Gregors Ergebnisse an 7.2.0.123 und der Kurztest 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-73.md`)
 
 Lauf über `d83e4de6..8bdab960`. **11 Funde** (6 falsch, 3 unvollständig,
