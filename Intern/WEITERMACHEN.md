@@ -311,7 +311,7 @@ Sie stecken alle im zuletzt geschnürten Paket **1.0.63** und im Quellstand
    Das ist der letzte bekannte Fehler, den ein Anwender merkt, und der einzige
    Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt* heißen. **Seit
    [E-43](BEFUNDE.md#e-43)** ist die Fehlerklasse dahinter an der Wurzel behoben — gut möglich,
-   dass die Meldung mit verschwunden ist. **Erst messen, dann suchen.**
+   dass die Meldung mit verschwunden ist. **Erst messen, dann suchen.** **Stand 26.10.2026:** Gregor hat die Meldung *„nach dem fix nicht mehr gesehen"*. `eudora.log` taugt nicht als Beleg — die MFC zeigt sie über `CWinApp::ProcessWndProcException`, und Eudora schreibt sie nirgends mit (gemessen: 0 Treffer in zehn Protokollen von Gregor, aber auch keine Zeile, die sie je hätte schreiben können). Deshalb kommt eine Spurmarke ins Testpaket 7.2.0.123; bleibt sie dort leer, gilt die Meldung als verschwunden und Kriterium 2 und 4 als erfüllt.
 4. **Der Nebenbefund ohne Nummer: die Fenster stehen nach einem Neustart nicht
    im Vollbild**, obwohl sie beim Beenden so waren (Gregor am 09.09.2026 an
    1.0.25). Das ist der Fensterzustand über `CMainFrame::SaveOpenWindows`,
