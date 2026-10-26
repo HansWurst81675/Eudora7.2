@@ -178,7 +178,7 @@ E-106p | C:\Temp\EBILD | 240 | log | E-106 groesser als angegeben: attr=35x35 qu
 E-110p | C:\Temp\EBILD | 240 | log | E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1 | | | messen=tools\messen-bild.ps1
 E-105p | C:\Temp\EBILD | 240 | log | E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet | | | messen=tools\messen-bild.ps1
 E-108p | C:\Temp\EBILD | 240 | log | Logging shutdown | Exception | | messen=tools\messen-bild.ps1
-BILD-lauf | C:\Temp\EBILD | 240 | messung | BILD ERGEBNIS abgeholt=7 geoeffnet=7 weitergeleitet=7 | | | messen=tools\messen-bild.ps1
+BILD-lauf | C:\Temp\EBILD | 240 | messung | BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8 | | | messen=tools\messen-bild.ps1
 # E-113 (24.10.2026): ein Bild breiter als der Textbereich wird auf dessen
 # Breite gedeckelt. Am Pruefstand ist der Textbereich des Verfassen-Fensters
 # 718 breit (Fenster 771); der Banner 985x378 muss als 718x276 kommen.

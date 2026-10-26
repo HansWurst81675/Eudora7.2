@@ -1,11 +1,7 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-26 12:12:52
-freigabe=Ansage 26.10.2026 im Chat an Gregor: EBILD ca. 4 min, Start 12:09 (Gregor: teste du, ich halte mich zurueck)
-faelle=5
-bestanden=4
-fehlgeschlagen=1
-fall=[ ok ] E-119d   vollstaendig=1 probe=ok
-fall=[ ok ] E-119a   data-db1b9f48.png faden=1 ok=1
-fall=[ ok ] E-119b   E-119 data-Bild als Datei:
-fall=[ ok ] E-119c   data-2eaa4a58.png laenge=1574
-fall=[FEHL] E-119e   fehlt in log: laenge=78519
+zeit=2026-10-26 12:33:50
+freigabe=Ansage 26.10.2026 im Chat an Gregor: EBILD ca. 4 min, Start 12:31
+faelle=1
+bestanden=1
+fehlgeschlagen=0
+fall=[ ok ] BILD-lauf BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8
