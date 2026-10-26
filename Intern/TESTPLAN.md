@@ -7,7 +7,8 @@
 
 ## Was jetzt zu testen ist — Testpaket 7.2.0.123
 
-**Starten immer mit `Eudora starten.cmd`** im neuen Verzeichnis. In der
+**Starten mit `Eudora starten.cmd`** im neuen Verzeichnis — **einzige Ausnahme ist
+Teil 0 A**, dort wird `Eudora.exe` doppelgeklickt. In der
 Titelzeile muss **7.2.0.123** und **Paket 1.0.123** stehen — sonst läuft
 ein anderes Paket.
 
@@ -24,7 +25,7 @@ was stattdessen kam). Ich trage es unten in die
 
 **A. Zuerst M1 — bevor das neue Paket irgendwie anders gestartet wurde.** Der
 Starttest braucht eine *fremde* Installation, und das ist dein 1.0.122. Wird
-das neue Paket vorher über `Eudora starten.cmd` gestartet, merkt sich Windows
+das neue Paket vorher über `Eudora starten.cmd` gestartet, merkt sich Eudora
 das neue Verzeichnis, und die Rückfrage aus M1 kommt zu Recht nicht mehr.
 
 1. Dein **1.0.122** einmal mit seinem `Eudora starten.cmd` starten und mit
@@ -36,15 +37,18 @@ das neue Verzeichnis, und die Rückfrage aus M1 kommt zu Recht nicht mehr.
    **`Eudora.exe` doppelklicken** und [M1](#m1-e132) Schritt 1 bis 4 fahren.
    Für Schritt 3 und 4 („fremde `Eudora.ini` unverändert“): das Änderungsdatum
    aus 2. muss gleich bleiben.
-4. Nach Schritt 4 läuft Eudora mit einem eigenen, leeren Mailverzeichnis.
-   Mit *File → Exit* beenden.
+4. Nach Schritt 4 läuft Eudora mit einem eigenen, leeren Mailverzeichnis und
+   öffnet deshalb den Assistenten für ein neues Konto: mit *Abbrechen*
+   schließen, dann *File → Exit*.
 
 **B. Deine Daten in das neue Paket.** Der Inhalt von
 `C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis` in
 `C:\Users\Gregor\Eudora72-1.0.123-release\Mailverzeichnis` kopieren
-(überschreiben). **Ausnahme:** liegt dort eine Datei `rootcerts.p7b`, sie
-**nicht** mitkopieren — sonst prüft K3 die alte Zertifikatsliste statt der
-neuen ([E-148](BEFUNDE.md#e-148)).
+(überschreiben). **Zwei Ausnahmen, beide nicht mitkopieren:** `eudora.log` —
+sonst ist das Protokoll aus M1 Schritt 4 überschrieben, und das alte enthält
+selbst `E-132`-Zeilen, die wie ein Nachweis aussehen; und, falls vorhanden,
+`rootcerts.p7b` — sonst prüft K3 die alte Zertifikatsliste statt der neuen
+([E-148](BEFUNDE.md#e-148)).
 
 **C. Ab jetzt nur noch mit `Eudora starten.cmd`** im neuen Verzeichnis, dann
 Teil 1 und Teil 2 in beliebiger Reihenfolge.
@@ -108,7 +112,7 @@ nicht").*
 | N7 | — | | |
 | M1 | — | | |
 | M3 | — | | |
-| Protokoll | — | | von mir gelesen: **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
+| Protokoll | — | | von mir gelesen: aus M1 die Zeilen `E-132 Startverzeichnis: … fremd=1` und `E-132 Startverzeichnis: eigenes gewaehlt=…`; **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
 
 **Die Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
 [C10](#c10) (die Auswahlbox) und [C9](#c9) (das Adressbuch) hast du am
@@ -630,9 +634,9 @@ damit sie in der Registry unter
 | 1 | **`Eudora.exe` doppelklicken** — nicht `Eudora starten.cmd`, denn das übergibt das Verzeichnis und schneidet den Weg ab | Eine Rückfrage erscheint: *„Eudora found an existing mail folder that belongs to another installation"* mit drei Knöpfen **Yes**, **No**, **Cancel** |
 | 2 | Die Vorauswahl ansehen, **ohne** zu klicken | **No** ist vorgewählt (= eigenes Verzeichnis anlegen). Ein unbedachtes Enter darf nichts an der fremden Installation ändern |
 | 3 | **Cancel** wählen | Das Programm endet. Die fremde `Eudora.ini` ist **unverändert** (SHA256 vorher/nachher vergleichen) |
-| 4 | Neu starten, **No** wählen | Eudora startet mit einem eigenen Mailverzeichnis neben dem Programm. Im Protokoll stehen `E-132 Startverzeichnis: … fremd=1` und danach `E-132 Startverzeichnis: eigenes gewaehlt="…"`. Die fremde `Eudora.ini` ist **unverändert** |
+| 4 | Wieder **`Eudora.exe` doppelklicken**, diesmal **No** wählen | Eudora startet mit einem eigenen Mailverzeichnis neben dem Programm. Im Protokoll stehen `E-132 Startverzeichnis: … fremd=1` und danach `E-132 Startverzeichnis: eigenes gewaehlt="…"`. Die fremde `Eudora.ini` ist **unverändert** |
 
-**Hier endet der Handtest (Gregor, 25.10.2026: *„ich teste nur bis schritt 4. schritt 5 geht nicht."*).** Den früheren Schritt 5 (*Yes* wählen) gibt es so nicht: Schritt 4 **merkt sich** die Antwort — Eudora schreibt `E132Abgelehnt=<Verzeichnis>` in die `DEudora.ini` neben dem Programm (`eudora.cpp:4241`), und jeder weitere Start liest sie und fragt **nicht** mehr (`:4191`, Protokoll: `E-132 Startverzeichnis: gemerkte Antwort Nein`). Der Weg *Yes* und das Wiederholen der Rückfrage werden ein **automatischer Prüfstandsfall**, der die gemerkte Antwort zwischen den Schritten zurücksetzt (Zweig `RC1_vorbereiten`). Die alte Gegenprobe mit `Eudora starten.cmd` (keine Rückfrage) prüft jeder gewöhnliche Prüfstandslauf ohnehin bei jedem Start.
+**Hier endet der Handtest (Gregor, 25.10.2026: *„ich teste nur bis schritt 4. schritt 5 geht nicht."*).** Den früheren Schritt 5 (*Yes* wählen) gibt es so nicht: Schritt 4 **merkt sich** die Antwort — Eudora schreibt `E132Abgelehnt=<Verzeichnis>` in die `DEudora.ini` neben dem Programm (`eudora.cpp`, `StartEudoraWithDefaultLocation`), und jeder weitere Start liest sie und fragt **nicht** mehr (dieselbe Funktion, Protokoll: `E-132 Startverzeichnis: gemerkte Antwort Nein`). Der Weg *Yes* und das Wiederholen der Rückfrage werden ein **automatischer Prüfstandsfall**, der die gemerkte Antwort zwischen den Schritten zurücksetzt (Zweig `RC1_vorbereiten`). Die alte Gegenprobe mit `Eudora starten.cmd` (keine Rückfrage) prüft jeder gewöhnliche Prüfstandslauf ohnehin bei jedem Start.
 
 **Wenn Schritt 2 oder 3 anders ausgeht, ist der Schaden aus
 [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102) zurück**
