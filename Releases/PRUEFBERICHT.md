@@ -3,18 +3,18 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.0.124` (Paketnummer `1.0.124`) |
-| **Commit** | `1bd0fe96` (Arbeitsbaum sauber) |
-| **Erstellt** | 2026-10-26 12:34 |
+| **Commit** | `abf96d75` (Arbeitsbaum sauber) |
+| **Erstellt** | 2026-10-26 13:10 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 12 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 13 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 09 s | dieser Lauf |
 | Pruefstand, 36 Faelle, 11 Eudora-Starts | 6 min 37 s | voller Lauf, Ende 2026-10-26 12:31:14 |
-| **zusammen** | **7 min 02 s** | |
+| **zusammen** | **6 min 53 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-26 12:34** gegen den Quelltext von Commit `1bd0fe96`.
+Gelaufen am **2026-10-26 13:10** gegen den Quelltext von Commit `abf96d75`.
 
 <details><summary>Alle 311 Unit-Tests einzeln</summary>
 
@@ -377,7 +377,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-26 12:34** gegen Commit `1bd0fe96`.
+Gelaufen am **2026-10-26 13:10** gegen Commit `abf96d75`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -431,7 +431,7 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-113p | ok | 2026-10-26 12:31:14 | `C:\Temp\EBILD` | Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22 | `Datei=985x378 gemalt=718x276` |
 | E-113b | ok | 2026-10-26 12:31:14 | `C:\Temp\EBILD` | Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22 | `BILD E113B` |
 | E-113b2 | ok | 2026-10-26 12:31:14 | `C:\Temp\EBILD` | Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22 | `neu=0 lebt=1 probe=ok` |
-| E-119d | ok | 2026-10-26 12:31:14 | `C:\Temp\E119K` | Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22 | `vollstaendig=1 probe=ok` |
+| E-119d | ok | 2026-10-26 12:54:15 | `C:\Temp\E119K` | Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22 | `vollstaendig=1 probe=ok` |
 | E-119a | ok | 2026-10-26 12:31:14 | `C:\Temp\EBILD` | Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22 | `data-db1b9f48.png faden=1 ok=1` |
 | E-119b | ok | 2026-10-26 12:31:14 | `C:\Temp\EBILD` | Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22 | `E-119 data-Bild als Datei:` |
 | E-119c | ok | 2026-10-26 12:31:14 | `C:\Temp\EBILD` | Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22 | `data-2eaa4a58.png laenge=1574` |
