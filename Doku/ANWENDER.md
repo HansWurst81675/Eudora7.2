@@ -221,7 +221,7 @@ Defender über jede EXE und DLL eines Pakets laufen und weist bei einem Fund
 ab; kein Paket geht mehr hinaus, das Defender **in diesem Moment** schon
 beanstandet. Ganz ausschließen lässt es sich nicht, weil die Cloud mitunter
 erst nach dem ersten Start urteilt. Dauerhaft hilft nur eine Code-Signatur
-mit einem Zertifikat – die gibt es für dieses Projekt bisher nicht.
+mit einem Zertifikat – die gibt es für dieses Projekt nicht und wird es nicht geben (das Projekt verdient kein Geld, Zertifikate kosten jährlich).
 
 ### Einen Fehler melden
 

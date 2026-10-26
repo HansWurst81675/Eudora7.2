@@ -175,7 +175,7 @@ Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.125.
 ## 1.0.124 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.124, Zweig `0.123_ergebnisse`
 
 **Geschnürt am 26.10.2026 um 13:10 und als Testverzeichnis abgelegt; nicht veröffentlicht.**
-Für Gregors Kurztest ([TESTPLAN T1–T5](../Intern/TESTPLAN.md)) vor dem Release 7.2.1.
+Für Gregors Kurztest ([TESTPLAN T1–T6](../Intern/TESTPLAN.md)) vor dem Release 7.2.1.
 
 | | |
 |---|---|
