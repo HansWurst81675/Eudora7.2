@@ -111,6 +111,21 @@ zu 7.2.0.123.
   schließt also wie gewohnt das Postfach. Regressionstest am Quelltext
   (302 Tests, 302 bestanden); am laufenden Programm prüft es Gregor im Testpaket.
 
+* **[E-142](Intern/BEFUNDE.md#e-142) — Hinweis beim Ziehen eines Entwurfs aus
+  einem IMAP-Ordner nach `Out`** (eingebaut, am laufenden Programm noch nicht
+  gemessen). Dieser Weg legt in `Out` eine leere Nachricht an; behoben wird
+  das nicht, vereinbart ist ein Hinweis. Eudora fragt jetzt einmal je Vorgang,
+  ob trotzdem übertragen werden soll, und rät, das Original im IMAP-Ordner zu
+  behalten. „No" überträgt nichts. Regressionstest am Quelltext (304 Tests,
+  304 bestanden).
+
+* **Meldung „Encountered an improper argument" wird protokolliert** ([ZIEL.md](ZIEL.md)
+  Kriterien 2 und 4). Sie kommt aus der MFC und stand bisher nirgends; jetzt
+  schreibt Eudora jedes Auftreten als `Ausnahme in Fensterbotschaft (ZIEL 2/4)`
+  mit Text, Botschaft und Fensterklasse ins `eudora.log`. Das Verhalten ist
+  sonst unverändert. Prüfstandsfall `ZIEL24` verlangt, dass auf dem
+  Bilder-Prüfstand keine solche Zeile entsteht.
+
 * **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
   „Task Status" überschreibt keinen Speicher mehr.** Die Liste führt zu jeder
   Spalte kleine Zusatzfelder, die kürzer sein können als die Zahl der Spalten;
