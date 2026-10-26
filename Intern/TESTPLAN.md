@@ -1,11 +1,40 @@
-# Testplan für Gregor — Quellstand 7.2.0.123 / `VERSION` 1.0.123, Stand 26.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.124 / `VERSION` 1.0.124, Stand 26.10.2026
 
 > **Testpaket 7.2.0.123** (Paket 1.0.123) — es kommt nach
 > `C:\Users\Gregor\Eudora72-1.0.123-release`, neben dein 1.0.122, das
 > unangetastet bleibt. Veröffentlicht ist `v1.0.120`. Nach deinem Test und
 > deinem Ja wird daraus das Release **7.2.1.<n>**.
 
-## Was jetzt zu testen ist — Testpaket 7.2.0.123
+## Was jetzt zu testen ist — Testpaket 7.2.0.124 (Kurztest)
+
+> Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.124-release`, neben dein
+> 1.0.123. Geprüft wird nur, was sich gegenüber 7.2.0.123 geändert hat; alles
+> andere hast du an 7.2.0.123 bestätigt (Ergebnistabelle unten).
+
+**Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.123-release\Mailverzeichnis`
+nach `C:\Users\Gregor\Eudora72-1.0.124-release\Mailverzeichnis` kopieren, **ohne**
+`eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
+starten. In der Titelzeile muss **7.2.0.124** und **Paket 1.0.124** stehen.
+
+| Nr. | Was | Wo | Was zu tun ist | Was herauskommen muss |
+|---|---|---|---|---|
+| T1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail in `In` ausgewählt | das Filterfenster öffnen (*Tools → Filters*), auf eine **Beschriftung** darin klicken (etwa „Match“), dann **Strg+W** | nur das Filterfenster verschwindet, die Mail bleibt offen |
+| T2 | [E-119](BEFUNDE.md#e-119) | lokal | auf die Polizeitag-Mail antworten (das große grüne Bild von heute) | das Bild erscheint vollständig, keine Fläche mit Streifen |
+| T3 | [E-158](BEFUNDE.md#e-158) | lokal | eine **Text**mail (etwa *„mail an mich“*) an dich selbst weiterleiten und abrufen | am Ende der angekommenen Mail steht **kein** `</x-html>` |
+| T4 | [E-142](BEFUNDE.md#e-142) | **IMAP** *Gelöscht* | einen Entwurf aus *Gelöscht* nach `Out` ziehen | die Rückfrage kommt, **No** ist vorgewählt; **Enter** drücken: nichts passiert. Entwurf danach löschen |
+| T5 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.124-release` sein |
+
+### <a id="ergebnis-7-2-0-124"></a>Ergebnis am Testpaket 7.2.0.124
+
+| Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
+|---|---|---|---|
+| T1 | — | | |
+| T2 | — | | |
+| T3 | — | | |
+| T4 | — | | |
+| T5 | — | | |
+
+## Testpaket 7.2.0.123 — abgeschlossen am 26.10.2026
 
 **Starten mit `Eudora starten.cmd`** im neuen Verzeichnis — **einzige Ausnahme ist
 Teil 0 A**, dort wird `Eudora.exe` doppelgeklickt. In der

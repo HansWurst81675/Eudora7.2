@@ -96,6 +96,33 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
+## 7.2.0.124 — Testpaket mit den Funden aus Gregors Test an 7.2.0.123 ([E-156](Intern/BEFUNDE.md#e-156), [E-158](Intern/BEFUNDE.md#e-158), [E-119](Intern/BEFUNDE.md#e-119), [E-137](Intern/BEFUNDE.md#e-137), [E-142](Intern/BEFUNDE.md#e-142))
+
+**Quellstand 7.2.0.124, Paket 1.0.124 — Testpaket, noch nicht bestätigt.** Gregor hat
+7.2.0.123 am 26.10.2026 getestet ([TESTPLAN.md](Intern/TESTPLAN.md), Ergebnistabelle):
+15 Punkte bestanden, drei nicht. Diese Fassung behebt die drei und zwei Lücken,
+die dabei auffielen. Prüfanleitung für den Kurztest: [TESTPLAN.md](Intern/TESTPLAN.md), oben.
+
+* **[E-156](Intern/BEFUNDE.md#e-156) — keine Debug-Fassungen mehr im Paket.** Sechs
+  Hilfsdateien (`NSImport.eif`, `OEImport.eif`, `OLImport.eif`, `EuShlExt.dll`,
+  `EudoraNS.dll`, `swEudora.exe`) waren seit August Testfassungen; Eudora stürzte
+  deshalb gelegentlich ab (34 Mal in Gregors Paketen, laut Windows). Jetzt kommt
+  jede Programmdatei aus dem fertigen Bau, und der Paketbau weist jede
+  Testfassung ab.
+* **[E-119](Intern/BEFUNDE.md#e-119) zweiter Teil — große Bilder im HTML kommen beim
+  Antworten und Weiterleiten vollständig an.** Über 48 KB wurden sie bisher
+  abgeschnitten und erschienen als Fläche mit Streifen.
+* **[E-158](Intern/BEFUNDE.md#e-158) — beim Weiterleiten einer Textmail steht am Ende
+  kein `</x-html>` mehr.**
+* **[E-137](Intern/BEFUNDE.md#e-137) zweiter Teil — Strg+W versteckt eine Leiste auch
+  dann, wenn vorher auf eine Beschriftung oder leere Fläche in ihr geklickt
+  wurde.**
+* **[E-142](Intern/BEFUNDE.md#e-142) — die Rückfrage beim Ziehen eines Entwurfs aus
+  einem IMAP-Ordner nach `Out` wählt jetzt *No* vor.**
+* Für Entwickler: der Prüfstand setzt Gregors Registry nach jedem Lauf zurück und
+  wertet Abstürze aus dem Windows-Ereignisprotokoll aus ([E-157](Intern/BEFUNDE.md#e-157)).
+  Unit-Tests: 311 Tests, 311 bestanden.
+
 ## 7.2.0.123 — Testpaket für Gregors Test vor dem Release 7.2.1: Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137), noch nicht am Programm gemessen), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130)), Hinweis bei Entwurf aus IMAP nach `Out` ([E-142](Intern/BEFUNDE.md#e-142)), Umbenennen von IMAP-Ordnern ([E-146](Intern/BEFUNDE.md#e-146)), Protokollzeilen zu „improper argument“, zu Ausnahmen außerhalb von Fensterbotschaften ([E-154](Intern/BEFUNDE.md#e-154)) und zu `rootcerts.p7b`
 
 **Quellstand 7.2.0.123, Paket 1.0.123 — Testpaket, noch nicht bestätigt.** Auf

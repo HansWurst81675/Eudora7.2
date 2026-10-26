@@ -15,10 +15,11 @@ E-113b	ok	2026-10-26 08:57:35	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+823
 E-113b2	ok	2026-10-26 08:57:35	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	neu=0 lebt=1 probe=ok
 E-113p	ok	2026-10-26 08:57:35	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	Datei=985x378 gemalt=718x276
 E-118	ok	2026-10-26 08:57:35	C:\Temp\E118	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	E-118 Bild:
-E-119a	ok	2026-10-26 08:57:35	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	data-db1b9f48.png faden=1 ok=1
-E-119b	ok	2026-10-26 08:57:35	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	E-119 data-Bild als Datei:
-E-119c	ok	2026-10-26 08:57:35	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	data-2eaa4a58.png laenge=1574
-E-119d	ok	2026-10-26 08:57:35	C:\Temp\E119K	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	vollstaendig=1 probe=ok
+E-119a	ok	2026-10-26 12:12:52	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	data-db1b9f48.png faden=1 ok=1
+E-119b	ok	2026-10-26 12:12:52	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	E-119 data-Bild als Datei:
+E-119c	ok	2026-10-26 12:12:52	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	data-2eaa4a58.png laenge=1574
+E-119d	ok	2026-10-26 12:12:52	C:\Temp\E119K	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	vollstaendig=1 probe=ok
+E-119e	FEHL	2026-10-26 12:12:52	C:\Temp\EBILD	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	fehlt in log: laenge=78519
 E-121	ok	2026-10-26 08:57:35	C:\Temp\E118	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	ablage-dateien=1
 E-125a	ok	2026-10-26 08:57:35	C:\Temp\E125	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0
 E-125b	ok	2026-10-26 08:57:35	C:\Temp\E125	Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50	E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1

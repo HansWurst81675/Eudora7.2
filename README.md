@@ -133,8 +133,9 @@ mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)); und es wird ke
 ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrieben
 ([E-131](Intern/BEFUNDE.md#e-131)).
 
-**Neu im Testpaket 7.2.0.123** (noch nicht veröffentlicht, kommt mit dem Release 7.2.1):
-steht an einer Stelle, im [CHANGELOG unter 7.2.0.123](CHANGELOG.md) — darunter
+**Neu in den Testpaketen 7.2.0.123 und 7.2.0.124** (noch nicht veröffentlicht, kommt mit dem Release 7.2.1):
+steht an einer Stelle, im [CHANGELOG](CHANGELOG.md) unter beiden Fassungen — darunter
+[E-156](Intern/BEFUNDE.md#e-156), [E-158](Intern/BEFUNDE.md#e-158),
 [E-137](Intern/BEFUNDE.md#e-137), [E-146](Intern/BEFUNDE.md#e-146), [E-77](Intern/BEFUNDE.md#e-77), [E-113](Intern/BEFUNDE.md#e-113), [E-119](Intern/BEFUNDE.md#e-119), [E-148](Intern/BEFUNDE.md#e-148), [E-150](Intern/BEFUNDE.md#e-150), [E-130](Intern/BEFUNDE.md#e-130), [E-154](Intern/BEFUNDE.md#e-154).
 
 **Was zur Fassung 7.2.1 noch fehlt, steht erzeugt ganz oben in

@@ -2,27 +2,27 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.0.123` (Paketnummer `1.0.123`) |
-| **Commit** | `3cbc3426` (Arbeitsbaum sauber) |
-| **Erstellt** | 2026-10-26 09:18 |
-| **Gesamturteil** | **BESTANDEN** |
+| **Quellstand** | `7.2.0.124` (Paketnummer `1.0.124`) |
+| **Commit** | `d6b9ff3b` — **Arbeitsbaum nicht sauber** (8 Dateien) |
+| **Erstellt** | 2026-10-26 12:14 |
+| **Gesamturteil** | **FEHLGESCHLAGEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 13 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 12 s | dieser Lauf |
 | Pruefstand, 35 Faelle, 11 Eudora-Starts | 5 min 34 s | voller Lauf, Ende 2026-10-26 08:57:35 |
-| **zusammen** | **5 min 49 s** | |
+| **zusammen** | **5 min 59 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
-| Unit-Tests (`EudoraTests.exe`) | 308 | 308 | 0 |  |
+| Unit-Tests (`EudoraTests.exe`) | 311 | 311 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 35 | 35 | 0 | 0 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 36 | 35 | 1 | 0 an anderem Bau, 0 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
@@ -51,9 +51,9 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-26 09:18** gegen den Quelltext von Commit `3cbc3426`.
+Gelaufen am **2026-10-26 12:14** gegen den Quelltext von Commit `d6b9ff3b*`.
 
-<details><summary>Alle 308 Unit-Tests einzeln</summary>
+<details><summary>Alle 311 Unit-Tests einzeln</summary>
 
 | Bereich | Test | Ergebnis |
 |---|---|---|
@@ -354,12 +354,15 @@ Gelaufen am **2026-10-26 09:18** gegen den Quelltext von Commit `3cbc3426`.
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-25: LocateNetscapePrefsFile gibt den Knoten des Aufrufers nicht frei | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-31 (Ursache von E-27): pg_time_t ist fest 32 Bit breit | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-137: Strg-W in einer Wazoo-Leiste versteckt nur die Leiste, vor jeder Weitergabe | ok |
+| Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-137: ein Klick irgendwo in eine Wazoo-Leiste gibt ihr den Tastaturfokus | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | ZIEL 2/4: Ausnahmen aus Fensterbotschaften landen im eudora.log | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | ZIEL 4 / E-154: Ausnahmen ausserhalb von Fensterbotschaften landen im eudora.log | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-142: Hinweis beim Ziehen eines Entwurfs aus einem IMAP-Ordner nach Out | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | rootcerts.p7b: eudora.log nennt das Verzeichnis, aus dem QCSSL die Liste geladen hat | ok |
 | E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-146 K8: RenameMailbox gibt den Servernamen zurueck, UpdateAfterRename fuehrt ihn | ok |
 | E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-146 K9: lehnt der Server ab, wird die Ordnerliste neu gelesen | ok |
+| E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-119: ein data:-Bild ueber 64 KB kommt mit seiner vollen Laenge an | ok |
+| E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-158: Weiterleiten einer Textmail haengt kein </x-html> an (E-88 nur bei HTML-Mails) | ok |
 | E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext) | E-77 K1: UpdateAfterRename fuehrt den Namen, der an den Server ging | ok |
 | E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext) | E-77 K2: RenameMailbox kodiert an allen fuenf Stellen, INBOX eingeschlossen | ok |
 | Startfehler S-2 (Regressionstests) | S-2: die Werbeleiste wird in unserem Bau nicht angelegt | ok |
@@ -374,7 +377,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-26 09:18** gegen Commit `3cbc3426`.
+Gelaufen am **2026-10-26 12:14** gegen Commit `d6b9ff3b*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -402,7 +405,7 @@ Gelaufen am **2026-10-26 09:18** gegen Commit `3cbc3426`.
 
 Je Fall der **letzte** Lauf. *Bau* ist die Kennung aus der `Eudora.exe` des
 Pruefstands (Fassung, Paket, Commit; ein `*` heisst: mit uncommitteten
-Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.0.123`
+Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.0.124`
 lief, zaehlt fuer diesen Stand nicht als gruen.
 
 | Fall | Ergebnis | gelaufen am | Pruefstand | Bau | erwartet |
@@ -428,10 +431,11 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-113p | ok | 2026-10-26 08:57:35 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `Datei=985x378 gemalt=718x276` |
 | E-113b | ok | 2026-10-26 08:57:35 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `BILD E113B` |
 | E-113b2 | ok | 2026-10-26 08:57:35 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `neu=0 lebt=1 probe=ok` |
-| E-119d | ok | 2026-10-26 08:57:35 | `C:\Temp\E119K` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `vollstaendig=1 probe=ok` |
-| E-119a | ok | 2026-10-26 08:57:35 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `data-db1b9f48.png faden=1 ok=1` |
-| E-119b | ok | 2026-10-26 08:57:35 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `E-119 data-Bild als Datei:` |
-| E-119c | ok | 2026-10-26 08:57:35 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `data-2eaa4a58.png laenge=1574` |
+| E-119d | ok | 2026-10-26 12:12:52 | `C:\Temp\E119K` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `vollstaendig=1 probe=ok` |
+| E-119a | ok | 2026-10-26 12:12:52 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `data-db1b9f48.png faden=1 ok=1` |
+| E-119b | ok | 2026-10-26 12:12:52 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `E-119 data-Bild als Datei:` |
+| E-119c | ok | 2026-10-26 12:12:52 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `data-2eaa4a58.png laenge=1574` |
+| E-119e | **FEHL** | 2026-10-26 12:12:52 | `C:\Temp\EBILD` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `laenge=78519` |
 | E-77a | ok | 2026-10-26 08:57:35 | `C:\Temp\E77` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `E77 ERGEBNIS roh=0 dekodiert=2` |
 | E-77b | ok | 2026-10-26 08:57:35 | `C:\Temp\E77` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `E-77 Ordnername: server="Entw&APw-rfe"` |
 | E-77c | ok | 2026-10-26 08:57:35 | `C:\Temp\E77` | Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 | `E-77 Ordnername: server="Gel&APY-scht"` |
@@ -445,7 +449,7 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 
 ## 4. Deckung der kritischen Befunde
 
-Von **69** kritischen Befunden haben **46** einen Test, **21** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: S-1 S-8 V-1 AN-1 E-2 E-3 E-23 E-32 E-60 E-64 E-72 E-82 E-120 E-122 E-123 E-124 E-126 E-129 E-136 E-133 E-39.
+Von **70** kritischen Befunden haben **46** einen Test, **22** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: S-1 S-8 V-1 AN-1 E-2 E-3 E-23 E-32 E-60 E-64 E-72 E-82 E-120 E-122 E-123 E-124 E-126 E-129 E-156 E-136 E-133 E-39.
 
 Solange diese Zahl nicht null ist, sagt ein gruener Bericht nicht, dass
 nichts kaputt ist — er sagt, dass nichts von dem kaputt ist, was geprueft
