@@ -1805,6 +1805,27 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Achtzigster Durchgang — Nachprüfung vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-75.md`)
+
+Lauf über `705d15b..3ca94aaf` (LEKTOR-74 eingearbeitet, Paket 1.0.124
+geschnürt). **6 Funde** (0 falsch, 3 veraltet, 3 unklar). Von L-74.1 bis
+L-74.12 sind sechs erledigt, drei teilweise, drei offen; die vier Stellen,
+die vor dem Schnüren zu berichtigen waren, sind berichtigt. Das Paket stimmt
+mit `PAKETE.md` (Größe, SHA-256, Uhrzeit, Byte-Gleichheit mit dem Bau
+nachgemessen). Die HTML-Weiterleitung zu E-158 (sichtbares `</x-html>`) ist
+gemessen und hat den richtigen Weg getroffen (`Fassung=ORIGINAL` im
+Prüfstandsprotokoll). Veraltet: „HIER WEITERMACHEN“ nennt als Nächstes noch
+das Einarbeiten und das Schnüren
+([L-75.1](../Befunde/LEKTOR-75.md#l-75.1)); `ZIEL.md` Zeile 2a heißt „offen“
+unter einem erfüllten Kriterium 2 ([L-75.3](../Befunde/LEKTOR-75.md#l-75.3));
+der CHANGELOG nennt Kriterium 4 ohne den Absturz an 7.2.0.123
+([L-75.4](../Befunde/LEKTOR-75.md#l-75.4)). Unklar: die Marke „zuletzt
+gemessen an 7.2.0.124“ an E-157 (Prüfstand verbog die Registry), obwohl die
+Zählung für 7.2.0.124 erst nach Gregors Test möglich ist
+([L-75.2](../Befunde/LEKTOR-75.md#l-75.2)). Für Gregor weiter offen: ob der
+Kurztest den Maßstab „alle neun Kriterien“ erfüllt, und die README-Frage zu
+`v1.0.120`.
+
 ## Neunundsiebzigster Durchgang — Bestand vor dem Testpaket 7.2.0.124, nach LEKTOR-73 und PRUEFER-59, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-74.md`)
 
 Lauf über `b26abf7..31a9b110`. **12 Funde** (4 falsch, 3 veraltet, 4 unklar,
