@@ -31,7 +31,11 @@
 #   tools\messen-e77-umbenennen.ps1 -Vorbereiten -Pfadfilter C:\Temp\E77U
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
-    [switch] $Vorbereiten
+    [switch] $Vorbereiten,
+    # E-146 (PRUEFER-50 K9), gerufen von tools\messen-e146.ps1: der
+    # Pruefserver lehnt RENAME ab. Erwartet: Eudora liest danach die
+    # Ordnerliste neu und fuehrt "Ablage" wieder unter seinem alten Namen.
+    [switch] $ServerLehntAb
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
@@ -120,7 +124,9 @@ $repo = Split-Path -Parent $PSScriptRoot
 $perl = 'C:\Program Files\Git\usr\bin\perl.exe'
 $belegt = @(Get-NetTCPConnection -LocalPort 1143 -State Listen -ErrorAction SilentlyContinue)
 if ($belegt.Count -gt 0) { Write-Host ('E77U FEHLER: Port 1143 belegt von Prozess ' + (($belegt | ForEach-Object { $_.OwningProcess }) -join ',')); exit 1 }
-$srv = Start-Process $perl -ArgumentList @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', '90') -WorkingDirectory $repo -WindowStyle Hidden -PassThru
+$srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', '90')
+if ($ServerLehntAb) { $srvArgs += '--rename-ablehnen' }
+$srv = Start-Process $perl -ArgumentList $srvArgs -WorkingDirectory $repo -WindowStyle Hidden -PassThru
 Start-Sleep -Seconds 2
 
 $TVM_EXPAND = 0x1102; $TVM_GETNEXT = 0x110A; $TVM_SELECT = 0x110B; $TVM_GETITEM = 0x110C
@@ -227,6 +233,27 @@ try {
     if ($nachher -eq [IntPtr]::Zero) { foreach ($w in $alle) { $nachher = Suche $b $w $neu 0; if ($nachher -ne [IntPtr]::Zero) { break } } }
     Write-Host ('E77U Baum nach dem Umbenennen: ' + $(if ($nachher -ne [IntPtr]::Zero) { 'Eintrag "' + (Text $b $nachher) + '" da' } else { 'kein Eintrag "' + $neu + '"' }))
 
+    # 4b. E-146: der Server hat abgelehnt. Fehlermeldung wegklicken, dann
+    # warten, bis Eudora die Ordnerliste neu gelesen hat, und den Baum noch
+    # einmal ab der Wurzel absuchen - die alten Eintraege sind danach ungueltig.
+    if ($ServerLehntAb) {
+        foreach ($a in (Alle $pp | Where-Object { $_.Klasse -eq '#32770' -and ([E77U]::GetWindowLongA($_.H, -16) -band 0x40000000) -eq 0 })) { [void][E77U]::PostMessageA($a.H, 0x0010, [IntPtr]0, [IntPtr]0) }
+        Start-Sleep -Seconds 8
+        Dialoge $pp
+        foreach ($a in (Alle $pp | Where-Object { $_.Klasse -eq '#32770' -and ([E77U]::GetWindowLongA($_.H, -16) -band 0x40000000) -eq 0 })) { [void][E77U]::PostMessageA($a.H, 0x0010, [IntPtr]0, [IntPtr]0) }
+        Start-Sleep -Seconds 2
+        $wurzel = Snd $b $TVM_GETNEXT ([IntPtr]0) ([IntPtr]0)
+        $alle = @(); $w = $wurzel
+        while ($w -ne [IntPtr]::Zero) { $alle += $w; $w = Snd $b $TVM_GETNEXT ([IntPtr]1) $w }
+        $script:baumNeu = 'weg'; $script:baumAlt = 'weg'
+        foreach ($w in $alle) {
+            if ((Suche $b $w $neu 0) -ne [IntPtr]::Zero) { $script:baumNeu = 'da' }
+            if ((Suche $b $w 'Ablage' 0) -ne [IntPtr]::Zero) { $script:baumAlt = 'da' }
+        }
+        Write-Host ('E77U Baum nach der Ablehnung: neu=' + $script:baumNeu + ' alt=' + $script:baumAlt)
+        $nachher = [IntPtr]::Zero    # nicht oeffnen: der Name gilt am Server nicht
+    }
+
     # 4. Oeffnen - der naechste Zugriff mit dem gefuehrten Namen
     if ($nachher -ne [IntPtr]::Zero) {
         [void](Snd $b $TVM_SELECT ([IntPtr]9) $nachher)
@@ -264,3 +291,6 @@ if (Test-Path $ml) {
     Write-Host ('E77U mboxlist.lst: ' + (($text -split "`r?`n" | Where-Object { $_ }) -join ' ; ').Replace([string][char]0xE4, '\xE4'))
 }
 Write-Host ("E77U ERGEBNIS rename={0} liste={1} unbekannt={2}" -f $rename, $liste, $unbekannt)
+if ($ServerLehntAb) {
+    Write-Host ("E146 ERGEBNIS rename={0} baum-neu={1} baum-alt={2} liste={3}" -f $rename, $script:baumNeu, $script:baumAlt, $liste)
+}

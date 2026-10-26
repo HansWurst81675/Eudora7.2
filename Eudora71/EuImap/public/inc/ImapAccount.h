@@ -114,7 +114,8 @@ public:
 									  LPCSTR szNewImapName,
 									  CString &strNewDirName,
 									  BOOL &bOldMboxStillExists,
-									  QCImapMailboxCommand **ppNewImapMailbox);
+									  QCImapMailboxCommand **ppNewImapMailbox,
+									  CString *pstrNeuerImapName = NULL);	// E-146: der Name, der an den Server geht
 	BOOL				 RenameMailboxOnServer(CString &strLogin,
 											   CString &strPassword,
 											   LPCSTR szOldImapName,

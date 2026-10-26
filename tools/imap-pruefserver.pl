@@ -55,6 +55,8 @@ use IO::Select;
 # und STATUS auf einen Namen, der nicht in der Liste steht, bekommen NO und
 # eine Zeile "!! UNBEKANNTES POSTFACH" - so wird sichtbar, wenn Eudora nach
 # dem Umbenennen einen anderen Namen benutzt als den, den es geschickt hat.
+# Mit --rename-ablehnen (seit 26.10.2026, Befund E-146) antwortet RENAME mit
+# NO und laesst die Liste, wie sie war.
 #
 # Er hoert NUR auf 127.0.0.1. Von aussen ist er nicht erreichbar.
 #
@@ -84,6 +86,7 @@ while (@ARGV) {
     elsif ($a eq '--zeitschranke') { $opt{zeitschranke} = shift @ARGV }
     elsif ($a eq '--gruss-verzoegerung') { $opt{gruss_verzoegerung} = shift @ARGV }
     elsif ($a eq '--append-ablehnen') { $opt{append_ablehnen} = 1 }
+    elsif ($a eq q{--rename-ablehnen}) { $opt{rename_ablehnen} = 1 }   # E-146 (PRUEFER-50 K9)
     elsif ($a eq '--ohne-appenduid') { $opt{ohne_appenduid} = 1 }
     elsif ($a eq '--fremde-uid')  { $opt{fremde_uid}   = shift @ARGV }
     elsif ($a eq '--append-verzoegerung') { $opt{append_verzoegerung} = shift @ARGV }
@@ -295,7 +298,12 @@ while (time < $ende) {
             $danach =~ s/^(?:"(?:[^"\\]|\\.)*"|\S+)\s*//;
             my $neu = postfach_name($danach);
             my $i = ordner_index($alt);
-            if ($i < 0) {
+            if ($opt{rename_ablehnen} and $i >= 0) {
+                # E-146: der Server lehnt ab, die Liste bleibt, wie sie war.
+                notiz(q{  RENAME ABGELEHNT (--rename-ablehnen): "} . sichtbar_bytes($alt) . q{" -> "} . sichtbar_bytes($neu) . q{"});
+                $antwort = "$marke NO RENAME: abgelehnt (Pruefstand)";
+            }
+            elsif ($i < 0) {
                 $unbekannt++;
                 notiz('  !! UNBEKANNTES POSTFACH bei RENAME: "' . sichtbar_bytes($alt) . '"');
                 $antwort = "$marke NO [NONEXISTENT] RENAME: kein Postfach";
