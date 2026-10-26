@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| CHRONIST | 2026-10-26 07:16 | CHRONIST-2026-10-26: Verlauf 25.10. ab 19:56 auswerten |

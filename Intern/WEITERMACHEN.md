@@ -136,6 +136,7 @@ Fensterbau abwickelte (`CHANGELOG.md` unter 7.2.0.20 und 7.2.0.21).
 > 3. **Logzeile** in `eudora.log`, aus welchem Verzeichnis `rootcerts.p7b` geladen wurde (*„zeile im log, ja"*).
 > 4. **E-132:** Gregor testet nur Schritt 1–4 (*„schritt 5 geht nicht"* — Schritt 4 merkt sich die Antwort in der `DEudora.ini`); der ganze Weg wird ein Prüfstandsfall.
 > 5. **Regressionstests:** die rote Probe ohne Behebung nur einmal beim Anlegen eines Tests, danach genügt grün.
+> 6. **Message-ID — kein Befund:** die Message-ID (`msgdoc.cpp` `AssignMessageId`, z. B. `<7.2.0.122.2.20261025200323.06321090@127.0.0.1>`) entspricht RFC 5322; Randfälle (Rücksendeadresse ohne `@` ergibt `wheresmymailserver.com`) werden nicht aufgenommen — *„mir reicht, wenn wir generell hier nicht gegen die standards verstoßen"* (Gregor, 25.10.2026).
 >
 > **Reihenfolge:** [PRÜFER-53 K4](../Befunde/PRUEFER-53.md) ist **erledigt** (`9a4cc0e1`: die INI wird jetzt nach dem Beenden gelesen, gemessen 19:09); als Nächstes von 2. noch E-142 und E-146, dann 3.–4., dann die Funde aus [LEKTOR-61](../Befunde/LEKTOR-61.md), dann Testpaket 7.2.0.123 für Gregor.
 >
