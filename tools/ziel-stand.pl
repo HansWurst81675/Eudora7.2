@@ -68,7 +68,13 @@ for my $zeile (split /\n/, $befunde) {
     my $alle = lc join ' || ', @fett;
     my $bleibt = index($alle, 'bleibt offen') >= 0;
     my $wieder = index($w,'wieder offen') >= 0 || index($w,'teilweise') >= 0 || $bleibt;
-    next if !$wieder and grep { index($w, $_) >= 0 } @erledigt_wort;
+    # LEKTOR-73 L-73.1 (26.10.2026): ein Urteil, das mit einem Offen-Wort
+    # BEGINNT, ist offen - gleich, was danach steht. E-119 lautete "offen -
+    # ... fuer grosse Bilder widerlegt ..."; das Wort "widerlegt" mitten im
+    # Satz machte ihn hier "erledigt", und er fiel aus allen Listen. Dieselbe
+    # Klasse wie L-16.1: das Werkzeug las mehr hinein, als dastand.
+    my $beginnt_offen = grep { $w =~ /^[\s\W]*\Q$_\E/ } @offen_wort;
+    next if !$wieder and !$beginnt_offen and grep { index($w, $_) >= 0 } @erledigt_wort;
     next unless $bleibt or grep { index($w, $_) >= 0 } @offen_wort;
     $offen{$k} = 1;
     if ($urteil =~ /\*\*Was noch fehlt:\*\*\s*(.+?)(?=\s*\*\*Wie zu pruefen:\*\*|\z)/s) {

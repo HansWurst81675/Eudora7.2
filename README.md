@@ -96,7 +96,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.123** / `VERSION` **1.0.123** — Testpaket für Gregors Test vor dem Release 7.2.1; was darin neu ist, steht im [CHANGELOG, Abschnitt 7.2.0.123](CHANGELOG.md). Veröffentlicht ist `v1.0.120`.*
+*Stand **7.2.0.124** / `VERSION` **1.0.124** — Testpaket mit den Funden aus Gregors Test an 7.2.0.123, vor dem Release 7.2.1; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.0.124 und 7.2.0.123. Veröffentlicht ist `v1.0.120`.*
 
 ### Was geht
 

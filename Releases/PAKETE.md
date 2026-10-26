@@ -165,6 +165,7 @@ Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.124.
 ## 1.0.123 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.123, Zweig `vor-testpaket-7.2.0.123`
 
 **Geschnürt am 26.10.2026 um 09:18 und als Testverzeichnis abgelegt; nicht veröffentlicht.**
+Von Gregor am 26.10.2026 getestet, Ergebnis: [TESTPLAN.md](../Intern/TESTPLAN.md#ergebnis-7-2-0-123) — 15 ja, 3 nein (K4 Absturz durch Debug-Fassungen, K6 `</x-html>`, N7 großes `data:`-Bild).
 Für Gregors Test vor dem Release 7.2.1.
 
 | | |

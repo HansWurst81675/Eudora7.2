@@ -1,9 +1,9 @@
 # Testplan für Gregor — Quellstand 7.2.0.124 / `VERSION` 1.0.124, Stand 26.10.2026
 
-> **Testpaket 7.2.0.123** (Paket 1.0.123) — es kommt nach
-> `C:\Users\Gregor\Eudora72-1.0.123-release`, neben dein 1.0.122, das
-> unangetastet bleibt. Veröffentlicht ist `v1.0.120`. Nach deinem Test und
-> deinem Ja wird daraus das Release **7.2.1.<n>**.
+> **Testpaket 7.2.0.124** (Paket 1.0.124) — Kurztest direkt hierunter. Das
+> Testpaket 7.2.0.123 ist abgeschlossen, seine Ergebnisse stehen weiter unten.
+> Veröffentlicht ist `v1.0.120`. Nach deinem Test und deinem Ja wird das
+> Release **7.2.1.<n>** gebaut.
 
 ## Was jetzt zu testen ist — Testpaket 7.2.0.124 (Kurztest)
 
@@ -18,10 +18,10 @@ starten. In der Titelzeile muss **7.2.0.124** und **Paket 1.0.124** stehen.
 
 | Nr. | Was | Wo | Was zu tun ist | Was herauskommen muss |
 |---|---|---|---|---|
-| T1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail in `In` ausgewählt | das Filterfenster öffnen (*Tools → Filters*), auf eine **Beschriftung** darin klicken (etwa „Match“), dann **Strg+W** | nur das Filterfenster verschwindet, die Mail bleibt offen |
+| T1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail aus `In` geöffnet | das Filterfenster öffnen (*Tools → Filters*), auf eine **Beschriftung** darin klicken (etwa „Match“), dann **Strg+W** — einmal angedockt, einmal schwebend (abgedockt) | nur das Filterfenster verschwindet, die Mail bleibt offen |
 | T2 | [E-119](BEFUNDE.md#e-119) | lokal | auf die Polizeitag-Mail antworten (das große grüne Bild von heute) | das Bild erscheint vollständig, keine Fläche mit Streifen |
 | T3 | [E-158](BEFUNDE.md#e-158) | lokal | eine **Text**mail (etwa *„mail an mich“*) an dich selbst weiterleiten und abrufen | am Ende der angekommenen Mail steht **kein** `</x-html>` |
-| T4 | [E-142](BEFUNDE.md#e-142) | **IMAP** *Gelöscht* | einen Entwurf aus *Gelöscht* nach `Out` ziehen | die Rückfrage kommt, **No** ist vorgewählt; **Enter** drücken: nichts passiert. Entwurf danach löschen |
+| T4 | [E-142](BEFUNDE.md#e-142) | **IMAP** *Gelöscht* | einen Entwurf anlegen (*Message → New Message*, an dich selbst, *File → Save*, Fenster schließen — er liegt in `Out`), in *Gelöscht* ziehen, dann zurück nach `Out` ziehen | die Rückfrage kommt, **No** ist vorgewählt; **Enter** drücken: nichts passiert. Entwurf danach löschen |
 | T5 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.124-release` sein |
 
 ### <a id="ergebnis-7-2-0-124"></a>Ergebnis am Testpaket 7.2.0.124
@@ -126,12 +126,12 @@ nicht").*
 | K0/K1 | **ja** | 26.10.2026 | Titelzeile *„Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 - Eudora72-1.0.123-release“* (Gregors Bild) |
 | K2 | **ja** | 26.10.2026 | Gregor: *„keine meldung“*; im `eudora.log` keine Zeile `Ausnahme …`, daneben Marken derselben Klasse (`E-137 Strg-W`, `rootcerts.p7b geladen aus:`) — die leere Spur zählt also |
 | K3 | **ja**, mit Bemerkung | 26.10.2026 | GMX über IMAP sofort; freenet über POP: der erste Versuch zu `194.97.208.37:995` hing über eine Minute ohne jede Protokollzeile, bis Gregor ihn stoppte; der zweite über `194.97.208.36:995` kam in 19 s durch. Kein Zertifikatsfehler. Ursache des Hängens nicht gemessen |
-| K4 | — | | |
+| K4 | **nein** | 26.10.2026 | Windows verzeichnete um 10:05 einen Absturz von `Eudora72-1.0.123-release\Eudora.exe` in `ucrtbased.dll` (von Gregor nicht bemerkt); Ursache Debug-Fassungen im Paket ([E-156](BEFUNDE.md#e-156)), behoben für 7.2.0.124 |
 | K5 | **ja**, mit Befund | 26.10.2026 | Gregor: *„k5: PASSED, am ende der mail steht aber: </x-html>“* — betrifft die weitergeleitete Mail, nicht diese: siehe K6 und [E-158](BEFUNDE.md#e-158) |
 | K6 | **nein** | 26.10.2026 | die weitergeleitete Mail endet mit sichtbarem `</x-html>` (Gregors Bild); Ursache [E-158](BEFUNDE.md#e-158), behoben für 7.2.0.124 |
 | K7 | **ja** | 26.10.2026 | Gregor: *„läßt sich beenden“*; Protokoll endet mit `Logging shutdown` |
 | K8 | **ja** | 26.10.2026 | Gregor: *„K8: PASSED“* |
-| N1 | **ja**, mit Bemerkung | 26.10.2026 | Gregor: *„e-137 PASSED“*; Protokoll dreimal `E-137 Strg-W`. Einmal griff Strg+W im angedockten Filterfenster nicht (keine E-137-Zeile), vermutlich nach einem Klick in die Filterdetails; danach wieder richtig. Ursache nicht gemessen |
+| N1 | **ja**, mit Bemerkung | 26.10.2026 | Gregor: *„e-137 PASSED“*; Protokoll dreimal `E-137 Strg-W`. Einmal griff Strg+W im schwebenden (abgedockten) Filterfenster nicht (keine E-137-Zeile), vermutlich nach einem Klick in die Filterdetails; danach wieder richtig. Ursache nicht gemessen |
 | N1b | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
 | N2 | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
 | N3 | **ja** | 26.10.2026 | Rückfrage mit dem neuen Text aus dem IMAP-Ordner *Gelöscht* (Gregors Bild), *No* gedrückt; Protokoll `E-142 Hinweis Entwurf aus IMAP nach Out: quelle=Gelöscht (<Dominant>) antwort=nein`, danach kein *„No messages were transferred!“*. Vorgewählt ist *Yes* |
@@ -143,7 +143,7 @@ nicht").*
 | M3 | **ja** | 26.10.2026 | Hinweis erschien (Gregors Bild), kein *„No messages were transferred!“*, Protokoll `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out kopie=0 einzeln=0`; Schritt 4 (Entwurf über das lokale `Trash` zurück nach `Out`) laut Gregor *„sollte passen“*, im Protokoll ab 11:15 keine `E-125`-Zeile |
 | Protokoll | — | | von mir gelesen: aus M1 die Zeilen `E-132 Startverzeichnis: … fremd=1` und `E-132 Startverzeichnis: eigenes gewaehlt=…`; **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
 
-**Beim Test gefunden (26.10.2026):** Die erste M1-Rückfrage nannte `C:\Temp\E67\Mailverzeichnis`, einen meiner Prüfstände. Jeder Eudora-Start schreibt `HKCU\Software\Qualcomm\Eudora\CommandLine\Current`, auch die Starts des Prüfstands auf Gregors Rechner; mein letzter Start um 08:57 hatte den Eintrag auf `C:\Temp\E67` gesetzt. Seit 7.2.0.114 fragt Eudora vorher; Hermes 7.1 oder ein Eudora vor 7.2.0.114 würde per Doppelklick still in diesem Prüfstand arbeiten. Der Prüfstand muss den Eintrag sichern und zurückschreiben (Befund folgt).
+**Beim Test gefunden (26.10.2026):** Die erste M1-Rückfrage nannte `C:\Temp\E67\Mailverzeichnis`, einen meiner Prüfstände. Jeder Eudora-Start schreibt `HKCU\Software\Qualcomm\Eudora\CommandLine\Current`, auch die Starts des Prüfstands auf Gregors Rechner; mein letzter Start um 08:57 hatte den Eintrag auf `C:\Temp\E67` gesetzt. Seit 7.2.0.114 fragt Eudora vorher; Hermes 7.1 oder ein Eudora vor 7.2.0.114 würde per Doppelklick still in diesem Prüfstand arbeiten. Der Prüfstand muss den Eintrag sichern und zurückschreiben ([E-157](BEFUNDE.md#e-157), seit 26.10.2026 im Prüfstand behoben).
 
 **Die Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
 [C10](#c10) (die Auswahlbox) und [C9](#c9) (das Adressbuch) hast du am
