@@ -1805,6 +1805,24 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Zweiundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-76 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-77.md`)
+
+Lauf über `469cf36..950ced8e` (Entscheidung 11 und die Berichtigungen zu
+LEKTOR-76; vier `.md`, zehn Zeilen). **3 Funde** (0 falsch, 3 unklar).
+L-76.1 bis L-76.3 sind erledigt; die Klammer an E-157 (Prüfstand verbog
+Gregors Registry) gibt PRÜFER-59 jetzt wörtlich wieder. Die neuen Sätze
+„an 7.2.0.123 von Gregor erneut bestätigt“ in `ZIEL.md` stimmen für die
+Kriterien 1, 5 und 7. Unklar: bei Kriterium 3 prüfte K3 nur den Abruf mit
+übernommenen Konten, und die Bemerkung zum hängenden freenet-Abruf fehlt
+([L-77.1](../Befunde/LEKTOR-77.md#l-77.1)); bei Kriterium 8 prüfte K8 nur
+das Menü *Window*, nicht die Registerkartenleiste
+([L-77.2](../Befunde/LEKTOR-77.md#l-77.2)); `ZIEL.md:207-208` zählt
+Kriterium 0 als an 7.2.0.123 belegt, die Zeile 0 nennt — richtig — nur den
+Test ohne Visual Studio vom 06.09.2026
+([L-77.3](../Befunde/LEKTOR-77.md#l-77.3)). Keiner hält den PR auf. Für
+Gregor weiter offen: was vor der Marke `v7.2.1.N` getestet sein muss,
+einschließlich Kriterium 0.
+
 ## Einundachtzigster Durchgang — Nachprüfung der Berichtigungen zu LEKTOR-75 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-76.md`)
 
 Lauf über `1a3a285..e6de8a5a` (ein Commit, sechs `.md`, acht Zeilen).
