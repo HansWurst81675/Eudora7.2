@@ -62,24 +62,10 @@ Merge bewegt; jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig
 
 ## Das Ziel, an dem alles hängt
 
-**Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
-erfüllt (2, 4).** Die Tabelle dazu steht in [ZIEL.md](../ZIEL.md) und ist die
-Quelle. Gregor hat am 06.09.2026 die zweite Stufe gesetzt, Kriterien **4 bis
-6**; **7** ist am 07.09.2026 aus seinem Urteil zu Paket 1.0.18 nachgetragen,
-**8** noch am selben Tag aus seinem Wunsch nach sichtbaren offenen Fenstern.
-
-| # | | Stand |
-|---|---|---|
-| 4 | **Keine Abstürze** | fast — fünfmal Strg-N ohne Absturz gemessen; das Beenden ist erledigt, und mit [**E-43**](BEFUNDE.md#e-43) sind [**E-37**](BEFUNDE.md#e-37) und [**E-38**](BEFUNDE.md#e-38) weggefallen. Offen bleibt die Meldung beim Anzeigen mancher Nachrichten |
-| 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
-| 6 | **Eine Mail weiterleiten** | **erfüllt** (07.09.2026, von Gregor bestätigt) |
-| 7 | ***File → Exit*** beendet Eudora sauber | **erfüllt** (08.09.2026, von Gregor bestätigt) — *„schließen klappt jetzt."* Alle drei Wege: Menü, Alt-F4, Kreuz |
-| 8 | Offene Fenster sichtbar und auswählbar | **erfüllt** (09.09.2026, von Gregor bestätigt) — Menü *Window* und die Registerkartenleiste unten; der Klick holt das Fenster nach vorn (**A-3** / [**E-48**](BEFUNDE.md#e-48)) |
-
-**Beiden noch nicht erfüllten Kriterien fehlt dasselbe:** die Meldung
-„Encountered an improper argument" beim **Anzeigen** mancher Nachrichten. Sie
-ist der letzte bekannte Fehler, den ein Anwender merkt — und **neu zu messen**,
-seit [**E-43**](BEFUNDE.md#e-43) die Fehlerklasse an der Wurzel behoben hat.
+Der Stand der neun Kriterien steht an **einer** Stelle: in der Tabelle in
+[ZIEL.md](../ZIEL.md), seit dem 26.10.2026 mit Gregors Ergebnis an 7.2.0.123
+([Ergebnistabelle](TESTPLAN.md#ergebnis-7-2-0-123)). Gregor hat am 06.09.2026 die zweite
+Stufe gesetzt, Kriterien **4 bis 6**; **7** kam am 07.09.2026 dazu, **8** am selben Tag.
 
 **Dazu vier Anforderungen, die kein Kriterium sind**, alle in
 [ZIEL.md](../ZIEL.md) aufgeschrieben: [**A-1**](BEFUNDE.md#a-1) (Vorgaben für ein neu angelegtes

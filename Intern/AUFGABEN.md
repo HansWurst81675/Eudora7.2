@@ -18,14 +18,8 @@ ist gesperrt; jeder Agent arbeitet in seinem eigenen Zweig
 > **neu:** [E-114](BEFUNDE.md#e-114) und [E-115](BEFUNDE.md#e-115). Was unten als *wartet* steht, ist der
 > Stand davor; die Urteile mit Zitat stehen in [BEFUNDE.md](BEFUNDE.md).
 
-**Alle neun Kriterien aus [ZIEL.md](../ZIEL.md) sind entweder erfüllt oder haben
-eine gebaute Behebung.** Sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind
-fast erfüllt (2, 4). Beiden gemeinsam fehlt die Meldung „Encountered an
-improper argument" beim **Anzeigen** mancher Nachrichten; **Kriterium 2 fehlt
-darüber hinaus** [**E-86**](BEFUNDE.md#e-86) (HTML-Nachrichten falsch dargestellt) und [**E-77**](BEFUNDE.md#e-77)
-(IMAP-Postfachnamen roh) — beides steht in `ZIEL.md` in der eigenen Zeile
-**2a**. Bis zum 14.09.2026 stand hier „beiden fehlt **dasselbe**", und das
-stimmte seit der Aufteilung von Kriterium 2 nicht mehr.
+**Der Stand der neun Kriterien** steht an einer Stelle, in [ZIEL.md](../ZIEL.md) — seit dem
+26.10.2026 mit Gregors Ergebnis an 7.2.0.123 ([Ergebnistabelle](TESTPLAN.md#ergebnis-7-2-0-123)).
 
 **Dazu warteten sechs frische Behebungen auf sein Urteil** *(Stand vor dem 13.10.2026 — [E-85](BEFUNDE.md#e-85) und [E-93](BEFUNDE.md#e-93) sind seither von Gregor an 1.0.84 bestätigt, [E-83](BEFUNDE.md#e-83) nachgemessen; offen bleiben [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96))*: [**E-85**](BEFUNDE.md#e-85) (Umlaute
 über IMAP, 7.2.0.52, am laufenden Programm belegt), [**E-83**](BEFUNDE.md#e-83) (Eudora liess
