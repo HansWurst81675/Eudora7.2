@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| PRUEFER | 2026-10-26 12:25 | PRUEFER-59.md: Aenderungen seit efc42028 gegen die Quelle, Kennungen E-159 und E-160 |

@@ -23,7 +23,7 @@ MFC-Stellen sind in der Quelle auf diesem Rechner nachgelesen
   im Repo. Die Ursache ist unbekannt. Im Prüfstandslauf an 7.2.0.124
   (`1bd0fe96`, 12:24 bis 12:31) kam derselbe Fall ohne Absturz durch
   (gemessen: kein Ereignis 1000 nach 10:05). Das ist der einzige Fund, den
-  Gregor vor dem Paket kennen sollte. Vorschlag: Nummer **E-159**.
+  Gregor vor dem Paket kennen sollte. Vorschlag: Nummer **[E-159](../Intern/BEFUNDE.md#e-159)**.
 * **Nachtrag nach `git fetch` (Stand `3a895491`):** Der Prüfstandsfall
   E-119e ist inzwischen gefahren und grün (`laenge=78519`). Damit ist der
   Rückfall aus [K4](#k4) am Programm abgedeckt, nur nicht in der Testsuite.
@@ -524,7 +524,7 @@ wiederholt, aber auch nicht erklärt.
 
 **Schwere: mittel (ungeklärt).** Hält das Paket nicht von selbst auf. Gregor
 sollte es aber wissen: Kommt der Absturz aus dem Umbenennen von IMAP-Ordnern
-([E-146](../Intern/BEFUNDE.md#e-146)), steckt er auch in 7.2.0.124. Vorschlag: Befund **E-159**. Erster
+([E-146](../Intern/BEFUNDE.md#e-146)), steckt er auch in 7.2.0.124. Vorschlag: Befund **[E-159](../Intern/BEFUNDE.md#e-159)**. Erster
 Schritt: Offset `0x1d0d79` gegen `Eudora.map` oder `Eudora.pdb` von
 7.2.0.122 auflösen, dann den Fall E146 einmal mit [E-157](../Intern/BEFUNDE.md#e-157) fahren.
 
@@ -542,4 +542,4 @@ Schritt: Offset `0x1d0d79` gegen `Eudora.map` oder `Eudora.pdb` von
 | [K8](#k8) | Das Debug-Muster erkennt `MSVCRTD.DLL` (VC6) und eine statisch eingebaute UCRT-Debug-Laufzeit nicht. Heute betrifft das keine Datei. | niedrig | nein |
 | [K9](#k9) | Das Zurücksetzen der Registry bricht an einem Standardwert ab und lässt dann `LaunchManager` stehen. Gregors gleichzeitige Änderungen werden überschrieben. Bei Abschuss von außen geschieht gar nichts. Heute tritt keiner der Fälle ein. | niedrig | nein |
 | [K10](#k10) | 148 Registry-Zweige früherer Mailverzeichnisse und 537 LaunchManager-Pfade bleiben liegen. [E-157](../Intern/BEFUNDE.md#e-157) verhindert nur neuen Zuwachs. | niedrig | nein |
-| [K11](#k11) | Der Prüfstand E146 ist heute um 07:56 in `Eudora.exe` 7.2.0.122 abgestürzt (`c0000409`). Das ist nirgends vermerkt, die Ursache ist unbekannt. An 7.2.0.124 lief derselbe Fall ohne Absturz. Vorschlag E-159. | mittel (ungeklärt) | nein von selbst. Gregor sollte es vor dem Test wissen |
+| [K11](#k11) | Der Prüfstand E146 ist heute um 07:56 in `Eudora.exe` 7.2.0.122 abgestürzt (`c0000409`). Das ist nirgends vermerkt, die Ursache ist unbekannt. An 7.2.0.124 lief derselbe Fall ohne Absturz. Vorschlag [E-159](../Intern/BEFUNDE.md#e-159). | mittel (ungeklärt) | nein von selbst. Gregor sollte es vor dem Test wissen |
