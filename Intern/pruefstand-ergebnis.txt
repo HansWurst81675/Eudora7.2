@@ -1,7 +1,7 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-26 12:33:50
-freigabe=Ansage 26.10.2026 im Chat an Gregor: EBILD ca. 4 min, Start 12:31
+zeit=2026-10-26 12:54:15
+freigabe=Ansage 26.10.2026 12:53 im Chat an Gregor: E119K ca. 2 min, HTML-Weiterleitung fuer E-158
 faelle=1
 bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] BILD-lauf BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8
+fall=[ ok ] E-119d   vollstaendig=1 probe=ok
