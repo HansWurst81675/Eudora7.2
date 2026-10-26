@@ -158,8 +158,18 @@ haben.
 
 ## 1.0.123 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.123, Zweig `vor-testpaket-7.2.0.123`
 
-**Nummer vergeben am 26.10.2026; Bau, Prüfstand und Schnüren folgen.** Größe,
-Prüfsumme und Ablageort werden hier eingetragen, sobald das Paket gebaut ist.
+**Geschnürt am 26.10.2026 um 09:18 und als Testverzeichnis abgelegt; nicht veröffentlicht.**
+Für Gregors Test vor dem Release 7.2.1.
+
+| | |
+|---|---|
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-1.0.123-release`, neben seinem 1.0.122, das unangetastet blieb. Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` mit `LogLevel=58527`; Gregor kopiert seine Daten nach [TESTPLAN Teil 0](../Intern/TESTPLAN.md) hinein |
+| ZIP | `Releases/Eudora72-1.0.123-release.zip`, 9.542.254 Byte. SHA-256 `cf3c780236b0ce0e82ff4dc6c43fdf53ced354b2a351b52065ff9994e9a1fca4` |
+| Gegen den Bau gemessen | `Eudora.exe` und `EudoraRes.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `7.2.0.123 / Paket 1.0.123+82372232`, 3.027.456 Byte); die Bau-Kennung, die Spurmarke `Ausnahme ausserhalb einer Fensterbotschaft` und der E-142-Hinweistext (UTF-16 in `EudoraRes.dll`) sind enthalten; `rootcerts.p7b` gleich `Releases/1.0/rootcerts.p7b` (ohne eMudhra) |
+| Geprüft vorher | 308 Unit-Tests, 19 Schranken, 35 Prüfstandsfälle, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md)) |
+| `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„startet ohne Nachinstallation: JA"*, 4 bekannte Warnungen (MFC71/MSVCP71 fehlen, zwei 16-Bit-Altlasten) |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen`: LEKTOR-70 und PRÜFER-58 waren gelaufen, fällig nur durch das Einarbeiten ihrer Funde |
+
 Inhalt: siehe [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.123; Prüfanleitung in
 [TESTPLAN.md](../Intern/TESTPLAN.md).
 
