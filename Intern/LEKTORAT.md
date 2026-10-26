@@ -1805,6 +1805,35 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Fünfundachtzigster Durchgang — Prüfung vor dem PR des Zweigs `0.123_ergebnisse` nach `main`: Kurztest an 7.2.0.124, E-137 dritter Teil, Nachtrag E-142, 26.10.2026 (Bericht: `Befunde/LEKTOR-80.md`)
+
+Lauf über `caf337b..e119d6ab` (7 Commits). **9 Funde** (1 falsch,
+5 veraltet, 3 unklar). L-79.1 und L-79.2 sind erledigt, L-79.3 (Doppelung)
+nicht. Kein Text gibt E-137 oder E-142 als für 7.2.0.124 bestätigt aus.
+Falsch: E-137 ist seit `0b0b50de` aus den erzeugten Listen offener Befunde
+in `CHANGELOG.md` und `Intern/WEITERMACHEN.md` verschwunden — ein kursives
+Zitat im fettgedruckten Urteil (`Intern/BEFUNDE.md:395`) lässt
+`tools/offene-befunde.pl` *„schwebenden“* als Urteil lesen, und das Werkzeug
+meldet trotzdem *„in beiden Listen gleich“*
+([L-80.1](../Befunde/LEKTOR-80.md#l-80.1)). Veraltet: E-137 kennt den
+zweiten Durchgang von T1 nicht ([L-80.2](../Befunde/LEKTOR-80.md#l-80.2));
+E-119 und E-158 warten in `BEFUNDE.md` und `ZIEL.md` noch auf die
+Bestätigung, die T2 und T3 gegeben haben, `ZIEL.md` zählt deshalb *„24 von
+25“* ([L-80.3](../Befunde/LEKTOR-80.md#l-80.3)); E-142 erwartet noch T4 und
+sagt *„vor 7.2.1 nichts“* neben Gregors offener Entscheidung
+([L-80.4](../Befunde/LEKTOR-80.md#l-80.4)); `WEITERMACHEN:132` nennt T3 und
+T4 als noch zu fahren ([L-80.7](../Befunde/LEKTOR-80.md#l-80.7));
+`PAKETE.md:6` sagt, 1.0.124 folge noch
+([L-80.8](../Befunde/LEKTOR-80.md#l-80.8)). Unklar: `README.md:172` (*„ab
+7.2.1 fragt Eudora nach“*) gegen T4, wo die Ablehnung kam
+([L-80.5](../Befunde/LEKTOR-80.md#l-80.5)); der dritte Teil von E-137 geht
+mit Nummer 7.2.0.124 und ohne CHANGELOG-Satz nach `main`
+([L-80.6](../Befunde/LEKTOR-80.md#l-80.6)); die neue Lehre
+`nur-testplan-zaehlt` nennt `pruefe-tabellenzeilen.pl`, das ihre Regel nicht
+prüft ([L-80.9](../Befunde/LEKTOR-80.md#l-80.9)). Für Gregor offen: was vor
+der Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio, und
+ob ein aus IMAP neu geladener Entwurf wieder als Entwurf gelten soll (T4).
+
 ## Vierundachtzigster Durchgang — Kurzprüfung der Berichtigung zu LEKTOR-78 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-79.md`)
 
 Lauf über `6c4cfd7..50f073b7` (ein Commit, `Intern/WEITERMACHEN.md` und
