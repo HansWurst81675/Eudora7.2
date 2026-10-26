@@ -1,6 +1,6 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-26 07:58:08
-freigabe=Ansage 26.10.2026 im Chat an Gregor: E146 ca. 1 min, Start 07:57
+zeit=2026-10-26 08:08:14
+freigabe=Ansage 26.10.2026 im Chat an Gregor: E146 ca. 1 min, Start 08:07
 faelle=1
 bestanden=1
 fehlgeschlagen=0
