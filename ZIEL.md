@@ -41,7 +41,7 @@ keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 19 von 19 erfüllt, 0 offen.** Diese Übersicht wird aus den
+**Stand: 23 von 23 erfüllt, 0 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -68,6 +68,10 @@ beschädigt, steht oben.
 | Kriterium 2 | [E-113](Intern/BEFUNDE.md#e-113) | breite Bilder laufen rechts hinaus (**behoben**, Variante A — Gregor: *„paßt so"*; auf `main` seit PR #164, kommt mit 7.2.0.123 und 7.2.1.x; am Prüfstand erst rot, dann grün; Regressionstests `TestE113.cpp` und Prüfstandsfälle `E-113p`, `E-113b`, `E-113b2`, zuletzt grün am 25.10.2026; **von Gregor noch nicht bestätigt**) |
 | Kriterium 2 | [E-119](Intern/BEFUNDE.md#e-119) | `data:`-Bilder als grauer Kasten (**behoben**, dazu der Datenverlust beim Löschen einer Nachricht, PRÜFER-49 K5; auf `main` seit PR #163, K5 seit PR #170, kommt mit 7.2.0.123 und 7.2.1.x; am Prüfstand erst rot, dann grün; Prüfstandsfälle `E-119a` bis `E-119d`, zuletzt grün am 25.10.2026; **von Gregor noch nicht bestätigt**) |
 | Kriterium 2 | [E-116](Intern/BEFUNDE.md#e-116) | `35px` falsch gelesen (**behoben**, seit PR #157 auf `main`, kommt mit 7.2.0.123 und 7.2.1.x; am laufenden Programm nicht nachstellbar — so geschlossen auf Gregors Entscheidung vom 24.10.2026; Regressionstest `TestE116.cpp`) |
+| Kriterium 4 | [E-150](Intern/BEFUNDE.md#e-150) | das Abschalten einer Spalte im Fenster *Task Status* schrieb 4 Byte hinter ein Feld (**behoben**, auf `main` seit PR #174, kommt mit 7.2.0.123 und 7.2.1.x; am herausgeschnittenen Code mit Schutzstreifen gemessen) |
+| Kriterium 3 | [E-148](Intern/BEFUNDE.md#e-148) | Eudora vertraute vier kompromittierten eMudhra-Wurzeln (**behoben**, auf `main`, kommt mit 7.2.0.123 und 7.2.1.x; GMX und freenet mit OpenSSL gegen die neue Liste gemessen, mit Eudora selbst prüft es Gregor im Testpaket) |
+| Kriterium 2 | [E-146](Intern/BEFUNDE.md#e-146) | umbenannte IMAP-Ordner hießen in Eudora anders als am Server, auch nach einer Ablehnung (**behoben auf dem Zweig `vor-testpaket-7.2.0.123`**, kommt mit 7.2.0.123; am Prüfstand erst rot, dann grün) |
+| Bekannte Fehler in der README | **keine Voraussetzung, durch Entscheidung** — die Befunde selbst bleiben offen | Von Gregor am 25. und 26.10.2026 entschieden: sie stehen unter „Bekannte Fehler“ in der [README](README.md) und werden nach 7.2.1 angegangen. Darunter der Entwurf aus einem IMAP-Ordner nach `Out` ([E-142](Intern/BEFUNDE.md#e-142); vereinbart ist nur ein Hinweis, eingebaut am 26.10.2026), dazu [E-144](Intern/BEFUNDE.md#e-144), [E-143](Intern/BEFUNDE.md#e-143), [E-139](Intern/BEFUNDE.md#e-139), [E-136](Intern/BEFUNDE.md#e-136), [AN-1](Intern/BEFUNDE.md#an-1), die Nebenwirkung von [E-77](Intern/BEFUNDE.md#e-77) auf ältere Nachrichten mit Ablage, [E-140](Intern/BEFUNDE.md#e-140), [E-141](Intern/BEFUNDE.md#e-141), [E-145](Intern/BEFUNDE.md#e-145) |
 | Kriterium 2 | [E-95](Intern/BEFUNDE.md#e-95), [E-96](Intern/BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Doctolib- und FairToner-Nachricht — **am 14.10.2026 an 1.0.87 bestätigt** |
 | Kriterium 4 | [E-111](Intern/BEFUNDE.md#e-111) | `resolve_URL` schreibt ein Byte hinter das Feld (**behoben in 7.2.0.121**, 246 Tests mit Gegenprobe; ausgelöst gesehen wurde es nie) |
 | Kriterium 4 | [E-14](Intern/BEFUNDE.md#e-14) | Zusicherung beim Start auf frischem Mailverzeichnis (**erledigt am 23.10.2026**: aus neun Mailverzeichnissen gemessen, 59 Sitzungen, 9 Erasing-Zeilen — je eine, immer in der ersten Sitzung. Kein Fehler, der normale erste Lauf) |

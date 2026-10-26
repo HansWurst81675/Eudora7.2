@@ -133,6 +133,17 @@ mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)); und es wird ke
 ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrieben
 ([E-131](Intern/BEFUNDE.md#e-131)).
 
+**Neu im Testpaket 7.2.0.123** (noch nicht veröffentlicht, kommt mit dem Release 7.2.1):
+Strg+W in einer angedockten Leiste versteckt nur die Leiste statt Eudora zu
+beenden ([E-137](Intern/BEFUNDE.md#e-137)); umbenannte IMAP-Ordner heißen in Eudora wie auf dem
+Server, auch wenn der Server das Umbenennen ablehnt ([E-146](Intern/BEFUNDE.md#e-146)); IMAP-Ordnernamen
+mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), breite Bilder ([E-113](Intern/BEFUNDE.md#e-113)) und Bilder im HTML beim Antworten
+([E-119](Intern/BEFUNDE.md#e-119)) sind behoben; die vier eMudhra-Wurzeln sind aus der Zertifikatsliste
+entfernt ([E-148](Intern/BEFUNDE.md#e-148)); das Abschalten einer Spalte im Fenster *Task Status*
+überschreibt keinen Speicher mehr ([E-150](Intern/BEFUNDE.md#e-150)); der Bau stempelt keine fremden
+DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130)); und Ausnahmen, nach denen Eudora bisher wortlos endete,
+stehen jetzt im Protokoll ([E-154](Intern/BEFUNDE.md#e-154)).
+
 **Was zur Fassung 7.2.1 noch fehlt, steht erzeugt ganz oben in
 [ZIEL.md](ZIEL.md)** — dort und nur dort, mit der Angabe, wer es prüft.
 

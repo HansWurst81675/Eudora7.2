@@ -156,6 +156,13 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 1.0.123 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.123, Zweig `vor-testpaket-7.2.0.123`
+
+**Nummer vergeben am 26.10.2026; Bau, Prüfstand und Schnüren folgen.** Größe,
+Prüfsumme und Ablageort werden hier eingetragen, sobald das Paket gebaut ist.
+Inhalt: siehe [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.123; Prüfanleitung in
+[TESTPLAN.md](../Intern/TESTPLAN.md).
+
 ## 1.0.122 — bereitgestellt am 23.10.2026 um 12:00 als `C:\Users\Gregor\Eudora72-1.0.122-release`
 
 **Übersetzt, als Testverzeichnis abgelegt und als ZIP geschnürt; nicht veröffentlicht.**

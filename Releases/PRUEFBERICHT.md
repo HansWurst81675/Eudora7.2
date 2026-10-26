@@ -2,27 +2,27 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.0.122` (Paketnummer `1.0.122`) |
-| **Commit** | `421ad480` (Arbeitsbaum sauber) |
-| **Erstellt** | 2026-10-26 08:09 |
-| **Gesamturteil** | **BESTANDEN** |
+| **Quellstand** | `7.2.0.123` (Paketnummer `1.0.123`) |
+| **Commit** | `33a899ec` — **Arbeitsbaum nicht sauber** (10 Dateien) |
+| **Erstellt** | 2026-10-26 08:46 |
+| **Gesamturteil** | **NICHT VOLLSTAENDIG** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 06 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 08 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 09 s | dieser Lauf |
 | Pruefstand, 34 Faelle, 10 Eudora-Starts | 5 min 07 s | voller Lauf, Ende 2026-10-26 08:07:11 |
-| **zusammen** | **5 min 21 s** | |
+| **zusammen** | **5 min 24 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.122 / Paket 1.0.122+2fbc35d4 2026-10-26 08:00`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
-| Unit-Tests (`EudoraTests.exe`) | 307 | 307 | 0 |  |
+| Unit-Tests (`EudoraTests.exe`) | 308 | 308 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 34 | 34 | 0 | 0 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 35 | 34 | 0 | 0 an anderem Bau, 1 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
@@ -51,9 +51,9 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-26 08:09** gegen den Quelltext von Commit `421ad480`.
+Gelaufen am **2026-10-26 08:46** gegen den Quelltext von Commit `33a899ec*`.
 
-<details><summary>Alle 307 Unit-Tests einzeln</summary>
+<details><summary>Alle 308 Unit-Tests einzeln</summary>
 
 | Bereich | Test | Ergebnis |
 |---|---|---|
@@ -355,6 +355,7 @@ Gelaufen am **2026-10-26 08:09** gegen den Quelltext von Commit `421ad480`.
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-31 (Ursache von E-27): pg_time_t ist fest 32 Bit breit | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-137: Strg-W in einer Wazoo-Leiste versteckt nur die Leiste, vor jeder Weitergabe | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | ZIEL 2/4: Ausnahmen aus Fensterbotschaften landen im eudora.log | ok |
+| Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | ZIEL 4 / E-154: Ausnahmen ausserhalb von Fensterbotschaften landen im eudora.log | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-142: Hinweis beim Ziehen eines Entwurfs aus einem IMAP-Ordner nach Out | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | rootcerts.p7b: eudora.log nennt das Verzeichnis, aus dem QCSSL die Liste geladen hat | ok |
 | E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-146 K8: RenameMailbox gibt den Servernamen zurueck, UpdateAfterRename fuehrt ihn | ok |
@@ -373,7 +374,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-26 08:09** gegen Commit `421ad480`.
+Gelaufen am **2026-10-26 08:46** gegen Commit `33a899ec*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -401,7 +402,7 @@ Gelaufen am **2026-10-26 08:09** gegen Commit `421ad480`.
 
 Je Fall der **letzte** Lauf. *Bau* ist die Kennung aus der `Eudora.exe` des
 Pruefstands (Fassung, Paket, Commit; ein `*` heisst: mit uncommitteten
-Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.0.122`
+Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.0.123`
 lief, zaehlt fuer diesen Stand nicht als gruen.
 
 | Fall | Ergebnis | gelaufen am | Pruefstand | Bau | erwartet |
@@ -440,6 +441,7 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-100 | ok | 2026-10-26 08:07:11 | `C:\Temp\E97` | Eudora 7.2.0.122 / Paket 1.0.122+2fbc35d4 2026-10-26 08:00 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
 | E-67 | ok | 2026-10-26 08:07:11 | `C:\Temp\E67` | Eudora 7.2.0.122 / Paket 1.0.122+2fbc35d4 2026-10-26 08:00 | `verb-gespeichert=14 verb-auswahl=0` |
 | ZIEL24 | ok | 2026-10-26 08:07:11 | `C:\Temp\EBILD` | Eudora 7.2.0.122 / Paket 1.0.122+2fbc35d4 2026-10-26 08:00 | `Logging shutdown` |
+| ZIEL24b | **NIE GELAUFEN** |  | `` |  | `Logging shutdown` |
 
 ## 4. Deckung der kritischen Befunde
 
@@ -452,6 +454,8 @@ wird.
 ## 5. Was dieser Bericht nicht abdeckt
 
 * Die manuellen Faelle in [TESTPLAN.md](../Intern/TESTPLAN.md), Teil M.
+* Gregors eigene Ergebnisse am Paket: [TESTPLAN.md, Buchfuehrung](../Intern/TESTPLAN.md)
+  (je Paket und Pruefschritt, mit Paketnummer).
 * Alles, was keinen Test hat (Abschnitt 4).
 * Ein Release gilt erst nach **Gregors eigenem Lauf** und seiner Zustimmung
   (CLAUDE.md, Abschnitt 4) — dieser Bericht ersetzt das nicht.

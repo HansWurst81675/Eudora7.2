@@ -94,15 +94,14 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122, kommt mit dem Testpaket 7.2.0.123 — Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137), noch nicht am Programm gemessen), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130)), Hinweis bei Entwurf aus IMAP nach `Out` ([E-142](Intern/BEFUNDE.md#e-142)), Umbenennen von IMAP-Ordnern ([E-146](Intern/BEFUNDE.md#e-146)), Protokollzeilen zu „improper argument“, zu Ausnahmen außerhalb von Fensterbotschaften ([E-154](Intern/BEFUNDE.md#e-154)) und zu `rootcerts.p7b`
+## 7.2.0.123 — Testpaket für Gregors Test vor dem Release 7.2.1: Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137), noch nicht am Programm gemessen), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130)), Hinweis bei Entwurf aus IMAP nach `Out` ([E-142](Intern/BEFUNDE.md#e-142)), Umbenennen von IMAP-Ordnern ([E-146](Intern/BEFUNDE.md#e-146)), Protokollzeilen zu „improper argument“, zu Ausnahmen außerhalb von Fensterbotschaften ([E-154](Intern/BEFUNDE.md#e-154)) und zu `rootcerts.p7b`
 
-**Auf `main` seit PR #157 (23.10.2026) bis PR #175 (25.10.2026); [E-142](Intern/BEFUNDE.md#e-142), [E-146](Intern/BEFUNDE.md#e-146),
-[E-154](Intern/BEFUNDE.md#e-154) und die Protokollzeilen kommen mit dem PR aus dem Zweig
-`vor-testpaket-7.2.0.123`. Noch in keinem Paket zum Herunterladen.** Das Programm meldet deshalb weiter die
-Fassung 7.2.0.122. Alles in diesem Abschnitt kommt mit dem nächsten
-**Testpaket 7.2.0.123** zu Gregors lokalem Test; veröffentlicht wird es erst
-mit dem Release **7.2.1.<n>**. Beim Bau des Testpakets wird dieser Abschnitt
-zu 7.2.0.123.
+**Quellstand 7.2.0.123, Paket 1.0.123 — Testpaket, noch nicht bestätigt.** Auf
+`main` seit PR #157 (23.10.2026) bis PR #175 (25.10.2026); [E-142](Intern/BEFUNDE.md#e-142), [E-146](Intern/BEFUNDE.md#e-146), [E-154](Intern/BEFUNDE.md#e-154)
+und die Protokollzeilen kommen mit dem PR aus dem Zweig
+`vor-testpaket-7.2.0.123`. Das Paket geht zu Gregors lokalem Test
+(Prüfanleitung in [TESTPLAN.md](Intern/TESTPLAN.md)); veröffentlicht wird erst das Release
+**7.2.1.<n>**, nach seiner Zustimmung.
 
 * **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W in einer angedockten Leiste (Adressbuch,
   Filter, …) soll nicht mehr ganz Eudora beenden, sondern nur diese Leiste
