@@ -1805,6 +1805,32 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Sechsundachtzigster Durchgang — Prüfung vor dem PR des Zweigs `0.123_ergebnisse` nach `main`: Kurztest 7.2.0.124 abgeschlossen, Entscheidungen 12–14, Fassung 7.2.0.125, 26.10.2026 (Bericht: `Befunde/LEKTOR-81.md`)
+
+Lauf über `f11f17f..1e819254` (14 Commits). **10 Funde** (0 falsch,
+7 veraltet, 3 unklar). L-80.1 bis L-80.9 sind erledigt bis auf einen Rest von
+L-80.4. Paket 1.0.125 stimmt mit `Releases/PAKETE.md` (Größe, SHA-256, `cmp`
+gegen den Bau, Spurmarke, `LogLevel`). Nichts gibt E-137 dritter Teil als
+bestätigt aus. Veraltet: E-156 und Kriterium 4 warten in `BEFUNDE.md:384`,
+`ZIEL.md:72,199` und `CHANGELOG.md:77` noch auf T5, das *ja* ist — Kriterium
+6 ist nach demselben Kurztest nachgezogen, 4 nicht
+([L-81.1](../Befunde/LEKTOR-81.md#l-81.1)); das E-137-Urteil nennt Paket
+1.0.125 nicht ([L-81.2](../Befunde/LEKTOR-81.md#l-81.2)); E-142 und
+Entscheidung 12 sagen noch, *Send Again* sei ungeprüft
+([L-81.4](../Befunde/LEKTOR-81.md#l-81.4)); TESTPLAN T4 *„entscheidet
+Gregor“* ([L-81.5](../Befunde/LEKTOR-81.md#l-81.5)); E-124 *Zuletzt
+gemessen 23.10.* trotz Messung an 1.0.124
+([L-81.6](../Befunde/LEKTOR-81.md#l-81.6)); `README.md:137` *„beide
+Fassungen“* bei dreien ([L-81.7](../Befunde/LEKTOR-81.md#l-81.7));
+`README.md:164` kündigt die E-119-Behebung für 7.2.0.124 an
+([L-81.8](../Befunde/LEKTOR-81.md#l-81.8)); `PAKETE.md:178` *„T1–T5“*
+([L-81.10](../Befunde/LEKTOR-81.md#l-81.10)). Unklar: E-137 verlangt
+Titelzeile und Rand auch angedockt, U1–U3 prüfen nur schwebend
+([L-81.3](../Befunde/LEKTOR-81.md#l-81.3)); `Doku/ANWENDER.md:223-224`
+*„bisher“* keine Code-Signatur nach Entscheidung 14
+([L-81.9](../Befunde/LEKTOR-81.md#l-81.9)). Für Gregor offen: was vor der
+Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio.
+
 ## Fünfundachtzigster Durchgang — Prüfung vor dem PR des Zweigs `0.123_ergebnisse` nach `main`: Kurztest an 7.2.0.124, E-137 dritter Teil, Nachtrag E-142, 26.10.2026 (Bericht: `Befunde/LEKTOR-80.md`)
 
 Lauf über `caf337b..e119d6ab` (7 Commits). **9 Funde** (1 falsch,
