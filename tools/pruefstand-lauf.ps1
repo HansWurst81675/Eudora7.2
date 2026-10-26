@@ -128,6 +128,73 @@ if ($NurPruefen) {
 # ein"). Gemessen wird der ganze Lauf; geschrieben nach
 # Intern/pruefstand-dauer.txt, eine eigene Datei, damit sich das Format des
 # Ergebnisbuchs nicht aendert (Arbeitsweise/datenformat-aendern-heisst-alle-leser-messen.md).
+
+# --- E-157: Gregors Registry vor dem Lauf festhalten, danach zurueck ------
+# Jeder Eudora-Start schreibt nach HKCU\Software\Qualcomm\Eudora - auch der
+# des Pruefstands, unter Gregors Konto. Am 26.10.2026 zeigte deshalb
+# CommandLine\Current auf C:\Temp\E67 (die M1-Rueckfrage nannte meinen
+# Pruefstand), und LaunchManager\DLLPath auf eine EuShlExt.dll in einem
+# Scratchpad, die danach JEDES Eudora auf dem Rechner lud. Festgehalten
+# werden beide Schluessel mit Namen, Wert und Art; nach dem Lauf werden neue
+# Werte entfernt und geaenderte zurueckgeschrieben - auch bei Abbruch
+# (finally unten).
+$regSchluessel = @('HKCU:\Software\Qualcomm\Eudora\CommandLine', 'HKCU:\Software\Qualcomm\Eudora\LaunchManager')
+function RegistryFesthalten {
+    $bild = @{}
+    foreach ($s in $regSchluessel) {
+        $k = Get-Item -LiteralPath $s -ErrorAction SilentlyContinue
+        if (-not $k) { $bild[$s] = $null; continue }
+        $werte = @{}
+        foreach ($n in $k.GetValueNames()) { $werte[$n] = @($k.GetValue($n, $null, 'DoNotExpandEnvironmentNames'), $k.GetValueKind($n)) }
+        $bild[$s] = $werte
+    }
+    return $bild
+}
+function RegistryZurueck($bild) {
+    $geaendert = 0
+    foreach ($s in $regSchluessel) {
+        $vorher = $bild[$s]
+        $k = Get-Item -LiteralPath $s -ErrorAction SilentlyContinue
+        if ($null -eq $vorher) {
+            if ($k) { Remove-Item -LiteralPath $s -Recurse -Force; $geaendert++ }
+            continue
+        }
+        if (-not $k) { $k = New-Item -Path $s -Force }
+        foreach ($n in @($k.GetValueNames())) {
+            if (-not $vorher.ContainsKey($n)) { Remove-ItemProperty -LiteralPath $s -Name $n; $geaendert++ }
+        }
+        foreach ($n in $vorher.Keys) {
+            $alt = $vorher[$n]
+            $jetzt = $k.GetValue($n, $null, 'DoNotExpandEnvironmentNames')
+            if ($null -eq $jetzt -or "$jetzt" -ne "$($alt[0])") {
+                New-ItemProperty -LiteralPath $s -Name $n -Value $alt[0] -PropertyType $alt[1] -Force | Out-Null
+                $geaendert++
+            }
+        }
+    }
+    Write-Host ("  Registry (CommandLine, LaunchManager): {0} Wert(e) auf den Stand vor dem Lauf zurueckgesetzt" -f $geaendert)
+}
+$regVorher = RegistryFesthalten
+
+# --- E-157: Abstuerze aus dem Windows-Ereignisprotokoll -------------------
+# Ein Fall, dessen Protokollzeile vor einem Absturz geschrieben wurde, blieb
+# gruen; das Ereignisprotokoll verzeichnete seit 30.08.2026 dreissig
+# Abstuerze unter C:\Temp, keiner machte einen Fall rot. Gelesen wird
+# Ereignis 1000 (Application Error) seit dem Start dieses Laufs; Pfad der
+# Anwendung ist Properties[10], Modul [3], Code [6] - sprachunabhaengig.
+function AbstuerzeSeit([datetime] $seit, [string] $verz) {
+    $voll = [IO.Path]::GetFullPath($verz).TrimEnd('\') + '\'
+    $ev = @(Get-WinEvent -FilterHashtable @{ LogName = 'Application'; Id = 1000; StartTime = $seit } -ErrorAction SilentlyContinue)
+    $treffer = @()
+    foreach ($e in $ev) {
+        $p = $e.Properties
+        if ($p.Count -gt 10 -and "$($p[10].Value)".StartsWith($voll, [StringComparison]::OrdinalIgnoreCase)) {
+            $treffer += ("{0} in {1} ({2}) um {3}" -f $p[0].Value, $p[3].Value, $p[6].Value, $e.TimeCreated.ToString('HH:mm:ss'))
+        }
+    }
+    return $treffer
+}
+
 $uhr = [Diagnostics.Stopwatch]::StartNew()
 $starts = 0
 $bestanden = 0
@@ -138,6 +205,7 @@ $meldungen = @()
 # verschiedenen Nachrichten brauchen zwei Laeufe, auch im selben Pruefstand.
 $gruppen = $liste | Group-Object { $_.Verzeichnis + "`t" + $_.Nachricht + "`t" + $_.Schalter }
 
+try {
 foreach ($g in $gruppen) {
 
     $hier = @($g.Group)
@@ -261,6 +329,11 @@ foreach ($g in $gruppen) {
         continue
     }
 
+    # E-157: ist Eudora in diesem Lauf abgestuerzt? Dann ist jeder Fall rot,
+    # auch wenn seine Zeile schon im Protokoll stand.
+    Start-Sleep -Seconds 2
+    $abstuerze = @(AbstuerzeSeit $beginn $verz)
+
     # Quelle "ablage": was im IMAP-Zielordner angekommen ist, als Text, damit
     # dieselbe Vergleichsmaschine greift. e118-serie.ps1 legt das Verzeichnis
     # je Lauf frisch an; was darin liegt, hat der IMAP-Pruefserver empfangen.
@@ -302,6 +375,10 @@ foreach ($g in $gruppen) {
             $ok = $false; $was = "steht in {0}, darf nicht: {1}" -f $f.Quelle, $f.DarfNicht
         }
 
+        if ($ok -and $abstuerze.Count -gt 0) {
+            $ok = $false; $was = "Eudora ist in diesem Lauf abgestuerzt (Windows-Ereignisprotokoll): " + ($abstuerze -join '; ')
+        }
+
         if ($ok) {
             $bestanden++
             $meldungen += ("    [ ok ] {0,-8} {1}" -f $f.Kennung, $(if ($f.Muss) { $f.Muss } else { "ohne " + $f.DarfNicht }))
@@ -310,6 +387,9 @@ foreach ($g in $gruppen) {
             $meldungen += ("    [FEHL] {0,-8} {1}" -f $f.Kennung, $was)
         }
     }
+}
+} finally {
+    RegistryZurueck $regVorher
 }
 
 Write-Host '  ------------------------------------------------------------'
