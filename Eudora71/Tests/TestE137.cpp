@@ -69,4 +69,33 @@ void RunE137Tests(const char* szEudoraDir)
 	}
 	free(pCode);
 	TT_EndTest();
+
+	// Zweiter Teil (Gregor am Testpaket 7.2.0.123): ein Klick auf eine
+	// Beschriftung oder leere Flaeche einer Leiste liess den Tastaturfokus in
+	// der Mail, und Strg+W schloss die Mail. Die Leiste holt sich den Fokus
+	// jetzt in OnMouseActivate - aber nur, wenn er noch ausserhalb liegt.
+	TT_BeginTest("E-137: ein Klick irgendwo in eine Wazoo-Leiste gibt ihr den Tastaturfokus");
+	char* pBar = QT_LiesNurCode(szEudoraDir, "WazooBar.cpp");
+	char* pKopf = QT_LiesNurCode(szEudoraDir, "WazooBar.h");
+	if (!pBar || !pKopf) { TT_Fail("WazooBar.cpp oder WazooBar.h nicht lesbar - ungeprueft ist nicht gruen"); free(pBar); free(pKopf); TT_EndTest(); return; }
+	QT_LeerraumZusammen(pBar);
+	QT_LeerraumZusammen(pKopf);
+	TT_CHECK_MSG(QT_Enthaelt(pKopf, "afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);"),
+				 "CWazooBar deklariert OnMouseActivate nicht");
+	TT_CHECK_MSG(QT_Enthaelt(pBar, "ON_WM_MOUSEACTIVATE()"), "OnMouseActivate steht nicht in der Message-Map - es liefe nie");
+	char* pFn = QT_Abschnitt(pBar, "int CWazooBar::OnMouseActivate(", "return nErgebnis; }");
+	TT_CHECK_MSG(pFn != NULL, "CWazooBar::OnMouseActivate nicht gefunden");
+	if (pFn)
+	{
+		const long lBasis = QT_Stelle(pFn, "SECControlBar::OnMouseActivate(pDesktopWnd, nHitTest, message);");
+		const long lWenn  = QT_Stelle(pFn, "if (!pFokus || !IsChild(pFokus)) {");
+		const long lSetze = QT_Stelle(pFn, "pWazooWnd->SetFocus();");
+		TT_CHECK_MSG(lBasis >= 0, "die Basisklasse wird nicht mehr gerufen - das Aktivieren der Leiste fiele weg");
+		TT_CHECK_MSG(lWenn >= 0 && lSetze > lWenn,
+					 "der Fokus wird nicht oder nicht nur dann gesetzt, wenn er ausserhalb der Leiste liegt");
+		free(pFn);
+	}
+	free(pBar);
+	free(pKopf);
+	TT_EndTest();
 }

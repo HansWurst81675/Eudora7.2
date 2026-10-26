@@ -159,6 +159,7 @@ protected:
 	afx_msg LRESULT OnTabSelect(WPARAM wParam, LPARAM lParam);
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnWindowPosChanging(WINDOWPOS* lpwndpos);
+	afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);	// E-137
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 
