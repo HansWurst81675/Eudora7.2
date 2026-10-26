@@ -433,7 +433,7 @@ dass `LogLevel` 32768 enthalten muss.
   `doku-pruefen.pl` nur als „nennt den Quellstand nicht" gemeldet; nicht
   einzeln gelesen.
 * Der Inhalt von PRÜFER-58 (läuft laut `tools/AGENTEN-LAUFEN.md` seit 08:01;
-  `Befunde/PRUEFER-58.md` und E-154/E-155 gibt es im Baum noch nicht —
+  `Befunde/PRUEFER-58.md` und [E-154](../Intern/BEFUNDE.md#e-154)/E-155 gibt es im Baum noch nicht —
   gemessen).
 * Die Behauptung *„Schlüsseln von nur 3 bis 8 Bit"* (`README.md:220`,
   `CHANGELOG.md:156`) stammt aus dem verlinkten Artikel; nicht gegen die

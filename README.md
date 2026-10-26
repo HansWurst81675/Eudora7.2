@@ -138,7 +138,7 @@ ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrie
 
 ### Bekannte Fehler
 
-Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
+Bis auf die mit *Selten* beginnende Zeile und den Entwurf aus einem IMAP-Ordner (dort nur, wenn man das Original löscht) geht in keinem dieser Fälle eine
 **Nachricht in Ihrem Postfach** verloren. Die zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
 *nichts* heißt, es betrifft nur Anzeige oder Bedienung.
 
@@ -164,12 +164,16 @@ Bis auf die mit *Selten* beginnende Zeile geht in keinem dieser Fälle eine
 | Emoji in Betreffzeilen erscheinen gar nicht — sie fallen beim Abrufen ersatzlos weg (seit 7.2.0.59; davor standen zwei `?` je Emoji) | nichts | – | [E-90](Intern/BEFUNDE.md#e-90) |
 | Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nichts | es gilt die zuletzt gewählte Einstellung | [E-98](Intern/BEFUNDE.md#e-98) |
 | **Bis `v1.0.120`:** eine Nachricht aus einem IMAP-Ordner nach `Out` gezogen wird nicht verschoben: in `Out` entsteht eine neue Nachricht mit `<br>` im Betreff und in den Kopfzeilen, dazu die Meldung *„No messages were transferred!“* | nichts – das Original bleibt im IMAP-Ordner; wer die neue Nachricht sendet, schickt sie mit kaputtem Empfänger | Nachrichten nicht aus einem IMAP-Ordner nach `Out` ziehen; so entstandene Einträge in `Out` nicht senden, sondern löschen. **Ab Paket 1.0.122** lehnt Eudora das Ziehen mit einem Hinweis ab | [E-125](Intern/BEFUNDE.md#e-125) |
-| Wird eine Nachricht mit Emoji oder mit Zeichen außerhalb des westeuropäischen Zeichensatzes (Kyrillisch, Griechisch, Chinesisch …) in Eudora gespeichert (*Strg+S*), werden diese Zeichen zu Fragezeichen – obwohl sie vorher richtig angezeigt wurden | **diese Zeichen** in der gespeicherten Nachricht, nicht rückgängig zu machen | solche Nachrichten nicht bearbeiten und speichern; vorher das Postfach sichern | [E-136](Intern/BEFUNDE.md#e-136) |
-| Ein Entwurf aus einem **IMAP-Ordner** nach `Out` gezogen ergibt in `Out` eine **leere** Nachricht (ohne Empfänger, Betreff und Text); das Original bleibt im IMAP-Ordner. Ab dem Release 7.2.1 fragt Eudora vorher nach und weist darauf hin | der **Entwurf**, wenn man das Original im IMAP-Ordner löscht, weil man es für verschoben hält | den Entwurf im IMAP-Ordner öffnen und von dort senden; das Original erst löschen, wenn die Kopie in `Out` geprüft ist | [E-142](Intern/BEFUNDE.md#e-142) |
+| Wird eine Nachricht mit Emoji oder mit Zeichen außerhalb des westeuropäischen Zeichensatzes in Eudora gespeichert (*Strg+S*), werden diese Zeichen zu Fragezeichen – obwohl sie vorher richtig angezeigt wurden. Gemessen an einem Emoji, das das Plug-in EudoraUnicodeFix als HTML-Entität geschrieben hatte; für andere Schriften erschlossen | **diese Zeichen** in der gespeicherten Nachricht, nicht rückgängig zu machen | solche Nachrichten nicht bearbeiten und speichern; vorher das Postfach sichern | [E-136](Intern/BEFUNDE.md#e-136) |
+| Ein Entwurf aus einem **IMAP-Ordner** nach `Out` gezogen ergibt in `Out` eine **leere** Nachricht (ohne Empfänger, Betreff und Text); das Original bleibt im IMAP-Ordner. Ab dem Release 7.2.1 fragt Eudora vorher nach und weist darauf hin | der **Entwurf**, wenn man das Original im IMAP-Ordner löscht, weil man es für verschoben hält | das Original im IMAP-Ordner erst löschen, wenn die Kopie in `Out` geprüft ist; ist sie leer, die Kopie löschen und den Text aus dem Original in eine neue Nachricht übernehmen. Nach *Ja* meldet Eudora weiter *„No messages were transferred!“* ([E-141](Intern/BEFUNDE.md#e-141)) | [E-142](Intern/BEFUNDE.md#e-142) |
 | Ein Antwortentwurf, der aus einem lokalen Postfach (etwa `Trash`) zurück nach `Out` gezogen wird, verliert die Angabe, worauf er antwortet (`In-Reply-To`, `References`) – beim Empfänger hängt die Antwort nicht mehr im Gesprächsfaden | nichts – Text und Betreff bleiben, nur die Zuordnung zum Gesprächsfaden fehlt | Antwortentwürfe nicht aus `Out` herausziehen; sonst die Antwort neu aus der ursprünglichen Nachricht anlegen | [E-144](Intern/BEFUNDE.md#e-144) |
-| Ein **Filter** mit Ziel `Out` oder ein Verschieben vieler Treffer aus dem **Suchfenster** nach `Out` zeigt den Hinweis je Nachricht – zwanzig Treffer, zwanzig Dialoge; ein solcher Filter hält den automatischen Mailabruf an, bis man klickt | nichts | keinen Filter mit Ziel `Out` anlegen; aus dem Suchfenster nicht nach `Out` verschieben | [E-143](Intern/BEFUNDE.md#e-143) |
-| Die Meldung, dass die Rechtschreibprüfung in dieser Fassung fehlt, kommt immer wieder – es gibt kein Kästchen *„Nicht mehr anzeigen"* | nichts | mit *OK* wegklicken | [E-139](Intern/BEFUNDE.md#e-139) |
+| Ein **Filter** mit Ziel `Out` oder ein Verschieben vieler Treffer aus dem **Suchfenster** nach `Out` zeigt den Hinweis je Nachricht – zwanzig Treffer, zwanzig Dialoge; ein solcher Filter hält den automatischen Mailabruf vermutlich an, bis man klickt (am Quelltext gelesen, nicht gemessen) | nichts | keinen Filter mit Ziel `Out` anlegen; aus dem Suchfenster nicht nach `Out` verschieben | [E-143](Intern/BEFUNDE.md#e-143) |
+| Die Meldung, dass die Rechtschreibprüfung in dieser Fassung fehlt, kommt nach jedem Programmstart einmal wieder – es gibt kein Kästchen *„Nicht mehr anzeigen"* | nichts | mit *OK* wegklicken | [E-139](Intern/BEFUNDE.md#e-139) |
 | Ein Anhang **ganz ohne Endung** im Dateinamen bekommt über **IMAP** keine Endung angehängt (über POP schon) | nichts – die Datei ist vollständig, nur die Endung fehlt | die Datei im Anhangverzeichnis umbenennen und die passende Endung anhängen (etwa `.pdf`) | [AN-1](Intern/BEFUNDE.md#an-1) |
+| Eine Nachricht, die **vor** dem Update auf 7.2.1 mit Ablage (*Fcc*) in einen IMAP-Ordner mit Umlaut im Namen (etwa *Entwürfe*) gespeichert wurde, wird nach dem Update gesendet, aber **ohne Meldung nicht abgelegt** — eine Nebenwirkung der Behebung von [E-77](Intern/BEFUNDE.md#e-77) (am Quelltext gelesen, nicht gemessen) | die **abgelegte Kopie** dieser Nachricht | vor dem Senden solcher älterer Nachrichten das Ablage-Ziel neu wählen | [E-77](Intern/BEFUNDE.md#e-77) |
+| Ziehen aus einem **IMAP-Ordner** nach `Out` stößt die IMAP-Nachbearbeitung an, obwohl nichts übertragen wurde, und meldet *„No messages were transferred!“*; je nach Einstellung kann sie den IMAP-Ordner am Server bereinigen (*Expunge*) — am Quelltext gelesen, nicht gemessen | als gelöscht markierte Nachrichten in diesem IMAP-Ordner, die sonst noch zurückzuholen wären | nicht aus einem IMAP-Ordner nach `Out` ziehen | [E-141](Intern/BEFUNDE.md#e-141) |
+| *File → Save As* aus dem **Nachrichten-** oder **Verfassen-Fenster** schreibt keine Zeichensatzangabe in die Datei; andere Programme können Umlaute dann falsch zeigen (am Quelltext gelesen, nicht gemessen) | die **gespeicherte Datei** kann verfälscht angezeigt werden (die Nachricht im Postfach nicht) | aus der Postfachliste speichern (Nachricht markieren, *File → Save As*) — dieser Weg ergänzt die Angabe | [E-140](Intern/BEFUNDE.md#e-140) |
+| In fehlerhaft kodierter Post (Base64 mit Bytes über 127) entstehen beim Dekodieren einzelne falsche Bytes, statt dass die ungültigen Zeichen übersprungen werden (am Quelltext gelesen, nicht gemessen) | einzelne Zeichen dieses Anhangs oder Textes | – (solche Post ist fehlerhaft und selten) | [E-145](Intern/BEFUNDE.md#e-145) |
 | Der Filterbericht bleibt nach einem Filterlauf leer | nichts | – | [E-71](Intern/BEFUNDE.md#e-71) |
 | Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nichts | siehe [Windows Defender meldet Eudora als Trojaner](Doku/ANWENDER.md#windows-defender-meldet-eudora-als-trojaner) | [E-124](Intern/BEFUNDE.md#e-124) |
 
@@ -267,8 +271,11 @@ Mailverzeichnis kopiert hat, behält **diese** Liste, auch mit dem neuen Paket:
 dort löschen oder ebenfalls durch die neue Datei ersetzen. Gefunden von
 [PRUEFER-51](Befunde/PRUEFER-51.md#pruefer-51) (K6).
 
-**Welche Liste gilt, steht ab dem Release 7.2.1 im Protokoll.** Beim ersten
-verschlüsselten Abruf nach dem Start schreibt Eudora eine Zeile wie
+**Welche Liste gilt, steht ab dem Release 7.2.1 im Protokoll** — sofern
+`LogLevel` in der `[Debug]`-Gruppe der `Eudora.ini` den Schalter 32768
+enthält (das Paket setzt `LogLevel=58527`, eine eigene `Eudora.ini` oft
+nicht; siehe [Doku/ANWENDER.md](Doku/ANWENDER.md)). Beim ersten
+verschlüsselten Abruf oder Versand nach dem Start schreibt Eudora eine Zeile wie
 `rootcerts.p7b geladen aus: C:\…\Mailverzeichnis\rootcerts.p7b (vorhanden)`
 in die Datei `eudora.log` im Mailverzeichnis. Steht dort das
 Mailverzeichnis, gilt Ihre eigene Liste; steht dort das Programmverzeichnis,

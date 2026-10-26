@@ -387,6 +387,8 @@ $b .= "wird.\n\n";
 
 $b .= "## 5. Was dieser Bericht nicht abdeckt\n\n";
 $b .= "* Die manuellen Faelle in [TESTPLAN.md](../Intern/TESTPLAN.md), Teil M.\n";
+$b .= "* Gregors eigene Ergebnisse am Paket: [TESTPLAN.md, Buchfuehrung](../Intern/TESTPLAN.md)\n";
+$b .= "  (je Paket und Pruefschritt, mit Paketnummer).\n";
 $b .= "* Alles, was keinen Test hat (Abschnitt 4).\n";
 $b .= "* Ein Release gilt erst nach **Gregors eigenem Lauf** und seiner Zustimmung\n";
 $b .= "  (CLAUDE.md, Abschnitt 4) \x{2014} dieser Bericht ersetzt das nicht.\n";
