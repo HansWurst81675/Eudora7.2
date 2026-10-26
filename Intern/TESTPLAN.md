@@ -131,7 +131,7 @@ nicht").*
 | K6 | **nein** | 26.10.2026 | die weitergeleitete Mail endet mit sichtbarem `</x-html>` (Gregors Bild); Ursache [E-158](BEFUNDE.md#e-158), behoben für 7.2.0.124 |
 | K7 | **ja** | 26.10.2026 | Gregor: *„läßt sich beenden“*; Protokoll endet mit `Logging shutdown` |
 | K8 | **ja** | 26.10.2026 | Gregor: *„K8: PASSED“* |
-| N1 | **ja**, mit Bemerkung | 26.10.2026 | Gregor: *„e-137 PASSED“*; Protokoll dreimal `E-137 Strg-W`. Einmal griff Strg+W im schwebenden (abgedockten) Filterfenster nicht (keine E-137-Zeile), von Gregor nachgestellt: Mail auswählen, dann ins schwebende Filterfenster klicken, Strg+W schließt das Mailfenster — der zweite Teil von [E-137](BEFUNDE.md#e-137), behoben für 7.2.0.124 (Kurztest T1) |
+| N1 | **ja**, mit Bemerkung | 26.10.2026 | Gregor: *„e-137 PASSED“*; Protokoll dreimal `E-137 Strg-W`. Einmal griff Strg+W im schwebenden (abgedockten) Filterfenster nicht (keine E-137-Zeile), von Gregor nachgestellt: Mail auswählen, dann ins schwebende Filterfenster klicken, Strg+W schließt das Mailfenster — der zweite Teil von [E-137](BEFUNDE.md#e-137); die Behebung ist in 7.2.0.124 eingebaut, am Programm noch nicht gemessen (Kurztest T1) |
 | N1b | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
 | N2 | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
 | N3 | **ja** | 26.10.2026 | Rückfrage mit dem neuen Text aus dem IMAP-Ordner *Gelöscht* (Gregors Bild), *No* gedrückt; Protokoll `E-142 Hinweis Entwurf aus IMAP nach Out: quelle=Gelöscht (<Dominant>) antwort=nein`, danach kein *„No messages were transferred!“*. Vorgewählt ist *Yes* |

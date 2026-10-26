@@ -168,7 +168,7 @@ Für Gregors Kurztest ([TESTPLAN T1–T5](../Intern/TESTPLAN.md)) vor dem Releas
 | Gegen den Bau gemessen | `Eudora.exe` und `EudoraRes.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `7.2.0.124 / Paket 1.0.124+8bdab960`, 3.027.968 Byte, mit `cmp` gemessen); Schritt 8 des Paketbaus hat sechs weitere Programmdateien aus dem Release-Bau ersetzt, 33 waren schon gleich ([E-156](../Intern/BEFUNDE.md#e-156)) |
 | Geprüft vorher | 311 Unit-Tests, 19 Schranken, 36 Prüfstandsfälle, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md), Gesamturteil BESTANDEN) |
 | `paket-pruefen.ps1` | keine Fehler; **39 ausführbare Dateien, keine enthält eine Debug-Laufzeit** (die Prüfung aus E-156); Kriterium 0 *„startet ohne Nachinstallation“*; 4 bekannte Warnungen wie bei 1.0.123 |
-| Rollenschranke | gebaut mit `-RollenSindGelaufen`: [LEKTOR-74](../Befunde/LEKTOR-74.md) und [PRÜFER-59](../Befunde/PRUEFER-59.md) waren gelaufen und eingearbeitet; fällig blieb der CHRONIST, der nur Lehren betrifft |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen`: [LEKTOR-74](../Befunde/LEKTOR-74.md) und [PRÜFER-59](../Befunde/PRUEFER-59.md) waren gelaufen; vor dem Schnüren eingearbeitet sind die vier „falsch“-Funde (L-74.1 bis L-74.4) und die Funde zu E-158 und E-159, der Rest danach; fällig blieb der CHRONIST, der nur Lehren betrifft |
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.124.
 
