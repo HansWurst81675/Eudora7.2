@@ -94,25 +94,27 @@ nicht").*
 
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
-| K0/K1 | — | | |
+| K0/K1 | **ja** | 26.10.2026 | Titelzeile *„Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50 - Eudora72-1.0.123-release“* (Gregors Bild) |
 | K2 | — | | |
-| K3 | — | | |
+| K3 | **ja**, mit Bemerkung | 26.10.2026 | GMX über IMAP sofort; freenet über POP: der erste Versuch zu `194.97.208.37:995` hing über eine Minute ohne jede Protokollzeile, bis Gregor ihn stoppte; der zweite über `194.97.208.36:995` kam in 19 s durch. Kein Zertifikatsfehler. Ursache des Hängens nicht gemessen |
 | K4 | — | | |
 | K5 | — | | |
 | K6 | — | | |
 | K7 | — | | |
 | K8 | — | | |
-| N1 | — | | |
-| N1b | — | | |
-| N2 | — | | |
+| N1 | **ja**, mit Bemerkung | 26.10.2026 | Gregor: *„e-137 PASSED“*; Protokoll dreimal `E-137 Strg-W`. Einmal griff Strg+W im angedockten Filterfenster nicht (keine E-137-Zeile), vermutlich nach einem Klick in die Filterdetails; danach wieder richtig. Ursache nicht gemessen |
+| N1b | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
+| N2 | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
 | N3 | — | | |
-| N4 | — | | |
+| N4 | **ja** | 26.10.2026 | *Entwürfe* und *Gelöscht* mit Umlauten (Gregors Bild); Protokoll `E-77 Ordnername: server="Entw&APw-rfe"` |
 | N5 | — | | |
 | N6 | — | | |
 | N7 | — | | |
-| M1 | — | | |
+| M1 | **ja** | 26.10.2026 | Schritt 1 Rückfrage (Bild), 2 *No* vorgewählt (Bild), 3 *Cancel*: die genannte fremde `Eudora.ini` (`C:\Temp\E67`, siehe Bemerkung unten) unverändert seit 08:57:34, Gregors 1.0.122 ebenfalls; 4 Protokoll `E-132 Startverzeichnis: gefunden="…Eudora72-1.0.122-release\Mailverzeichnis" … fremd=1` und `eigenes gewaehlt="…Eudora72-1.0.123-release\Mailverzeichnis"` |
 | M3 | — | | |
 | Protokoll | — | | von mir gelesen: aus M1 die Zeilen `E-132 Startverzeichnis: … fremd=1` und `E-132 Startverzeichnis: eigenes gewaehlt=…`; **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
+
+**Beim Test gefunden (26.10.2026):** Die erste M1-Rückfrage nannte `C:\Temp\E67\Mailverzeichnis`, einen meiner Prüfstände. Jeder Eudora-Start schreibt `HKCU\Software\Qualcomm\Eudora\CommandLine\Current`, auch die Starts des Prüfstands auf Gregors Rechner; mein letzter Start um 08:57 hatte den Eintrag auf `C:\Temp\E67` gesetzt. Seit 7.2.0.114 fragt Eudora vorher; Hermes 7.1 oder ein Eudora vor 7.2.0.114 würde per Doppelklick still in diesem Prüfstand arbeiten. Der Prüfstand muss den Eintrag sichern und zurückschreiben (Befund folgt).
 
 **Die Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
 [C10](#c10) (die Auswahlbox) und [C9](#c9) (das Adressbuch) hast du am
