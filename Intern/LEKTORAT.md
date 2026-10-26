@@ -1805,6 +1805,23 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Einundachtzigster Durchgang — Nachprüfung der Berichtigungen zu LEKTOR-75 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-76.md`)
+
+Lauf über `1a3a285..e6de8a5a` (ein Commit, sechs `.md`, acht Zeilen).
+**3 Funde** (1 falsch, 2 unklar). L-75.1 bis L-75.6 sind an ihrer Stelle
+berichtigt; bei L-75.2 zeigen die erzeugten Listen weiter nur die Marke.
+Falsch: `PAKETE.md:171` sagt zu 1.0.124, der Rest der LEKTOR-74-Funde sei
+nach dem Schnüren eingearbeitet worden — es ist danach keiner mehr
+eingearbeitet, drei sind offen ([L-76.1](../Befunde/LEKTOR-76.md#l-76.1)).
+Unklar: die neue Klammer an E-157 (Prüfstand verbog Gregors Registry) nennt
+„2 Registry-Werte“ und schreibt sie PRÜFER-59 zu, die Zahl steht aber
+nirgends im Repo; in der Sache stimmt sie mit PRÜFER-59 überein
+([L-76.2](../Befunde/LEKTOR-76.md#l-76.2)); `ZIEL.md:87-88` sagt „neu
+messen“ und „neu gemessen“ in einem Satz
+([L-76.3](../Befunde/LEKTOR-76.md#l-76.3)). Keiner hält den PR auf. Für
+Gregor weiter offen: ob der Kurztest den Maßstab „alle neun Kriterien“
+erfüllt, und die README-Frage zu `v1.0.120`.
+
 ## Achtzigster Durchgang — Nachprüfung vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-75.md`)
 
 Lauf über `705d15b..3ca94aaf` (LEKTOR-74 eingearbeitet, Paket 1.0.124
