@@ -1805,6 +1805,29 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Sechsundsiebzigster Durchgang — Teil 0 der Prüfanleitung und die Berichtigungen aus LEKTOR-70, Zweig `vor-testpaket-7.2.0.123` bis `71006e5a`, 26.10.2026 (Bericht: `Befunde/LEKTOR-71.md`)
+
+Kurzlauf vor dem PR: Stand der sechzehn Funde aus LEKTOR-70, alles seit
+`e3578897`, jeder Schritt von *Teil 0* im Testplan gegen `eudora.cpp`.
+**10 Funde** (3 falsch, 2 unvollständig, 1 veraltet, 4 Hinweise). Von den
+Funden aus LEKTOR-70 sind elf erledigt, fünf teilweise.
+
+**Die E-132-Rückfrage kommt in Teil 0 A wirklich** — am Quelltext belegt:
+`RegisterCommandLine` schreibt `CommandLine\Current` bei jedem Start, A.1 setzt
+es auf 1.0.122, und die `DEudora.ini` des Pakets trägt keinen Merker. **Der
+schwerste Fund, [L-71.1](../Befunde/LEKTOR-71.md#l-71.1):** Teil 0 B kopiert
+das Mailverzeichnis aus 1.0.122 überschreibend hinein, samt dessen
+`eudora.log` (gemessen: vorhanden, 51.314 Byte) — damit ist das Protokoll von
+M1 Schritt 4 weg. Dazu falsch: der Kopf des Testplans sagt *„Starten immer mit
+`Eudora starten.cmd`“*, Teil 0 A verlangt den Doppelklick auf `Eudora.exe`
+([L-71.2](../Befunde/LEKTOR-71.md#l-71.2)); `WEITERMACHEN.md` nennt als
+Vorgänger 7.2.0.122 und 7.2.0.121 ([L-71.4](../Befunde/LEKTOR-71.md#l-71.4));
+E-142 sagt in der Kurzfassung weiter *„Behoben wird das nicht“*
+([L-71.5](../Befunde/LEKTOR-71.md#l-71.5)). Nach M1 Schritt 4 erscheint der
+Kontoassistent, die Anleitung sagt es nicht
+([L-71.3](../Befunde/LEKTOR-71.md#l-71.3)). `doku-pruefen.pl` und
+`ziel-stand.pl` melden keinen dieser Funde. Keine Frage an Gregor.
+
 ## Fünfundsiebzigster Durchgang — Prüfanleitung und Doku zum Testpaket 7.2.0.123, Zweig `vor-testpaket-7.2.0.123` bis `edbafe7d`, 26.10.2026 (Bericht: `Befunde/LEKTOR-70.md`)
 
 Kurzlauf vor dem Testpaket: Stand der Funde aus LEKTOR-69, die Änderungen
