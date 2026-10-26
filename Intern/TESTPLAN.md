@@ -1,11 +1,37 @@
-# Testplan für Gregor — Quellstand 7.2.0.124 / `VERSION` 1.0.124, Stand 26.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.125 / `VERSION` 1.0.125, Stand 26.10.2026
 
-> **Testpaket 7.2.0.124** (Paket 1.0.124) — Kurztest direkt hierunter. Das
-> Testpaket 7.2.0.123 ist abgeschlossen, seine Ergebnisse stehen weiter unten.
-> Veröffentlicht ist `v1.0.120`. Nach deinem Test und deinem Ja wird das
-> Release **7.2.1.<n>** gebaut.
+> **Testpaket 7.2.0.125** (Paket 1.0.125) — Kurztest direkt hierunter. Die
+> Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen, ihre Ergebnisse stehen
+> weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Test und deinem Ja
+> wird das Release **7.2.1.<n>** gebaut.
 
-## Was jetzt zu testen ist — Testpaket 7.2.0.124 (Kurztest)
+## Was jetzt zu testen ist — Testpaket 7.2.0.125 (Kurztest)
+
+> Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.125-release`, neben dein
+> 1.0.124. Geprüft wird nur, was sich gegenüber 7.2.0.124 geändert hat.
+
+**Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.124-release\Mailverzeichnis`
+nach `C:\Users\Gregor\Eudora72-1.0.125-release\Mailverzeichnis` kopieren, **ohne**
+`eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
+starten. In der Titelzeile muss **7.2.0.125** und **Paket 1.0.125** stehen.
+
+| Nr. | Was | Wo | Was zu tun ist | Was herauskommen muss |
+|---|---|---|---|---|
+| U1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail aus `In` geöffnet | das Filterfenster öffnen (*Tools → Filters*) und abdocken, so dass es **schwebt**; erst in die Mail klicken, dann auf die **Titelzeile** des Filterfensters klicken, dann **Strg+W** | nur das Filterfenster verschwindet, die Mail bleibt offen |
+| U2 | [E-137](BEFUNDE.md#e-137) | wie U1 | Filterfenster wieder öffnen (schwebend); erst in die Mail klicken, dann auf den **Rand** des Filterfensters klicken, dann **Strg+W** | wie U1 |
+| U3 | [E-137](BEFUNDE.md#e-137) | wie U1 | Filterfenster wieder öffnen und **andocken**; erst in die Mail klicken, dann auf eine **Beschriftung** im Filterfenster (etwa „Match“), dann **Strg+W** | wie U1 |
+| U4 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.125-release` sein |
+
+### <a id="ergebnis-7-2-0-125"></a>Ergebnis am Testpaket 7.2.0.125
+
+| Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
+|---|---|---|---|
+| U1 | — | | |
+| U2 | — | | |
+| U3 | — | | |
+| U4 | — | | |
+
+## Kurztest 7.2.0.124 — abgeschlossen
 
 > Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.124-release`, neben dein
 > 1.0.123. Geprüft wird nur, was sich gegenüber 7.2.0.123 geändert hat; alles

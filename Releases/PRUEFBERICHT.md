@@ -2,25 +2,25 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.0.124` (Paketnummer `1.0.124`) |
-| **Commit** | `abf96d75` (Arbeitsbaum sauber) |
-| **Erstellt** | 2026-10-26 13:10 |
+| **Quellstand** | `7.2.0.125` (Paketnummer `1.0.125`) |
+| **Commit** | `469742da` — **Arbeitsbaum nicht sauber** (10 Dateien) |
+| **Erstellt** | 2026-10-26 20:43 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 09 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 05 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
 | Pruefstand, 36 Faelle, 11 Eudora-Starts | 6 min 37 s | voller Lauf, Ende 2026-10-26 12:31:14 |
-| **zusammen** | **6 min 53 s** | |
+| **zusammen** | **6 min 50 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.124 / Paket 1.0.124+8bdab960 2026-10-26 12:22`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
-| Unit-Tests (`EudoraTests.exe`) | 311 | 311 | 0 |  |
+| Unit-Tests (`EudoraTests.exe`) | 312 | 312 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
 | Pruefstand (Oberflaeche) | 36 | 36 | 0 | 0 an anderem Bau, 0 nie gelaufen |
 
@@ -51,9 +51,9 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-26 13:10** gegen den Quelltext von Commit `abf96d75`.
+Gelaufen am **2026-10-26 20:43** gegen den Quelltext von Commit `469742da*`.
 
-<details><summary>Alle 311 Unit-Tests einzeln</summary>
+<details><summary>Alle 312 Unit-Tests einzeln</summary>
 
 | Bereich | Test | Ergebnis |
 |---|---|---|
@@ -355,6 +355,7 @@ Gelaufen am **2026-10-26 13:10** gegen den Quelltext von Commit `abf96d75`.
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-31 (Ursache von E-27): pg_time_t ist fest 32 Bit breit | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-137: Strg-W in einer Wazoo-Leiste versteckt nur die Leiste, vor jeder Weitergabe | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-137: ein Klick irgendwo in eine Wazoo-Leiste gibt ihr den Tastaturfokus | ok |
+| Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-137: ein Klick auf Titelzeile oder Rand einer schwebenden Leiste gibt ihr den Tastaturfokus | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | ZIEL 2/4: Ausnahmen aus Fensterbotschaften landen im eudora.log | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | ZIEL 4 / E-154: Ausnahmen ausserhalb von Fensterbotschaften landen im eudora.log | ok |
 | Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) | E-142: Hinweis beim Ziehen eines Entwurfs aus einem IMAP-Ordner nach Out | ok |
@@ -377,7 +378,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-26 13:10** gegen Commit `abf96d75`.
+Gelaufen am **2026-10-26 20:43** gegen Commit `469742da*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -405,7 +406,7 @@ Gelaufen am **2026-10-26 13:10** gegen Commit `abf96d75`.
 
 Je Fall der **letzte** Lauf. *Bau* ist die Kennung aus der `Eudora.exe` des
 Pruefstands (Fassung, Paket, Commit; ein `*` heisst: mit uncommitteten
-Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.0.124`
+Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.0.125`
 lief, zaehlt fuer diesen Stand nicht als gruen.
 
 | Fall | Ergebnis | gelaufen am | Pruefstand | Bau | erwartet |

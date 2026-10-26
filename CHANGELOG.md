@@ -97,9 +97,22 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
+## 7.2.0.125 — Testpaket: Strg+W nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste ([E-137](Intern/BEFUNDE.md#e-137))
+
+**Quellstand 7.2.0.125, Paket 1.0.125 — Testpaket, noch nicht getestet.** Gregors
+Kurztest an 7.2.0.124 ([TESTPLAN](Intern/TESTPLAN.md)) fand, dass Strg+W wieder die
+Mail schloss, wenn er zuvor auf die Titelzeile oder den Rand des schwebenden
+Filterfensters geklickt hatte.
+
+* **[E-137](Intern/BEFUNDE.md#e-137) — ein Klick auf Titelzeile, Rand oder Ecke einer
+  schwebenden Leiste holt jetzt den Tastaturfokus in die Leiste**, Strg+W
+  versteckt dann die Leiste statt die Mail zu schließen. Ausgenommen ist der
+  Schließknopf der Leiste. Unit-Test `TestE137.cpp` (312 Tests, 312 bestanden;
+  ohne die Behebung 311/312); nachgerechnet von [PRÜFER-60](Befunde/PRUEFER-60.md).
+
 ## 7.2.0.124 — Testpaket mit den Funden aus Gregors Test an 7.2.0.123 ([E-156](Intern/BEFUNDE.md#e-156), [E-158](Intern/BEFUNDE.md#e-158), [E-119](Intern/BEFUNDE.md#e-119), [E-137](Intern/BEFUNDE.md#e-137), [E-142](Intern/BEFUNDE.md#e-142))
 
-**Quellstand 7.2.0.124, Paket 1.0.124 — Testpaket, von Gregor im Kurztest geprüft ([TESTPLAN](Intern/TESTPLAN.md)).** Nach dem Schnüren kam auf dem Zweig der dritte Teil von [E-137](Intern/BEFUNDE.md#e-137) dazu (Klick auf Titelzeile oder Rand der schwebenden Leiste), er ist **nicht** im Paket 1.0.124 und kommt mit dem nächsten. Gregor hat
+**Quellstand 7.2.0.124, Paket 1.0.124 — Testpaket, von Gregor im Kurztest geprüft ([TESTPLAN](Intern/TESTPLAN.md)).** Der dritte Teil von [E-137](Intern/BEFUNDE.md#e-137) kam nach dem Schnüren dazu und steht unter 7.2.0.125. Gregor hat
 7.2.0.123 am 26.10.2026 getestet ([TESTPLAN.md](Intern/TESTPLAN.md), Ergebnistabelle):
 15 Punkte bestanden, drei nicht. Diese Fassung behebt die drei und zwei Lücken,
 die dabei auffielen. Prüfanleitung für den Kurztest: [TESTPLAN.md](Intern/TESTPLAN.md), oben.
