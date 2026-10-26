@@ -1805,6 +1805,22 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Dreiundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-77 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-78.md`)
+
+Lauf über `28deabd..678e8475` (ein Commit, `ZIEL.md`, drei Zeilen).
+**1 Fund** (1 falsch). L-77.1 bis L-77.3 sind erledigt: Kriterium 3 nennt
+jetzt nur den Abruf mit übernommenen Konten, Kriterium 8 nur das Menü
+*Window*, und die Zusammenfassung führt Kriterium 0 ausdrücklich auf den
+Test ohne Visual Studio vom 06.09.2026 zurück — alle drei stimmen mit
+`TESTPLAN.md` und mit Zeile 0 und dem Maßstab in `ZIEL.md`. Falsch:
+`Intern/WEITERMACHEN.md:65-82` führt die Kriterien weiter mit dem Stand von
+vor dem Test an 7.2.0.123 (Kriterium 6 *erfüllt*, 2 *fast*, die Meldung
+„Encountered an improper argument“ *neu zu messen*) und widerspricht damit
+der berichtigten Zusammenfassung in `ZIEL.md:207-209`
+([L-78.1](../Befunde/LEKTOR-78.md#l-78.1)); Vorschlag: durch einen Verweis
+auf `ZIEL.md` ersetzen. Für Gregor weiter offen: was vor der Marke
+`v7.2.1.N` getestet sein muss, einschließlich Kriterium 0.
+
 ## Zweiundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-76 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-77.md`)
 
 Lauf über `469cf36..950ced8e` (Entscheidung 11 und die Berichtigungen zu
