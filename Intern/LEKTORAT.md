@@ -1805,6 +1805,38 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Fünfundsiebzigster Durchgang — Prüfanleitung und Doku zum Testpaket 7.2.0.123, Zweig `vor-testpaket-7.2.0.123` bis `edbafe7d`, 26.10.2026 (Bericht: `Befunde/LEKTOR-70.md`)
+
+Kurzlauf vor dem Testpaket: Stand der Funde aus LEKTOR-69, die Änderungen
+seit `33a899ec` und jeder Schritt der neuen Prüfanleitung in `TESTPLAN.md`
+gegen Code und `BEFUNDE.md`. Erstmals nach Gregors Regel vom 26.10.2026:
+Widersprüche zwischen `.md` heißen *falsch*, Doppelungen *Hinweis*.
+**16 Funde** (6 falsch, 5 unvollständig, 1 veraltet, 4 Hinweise). Von den
+zwölf Funden aus LEKTOR-69 sind sieben erledigt, fünf teilweise.
+
+**Der schwerste für das Testpaket, [L-70.1](../Befunde/LEKTOR-70.md#l-70.1):**
+der Testplan verlangt in N6/N7, dass breite Bilder eingepasst werden und
+`data:`-Bilder erscheinen, und sagt im Abschnitt *„Was bekannt ist — bitte
+nicht als neuen Fehler melden"* desselben Dokuments das Gegenteil. Dazu
+[L-70.7](../Befunde/LEKTOR-70.md#l-70.7): die Anleitung sagt nicht, dass das
+Mailverzeichnis im Paket leer ist und Gregors Daten hineinkopiert werden
+müssen — und eine mitkopierte eigene `rootcerts.p7b` ließe K3 die alte
+Zertifikatsliste prüfen, ohne dass die Protokollzeile es verriete, weil sie
+das erwartete Verzeichnis nicht nennt.
+
+Weiter falsch: `WEITERMACHEN.md` nennt in Zeile 9 und 12 zwei Quellstände
+([L-70.2](../Befunde/LEKTOR-70.md#l-70.2)); die Einleitung zu *Bekannte
+Fehler* übersieht die neue E-141-Zeile ([L-70.3](../Befunde/LEKTOR-70.md#l-70.3));
+E-142 sagt „Behoben wird das nicht" und „Was noch fehlt: … dann beheben"
+([L-70.4](../Befunde/LEKTOR-70.md#l-70.4)); der Titel von E-139 sagt weiter
+„bei jeder Gelegenheit" ([L-70.5](../Befunde/LEKTOR-70.md#l-70.5)); `ZIEL.md`
+oben „alle erfüllt", unten „zwei fast" und „E-77 fehlt noch"
+([L-70.6](../Befunde/LEKTOR-70.md#l-70.6), offen seit L-61.1). M1 in Teil 3
+lässt die Vorbereitung weg, und nach K0 zeigt die Registry auf das eigene
+Paket — Schritt 1 käme ohne Rückfrage ([L-70.8](../Befunde/LEKTOR-70.md#l-70.8)).
+`doku-pruefen.pl` und `ziel-stand.pl` melden keinen dieser Funde.
+Keine neue Frage an Gregor.
+
 ## Vierundsiebzigster Durchgang — Bestand vor dem Testpaket 7.2.0.123, Zweig `vor-testpaket-7.2.0.123` bis `f3e8389c`, 26.10.2026 (Bericht: `Befunde/LEKTOR-69.md`)
 
 Alle `.md` außer `Arbeitsweise/` und `Befunde/` gegen den Bestand, Schwerpunkt
