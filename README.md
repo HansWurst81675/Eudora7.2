@@ -1,5 +1,7 @@
 # Eudora 7.2
 
+**Deutsch | [English](README.en.md)**
+
 <!-- pruefstand: eceeecf -->
 <!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
      wurde. Wer die Datei nachzieht, zieht die Marke mit.
