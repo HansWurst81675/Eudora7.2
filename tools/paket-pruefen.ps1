@@ -764,6 +764,36 @@ if (Test-Path -LiteralPath $addonDll) {
 }
 Write-Host ''
 
+
+# ---------------------------------------- Debug und Release gemischt? --
+#
+# Gregor am 26.10.2026: "warum haben wir eine mischung aus debug und release?
+# darf nicht vorkommen!" Paket 1.0.123 trug sechs Debug-Fassungen aus der
+# Grundlage vom 30.08.2026 und stuerzte bei ihm in ucrtbased.dll ab. Diese
+# Pruefung hat sie nicht gesehen, weil sie nur .exe und .dll las und nur
+# Importe kannte: drei Dateien endeten auf .eif, drei hatten die
+# Debug-Laufzeit statisch eingebaut. Jetzt: jede Datei, die am Dateikopf (MZ)
+# ausfuehrbar ist, gleich welche Endung, ausser im Mailverzeichnis; gesucht
+# wird nach Debug-Laufzeit als Import UND als eingebauter Code.
+Write-Host 'Debug-Fassungen im Paket (jede ausfuehrbare Datei, jede Endung):'
+$debugMuster = '(?i)ucrtbased\.dll|[a-z]+140u?d\.dll|msvc[rp]\d+d\.dll|mfc\d+u?d\.dll|_CrtDbgReport|dbgheap\.c'
+$mailVz = Join-Path $Paket 'Mailverzeichnis'
+$geprueft = 0; $debugDateien = 0
+foreach ($f in @(Get-ChildItem -LiteralPath $Paket -Recurse -File | Where-Object { -not $_.FullName.StartsWith($mailVz + '\', [System.StringComparison]::OrdinalIgnoreCase) })) {
+  $kopf = New-Object byte[] 2
+  $fs = [IO.File]::OpenRead($f.FullName); [void]$fs.Read($kopf, 0, 2); $fs.Close()
+  if ($kopf[0] -ne 0x4D -or $kopf[1] -ne 0x5A) { continue }
+  $geprueft++
+  $inhalt = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($f.FullName))
+  $treffer = @([regex]::Matches($inhalt, $debugMuster) | ForEach-Object { $_.Value } | Sort-Object -Unique)
+  if ($treffer.Count -gt 0) {
+    $debugDateien++
+    Melde-Fehler ("{0} ist eine Debug-Fassung ({1}) - Debug und Release duerfen im Paket nicht gemischt sein" -f $f.FullName.Substring($Paket.TrimEnd('\').Length + 1), ($treffer -join ', '))
+  }
+}
+if ($debugDateien -eq 0) { Write-Host ("   ok  {0} ausfuehrbare Dateien, keine enthaelt Debug-Laufzeit" -f $geprueft) }
+else { Write-Host ("   FEHLER  {0} von {1} ausfuehrbaren Dateien sind Debug-Fassungen" -f $debugDateien, $geprueft) -ForegroundColor Red }
+Write-Host ''
 # ------------------------------------------------------------- Zusammenzug --
 
 Write-Host '========================================================'

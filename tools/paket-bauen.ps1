@@ -667,6 +667,51 @@ if ($Bauart -eq 'Release') {
   Weg 'laufzeit-holen.ps1'
 }
 
+# 8. JEDE ausfuehrbare Datei aus dem Release-Bau ----------------------------
+#
+# Gregor am 26.10.2026: "warum haben wir eine mischung aus debug und release?
+# darf nicht vorkommen!" - Anlass: Paket 1.0.123 stuerzte bei ihm um 10:05
+# in ucrtbased.dll ab. Sechs Dateien kamen seit August unveraendert aus der
+# Grundlage vom 30.08.2026 und waren DEBUG-Fassungen: NSImport.eif,
+# OEImport.eif, OLImport.eif (laden die Debug-Laufzeit), EuShlExt.dll,
+# EudoraNS.dll, swEudora.exe (Debug-Laufzeit statisch eingebaut). Der Schritt
+# 0 oben nimmt nur eine feste Liste von EXE/DLL, alles andere blieb stehen.
+#
+# Jetzt gilt: jede Datei im Paket, die am Dateikopf (MZ) als ausfuehrbar zu
+# erkennen ist - gleich welche Endung -, wird aus Eudora71\Bin\Release
+# genommen. Gibt es dort kein Gegenstueck, bricht der Bau ab, statt die alte
+# Fassung stehen zu lassen. Paige32d.dll ist die umbenannte Paige32.dll
+# (Schritt 2). Das Mailverzeichnis gehoert dem Anwender und wird nicht
+# angefasst. Danach darf keine Datei mehr eine Debug-Laufzeit enthalten.
+if ($Bauart -eq 'Release') {
+  Write-Host ''
+  Write-Host '8. Jede ausfuehrbare Datei aus dem Release-Bau (Gregor 26.10.2026)'
+  $debugMuster = '(?i)ucrtbased\.dll|[a-z]+140u?d\.dll|msvc[rp]\d+d\.dll|mfc\d+u?d\.dll|_CrtDbgReport|dbgheap\.c'
+  $mailVz = Join-Path $Ziel 'Mailverzeichnis'
+  $ersetzt = 0; $gleich = 0
+  foreach ($f in @(Get-ChildItem -LiteralPath $Ziel -Recurse -File | Where-Object { -not $_.FullName.StartsWith($mailVz + '\', [System.StringComparison]::OrdinalIgnoreCase) })) {
+    $kopf = New-Object byte[] 2
+    $fs = [IO.File]::OpenRead($f.FullName); [void]$fs.Read($kopf, 0, 2); $fs.Close()
+    if ($kopf[0] -ne 0x4D -or $kopf[1] -ne 0x5A) { continue }
+    $rel = $f.FullName.Substring($Ziel.TrimEnd('\').Length + 1)
+    $quelle = if ($rel -ieq 'Paige32d.dll') { Join-Path $binRel 'Paige32.dll' } else { Join-Path $binRel $rel }
+    if (-not (Test-Path -LiteralPath $quelle)) {
+      throw ("ABBRUCH: {0} ist ausfuehrbar, hat aber kein Gegenstueck in {1} - die alte Fassung bleibt nicht stehen" -f $rel, $binRel)
+    }
+    if ((Get-FileHash -LiteralPath $quelle).Hash -ne (Get-FileHash -LiteralPath $f.FullName).Hash) {
+      Copy-Item -LiteralPath $quelle -Destination $f.FullName -Force
+      Write-Host ("  {0,-28} aus dem Release-Bau ersetzt" -f $rel)
+      $ersetzt++
+    } else { $gleich++ }
+    $inhalt = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($f.FullName))
+    $treffer = @([regex]::Matches($inhalt, $debugMuster) | ForEach-Object { $_.Value } | Sort-Object -Unique)
+    if ($treffer.Count -gt 0) {
+      throw ("ABBRUCH: {0} enthaelt Debug-Laufzeit ({1}) - auch die Fassung im Release-Bau" -f $rel, ($treffer -join ', '))
+    }
+  }
+  Write-Host ("  {0} ersetzt, {1} schon gleich, keine Debug-Laufzeit" -f $ersetzt, $gleich)
+}
+
 Write-Host ''
 Write-Host "Paketverzeichnis steht: $Ziel"
 
