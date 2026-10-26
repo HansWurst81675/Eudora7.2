@@ -211,6 +211,10 @@ E-119d | C:\Temp\E119K | 120 | messung | vollstaendig=1 probe=ok | | | messen=to
 E-119a | C:\Temp\EBILD | 240 | log | data-db1b9f48.png faden=1 ok=1 | E-110 Laden: src=data: | | messen=tools\messen-bild.ps1
 E-119b | C:\Temp\EBILD | 240 | log | E-119 data-Bild als Datei: | | | messen=tools\messen-bild.ps1
 E-119c | C:\Temp\EBILD | 240 | log | data-2eaa4a58.png laenge=1574 | | | messen=tools\messen-bild.ps1
+# E-119e (26.10.2026, Gregor am Testpaket 7.2.0.123: Bild in der Antwort
+# verstuemmelt): ein data:-JPEG mit 78.519 Zeichen langem src. Vorher kamen
+# wegen des 16-Bit-Zaehlers arg_size nur 78.519 - 65.536 = 12.983 an.
+E-119e | C:\Temp\EBILD | 240 | log | laenge=78519 | laenge=12983 | | messen=tools\messen-bild.ps1
 # -------------------------------------------------------------------------
 # E-77 (24.10.2026): IMAP-Ordner mit Umlauten. GMX schickt "Entw&APw-rfe"
 # und "Gel&APY-scht" (modifiziertes UTF-7, RFC 3501). tools/messen-e77.ps1

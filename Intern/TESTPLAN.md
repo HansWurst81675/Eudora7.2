@@ -107,9 +107,9 @@ nicht").*
 | N2 | **ja** | 26.10.2026 | Gregor: *„e-137 PASSED“* |
 | N3 | — | | |
 | N4 | **ja** | 26.10.2026 | *Entwürfe* und *Gelöscht* mit Umlauten (Gregors Bild); Protokoll `E-77 Ordnername: server="Entw&APw-rfe"` |
-| N5 | — | | |
+| N5 | **ja** | 26.10.2026 | Gregor: *„E-146: PASSED“*, *„E-77 PASSED“*; zweiter Durchlauf mit `Temp1_öüß_20261026_1052` (anlegen, Mail hinein und heraus, löschen) im Protokoll ohne Fehler. Einmal meldete ein älterer Ordner `Temp2_ÖÄÜß_b` beim Abgleich *„unknown folder“* — nicht nachgestellt |
 | N6 | — | | |
-| N7 | — | | |
+| N7 | **nein** | 26.10.2026 | beim Antworten erschien ein großes `data:`-Bild als grüne Fläche mit Streifen (Gregors Bild); Ursache gefunden ([E-119](BEFUNDE.md#e-119) zweiter Teil, 16-Bit-Zähler), behoben für 7.2.0.124 |
 | M1 | **ja** | 26.10.2026 | Schritt 1 Rückfrage (Bild), 2 *No* vorgewählt (Bild), 3 *Cancel*: die genannte fremde `Eudora.ini` (`C:\Temp\E67`, siehe Bemerkung unten) unverändert seit 08:57:34, Gregors 1.0.122 ebenfalls; 4 Protokoll `E-132 Startverzeichnis: gefunden="…Eudora72-1.0.122-release\Mailverzeichnis" … fremd=1` und `eigenes gewaehlt="…Eudora72-1.0.123-release\Mailverzeichnis"` |
 | M3 | — | | |
 | Protokoll | — | | von mir gelesen: aus M1 die Zeilen `E-132 Startverzeichnis: … fremd=1` und `E-132 Startverzeichnis: eigenes gewaehlt=…`; **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
