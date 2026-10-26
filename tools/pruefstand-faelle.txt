@@ -256,3 +256,4 @@ E-67 | C:\Temp\E67 | 60 | log | verb-gespeichert=14 verb-auswahl=0 | verb-auswah
 # solche Zeile entstehen. "Logging shutdown" ist die Positivprobe: das
 # Protokoll wurde bis zum Ende geschrieben.
 ZIEL24 | C:\Temp\EBILD | 240 | log | Logging shutdown | Ausnahme in Fensterbotschaft | | messen=tools\messen-bild.ps1
+ZIEL24b | C:\Temp\EBILD | 240 | log | Logging shutdown | Ausnahme ausserhalb einer Fensterbotschaft | | messen=tools\messen-bild.ps1

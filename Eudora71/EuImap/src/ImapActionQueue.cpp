@@ -2859,7 +2859,11 @@ HRESULT CImapRenameMailboxAction::DoWork()
 //	gibt. Jetzt wird im Hauptfaden die Ordnerliste des Kontos neu vom Server
 //	gelesen (dieselbe Aktion wie "Refresh"), danach steht der Ordner wieder
 //	unter dem Namen da, den der Server fuehrt. Die Nachrichten liegen auf dem
-//	Server; verloren geht nur der lokale Zwischenspeicher des Ordners.
+//	Server. Das lokale Verzeichnis des abgelehnten Namens bleibt mit dem
+//	Zwischenspeicher des alten Ordners liegen (PRUEFER-58 K8).
+//	GRENZE (PRUEFER-58): scheitert es an fehlender Verbindung, scheitert auch
+//	das Neueinlesen; der falsche Name bleibt dann stehen, bis der Anwender die
+//	Ordnerliste von Hand auffrischt.
 //
 void CImapRenameMailboxAction::DoPostProcessing()
 {

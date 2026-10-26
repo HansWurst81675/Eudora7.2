@@ -9,5 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| PRUEFER | 2026-10-26 08:01 | PRUEFER-58.md: Aenderungen seit 07f181dc gegen die Quelle, Kennungen E-154 und E-155 |
 | LEKTOR | 2026-10-26 08:11 | LEKTOR-69.md: alle MDs gegen den Bestand, seit 47d5f77 |

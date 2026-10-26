@@ -50,6 +50,11 @@ void RunRootCertsLogTests(const char* szEudoraDir)
 		const long lBegin = QT_Stelle(pInit, "bSuccess = g_fnQCSSLBeginSession(m_pSSLReference);");
 		const long lRuf   = QT_Stelle(pInit, "ProtokolliereRootCertsVerzeichnis(m_pSSLReference);");
 		TT_CHECK_MSG(lBegin >= 0 && lRuf > lBegin, "die Zeile wird nicht NACH dem Sitzungsaufbau geschrieben - vorher hat QCSSL noch nicht gewaehlt");
+		// PRUEFER-58 K10: "if (bSuccess)" vor dem Aufruf blieb gruen. Der
+		// Aufruf steht unbedingt, direkt hinter dem Sitzungsaufbau - auch ein
+		// gescheiterter Aufbau soll zeigen, welche Liste gegolten hat.
+		TT_CHECK_MSG(QT_Enthaelt(pInit, "if (g_fnQCSSLBeginSession) bSuccess = g_fnQCSSLBeginSession(m_pSSLReference); ProtokolliereRootCertsVerzeichnis(m_pSSLReference);"),
+					 "der Aufruf steht nicht mehr unbedingt direkt hinter dem Sitzungsaufbau");
 		free(pInit);
 	}
 

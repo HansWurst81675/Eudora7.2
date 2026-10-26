@@ -7806,7 +7806,7 @@ BEGIN
                             "Eudora is unable to delete the messages from the IMAP mailbox ""%s"". The server responded with: ""%s"". Continuing this operation will COPY the messages to the destination mailbox.\n\nDo you want to continue the operation?"
     IDS_ERR_IMAP_NO_MSGS_XFERRED "No messages were transferred!"
     IDS_WARN_IMAP_DRAFT_TO_OUT 
-                            "Moving a draft from an IMAP mailbox to Out may give an empty message in Out (no recipients, subject or text). The original stays in the IMAP mailbox - keep it until you have checked the copy.\n\nTransfer anyway?"
+                            "Moving or copying a draft from an IMAP mailbox to Out may give an empty message in Out (no recipients, subject or text). The original stays in the IMAP mailbox - keep it until you have checked the copy.\n\nTransfer anyway?"
     IDS_WARN_IMAP_SOME_XFER_FAILED 
                             "Some messages failed to transfer correctly!"
     IDS_WARN_IMAP_RDONLY_MOVETO 

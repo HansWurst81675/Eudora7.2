@@ -145,7 +145,7 @@ aber ohne Ursache.
 `catch`-Zweigen von `CEudoraApp::Run` dieselbe Art Zeile schreiben,
 `GetErrorMessage` und `GetRuntimeClass()->m_lpszClassName` mit
 `PutDebugLog(DEBUG_MASK_MISC, ...)`, dazu die Wörter „Eudora endet“.
-Vorschlag für die Kennung: E-154.
+Vorschlag für die Kennung: [E-154](../Intern/BEFUNDE.md#e-154).
 
 ## <a id="k2"></a>K2 — `UpdateData` zeigt dieselbe Meldung an der Spurmarke vorbei
 

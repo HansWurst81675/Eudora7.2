@@ -123,7 +123,11 @@ zu 7.2.0.123.
   schreibt Eudora jedes Auftreten als `Ausnahme in Fensterbotschaft (ZIEL 2/4)`
   mit Text, Botschaft und Fensterklasse ins `eudora.log`. Das Verhalten ist
   sonst unverändert. Prüfstandsfall `ZIEL24` verlangt, dass auf dem
-  Bilder-Prüfstand keine solche Zeile entsteht.
+  Bilder-Prüfstand keine solche Zeile entsteht. Dazu
+  [E-154](Intern/BEFUNDE.md#e-154): eine Ausnahme **außerhalb** einer
+  Fensterbotschaft beendete Eudora bisher wortlos; jetzt steht vorher
+  `Ausnahme ausserhalb einer Fensterbotschaft (ZIEL 4), Eudora endet` im
+  Protokoll (Fall `ZIEL24b`). Das Ende selbst bleibt.
 
 * **`eudora.log` nennt, aus welchem Verzeichnis `rootcerts.p7b` geladen
   wurde** ([E-148](Intern/BEFUNDE.md#e-148); eingebaut, am laufenden Programm

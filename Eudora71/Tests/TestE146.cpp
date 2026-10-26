@@ -46,6 +46,9 @@ void RunE146Tests(const char* szEudoraDir)
 			const long lRueck = QT_Stelle(pRen, "if (pstrNeuerImapName) *pstrNeuerImapName = strNewFullImapName;");
 			const long lQueue = QT_Stelle(pRen, "QueueAction(pRenameMailboxAction);");
 			TT_CHECK_MSG(lRueck >= 0, "RenameMailbox gibt den Namen, den es an den Server schickt, nicht zurueck");
+			// PRUEFER-58 K10: das Praefix bei INBOX zu streichen blieb gruen.
+			TT_CHECK_MSG(QT_Enthaelt(pRen, "strNewFullImapName = prefix + E77ImapNameFuerServer(szNewImapName);"),
+						 "INBOX: das Praefix des Kontos geht nicht mehr in den neuen Namen");
 			TT_CHECK_MSG(lQueue >= 0 && QT_Stelle(pRen, "strNewFullImapName, strLogin,") >= 0,
 						 "an den Server geht nicht mehr strNewFullImapName");
 			free(pRen);

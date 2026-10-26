@@ -2003,14 +2003,31 @@ int CEudoraApp::Run()
 	catch (CException * pException)
 	{
 		// MFC currently makes operator new throw a CMemoryException
+		//
+		// E-154 (PRUEFER-58 K1): eine Ausnahme, die NICHT in einer
+		// Fensterbotschaft entsteht (Leerlauf, PreTranslateMessage,
+		// Nachbearbeitung von Aufgaben), landet hier und nicht in
+		// ProcessWndProcException. Eudora endet danach ohne Meldung und ohne
+		// ExitInstance. Bisher stand davon nichts im eudora.log; jetzt eine
+		// Zeile, damit ZIEL Kriterium 4 diesen Weg sieht.
+		TCHAR szText[256] = "";
+		pException->GetErrorMessage(szText, sizeof(szText) / sizeof(TCHAR));
+		CString szSpur;
+		szSpur.Format("Ausnahme ausserhalb einer Fensterbotschaft (ZIEL 4), Eudora endet: text=\"%s\" art=%s",
+					  szText, pException->GetRuntimeClass()->m_lpszClassName);
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
 		pException->Delete();
 
 		bExceptionOccurred = true;
 	}
-	catch (std::exception & /* exception */)
+	catch (std::exception & exception)
 	{
 		// I don't think we can currently get this given MFC's overriding of
 		// operator new, but perhaps they'll be standards compliant in the future.
+		CString szSpur;
+		szSpur.Format("Ausnahme ausserhalb einer Fensterbotschaft (ZIEL 4), Eudora endet: text=\"%s\" art=std::exception",
+					  exception.what());
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
 
 		bExceptionOccurred = true;
 	}

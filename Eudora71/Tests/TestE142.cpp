@@ -66,6 +66,12 @@ void RunE142Tests(const char* szEudoraDir)
 		free(pRumpf);
 	}
 
+	// PRUEFER-58 K10: "BOOL E142Gefragt = TRUE;" schaltete den Hinweis ganz
+	// ab und blieb gruen. Der Merker muss bei jeder Uebertragung FALSE starten.
+	TT_CHECK_MSG(QT_Enthaelt(pCode, "BOOL E142Gefragt = FALSE;") && !QT_Enthaelt(pCode, "BOOL E142Gefragt = TRUE;"),
+				 "der Merker E142Gefragt startet nicht mit FALSE - der Hinweis kaeme nie");
+	TT_CHECK_MSG(QT_Enthaelt(pCode, "BOOL E142Abgebrochen = FALSE;"),
+				 "der Merker E142Abgebrochen startet nicht mit FALSE - die IMAP-Nachbearbeitung fiele immer aus");
 	TT_CHECK_MSG(QT_Enthaelt(pCode, "if ( !E125Abgelehnt && !E142Abgebrochen &&"),
 				 "nach \"Nein\" laeuft die IMAP-Nachbearbeitung trotzdem - dann kaeme \"No messages were transferred!\"");
 	TT_CHECK_MSG(QT_Enthaelt(pRc, "IDS_WARN_IMAP_DRAFT_TO_OUT"), "der Hinweistext fehlt in EudoraRes.rc");
