@@ -1805,6 +1805,23 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Siebenundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-81 vor dem PR des Zweigs `0.123_ergebnisse` nach `main`, 26.10.2026 (Bericht: `Befunde/LEKTOR-82.md`)
+
+Lauf über `e6fedc9..aeb79aa4` (ein Commit, acht `.md`, 17 Zeilen).
+**3 Funde** (0 falsch, 1 veraltet, 2 unklar). L-81.2 bis L-81.10 sind
+erledigt, L-81.1 bis auf eine Zeile. Nichts gibt etwas als bestätigt aus,
+das nicht bestätigt ist; Kriterium 4 heißt mit dem offenen E-159 begründet
+weiter *fast*. Unklar: in E-124 hängt am neuen Datum *„Zuletzt gemessen:
+26.10.2026“* noch der Halbsatz *„aus der Vorgangsseite gelesen“*, die seit
+dem 22.10.2026 niemand neu gelesen hat (`Intern/BEFUNDE.md:370`,
+[L-82.1](../Befunde/LEKTOR-82.md#l-82.1)); E-142 nennt die *No*-Vorwahl
+*„an 1.0.124 geprüft (T4, T6)“*, obwohl die Rückfrage in T4 nicht kam und
+T6 etwas anderes prüft (`Intern/BEFUNDE.md:378`,
+[L-82.2](../Befunde/LEKTOR-82.md#l-82.2)). Veraltet: `CHANGELOG.md:78`
+führt Kriterium 6 noch als *„an 7.2.0.123 nicht bestanden“* ohne T3 an
+7.2.0.124 ([L-82.3](../Befunde/LEKTOR-82.md#l-82.3)). Für Gregor offen: was
+vor der Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio.
+
 ## Sechsundachtzigster Durchgang — Prüfung vor dem PR des Zweigs `0.123_ergebnisse` nach `main`: Kurztest 7.2.0.124 abgeschlossen, Entscheidungen 12–14, Fassung 7.2.0.125, 26.10.2026 (Bericht: `Befunde/LEKTOR-81.md`)
 
 Lauf über `f11f17f..1e819254` (14 Commits). **10 Funde** (0 falsch,
