@@ -1,11 +1,7 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-26 07:50:54
-freigabe=Ansage 26.10.2026 07:50 im Chat an Gregor: C:\Temp\E146 ca. 1 min, Start 07:50
+zeit=2026-10-26 07:58:08
+freigabe=Ansage 26.10.2026 im Chat an Gregor: E146 ca. 1 min, Start 07:57
 faelle=1
-bestanden=0
-fehlgeschlagen=1
-fall=[FEHL] E-146    fehlt in messung: E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)
-             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
-                         Zeit vom WM_CLOSE bis zum Ende: 1 s
-                         Beendet: True
-                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\tools\TESTLAEUFE.md
+bestanden=1
+fehlgeschlagen=0
+fall=[ ok ] E-146    E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)

@@ -26,7 +26,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 |---|---|---|---|
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
 | **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
-| **[E-146](Intern/BEFUNDE.md#e-146)** | Nach dem Umbenennen eines IMAP-Ordners führt Eudora ihn unter einem anderen Namen als der… | **nie gemessen** | eine Rechnung statt zwei — `UpdateAfterRename` (`QCImapMailboxDirector.cpp:2516`) übernimmt den Namen, den `RenameMailbox` (`ImapAccount.cpp:2998-3… |
 | **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
@@ -132,6 +131,16 @@ zu 7.2.0.123.
   der mitgelieferten; die Zeile `rootcerts.p7b geladen aus: …` zeigt nach dem
   ersten verschlüsselten Abruf, welche gilt. Regressionstest am Quelltext
   (305 Tests, 305 bestanden).
+
+* **[E-146](Intern/BEFUNDE.md#e-146) — umbenannte IMAP-Ordner heißen in Eudora
+  wie auf dem Server.** Eudora bildete den neuen Namen zweimal, einmal für den
+  Server und einmal für sich selbst; auf einem Server ohne Ordnerhierarchie
+  und bei INBOX mit Präfix kamen zwei verschiedene Namen heraus. Jetzt gibt es
+  nur noch eine Rechnung. Lehnt der Server das Umbenennen ab, liest Eudora
+  danach die Ordnerliste neu und führt den Ordner wieder unter seinem alten
+  Namen; bisher blieb er lokal umbenannt und war nicht mehr erreichbar. Am
+  Prüfstand erst rot, dann grün gemessen (Fall [`E-146`](Intern/BEFUNDE.md#e-146), Prüfserver lehnt
+  RENAME ab); 307 Tests, 307 bestanden.
 
 * **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
   „Task Status" überschreibt keinen Speicher mehr.** Die Liste führt zu jeder

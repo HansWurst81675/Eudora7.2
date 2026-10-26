@@ -281,7 +281,27 @@ while (time < $ende) {
             $antwort = "$marke OK angemeldet";
         }
         elsif ($B eq 'LIST' or $B eq 'LSUB') {
-            print $h "* $B (\\HasNoChildren) \"/\" \"$_\"\r\n" for @ordner;
+            # Seit 26.10.2026 (E-146) mit Suchmuster nach RFC 3501 6.3.8:
+            # "%" passt auf alles ausser dem Trenner "/", "*" auf alles.
+            # Vorher kam auf JEDES Muster die ganze Liste - auf
+            # LIST "" Ablage/% meldete der Server "Ablage" als eigenes Kind,
+            # und Eudora stieg beim Neueinlesen der Ordnerliste endlos hinab
+            # (1556 LIST in zwei Sekunden). Ein echter Server tut das nicht.
+            # LIST "" "" fragt nur nach dem Trenner.
+            my $bezug = postfach_name($rest);
+            my $danach = $rest;
+            $danach =~ s/^(?:"(?:[^"\\]|\\.)*"|\S+)\s*//;
+            my $muster = $bezug . postfach_name($danach);
+            if ($muster eq '') {
+                print $h "* $B (\\Noselect) \"/\" \"\"\r\n";
+            }
+            else {
+                my $re = join '', map { $_ eq '%' ? '[^/]*' : $_ eq '*' ? '.*' : quotemeta $_ } split //, $muster;
+                for (@ordner) {
+                    next unless /^$re$/ or (uc $_ eq 'INBOX' and uc $muster eq 'INBOX');
+                    print $h "* $B (\\HasNoChildren) \"/\" \"$_\"\r\n";
+                }
+            }
             $antwort = "$marke OK $B";
         }
         elsif (($B eq q{RENAME} or $B eq q{SELECT} or $B eq q{EXAMINE} or $B eq q{STATUS} or $B eq q{CREATE})
