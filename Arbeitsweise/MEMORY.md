@@ -128,3 +128,4 @@
 - [Message-ID: kein Befund](entscheidung-message-id-kein-befund.md) — Gregor 25.10.: RFC-5322-Randfälle in AssignMessageId nicht aufnehmen; steht noch in keiner Repo-Datei, dazu ungeprüfter sprintf-Hinweis
 - [Eine Stelle, dann verlinken](eine-stelle-dann-verlinken.md) — Gregor 26.10.: jede Information nur an einer Stelle, andere MDs verlinken; Doppelungen vom 26.10. nach dem Testpaket zurückbauen
 - [Nur der Testplan zählt](nur-testplan-zaehlt.md) — Gregor 26.10.: testet nur, was in Intern/TESTPLAN.md steht; Anweisungen erst ins Repo, im Chat nur der Verweis
+- [Stand 26.10.2026 nachts](stand-26-10-2026-nacht.md) — 9 Dateien UNGESICHERT (E-137 vierter Anlauf, E-160); zuerst Zweignamen bestätigen lassen, dann committen

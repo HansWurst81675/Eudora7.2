@@ -302,6 +302,14 @@ bool OLImportClass::FindMainOLKey(bool bDisplayErrDialog)
 		m_bIdentityKey = false;
 	}
 
+	// E-160 (Gregor am Testpaket 7.2.0.125, 26.10.2026): Persona -> Neu
+	// zeigte die Windows-Meldung "Zum Ausfuehren der gewuenschten Aktion ist
+	// kein E-Mail-Programm zugeordnet", weil hier ohne jeden Outlook-Eintrag
+	// trotzdem MAPI geladen und angemeldet wurde. Ohne Profil- und
+	// Identitaetsschluessel gibt es nichts zu importieren: still aufhoeren.
+	if (!m_bProfileKey && !m_bIdentityKey)
+		return false;
+
 	// here we use MAPI to get the differnt profiles
 	HRESULT			hResult;	
 

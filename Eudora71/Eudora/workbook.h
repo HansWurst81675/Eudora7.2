@@ -162,6 +162,8 @@ protected:
 	//{{AFX_MSG(QCMiniDockFrameWnd)
 	//}}AFX_MSG
 	afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);	// E-137
+	afx_msg void OnNcLButtonDown(UINT nHitTest, CPoint point);	// E-137
+	void FokusInDieLeiste(UINT nHitTest, LPCTSTR pszWeg);	// E-137
 	DECLARE_MESSAGE_MAP()
 };
 

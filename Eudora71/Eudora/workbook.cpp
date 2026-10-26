@@ -533,6 +533,7 @@ BEGIN_MESSAGE_MAP(QCMiniDockFrameWnd, SECMiniDockFrameWnd)
 	//{{AFX_MSG_MAP(QCMiniDockFrameWnd)
 	//}}AFX_MSG_MAP
 	ON_WM_MOUSEACTIVATE()	// E-137
+	ON_WM_NCLBUTTONDOWN()	// E-137
 END_MESSAGE_MAP()
 
 
@@ -546,52 +547,61 @@ QCMiniDockFrameWnd::~QCMiniDockFrameWnd()
 
 
 ////////////////////////////////////////////////////////////////////////
-// OnMouseActivate [protected]
+// FokusInDieLeiste [protected]
 //
 // E-137, dritter Teil (Gregor am Testpaket 7.2.0.124, 26.10.2026, T1):
 // "CTRL-W schliesst nicht filter fenster" - geklickt hatte er "mal oben,
 // mal seitlich", also auf die Titelzeile und den Rand des SCHWEBENDEN
 // Fensters. Das ist dieser kleine Rahmen, nicht die Leiste darin;
 // CWazooBar::OnMouseActivate sah den Klick nie, der Fokus blieb in der
-// Mail, und Strg+W schloss sie. Die Klicks IN die Leiste davor wirkten
-// (eudora.log: "E-137 Klick in Wazoo-Leiste" und gleich danach
-// "E-137 Strg-W").
+// Mail, und Strg+W schloss sie.
 //
-// Hier wird deshalb ein Klick auf den Rahmen (Titelzeile, Rand, Ecke)
-// wie ein Klick in die Leiste behandelt: liegt der Fokus ausserhalb der
-// schwebenden Leiste, bekommt ihn ihr aktives Wazoo-Fenster. Die Leiste
+// Die erste Behebung (7.2.0.125) sass nur in OnMouseActivate - und griff
+// an Gregors Programm nicht (Kurztest U1 an 1.0.125: FAILED, im
+// eudora.log nach dem Klick auf den Rahmen keine einzige E-137-Zeile).
+// Ob WM_MOUSEACTIVATE dort gar nicht ankommt oder die Leiste nicht
+// gefunden wird, ist nicht gemessen. Deshalb jetzt zwei Wege und eine
+// Spur, die jeden Aufruf mit seinem Zwischenstand meldet:
+//   - OnMouseActivate (kommt nur, wenn der Rahmen noch nicht aktiv ist)
+//   - OnNcLButtonDown (kommt bei JEDEM Linksklick auf Titelzeile, Rand
+//     oder Ecke, auch wenn der Rahmen schon aktiv ist - PRUEFER-60 K6)
+// Ausgenommen ist der Schliessknopf (HTCLOSE, PRUEFER-60 K4). Die Leiste
 // kommt wie in RecalcLayout direkt aus m_wndSECDockBar (PRUEFER-60 K5).
-//
-// Klicks IN die Leiste erreichen den Rahmen gar nicht: schwebend gibt
-// CControlBar::OnMouseActivate MA_NOACTIVATE zurueck, ohne an die Eltern
-// weiterzureichen (barcore.cpp, PRUEFER-60 K5). Die Abfrage auf HTCLIENT
-// ist nur eine Absicherung. Ausgenommen ist der Schliessknopf (HTCLOSE):
-// die Leiste verschwindet gleich danach, der Fokus gehoert dann nicht
-// hinein (PRUEFER-60 K4).
 ////////////////////////////////////////////////////////////////////////
+void QCMiniDockFrameWnd::FokusInDieLeiste(UINT nHitTest, LPCTSTR pszWeg)
+{
+	if (nHitTest == HTCLIENT || nHitTest == HTCLOSE)
+		return;
+
+	CWazooBar* pLeiste = DYNAMIC_DOWNCAST(CWazooBar, m_wndSECDockBar.GetFirstControlBar());
+	CWnd* pFokus = CWnd::GetFocus();
+	const BOOL bSichtbar = pLeiste && pLeiste->IsWindowVisible();
+	const BOOL bFokusDrin = pLeiste && pFokus && pLeiste->IsChild(pFokus);
+	CWazooWnd* pWazooWnd = pLeiste ? pLeiste->GetActiveWazooWindow() : NULL;
+
+	CString strSpur;
+	strSpur.Format("E-137 Klick auf den Rahmen der schwebenden Leiste: weg=%s Trefferzone=%u leiste=%s sichtbar=%d fokus-drin=%d wazoo=%s",
+				   pszWeg, nHitTest, pLeiste ? "ja" : "NEIN", bSichtbar, bFokusDrin,
+				   (pWazooWnd && pWazooWnd->GetSafeHwnd()) ? "ja" : "NEIN");
+	PutDebugLog(DEBUG_MASK_MISC, strSpur);
+
+	if (bSichtbar && !bFokusDrin && pWazooWnd && pWazooWnd->GetSafeHwnd())
+		pWazooWnd->SetFocus();
+}
+
 int QCMiniDockFrameWnd::OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message)
 {
 	const int nErgebnis = SECMiniDockFrameWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);
-
-	if (nHitTest != HTCLIENT && nHitTest != HTCLOSE)
-	{
-		CWazooBar* pLeiste = DYNAMIC_DOWNCAST(CWazooBar, m_wndSECDockBar.GetFirstControlBar());
-
-		CWnd* pFokus = CWnd::GetFocus();
-		if (pLeiste && pLeiste->IsWindowVisible() && (!pFokus || !pLeiste->IsChild(pFokus)))
-		{
-			CWazooWnd* pWazooWnd = pLeiste->GetActiveWazooWindow();
-			if (pWazooWnd && pWazooWnd->GetSafeHwnd())
-			{
-				CString strSpur;
-				strSpur.Format("E-137 Klick auf den Rahmen der schwebenden Leiste: Fokus geht in die Leiste (Trefferzone %u)", nHitTest);
-				PutDebugLog(DEBUG_MASK_MISC, strSpur);
-				pWazooWnd->SetFocus();
-			}
-		}
-	}
-
+	FokusInDieLeiste(nHitTest, "MouseActivate");
 	return nErgebnis;
+}
+
+void QCMiniDockFrameWnd::OnNcLButtonDown(UINT nHitTest, CPoint point)
+{
+	// Vor dem Basisaufruf: der beginnt bei Titelzeile und Rand die
+	// Zieh- bzw. Groessenschleife und kehrt erst nach dem Loslassen zurueck.
+	FokusInDieLeiste(nHitTest, "NcLButtonDown");
+	SECMiniDockFrameWnd::OnNcLButtonDown(nHitTest, point);
 }
 
 

@@ -26,7 +26,7 @@ starten. In der Titelzeile muss **7.2.0.125** und **Paket 1.0.125** stehen.
 
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
-| U1 | — | | |
+| U1 | **nein** | 26.10.2026 | Gregor: *„E-137, T1 FAILED“* (gemeint ist U1). Im Protokoll nach dem Klick auf den Rahmen keine E-137-Zeile; neuer Anlauf für 7.2.0.126 ([E-137](BEFUNDE.md#e-137)). Nebenbei gefunden: [E-160](BEFUNDE.md#e-160) (Windows-Meldung bei *Persona* → *Neu*) |
 | U2 | — | | |
 | U3 | — | | |
 | U4 | — | | |

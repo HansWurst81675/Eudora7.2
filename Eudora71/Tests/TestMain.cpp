@@ -48,6 +48,7 @@ void RunRootCertsLogTests(const char* szEudoraDir);
 void RunE146Tests(const char* szEudoraDir);
 void RunE119Tests(const char* szEudoraDir);
 void RunE158Tests(const char* szEudoraDir);
+void RunE160Tests(const char* szEudoraDir);
 void RunE77QuelltextTests(const char* szEudoraDir);
 void RunStartfehlerTests(const char* szEudoraDir);
 void RunE148Tests(const char* szEudoraDir);
@@ -163,6 +164,7 @@ int main(int argc, char* argv[])
 	RunE146Tests(szEudoraDir);
 	RunE119Tests(szEudoraDir);
 	RunE158Tests(szEudoraDir);
+	RunE160Tests(szEudoraDir);
 	RunE77QuelltextTests(szEudoraDir);
 	RunStartfehlerTests(szEudoraDir);
 	RunE148Tests(szEudoraDir);

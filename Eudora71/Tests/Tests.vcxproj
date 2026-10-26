@@ -127,6 +127,7 @@
     <ClCompile Include="TestE146.cpp" />
     <ClCompile Include="TestE119.cpp" />
     <ClCompile Include="TestE158.cpp" />
+    <ClCompile Include="TestE160.cpp" />
     <ClCompile Include="TestStartfehler.cpp" />
     <ClCompile Include="TestE148.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />
