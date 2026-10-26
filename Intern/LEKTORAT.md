@@ -1805,6 +1805,20 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Siebenundsiebzigster Durchgang — Einarbeitung von LEKTOR-71 (`ce28be3b`) und Teil 0 der Prüfanleitung, 26.10.2026 (Bericht: `Befunde/LEKTOR-72.md`)
+
+Sehr kurzer Lauf vor dem PR, nur über `ce28be3b`. **5 Funde** (0 falsch,
+2 unvollständig, 3 Hinweise). Von L-71.1 bis L-71.9 sind fünf erledigt, vier
+teilweise; **keine geänderte Zeile führt eine neue falsche Aussage ein.**
+**Teil 0 ist von A.1 bis C ohne Widerspruch ausführbar.** Belegt dazu: vor dem
+Kontoassistenten kommt kein Einführungsdialog, weil der Release-Bau
+`BUILD_BOX_OR_SITE_R_VERSION` setzt und `IsBoxBuild()` den Dialog überspringt
+(`eudora.cpp:1656`). Offen bleiben Doppelungen: der Vorgänger 7.2.0.122 in
+`WEITERMACHEN.md:9` und `:10` ([L-72.1](../Befunde/LEKTOR-72.md#l-72.1)), der
+alte E-146-Fehler zweimal ([L-72.4](../Befunde/LEKTOR-72.md#l-72.4)); und
+Teil 0 C nennt Teil 3 (M3) nicht ([L-72.5](../Befunde/LEKTOR-72.md#l-72.5)).
+Keine Frage an Gregor; nichts hält den PR auf.
+
 ## Sechsundsiebzigster Durchgang — Teil 0 der Prüfanleitung und die Berichtigungen aus LEKTOR-70, Zweig `vor-testpaket-7.2.0.123` bis `71006e5a`, 26.10.2026 (Bericht: `Befunde/LEKTOR-71.md`)
 
 Kurzlauf vor dem PR: Stand der sechzehn Funde aus LEKTOR-70, alles seit
