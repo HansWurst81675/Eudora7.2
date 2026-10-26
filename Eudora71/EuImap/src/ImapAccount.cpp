@@ -2951,7 +2951,8 @@ BOOL CImapAccount::RenameMailbox(QCImapMailboxCommand *pImapCommand,
 								 LPCSTR szNewImapName,
 								 CString &strNewDirName,
 								 BOOL &bOldMboxStillExists,
-								 QCImapMailboxCommand **ppNewImapMailbox)
+								 QCImapMailboxCommand **ppNewImapMailbox,
+								 CString *pstrNeuerImapName /* = NULL */)
 {
 	BOOL	bResult = FALSE;
 	TCHAR	cDelimiter = 0;
@@ -2959,6 +2960,8 @@ BOOL CImapAccount::RenameMailbox(QCImapMailboxCommand *pImapCommand,
 	// Do these. They are output parameters.
 	strNewDirName.Empty();
 	bOldMboxStillExists = FALSE;
+	if (pstrNeuerImapName)
+		pstrNeuerImapName->Empty();
 
 	if (!pImapCommand || !szNewImapName || !*szNewImapName || !ppNewImapMailbox)
 	{
@@ -3066,6 +3069,14 @@ BOOL CImapAccount::RenameMailbox(QCImapMailboxCommand *pImapCommand,
 		}
 		delete pImapNode;
 	}
+
+	// E-146: den Namen, der an den Server geht, an den Aufrufer zurueckgeben.
+	// UpdateAfterRename (QCImapMailboxDirector.cpp) hat ihn vorher ein zweites
+	// Mal selbst gebildet - ohne Trenner (ReverseFind('\0') liefert die Laenge,
+	// aus "Ablage" wurde "AblageAblage-...") und bei INBOX mit Praefix (das
+	// Praefix fehlte) falsch. Jetzt gibt es nur noch diese eine Rechnung.
+	if (pstrNeuerImapName)
+		*pstrNeuerImapName = strNewFullImapName;
 
 	CImapRenameMailboxAction	*pRenameMailboxAction = DEBUG_NEW CImapRenameMailboxAction(m_AccountID,
 																							strOldImapName.GetBuffer(0),

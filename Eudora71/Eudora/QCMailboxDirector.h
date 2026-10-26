@@ -85,7 +85,7 @@ class QCMailboxDirector : public QCCommandDirector
 	POSITION FindContainingList(QCMailboxCommand* pChild, CPtrList** ppList,
 								QCMailboxCommand** ppParent);
 	BOOL UpdateAfterRename(QCImapMailboxCommand* pImapCommand, LPCTSTR pNewName,
-							LPCTSTR pNewDirname);
+							LPCTSTR pNewDirname, LPCTSTR pNewFullImapName);
 	void UpdateChildrenAfterRename(QCImapMailboxCommand* pImapCommand);
 
 

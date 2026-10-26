@@ -1,26 +1,123 @@
-# Testplan für Gregor — Quellstand 7.2.0.122 / `VERSION` 1.0.122, Stand 25.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.123 / `VERSION` 1.0.123, Stand 26.10.2026
 
-> **Bei dir liegt Paket 1.0.122** (`C:\Users\Gregor\Eudora72-1.0.122-release`,
-> seit 23.10.2026 um 12:00). Veröffentlicht ist `v1.0.120`.
+> **Testpaket 7.2.0.123** (Paket 1.0.123) — es kommt nach
+> `C:\Users\Gregor\Eudora72-1.0.123-release`, neben dein 1.0.122, das
+> unangetastet bleibt. Veröffentlicht ist `v1.0.120`. Nach deinem Test und
+> deinem Ja wird daraus das Release **7.2.1.<n>**.
 
-## Was jetzt zu testen ist
+## Was jetzt zu testen ist — Testpaket 7.2.0.123
 
-**Im Moment nichts.** An 1.0.122 war nur ein Fall offen:
-[M3](#m3-e125), Verschieben nach `Out` ([E-125](BEFUNDE.md#e-125)). Du hast
-am 23.10.2026 bestätigt, dass eine empfangene Nachricht abgelehnt wird. Die
-Gegenprobe mit einem Entwurf hast du zu Recht abgelehnt: Die Beschreibung
-sagte nicht, wie man überhaupt einen Entwurf außerhalb von `Out` bekommt. Ich
-habe sie am selben Tag am Prüfstand gefahren. Sie läuft jetzt bei jedem
-Regressionslauf automatisch mit, und die Schritte in M3 sind neu geschrieben.
+**Starten mit `Eudora starten.cmd`** im neuen Verzeichnis — **einzige Ausnahme ist
+Teil 0 A**, dort wird `Eudora.exe` doppelgeklickt. In der
+Titelzeile muss **7.2.0.123** und **Paket 1.0.123** stehen — sonst läuft
+ein anderes Paket.
 
-**Vor dem Release 7.2.1** bleiben die Fälle M1 und M3 aus [Teil M](#m1-e132) von Hand
-zu fahren.
+**Wo:** Jeder Schritt sagt, in welchem Postfach. *Lokal* heißt die Postfächer
+oben in der Liste (`In`, `Out`, `Trash`); *IMAP* heißt die Ordner unter
+deinem GMX-Konto.
 
-**Die drei Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
+**Was du mir zurückgibst:** je Zeile *ja* oder *nein* (bei *nein* ein Satz,
+was stattdessen kam). Ich trage es unten in die
+[Ergebnistabelle](#ergebnis-7-2-0-123) und in die Buchführung ein; das
+`eudora.log` lese ich danach selbst (wie vereinbart nur lesen).
+
+### Teil 0 — Reihenfolge und Vorbereitung (bitte genau in dieser Reihenfolge)
+
+**A. Zuerst M1 — bevor das neue Paket irgendwie anders gestartet wurde.** Der
+Starttest braucht eine *fremde* Installation, und das ist dein 1.0.122. Wird
+das neue Paket vorher über `Eudora starten.cmd` gestartet, merkt sich Eudora
+das neue Verzeichnis, und die Rückfrage aus M1 kommt zu Recht nicht mehr.
+
+1. Dein **1.0.122** einmal mit seinem `Eudora starten.cmd` starten und mit
+   *File → Exit* beenden. Danach steht es als zuletzt benutzte Installation in
+   der Registry.
+2. Im Explorer das **Änderungsdatum** von
+   `C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis\Eudora.ini` notieren.
+3. Im neuen Verzeichnis `C:\Users\Gregor\Eudora72-1.0.123-release` die
+   **`Eudora.exe` doppelklicken** und [M1](#m1-e132) Schritt 1 bis 4 fahren.
+   Für Schritt 3 und 4 („fremde `Eudora.ini` unverändert“): das Änderungsdatum
+   aus 2. muss gleich bleiben.
+4. Nach Schritt 4 läuft Eudora mit einem eigenen, leeren Mailverzeichnis und
+   öffnet deshalb den Assistenten für ein neues Konto: mit *Abbrechen*
+   schließen, dann *File → Exit*.
+
+**B. Deine Daten in das neue Paket.** Der Inhalt von
+`C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis` in
+`C:\Users\Gregor\Eudora72-1.0.123-release\Mailverzeichnis` kopieren
+(überschreiben). **Zwei Ausnahmen, beide nicht mitkopieren:** `eudora.log` —
+sonst ist das Protokoll aus M1 Schritt 4 überschrieben, und das alte enthält
+selbst `E-132`-Zeilen, die wie ein Nachweis aussehen; und, falls vorhanden,
+`rootcerts.p7b` — sonst prüft K3 die alte Zertifikatsliste statt der neuen
+([E-148](BEFUNDE.md#e-148)).
+
+**C. Ab jetzt nur noch mit `Eudora starten.cmd`** im neuen Verzeichnis, dann
+Teil 1 und Teil 2 in beliebiger Reihenfolge.
+
+### Teil 1 — die neun Kriterien aus ZIEL.md, kurz
+
+| Nr. | Kriterium | Was zu tun ist | Was herauskommen muss |
+|---|---|---|---|
+| K0/K1 | startet, Hauptfenster | `Eudora starten.cmd` doppelklicken | Hauptfenster, Titelzeile mit 7.2.0.123 / Paket 1.0.123 |
+| K2 | Darstellung | ein paar Nachrichten in `In` (lokal) öffnen, darunter eine HTML-Mail mit Bildern | richtig dargestellt, **keine** Meldung *„Encountered an improper argument"* |
+| K3 | Abruf | bei GMX und bei freenet Mail abrufen | Abruf geht, **kein** Zertifikatsfehler (das prüft zugleich die neue Zertifikatsliste, [E-148](BEFUNDE.md#e-148)) |
+| K4 | keine Abstürze | während des ganzen Tests | Eudora bleibt stehen |
+| K5 | schreiben und senden | eine Mail an dich selbst schreiben und senden | kommt an |
+| K6 | weiterleiten | die angekommene Mail weiterleiten | geht |
+| K7 | beenden | *File → Exit* | Eudora schließt sauber |
+| K8 | offene Fenster | zwei Postfächer öffnen, Menü *Window* | beide stehen dort und lassen sich wählen |
+
+### Teil 2 — was neu ist und nur du am Programm prüfen kannst
+
+| Nr. | Befund | Wo | Was zu tun ist | Was herauskommen muss |
+|---|---|---|---|---|
+| N1 | [E-137](BEFUNDE.md#e-137) Strg+W | lokal, `In` offen | mit **Strg+L** das Adressbuch öffnen, **angedockt**, hineinklicken, dann **Strg+W** | nur das Adressbuch verschwindet, Eudora bleibt offen; ein zweites Strg+W schließt `In` |
+| N1b | [E-137](BEFUNDE.md#e-137), *File → Close* | lokal, `In` offen | Adressbuch mit Strg+L öffnen (angedockt), hineinklicken, dann *File → Close* | wie N1: nur das Adressbuch verschwindet (so am 25.10.2026 entschieden, *„a) ist ok.“*) |
+| N2 | [E-137](BEFUNDE.md#e-137), schwebend | wie N1 | das Adressbuch aus dem Rahmen ziehen (schwebend), hineinklicken, **Strg+W** | nur das Adressbuch verschwindet |
+| N3 | [E-142](BEFUNDE.md#e-142) Hinweis | lokal `Out` und **IMAP** `Gelöscht` (der Papierkorb unter deinem GMX-Konto, nicht das lokale `Trash`) | einen Entwurf anlegen (*Message → New Message*, an dich selbst, Betreff `N3`, *File → Save*, Fenster schließen — er liegt in `Out`), in den IMAP-Ordner `Gelöscht` ziehen, dann von dort **zurück** nach `Out` ziehen | eine Rückfrage *„Moving or copying a draft from an IMAP mailbox to Out may give an empty message …“*. **No** drücken: nichts passiert, keine weitere Meldung. **Nicht Yes** — dann entsteht in `Out` die bekannte leere Nachricht. Danach den Entwurf in `Gelöscht` löschen |
+| N4 | [E-77](BEFUNDE.md#e-77) Umlaute | IMAP | die Ordnerliste unter dem GMX-Konto ansehen | *Entwürfe*, *Gelöscht* mit Umlauten, nicht `Entw&APw-rfe` |
+| N5 | [E-77](BEFUNDE.md#e-77)/[E-146](BEFUNDE.md#e-146) Umbenennen | IMAP | einen Testordner `Test-ä` anlegen, in `Test-ö` umbenennen, öffnen; im GMX-Webmailer nachsehen; dann in Eudora löschen | heißt in Eudora und im Webmailer `Test-ö`, lässt sich öffnen, keine Fehlermeldung |
+| N6 | [E-113](BEFUNDE.md#e-113) breite Bilder | lokal | auf eine Nachricht mit einem sehr breiten Bild antworten | das Bild passt im Antwortfenster in die Breite, unverzerrt |
+| N7 | [E-119](BEFUNDE.md#e-119) Bilder im HTML | lokal | falls du eine Mail hast, deren Bilder direkt im HTML stecken (manche Newsletter): antworten | Bild statt grauem Kasten. Hast du keine, schreib *keine Mail dafür* — der Prüfstand hat es gemessen |
+
+### Teil 3 — die Handfälle aus Teil M
+
+| Nr. | Fall | Was zu tun ist |
+|---|---|---|
+| M1 | [E-132](BEFUNDE.md#e-132), Schritt 1–4 | **schon in Teil 0 A erledigt** — dort steht die Vorbereitung; nur Schritt 1 bis 4 (Schritt 5 geht nicht, entschieden am 25.10.2026) |
+| M3 | [E-125](BEFUNDE.md#e-125) | wie in [M3](#m3-e125) beschrieben |
+
+### <a id="ergebnis-7-2-0-123"></a>Ergebnis am Testpaket 7.2.0.123 — je Kriterium
+
+*Wird nach deiner Rückmeldung ausgefüllt. Ohne diese Tabelle gibt es kein
+Release 7.2.1 (ZIEL.md: „Ein Release ohne dokumentierte Ergebnisse gibt es
+nicht").*
+
+| Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
+|---|---|---|---|
+| K0/K1 | — | | |
+| K2 | — | | |
+| K3 | — | | |
+| K4 | — | | |
+| K5 | — | | |
+| K6 | — | | |
+| K7 | — | | |
+| K8 | — | | |
+| N1 | — | | |
+| N1b | — | | |
+| N2 | — | | |
+| N3 | — | | |
+| N4 | — | | |
+| N5 | — | | |
+| N6 | — | | |
+| N7 | — | | |
+| M1 | — | | |
+| M3 | — | | |
+| Protokoll | — | | von mir gelesen: aus M1 die Zeilen `E-132 Startverzeichnis: … fremd=1` und `E-132 Startverzeichnis: eigenes gewaehlt=…`; **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
+
+**Die Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
 [C10](#c10) (die Auswahlbox) und [C9](#c9) (das Adressbuch) hast du am
-21.10.2026 bestätigt. C10 stand hier bis zum 23.10. trotzdem als „offen" —
-das war falsch. [C8](#c8) ist derselbe Starttest wie [M1](#m1-e132) und wird
-dort geführt.
+21.10.2026 bestätigt. [C8](#c8) ist derselbe Starttest wie [M1](#m1-e132)
+und wird dort geführt.
 
 ### <a id="c10"></a>Die Auswahlbox im `To:`-Feld — bleibt sie gleich groß?
 
@@ -223,23 +320,10 @@ Dasselbe gilt für die Gegenprobe zu [R1](../Befunde/PRUEFER-38.md), die ohne
 einen ersten Filterlauf gar nichts aussagt.
 ### Was bekannt ist — bitte nicht als neuen Fehler melden
 
-* Nach einem **Absturz**, einem Eingriff von **Defender**, einem Stromausfall
-  oder einem erzwungenen Herunterfahren können eingebettete Bilder einer
-  verschobenen Nachricht weiter fehlen. Schritt 2 prüft nur das **ordentliche**
-  Beenden.
-* Bilder, die als `data:`-Adresse in der Mail stecken, erscheinen als **grauer
-  Kasten**.
-* Bilder, die **breiter sind als das Fenster**, werden nicht verkleinert.
-* Eine Größenangabe mit Einheit (`width="35px"`) wird nicht ausgewertet.
-* Beim **Weiterleiten eines Newsletters** können Bilder doppelt erscheinen.
+Steht an **einer** Stelle: in der [README unter „Bekannte Fehler“](../README.md#bekannte-fehler).
+Bis zum 26.10.2026 stand hier eine eigene Liste; sie nannte drei Fehler als
+bekannt, die im Testpaket 7.2.0.123 behoben sind (LEKTOR-70, L-70.1).
 
-* Eine gespeicherte Nachricht heißt **`.txt` und enthält HTML** — ohne Hinweis
-  ([E-128](BEFUNDE.md#e-128), 20.10.2026).
-* Wird ohne Serververbindung in einen IMAP-Ordner verschoben und gleich
-  beendet, zeigt der **Zielordner nur eine von fünf** Nachrichten; die anderen
-  stehen vollständig in der Datei, und in der `Inbox` erscheinen sie wieder
-  über *Rechtsklick → Show Deleted Messages*
-  ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
 Mit der **Paketnummer** — der des Pakets, das du wirklich gestartet hast:
@@ -248,7 +332,7 @@ Mit der **Paketnummer** — der des Pakets, das du wirklich gestartet hast:
 ist das Urteil wertlos — einmal stand „behoben“ einen Tag lang da, während
 das ausgelieferte Paket den Fehler noch hatte.
 
-Eigene Tests dieser Fassung: siehe [Releases/PRUEFBERICHT.md](../Releases/PRUEFBERICHT.md) — dort je Test mit Bau und Zeit (am 25.10.2026: **301 Tests, 301 bestanden** auf `796369bb`). Die Zahl stand hier bis zum 25.10.2026 von Hand und war vier Mal veraltet ([L-51.16](../Befunde/LEKTOR-51.md)); sie gehört aus `tools/pruefbericht.pl` erzeugt, nicht von Hand gepflegt.
+Eigene Tests dieser Fassung: siehe [Releases/PRUEFBERICHT.md](../Releases/PRUEFBERICHT.md) — dort je Test mit Bau und Zeit; die Zahl steht nur dort. Die Zahl stand hier bis zum 25.10.2026 von Hand und war vier Mal veraltet ([L-51.16](../Befunde/LEKTOR-51.md)); sie gehört aus `tools/pruefbericht.pl` erzeugt, nicht von Hand gepflegt.
 
 ---
 
@@ -550,9 +634,9 @@ damit sie in der Registry unter
 | 1 | **`Eudora.exe` doppelklicken** — nicht `Eudora starten.cmd`, denn das übergibt das Verzeichnis und schneidet den Weg ab | Eine Rückfrage erscheint: *„Eudora found an existing mail folder that belongs to another installation"* mit drei Knöpfen **Yes**, **No**, **Cancel** |
 | 2 | Die Vorauswahl ansehen, **ohne** zu klicken | **No** ist vorgewählt (= eigenes Verzeichnis anlegen). Ein unbedachtes Enter darf nichts an der fremden Installation ändern |
 | 3 | **Cancel** wählen | Das Programm endet. Die fremde `Eudora.ini` ist **unverändert** (SHA256 vorher/nachher vergleichen) |
-| 4 | Neu starten, **No** wählen | Eudora startet mit einem eigenen Mailverzeichnis neben dem Programm. Im Protokoll stehen `E-132 Startverzeichnis: … fremd=1` und danach `E-132 Startverzeichnis: eigenes gewaehlt="…"`. Die fremde `Eudora.ini` ist **unverändert** |
+| 4 | Wieder **`Eudora.exe` doppelklicken**, diesmal **No** wählen | Eudora startet mit einem eigenen Mailverzeichnis neben dem Programm. Im Protokoll stehen `E-132 Startverzeichnis: … fremd=1` und danach `E-132 Startverzeichnis: eigenes gewaehlt="…"`. Die fremde `Eudora.ini` ist **unverändert** |
 
-**Hier endet der Handtest (Gregor, 25.10.2026: *„ich teste nur bis schritt 4. schritt 5 geht nicht."*).** Den früheren Schritt 5 (*Yes* wählen) gibt es so nicht: Schritt 4 **merkt sich** die Antwort — Eudora schreibt `E132Abgelehnt=<Verzeichnis>` in die `DEudora.ini` neben dem Programm (`eudora.cpp:4241`), und jeder weitere Start liest sie und fragt **nicht** mehr (`:4191`, Protokoll: `E-132 Startverzeichnis: gemerkte Antwort Nein`). Der Weg *Yes* und das Wiederholen der Rückfrage werden ein **automatischer Prüfstandsfall**, der die gemerkte Antwort zwischen den Schritten zurücksetzt (Zweig `RC1_vorbereiten`). Die alte Gegenprobe mit `Eudora starten.cmd` (keine Rückfrage) prüft jeder gewöhnliche Prüfstandslauf ohnehin bei jedem Start.
+**Hier endet der Handtest (Gregor, 25.10.2026: *„ich teste nur bis schritt 4. schritt 5 geht nicht."*).** Den früheren Schritt 5 (*Yes* wählen) gibt es so nicht: Schritt 4 **merkt sich** die Antwort — Eudora schreibt `E132Abgelehnt=<Verzeichnis>` in die `DEudora.ini` neben dem Programm (`eudora.cpp`, `StartEudoraWithDefaultLocation`), und jeder weitere Start liest sie und fragt **nicht** mehr (dieselbe Funktion, Protokoll: `E-132 Startverzeichnis: gemerkte Antwort Nein`). Der Weg *Yes* und das Wiederholen der Rückfrage werden ein **automatischer Prüfstandsfall**, der die gemerkte Antwort zwischen den Schritten zurücksetzt (Zweig `RC1_vorbereiten`). Die alte Gegenprobe mit `Eudora starten.cmd` (keine Rückfrage) prüft jeder gewöhnliche Prüfstandslauf ohnehin bei jedem Start.
 
 **Wenn Schritt 2 oder 3 anders ausgeht, ist der Schaden aus
 [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102) zurück**
@@ -626,7 +710,7 @@ nicht durchführbar abgelehnt.
 **Was nicht ins Paket gehört, aber hierher:** ein Entwurf aus einem
 **IMAP**-Ordner nach `Out` ergibt dort eine **leere** Nachricht und die
 Meldung *„No messages were transferred!"* ([E-142](BEFUNDE.md#e-142), von
-Gregor am 23.10.2026 genau so gesehen). Deshalb in 4b das **lokale** `Trash`.
+Gregor am 23.10.2026 genau so gesehen). Deshalb in 4b das **lokale** `Trash`. Seit 7.2.0.123 fragt Eudora bei diesem Weg vorher nach (Teil 2, N3).
 
 ## Teil D — Wie dein Urteil ins Repo kommt
 

@@ -141,3 +141,12 @@ Zeiten MEZ, gemessen mit `tools/verlauf-messen.pl` ab 18:08: 44 Nachrichten von 
 | 19:13:40 | *„was ist aus "keine lügen auf main" geworden? gilt nicht mehr?"* | 10 Werkzeugaufrufe, 0 Text (Werkzeug: „18:13:40 10 WZ / 0 Text", UTC). Eine Antwort auf die Frage, ob die Regel gilt, kam nie |
 
 Die Regel vom 14.10. (*„Eine direkte Frage Gregors wird im ersten Satz beantwortet"*) stand hier. Gebrochen wurde sie, weil ich die Berichtigung für die Antwort hielt. Für Gregor ist ein Commit keine Antwort, denn er sieht ihn erst beim nächsten PR. **How to apply, zusätzlich:** Auf eine Ja-oder-Nein-Frage folgt zuerst eine Zeile mit Ja oder Nein, auch wenn die Arbeit daran sofort beginnt. Bei „gilt X nicht mehr?" lautet die Antwort *„Doch, X gilt. Ich habe es mit … verletzt"* ([[einschraenkung-im-pr-ist-kein-ja]]).
+
+## Nachtrag 25.10.2026 spät (CHRONIST): eine Einwurf-Frage zwischen zwei Agentenrückläufen
+
+Zeiten MEZ, gemessen am Transkript. Um 20:43:59 entschied Gregor *„a) ist ok.“* (PRUEFER-57 K2). Um 20:44:24 kam als Einwurf, gleichzeitig mit dem Rücklauf von LEKTOR-67: *„a) bedeutet, daß es jetzt schon so funktioniert, ha?“* Danach folgten vier Werkzeugaufrufe und um 20:46:35 eine Zeile über LEKTOR-68. Eine direkte Antwort kam nicht. Der Inhalt stand nur indirekt im PR-Text (20:49:53): *„E-137 eingebaut … Am laufenden Programm ist das noch nicht gemessen“*, ohne Bezug auf seine Frage und ohne Datei → Schließen, um das es bei (a) ging.
+ Die richtige Antwort wäre eine Zeile gewesen: *„Eingebaut ja, im Code seit 20:23. Gemessen am laufenden Programm nein, das prüfen Sie im Testpaket.“* Das stand in E-137, aber nicht als Antwort an ihn.
+
+Damit steht in dieser Lehre der dritte Fall einer unbeantworteten Frage (nach dem 14.10. und dem 25.10. abends). Diesmal kam die Frage **als Einwurf**, während ein Rücklauf verarbeitet wurde, und ging darin unter. Die Quote war diesmal niedrig (6 Einwürfe von 20 Nachrichten, 30 %, `verlauf-messen.pl` ab 18:56 UTC). Verloren ging trotzdem genau eine Frage, und es war eine, in der „eingebaut“ und „funktioniert“ verwechselt werden können ([[anzeige-ist-kein-zustand]]).
+
+**How to apply, zusätzlich:** Nach jedem Agentenrücklauf werden zuerst die Einwürfe gelesen, die seit der letzten Textzeile kamen. Jede Frage darunter bekommt ihre Zeile, bevor der Rücklauf bearbeitet wird. Fragt Gregor, ob etwas „schon funktioniert“, nennt die Antwort beide Stände getrennt: im Code und am laufenden Programm.

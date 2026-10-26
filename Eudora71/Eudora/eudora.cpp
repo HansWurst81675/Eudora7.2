@@ -2003,14 +2003,31 @@ int CEudoraApp::Run()
 	catch (CException * pException)
 	{
 		// MFC currently makes operator new throw a CMemoryException
+		//
+		// E-154 (PRUEFER-58 K1): eine Ausnahme, die NICHT in einer
+		// Fensterbotschaft entsteht (Leerlauf, PreTranslateMessage,
+		// Nachbearbeitung von Aufgaben), landet hier und nicht in
+		// ProcessWndProcException. Eudora endet danach ohne Meldung und ohne
+		// ExitInstance. Bisher stand davon nichts im eudora.log; jetzt eine
+		// Zeile, damit ZIEL Kriterium 4 diesen Weg sieht.
+		TCHAR szText[256] = "";
+		pException->GetErrorMessage(szText, sizeof(szText) / sizeof(TCHAR));
+		CString szSpur;
+		szSpur.Format("Ausnahme ausserhalb einer Fensterbotschaft (ZIEL 4), Eudora endet: text=\"%s\" art=%s",
+					  szText, pException->GetRuntimeClass()->m_lpszClassName);
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
 		pException->Delete();
 
 		bExceptionOccurred = true;
 	}
-	catch (std::exception & /* exception */)
+	catch (std::exception & exception)
 	{
 		// I don't think we can currently get this given MFC's overriding of
 		// operator new, but perhaps they'll be standards compliant in the future.
+		CString szSpur;
+		szSpur.Format("Ausnahme ausserhalb einer Fensterbotschaft (ZIEL 4), Eudora endet: text=\"%s\" art=std::exception",
+					  exception.what());
+		PutDebugLog(DEBUG_MASK_MISC, szSpur);
 
 		bExceptionOccurred = true;
 	}
@@ -2024,6 +2041,41 @@ int CEudoraApp::Run()
 void CEudoraApp::SaveStdProfileSettings()
 {
 	CWinApp::SaveStdProfileSettings();
+}
+
+////////////////////////////////////////////////////////////////////////
+// ProcessWndProcException [public, virtual]
+//
+// SPURMARKE zu ZIEL.md Kriterium 2 und 4 (26.10.2026). Eine Ausnahme, die
+// aus der Behandlung einer Fensterbotschaft bis hierher durchschlaegt,
+// zeigt die MFC als Meldung - etwa "Encountered an improper argument." -,
+// und Eudora schrieb sie nirgends mit. Gregor hat die Meldung seit E-43
+// nicht mehr gesehen; ob sie wirklich verschwunden ist, laesst sich nur
+// messen, wenn jedes Auftreten im eudora.log steht (0 Treffer in seinen
+// Protokollen bewiesen nichts - es gab keine Zeile, die sie haette schreiben
+// koennen). Das Verhalten bleibt unveraendert: danach zeigt die MFC die
+// Meldung wie bisher.
+////////////////////////////////////////////////////////////////////////
+LRESULT CEudoraApp::ProcessWndProcException(CException* e, const MSG* pMsg)
+{
+	TCHAR szText[256] = "";
+	if (e)
+		e->GetErrorMessage(szText, sizeof(szText) / sizeof(TCHAR));
+
+	TCHAR szKlasse[64] = "";
+	if (pMsg && pMsg->hwnd)
+		::GetClassName(pMsg->hwnd, szKlasse, sizeof(szKlasse) / sizeof(TCHAR));
+
+	CString szSpur;
+	szSpur.Format("Ausnahme in Fensterbotschaft (ZIEL 2/4): text=\"%s\" art=%s nachricht=0x%04X wparam=0x%X fenster=\"%s\"",
+				  szText,
+				  (e ? e->GetRuntimeClass()->m_lpszClassName : "?"),
+				  (pMsg ? pMsg->message : 0),
+				  (pMsg ? (UINT) pMsg->wParam : 0),
+				  szKlasse);
+	PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+	return CWinApp::ProcessWndProcException(e, pMsg);
 }
 
 int CEudoraApp::ExitInstance()

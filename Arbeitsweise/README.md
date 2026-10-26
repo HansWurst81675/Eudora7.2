@@ -57,6 +57,7 @@ eine Datei liest, liest diese.
 | [CHRONIST-2026-10-23](CHRONIST-2026-10-23.md) | CHRONIST-Lauf 23.10.2026 - zwei neue Lehren (test-prueft-den-ausstieg, befund-gegen-die-quelle-lesen), Rueckstrich-Faelle 19 bis 21, und was Gregors Einwuerfe an diesem Tag gefunden haben |
 | [CHRONIST-2026-10-25](CHRONIST-2026-10-25.md) | CHRONIST-Lauf 25.10.2026 über den 23.10. nachmittags bis 25.10. abends - eine neue Lehre (gekuerzte-ausgabe-ist-kein-ergebnis), zehn Nachträge, und warum der CHRONIST selbst zwei Tage lang als \"aktuell\" galt (rollen-faellig.pl:140) |
 | [CHRONIST-2026-10-25b](CHRONIST-2026-10-25b.md) | CHRONIST-Lauf 25.10.2026 über 18:08-19:56 MEZ - eine neue Lehre (einschraenkung-im-pr-ist-kein-ja), dreizehn Nachträge; zwei Lehren in derselben Stunde gebrochen, in der sie entstanden |
+| [CHRONIST-2026-10-26](CHRONIST-2026-10-26.md) | CHRONIST-Lauf 26.10.2026 über 25.10. 19:56 MEZ bis 26.10. 07:18 MEZ - keine neue Lehre, neun Nachträge, eine Entscheidungsnotiz; E-137-Test las die falsche Funktion, Ansage-Regel 17 Minuten nach ihrer Spiegelung wieder gebrochen |
 | [abschalten-ist-ein-termin](abschalten-ist-ein-termin.md) | Wenn Gregor das Abschalten ankuendigt, ist das eine Frist - sichern hat Vorrang vor jeder laufenden Arbeit |
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
@@ -86,6 +87,7 @@ eine Datei liest, liest diese.
 | [doku-parallel-nicht-hinterher](doku-parallel-nicht-hinterher.md) | Ein Wert, der in mehreren MDs steht, wird im selben Arbeitsschritt ueberall berichtigt; doku-pruefen.pl haelt sie gegeneinander |
 | [dummy-statt-weglassen](dummy-statt-weglassen.md) | Nicht benutzte Funktionen, Methoden und Klassen als Dummy implementieren, statt sie auszubauen |
 | [eigene-schleife-verschluckt-nichts](eigene-schleife-verschluckt-nichts.md) | Eine eigene Nachrichtenschleife darf WM_QUIT nicht entnehmen, ohne sie zurückzustellen — und nicht ohne Zeitschranke warten |
+| [eine-stelle-dann-verlinken](eine-stelle-dann-verlinken.md) | Gregor 26.10.2026 - jede Information in den MD-Dateien nur an EINER Stelle, andere MDs verlinken dorthin; keine Widersprueche |
 | [eingebaute-messung-auslesen](eingebaute-messung-auslesen.md) | Eine Spurmarke, die niemand ausliest, ist keine Messung - der Moment des Auslesens gehoert an das naechste Paket |
 | [einigkeit-ist-kein-beweis](einigkeit-ist-kein-beweis.md) | Dokumente gegeneinander zu prüfen findet nur Widersprüche; der Maßstab muss von außen kommen |
 | [einschraenkung-im-pr-ist-kein-ja](einschraenkung-im-pr-ist-kein-ja.md) | Eine bekannte falsche Aussage im PR-Text offenzulegen ist keine Zustimmung Gregors, sie auf main zu bringen; aufgeschoben wird ein Fund nur mit seinem Ja zu genau diesem Fund |
@@ -94,6 +96,7 @@ eine Datei liest, liest diese.
 | [entscheidung-e148-release-7-2-0-123](entscheidung-e148-release-7-2-0-123.md) | Gregor 25.10.2026 - E-148 (eMudhra-Wurzeln) wird mit dem Release 7.2.1.<n> veroeffentlicht, nach seinem lokalen Test; 7.2.0.123 ist nur Testpaket |
 | [entscheidung-kritische-nicht-release-blocker](entscheidung-kritische-nicht-release-blocker.md) | Gregor 23.10.2026 - die sechs offenen \"kritischen\" Befunde E-122, E-123, E-124, E-126, E-129, E-136 halten 7.2.1.0 NICHT auf (\"unkritisch, randfaelle\"); noch nicht im Repo eingetragen |
 | [entscheidung-marke-v7-2-1](entscheidung-marke-v7-2-1.md) | Die GitHub-Marke fuer Releases heisst v7.2.1.<n> (z. B. v7.2.1.123), nicht v1.0.<n> - entschieden, nicht wieder fragen |
+| [entscheidung-message-id-kein-befund](entscheidung-message-id-kein-befund.md) | Gregor 25.10.2026 - die Message-ID-Frage (HermesMail-Faden, RFC 5322) bekommt keinen Befund; zwei Randfälle in AssignMessageId stehen nur hier, dazu ein ungeprüfter Puffer-Hinweis |
 | [entscheidung-rootcerts-logzeile](entscheidung-rootcerts-logzeile.md) | Gregor 25.10.2026 - Eudora schreibt eine Zeile in eudora.log, aus welchem Verzeichnis rootcerts.p7b geladen wurde (Mailverzeichnis vor Programmverzeichnis) |
 | [entscheidung-vor-7-2-1-beheben](entscheidung-vor-7-2-1-beheben.md) | Gregor 25.10.2026 - vor 7.2.1 beheben E-137, E-142 (Hinweis), E-146; in die README als bekannte Fehler E-144, E-143, E-139, E-136, AN-1 (IMAP-Endung) |
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |
@@ -155,7 +158,7 @@ eine Datei liest, liest diese.
 | [stand-23-10-2026-abend](stand-23-10-2026-abend.md) | Was am 23.10.2026 beim Abschalten offen blieb und in KEINER Repo-Datei steht - die fertige Berichtigung des Testplan-Kopfes, der Zweigname, und was Gregor als naechstes erwartet |
 | [stand-23-10-2026-spaet](stand-23-10-2026-spaet.md) | Stand beim Abschalten am 23.10.2026 spaet - PR 156 offen, BILDBREITE (E-116) mitten in der Arbeit abgebrochen, Regressionstest-Rueckstand ist der erste Schritt |
 | [stand-24-10-2026-spaet](stand-24-10-2026-spaet.md) | Stand beim Abschalten am 24.10.2026 spaet - PRUEFER-50 nur als Zwischenstand gesichert, E-148 als naechstes, angleichen.sh will \"main\" |
-| [stand-25-10-2026-abend](stand-25-10-2026-abend.md) | Was nach agenten-befunde-25-10b als Naechstes kommt - E-132 als Pruefstandsfall, TESTPLAN M1, LEKTOR-61-Funde, Logzeile rootcerts; noch nicht im Repo |
+| [stand-25-10-2026-abend](stand-25-10-2026-abend.md) | Uebergabe 25.10.2026 spaet - RC1_vorbereiten als PR gemeldet; morgen zuerst CHRONIST, dann E-142-Hinweis, E-146, Logzeile, E-132-Pruefstandsfall, LEKTOR-61-Funde, Testpaket 7.2.0.123 |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
 | [test-prueft-den-ausstieg](test-prueft-den-ausstieg.md) | Ein Regressionstest, der nur die neue Meldung sucht und nicht den Ausstieg, laesst den ganzen Fehler zurueck - 277 von 277 gruen mit vollstaendig wiederhergestelltem Befund |
 | [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md) | Ein Testdatum muss nicht nur den Fehler treffen, sondern jede Schranke auf dem Weg zur Messstelle ueberleben - 550 Spam message rejected |

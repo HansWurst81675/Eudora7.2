@@ -30,3 +30,16 @@ Schranke, die die Stellen im Baum zählt. **Übersetzbarkeit:** ein grüner
 Prüfstand ist kein Beleg, dass das Programm baut — erst `bauen.ps1`, dessen
 drei Messpunkte Fall 3 gefangen haben. Siehe [[pruefstand-kann-blind-sein]],
 [[schranke-gegentesten]], [[nie-benutzt-ist-nicht-geprueft]].
+
+## Nachtrag 25.10.2026 spät (CHRONIST): der Quelltexttest las die falsche Funktion
+
+Zeiten MEZ, belegt an Commits und Berichten. Die erste Behebung von [[E-137]] (`ed0d53a2`, 19:37) fing Strg+W in `CMainFrame::OnCmdMsg` ab, und zwar „bevor der Befehl an das Wazoo-Fenster weitergeht“. `TestE137.cpp` prüfte genau das: Mit `QT_Abschnitt` schnitt er den Rumpf von `OnCmdMsg` aus und verlangte, dass die Abfangung vor der Zeile `CWazooWnd* pWazooWnd = GetWazooWindowWithFocus();` steht. Rote Probe ohne Behebung 301/302, mit Behebung 302/302. PRUEFER-55 (19:55) fand vier von fünf Rückfällen unsichtbar, den Weg aber nicht. Erst PRUEFER-56 (20:20) zeigte, dass die Behebung **nie erreicht** wurde: `CMainFrame::OnCommand` gibt den Befehl schon vorher an das Wazoo-Fenster, von dort geht er über das Dokument an `CDoc::OnFileClose`, und das schickt `WM_CLOSE` an den Rahmen. Angedockt ist das der Hauptrahmen (am Quelltext belegt, nicht gemessen). Um 20:23 wurde die Abfangung verlegt (`78f2ad2a`). Auf `main` kam die unwirksame Fassung nie, PR #174 war schon um 18:40 gemergt.
+
+**Was es früher gezeigt hätte (gemessen an `ed0d53a2:mainfrm.cpp`):** Die Ankerzeile des Tests, `GetWazooWindowWithFocus();`, steht in derselben Datei **zweimal**: in Zeile 3408 (`OnCommand`) und in Zeile 3498 (`OnCmdMsg`). Eine einzige Suche nach dem eigenen Anker hätte zwei Weitergaben gezeigt, und der Test bewachte nur eine davon. Der Test prüfte, ob die Regel richtig steht, aber nicht, ob der Befehl die Funktion überhaupt erreicht. Das ist dieselbe Klasse wie die Extrakte vom 19.10., nur ohne `Extract.ps1`: `QT_Abschnitt` schneidet eine Funktion aus, und alles außerhalb des Schnitts ist unsichtbar.
+
+**How to apply, zusätzlich:**
+- **Ein Test der Form „A steht vor B“ zählt B im ganzen Baum.** Kommt B mehr als einmal vor, gibt es mehr als einen Weg, und jeder braucht eine eigene Prüfung oder einen Grund, warum er nicht zählt.
+- **Bei einem Befehlsweg (`WM_COMMAND`, `OnCmdMsg`, `OnCommand`, `PreTranslateMessage`) wird der Weg vom Eingang an gelesen**, nicht von der Stelle an, an der die Behebung passt. Bei E-137 stand der Eingang 60 Zeilen über der Behebung, mit dem Kommentar *„change the standard command routing to include the Wazoo window“*.
+- Eine rote Probe beweist nur, dass der Test den **Text** sieht. Ob der Weg dort vorbeikommt, beweist sie nicht ([[test-prueft-den-ausstieg]], [[gegenprobe-umdrehen]]).
+
+**Vorschlag für eine Schranke (nicht gebaut):** `QT_Abschnitt` bekommt eine Schwester `QT_Eindeutig(pCode, "<anker>")`, die rot meldet, wenn ein Anker im **ganzen** Datei-Code mehr als einmal vorkommt. Gegenprobe: `TestE137.cpp` auf dem Stand `ed0d53a2` mit diesem Aufruf für `GetWazooWindowWithFocus();` muss rot werden, auf `78f2ad2a` (Abfangung in `OnCommand` vor der ersten Weitergabe) grün.

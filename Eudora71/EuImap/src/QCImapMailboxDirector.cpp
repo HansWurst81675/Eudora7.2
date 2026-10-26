@@ -2396,8 +2396,9 @@ BOOL QCMailboxDirector::HandleRenameImapMailbox (QCMailboxCommand **ppCommand,
 	CString szNewDirname;
 	BOOL bOldMailboxStillExists = FALSE;
 	QCImapMailboxCommand *pNewSibling = NULL;
+	CString strNeuerImapName;	// E-146: der Name, der an den Server geht
 
-	bResult = pAccount->RenameMailbox ( pImapCommand, szNewName, szNewDirname, bOldMailboxStillExists, &pNewSibling );
+	bResult = pAccount->RenameMailbox ( pImapCommand, szNewName, szNewDirname, bOldMailboxStillExists, &pNewSibling, &strNeuerImapName );
 
 	// Did we succeed?
 	if (!bResult)
@@ -2452,7 +2453,7 @@ BOOL QCMailboxDirector::HandleRenameImapMailbox (QCMailboxCommand **ppCommand,
 	}
 	else
 	{
-		bResult = UpdateAfterRename (pImapCommand, szNewName, szNewDirname);
+		bResult = UpdateAfterRename (pImapCommand, szNewName, szNewDirname, strNeuerImapName);
 	}
 
 	// Make sure:
@@ -2472,7 +2473,7 @@ BOOL QCMailboxDirector::HandleRenameImapMailbox (QCMailboxCommand **ppCommand,
 // call this to perform the cleanup actions.
 // END FUNCTION
 // //////////////////////////////////////////////////////////////////////
-BOOL QCMailboxDirector::UpdateAfterRename (QCImapMailboxCommand *pImapCommand, LPCSTR pNewName, LPCSTR pNewDirname)
+BOOL QCMailboxDirector::UpdateAfterRename (QCImapMailboxCommand *pImapCommand, LPCSTR pNewName, LPCSTR pNewDirname, LPCSTR pNewFullImapName)
 { 
 	char	szDrive[ _MAX_DRIVE ];
 	char	szDir[ 1024 ];
@@ -2480,7 +2481,7 @@ BOOL QCMailboxDirector::UpdateAfterRename (QCImapMailboxCommand *pImapCommand, L
 	char	szExt[ _MAX_EXT ];
 
 	// Sanity:
-	if ( ! (pImapCommand && pNewName && pNewDirname) )
+	if ( ! (pImapCommand && pNewName && pNewDirname && pNewFullImapName && *pNewFullImapName) )
 	{
 		ASSERT (0);
 		return FALSE;
@@ -2506,24 +2507,14 @@ BOOL QCMailboxDirector::UpdateAfterRename (QCImapMailboxCommand *pImapCommand, L
 	pImapCommand->SetName( pNewName );
 
 	// Set the new IMAP name.
-	CString szNewFullImapName = pImapCommand->GetImapName();
-	TCHAR	Delimiter = pImapCommand->GetDelimiter();
-
-	int nc = szNewFullImapName.ReverseFind (Delimiter);
-	if (nc < 0)
-	{
-		// This is a top level mailbox. Replace complete name.
-		szNewFullImapName = E77ImapNameFuerServer(pNewName);   // BEFUND E-77 (PRUEFER-49 K1): wie an den Server geschickt
-	}
-	else
-	{
-		// Replace basename.
-		szNewFullImapName = szNewFullImapName.Left (nc + 1);
-		szNewFullImapName += E77ImapNameFuerServer(pNewName);   // BEFUND E-77 (PRUEFER-49 K1)
-	}
-
-	// Set the new full IMAP name.
-	pImapCommand->SetImapName (szNewFullImapName);
+	//
+	// E-146: der Name kommt fertig aus CImapAccount::RenameMailbox - genau der,
+	// der an den Server geschickt wird (dort auch nach E-77 kodiert). Vorher
+	// wurde er hier ein zweites Mal gebildet: ohne Trenner haengte
+	// ReverseFind('\0') den neuen Namen an den ganzen alten, und bei INBOX
+	// fehlte das Praefix des Kontos. Danach fragte Eudora den Server nach einem
+	// Ordner, den es nicht gibt.
+	pImapCommand->SetImapName (pNewFullImapName);
 
 	// Set the new pathname to the full path of the MBX file within the object
 	// directory.

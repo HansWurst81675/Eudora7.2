@@ -230,6 +230,12 @@ E-77c | C:\Temp\E77 | 40 | log | E-77 Ordnername: server="Gel&APY-scht" | | | me
 # BAD, mboxlist.lst fuehrte den rohen Namen - rot. Nach der Behebung: SELECT
 # Ablage-&AOQ- -> OK. Pruefstand C:\Temp\E77U ist eine Kopie von C:\Temp\E77.
 E-77d | C:\Temp\E77U | 40 | messung | E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0 | 8-BIT IM POSTFACHNAMEN | | messen=tools\messen-e77-umbenennen.ps1
+# E-146 (26.10.2026, PRUEFER-50 K9): wie E-77d, aber der Pruefserver lehnt
+# RENAME ab (--rename-ablehnen). Eudora hat den Ordner lokal schon
+# umbenannt; danach muss es die Ordnerliste neu lesen und "Ablage" wieder
+# unter dem alten Namen fuehren. Pruefstand C:\Temp\E146 ist eine Kopie von
+# C:\Temp\E77U.
+E-146 | C:\Temp\E146 | 60 | messung | E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag) | 8-BIT IM POSTFACHNAMEN | | messen=tools\messen-e146.ps1
 
 # E-97 / E-100 (25.10.2026): "Speichern unter" darf Eudora nicht abstuerzen
 # lassen - einmal aus dem Postfach mit OK und geschriebener Datei, einmal aus
@@ -241,3 +247,13 @@ E-100 | C:\Temp\E97 | 120 | messung | E100 ERGEBNIS dialog=1 lebt=1 ini=ok | ABG
 # blossen Oeffnen des Filterfensters nicht zu "matches regexp" werden. Die
 # Spurmarke zeigt den Mechanismus: mit dem Fehler waehlt das Feld 14 (ungueltig).
 E-67 | C:\Temp\E67 | 60 | log | verb-gespeichert=14 verb-auswahl=0 | verb-auswahl=14 | | messen=tools\messen-e67.ps1
+
+# ZIEL 2/4 (26.10.2026): die Meldung "Encountered an improper argument" beim
+# Anzeigen. Seit dem 26.10. schreibt Eudora jede Ausnahme aus einer
+# Fensterbotschaft als "Ausnahme in Fensterbotschaft (ZIEL 2/4)" ins
+# Protokoll (eudora.cpp, CEudoraApp::ProcessWndProcException). EBILD zeigt,
+# beantwortet und leitet die meisten Nachrichten weiter - dort darf keine
+# solche Zeile entstehen. "Logging shutdown" ist die Positivprobe: das
+# Protokoll wurde bis zum Ende geschrieben.
+ZIEL24 | C:\Temp\EBILD | 240 | log | Logging shutdown | Ausnahme in Fensterbotschaft | | messen=tools\messen-bild.ps1
+ZIEL24b | C:\Temp\EBILD | 240 | log | Logging shutdown | Ausnahme ausserhalb einer Fensterbotschaft | | messen=tools\messen-bild.ps1

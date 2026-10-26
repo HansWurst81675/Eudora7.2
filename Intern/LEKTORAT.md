@@ -1805,6 +1805,103 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Siebenundsiebzigster Durchgang — Einarbeitung von LEKTOR-71 (`ce28be3b`) und Teil 0 der Prüfanleitung, 26.10.2026 (Bericht: `Befunde/LEKTOR-72.md`)
+
+Sehr kurzer Lauf vor dem PR, nur über `ce28be3b`. **5 Funde** (0 falsch,
+2 unvollständig, 3 Hinweise). Von L-71.1 bis L-71.9 sind fünf erledigt, vier
+teilweise; **keine geänderte Zeile führt eine neue falsche Aussage ein.**
+**Teil 0 ist von A.1 bis C ohne Widerspruch ausführbar.** Belegt dazu: vor dem
+Kontoassistenten kommt kein Einführungsdialog, weil der Release-Bau
+`BUILD_BOX_OR_SITE_R_VERSION` setzt und `IsBoxBuild()` den Dialog überspringt
+(`eudora.cpp:1656`). Offen bleiben Doppelungen: der Vorgänger 7.2.0.122 in
+`WEITERMACHEN.md:9` und `:10` ([L-72.1](../Befunde/LEKTOR-72.md#l-72.1)), der
+alte E-146-Fehler zweimal ([L-72.4](../Befunde/LEKTOR-72.md#l-72.4)); und
+Teil 0 C nennt Teil 3 (M3) nicht ([L-72.5](../Befunde/LEKTOR-72.md#l-72.5)).
+Keine Frage an Gregor; nichts hält den PR auf.
+
+## Sechsundsiebzigster Durchgang — Teil 0 der Prüfanleitung und die Berichtigungen aus LEKTOR-70, Zweig `vor-testpaket-7.2.0.123` bis `71006e5a`, 26.10.2026 (Bericht: `Befunde/LEKTOR-71.md`)
+
+Kurzlauf vor dem PR: Stand der sechzehn Funde aus LEKTOR-70, alles seit
+`e3578897`, jeder Schritt von *Teil 0* im Testplan gegen `eudora.cpp`.
+**10 Funde** (3 falsch, 2 unvollständig, 1 veraltet, 4 Hinweise). Von den
+Funden aus LEKTOR-70 sind elf erledigt, fünf teilweise.
+
+**Die E-132-Rückfrage kommt in Teil 0 A wirklich** — am Quelltext belegt:
+`RegisterCommandLine` schreibt `CommandLine\Current` bei jedem Start, A.1 setzt
+es auf 1.0.122, und die `DEudora.ini` des Pakets trägt keinen Merker. **Der
+schwerste Fund, [L-71.1](../Befunde/LEKTOR-71.md#l-71.1):** Teil 0 B kopiert
+das Mailverzeichnis aus 1.0.122 überschreibend hinein, samt dessen
+`eudora.log` (gemessen: vorhanden, 51.314 Byte) — damit ist das Protokoll von
+M1 Schritt 4 weg. Dazu falsch: der Kopf des Testplans sagt *„Starten immer mit
+`Eudora starten.cmd`“*, Teil 0 A verlangt den Doppelklick auf `Eudora.exe`
+([L-71.2](../Befunde/LEKTOR-71.md#l-71.2)); `WEITERMACHEN.md` nennt als
+Vorgänger 7.2.0.122 und 7.2.0.121 ([L-71.4](../Befunde/LEKTOR-71.md#l-71.4));
+E-142 sagt in der Kurzfassung weiter *„Behoben wird das nicht“*
+([L-71.5](../Befunde/LEKTOR-71.md#l-71.5)). Nach M1 Schritt 4 erscheint der
+Kontoassistent, die Anleitung sagt es nicht
+([L-71.3](../Befunde/LEKTOR-71.md#l-71.3)). `doku-pruefen.pl` und
+`ziel-stand.pl` melden keinen dieser Funde. Keine Frage an Gregor.
+
+## Fünfundsiebzigster Durchgang — Prüfanleitung und Doku zum Testpaket 7.2.0.123, Zweig `vor-testpaket-7.2.0.123` bis `edbafe7d`, 26.10.2026 (Bericht: `Befunde/LEKTOR-70.md`)
+
+Kurzlauf vor dem Testpaket: Stand der Funde aus LEKTOR-69, die Änderungen
+seit `33a899ec` und jeder Schritt der neuen Prüfanleitung in `TESTPLAN.md`
+gegen Code und `BEFUNDE.md`. Erstmals nach Gregors Regel vom 26.10.2026:
+Widersprüche zwischen `.md` heißen *falsch*, Doppelungen *Hinweis*.
+**16 Funde** (6 falsch, 5 unvollständig, 1 veraltet, 4 Hinweise). Von den
+zwölf Funden aus LEKTOR-69 sind sieben erledigt, fünf teilweise.
+
+**Der schwerste für das Testpaket, [L-70.1](../Befunde/LEKTOR-70.md#l-70.1):**
+der Testplan verlangt in N6/N7, dass breite Bilder eingepasst werden und
+`data:`-Bilder erscheinen, und sagt im Abschnitt *„Was bekannt ist — bitte
+nicht als neuen Fehler melden"* desselben Dokuments das Gegenteil. Dazu
+[L-70.7](../Befunde/LEKTOR-70.md#l-70.7): die Anleitung sagt nicht, dass das
+Mailverzeichnis im Paket leer ist und Gregors Daten hineinkopiert werden
+müssen — und eine mitkopierte eigene `rootcerts.p7b` ließe K3 die alte
+Zertifikatsliste prüfen, ohne dass die Protokollzeile es verriete, weil sie
+das erwartete Verzeichnis nicht nennt.
+
+Weiter falsch: `WEITERMACHEN.md` nennt in Zeile 9 und 12 zwei Quellstände
+([L-70.2](../Befunde/LEKTOR-70.md#l-70.2)); die Einleitung zu *Bekannte
+Fehler* übersieht die neue E-141-Zeile ([L-70.3](../Befunde/LEKTOR-70.md#l-70.3));
+E-142 sagt „Behoben wird das nicht" und „Was noch fehlt: … dann beheben"
+([L-70.4](../Befunde/LEKTOR-70.md#l-70.4)); der Titel von E-139 sagt weiter
+„bei jeder Gelegenheit" ([L-70.5](../Befunde/LEKTOR-70.md#l-70.5)); `ZIEL.md`
+oben „alle erfüllt", unten „zwei fast" und „E-77 fehlt noch"
+([L-70.6](../Befunde/LEKTOR-70.md#l-70.6), offen seit L-61.1). M1 in Teil 3
+lässt die Vorbereitung weg, und nach K0 zeigt die Registry auf das eigene
+Paket — Schritt 1 käme ohne Rückfrage ([L-70.8](../Befunde/LEKTOR-70.md#l-70.8)).
+`doku-pruefen.pl` und `ziel-stand.pl` melden keinen dieser Funde.
+Keine neue Frage an Gregor.
+
+## Vierundsiebzigster Durchgang — Bestand vor dem Testpaket 7.2.0.123, Zweig `vor-testpaket-7.2.0.123` bis `f3e8389c`, 26.10.2026 (Bericht: `Befunde/LEKTOR-69.md`)
+
+Alle `.md` außer `Arbeitsweise/` und `Befunde/` gegen den Bestand, Schwerpunkt
+die neuen README-Zeilen unter *Bekannte Fehler*, die Logzeile zu
+`rootcerts.p7b` und der CHANGELOG-Abschnitt vor dem PR. **12 Funde** (4 falsch,
+3 unvollständig, 3 veraltet, 2 Hinweise); LEKTOR-68 hatte keinen.
+
+**Der schwerste, [L-69.3](../Befunde/LEKTOR-69.md#l-69.3):** die Logzeile
+`rootcerts.p7b geladen aus:` und die neue Spurmarke zu *„Encountered an
+improper argument"* schreiben mit `DEBUG_MASK_MISC` (32768); Eudoras Vorgabe
+`LogLevel=25759` enthält ihn nicht (belegt, `debug.cpp:142`,
+`EudoraRes.rc:8463`). Wer eine eigene `Eudora.ini` hat, sieht die Zeile nie —
+und eine leere Spur zählt nicht als „Meldung verschwunden".
+
+Weiter: der Einleitungssatz der README (*„geht keine Nachricht verloren"*)
+widerspricht der neuen E-142-Zeile, und E-142 selbst sagt im ersten Satz
+*„Verloren geht nichts"* ([L-69.1](../Befunde/LEKTOR-69.md#l-69.1),
+[L-69.2](../Befunde/LEKTOR-69.md#l-69.2)); die README nennt E-77 „behoben",
+ohne dass ältere Nachrichten mit Ablage in einen Umlaut-Ordner ihre Kopie
+ohne Meldung verlieren ([L-69.7](../Befunde/LEKTOR-69.md#l-69.7)); der
+CHANGELOG sagt *„auf `main` … bis PR #174"*, E-137 kam mit #175 und vier
+Punkte liegen nur auf dem Zweig ([L-69.4](../Befunde/LEKTOR-69.md#l-69.4)).
+Drei ältere Funde derselben Klasse sind weiter offen: L-55.1 (bei E-77,
+E-113, E-119, jetzt auch E-146 nennt „Was noch fehlt" die Behebung), L-55.5
+(E-77 in `ZIEL.md` 2a offen — die Zeile wurde heute bearbeitet), L-56.3.
+**Zwei Fragen an Gregor:** E-77-Ablageziele vor 7.2.1 beheben oder in die
+README; E-141, E-140, E-145 beheben, in die README oder draußen lassen.
+
 ## Dreiundsiebzigster Durchgang — Mikrolauf: Gregors Entscheidung zu PRÜFER-57 K2 in E-137, 25.10.2026 (Bericht: `Befunde/LEKTOR-68.md`)
 
 Geprüft nur den Satz aus `75c71096` in E-137 (`BEFUNDE.md:390`) gegen

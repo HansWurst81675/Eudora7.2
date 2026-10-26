@@ -229,3 +229,20 @@ an welcher Fassung ein Testpunkt zuletzt gemessen wurde.
 - **Bevor ich Gregor eine Übersicht „offen / erledigt" gebe, prüfe ich
   jedes „offen" gegen den CHANGELOG der aktuellen Fassung.** Er testet nach
   dieser Liste; ein falsches „offen" kostet ihn einen Durchgang.
+
+## Nachtrag 25.10.2026 spät (CHRONIST): vier von fünf LEKTOR-Funden waren Code ohne mitgezogenen Text
+
+Gemessen an `Befunde/LEKTOR-63.md` bis `LEKTOR-68.md` (25.10.2026, 19:23 bis 20:47 MEZ). Die sechs Läufe brachten **5 falsch-Funde** (1, 2, 1, 1, 0, 0). Alle fünf standen in Text, den ich nach dem vorigen Lauf geschrieben oder geändert hatte. **Vier davon hatten dieselbe Form:** Ein Commit änderte Code oder Zustand, und die Beschreibung an anderer Stelle blieb stehen.
+
+| Fund | Was sich geändert hatte | Was stehen blieb | Hätte diese Suche es gefunden? |
+|---|---|---|---|
+| L-63.1 | K4 behoben (`9a4cc0e1`) | `WEITERMACHEN.md`: K4 als erster Schritt | `grep -n "K4" Intern/WEITERMACHEN.md`: ja |
+| L-64.1 | E-137 behoben (`ed0d53a2`) | `WEITERMACHEN.md` Punkt 2: E-137 als nächster Schritt | `grep -n "E-137" Intern/WEITERMACHEN.md`: ja |
+| L-65.1 | Spurmarke im Code ohne „angedockte“ (`424966f6`) | `BEFUNDE.md` E-137 nannte den alten Wortlaut | Suche nach der **entfernten** Zeichenkette: ja |
+| L-66.1 | Abfangung nach `OnCommand` verlegt (`78f2ad2a`) | Absatz **Behebung** in E-137 nannte `OnCmdMsg` und eine MDI-Abfrage | `grep -n "OnCmdMsg" Intern/BEFUNDE.md`: ja |
+
+Der fünfte (L-64.2, die Lizenz „dieselbe wie unser Repo“) war neu geschriebener falscher Text ([[gekuerzte-ausgabe-ist-kein-ergebnis]]). LEKTOR-67 und -68 fanden nichts mehr. Die Schleife lief also aus. LEKTOR-64 bis -67 dauerten zusammen rund zwölf Minuten (gemessen an `duration_ms`: 267, 158, 199 und 127 s).
+
+**Berichtigung zum Vorschlag vom 25.10. abends** („erst Zustand herstellen, dann beschreiben“, [[einschraenkung-im-pr-ist-kein-ja]]): Er trifft nur L-63.1. Bei L-64.1, L-65.1 und L-66.1 stand die Beschreibung schon vorher und war richtig. Falsch wurde sie erst **durch** meinen Commit. Hier hilft keine Reihenfolge, nur Punkt 1 dieser Lehre, angewandt auf Code: **Wer einen Bezeichner, eine Spurmarke oder einen Ort ändert, sucht den alten Wortlaut in allen `.md` im selben Commit.**
+
+**Vorschlag für die Schranke (nicht gebaut):** Ein `pre-commit`-Schritt nimmt aus dem gestagten Diff unter `Eudora71/` jede **entfernte** Zeichenkette in `PutDebugLog(…)` und jeden Funktionsnamen, aus dessen Rumpf eine `BEFUND`-Markierung verschwindet, und sucht sie in `git ls-files '*.md'`. Ausgenommen sind `Befunde/` und Geschichtsabschnitte. Bei Treffern meldet er „N Stellen nennen den alten Wortlaut“. Gegenprobe: Der Commit `424966f6` muss `Intern/BEFUNDE.md` E-137 melden (L-65.1), der Commit `78f2ad2a` muss `OnCmdMsg` in E-137 melden (L-66.1).

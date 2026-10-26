@@ -64,3 +64,15 @@ Die Antwort kam elf Sekunden später: *„Ja. E-117 kann ich ohne dich nachstell
 
 - **Jeder Punkt einer Liste für später bekommt eine Spalte: braucht Gregor / geht ohne ihn.** Was ohne ihn geht und keine Stunde braucht, wird gemacht, solange er noch da ist, und die Liste wird danach geschrieben.
 - **Ein Prüffall aus Gregors Postfach ist ein Hinweis auf den Mechanismus, kein Termin bei ihm.** Erst fragen, ob sich der Mechanismus mit einer Testnachricht und einem Server auf `127.0.0.1` nachbauen lässt ([[testdaten-muessen-durchkommen]]: das Netz außen vor lassen).
+
+## Nachtrag 25.10.2026 spät (CHRONIST): „seit wann“ geschätzt statt abgelesen, zehnmal „danach der PR“
+
+Zeiten MEZ, gemessen am Transkript. Gregor schrieb um 20:17:00 *„sag bescheid, wenn was zum mergen da ist.“*, um 20:17:19 *„ich warte.“*, um 20:19:35 *„lebt der prüfer noch?“* und um 20:35:48 *„ich warte...“*. PR #175 kam um 20:49:47, 33 Minuten nach seiner ersten Bitte.
+
+- **Regel 3 verlangt „seit wann“. Die Angabe war falsch.** Um 20:17:22: *„Der PRUEFER läuft noch, gestartet ist er vor etwa 20 Minuten.“* Gestartet war PRUEFER-56 um 20:12:15, also fünf Minuten vorher. Angekündigt waren *„etwa 10–20 Minuten“*. Wer „20 Minuten“ liest, hält den Lauf für überfällig. Dass Gregors *„lebt der prüfer noch?“* zwei Minuten später daher kam, ist eine Vermutung. Die Antwort darauf war gut, weil gemessen: Zeitstempel und Größe von `PRUEFER-56.md` (20:19, 12 KB), fünf Sekunden nach der Frage.
+- **Zehn Zusagen „danach der PR“ zwischen 20:12:23 und 20:46:35** (gezählt am Text). Jede stimmte, als sie geschrieben wurde. Dann kam der nächste Lauf dazwischen: PRUEFER-56 fand um 20:20 die unwirksame Behebung, danach kamen Verlegung, Bau, Prüfstand, LEKTOR-66/PRUEFER-57, LEKTOR-67 und LEKTOR-68. Eine neue Zeitangabe für den PR gab es in den 33 Minuten nie, auch nicht, als um 20:21 feststand, dass die Behebung neu gebaut werden muss.
+- Die tatsächlichen Laufzeiten der sechs Kurzläufe (LEKTOR-65 bis -68, PRUEFER-56/57) lagen bei 1,6 bis 8,7 Minuten (gemessen an `duration_ms`). Die Ansage „10–20 Minuten“ war zu hoch, und das ist harmlos. Gefehlt hat die Gesamtzeit bis zum Ziel, auf das Gregor wartete.
+
+**How to apply, zusätzlich:**
+- „Seit wann“ wird abgelesen (Startzeit des Agenten oder Zeitstempel seiner Datei), nie geschätzt.
+- Ändert sich der Weg zum zugesagten Ziel (neuer Fund, neuer Bau), dann sagt die nächste Zeile das neue Ziel mit Zeit: *„Der PR verschiebt sich, weil … Neue Schätzung: etwa 20:45.“* Ein weiteres „danach der PR“ ohne Zeit zählt nicht.

@@ -443,3 +443,12 @@ Zeiten MEZ, Transkript `fa3529ec-…jsonl`, gemessen.
 Nach der Zählung im CHRONIST-Bericht vom 23.10. (21 Fälle) ist der zweite Fall der **22. Rückstrichverlust**. Beide Regeln standen hier, beide wurden nicht angewendet; beide Befehle lagen außerhalb jeder Schranke (Wegwerfbefehle). Die zweite Zeile ist zugleich ein Fall von [[gekuerzte-ausgabe-ist-kein-ergebnis]]: ein Rückgabewert, der nicht der des Bauskripts war.
 
 **How to apply, zusätzlich:** Ersatztext nicht mehr selbst einlesen, sondern `tools/ersetze-bereich.pl` (steht oben als Schranke und wurde an diesen beiden Tagen nicht benutzt). Wer doch einen Einzeiler schreibt: `$T =~ s/\n\z//`, nie `chomp` innerhalb von `local $/`.
+
+## Nachtrag 26.10.2026: dreiundzwanzigster und vierundzwanzigster Fall, beide mit Regel hier
+
+| Was | Welche Regel hier stand | Folge |
+|---|---|---|
+| E-142-Status per `chomp $z` unter `local $/` eingelesen | 14.10. und 25.10.: nie `chomp` unter `local $/` | Tabellenzeile E-142 in BEFUNDE zerrissen; `pruefe-tabellenzeilen.pl` fand es vor dem Commit |
+| neuer Testblock fuer `TestE77.cpp` (C-Pfade mit doppeltem Rueckstrich) per Hier-Dokument in eine Datei | Fall 11/12 (12.10.): Text mit doppeltem Rueckstrich nur mit dem Write-Werkzeug | im Test stand ein Pfad mit einfachen Rueckstrichen; der Compiler warnte C4129, der Test war rot. Gefunden an der Warnung, nicht an einer Messung |
+
+**How to apply:** Ein Einsetzblock fuer **C/C++-Quelltext** geht immer mit dem Write-Werkzeug in die Zwischendatei, nicht nur Doku-Pfade; C-Zeichenketten tragen fast immer Rueckstriche. Neue Testdateien, die ganz mit dem Write-Werkzeug entstanden (`TestE146.cpp`, `TestRootCertsLog.cpp`), waren richtig.

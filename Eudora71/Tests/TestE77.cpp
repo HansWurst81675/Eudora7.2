@@ -68,21 +68,24 @@ void RunE77QuelltextTests(const char* szEudoraDir)
 {
 	TT_Suite("E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext)");
 
-	TT_BeginTest("E-77 K1: UpdateAfterRename fuehrt den kodierten Namen");
+	// Seit E-146 (26.10.2026) bildet UpdateAfterRename den Namen nicht mehr
+	// selbst, sondern fuehrt den, den RenameMailbox an den Server schickt -
+	// dessen Kodierung prueft K2 unten. Der Test haelt deshalb fest, dass es
+	// bei dieser einen Quelle bleibt. Einzelheiten in TestE146.cpp.
+	TT_BeginTest("E-77 K1: UpdateAfterRename fuehrt den Namen, der an den Server ging");
 	{
 		char* pCode = QT_LiesNurCode(szEudoraDir, "..\\EuImap\\src\\QCImapMailboxDirector.cpp");
 		if (!pCode) { TT_Fail("QCImapMailboxDirector.cpp nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
+		QT_LeerraumZusammen(pCode);
 		char* pRumpf = QT_Abschnitt(pCode, "BOOL QCMailboxDirector::UpdateAfterRename (QCImapMailboxCommand",
-										   "pImapCommand->SetImapName (szNewFullImapName);");
-		TT_CHECK_MSG(pRumpf != NULL, "UpdateAfterRename bis SetImapName nicht gefunden");
+										   "UpdateChildrenAfterRename (pImapCommand);");
+		TT_CHECK_MSG(pRumpf != NULL, "UpdateAfterRename nicht gefunden");
 		if (pRumpf)
 		{
-			TT_CHECK_MSG(QT_Enthaelt(pRumpf, "szNewFullImapName = E77ImapNameFuerServer(pNewName);"),
-						 "oberste Ebene: der gefuehrte Name ist nicht mehr kodiert");
-			TT_CHECK_MSG(QT_Enthaelt(pRumpf, "szNewFullImapName += E77ImapNameFuerServer(pNewName);"),
-						 "Unterordner: der gefuehrte Name ist nicht mehr kodiert");
-			TT_CHECK_MSG(!QT_Enthaelt(pRumpf, "= pNewName;"),
-						 "der getippte Name geht wieder roh in den IMAP-Namen");
+			TT_CHECK_MSG(QT_Enthaelt(pRumpf, "pImapCommand->SetImapName (pNewFullImapName);"),
+						 "der gefuehrte Name ist nicht mehr der, der an den Server ging");
+			TT_CHECK_MSG(!QT_Enthaelt(pRumpf, "pNewName;") && !QT_Enthaelt(pRumpf, "(pNewName)"),
+						 "der getippte Name geht wieder in den IMAP-Namen");
 			free(pRumpf);
 		}
 		free(pCode);

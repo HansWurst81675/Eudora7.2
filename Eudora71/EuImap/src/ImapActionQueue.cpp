@@ -2720,7 +2720,8 @@ CImapRenameMailboxAction::CImapRenameMailboxAction(unsigned long lAccountID,
 												   CString strLogin,
 												   CString strPassword) :
 	CImapAction(lAccountID, szMailbox, cDelimiter, "", strLogin, strPassword),
-	m_szNewName(NULL)
+	m_szNewName(NULL),
+	m_bE146Fehlgeschlagen(false)
 {
 	if (szNewName && *szNewName)
 	{
@@ -2730,7 +2731,8 @@ CImapRenameMailboxAction::CImapRenameMailboxAction(unsigned long lAccountID,
 
 CImapRenameMailboxAction::CImapRenameMailboxAction() :
 	CImapAction(),
-	m_szNewName(NULL)
+	m_szNewName(NULL),
+	m_bE146Fehlgeschlagen(false)
 {
 }
 
@@ -2814,7 +2816,9 @@ bool CImapRenameMailboxAction::DoPreThreadAction()
 	}
 
 	m_pTaskInfo->SetTaskType(TASK_TYPE_SENDING);
-	m_pTaskInfo->SetTitle(CRString(IDS_IMAP_RENAMING));
+	CRString		 strTitle(IDS_IMAP_RENAMING);
+	m_pTaskInfo->SetTitle(strTitle);
+	m_pTaskInfo->SetPostProcFn(strTitle, ::DoPostProcessing, this);	// E-146
 
 	return true;
 }
@@ -2838,9 +2842,43 @@ HRESULT CImapRenameMailboxAction::DoWork()
 	else
 	{
 		m_iState = kActionStateFailed;
+		m_bE146Fehlgeschlagen = true;
 	}
 
 	return S_OK;
+}
+
+//
+//	CImapRenameMailboxAction::DoPostProcessing()
+//
+//	E-146 (PRUEFER-50 K9): CImapAccount::RenameMailbox benennt das lokale
+//	Verzeichnis und den Eintrag im Baum um, BEVOR der Server gefragt wird -
+//	die Aktion laeuft spaeter in der Warteschlange. Lehnt der Server ab (NO,
+//	BAD, keine Verbindung), wurde die Aktion bisher nur verworfen, und Eudora
+//	fuehrte den Ordner unter einem Namen weiter, den es auf dem Server nicht
+//	gibt. Jetzt wird im Hauptfaden die Ordnerliste des Kontos neu vom Server
+//	gelesen (dieselbe Aktion wie "Refresh"), danach steht der Ordner wieder
+//	unter dem Namen da, den der Server fuehrt. Die Nachrichten liegen auf dem
+//	Server. Das lokale Verzeichnis des abgelehnten Namens bleibt mit dem
+//	Zwischenspeicher des alten Ordners liegen (PRUEFER-58 K8).
+//	GRENZE (PRUEFER-58): scheitert es an fehlender Verbindung, scheitert auch
+//	das Neueinlesen; der falsche Name bleibt dann stehen, bis der Anwender die
+//	Ordnerliste von Hand auffrischt.
+//
+void CImapRenameMailboxAction::DoPostProcessing()
+{
+	if (!m_bE146Fehlgeschlagen || !m_pAccount)
+		return;
+
+	CString		 szSpur;
+	szSpur.Format("E-146 Umbenennen am Server gescheitert: alt=%s neu=%s - Ordnerliste wird neu gelesen",
+				  (m_szMailbox ? m_szMailbox : "?"), (m_szNewName ? m_szNewName : "?"));
+	PutDebugLog(DEBUG_MASK_MISC, szSpur);
+
+	CImapRefreshMailboxesAction	*pRefresh = DEBUG_NEW_NOTHROW CImapRefreshMailboxesAction(m_lAccountID, "", m_cDelimiter,
+																						   m_strLogin, m_strPassword);
+	if (pRefresh)
+		m_pAccount->QueueAction(pRefresh);
 }
 
 void CImapRenameMailboxAction::SetNewName(const char *szNewName)

@@ -26,14 +26,13 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 |---|---|---|---|
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
 | **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
-| **[E-146](Intern/BEFUNDE.md#e-146)** | Nach dem Umbenennen eines IMAP-Ordners führt Eudora ihn unter einem anderen Namen als der… | **nie gemessen** | eine Rechnung statt zwei — `UpdateAfterRename` (`QCImapMailboxDirector.cpp:2516`) übernimmt den Namen, den `RenameMailbox` (`ImapAccount.cpp:2998-3… |
 | **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
-| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | **nie gemessen** | die Ursache der leeren Kopie messen (Spurmarke beim Lesen der IMAP-Quelle, Vorschlag in PRÜFER-48), dann beheben. Außerdem, aus der ersten Fassung, … |
+| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | **nie gemessen** | vor 7.2.1 nichts — vereinbart ist der Hinweis, und der ist eingebaut. **Nach 7.2.1:** die Ursache der leeren Kopie messen (Spurmarke beim Lesen der … |
 | **[E-141](Intern/BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Berichtigung in `tocdoc.cpp:3134` — die Klammer um den Oder-Teil ziehen, so dass die Anzahlprüfung für **beide** Seiten gilt. Sie schließt Fe… |
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
-| **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt bei jeder Gelegenheit wieder … | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
+| **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt nach jedem Programmstart einmal… | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
@@ -95,14 +94,14 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Seit 7.2.0.122 auf `main`, kommt mit dem Testpaket 7.2.0.123 — Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137), noch nicht am Programm gemessen), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130))
+## 7.2.0.123 — Testpaket für Gregors Test vor dem Release 7.2.1: Strg+W in angedockter Leiste ([E-137](Intern/BEFUNDE.md#e-137), noch nicht am Programm gemessen), Spalte im Fenster „Task Status" ([E-150](Intern/BEFUNDE.md#e-150)), eMudhra-Zertifikate ([E-148](Intern/BEFUNDE.md#e-148)), IMAP-Ordner mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), zu breite Bilder passen ins Fenster ([E-113](Intern/BEFUNDE.md#e-113)), Bilder im HTML beim Antworten und Weiterleiten ([E-119](Intern/BEFUNDE.md#e-119)), Bildbreite mit Einheit ([E-116](Intern/BEFUNDE.md#e-116)), Bau stempelt keine fremden DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130)), Hinweis bei Entwurf aus IMAP nach `Out` ([E-142](Intern/BEFUNDE.md#e-142)), Umbenennen von IMAP-Ordnern ([E-146](Intern/BEFUNDE.md#e-146)), Protokollzeilen zu „improper argument“, zu Ausnahmen außerhalb von Fensterbotschaften ([E-154](Intern/BEFUNDE.md#e-154)) und zu `rootcerts.p7b`
 
-**Auf `main` seit PR #157 (23.10.2026) bis PR #174 (25.10.2026), aber noch in
-keinem Paket zum Herunterladen.** Das Programm meldet deshalb weiter die
-Fassung 7.2.0.122. Alles in diesem Abschnitt kommt mit dem nächsten
-**Testpaket 7.2.0.123** zu Gregors lokalem Test; veröffentlicht wird es erst
-mit dem Release **7.2.1.<n>**. Beim Bau des Testpakets wird dieser Abschnitt
-zu 7.2.0.123.
+**Quellstand 7.2.0.123, Paket 1.0.123 — Testpaket, noch nicht bestätigt.** Auf
+`main` seit PR #157 (23.10.2026) bis PR #175 (25.10.2026); [E-142](Intern/BEFUNDE.md#e-142), [E-146](Intern/BEFUNDE.md#e-146), [E-154](Intern/BEFUNDE.md#e-154)
+und die Protokollzeilen kommen mit dem PR aus dem Zweig
+`vor-testpaket-7.2.0.123`. Das Paket geht zu Gregors lokalem Test
+(Prüfanleitung in [TESTPLAN.md](Intern/TESTPLAN.md)); veröffentlicht wird erst das Release
+**7.2.1.<n>**, nach seiner Zustimmung.
 
 * **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W in einer angedockten Leiste (Adressbuch,
   Filter, …) soll nicht mehr ganz Eudora beenden, sondern nur diese Leiste
@@ -110,6 +109,43 @@ zu 7.2.0.123.
   Danach geht der Schwerpunkt an das aktive Fenster, ein zweites Strg+W
   schließt also wie gewohnt das Postfach. Regressionstest am Quelltext
   (302 Tests, 302 bestanden); am laufenden Programm prüft es Gregor im Testpaket.
+
+* **[E-142](Intern/BEFUNDE.md#e-142) — Hinweis beim Ziehen eines Entwurfs aus
+  einem IMAP-Ordner nach `Out`** (eingebaut, am laufenden Programm noch nicht
+  gemessen). Dieser Weg legt in `Out` eine leere Nachricht an; behoben wird
+  das nicht, vereinbart ist ein Hinweis. Eudora fragt jetzt einmal je Vorgang,
+  ob trotzdem übertragen werden soll, und rät, das Original im IMAP-Ordner zu
+  behalten. „No" überträgt nichts. Regressionstest am Quelltext (304 Tests,
+  304 bestanden).
+
+* **Meldung „Encountered an improper argument" wird protokolliert** ([ZIEL.md](ZIEL.md)
+  Kriterien 2 und 4). Sie kommt aus der MFC und stand bisher nirgends; jetzt
+  schreibt Eudora jedes Auftreten als `Ausnahme in Fensterbotschaft (ZIEL 2/4)`
+  mit Text, Botschaft und Fensterklasse ins `eudora.log`. Das Verhalten ist
+  sonst unverändert. Prüfstandsfall `ZIEL24` verlangt, dass auf dem
+  Bilder-Prüfstand keine solche Zeile entsteht. Dazu
+  [E-154](Intern/BEFUNDE.md#e-154): eine Ausnahme **außerhalb** einer
+  Fensterbotschaft beendete Eudora bisher wortlos; jetzt steht vorher
+  `Ausnahme ausserhalb einer Fensterbotschaft (ZIEL 4), Eudora endet` im
+  Protokoll (Fall `ZIEL24b`). Das Ende selbst bleibt.
+
+* **`eudora.log` nennt, aus welchem Verzeichnis `rootcerts.p7b` geladen
+  wurde** ([E-148](Intern/BEFUNDE.md#e-148); eingebaut, am laufenden Programm
+  noch nicht gemessen). Eine eigene Liste im Mailverzeichnis hat Vorrang vor
+  der mitgelieferten; die Zeile `rootcerts.p7b geladen aus: …` zeigt nach dem
+  ersten verschlüsselten Abruf, welche gilt — sofern `LogLevel` den
+  Schalter 32768 enthält (das Paket setzt ihn). Regressionstest am Quelltext
+  (305 Tests, 305 bestanden).
+
+* **[E-146](Intern/BEFUNDE.md#e-146) — umbenannte IMAP-Ordner heißen in Eudora
+  wie auf dem Server.** Eudora bildete den neuen Namen zweimal, einmal für den
+  Server und einmal für sich selbst; auf einem Server ohne Ordnerhierarchie
+  und bei INBOX mit Präfix kamen zwei verschiedene Namen heraus. Jetzt gibt es
+  nur noch eine Rechnung. Lehnt der Server das Umbenennen ab, liest Eudora
+  danach die Ordnerliste neu und führt den Ordner wieder unter seinem alten
+  Namen; bisher blieb er lokal umbenannt und war nicht mehr erreichbar. Am
+  Prüfstand erst rot, dann grün gemessen (Fall [`E-146`](Intern/BEFUNDE.md#e-146), Prüfserver lehnt
+  RENAME ab); 307 Tests, 307 bestanden.
 
 * **[E-150](Intern/BEFUNDE.md#e-150) — das Abschalten einer Spalte im Fenster
   „Task Status" überschreibt keinen Speicher mehr.** Die Liste führt zu jeder

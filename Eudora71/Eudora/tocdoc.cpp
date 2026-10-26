@@ -2643,6 +2643,8 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 	// Vorrangfehler bleibt stehen, er ist ein eigener Befund.
 	//
 	BOOL E125Abgelehnt = FALSE;
+	BOOL E142Gefragt = FALSE;		// E-142: Hinweis nur einmal je Uebertragung
+	BOOL E142Abgebrochen = FALSE;	// E-142: "Nein" auf den Hinweis
 	BOOL ClosedOpenWindow = FALSE;
 	POSITION pos, NextPos;
 	BOOL bGoingBackward = FALSE;
@@ -2766,6 +2768,37 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 
 			AlertDialog(IDD_XFER_TO_OUT_REFUSED);
 			break;
+		}
+		
+		//
+		// E-142: ein ENTWURF aus einem IMAP-Ordner nach "Out" ergibt dort eine
+		// leere Nachricht (ohne Empfaenger, Betreff und Text), das Original
+		// bleibt im IMAP-Ordner (Gregor am laufenden Programm, 23.10.2026).
+		// Vereinbart ist KEINE Behebung, sondern ein Hinweis - Gregor am
+		// 24.10.2026: "wir haben ausgemacht, dass es als hinweis kommt, dass
+		// bei dieser aktion mail inhalt verloren gehen kann, das sollte
+		// reichen." Gefragt wird einmal je Uebertragung, nicht je Nachricht
+		// (vgl. E-143). Bei "Nein" wird nichts uebertragen, und die
+		// IMAP-Nachbearbeitung unten laeuft nicht an - sonst kaeme dazu
+		// "No messages were transferred!".
+		//
+		if (ToOut && IsImapToc() && !E142Gefragt)
+		{
+			E142Gefragt = TRUE;
+			const BOOL bWeiter = (YesNoDialogPlain(IDS_WARN_IMAP_DRAFT_TO_OUT) == IDOK);
+			{
+				CString szSpur;
+				szSpur.Format("E-142 Hinweis Entwurf aus IMAP nach Out: quelle=%s antwort=%s",
+					(const char*) Name(), (bWeiter ? "ja" : "nein"));
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			}
+			if (!bWeiter)
+			{
+				E142Abgebrochen = TRUE;
+				if (HighlightIndex < 0)
+					HighlightIndex = i;
+				break;
+			}
 		}
 		
 		// Close window if need be
@@ -3130,7 +3163,7 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 
 #ifdef IMAP4
 	// If one of the mailboxes is an IMAP mailbox, handle it specially.
-	if ( !E125Abgelehnt &&
+	if ( !E125Abgelehnt && !E142Abgebrochen &&
 		 ( IsImapToc() || (TargetToc && TargetToc->IsImapToc()) && sumlist.GetCount() > 0 ) )
 	{
 		if (this == TargetToc)

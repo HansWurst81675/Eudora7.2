@@ -384,8 +384,10 @@ public:
 
 	virtual bool			 DoPreThreadAction();
 	virtual HRESULT			 DoWork();
+	virtual void			 DoPostProcessing();	// E-146: nach Ablehnung am Server die Ordnerliste neu lesen
 
 	char					*m_szNewName;
+	bool					 m_bE146Fehlgeschlagen;	// E-146: DoWork ist am Server gescheitert
 
 	void					 SetNewName(const char *szNewName);
 };

@@ -120,6 +120,7 @@ protected:
 	BOOL IdleLogTocDiscrepancies();
 
 	virtual BOOL OnIdle( LONG lCount );
+	virtual LRESULT ProcessWndProcException(CException* e, const MSG* pMsg);	// Spurmarke, ZIEL.md Kriterium 2 und 4
 	void LoadEPIs( void );
 	void FreeResources( void );
 	void AddEPIs( const char* clsDirectory );

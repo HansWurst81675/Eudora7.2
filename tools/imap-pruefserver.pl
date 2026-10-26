@@ -55,6 +55,8 @@ use IO::Select;
 # und STATUS auf einen Namen, der nicht in der Liste steht, bekommen NO und
 # eine Zeile "!! UNBEKANNTES POSTFACH" - so wird sichtbar, wenn Eudora nach
 # dem Umbenennen einen anderen Namen benutzt als den, den es geschickt hat.
+# Mit --rename-ablehnen (seit 26.10.2026, Befund E-146) antwortet RENAME mit
+# NO und laesst die Liste, wie sie war.
 #
 # Er hoert NUR auf 127.0.0.1. Von aussen ist er nicht erreichbar.
 #
@@ -84,6 +86,7 @@ while (@ARGV) {
     elsif ($a eq '--zeitschranke') { $opt{zeitschranke} = shift @ARGV }
     elsif ($a eq '--gruss-verzoegerung') { $opt{gruss_verzoegerung} = shift @ARGV }
     elsif ($a eq '--append-ablehnen') { $opt{append_ablehnen} = 1 }
+    elsif ($a eq q{--rename-ablehnen}) { $opt{rename_ablehnen} = 1 }   # E-146 (PRUEFER-50 K9)
     elsif ($a eq '--ohne-appenduid') { $opt{ohne_appenduid} = 1 }
     elsif ($a eq '--fremde-uid')  { $opt{fremde_uid}   = shift @ARGV }
     elsif ($a eq '--append-verzoegerung') { $opt{append_verzoegerung} = shift @ARGV }
@@ -278,7 +281,27 @@ while (time < $ende) {
             $antwort = "$marke OK angemeldet";
         }
         elsif ($B eq 'LIST' or $B eq 'LSUB') {
-            print $h "* $B (\\HasNoChildren) \"/\" \"$_\"\r\n" for @ordner;
+            # Seit 26.10.2026 (E-146) mit Suchmuster nach RFC 3501 6.3.8:
+            # "%" passt auf alles ausser dem Trenner "/", "*" auf alles.
+            # Vorher kam auf JEDES Muster die ganze Liste - auf
+            # LIST "" Ablage/% meldete der Server "Ablage" als eigenes Kind,
+            # und Eudora stieg beim Neueinlesen der Ordnerliste endlos hinab
+            # (1556 LIST in zwei Sekunden). Ein echter Server tut das nicht.
+            # LIST "" "" fragt nur nach dem Trenner.
+            my $bezug = postfach_name($rest);
+            my $danach = $rest;
+            $danach =~ s/^(?:"(?:[^"\\]|\\.)*"|\S+)\s*//;
+            my $muster = $bezug . postfach_name($danach);
+            if ($muster eq '') {
+                print $h "* $B (\\Noselect) \"/\" \"\"\r\n";
+            }
+            else {
+                my $re = join '', map { $_ eq '%' ? '[^/]*' : $_ eq '*' ? '.*' : quotemeta $_ } split //, $muster;
+                for (@ordner) {
+                    next unless /^$re$/ or (uc $_ eq 'INBOX' and uc $muster eq 'INBOX');
+                    print $h "* $B (\\HasNoChildren) \"/\" \"$_\"\r\n";
+                }
+            }
             $antwort = "$marke OK $B";
         }
         elsif (($B eq q{RENAME} or $B eq q{SELECT} or $B eq q{EXAMINE} or $B eq q{STATUS} or $B eq q{CREATE})
@@ -295,7 +318,12 @@ while (time < $ende) {
             $danach =~ s/^(?:"(?:[^"\\]|\\.)*"|\S+)\s*//;
             my $neu = postfach_name($danach);
             my $i = ordner_index($alt);
-            if ($i < 0) {
+            if ($opt{rename_ablehnen} and $i >= 0) {
+                # E-146: der Server lehnt ab, die Liste bleibt, wie sie war.
+                notiz(q{  RENAME ABGELEHNT (--rename-ablehnen): "} . sichtbar_bytes($alt) . q{" -> "} . sichtbar_bytes($neu) . q{"});
+                $antwort = "$marke NO RENAME: abgelehnt (Pruefstand)";
+            }
+            elsif ($i < 0) {
                 $unbekannt++;
                 notiz('  !! UNBEKANNTES POSTFACH bei RENAME: "' . sichtbar_bytes($alt) . '"');
                 $antwort = "$marke NO [NONEXISTENT] RENAME: kein Postfach";
