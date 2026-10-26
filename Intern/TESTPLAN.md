@@ -98,8 +98,8 @@ nicht").*
 | K2 | **ja** | 26.10.2026 | Gregor: *„keine meldung“*; im `eudora.log` keine Zeile `Ausnahme …`, daneben Marken derselben Klasse (`E-137 Strg-W`, `rootcerts.p7b geladen aus:`) — die leere Spur zählt also |
 | K3 | **ja**, mit Bemerkung | 26.10.2026 | GMX über IMAP sofort; freenet über POP: der erste Versuch zu `194.97.208.37:995` hing über eine Minute ohne jede Protokollzeile, bis Gregor ihn stoppte; der zweite über `194.97.208.36:995` kam in 19 s durch. Kein Zertifikatsfehler. Ursache des Hängens nicht gemessen |
 | K4 | — | | |
-| K5 | **ja**, mit Befund | 26.10.2026 | Gregor: *„k5: PASSED, am ende der mail steht aber: </x-html>“* — Eudoras interne HTML-Klammer wird sichtbar; Ort und Weg werden geklärt |
-| K6 | — | | |
+| K5 | **ja**, mit Befund | 26.10.2026 | Gregor: *„k5: PASSED, am ende der mail steht aber: </x-html>“* — betrifft die weitergeleitete Mail, nicht diese: siehe K6 und [E-158](BEFUNDE.md#e-158) |
+| K6 | **nein** | 26.10.2026 | die weitergeleitete Mail endet mit sichtbarem `</x-html>` (Gregors Bild); Ursache [E-158](BEFUNDE.md#e-158), behoben für 7.2.0.124 |
 | K7 | **ja** | 26.10.2026 | Gregor: *„läßt sich beenden“*; Protokoll endet mit `Logging shutdown` |
 | K8 | **ja** | 26.10.2026 | Gregor: *„K8: PASSED“* |
 | N1 | **ja**, mit Bemerkung | 26.10.2026 | Gregor: *„e-137 PASSED“*; Protokoll dreimal `E-137 Strg-W`. Einmal griff Strg+W im angedockten Filterfenster nicht (keine E-137-Zeile), vermutlich nach einem Klick in die Filterdetails; danach wieder richtig. Ursache nicht gemessen |

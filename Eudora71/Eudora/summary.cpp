@@ -1504,8 +1504,20 @@ BOOL CSummary::ComposeMessage
 	// dokument seinen Rumpf aus zwei Quellen, und welche davon der
 	// Anwender meint, ist hier nicht zu entscheiden.
 	//
+	//
+	// E-158 (Gregor am Testpaket 7.2.0.123, 26.10.2026): beim Weiterleiten
+	// einer TEXTmail stand am Ende "</x-html>" sichtbar in der Nachricht.
+	// Der Rumpf, den QuoteText seit E-87 auch fuer Text baut, traegt eine
+	// doppelte <x-html>-Huelle; der Editor schluckt die innere, das
+	// aufgehobene Original nicht - gemessen an der angekommenen Nachricht
+	// und an OrigBytes=845 im Protokoll. E-88 ist fuer HTML-Mails gedacht
+	// (Kaesten, Hintergruende, CSS-Bildgroessen); bei Text gibt es nichts zu
+	// erhalten. Deshalb zaehlt die AUSGANGSNACHRICHT (IsHTML), nicht nur der
+	// gebaute Rumpf.
+	//
 	const bool	bE88Merken = ( !pszStationery && Body &&
 							   GetIniShort(IDS_INI_FORWARD_ORIGINAL_HTML) &&
+							   IsHTML() &&
 							   (::IsFancy(Body) == IS_HTML) );
 
 	//
