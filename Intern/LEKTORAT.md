@@ -1805,6 +1805,23 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Vierundachtzigster Durchgang — Kurzprüfung der Berichtigung zu LEKTOR-78 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-79.md`)
+
+Lauf über `6c4cfd7..50f073b7` (ein Commit, `Intern/WEITERMACHEN.md` und
+`Intern/AUFGABEN.md`). **3 Funde** (1 falsch, 1 veraltet, 1 Doppelung).
+L-78.1 ist erledigt; die zwei neuen Absätze verlinken richtig auf `ZIEL.md`
+und den Anker `#ergebnis-7-2-0-123`, und alles aus der gelöschten Tabelle
+steht in `ZIEL.md:185-205`. Falsch: `Intern/AUFGABEN.md:145-151` führt eine
+zweite, undatierte Kriterientabelle vom 09.09.2026 (Kriterium 6 *erfüllt*,
+4 *fast* wegen der Meldung), die der Commit stehen ließ
+([L-79.1](../Befunde/LEKTOR-79.md#l-79.1)). Veraltet: das Linkziel
+`Intern/TESTPLAN.md:120` sagt noch *„Wird nach deiner Rückmeldung
+ausgefüllt“* ([L-79.2](../Befunde/LEKTOR-79.md#l-79.2)). Doppelung:
+`Intern/WEITERMACHEN.md:67-68` wiederholt die Entstehung der Kriterien aus
+`ZIEL.md` ([L-79.3](../Befunde/LEKTOR-79.md#l-79.3)). Für Gregor weiter
+offen: was vor der Marke `v7.2.1.N` getestet sein muss, einschließlich
+Kriterium 0.
+
 ## Dreiundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-77 vor dem PR des Testpakets 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-78.md`)
 
 Lauf über `28deabd..678e8475` (ein Commit, `ZIEL.md`, drei Zeilen).
