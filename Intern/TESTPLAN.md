@@ -23,6 +23,7 @@ starten. In der Titelzeile muss **7.2.0.124** und **Paket 1.0.124** stehen.
 | T3 | [E-158](BEFUNDE.md#e-158) | lokal | eine **Text**mail (etwa *„mail an mich“*) an dich selbst weiterleiten und abrufen | am Ende der angekommenen Mail steht **kein** `</x-html>` |
 | T4 | [E-142](BEFUNDE.md#e-142) | **IMAP** *Gelöscht* | einen Entwurf anlegen (*Message → New Message*, an dich selbst, *File → Save*, Fenster schließen — er liegt in `Out`), in *Gelöscht* ziehen, dann zurück nach `Out` ziehen | die Rückfrage kommt, **No** ist vorgewählt; **Enter** drücken: nichts passiert. Entwurf danach löschen |
 | T5 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.124-release` sein |
+| T6 | [E-142](BEFUNDE.md#e-142), Entscheidung 12 | **IMAP** *Gelöscht* | den Entwurf aus T4 (liegt noch in *Gelöscht*) **öffnen**, dann *Message → Send Again* | es öffnet sich eine neue Mail mit Empfänger, Betreff und Text des Entwurfs; *Send* schickt sie ab, sie kommt bei dir an. Danach den Entwurf in *Gelöscht* löschen |
 
 ### <a id="ergebnis-7-2-0-124"></a>Ergebnis am Testpaket 7.2.0.124
 
@@ -33,6 +34,7 @@ starten. In der Titelzeile muss **7.2.0.124** und **Paket 1.0.124** stehen.
 | T3 | **ja** | 26.10.2026 | Gregor: *„E-158: PASS“* — die weitergeleitete Textmail endet ohne `</x-html>` ([E-158](BEFUNDE.md#e-158)) |
 | T4 | **nein** | 26.10.2026 | Gregor: neue Mail angelegt, nach IMAP *Gelöscht* verschoben, zurück nach `Out` — statt der Rückfrage kam *„Messages can't be transferred to the Out mailbox“* (Gregors Bild). Gemessen in Gregors `eudora.log` an 1.0.124 (26.10.2026): neuer Entwurf gespeichert (Programmzeit 14:12, `E-88 … Fassung=EDITOR`), nach IMAP *Gelöscht* hochgeladen (14:30, `E-121 Hochgeladen: ergebnis=1 neue-uid=15`), danach den Ordner geöffnet und die Nachricht vom Server neu geladen (14:50, `1 message(s) left to download`), dann das Zurückziehen nach `Out` abgelehnt (15:01, `E-125 Xfer nach Out abgelehnt: quelle=Gelöscht (<Dominant>)`) — Eudora hielt sie nicht mehr für einen Entwurf, die E-142-Rückfrage kam deshalb nicht. Nichts ging verloren, das Original liegt weiter in *Gelöscht*. Vermutung, nicht gemessen: beim Neuladen vom Server geht die Entwurfsmarke verloren; an 1.0.123 (TESTPLAN N3) kam die Rückfrage, vermutlich weil die Nachricht noch nicht neu geladen war. Ob das so bleiben soll oder die Entwurfsmarke erhalten werden muss, entscheidet Gregor ([E-142](BEFUNDE.md#e-142)) |
 | T5 | — | | |
+| T6 | — | | |
 
 ## Testpaket 7.2.0.123 — abgeschlossen am 26.10.2026
 
