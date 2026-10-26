@@ -1805,6 +1805,24 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Achtundsiebzigster Durchgang — Gregors Ergebnisse an 7.2.0.123 und der Kurztest 7.2.0.124, Zweig `0.123_ergebnisse`, 26.10.2026 (Bericht: `Befunde/LEKTOR-73.md`)
+
+Lauf über `d83e4de6..8bdab960`. **11 Funde** (6 falsch, 3 unvollständig,
+2 Hinweise). Von L-72.1 bis L-72.5 ist einer erledigt, drei offen (zwei davon
+durch den Abschluss des Tests gegenstandslos), L-72.1 ist gewachsen.
+**`ZIEL.md` meldet „25 von 25 erfüllt“, obwohl E-119 offen ist** — beide
+Werkzeuge lesen *„widerlegt“* im Urteil als erledigt, E-119 fehlt auch in den
+Listen der offenen Befunde ([L-73.1](../Befunde/LEKTOR-73.md#l-73.1), dieselbe
+Klasse wie L-16.1). Gregors Bestätigungen vom 26.10.2026 stehen nur in der
+Ergebnistabelle; E-77, E-113, E-137, E-146 und E-148 heißen anderswo weiter
+„noch nicht bestätigt“ ([L-73.2](../Befunde/LEKTOR-73.md#l-73.2)). Drei
+Stand-Zeilen nennen 7.2.0.123, der Block „HIER WEITERMACHEN“ schickt zu PR und
+Test von 7.2.0.123, K4 ist trotz des Absturzes von 10:05 leer, und Tabelle und
+E-137 widersprechen sich über *angedockt*/*abgedockt*. Der Kurztest stimmt mit
+dem Code; T1 und T4 fehlt je eine Voraussetzung. Gemessen: das veröffentlichte
+`v1.0.120` trägt die sechs Testfassungen aus E-156 — ob die README dazu einen
+Satz bekommt, entscheidet Gregor.
+
 ## Siebenundsiebzigster Durchgang — Einarbeitung von LEKTOR-71 (`ce28be3b`) und Teil 0 der Prüfanleitung, 26.10.2026 (Bericht: `Befunde/LEKTOR-72.md`)
 
 Sehr kurzer Lauf vor dem PR, nur über `ce28be3b`. **5 Funde** (0 falsch,
