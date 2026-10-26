@@ -38,6 +38,7 @@ DAMAGE. */
 #include "utils.h"
 #include "WazooBar.h"
 #include "debug.h"		// PutDebugLog, E-137
+#include "WazooWnd.h"		// CWazooWnd::SetFocus, E-137
 #include "guiutils.h"
 
 
