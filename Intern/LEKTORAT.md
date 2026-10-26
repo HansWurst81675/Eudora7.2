@@ -1805,6 +1805,18 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Achtundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-82 vor dem PR des Zweigs `0.123_ergebnisse` nach `main`, 26.10.2026 (Bericht: `Befunde/LEKTOR-83.md`)
+
+Lauf über `5a8e549..ce780458` (ein Commit, zwei `.md`, 3 Zeilen).
+**0 Funde.** L-82.1 bis L-82.3 sind erledigt: E-124 trennt jetzt die
+Messung vom 26.10.2026 (Schutzverlauf) von der Lesung der Vorgangsseite
+am 23.10.2026 (`Intern/BEFUNDE.md:370`, gleich
+`Releases/DEFENDER-FEHLALARM.md:3`); E-142 sagt, die *No*-Vorwahl sei am
+Programm noch nicht gesehen, nur im Unit-Test belegt
+(`Intern/BEFUNDE.md:378`); `CHANGELOG.md:78` nennt Kriterium 6 an 7.2.0.124
+mit T3 bestätigt, gleich `ZIEL.md:201`. Für Gregor offen: was vor der Marke
+`v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio.
+
 ## Siebenundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-81 vor dem PR des Zweigs `0.123_ergebnisse` nach `main`, 26.10.2026 (Bericht: `Befunde/LEKTOR-82.md`)
 
 Lauf über `e6fedc9..aeb79aa4` (ein Commit, acht `.md`, 17 Zeilen).
