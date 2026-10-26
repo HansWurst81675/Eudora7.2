@@ -117,7 +117,7 @@ Teil 1 und Teil 2 in beliebiger Reihenfolge.
 
 ### <a id="ergebnis-7-2-0-123"></a>Ergebnis am Testpaket 7.2.0.123 — je Kriterium
 
-*Wird nach deiner Rückmeldung ausgefüllt. Ohne diese Tabelle gibt es kein
+*Ausgefüllt am 26.10.2026 nach deiner Rückmeldung. Ohne diese Tabelle gäbe es kein
 Release 7.2.1 (ZIEL.md: „Ein Release ohne dokumentierte Ergebnisse gibt es
 nicht").*
 

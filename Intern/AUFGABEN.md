@@ -142,13 +142,8 @@ ausdrücklich nicht zu benutzen.
 > Vermerke genannt. Es waren also **sechs** Dokumente, und zwei blieben
 > stehen. Beide sind jetzt berichtigt.
 
-| # | | Stand |
-|---|---|---|
-| 4 | **Keine Abstürze** | *fast* — Strg-N fünfmal ohne Absturz gemessen, das Beenden ist erledigt (Kriterium 7), und mit [**E-43**](BEFUNDE.md#e-43) sind [**E-37**](BEFUNDE.md#e-37) und [**E-38**](BEFUNDE.md#e-38) weggefallen. Offen: die Meldung beim Anzeigen mancher Nachrichten |
-| 5 | **Eine neue Mail schreiben und abschicken** | **erfüllt** — Gregor am 07.09.2026: *„mail können jetzt abgeschickt werden."* |
-| 6 | **Eine Mail weiterleiten** | **erfüllt** — Gregor am 07.09.2026: *„weiterleitung funktioniert übrigens."* |
-| 7 | ***File → Exit*** beendet Eudora sauber | **erfüllt** — Gregor am 08.09.2026: *„schließen klappt jetzt."* Alle drei Wege: Menü, Alt-F4, Kreuz |
-| 8 | Offene Fenster sichtbar und auswählbar | **erfüllt** — Gregor am 09.09.2026: der Klick auf eine Registerkarte holt das Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window* (**A-3** / [**E-48**](BEFUNDE.md#e-48)) |
+Der Stand der Kriterien steht in [ZIEL.md](../ZIEL.md); hier stand bis zum 26.10.2026
+eine Tabelle mit dem Stand vom 09.09.2026.
 
 **Was sich am 09.09.2026 geändert hat.** Gregor hat **A-3** bestätigt und damit
 Kriterium 8 geschlossen, und er hat die Höhenänderung des unteren Bereichs
