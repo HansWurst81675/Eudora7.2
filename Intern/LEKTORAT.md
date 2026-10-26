@@ -1805,6 +1805,34 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Vierundsiebzigster Durchgang — Bestand vor dem Testpaket 7.2.0.123, Zweig `vor-testpaket-7.2.0.123` bis `f3e8389c`, 26.10.2026 (Bericht: `Befunde/LEKTOR-69.md`)
+
+Alle `.md` außer `Arbeitsweise/` und `Befunde/` gegen den Bestand, Schwerpunkt
+die neuen README-Zeilen unter *Bekannte Fehler*, die Logzeile zu
+`rootcerts.p7b` und der CHANGELOG-Abschnitt vor dem PR. **12 Funde** (4 falsch,
+3 unvollständig, 3 veraltet, 2 Hinweise); LEKTOR-68 hatte keinen.
+
+**Der schwerste, [L-69.3](../Befunde/LEKTOR-69.md#l-69.3):** die Logzeile
+`rootcerts.p7b geladen aus:` und die neue Spurmarke zu *„Encountered an
+improper argument"* schreiben mit `DEBUG_MASK_MISC` (32768); Eudoras Vorgabe
+`LogLevel=25759` enthält ihn nicht (belegt, `debug.cpp:142`,
+`EudoraRes.rc:8463`). Wer eine eigene `Eudora.ini` hat, sieht die Zeile nie —
+und eine leere Spur zählt nicht als „Meldung verschwunden".
+
+Weiter: der Einleitungssatz der README (*„geht keine Nachricht verloren"*)
+widerspricht der neuen E-142-Zeile, und E-142 selbst sagt im ersten Satz
+*„Verloren geht nichts"* ([L-69.1](../Befunde/LEKTOR-69.md#l-69.1),
+[L-69.2](../Befunde/LEKTOR-69.md#l-69.2)); die README nennt E-77 „behoben",
+ohne dass ältere Nachrichten mit Ablage in einen Umlaut-Ordner ihre Kopie
+ohne Meldung verlieren ([L-69.7](../Befunde/LEKTOR-69.md#l-69.7)); der
+CHANGELOG sagt *„auf `main` … bis PR #174"*, E-137 kam mit #175 und vier
+Punkte liegen nur auf dem Zweig ([L-69.4](../Befunde/LEKTOR-69.md#l-69.4)).
+Drei ältere Funde derselben Klasse sind weiter offen: L-55.1 (bei E-77,
+E-113, E-119, jetzt auch E-146 nennt „Was noch fehlt" die Behebung), L-55.5
+(E-77 in `ZIEL.md` 2a offen — die Zeile wurde heute bearbeitet), L-56.3.
+**Zwei Fragen an Gregor:** E-77-Ablageziele vor 7.2.1 beheben oder in die
+README; E-141, E-140, E-145 beheben, in die README oder draußen lassen.
+
 ## Dreiundsiebzigster Durchgang — Mikrolauf: Gregors Entscheidung zu PRÜFER-57 K2 in E-137, 25.10.2026 (Bericht: `Befunde/LEKTOR-68.md`)
 
 Geprüft nur den Satz aus `75c71096` in E-137 (`BEFUNDE.md:390`) gegen
