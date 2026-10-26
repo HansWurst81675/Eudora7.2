@@ -29,7 +29,7 @@ starten. In der Titelzeile muss **7.2.0.124** und **Paket 1.0.124** stehen.
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
 | T1 | **nein** | 26.10.2026 | Gregor: *„FAILED: CTRL-W schließt nicht filter fenster“*, geklickt *„mal oben, mal seitlich“* (Titelzeile und Rand des schwebenden Fensters). Klicks **in** die Leiste wirkten (Protokoll dreimal `E-137 Strg-W`). Ursache und Behebung: [E-137](BEFUNDE.md#e-137), dritter Teil |
-| T2 | — | | |
+| T2 | **ja** | 26.10.2026 | Gregors Bild: Antwort auf die Polizeitag-Mail, das große grüne Bild steht vollständig, keine Streifen. Protokoll: `E-119 data-Bild als Datei: …data-8e094058.jpg laenge=201951` — mehr als 65.535 Zeichen, an 7.2.0.123 wurde genau dort abgeschnitten ([E-119](BEFUNDE.md#e-119)). Im selben Bild die bekannte Meldung zur Rechtschreibprüfung ([E-139](BEFUNDE.md#e-139)) |
 | T3 | — | | |
 | T4 | — | | |
 | T5 | — | | |
