@@ -49,7 +49,7 @@ beschädigt, steht oben.
 
 | | wer | Was noch fehlt | Wie zu prüfen |
 |---|---|---|---|
-| **E-119** | ich | Gregors Bestätigung am Testpaket 7.2.0.123. | `Testdaten/` um eine Nachricht mit `data:`-Bild ergänzen, darauf antworten. Rot: grauer Kasten im Verfassenfenster. Grün: das Bild. **Zuletzt belegt am Quelltext: 22.10.2026 an 7.2.0.121**… |
+| **E-119** | ich | Gregors Bestätigung am Testpaket 7.2.0.124 (TESTPLAN T2) — am Testpaket 7.2.0.123 war das große Bild beim Antworten noch abgeschnitten (TESTPLAN N… | `Testdaten/` um eine Nachricht mit `data:`-Bild ergänzen, darauf antworten. Rot: grauer Kasten im Verfassenfenster. Grün: das Bild. **Zuletzt belegt am Quelltext: 22.10.2026 an 7.2.0.121**… |
 
 <!-- ziel-stand: Ende -->
 
