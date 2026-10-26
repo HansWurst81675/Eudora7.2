@@ -819,6 +819,7 @@ public:
 	const char* m_Message;
 	UINT m_WarnID;
 	UINT m_ResponseID;
+	BOOL m_bNeinVorgewaehlt;	// E-142: No statt Yes als Standardknopf
 
 // Implementation
 protected:
@@ -845,6 +846,7 @@ CYesNoDlg::CYesNoDlg(UINT WarnIniID, UINT responseIniID, const char* Message, CW
 	m_Message = Message;
 	m_WarnID = WarnIniID;
 	m_ResponseID = responseIniID;
+	m_bNeinVorgewaehlt = FALSE;
 }
 
 BOOL CYesNoDlg::OnInitDialog()
@@ -860,6 +862,17 @@ BOOL CYesNoDlg::OnInitDialog()
 
 	CenterWindow(AfxGetMainWnd() && AfxGetMainWnd()->IsIconic()? GetDesktopWindow() : NULL);
 	
+	// E-142 (Gregor 26.10.2026: "no waere besser"): ein unbedachtes Enter
+	// soll nichts uebertragen. No wird Standardknopf und bekommt den Fokus.
+	if (m_bNeinVorgewaehlt && GetDlgItem(IDCANCEL))
+	{
+		SetDefID(IDCANCEL);
+		if (GetDlgItem(IDOK))
+			GetDlgItem(IDOK)->SendMessage(BM_SETSTYLE, BS_PUSHBUTTON, TRUE);
+		GotoDlgCtrl(GetDlgItem(IDCANCEL));
+		return (FALSE);	// Fokus ist gesetzt
+	}
+
 	return (TRUE);  // return TRUE  unless you set the focus to a control
 }
 
@@ -1174,6 +1187,27 @@ int YesNoDialogPlain(UINT StringID, ...)
 	int Result = dlg.DoModal();
 	
 	return (Result);
+}
+
+// E-142: wie YesNoDialogPlain, aber No ist vorgewaehlt (Gregor 26.10.2026).
+int YesNoDialogPlainNeinVorgewaehlt(UINT StringID, ...)
+{
+	ASSERT(::IsMainThreadMT());
+
+	char buf[1024];
+
+	MessageBeep(MB_ICONINFORMATION);
+
+	va_list args;
+	va_start(args, StringID);
+	_vsnprintf(buf, sizeof(buf) - 1, CRString(StringID), args);
+	va_end(args);
+	buf[sizeof(buf) - 1] = 0;
+
+	CYesNoDlg dlg(0, 0, buf);
+	dlg.m_bNeinVorgewaehlt = TRUE;
+
+	return dlg.DoModal();
 }
 
 int YesNoDialog(UINT WarnID, UINT responseID, UINT StringID, ...)

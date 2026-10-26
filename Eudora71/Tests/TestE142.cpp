@@ -41,7 +41,7 @@ void RunE142Tests(const char* szEudoraDir)
 		{
 			"if (ToOut && IsImapToc() && !E142Gefragt) {",
 			"E142Gefragt = TRUE;",
-			"const BOOL bWeiter = (YesNoDialogPlain(IDS_WARN_IMAP_DRAFT_TO_OUT) == IDOK);",
+			"const BOOL bWeiter = (YesNoDialogPlainNeinVorgewaehlt(IDS_WARN_IMAP_DRAFT_TO_OUT) == IDOK);",
 		};
 		long lPos = 0;
 		bool bFolge = true;
@@ -76,6 +76,24 @@ void RunE142Tests(const char* szEudoraDir)
 				 "nach \"Nein\" laeuft die IMAP-Nachbearbeitung trotzdem - dann kaeme \"No messages were transferred!\"");
 	TT_CHECK_MSG(QT_Enthaelt(pRc, "IDS_WARN_IMAP_DRAFT_TO_OUT"), "der Hinweistext fehlt in EudoraRes.rc");
 	TT_CHECK_MSG(QT_Enthaelt(pRc, "may give an empty message in Out"), "der Hinweistext sagt nicht mehr, dass die Nachricht in Out leer sein kann");
+
+	// Gregor 26.10.2026: "no waere besser" - ein unbedachtes Enter soll nichts
+	// uebertragen. No ist Standardknopf und hat den Fokus.
+	char* pGui = QT_LiesNurCode(szEudoraDir, "guiutils.cpp");
+	TT_CHECK_MSG(pGui != NULL, "guiutils.cpp nicht lesbar");
+	if (pGui)
+	{
+		QT_LeerraumZusammen(pGui);
+		char* pFn = QT_Abschnitt(pGui, "int YesNoDialogPlainNeinVorgewaehlt(UINT StringID, ...)", "int YesNoDialog(");
+		TT_CHECK_MSG(pFn && QT_Enthaelt(pFn, "dlg.m_bNeinVorgewaehlt = TRUE;"), "YesNoDialogPlainNeinVorgewaehlt waehlt No nicht vor");
+		free(pFn);
+		char* pInit = QT_Abschnitt(pGui, "BOOL CYesNoDlg::OnInitDialog()", "void CYesNoDlg::DoDataExchange(");
+		TT_CHECK_MSG(pInit && QT_Enthaelt(pInit, "if (m_bNeinVorgewaehlt && GetDlgItem(IDCANCEL)) { SetDefID(IDCANCEL);")
+					 && QT_Enthaelt(pInit, "GotoDlgCtrl(GetDlgItem(IDCANCEL));"),
+					 "CYesNoDlg macht No nicht zum Standardknopf mit Fokus");
+		free(pInit);
+		free(pGui);
+	}
 
 	free(pCode);
 	free(pRc);
