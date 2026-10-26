@@ -14,4 +14,4 @@ Gregor am 26.10.2026: *„ich teste jetzt nur noch sachen aus dem testplan, die 
 
 **How to apply:** Jede Testanweisung zuerst in `Intern/TESTPLAN.md` schreiben, committen, pushen — im Chat nur „steht in TESTPLAN, Abschnitt X“. Keine Testschritte nur im Chat. Antworten kurz: Urteil, nächster Handgriff, höchstens eine Frage. Immer Deutsch. Siehe [[chat-knapp-halten]], [[testschritt-nennt-den-ort]].
 
-Schranke: keine - eine Regel für den Chat, kein Werkzeug liest Chattext. Wirksam wird sie dadurch, dass Testschritte nur in Intern/TESTPLAN.md entstehen und pruefe-tabellenzeilen.pl dort jede Tabellenzeile prüft.
+Schranke: keine - eine Regel für den Chat, kein Werkzeug liest Chattext und kein Werkzeug prüft sie; sie wirkt nur, wenn ich vor jeder Testanweisung zuerst die TESTPLAN-Zeile schreibe.

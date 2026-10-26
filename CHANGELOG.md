@@ -31,11 +31,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-145](Intern/BEFUNDE.md#e-145)** | Base64-Dekodieren wertet Bytes über 127 als gültige Zeichen — statt sie zu überspring… | **nie gemessen** | die Behebung in einer Zeile (`Eudora/Base64.cpp:166`) und ein Testfall in `Tests/`. **Herleitung:** `Base64Decoder::Decode` indiziert `g_Decode[*In]` … |
 | **[E-144](Intern/BEFUNDE.md#e-144)** | Ein Antwortentwurf, der aus einem anderen Postfach nach Out zurückgeschoben wird, verlier… | **nie gemessen** | die beiden Kopfzeilen beim Neuanlegen übernehmen — laut [PRÜFER-48](Befunde/PRUEFER-48.md) K8 zwei Zeilen in `summary.cpp` im Block `if (NewDoc… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
-| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.123 | vor 7.2.1 nichts — vereinbart ist der Hinweis, und der ist eingebaut. **Nach 7.2.1:** die Ursache der leeren Kopie messen (Spurmarke beim Lesen der … |
+| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 | vor 7.2.1 der Nachweis, dass *Message → Send Again* aus dem IMAP-Ordner eine sendbare Mail ergibt (Entscheidung 12, TESTPLAN T6); der Hinweis selbst… |
 | **[E-141](Intern/BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Berichtigung in `tocdoc.cpp:3134` — die Klammer um den Oder-Teil ziehen, so dass die Anzahlprüfung für **beide** Seiten gilt. Sie schließt Fe… |
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt nach jedem Programmstart einmal… | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
+| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | 26.10.2026 an 7.2.0.124 | Gregors Prüfung im nächsten Testpaket: Klick in die Leiste, auf ihre Titelzeile und auf ihren Rand, jeweils dann Strg+W, angedockt und schwebend. De… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
@@ -44,7 +45,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-124](Intern/BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 23.10.2026 an 7.2.0.121 | der Vorgang bei Microsoft ist **abgewiesen** (zu viele Dateien im Upload, siehe die Messung unten) — nachzuholen ist eine **neue** Einreichung mit *… |
 | **[E-123](Intern/BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | 22.10.2026 an 7.2.0.121 | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
 | **[E-122](Intern/BEFUNDE.md#e-122)** | Das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone v… | 22.10.2026 an 7.2.0.121 (Quelltext) | die Berichtigung selbst — `ImapMailbox.cpp:4281` übergibt `CSummary::m_Seconds` an `append_date`, das echtes UTC erwartet, während `m_Seconds` UTC… |
-| **[E-119](Intern/BEFUNDE.md#e-119)** | Bilder, die als data:-Adresse im HTML stecken, erscheinen beim Antworten und Weiterleiten … | 26.10.2026 an 7.2.0.124 | Gregors Bestätigung am Testpaket 7.2.0.124 (TESTPLAN T2) — am Testpaket 7.2.0.123 war das große Bild beim Antworten noch abgeschnitten (TESTPLAN N… |
 | **[E-109](Intern/BEFUNDE.md#e-109)** | Die Schranken waren da und haben nicht gehalten — *„es gibt viele schranken, die genau… | 22.10.2026 an 7.2.0.121 (Quelltext) | die drei Forderungen sind nicht umgesetzt — je Schranke ein Testfall für ihre **bekannte Grenze**, eine Unterscheidung zwischen *geprüft und frei*… |
 | **[E-98](Intern/BEFUNDE.md#e-98)** | Die beiden Optionen im Speicherdialog fehlen — *Kopfzeilen einschließen* (Include Heade… | 22.10.2026 an 7.2.0.121 (Quelltext) | zweierlei ist nicht gemessen — welche Vorgabe für *Kopfzeilen einschließen* und *Absätze raten* tatsächlich greift, solange die Kästchen fehlen… |
 | **[E-92](Intern/BEFUNDE.md#e-92)** | der Weiterleitungskopf ist bei Thunderbird eine ausgerichtete kleine Tabelle — auf Grego… | 22.10.2026 an 7.2.0.121 (Quelltext) | unsere eigene Seite — ein Vergleichsbild aus Eudora zur selben Nachricht liegt nicht vor, es ist also offen, ob unser Weiterleitungskopf überhaupt … |
@@ -99,7 +99,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## 7.2.0.124 — Testpaket mit den Funden aus Gregors Test an 7.2.0.123 ([E-156](Intern/BEFUNDE.md#e-156), [E-158](Intern/BEFUNDE.md#e-158), [E-119](Intern/BEFUNDE.md#e-119), [E-137](Intern/BEFUNDE.md#e-137), [E-142](Intern/BEFUNDE.md#e-142))
 
-**Quellstand 7.2.0.124, Paket 1.0.124 — Testpaket, noch nicht bestätigt.** Gregor hat
+**Quellstand 7.2.0.124, Paket 1.0.124 — Testpaket, von Gregor im Kurztest geprüft ([TESTPLAN](Intern/TESTPLAN.md)).** Nach dem Schnüren kam auf dem Zweig der dritte Teil von [E-137](Intern/BEFUNDE.md#e-137) dazu (Klick auf Titelzeile oder Rand der schwebenden Leiste), er ist **nicht** im Paket 1.0.124 und kommt mit dem nächsten. Gregor hat
 7.2.0.123 am 26.10.2026 getestet ([TESTPLAN.md](Intern/TESTPLAN.md), Ergebnistabelle):
 15 Punkte bestanden, drei nicht. Diese Fassung behebt die drei und zwei Lücken,
 die dabei auffielen. Prüfanleitung für den Kurztest: [TESTPLAN.md](Intern/TESTPLAN.md), oben.
@@ -119,7 +119,9 @@ die dabei auffielen. Prüfanleitung für den Kurztest: [TESTPLAN.md](Intern/TEST
   dann, wenn vorher auf eine Beschriftung oder leere Fläche in ihr geklickt
   wurde.**
 * **[E-142](Intern/BEFUNDE.md#e-142) — die Rückfrage beim Ziehen eines Entwurfs aus
-  einem IMAP-Ordner nach `Out` wählt jetzt *No* vor.**
+  einem IMAP-Ordner nach `Out` wählt jetzt *No* vor.** Am Programm nicht gezeigt: in Gregors
+  Kurztest T4 kam statt der Rückfrage die Ablehnung, weil der Entwurf vorher vom Server neu
+  geladen war; nichts ging verloren (Entscheidung 12).
 * Für Entwickler: der Prüfstand setzt Gregors Registry nach jedem Lauf zurück und
   wertet Abstürze aus dem Windows-Ereignisprotokoll aus ([E-157](Intern/BEFUNDE.md#e-157)).
   Unit-Tests: 311 Tests, 311 bestanden.
