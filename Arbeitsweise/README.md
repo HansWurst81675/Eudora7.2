@@ -87,6 +87,7 @@ eine Datei liest, liest diese.
 | [doku-parallel-nicht-hinterher](doku-parallel-nicht-hinterher.md) | Ein Wert, der in mehreren MDs steht, wird im selben Arbeitsschritt ueberall berichtigt; doku-pruefen.pl haelt sie gegeneinander |
 | [dummy-statt-weglassen](dummy-statt-weglassen.md) | Nicht benutzte Funktionen, Methoden und Klassen als Dummy implementieren, statt sie auszubauen |
 | [eigene-schleife-verschluckt-nichts](eigene-schleife-verschluckt-nichts.md) | Eine eigene Nachrichtenschleife darf WM_QUIT nicht entnehmen, ohne sie zurückzustellen — und nicht ohne Zeitschranke warten |
+| [eine-stelle-dann-verlinken](eine-stelle-dann-verlinken.md) | Gregor 26.10.2026 - jede Information in den MD-Dateien nur an EINER Stelle, andere MDs verlinken dorthin; keine Widersprueche |
 | [eingebaute-messung-auslesen](eingebaute-messung-auslesen.md) | Eine Spurmarke, die niemand ausliest, ist keine Messung - der Moment des Auslesens gehoert an das naechste Paket |
 | [einigkeit-ist-kein-beweis](einigkeit-ist-kein-beweis.md) | Dokumente gegeneinander zu prüfen findet nur Widersprüche; der Maßstab muss von außen kommen |
 | [einschraenkung-im-pr-ist-kein-ja](einschraenkung-im-pr-ist-kein-ja.md) | Eine bekannte falsche Aussage im PR-Text offenzulegen ist keine Zustimmung Gregors, sie auf main zu bringen; aufgeschoben wird ein Fund nur mit seinem Ja zu genau diesem Fund |
