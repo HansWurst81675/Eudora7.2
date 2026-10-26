@@ -96,7 +96,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.122** / `VERSION` **1.0.122** — geschnürt als Paket 1.0.122 (23.10.2026), am selben Tag von Gregor und am Prüfstand geprüft ([Testbericht](Intern/TESTBERICHT-E125.md)): [E-125](Intern/BEFUNDE.md#e-125), Ziehen einer empfangenen Nachricht nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen (277 Tests, 277 bestanden, zweimal gegengetestet); davor in 7.2.0.121 [E-111](Intern/BEFUNDE.md#e-111), `resolve_URL` schreibt nicht mehr über das Zielfeld hinaus (246 Tests, mit Gegenprobe). **Veröffentlicht ist `v1.0.120`** (21.10.2026, 19:07:37 UTC) — die Auswahlbox im `To:`-Feld schrumpft nicht mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)). Die vollständige Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), was zur Fassung 7.2.1 noch fehlt oben in [ZIEL.md](ZIEL.md).*
+*Stand **7.2.0.123** / `VERSION` **1.0.123** — Testpaket für Gregors Test vor dem Release 7.2.1; was darin neu ist, steht im [CHANGELOG, Abschnitt 7.2.0.123](CHANGELOG.md). Veröffentlicht ist `v1.0.120`.*
 
 ### Was geht
 
@@ -134,23 +134,15 @@ ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrie
 ([E-131](Intern/BEFUNDE.md#e-131)).
 
 **Neu im Testpaket 7.2.0.123** (noch nicht veröffentlicht, kommt mit dem Release 7.2.1):
-Strg+W in einer angedockten Leiste versteckt nur die Leiste statt Eudora zu
-beenden ([E-137](Intern/BEFUNDE.md#e-137)); umbenannte IMAP-Ordner heißen in Eudora wie auf dem
-Server, auch wenn der Server das Umbenennen ablehnt ([E-146](Intern/BEFUNDE.md#e-146)); IMAP-Ordnernamen
-mit Umlauten ([E-77](Intern/BEFUNDE.md#e-77)), breite Bilder ([E-113](Intern/BEFUNDE.md#e-113)) und Bilder im HTML beim Antworten
-([E-119](Intern/BEFUNDE.md#e-119)) sind behoben; die vier eMudhra-Wurzeln sind aus der Zertifikatsliste
-entfernt ([E-148](Intern/BEFUNDE.md#e-148)); das Abschalten einer Spalte im Fenster *Task Status*
-überschreibt keinen Speicher mehr ([E-150](Intern/BEFUNDE.md#e-150)); der Bau stempelt keine fremden
-DLLs mehr ([E-130](Intern/BEFUNDE.md#e-130)); und Ausnahmen, nach denen Eudora bisher wortlos endete,
-stehen jetzt im Protokoll ([E-154](Intern/BEFUNDE.md#e-154)).
+steht an einer Stelle, im [CHANGELOG unter 7.2.0.123](CHANGELOG.md) — darunter
+[E-137](Intern/BEFUNDE.md#e-137), [E-146](Intern/BEFUNDE.md#e-146), [E-77](Intern/BEFUNDE.md#e-77), [E-113](Intern/BEFUNDE.md#e-113), [E-119](Intern/BEFUNDE.md#e-119), [E-148](Intern/BEFUNDE.md#e-148), [E-150](Intern/BEFUNDE.md#e-150), [E-130](Intern/BEFUNDE.md#e-130), [E-154](Intern/BEFUNDE.md#e-154).
 
 **Was zur Fassung 7.2.1 noch fehlt, steht erzeugt ganz oben in
 [ZIEL.md](ZIEL.md)** — dort und nur dort, mit der Angabe, wer es prüft.
 
 ### Bekannte Fehler
 
-Bis auf die mit *Selten* beginnende Zeile und den Entwurf aus einem IMAP-Ordner (dort nur, wenn man das Original löscht) geht in keinem dieser Fälle eine
-**Nachricht in Ihrem Postfach** verloren. Die zweite Spalte sagt, was sonst verlorengehen oder verfälscht werden kann;
+Die zweite Spalte sagt, was dabei verlorengehen oder verfälscht werden kann;
 *nichts* heißt, es betrifft nur Anzeige oder Bedienung.
 
 | Was passiert | Was kann verlorengehen | Was hilft | Befund |
@@ -182,7 +174,7 @@ Bis auf die mit *Selten* beginnende Zeile und den Entwurf aus einem IMAP-Ordner 
 | Die Meldung, dass die Rechtschreibprüfung in dieser Fassung fehlt, kommt nach jedem Programmstart einmal wieder – es gibt kein Kästchen *„Nicht mehr anzeigen"* | nichts | mit *OK* wegklicken | [E-139](Intern/BEFUNDE.md#e-139) |
 | Ein Anhang **ganz ohne Endung** im Dateinamen bekommt über **IMAP** keine Endung angehängt (über POP schon) | nichts – die Datei ist vollständig, nur die Endung fehlt | die Datei im Anhangverzeichnis umbenennen und die passende Endung anhängen (etwa `.pdf`) | [AN-1](Intern/BEFUNDE.md#an-1) |
 | Eine Nachricht, die **vor** dem Update auf 7.2.1 mit Ablage (*Fcc*) in einen IMAP-Ordner mit Umlaut im Namen (etwa *Entwürfe*) gespeichert wurde, wird nach dem Update gesendet, aber **ohne Meldung nicht abgelegt** — eine Nebenwirkung der Behebung von [E-77](Intern/BEFUNDE.md#e-77) (am Quelltext gelesen, nicht gemessen) | die **abgelegte Kopie** dieser Nachricht | vor dem Senden solcher älterer Nachrichten das Ablage-Ziel neu wählen | [E-77](Intern/BEFUNDE.md#e-77) |
-| Ziehen aus einem **IMAP-Ordner** nach `Out` stößt die IMAP-Nachbearbeitung an, obwohl nichts übertragen wurde, und meldet *„No messages were transferred!“*; je nach Einstellung kann sie den IMAP-Ordner am Server bereinigen (*Expunge*) — am Quelltext gelesen, nicht gemessen | als gelöscht markierte Nachrichten in diesem IMAP-Ordner, die sonst noch zurückzuholen wären | nicht aus einem IMAP-Ordner nach `Out` ziehen | [E-141](Intern/BEFUNDE.md#e-141) |
+| Zieht man einen **Entwurf** aus einem **IMAP-Ordner** nach `Out` und antwortet auf die Rückfrage mit *Yes*, stößt das die IMAP-Nachbearbeitung an, obwohl nichts übertragen wurde, und meldet *„No messages were transferred!“*; je nach Einstellung kann sie den IMAP-Ordner am Server bereinigen (*Expunge*) — am Quelltext gelesen, nicht gemessen | als gelöscht markierte Nachrichten in diesem IMAP-Ordner, die sonst noch zurückzuholen wären | nicht aus einem IMAP-Ordner nach `Out` ziehen | [E-141](Intern/BEFUNDE.md#e-141) |
 | *File → Save As* aus dem **Nachrichten-** oder **Verfassen-Fenster** schreibt keine Zeichensatzangabe in die Datei; andere Programme können Umlaute dann falsch zeigen (am Quelltext gelesen, nicht gemessen) | die **gespeicherte Datei** kann verfälscht angezeigt werden (die Nachricht im Postfach nicht) | aus der Postfachliste speichern (Nachricht markieren, *File → Save As*) — dieser Weg ergänzt die Angabe | [E-140](Intern/BEFUNDE.md#e-140) |
 | In fehlerhaft kodierter Post (Base64 mit Bytes über 127) entstehen beim Dekodieren einzelne falsche Bytes, statt dass die ungültigen Zeichen übersprungen werden (am Quelltext gelesen, nicht gemessen) | einzelne Zeichen dieses Anhangs oder Textes | – (solche Post ist fehlerhaft und selten) | [E-145](Intern/BEFUNDE.md#e-145) |
 | Der Filterbericht bleibt nach einem Filterlauf leer | nichts | – | [E-71](Intern/BEFUNDE.md#e-71) |

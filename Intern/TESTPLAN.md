@@ -20,6 +20,35 @@ was stattdessen kam). Ich trage es unten in die
 [Ergebnistabelle](#ergebnis-7-2-0-123) und in die Buchführung ein; das
 `eudora.log` lese ich danach selbst (wie vereinbart nur lesen).
 
+### Teil 0 — Reihenfolge und Vorbereitung (bitte genau in dieser Reihenfolge)
+
+**A. Zuerst M1 — bevor das neue Paket irgendwie anders gestartet wurde.** Der
+Starttest braucht eine *fremde* Installation, und das ist dein 1.0.122. Wird
+das neue Paket vorher über `Eudora starten.cmd` gestartet, merkt sich Windows
+das neue Verzeichnis, und die Rückfrage aus M1 kommt zu Recht nicht mehr.
+
+1. Dein **1.0.122** einmal mit seinem `Eudora starten.cmd` starten und mit
+   *File → Exit* beenden. Danach steht es als zuletzt benutzte Installation in
+   der Registry.
+2. Im Explorer das **Änderungsdatum** von
+   `C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis\Eudora.ini` notieren.
+3. Im neuen Verzeichnis `C:\Users\Gregor\Eudora72-1.0.123-release` die
+   **`Eudora.exe` doppelklicken** und [M1](#m1-e132) Schritt 1 bis 4 fahren.
+   Für Schritt 3 und 4 („fremde `Eudora.ini` unverändert“): das Änderungsdatum
+   aus 2. muss gleich bleiben.
+4. Nach Schritt 4 läuft Eudora mit einem eigenen, leeren Mailverzeichnis.
+   Mit *File → Exit* beenden.
+
+**B. Deine Daten in das neue Paket.** Der Inhalt von
+`C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis` in
+`C:\Users\Gregor\Eudora72-1.0.123-release\Mailverzeichnis` kopieren
+(überschreiben). **Ausnahme:** liegt dort eine Datei `rootcerts.p7b`, sie
+**nicht** mitkopieren — sonst prüft K3 die alte Zertifikatsliste statt der
+neuen ([E-148](BEFUNDE.md#e-148)).
+
+**C. Ab jetzt nur noch mit `Eudora starten.cmd`** im neuen Verzeichnis, dann
+Teil 1 und Teil 2 in beliebiger Reihenfolge.
+
 ### Teil 1 — die neun Kriterien aus ZIEL.md, kurz
 
 | Nr. | Kriterium | Was zu tun ist | Was herauskommen muss |
@@ -38,10 +67,11 @@ was stattdessen kam). Ich trage es unten in die
 | Nr. | Befund | Wo | Was zu tun ist | Was herauskommen muss |
 |---|---|---|---|---|
 | N1 | [E-137](BEFUNDE.md#e-137) Strg+W | lokal, `In` offen | mit **Strg+L** das Adressbuch öffnen, **angedockt**, hineinklicken, dann **Strg+W** | nur das Adressbuch verschwindet, Eudora bleibt offen; ein zweites Strg+W schließt `In` |
+| N1b | [E-137](BEFUNDE.md#e-137), *File → Close* | lokal, `In` offen | Adressbuch mit Strg+L öffnen (angedockt), hineinklicken, dann *File → Close* | wie N1: nur das Adressbuch verschwindet (so am 25.10.2026 entschieden, *„a) ist ok.“*) |
 | N2 | [E-137](BEFUNDE.md#e-137), schwebend | wie N1 | das Adressbuch aus dem Rahmen ziehen (schwebend), hineinklicken, **Strg+W** | nur das Adressbuch verschwindet |
-| N3 | [E-142](BEFUNDE.md#e-142) Hinweis | Entwurf in einem **IMAP**-Ordner | einen Entwurf (*File → Save*, liegt in `Out`) in den IMAP-Papierkorb ziehen, dann **zurück** nach `Out` ziehen | eine Rückfrage *„Moving or copying a draft from an IMAP mailbox to Out may give an empty message …"*. **No** drücken: nichts passiert. Danach den Entwurf im IMAP-Ordner löschen |
+| N3 | [E-142](BEFUNDE.md#e-142) Hinweis | lokal `Out` und **IMAP** `Gelöscht` (der Papierkorb unter deinem GMX-Konto, nicht das lokale `Trash`) | einen Entwurf anlegen (*Message → New Message*, an dich selbst, Betreff `N3`, *File → Save*, Fenster schließen — er liegt in `Out`), in den IMAP-Ordner `Gelöscht` ziehen, dann von dort **zurück** nach `Out` ziehen | eine Rückfrage *„Moving or copying a draft from an IMAP mailbox to Out may give an empty message …“*. **No** drücken: nichts passiert, keine weitere Meldung. **Nicht Yes** — dann entsteht in `Out` die bekannte leere Nachricht. Danach den Entwurf in `Gelöscht` löschen |
 | N4 | [E-77](BEFUNDE.md#e-77) Umlaute | IMAP | die Ordnerliste unter dem GMX-Konto ansehen | *Entwürfe*, *Gelöscht* mit Umlauten, nicht `Entw&APw-rfe` |
-| N5 | [E-77](BEFUNDE.md#e-77)/[E-146](BEFUNDE.md#e-146) Umbenennen | IMAP | einen Testordner `Test-ä` anlegen, in `Test-ö` umbenennen, öffnen, dann löschen | heißt richtig, lässt sich öffnen, keine Fehlermeldung |
+| N5 | [E-77](BEFUNDE.md#e-77)/[E-146](BEFUNDE.md#e-146) Umbenennen | IMAP | einen Testordner `Test-ä` anlegen, in `Test-ö` umbenennen, öffnen; im GMX-Webmailer nachsehen; dann in Eudora löschen | heißt in Eudora und im Webmailer `Test-ö`, lässt sich öffnen, keine Fehlermeldung |
 | N6 | [E-113](BEFUNDE.md#e-113) breite Bilder | lokal | auf eine Nachricht mit einem sehr breiten Bild antworten | das Bild passt im Antwortfenster in die Breite, unverzerrt |
 | N7 | [E-119](BEFUNDE.md#e-119) Bilder im HTML | lokal | falls du eine Mail hast, deren Bilder direkt im HTML stecken (manche Newsletter): antworten | Bild statt grauem Kasten. Hast du keine, schreib *keine Mail dafür* — der Prüfstand hat es gemessen |
 
@@ -49,7 +79,7 @@ was stattdessen kam). Ich trage es unten in die
 
 | Nr. | Fall | Was zu tun ist |
 |---|---|---|
-| M1 | [E-132](BEFUNDE.md#e-132), Schritt 1–4 | wie in [M1](#m1-e132) beschrieben, nur Schritt 1 bis 4 (Schritt 5 geht nicht, entschieden am 25.10.2026) |
+| M1 | [E-132](BEFUNDE.md#e-132), Schritt 1–4 | **schon in Teil 0 A erledigt** — dort steht die Vorbereitung; nur Schritt 1 bis 4 (Schritt 5 geht nicht, entschieden am 25.10.2026) |
 | M3 | [E-125](BEFUNDE.md#e-125) | wie in [M3](#m3-e125) beschrieben |
 
 ### <a id="ergebnis-7-2-0-123"></a>Ergebnis am Testpaket 7.2.0.123 — je Kriterium
@@ -69,6 +99,7 @@ nicht").*
 | K7 | — | | |
 | K8 | — | | |
 | N1 | — | | |
+| N1b | — | | |
 | N2 | — | | |
 | N3 | — | | |
 | N4 | — | | |
@@ -77,7 +108,7 @@ nicht").*
 | N7 | — | | |
 | M1 | — | | |
 | M3 | — | | |
-| Protokoll | — | | von mir: `eudora.log` ohne `Ausnahme in Fensterbotschaft` und ohne `Ausnahme ausserhalb einer Fensterbotschaft`, dafür mit `rootcerts.p7b geladen aus:` |
+| Protokoll | — | | von mir gelesen: **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
 
 **Die Abschnitte direkt hierunter sind Nachschlagewerk, kein Auftrag.**
 [C10](#c10) (die Auswahlbox) und [C9](#c9) (das Adressbuch) hast du am
@@ -285,23 +316,10 @@ Dasselbe gilt für die Gegenprobe zu [R1](../Befunde/PRUEFER-38.md), die ohne
 einen ersten Filterlauf gar nichts aussagt.
 ### Was bekannt ist — bitte nicht als neuen Fehler melden
 
-* Nach einem **Absturz**, einem Eingriff von **Defender**, einem Stromausfall
-  oder einem erzwungenen Herunterfahren können eingebettete Bilder einer
-  verschobenen Nachricht weiter fehlen. Schritt 2 prüft nur das **ordentliche**
-  Beenden.
-* Bilder, die als `data:`-Adresse in der Mail stecken, erscheinen als **grauer
-  Kasten**.
-* Bilder, die **breiter sind als das Fenster**, werden nicht verkleinert.
-* Eine Größenangabe mit Einheit (`width="35px"`) wird nicht ausgewertet.
-* Beim **Weiterleiten eines Newsletters** können Bilder doppelt erscheinen.
+Steht an **einer** Stelle: in der [README unter „Bekannte Fehler“](../README.md#bekannte-fehler).
+Bis zum 26.10.2026 stand hier eine eigene Liste; sie nannte drei Fehler als
+bekannt, die im Testpaket 7.2.0.123 behoben sind (LEKTOR-70, L-70.1).
 
-* Eine gespeicherte Nachricht heißt **`.txt` und enthält HTML** — ohne Hinweis
-  ([E-128](BEFUNDE.md#e-128), 20.10.2026).
-* Wird ohne Serververbindung in einen IMAP-Ordner verschoben und gleich
-  beendet, zeigt der **Zielordner nur eine von fünf** Nachrichten; die anderen
-  stehen vollständig in der Datei, und in der `Inbox` erscheinen sie wieder
-  über *Rechtsklick → Show Deleted Messages*
-  ([E-129](BEFUNDE.md#e-129), 20.10.2026). **Kein Datenverlust.**
 ### Wie dein Urteil zählt
 
 Mit der **Paketnummer** — der des Pakets, das du wirklich gestartet hast:

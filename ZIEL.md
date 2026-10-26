@@ -167,7 +167,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 22.10.2026.** Quellstand **7.2.0.120** / `VERSION` **1.0.120**, veröffentlicht als [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 26.10.2026.** Quellstand **7.2.0.123** / `VERSION` **1.0.123** (Testpaket); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 
@@ -201,10 +201,10 @@ kein Mailprogramm.
 | 8 | **Die offenen Fenster sind sichtbar und auswählbar** | **erfüllt** — von Gregor am 09.09.2026 bestätigt: das Menü *Window* listet sie auf („1 In", „2 Out"), und die **Registerkartenleiste am unteren Fensterrand** ist da (Anforderung **A-3**, Befund [**E-48**](Intern/BEFUNDE.md#e-48), umgesetzt in 7.2.0.25) — der Klick auf eine Karte holt ihr Fenster nach vorn, die Beschriftungen stimmen mit dem Menü *Window*. Drei Mängel an der Leiste sind in 7.2.0.26 behoben ([**E-50**](Intern/BEFUNDE.md#e-50)) und von Gregor an 1.0.84 bestätigt (13.10.2026) |
 
 **Neun Kriterien: sieben sind belegt (0, 1, 3, 5, 6, 7, 8), zwei sind fast
-erfüllt (2, 4).** Was Kriterium 2 noch fehlt, steht vollständig in der Zeile
-**2a**: [**E-77**](Intern/BEFUNDE.md#e-77) (IMAP-Postfachnamen mit Umlauten)
-und die Meldung „Encountered an improper argument" beim **Anzeigen** mancher
-Nachrichten — diese Meldung fehlt auch Kriterium 4.
+erfüllt (2, 4).** Beiden fehlt nur noch der Nachweis, dass die Meldung
+„Encountered an improper argument" nicht mehr kommt (Zeile **2a**) — Gregors
+Test am Testpaket 7.2.0.123 mit Protokoll ([TESTPLAN](Intern/TESTPLAN.md)).
+[E-77](Intern/BEFUNDE.md#e-77) ist behoben, von Gregor dort noch zu bestätigen.
 
 > **Berichtigt am 22.10.2026.** Hier stand bis heute auch
 > [E-86](Intern/BEFUNDE.md#e-86) (HTML-Nachrichten falsch dargestellt) — der

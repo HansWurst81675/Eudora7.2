@@ -3,18 +3,18 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.0.123` (Paketnummer `1.0.123`) |
-| **Commit** | `82372232` — **Arbeitsbaum nicht sauber** (3 Dateien) |
-| **Erstellt** | 2026-10-26 08:57 |
+| **Commit** | `458fda57` — **Arbeitsbaum nicht sauber** (8 Dateien) |
+| **Erstellt** | 2026-10-26 09:16 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 08 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 09 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
 | Pruefstand, 35 Faelle, 11 Eudora-Starts | 5 min 34 s | voller Lauf, Ende 2026-10-26 08:57:35 |
-| **zusammen** | **5 min 51 s** | |
+| **zusammen** | **5 min 49 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.123 / Paket 1.0.123+82372232 2026-10-26 08:50`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-26 08:57** gegen den Quelltext von Commit `82372232*`.
+Gelaufen am **2026-10-26 09:16** gegen den Quelltext von Commit `458fda57*`.
 
 <details><summary>Alle 308 Unit-Tests einzeln</summary>
 
@@ -374,7 +374,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-26 08:57** gegen Commit `82372232*`.
+Gelaufen am **2026-10-26 09:16** gegen Commit `458fda57*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -454,8 +454,9 @@ wird.
 ## 5. Was dieser Bericht nicht abdeckt
 
 * Die manuellen Faelle in [TESTPLAN.md](../Intern/TESTPLAN.md), Teil M.
-* Gregors eigene Ergebnisse am Paket: [TESTPLAN.md, Buchfuehrung](../Intern/TESTPLAN.md)
-  (je Paket und Pruefschritt, mit Paketnummer).
+* Gregors eigene Ergebnisse am Paket: die Ergebnistabelle im Kopf von
+  [TESTPLAN.md](../Intern/TESTPLAN.md) (je Kriterium und Pruefschritt, mit Paketnummer),
+  aeltere in der Buchfuehrung darunter.
 * Alles, was keinen Test hat (Abschnitt 4).
 * Ein Release gilt erst nach **Gregors eigenem Lauf** und seiner Zustimmung
   (CLAUDE.md, Abschnitt 4) — dieser Bericht ersetzt das nicht.
