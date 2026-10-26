@@ -250,8 +250,8 @@ enthält jetzt 117 statt 121 Zertifikate, erzeugt von
 Ausschlussliste, und der Paketbau legt diese Datei in jedes Paket. GMX und
 freenet (IMAP, POP3, SMTP) sind gegen die neue Liste mit **OpenSSL** gemessen
 und werden angenommen — ihre Zertifikate stammen von der Telekom (T-TeleSec),
-nicht von eMudhra. **Mit Eudora selbst** ist das erst mit dem Testpaket 7.2.0.123 zu
-messen; bis dahin ist es eine Rechnung, keine Beobachtung am Programm. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
+nicht von eMudhra. **Mit Eudora selbst** hat Gregor es am Testpaket 7.2.0.123 gemessen:
+Abruf ohne Zertifikatsfehler. Dass Eudora eine eMudhra-Kette ablehnt, bleibt eine Rechnung. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
 zurückkommt ([E-148](Intern/BEFUNDE.md#e-148)).
 
 **Was Sie mit einem älteren Paket tun können:** Eudora beenden, die

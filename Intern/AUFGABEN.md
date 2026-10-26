@@ -243,8 +243,9 @@ Nebenbei-Beobachten: friert etwas ein, ist es ein Befund.
 
 ### 2. Die Meldung „Encountered an improper argument" beim Anzeigen
 
-**Das ist der letzte bekannte Fehler, den ein Anwender merkt** — und der
-einzige Grund, warum Kriterium 2 und Kriterium 4 nicht *erfüllt* heißen.
+**Erledigt mit Gregors Test an 7.2.0.123:** die Meldung kam nicht, im Protokoll
+steht keine Ausnahme-Zeile ([TESTPLAN K2](TESTPLAN.md#ergebnis-7-2-0-123)); den Stand der Kriterien
+führt [ZIEL.md](../ZIEL.md). Was folgt, war der Plan davor.
 
 MFCs Text für `CInvalidArgException`, **dieselbe Fehlerklasse wie [E-34](BEFUNDE.md#e-34) und
 [E-43](BEFUNDE.md#e-43)**, andere Aufrufstelle. **Neu zu messen, seit [E-43](BEFUNDE.md#e-43) an der Wurzel behoben
