@@ -285,9 +285,8 @@ nur der Verweis, nach Gregors Regel.
 
 ## Nicht geprüft
 
-* Ob der Prüfstandsfall `E-119e` inzwischen gelaufen ist (`tools/TESTLAEUFE.md`
-  zeigt um 12:10/12:12 zwei Läufe an `C:\Temp\E119K` und `C:\Temp\EBILD`, der
-  zweite an 7.2.0.123).
+* Der Prüfstandslauf `1bd0fe96` selbst (36 Fälle) — nur die Zeile zu `E-119e`
+  gelesen.
 * Gregors Absturzbericht und das Ereignisprotokoll selbst.
 
 ## Was nur Gregor entscheiden kann
