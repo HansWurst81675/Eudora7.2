@@ -113,8 +113,10 @@ die Mail, und im Protokoll stand keine E-137-Zeile.
   Titelzeile gibt den Fokus ohnehin an die Mail zurück. Das Hauptfenster merkt
   sich deshalb den letzten Klick (`CMainFrame::E137EingabeMerken`), unabhängig
   von Rahmenklasse und Fokus. Jedes Strg+W schreibt die Zeile
-  `E-137 Strg-W angekommen` ins Protokoll. Unit-Test `TestE137.cpp`; am Programm
-  noch nicht gemessen.
+  `E-137 Strg-W angekommen` ins Protokoll. Unit-Test `TestE137.cpp` und **neuer
+  Prüfstandsfall** `tools/messen-e137.ps1` (Klick auf Titelzeile bzw. Rand der
+  schwebenden Filterleiste, dann der Befehl hinter Strg+W): am Bau 1.0.125 rot —
+  dasselbe Bild wie Gregors U1 —, am Bau 1.0.126 grün. Gregors Test steht noch aus.
 * **[E-160](Intern/BEFUNDE.md#e-160) — beim Anlegen einer Persönlichkeit (*Tools →
   Personalities*, Rechtsklick → *New...*) soll die Windows-Meldung „kein
   E-Mail-Programm zugeordnet“ nicht mehr kommen.** Der Outlook-Import im

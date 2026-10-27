@@ -3,8 +3,8 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.0.126` (Paketnummer `1.0.126`) |
-| **Commit** | `1cf3d242` — **Arbeitsbaum nicht sauber** (1 Dateien) |
-| **Erstellt** | 2026-10-27 12:37 |
+| **Commit** | `b5a8e717` — **Arbeitsbaum nicht sauber** (6 Dateien) |
+| **Erstellt** | 2026-10-27 12:49 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
@@ -12,9 +12,9 @@
 | Teil | Dauer | gemessen |
 |---|---|---|
 | Unit-Tests bauen und fahren | 0 min 00 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 13 s | dieser Lauf |
 | Pruefstand, 36 Faelle, 11 Eudora-Starts | 6 min 08 s | voller Lauf, Ende 2026-10-27 12:37:32 |
-| **zusammen** | **6 min 16 s** | |
+| **zusammen** | **6 min 21 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.126 / Paket 1.0.126+5ab3e4ea 2026-10-27 12:16`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
@@ -22,7 +22,7 @@ Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudo
 |---|---|---|---|---|
 | Unit-Tests (`EudoraTests.exe`) | 314 | 314 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 36 | 36 | 0 | 0 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 39 | 39 | 0 | 0 an anderem Bau, 0 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-27 12:37** gegen den Quelltext von Commit `1cf3d242*`.
+Gelaufen am **2026-10-27 12:49** gegen den Quelltext von Commit `b5a8e717*`.
 
 <details><summary>Alle 314 Unit-Tests einzeln</summary>
 
@@ -380,7 +380,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-27 12:37** gegen Commit `1cf3d242*`.
+Gelaufen am **2026-10-27 12:49** gegen Commit `b5a8e717*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -449,6 +449,9 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-67 | ok | 2026-10-27 12:37:32 | `C:\Temp\E67` | Eudora 7.2.0.126 / Paket 1.0.126+5ab3e4ea 2026-10-27 12:16 | `verb-gespeichert=14 verb-auswahl=0` |
 | ZIEL24 | ok | 2026-10-27 12:37:32 | `C:\Temp\EBILD` | Eudora 7.2.0.126 / Paket 1.0.126+5ab3e4ea 2026-10-27 12:16 | `Logging shutdown` |
 | ZIEL24b | ok | 2026-10-27 12:37:32 | `C:\Temp\EBILD` | Eudora 7.2.0.126 / Paket 1.0.126+5ab3e4ea 2026-10-27 12:16 | `Logging shutdown` |
+| E-137a | ok | 2026-10-27 12:49:20 | `C:\Temp\E137` | Eudora 7.2.0.126 / Paket 1.0.126+5ab3e4ea 2026-10-27 12:16 | `E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1` |
+| E-137b | ok | 2026-10-27 12:49:20 | `C:\Temp\E137` | Eudora 7.2.0.126 / Paket 1.0.126+5ab3e4ea 2026-10-27 12:16 | `E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1` |
+| E-137c | ok | 2026-10-27 12:49:20 | `C:\Temp\E137` | Eudora 7.2.0.126 / Paket 1.0.126+5ab3e4ea 2026-10-27 12:16 | `E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja` |
 
 ## 4. Deckung der kritischen Befunde
 
