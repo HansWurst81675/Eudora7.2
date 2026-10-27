@@ -1819,9 +1819,10 @@ grünen Schranken ([L-88.1](../Befunde/LEKTOR-88.md#l-88.1) bis
 [L-88.6](../Befunde/LEKTOR-88.md#l-88.6)). `Doku/ANWENDER.md` nannte den
 Dialog nach *Ja* „leer“, obwohl Kurzname und Name aus dem Absender vorbelegt
 werden ([L-88.7](../Befunde/LEKTOR-88.md#l-88.7)). Alle sieben **vom LEKTOR
-selbst berichtigt**. **Vor dem PR offen:** E-137 zählt *„viermal“* die
-Protokollzeile, der TESTPLAN zwei und eine unbezifferte
-([L-88.8](../Befunde/LEKTOR-88.md#l-88.8)). E-124 kennt den Defender-Fall an
+selbst berichtigt**. E-137 zählte *„viermal“* die Protokollzeile, der TESTPLAN
+zwei und eine unbezifferte; nach der Zählung des Hauptagenten in Gregors
+Protokoll (vier Zeilen, angedockt/schwebend nicht ablesbar) ebenfalls
+berichtigt ([L-88.8](../Befunde/LEKTOR-88.md#l-88.8)). E-124 kennt den Defender-Fall an
 1.0.127 nicht ([L-88.9](../Befunde/LEKTOR-88.md#l-88.9)); ein Verweis in
 PRÜFER-63 zeigt auf den inzwischen vergebenen E-165
 ([L-88.10](../Befunde/LEKTOR-88.md#l-88.10)). E-165 ist vollständig. Für

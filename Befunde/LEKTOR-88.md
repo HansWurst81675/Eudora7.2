@@ -21,10 +21,9 @@ Entscheidung 2, „hier weiter“), README-Stand, AUFGABEN, PAKETE, TESTPLAN-Kop
 nannten [E-137](../Intern/BEFUNDE.md#e-137)/[E-160](../Intern/BEFUNDE.md#e-160) weiter *„am Programm nicht gemessen“*, *„zu prüfen“*
 oder *„Gregors Test steht noch aus“*. Diese sieben Funde
 ([L-88.1](#l-88.1) bis [L-88.7](#l-88.7)) sind reine Doku-Zeilen und
-**vom LEKTOR selbst berichtigt** (Auftrag des Hauptagenten). **Vor dem PR
-offen:** [L-88.8](#l-88.8) — [E-137](../Intern/BEFUNDE.md#e-137) nennt *„viermal“* die Protokollzeile, der
+**vom LEKTOR selbst berichtigt** (Auftrag des Hauptagenten). [L-88.8](#l-88.8) — [E-137](../Intern/BEFUNDE.md#e-137) nennt *„viermal“* die Protokollzeile, der
 TESTPLAN nur zwei plus eine unbezifferte; das lässt sich nur am Protokoll
-klären, das ich nicht lesen kann. [L-88.9](#l-88.9) und [L-88.10](#l-88.10)
+klären — **nachträglich berichtigt** nach der Zählung des Hauptagenten (vier Zeilen). Vor dem PR ist damit nichts offen. [L-88.9](#l-88.9) und [L-88.10](#l-88.10)
 hindern den PR nicht.
 
 Kennzeichnung je Aussage: **gemessen** (Befehl mit Ausgabe), **belegt**
@@ -227,6 +226,19 @@ wäre:** am Protokoll zählen und eine der beiden Stellen angleichen
 V3 *„zweimal“*); „angedockt“ in [E-137](../Intern/BEFUNDE.md#e-137) nur stehen lassen, wenn das Protokoll
 es zeigt (etwa eine `E-76 … schwebt=0`-Zeile). **Vor dem PR empfohlen** —
 eine Zahl in einer Bestätigung.
+
+**Berichtigt** vom LEKTOR selbst im Auftrag des Hauptagenten, 27.10.2026,
+nach dessen Zählung in Gregors `eudora.log` (gemessen vom Hauptagenten, nicht
+von mir): genau vier Zeilen `E-137 Strg-W angekommen`, jede gleich gefolgt
+von `Wazoo-Leiste wird versteckt` — Zeile 2835 und 3100
+(`leiste-mit-fokus=nein … fokus=ListBox`, Weg aus V1/V2), Zeile 3172
+(`leiste-mit-fokus=ja … fokus=ListBox`) und 3186 (`leiste-mit-fokus=ja …
+fokus=Button`, V3); angedockt oder schwebend steht nicht im Protokoll. Die
+Vermutung oben (zwei plus zwei Button-Zeilen) war falsch: es ist **eine**
+Button-Zeile. `Intern/BEFUNDE.md` ([E-137](../Intern/BEFUNDE.md#e-137), Kopf) nennt jetzt diese Zählung
+statt *„schwebend … und angedockt mit Fokus auf „Match““*;
+`Intern/TESTPLAN.md:49` (V3) nennt die Zeilen 3172 und 3186 und die Summe
+von vier.
 
 ## <a id="l-88.9"></a>L-88.9 — veraltet: E-124 kennt den Defender-Fall an 1.0.127 nicht
 
