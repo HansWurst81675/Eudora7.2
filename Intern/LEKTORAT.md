@@ -1805,6 +1805,30 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Neunzigster Durchgang — Bestand vor dem PR des Zweigs `0.125_ergebnisse` nach `main`: Berichtigungen zu LEKTOR-84, E-137 fünfter Anlauf, Prüfstandsfall E-137a–c, Paket 1.0.126, 27.10.2026 (Bericht: `Befunde/LEKTOR-85.md`)
+
+Lauf über `8e78401c..5b8cf839` (fünf Commits), Bestand der 61 `.md` auf
+Standangaben. **7 Funde** (1 falsch, 3 veraltet, 3 unklar), dazu L-84.9
+offen. L-84.1, .3, .5, .7, .8 erledigt, L-84.4 und L-84.6 bis auf Reste.
+Nirgends wird E-137 oder E-160 als behoben oder bestätigt ausgegeben; der
+Kurztest V1–V5 ist ohne Rückfrage ausführbar. **Falsch:** das Urteil von
+E-137 sagt im Kopf *„am Programm noch nicht gemessen“* und *„Zuletzt
+gemessen: 26.10.2026 an 7.2.0.125“*, derselbe Eintrag meldet den
+Prüfstandslauf am Bau 1.0.126 grün — Grenzen des Falls (Fensterbotschaft
+statt Mausklick, Befehl statt Tastendruck, Postfach statt Mail, V3 ohne
+Fall) stehen nicht im Kopf ([L-85.1](../Befunde/LEKTOR-85.md#l-85.1)).
+`ZIEL.md` meldet für E-160 *„wer ?“* und *„nicht aufgeschrieben“*, obwohl
+TESTPLAN V4 der Schritt ist ([L-85.2](../Befunde/LEKTOR-85.md#l-85.2));
+README und AUFGABEN sagen „vierter Teil“ statt fünfter Anlauf
+([L-85.3](../Befunde/LEKTOR-85.md#l-85.3)); E-137 fehlt weiter im Maßstab
+([L-85.4](../Befunde/LEKTOR-85.md#l-85.4) = L-84.2); der fünfte Anlauf
+(Haken in `PreTranslateMessage`) ist von keinem PRÜFER gelesen
+([L-85.5](../Befunde/LEKTOR-85.md#l-85.5)); `WEITERMACHEN.md:135` sagt
+„danach PR“ ([L-85.6](../Befunde/LEKTOR-85.md#l-85.6)). Vor dem PR: L-85.1
+bis L-85.4 und L-85.6, über L-85.5 entscheidet der Hauptagent. Für Gregor
+offen: was vor der Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne
+Visual Studio.
+
 ## Neunundachtzigster Durchgang — Bestand nach dem Fassungssprung auf 7.2.0.126 / Paket 1.0.126 (E-137 vierter Anlauf, E-160, Kurztest V1–V5), 27.10.2026 (Bericht: `Befunde/LEKTOR-84.md`)
 
 Lauf über `903b0c6..120e09f5` (drei Commits), Bestand der 61 `.md` auf
