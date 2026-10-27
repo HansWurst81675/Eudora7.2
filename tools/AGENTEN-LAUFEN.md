@@ -9,3 +9,5 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-10-27 14:26 | PRUEFER-63.md: Aenderungen seit 53e7a718 gegen die Quelle, Kennungen E-165 und E-166 |
+| LEKTOR | 2026-10-27 14:26 | LEKTOR-86.md: alle MDs gegen den Bestand, seit 634414a0 |
