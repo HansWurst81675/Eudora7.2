@@ -1805,6 +1805,28 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Neunundachtzigster Durchgang — Bestand nach dem Fassungssprung auf 7.2.0.126 / Paket 1.0.126 (E-137 vierter Anlauf, E-160, Kurztest V1–V5), 27.10.2026 (Bericht: `Befunde/LEKTOR-84.md`)
+
+Lauf über `903b0c6..120e09f5` (drei Commits), Bestand der 61 `.md` auf
+Standangaben. **9 Funde** (2 falsch, 4 veraltet, 3 unklar). Nirgends wird
+E-137 oder E-160 als behoben oder bestätigt ausgegeben. **Falsch:** E-160
+ist für `offene-befunde.pl`, `ziel-stand.pl` und `pruefe-befundurteile.pl`
+unsichtbar — ein kursives Zitat im fettgedruckten Urteil, dieselbe Klasse
+wie L-80.1 —, deshalb meldet `ZIEL.md` *„26 von 26 erfüllt“* und die Listen
+„Noch offen“ zählen 41 statt 42 ([L-84.1](../Befunde/LEKTOR-84.md#l-84.1));
+`WEITERMACHEN.md:12` zählt drei statt zwei am 26.10. getestete Pakete
+([L-84.6](../Befunde/LEKTOR-84.md#l-84.6)). E-137, Voraussetzung für 7.2.1
+nach Entscheidung 2, hat keine Zeile im Maßstab
+([L-84.2](../Befunde/LEKTOR-84.md#l-84.2)); sein Urteil steht in Kopf,
+„Was noch fehlt“ und Messdatum auf dem Stand vor U1
+([L-84.3](../Befunde/LEKTOR-84.md#l-84.3)); der Absatz „Stand 26.10.2026,
+21:00“ und Entscheidung 2 in `WEITERMACHEN.md` sind überholt
+([L-84.4](../Befunde/LEKTOR-84.md#l-84.4),
+[L-84.5](../Befunde/LEKTOR-84.md#l-84.5)). TESTPLAN V4 nennt *Neu* statt
+*New...* ([L-84.7](../Befunde/LEKTOR-84.md#l-84.7)). Vor dem Paket: L-84.1,
+L-84.3, L-84.7. Für Gregor offen: was vor der Marke `v7.2.1.N` getestet
+sein muss, Kriterium 0 ohne Visual Studio.
+
 ## Achtundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-82 vor dem PR des Zweigs `0.123_ergebnisse` nach `main`, 26.10.2026 (Bericht: `Befunde/LEKTOR-83.md`)
 
 Lauf über `5a8e549..ce780458` (ein Commit, zwei `.md`, 3 Zeilen).
