@@ -737,6 +737,7 @@ CMainFrame::CMainFrame() :
 	ASSERT(!m_pTheMainFrame);
 	m_pTheMainFrame = this;
 	m_hE137Leiste = NULL;
+	m_hE137MdiBeiKlick = NULL;
 
 	// Setting this to FALSE means that menu items without handlers do not get disabled.
 	// This is used to control enabling/disabling of menu items in Mailboxes, Transfer,
@@ -1634,6 +1635,11 @@ void CMainFrame::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 
 void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 {
+	// E-137, PRUEFER-62 K1: wer zu einem anderen Programm wechselt und
+	// zurueckkommt, hat nicht zuletzt in die Leiste geklickt.
+	if (!bActive)
+		m_hE137Leiste = NULL;
+
 	if ( SearchManager::Instance() )
 		SearchManager::Instance()->OnActivateApp(bActive);
 }
@@ -3405,6 +3411,13 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 // OnCommand gibt Strg-W dann dieser Leiste. Jeder andere Klick und jede
 // andere Taste loescht die Marke, damit Strg-W nach einem Wechsel per
 // Tastatur wieder das Fenster mit dem Fokus trifft.
+//
+// PRUEFER-62 K1: ein Doppelklick auf ein Postfach in der Leiste Mailboxes
+// oeffnet es OHNE weiteren Klick - die Marke stand noch, und Strg-W haette
+// die Leiste versteckt statt das neue Postfach zu schliessen. Deshalb wird
+// mit der Marke das aktive MDI-Fenster gemerkt; OnCommand nimmt die Marke
+// nur, wenn es noch dasselbe ist. Wechselt Eudora in den Hintergrund,
+// verfaellt die Marke (OnActivateApp).
 ////////////////////////////////////////////////////////////////////////
 void CMainFrame::E137EingabeMerken(const MSG* pMsg)
 {
@@ -3417,6 +3430,8 @@ void CMainFrame::E137EingabeMerken(const MSG* pMsg)
 		{
 			CWazooBar* pLeiste = m_WazooBarMgr.GetWazooBarAt(pMsg->hwnd);
 			m_hE137Leiste = pLeiste ? pLeiste->GetSafeHwnd() : NULL;
+			CMDIChildWnd* pAktiv = MDIGetActive();
+			m_hE137MdiBeiKlick = pAktiv ? pAktiv->GetSafeHwnd() : NULL;
 		}
 		break;
 
@@ -3480,6 +3495,14 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		CWazooBar* pGeklickt = m_WazooBarMgr.GetWazooBarAt(m_hE137Leiste);
 		m_hE137Leiste = NULL;
 
+		// PRUEFER-62 K1: ist seit dem Klick ein anderes MDI-Fenster aktiv
+		// geworden (Doppelklick auf ein Postfach in Mailboxes), gilt Strg-W
+		// diesem neuen Fenster, nicht der Leiste.
+		CMDIChildWnd* pMdiJetzt = MDIGetActive();
+		const BOOL bMdiGewechselt = (pMdiJetzt ? pMdiJetzt->GetSafeHwnd() : NULL) != m_hE137MdiBeiKlick;
+		if (bMdiGewechselt)
+			pGeklickt = NULL;
+
 		// E-137, fuenfter Teil: eine Zeile bei JEDEM Strg-W, vor der
 		// Entscheidung - an 1.0.125 stand nach Gregors Klick gar nichts im
 		// Protokoll, und niemand konnte sagen, welcher Weg lief.
@@ -3488,8 +3511,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		if (pFokus && pFokus->GetSafeHwnd())
 			::GetClassNameA(pFokus->GetSafeHwnd(), szFokus, sizeof(szFokus));
 		CString strSpur;
-		strSpur.Format("E-137 Strg-W angekommen: leiste-mit-fokus=%s zuletzt-angeklickte-leiste=%s fokus=%s",
-					   pFokusLeiste ? "ja" : "nein", pGeklickt ? "ja" : "nein", szFokus);
+		strSpur.Format("E-137 Strg-W angekommen: leiste-mit-fokus=%s zuletzt-angeklickte-leiste=%s fokus=%s mdi-gewechselt=%s",
+					   pFokusLeiste ? "ja" : "nein", pGeklickt ? "ja" : "nein", szFokus, bMdiGewechselt ? "ja" : "nein");
 		PutDebugLog(DEBUG_MASK_MISC, strSpur);
 
 		// Nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste

@@ -191,8 +191,20 @@ void RunE137Tests(const char* szEudoraDir)
 		TT_CHECK_MSG(QT_Enthaelt(pMerk, "case WM_NCLBUTTONDOWN:"), "ein Klick auf Titelzeile oder Rand (WM_NCLBUTTONDOWN) wird nicht gemerkt - genau Gregors Fall U1");
 		TT_CHECK_MSG(QT_Enthaelt(pMerk, "CWazooBar* pLeiste = m_WazooBarMgr.GetWazooBarAt(pMsg->hwnd); m_hE137Leiste = pLeiste ? pLeiste->GetSafeHwnd() : NULL;"),
 					 "der Klick setzt die Marke nicht, oder ein Klick anderswo loescht sie nicht");
+		// PRUEFER-62 K2: ohne die W-Ausnahme loescht die Taste W selbst die
+		// Marke, bevor der Befehl ankommt - Gregors V1 scheitert, und kein
+		// anderer Test merkt es (der Pruefstand schickt ID_FILE_CLOSE direkt).
+		TT_CHECK_MSG(QT_Enthaelt(pMerk, "if (pMsg->wParam != VK_CONTROL && pMsg->wParam != VK_SHIFT && pMsg->wParam != 'W') m_hE137Leiste = NULL;"),
+					 "Strg und W loeschen die Marke - echtes Strg-W kaeme nie bei der Leiste an (PRUEFER-62 K2)");
+		// PRUEFER-62 K1: mit der Marke wird das aktive MDI-Fenster gemerkt.
+		TT_CHECK_MSG(QT_Enthaelt(pMerk, "CMDIChildWnd* pAktiv = MDIGetActive(); m_hE137MdiBeiKlick = pAktiv ? pAktiv->GetSafeHwnd() : NULL;"),
+					 "beim Klick wird das aktive MDI-Fenster nicht gemerkt (PRUEFER-62 K1)");
 		free(pMerk);
 	}
+	char* pCmd = QT_Abschnitt(pHaupt, "BOOL CMainFrame::OnCommand(", "BOOL CMainFrame::OnCmdMsg(");
+	TT_CHECK_MSG(pCmd && QT_Enthaelt(pCmd, "const BOOL bMdiGewechselt = (pMdiJetzt ? pMdiJetzt->GetSafeHwnd() : NULL) != m_hE137MdiBeiKlick; if (bMdiGewechselt) pGeklickt = NULL;"),
+				 "Strg-W nimmt die Marke auch, wenn inzwischen ein anderes Fenster aktiv ist - ein per Doppelklick geoeffnetes Postfach liesse sich nicht schliessen (PRUEFER-62 K1)");
+	free(pCmd);
 	char* pAt = QT_Abschnitt(pMgr, "CWazooBar* CWazooBarMgr::GetWazooBarAt(HWND hWnd) const", "return NULL; }");
 	TT_CHECK_MSG(pAt != NULL, "CWazooBarMgr::GetWazooBarAt nicht gefunden");
 	if (pAt)

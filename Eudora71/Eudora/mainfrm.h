@@ -424,6 +424,7 @@ protected:
 	BOOL	m_bE123Gewartet;		// E-123: beim Beenden schon auf Uebertragungen gewartet
 	BOOL	m_bE123WarteAktiv;		// E-123: das Warten laeuft gerade (Zeitgeber aktiv)
 	HWND	m_hE137Leiste;			// E-137: Leiste des letzten Klicks (NULL = keine)
+	HWND	m_hE137MdiBeiKlick;		// E-137: aktives MDI-Fenster beim Klick (PRUEFER-62 K1)
 	DWORD	m_dwE123Beginn;			// E-123: Beginn des Wartens (GetTickCount)
 	int		m_iNewMsgs;				// Counter for Win95 status pane
 
