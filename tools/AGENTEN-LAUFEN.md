@@ -10,3 +10,4 @@ nächsten Paket geklärt sein.
 | Rolle | seit | Auftrag |
 |---|---|---|
 | CHRONIST | 2026-10-27 16:59 | Lauf ueber 26.10. 07:18 bis 27.10. 17:00: Transkripte fa3529ec (Rest) und 15164e13 |
+| LEKTOR | 2026-10-27 17:03 | LEKTOR-88.md: alle MDs gegen den Bestand, seit 91c92ed0 |
