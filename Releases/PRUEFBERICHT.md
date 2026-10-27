@@ -2,27 +2,27 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.0.125` (Paketnummer `1.0.125`) |
-| **Commit** | `46707a76` — **Arbeitsbaum nicht sauber** (1 Dateien) |
-| **Erstellt** | 2026-10-26 20:56 |
-| **Gesamturteil** | **BESTANDEN** |
+| **Quellstand** | `7.2.0.126` (Paketnummer `1.0.126`) |
+| **Commit** | `ef3642f4` — **Arbeitsbaum nicht sauber** (11 Dateien) |
+| **Erstellt** | 2026-10-27 11:15 |
+| **Gesamturteil** | **NICHT VOLLSTAENDIG** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 01 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 16 s | dieser Lauf |
 | Pruefstand, 36 Faelle, 11 Eudora-Starts | 6 min 05 s | voller Lauf, Ende 2026-10-26 20:54:44 |
-| **zusammen** | **6 min 20 s** | |
+| **zusammen** | **6 min 22 s** | |
 
-Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
+Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.0.125 / Paket 1.0.125+c78096ea* 2026-10-26 22:23`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
-| Unit-Tests (`EudoraTests.exe`) | 312 | 312 | 0 |  |
+| Unit-Tests (`EudoraTests.exe`) | 313 | 313 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 36 | 36 | 0 | 0 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 36 | 0 | 0 | 36 an anderem Bau, 0 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
@@ -51,9 +51,9 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-26 20:56** gegen den Quelltext von Commit `46707a76*`.
+Gelaufen am **2026-10-27 11:15** gegen den Quelltext von Commit `ef3642f4*`.
 
-<details><summary>Alle 312 Unit-Tests einzeln</summary>
+<details><summary>Alle 313 Unit-Tests einzeln</summary>
 
 | Bereich | Test | Ergebnis |
 |---|---|---|
@@ -364,6 +364,7 @@ Gelaufen am **2026-10-26 20:56** gegen den Quelltext von Commit `46707a76*`.
 | E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-146 K9: lehnt der Server ab, wird die Ordnerliste neu gelesen | ok |
 | E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-119: ein data:-Bild ueber 64 KB kommt mit seiner vollen Laenge an | ok |
 | E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-158: Weiterleiten einer Textmail haengt kein </x-html> an (E-88 nur bei HTML-Mails) | ok |
+| E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung | E-160: ohne Outlook-Eintraege laedt der Kontoassistent kein MAPI | ok |
 | E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext) | E-77 K1: UpdateAfterRename fuehrt den Namen, der an den Server ging | ok |
 | E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext) | E-77 K2: RenameMailbox kodiert an allen fuenf Stellen, INBOX eingeschlossen | ok |
 | Startfehler S-2 (Regressionstests) | S-2: die Werbeleiste wird in unserem Bau nicht angelegt | ok |
@@ -378,7 +379,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-26 20:56** gegen Commit `46707a76*`.
+Gelaufen am **2026-10-27 11:15** gegen Commit `ef3642f4*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -406,47 +407,47 @@ Gelaufen am **2026-10-26 20:56** gegen Commit `46707a76*`.
 
 Je Fall der **letzte** Lauf. *Bau* ist die Kennung aus der `Eudora.exe` des
 Pruefstands (Fassung, Paket, Commit; ein `*` heisst: mit uncommitteten
-Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.0.125`
+Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.0.126`
 lief, zaehlt fuer diesen Stand nicht als gruen.
 
 | Fall | Ergebnis | gelaufen am | Pruefstand | Bau | erwartet |
 |---|---|---|---|---|---|
-| E-131a | ok | 2026-10-26 20:54:44 | `C:\Temp\E131L` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `ohne MRUFloatXPos=-2147483648` |
-| E-131b | ok | 2026-10-26 20:54:44 | `C:\Temp\E131L` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `ohne MRUFloatYPos=-2147483648` |
-| E-131c | ok | 2026-10-26 20:54:44 | `C:\Temp\E131L` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-131 Leistenposition:` |
-| E-121 | ok | 2026-10-26 20:54:44 | `C:\Temp\E118` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `ablage-dateien=1` |
-| E-118 | ok | 2026-10-26 20:54:44 | `C:\Temp\E118` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-118 Bild:` |
-| E-125a | ok | 2026-10-26 20:54:44 | `C:\Temp\E125` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0` |
-| E-125b | ok | 2026-10-26 20:54:44 | `C:\Temp\E125` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1` |
-| E-125c | ok | 2026-10-26 20:54:44 | `C:\Temp\E125` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out` |
-| E-103p | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64` |
-| E-112p | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=35x35 Datei=330x327 gemalt=35x35` |
-| E-112f2 | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=150x0 Datei=985x378 gemalt=150x58` |
-| E-112n1 | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=600x0 Datei=985x378 gemalt=600x230` |
-| E-112h | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=0x600 Datei=330x327 gemalt=606x600` |
-| E-106p | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-106 groesser als angegeben: attr=35x35 quelle=330x327` |
-| E-110p | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1` |
-| E-105p | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet` |
-| E-108p | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `Logging shutdown` |
-| BILD-lauf | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8` |
-| E-113p | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `Datei=985x378 gemalt=718x276` |
-| E-113b | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `BILD E113B` |
-| E-113b2 | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `neu=0 lebt=1 probe=ok` |
-| E-119d | ok | 2026-10-26 20:54:44 | `C:\Temp\E119K` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `vollstaendig=1 probe=ok` |
-| E-119a | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `data-db1b9f48.png faden=1 ok=1` |
-| E-119b | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-119 data-Bild als Datei:` |
-| E-119c | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `data-2eaa4a58.png laenge=1574` |
-| E-119e | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `laenge=78519` |
-| E-77a | ok | 2026-10-26 20:54:44 | `C:\Temp\E77` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E77 ERGEBNIS roh=0 dekodiert=2` |
-| E-77b | ok | 2026-10-26 20:54:44 | `C:\Temp\E77` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-77 Ordnername: server="Entw&APw-rfe"` |
-| E-77c | ok | 2026-10-26 20:54:44 | `C:\Temp\E77` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-77 Ordnername: server="Gel&APY-scht"` |
-| E-77d | ok | 2026-10-26 20:54:44 | `C:\Temp\E77U` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0` |
-| E-146 | ok | 2026-10-26 20:54:44 | `C:\Temp\E146` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)` |
-| E-97 | ok | 2026-10-26 20:54:44 | `C:\Temp\E97` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
-| E-100 | ok | 2026-10-26 20:54:44 | `C:\Temp\E97` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
-| E-67 | ok | 2026-10-26 20:54:44 | `C:\Temp\E67` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `verb-gespeichert=14 verb-auswahl=0` |
-| ZIEL24 | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `Logging shutdown` |
-| ZIEL24b | ok | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `Logging shutdown` |
+| E-131a | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E131L` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `ohne MRUFloatXPos=-2147483648` |
+| E-131b | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E131L` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `ohne MRUFloatYPos=-2147483648` |
+| E-131c | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E131L` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-131 Leistenposition:` |
+| E-121 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E118` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `ablage-dateien=1` |
+| E-118 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E118` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-118 Bild:` |
+| E-125a | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E125` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0` |
+| E-125b | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E125` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1` |
+| E-125c | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E125` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out` |
+| E-103p | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64` |
+| E-112p | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=35x35 Datei=330x327 gemalt=35x35` |
+| E-112f2 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=150x0 Datei=985x378 gemalt=150x58` |
+| E-112n1 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=600x0 Datei=985x378 gemalt=600x230` |
+| E-112h | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-112 Metadatei: angegeben=0x600 Datei=330x327 gemalt=606x600` |
+| E-106p | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-106 groesser als angegeben: attr=35x35 quelle=330x327` |
+| E-110p | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1` |
+| E-105p | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet` |
+| E-108p | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `Logging shutdown` |
+| BILD-lauf | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8` |
+| E-113p | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `Datei=985x378 gemalt=718x276` |
+| E-113b | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `BILD E113B` |
+| E-113b2 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `neu=0 lebt=1 probe=ok` |
+| E-119d | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E119K` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `vollstaendig=1 probe=ok` |
+| E-119a | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `data-db1b9f48.png faden=1 ok=1` |
+| E-119b | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-119 data-Bild als Datei:` |
+| E-119c | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `data-2eaa4a58.png laenge=1574` |
+| E-119e | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `laenge=78519` |
+| E-77a | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E77` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E77 ERGEBNIS roh=0 dekodiert=2` |
+| E-77b | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E77` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-77 Ordnername: server="Entw&APw-rfe"` |
+| E-77c | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E77` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E-77 Ordnername: server="Gel&APY-scht"` |
+| E-77d | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E77U` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0` |
+| E-146 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E146` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)` |
+| E-97 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E97` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
+| E-100 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E97` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
+| E-67 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\E67` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `verb-gespeichert=14 verb-auswahl=0` |
+| ZIEL24 | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `Logging shutdown` |
+| ZIEL24b | **ok, ANDERER BAU** | 2026-10-26 20:54:44 | `C:\Temp\EBILD` | Eudora 7.2.0.125 / Paket 1.0.125+46707a76 2026-10-26 20:48 | `Logging shutdown` |
 
 ## 4. Deckung der kritischen Befunde
 

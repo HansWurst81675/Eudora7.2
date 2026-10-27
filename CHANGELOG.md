@@ -37,10 +37,10 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt nach jedem Programmstart einmal… | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
 | **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | 26.10.2026 an 7.2.0.124 | Gregors Prüfung an 1.0.125: Klick auf Titelzeile und Rand der **schwebenden** Leiste (U1, U2) und auf eine Beschriftung der **angedockten** Leiste (U… |
-| **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
+| **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 — **veraltet** | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
-| **[E-128](Intern/BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | 23.10.2026 an 7.2.0.120 | die Entscheidung über den eigenen Vorschlag und dann sein Einbau — die Vorgabeendung aus dem Inhalt ableiten (`.html`, `.eml`, `.txt`) und den Date… |
+| **[E-128](Intern/BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | 23.10.2026 an 7.2.0.120 — **veraltet** | die Entscheidung über den eigenen Vorschlag und dann sein Einbau — die Vorgabeendung aus dem Inhalt ableiten (`.html`, `.eml`, `.txt`) und den Date… |
 | **[E-126](Intern/BEFUNDE.md#e-126)** | Eine gesendete Mail, die genau während eines Abgleichs des Ziel-IMAP-Ordners dorthin vers… | 23.10.2026 an 7.2.0.121 (Quelltext) | jede Messung — die Vermutung aus [PRÜFER-33](Befunde/PRUEFER-33.md) Q1 ist nie beobachtet worden, weder bei Gregor noch am Prüfstand, und dort … |
 | **[E-124](Intern/BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 26.10.2026 an 7.2.0.124 | der Vorgang bei Microsoft ist **abgewiesen** (zu viele Dateien im Upload, siehe die Messung unten) — nachzuholen ist eine **neue** Einreichung mit *… |
 | **[E-123](Intern/BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | 22.10.2026 an 7.2.0.121 | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
@@ -97,9 +97,29 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
+## 7.2.0.126 — Testpaket: Strg+W nach einem Klick auf die schwebende Leiste, vierter Anlauf ([E-137](Intern/BEFUNDE.md#e-137)); keine Windows-Meldung mehr beim Anlegen einer Persönlichkeit ([E-160](Intern/BEFUNDE.md#e-160))
+
+**Quellstand 7.2.0.126, Paket 1.0.126 — Testpaket, noch nicht getestet.** Gregors
+Kurztest an 7.2.0.125 ([TESTPLAN](Intern/TESTPLAN.md)): U1 nicht bestanden — nach einem
+Klick auf die Titelzeile des schwebenden Filterfensters schloss Strg+W wieder
+die Mail, und im Protokoll stand keine E-137-Zeile.
+
+* **[E-137](Intern/BEFUNDE.md#e-137) — die Fokusübergabe in die schwebende Leiste
+  hängt jetzt zusätzlich am Linksklick auf Titelzeile, Rand oder Ecke**
+  (`QCMiniDockFrameWnd::OnNcLButtonDown`), nicht mehr nur an der Aktivierung des
+  Rahmens. Beide Wege schreiben **vor** jeder Entscheidung eine Zeile
+  `E-137 Klick auf den Rahmen der schwebenden Leiste` ins Protokoll — geht es
+  wieder schief, zeigt das Protokoll, welcher Weg lief und warum er nichts tat.
+  Unit-Test `TestE137.cpp` angepasst.
+* **[E-160](Intern/BEFUNDE.md#e-160) — beim Anlegen einer Persönlichkeit (*Persona* →
+  Rechtsklick → *Neu*) kommt keine Windows-Meldung „kein E-Mail-Programm
+  zugeordnet“ mehr.** Der Outlook-Import im Kontoassistenten meldet sich nur noch
+  bei MAPI an, wenn in der Registry ein Outlook eingetragen ist. Unit-Test
+  `TestE160.cpp` (313 Tests, 313 bestanden; ohne die Behebung 312/313).
+
 ## 7.2.0.125 — Testpaket: Strg+W nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste ([E-137](Intern/BEFUNDE.md#e-137))
 
-**Quellstand 7.2.0.125, Paket 1.0.125 — Testpaket, noch nicht getestet.** Gregors
+**Quellstand 7.2.0.125, Paket 1.0.125 — Testpaket, von Gregor am 26.10.2026 im Kurztest geprüft: U1 nicht bestanden ([TESTPLAN](Intern/TESTPLAN.md)), weiter in 7.2.0.126.** Gregors
 Kurztest an 7.2.0.124 ([TESTPLAN](Intern/TESTPLAN.md)) fand, dass Strg+W wieder die
 Mail schloss, wenn er zuvor auf die Titelzeile oder den Rand des schwebenden
 Filterfensters geklickt hatte.

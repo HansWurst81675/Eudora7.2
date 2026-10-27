@@ -41,7 +41,7 @@ keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 25 von 25 erfüllt, 0 offen.** Diese Übersicht wird aus den
+**Stand: 26 von 26 erfüllt, 0 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -71,6 +71,7 @@ beschädigt, steht oben.
 | Kriterium 4 | [E-150](Intern/BEFUNDE.md#e-150) | das Abschalten einer Spalte im Fenster *Task Status* schrieb 4 Byte hinter ein Feld (**behoben**, auf `main` seit PR #174, kommt mit 7.2.0.123 und 7.2.1.x; am herausgeschnittenen Code mit Schutzstreifen gemessen) |
 | Kriterium 4 | [E-156](Intern/BEFUNDE.md#e-156) | im Paket lagen seit August sechs Debug-Fassungen, Eudora stürzte in `ucrtbased.dll` ab (**behoben** auf dem Zweig `0.123_ergebnisse`, kommt mit 7.2.0.124; Paketprüfung erst rot, dann grün; von Gregor am 26.10.2026 an Paket 1.0.124 bestätigt, TESTPLAN T5) |
 | Post wird verfälscht | [E-158](Intern/BEFUNDE.md#e-158) | beim Weiterleiten einer Textmail stand `</x-html>` in der gesendeten Nachricht (**behoben** auf dem Zweig `0.123_ergebnisse`, kommt mit 7.2.0.124; von Gregor am 26.10.2026 an Paket 1.0.124 bestätigt, TESTPLAN T3) |
+| Kriterium 3 | [E-160](Intern/BEFUNDE.md#e-160) | beim Anlegen einer Persönlichkeit (*Persona* → *Neu*) zeigte Windows „kein E-Mail-Programm zugeordnet“, weil der Outlook-Import auch ohne Outlook MAPI lud (**Behebung eingebaut**, kommt mit 7.2.0.126; Unit-Test rot ohne und grün mit, am Programm noch nicht gemessen — TESTPLAN V4) |
 | Kriterium 3 | [E-148](Intern/BEFUNDE.md#e-148) | Eudora vertraute vier kompromittierten eMudhra-Wurzeln (**behoben**, auf `main`, kommt mit 7.2.0.123 und 7.2.1.x; GMX und freenet mit OpenSSL gegen die neue Liste gemessen, mit Eudora selbst von Gregor am 26.10.2026 an Paket 1.0.123 bestätigt, TESTPLAN K3) |
 | Kriterium 2 | [E-146](Intern/BEFUNDE.md#e-146) | umbenannte IMAP-Ordner hießen in Eudora anders als am Server, auch nach einer Ablehnung (**behoben auf dem Zweig `vor-testpaket-7.2.0.123`**, kommt mit 7.2.0.123; am Prüfstand erst rot, dann grün) |
 | Bekannte Fehler in der README | **keine Voraussetzung, durch Entscheidung** — die Befunde selbst bleiben offen | Von Gregor am 25. und 26.10.2026 entschieden: sie stehen unter „Bekannte Fehler“ in der [README](README.md) und werden nach 7.2.1 angegangen. Darunter der Entwurf aus einem IMAP-Ordner nach `Out` ([E-142](Intern/BEFUNDE.md#e-142); vereinbart ist nur ein Hinweis, eingebaut am 26.10.2026), dazu [E-144](Intern/BEFUNDE.md#e-144), [E-143](Intern/BEFUNDE.md#e-143), [E-139](Intern/BEFUNDE.md#e-139), [E-136](Intern/BEFUNDE.md#e-136), [AN-1](Intern/BEFUNDE.md#an-1), die Nebenwirkung von [E-77](Intern/BEFUNDE.md#e-77) auf ältere Nachrichten mit Ablage, [E-140](Intern/BEFUNDE.md#e-140), [E-141](Intern/BEFUNDE.md#e-141), [E-145](Intern/BEFUNDE.md#e-145) |
@@ -169,7 +170,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 26.10.2026.** Quellstand **7.2.0.125** / `VERSION` **1.0.125** (Testpaket); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 27.10.2026.** Quellstand **7.2.0.126** / `VERSION` **1.0.126** (Testpaket); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 

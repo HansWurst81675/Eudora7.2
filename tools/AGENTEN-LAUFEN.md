@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| PRUEFER | 2026-10-27 11:11 | PRUEFER-61.md: Aenderungen seit d1b1024 gegen die Quelle, Kennungen E-161 und E-162 |
