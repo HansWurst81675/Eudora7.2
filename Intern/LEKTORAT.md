@@ -1805,6 +1805,19 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Zweiundneunzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-86 und der Übernahme von PRÜFER-63 vor dem PR des Zweigs `0.125_ergebnisse` nach `main`, 27.10.2026 (Bericht: `Befunde/LEKTOR-87.md`)
+
+Lauf über `ecbdbba9..212f826f` (LEKTOR-86 eingearbeitet, PRÜFER-63
+übernommen). **2 Funde** (1 unklar, 1 veraltet). L-86.1 bis L-86.7 alle
+erledigt; der Rest aus PRÜFER-63 K1 steht richtig in E-137, V6 trägt die
+Vorbedingung aus K3. **Unklar:** `CHANGELOG.md:106-108` verspricht für jeden
+Doppelklick auf ein Postfach, dass Strg+W wieder das Postfach schließt — der
+Restfall (Postfach schon vorn: die Leiste verschwindet) fehlt
+([L-87.1](../Befunde/LEKTOR-87.md#l-87.1), vor dem PR empfohlen).
+`WEITERMACHEN.md:135` nennt PRÜFER-63 nicht
+([L-87.2](../Befunde/LEKTOR-87.md#l-87.2)). Für Gregor offen: was vor der
+Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio.
+
 ## Einundneunzigster Durchgang — Kurzprüfung vor dem PR des Zweigs `0.125_ergebnisse` nach `main`: Berichtigungen zu LEKTOR-85, Korrektur PRÜFER-62 K1/K2, Fassung 7.2.0.127 / Paket 1.0.127, 27.10.2026 (Bericht: `Befunde/LEKTOR-86.md`)
 
 Lauf über `634414a0..ce5cda3e` (LEKTOR-85 eingearbeitet, K1/K2-Korrektur,
