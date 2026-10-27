@@ -452,3 +452,20 @@ Nach der Zählung im CHRONIST-Bericht vom 23.10. (21 Fälle) ist der zweite Fall
 | neuer Testblock fuer `TestE77.cpp` (C-Pfade mit doppeltem Rueckstrich) per Hier-Dokument in eine Datei | Fall 11/12 (12.10.): Text mit doppeltem Rueckstrich nur mit dem Write-Werkzeug | im Test stand ein Pfad mit einfachen Rueckstrichen; der Compiler warnte C4129, der Test war rot. Gefunden an der Warnung, nicht an einer Messung |
 
 **How to apply:** Ein Einsetzblock fuer **C/C++-Quelltext** geht immer mit dem Write-Werkzeug in die Zwischendatei, nicht nur Doku-Pfade; C-Zeichenketten tragen fast immer Rueckstriche. Neue Testdateien, die ganz mit dem Write-Werkzeug entstanden (`TestE146.cpp`, `TestRootCertsLog.cpp`), waren richtig.
+
+## Nachtrag 27.10.2026 (CHRONIST): fünfundzwanzigster und sechsundzwanzigster Fall, einen Tag nach der Regel
+
+Zeiten MEZ, gemessen am Transkript.
+
+| Zeit | Was | Regel hier | Folge |
+|---|---|---|---|
+| 12:07:26 / 12:07:39 | E-160: Quelltextzeilen und Testzeilen mit Registry-Pfaden (`Software\\Microsoft\\Office\\16.0\\…`) per `cat > $S/… <<'EOF'` in Zwischendateien | Nachtrag 26.10.: *„Ein Einsetzblock für C/C++-Quelltext geht immer mit dem Write-Werkzeug“* | In `OLImportClass.cpp:320` und `TestE160.cpp:31/33` standen einfache Rückstriche. Ein Reparaturversuch per `perl -i -pe 's/\\\\/…/g'` (12:07:46) verdoppelte jeden Rückstrich, auch den vor dem Anführungszeichen (`\\"Software…`). Erst `od -c` (12:08:05) zeigte, dass schon die Zwischendatei nur **einen** Rückstrich hatte, **obwohl das Hier-Dokument in Hochkommas stand**. Mit dem Write-Werkzeug neu geschrieben (12:08:12–16), danach richtig |
+| 15:39:45 | Neue Zeile für `tools/ZWEIGE.md` mit `„…“` und `–` als `\x{201E}`, `\x{2013}` in einem `perl -i -pe` ohne Ausgabeschicht | 14.10. (Fall mit `\x{2014}`) und [[zeilenenden-nach-jedem-schreibzugriff-messen]] (*„Wide character“*) | `Wide character in print … line 175`: die **vorhandene** Zeile 175 (*„ja, paßt“*) wurde doppelt kodiert, nicht nur die neue. Erkannt an der Warnung (15:39:51), Datei aus Git zurückgeholt, Zeile mit dem Write-Werkzeug und `<:raw` eingesetzt (15:40:03–10) |
+
+Beide Male hat die Messung danach gegriffen, der Schaden kam nicht in einen Commit. Beide Male stand die Regel einen Tag vorher in dieser Datei.
+
+**Neu gemessen:** Ein Hier-Dokument mit `<<'EOF'` ist auf diesem Weg **nicht** rückstrichfest. Gemessen 12:08:05 an `q320.txt`. Die Annahme „gequotetes Heredoc reicht ja“ ist widerlegt ([[widerlegte-vermutungen-aufschreiben]]).
+
+**How to apply, zusätzlich:**
+- Zwischendateien mit Rückstrich, Anführungszeichen oder Nicht-ASCII-Zeichen entstehen **nur** mit dem Write-Werkzeug. Ein Heredoc ist für solchen Text kein Weg, auch nicht in Hochkommas.
+- `\x{…}` über 255 nie in einem Perl-Einzeiler, der eine Datei roh umschreibt. Das Zeichen gehört als UTF-8-Bytes in die Zwischendatei.

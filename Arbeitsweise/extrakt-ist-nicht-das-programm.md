@@ -43,3 +43,18 @@ Zeiten MEZ, belegt an Commits und Berichten. Die erste Behebung von [[E-137]] (`
 - Eine rote Probe beweist nur, dass der Test den **Text** sieht. Ob der Weg dort vorbeikommt, beweist sie nicht ([[test-prueft-den-ausstieg]], [[gegenprobe-umdrehen]]).
 
 **Vorschlag für eine Schranke (nicht gebaut):** `QT_Abschnitt` bekommt eine Schwester `QT_Eindeutig(pCode, "<anker>")`, die rot meldet, wenn ein Anker im **ganzen** Datei-Code mehr als einmal vorkommt. Gegenprobe: `TestE137.cpp` auf dem Stand `ed0d53a2` mit diesem Aufruf für `GetWazooWindowWithFocus();` muss rot werden, auf `78f2ad2a` (Abfangung in `OnCommand` vor der ersten Weitergabe) grün.
+
+## Nachtrag 27.10.2026 (CHRONIST): grün, nicht übersetzbar und nie ausgeführt
+
+Zeiten MEZ, gemessen am Transkript, belegt an `Befunde/PRUEFER-61.md`. Der dritte und der vierte Anlauf zu [[E-137]] zeigen alle drei Fragen dieser Datei auf einmal:
+
+- **Übersetzbarkeit.** 26.10. 14:01: *„The counter-test is red without the fix (311/312) and green with it (312/312)“*, 14:04 an Gregor: *„I've fixed it and pushed (commit `0b0b50de`)“*. Übersetzt hat der Code erst um 20:47, weil eine Einbindung fehlte (20:58: *„Der Unit-Test liest nur den Quelltext und hat das nicht gemerkt“*). Sechs Stunden lang stand „behoben“ für Code, der nicht baute. Fall 3 vom 19.10., wörtlich.
+- **Lebenslauf (hier: gibt es das Objekt überhaupt?).** Beide Anläufe saßen in Handlern von `QCMiniDockFrameWnd`. `mainfrm.cpp:1791` setzt diese Klasse, aber `EnableDocking` fünfzehn Zeilen später überschreibt sie in MFC ausnahmslos mit `CMiniDockFrameWnd` (`winfrm2.cpp:51`). **Kein schwebender Rahmen ist je ein `QCMiniDockFrameWnd`**, keine Zeile der Behebung lief jemals. Die Quelltexttests waren grün, die rote Probe auch, denn sie sahen den Text.
+- **Ein Kommentar als Beleg.** PRUEFER-60 hatte den dritten Anlauf bestätigt, gestützt auf `mainfrm.cpp:1791` und den Kommentar `OTShim.h:993-994`. PRUEFER-61 schreibt dazu: *„Den Aufruf danach habe ich nicht nachgerechnet.“* ([[schranke-liest-nur-code]], [[befund-gegen-die-quelle-lesen]].)
+
+Was es gelöst hat, war kein besserer Quelltexttest, sondern ein Fall, der das **laufende** Programm fragt: `tools/messen-e137.ps1` klickt per Fensterbotschaft auf Titelzeile und Rand und prüft, ob das Fenster dahinter offen bleibt. Rot an 1.0.125 (27.10. 12:48), grün an 1.0.126 (12:49). Er entstand erst auf Gregors Frage ([[erst-nachstellen-dann-ausliefern]], Nachtrag 27.10.).
+
+**How to apply, zusätzlich:**
+- **Eine Behebung in einer Klasse beginnt mit dem Beweis, dass ein Objekt dieser Klasse zur Laufzeit existiert:** eine Spurzeile im Konstruktor oder ein Prüfstandsfall. Bei Fensterklassen, die über `RUNTIME_CLASS` gesetzt werden, den Weg bis zum `new`/`CreateObject` lesen, nicht bis zur Zuweisung.
+- **„Behoben“ an Gregor erst nach `bauen.ps1`**, nie nach den Unit-Tests allein.
+- Die Spurzeile, die 1.0.125 schreiben sollte (`E-137 Klick auf den Rahmen`), stand im Bau (PAKETE.md belegt es) und in Gregors Protokoll fehlte sie. Das Ausbleiben war hier der Befund; er wurde gelesen (26.10. 22:19) ([[ausbleiben-ist-kein-befund]]).

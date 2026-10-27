@@ -39,3 +39,15 @@ vorhandene Verweise nicht ins Leere zeigen.
   bleiben — ein Anker ist eine Adresse, kein Text.
 - **Nicht „kurz erklären" sondern ersetzen.** *„C8 (der Starttest)"* ist immer
   noch C8. Der Satz muss ohne die Kennung vollständig sein.
+
+## Nachtrag 27.10.2026 (CHRONIST): „E-119e“, „T0“ und ein Pfad mit „…“
+
+Zeiten MEZ, 26.10., gemessen am Transkript.
+
+- 11:27:34: *„Der Prüfbericht ist nicht vollständig, weil E-119e noch nie gelaufen ist.“* Gregor 11:28:35: *„was ist e-119e?“*, 11:28:42: *„steht ja nichts im befunde.md“*. Das ist ein **Prüfstandsfall** (der fünfte zu E-119, in `tools/pruefstand-faelle.txt`), kein Befund. Er sieht aber aus wie einer. Gregor fragte um 11:36:18 noch einmal: *„mit e-119e muß ich da was machen?“*
+- 13:27:16 *„was ist t1 und t5?“*, 14:21:37 *„1. was war t0..t5?“*, 14:24:42 *„t0“*. Am 26.10. waren nebeneinander Teil 0–3, K0–K8, M1–M3, N1–N6, T1–T5 und abends U1–U4 in Gebrauch, am 27.10. kam V1–V6 dazu. Jedes Paket brachte neue Buchstaben.
+- 11:19:50: *„pfad mit ... geht nicht“*. Ich hatte den Pfad zum Absturzbericht mit `…` gekürzt, und Gregor hat versucht, ihn zu benutzen. Um 11:38:06 kam derselbe Kniff noch einmal, in einer Tabelle mit *„`…` steht für …“*.
+
+**How to apply, zusätzlich:**
+- Ein Pfad, den Gregor kopieren oder eintippen soll, steht **vollständig** und in einem Stück da, nie mit `…`.
+- Interne Namen (Prüfstandsfälle, Schrittkennungen eines anderen Pakets) gehen nur mit Klartext an Gregor: *„der Prüfstandsfall E-119e (großes Bild in einer Mail; kein Befund, für Sie nichts zu tun)“*.

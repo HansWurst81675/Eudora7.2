@@ -242,3 +242,26 @@ die Frage, die es entscheidet (*„steht die Zeile im Claude-Fenster oder in
 der Leiste des Editors?"*). Die inhaltliche Antwort (*„du musst damit nichts
 tun"*) war richtig und gehört in den ersten Satz; die Ursache nur mit
 Kennzeichnung.
+
+## Nachtrag 27.10.2026 (CHRONIST): das Bildschirmfoto lag im Ordner, die Vermutung kam zuerst
+
+Zeiten MEZ, Uhr des Transkripts (die VM-Uhr sprang danach um etwa 25 Minuten zurück), gemessen.
+
+| Zeit | Was |
+|---|---|
+| 16:58:50 | Gregor: *„\\vmware-host\Shared Folders\Win10_VM\test_0.127 schau mal hier rein. … ich kann mit ctrl-k keine adresse ins adressbuch aufnehmen“* |
+| 16:58:59–16:59:01 | ich: **fünf** Bildschirmfotos auf einmal lesen. 16:59:07 von Gregor abgelehnt |
+| 17:06:46 | Gregor: *„schon was gefunden?“* |
+| 17:08:08 | ich: *„Gefunden ist noch nichts Belastbares. Ich habe nur eine **Vermutung**“* (IMAP-Text nicht geladen), dazu **drei Fragen** an Gregor |
+| 17:08:42 | ich, 34 Sekunden später, zur selben Sache: *„dann suche ich in der Tastenverarbeitung, auch in meinem neuen Haken für E-137“*. Um 17:08:08 hatte ich geschrieben: *„Strg+K läuft nicht über die E-137-Stellen“* |
+| 17:10:18 | Gregor: *„ich habe dort **ein** screenshot reingestellt, du brauchst es nur zu lesen“* |
+| 17:10:21 | ich: wieder **vier** Bildschirmfotos auf einmal. 17:11:27 abgelehnt |
+| 17:11:29 | Gregor nennt den Dateinamen: *„Screenshot 2026-10-27 165242.png“* |
+| 17:11:32 → 17:12:15 | ein Bild gelesen, Antwort in 43 Sekunden: Originalverhalten, eigene Adresse wird herausgenommen |
+
+Die Antwort stand die ganze Zeit in einer Datei, die Gregor hingelegt und genannt hatte. Dazwischen lagen eine Vermutung, drei Rückfragen, ein Widerspruch innerhalb einer Minute und zwei abgelehnte Lesestapel. **Warum Gregor die Stapel ablehnte, ist nicht gemessen.** Vermutung: Jede Datei auf der Netzfreigabe will eine eigene Freigabe, und er wollte ein Bild, nicht fünf. Sicher ist nur: Nach der ersten Ablehnung habe ich nicht gefragt, welches Bild, sondern geraten, und nach seinem *„ein screenshot“* wieder alle genommen ([[erlaubnis-nicht-hineinlesen]]: ein Ja zu einem Bild ist keins zu vier).
+
+**How to apply, zusätzlich:**
+- Nennt Gregor einen Ordner mit Bildschirmfotos, lese ich **das neueste zuerst, einzeln**, und erst dann, wenn es nicht reicht, das nächste.
+- Lehnt Gregor einen Lesestapel ab, ist die nächste Zeile eine Frage nach **der** Datei, keine Vermutung zur Ursache.
+- Solange das Beweisstück ungelesen ist, gibt es keine Aussage dazu, welche eigene Änderung beteiligt ist oder nicht.

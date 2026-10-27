@@ -40,3 +40,17 @@ Schranke: keine - die Filter stehen in Wegwerfbefehlen, die kein Commit-Haken si
 ## Nachtrag 25.10.2026 abends (CHRONIST): Fall 4, eine Stunde nach dieser Lehre
 
 19:19:53 MEZ: `ls LICENSE*; head -5 LICENSE` im eigenen Repo. Die fünf Zeilen enthalten nur die Copyright-Vermerke (gemessen am Transkript). 19:20:15 im Chat: *„Lizenz: BSD-3-Clause … Das ist **dieselbe Lizenz wie unser Repo**."* Am selben Abend stand derselbe Satz in E-147. LEKTOR-64 (19:53): Unsere Lizenz schließt Patentrechte aus (`LICENSE:8`, `:20`), sie heißt im Repo selbst „BSD-3-Clause mit Patentausschluss" (`LICENSE:39`, `README.md:310`), und GitHub meldet `NOASSERTION`. Die Folgerung „Einbau erlaubt" hielt, die Begründung nicht. **Regel 1 dieser Lehre in neuer Form:** Wer zwei Dinge für „gleich" erklärt, liest beide ganz. Von der einen Seite den SPDX-Namen zu lesen und von der anderen den Kopf ist kein Vergleich.
+
+## Nachtrag 27.10.2026 (CHRONIST): eine weggeworfene Ausgabe, eine Kette mit Semikolon, ein fremder Stash
+
+Zeiten MEZ, 26.10., gemessen am Transkript. Neun Dateien lagen ungesichert im Arbeitsbaum, Gregor hatte um 23:19:28 den Zweignamen bestätigt. Um 23:20:03 lief in **einem** Befehl:
+
+`git stash push -u -m "ungesichert 26.10. abends" >/dev/null 2>&1; echo stash=$?; … git switch -q 0.123_ergebnisse && git branch -d 0.125_ergebnisse …; git switch -c 0.125_ergebnisse origin/main …; git stash pop …`
+
+Ergebnis: `stash=1`. **Der Stash war gescheitert**, seine Meldung ging nach `/dev/null`. Die Kette lief mit `;` weiter, und `git stash pop` griff nach dem obersten vorhandenen Stash, *„On wt/pruefer-20261021: pruefer-44 vorgefundener Stand 21.10.“*, also einem fremden Stand vom 21.10. über elf geänderten Dateien. Git wendete ihn nicht an (*„The stash entry is kept in case you need it again“*), nichts ging verloren. Die Dateien wurden danach gegen die Patch-Kopie verglichen, identisch. Gregor um 23:20:40, ohne das gesehen zu haben: *„mach nichts kaputt auf die letzten schritte“*. Gemeldet habe ich es um 23:22:18 ungeschönt.
+
+Am 27.10. um 12:09:26 dasselbe Muster bei `git commit`: Fehlerausgabe nach `$TEMP/../nul_unused`, nur der Rückgabewert wurde gezeigt ([[zwischendateien-ins-scratchpad]], Nachtrag 27.10.).
+
+**How to apply, zusätzlich:**
+- Die Ausgabe eines git-Befehls, der den Arbeitsbaum oder den Stash verändert (`stash`, `switch`, `checkout`, `reset`, `branch -d`), wird nie weggeworfen.
+- Hängt ein Schritt vom vorigen ab, wird mit `&&` verkettet, nie mit `;`. Ein `stash pop` ohne Namen ist ausgeschlossen. Es heißt `git stash pop "stash@{N}"` mit der Nummer, die der eigene `stash push` gerade gemeldet hat ([[verwerfen-nur-mit-zaehler]]).
