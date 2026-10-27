@@ -229,6 +229,7 @@ public:
 	void SetIcon(int HaveMailStatus=-1, int msgCount =-1, BOOL bForceChange = FALSE);
 	UINT GetTopWindowID();
 	CWazooWnd* GetWazooWindowWithFocus();
+	void E137EingabeMerken(const MSG* pMsg);	// E-137, fuenfter Teil
 	void SetActiveWazooWindows();
 	void EnableDocking(DWORD dwDockStyle);
 	void GetRealClientRect(LPRECT lpRect);
@@ -422,6 +423,7 @@ protected:
 	UINT	m_idAutoActivateTimer;	// for Auto-Wazoo drag and drop auto-activation
 	BOOL	m_bE123Gewartet;		// E-123: beim Beenden schon auf Uebertragungen gewartet
 	BOOL	m_bE123WarteAktiv;		// E-123: das Warten laeuft gerade (Zeitgeber aktiv)
+	HWND	m_hE137Leiste;			// E-137: Leiste des letzten Klicks (NULL = keine)
 	DWORD	m_dwE123Beginn;			// E-123: Beginn des Wartens (GetTickCount)
 	int		m_iNewMsgs;				// Counter for Win95 status pane
 

@@ -37,10 +37,22 @@ void RunE137Tests(const char* szEudoraDir)
 		// Der ganze Abfangblock, als eine Folge von Anweisungen. Jede
 		// Abweichung - Bedingung verneint, Zweig ausgeschaltet, Schwerpunkt
 		// weggelassen, return vergessen - zerreisst die Folge.
-		const char* aBlock[] =
+		// Fuenfter Teil (PRUEFER-61 K1): Strg-W gilt auch der Leiste, die
+		// zuletzt angeklickt wurde - nach einem Klick auf Titelzeile oder
+		// Rand der schwebenden Leiste liegt der Fokus wieder in der Mail.
+		// Zwei Folgen: Ermitteln (mit Loeschen der Marke) und Entscheiden,
+		// dazwischen nur die Spurzeile.
+		const char* aErmitteln[] =
 		{
 			"if (wCommandID == ID_FILE_CLOSE) {",
 			"CWazooBar* pFokusLeiste = m_WazooBarMgr.GetWazooBarWithFocus();",
+			"CWazooBar* pGeklickt = m_WazooBarMgr.GetWazooBarAt(m_hE137Leiste);",
+			"m_hE137Leiste = NULL;",
+		};
+		const char* aBlock[] =
+		{
+			"PutDebugLog(DEBUG_MASK_MISC, strSpur);",
+			"if (!pFokusLeiste) pFokusLeiste = pGeklickt;",
 			"if (pFokusLeiste && pFokusLeiste->GetSafeHwnd() && pFokusLeiste->IsWindowVisible()) {",
 			"PutDebugLog(DEBUG_MASK_MISC, \"E-137 Strg-W: Wazoo-Leiste wird versteckt statt Eudora zu beenden\");",
 			"pFokusLeiste->PostMessage(WM_COMMAND, ID_SEC_HIDE, 0);",
@@ -50,13 +62,18 @@ void RunE137Tests(const char* szEudoraDir)
 		};
 		long lPos = 0;
 		bool bFolge = true;
-		for (size_t k = 0; k < sizeof(aBlock) / sizeof(aBlock[0]); k++)
+		for (int nFolge = 0; nFolge < 2 && bFolge; nFolge++)
 		{
-			const long l = QT_Stelle(pRumpf + lPos, aBlock[k]);
-			if (l < 0) { bFolge = false; TT_Fail("fehlt oder getrennt: %s", aBlock[k]); break; }
-			// Zwischen zwei Anweisungen darf nichts anderes stehen als ein Leerzeichen.
-			if (k > 0 && l > 1) { bFolge = false; TT_Fail("fehlt oder getrennt: %s", aBlock[k]); break; }
-			lPos += l + (long) strlen(aBlock[k]);
+			const char** a = nFolge == 0 ? aErmitteln : aBlock;
+			const size_t n = nFolge == 0 ? sizeof(aErmitteln) / sizeof(aErmitteln[0]) : sizeof(aBlock) / sizeof(aBlock[0]);
+			for (size_t k = 0; k < n; k++)
+			{
+				const long l = QT_Stelle(pRumpf + lPos, a[k]);
+				if (l < 0) { bFolge = false; TT_Fail("fehlt oder getrennt: %s", a[k]); break; }
+				// Innerhalb einer Folge darf zwischen zwei Anweisungen nichts anderes stehen als ein Leerzeichen.
+				if (k > 0 && l > 1) { bFolge = false; TT_Fail("fehlt oder getrennt: %s", a[k]); break; }
+				lPos += l + (long) strlen(a[k]);
+			}
 		}
 		TT_CHECK_MSG(bFolge, "der Abfangblock fuer Strg-W ist nicht mehr vollstaendig und zusammenhaengend (siehe die Zeile davor)");
 
@@ -147,5 +164,47 @@ void RunE137Tests(const char* szEudoraDir)
 	}
 	free(pWb);
 	free(pWbKopf);
+	TT_EndTest();
+
+	// Fuenfter Teil (Gregor an 1.0.125, U1 FAILED; PRUEFER-61 K1): der
+	// Rahmen der schwebenden Leiste ist ein CMiniDockFrameWnd, die Behandler
+	// in QCMiniDockFrameWnd liefen nie. Das Hauptfenster merkt sich jetzt den
+	// letzten Klick - aus CEudoraApp::PreTranslateMessage, fuer Klicks in die
+	// Leiste UND auf den Rahmen um eine schwebende.
+	TT_BeginTest("E-137: der letzte Klick in eine Wazoo-Leiste oder auf ihren schwebenden Rahmen wird gemerkt");
+	char* pApp = QT_LiesNurCode(szEudoraDir, "eudora.cpp");
+	char* pHaupt = QT_LiesNurCode(szEudoraDir, "mainfrm.cpp");
+	char* pMgr = QT_LiesNurCode(szEudoraDir, "WazooBarMgr.cpp");
+	if (!pApp || !pHaupt || !pMgr) { TT_Fail("eudora.cpp, mainfrm.cpp oder WazooBarMgr.cpp nicht lesbar - ungeprueft ist nicht gruen"); free(pApp); free(pHaupt); free(pMgr); TT_EndTest(); return; }
+	QT_LeerraumZusammen(pApp);
+	QT_LeerraumZusammen(pHaupt);
+	QT_LeerraumZusammen(pMgr);
+	char* pPre = QT_Abschnitt(pApp, "BOOL CEudoraApp::PreTranslateMessage(MSG* pMsg)", "return (CWinApp::PreTranslateMessage(pMsg));");
+	TT_CHECK_MSG(pPre && QT_Enthaelt(pPre, "if (mes == WM_LBUTTONDOWN || mes == WM_RBUTTONDOWN || mes == WM_NCLBUTTONDOWN || mes == WM_NCRBUTTONDOWN || mes == WM_KEYDOWN || mes == WM_SYSKEYDOWN) {"),
+				 "CEudoraApp::PreTranslateMessage reicht Klicks und Tasten nicht weiter - die Marke entstuende nie");
+	TT_CHECK_MSG(pPre && QT_Enthaelt(pPre, "pHaupt->E137EingabeMerken(pMsg);"), "CEudoraApp::PreTranslateMessage ruft E137EingabeMerken nicht");
+	free(pPre);
+	char* pMerk = QT_Abschnitt(pHaupt, "void CMainFrame::E137EingabeMerken(const MSG* pMsg)", "m_hE137Leiste = NULL; break; } }");
+	TT_CHECK_MSG(pMerk != NULL, "CMainFrame::E137EingabeMerken nicht gefunden");
+	if (pMerk)
+	{
+		TT_CHECK_MSG(QT_Enthaelt(pMerk, "case WM_NCLBUTTONDOWN:"), "ein Klick auf Titelzeile oder Rand (WM_NCLBUTTONDOWN) wird nicht gemerkt - genau Gregors Fall U1");
+		TT_CHECK_MSG(QT_Enthaelt(pMerk, "CWazooBar* pLeiste = m_WazooBarMgr.GetWazooBarAt(pMsg->hwnd); m_hE137Leiste = pLeiste ? pLeiste->GetSafeHwnd() : NULL;"),
+					 "der Klick setzt die Marke nicht, oder ein Klick anderswo loescht sie nicht");
+		free(pMerk);
+	}
+	char* pAt = QT_Abschnitt(pMgr, "CWazooBar* CWazooBarMgr::GetWazooBarAt(HWND hWnd) const", "return NULL; }");
+	TT_CHECK_MSG(pAt != NULL, "CWazooBarMgr::GetWazooBarAt nicht gefunden");
+	if (pAt)
+	{
+		TT_CHECK_MSG(QT_Enthaelt(pAt, "const HWND hOben = ::GetAncestor(hWnd, GA_ROOT);"), "der Rahmen um die schwebende Leiste wird nicht ermittelt");
+		TT_CHECK_MSG(QT_Enthaelt(pAt, "if (pWazooBar->IsFloating()) { CFrameWnd* pRahmen = pWazooBar->GetParentFrame(); if (pRahmen && pRahmen->GetSafeHwnd() == hOben) return pWazooBar; }"),
+					 "ein Klick auf den Rahmen einer schwebenden Leiste wird ihr nicht zugeordnet");
+		TT_CHECK_MSG(!QT_Enthaelt(pAt, "QCMiniDockFrameWnd"), "die Zuordnung haengt an QCMiniDockFrameWnd - diese Klasse wird nie erzeugt (PRUEFER-61 K1)");
+		free(pAt);
+	}
+	free(pApp);
+	free(pHaupt);
+	free(pMgr);
 	TT_EndTest();
 }

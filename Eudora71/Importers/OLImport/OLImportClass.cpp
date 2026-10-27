@@ -307,7 +307,29 @@ bool OLImportClass::FindMainOLKey(bool bDisplayErrDialog)
 	// kein E-Mail-Programm zugeordnet", weil hier ohne jeden Outlook-Eintrag
 	// trotzdem MAPI geladen und angemeldet wurde. Ohne Profil- und
 	// Identitaetsschluessel gibt es nichts zu importieren: still aufhoeren.
-	if (!m_bProfileKey && !m_bIdentityKey)
+	//
+	// Nachtrag 27.10.2026 (PRUEFER-61 K3): Outlook 2013 und neuer legt seine
+	// Profile nicht mehr unter den beiden alten Schluesseln ab, sondern unter
+	// Office\15.0 bzw. 16.0\Outlook\Profiles. Diese Anwender kamen vorher bis
+	// MAPI und sahen ihre Profile; damit das so bleibt, zaehlen auch diese
+	// Schluessel. m_bProfileKey/m_bIdentityKey bleiben dabei unveraendert -
+	// der weitere Weg ist derselbe wie vor E-160.
+	bool bNeueresOutlook = false;
+	const char* aNeuereProfile[] =
+	{
+		"Software\\Microsoft\\Office\\16.0\\Outlook\\Profiles",
+		"Software\\Microsoft\\Office\\15.0\\Outlook\\Profiles",
+	};
+	for (int i = 0; i < 2 && !bNeueresOutlook; i++)
+	{
+		HKEY hNeu = NULL;
+		if (RegOpenKeyEx(HKEY_CURRENT_USER, aNeuereProfile[i], 0, KEY_READ, &hNeu) == ERROR_SUCCESS)
+		{
+			bNeueresOutlook = true;
+			RegCloseKey(hNeu);
+		}
+	}
+	if (!m_bProfileKey && !m_bIdentityKey && !bNeueresOutlook)
 		return false;
 
 	// here we use MAPI to get the differnt profiles

@@ -567,6 +567,12 @@ QCMiniDockFrameWnd::~QCMiniDockFrameWnd()
 //     oder Ecke, auch wenn der Rahmen schon aktiv ist - PRUEFER-60 K6)
 // Ausgenommen ist der Schliessknopf (HTCLOSE, PRUEFER-60 K4). Die Leiste
 // kommt wie in RecalcLayout direkt aus m_wndSECDockBar (PRUEFER-60 K5).
+//
+// NACHTRAG 27.10.2026 (PRUEFER-61 K1): diese Klasse wird im laufenden
+// Programm nie erzeugt - CFrameWnd::EnableDocking (winfrm2.cpp:51)
+// ueberschreibt m_pFloatingFrameClass, den mainfrm.cpp vorher setzt. Die
+// beiden Behandler hier liefen deshalb nie. Der wirksame Weg steht jetzt
+// in CMainFrame::E137EingabeMerken (mainfrm.cpp).
 ////////////////////////////////////////////////////////////////////////
 void QCMiniDockFrameWnd::FokusInDieLeiste(UINT nHitTest, LPCTSTR pszWeg)
 {
