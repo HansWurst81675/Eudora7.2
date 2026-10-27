@@ -26,7 +26,7 @@ starten. In der Titelzeile muss **7.2.0.127** und **Paket 1.0.127** stehen.
 | V3 | [E-137](BEFUNDE.md#e-137) | wie V1 | Filterfenster wieder öffnen und **andocken**; erst in die Mail klicken, dann auf eine **Beschriftung** im Filterfenster (etwa „Match“), dann **Strg+W** | wie V1 |
 | V4 | [E-160](BEFUNDE.md#e-160) | lokal | *Tools → Personalities* öffnen (Register *Persona*), in die Liste rechtsklicken → *New...* | der Assistent für die neue Persönlichkeit erscheint **ohne** vorherige Windows-Meldung „kein E-Mail-Programm zugeordnet“; danach den Assistenten schließen, ohne etwas anzulegen |
 | V5 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.127-release` sein |
-| V6 | [E-137](BEFUNDE.md#e-137) (Gegenprobe, [PRÜFER-62](../Befunde/PRUEFER-62.md) K1) | lokal | die Leiste *Mailboxes* öffnen (*Tools → Mailboxes*), dort ein lokales Postfach (etwa `Trash`) **doppelklicken**, gleich danach **Strg+W** | das eben geöffnete Postfach geht zu, die Leiste *Mailboxes* bleibt stehen |
+| V6 | [E-137](BEFUNDE.md#e-137) (Gegenprobe, [PRÜFER-62](../Befunde/PRUEFER-62.md) K1) | lokal | die Leiste *Mailboxes* öffnen (*Tools → Mailboxes*), dort ein lokales Postfach **doppelklicken**, das gerade **nicht** offen ist (etwa `Junk`; ist es offen, vorher schließen), gleich danach **Strg+W** | das eben geöffnete Postfach geht zu, die Leiste *Mailboxes* bleibt stehen |
 
 Geht V1, V2 oder V3 schief, genügt mir die Nummer und *nein*, etwa *„V2 nein“*: Ich lese dann in deiner
 `eudora.log` die Zeilen `E-137 Strg-W angekommen`.
