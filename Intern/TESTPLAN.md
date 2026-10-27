@@ -43,12 +43,14 @@ Geht V1, V2, V3 oder V6 schief, genügt mir die Nummer und *nein*, etwa *„V2 n
 
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
-| V1 | — | | |
-| V2 | — | | |
-| V3 | — | | |
-| V4 | — | | |
-| V5 | — | | |
-| V6 | — | | |
+| V1 | **ja** (aus dem Protokoll) | 27.10.2026 | Gregor testete außerhalb der VM mit leerem Stand und frisch abgerufener Post und sagte: *„du kannst die ergebnisse jetzt übernehmen.“* Sein `eudora.log` (geteilter Ordner `test_0.127`), Sitzung 16:37: zweimal `E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja fokus=ListBox mdi-gewechselt=nein`, danach `Wazoo-Leiste wird versteckt`. Das ist der Weg aus V1/V2: Fokus in der Postfachliste, Klick auf den schwebenden Rahmen, die Leiste wird versteckt. Ob ein Klick auf die Titelzeile oder auf den Rand ging, zeigt die Zeile nicht |
+| V2 | **ja** (aus dem Protokoll) | 27.10.2026 | wie V1, dieselben zwei Zeilen |
+| V3 | **ja** (aus dem Protokoll) | 27.10.2026 | `E-137 Strg-W angekommen: leiste-mit-fokus=ja … fokus=Button`, danach `Wazoo-Leiste wird versteckt`: Klick auf das Gruppenfeld „Match“ der Leiste, dann Strg+W |
+| V4 | — | | im Protokoll nicht ablesbar ([E-160](BEFUNDE.md#e-160) schreibt keine Zeile); Gregors Urteil fehlt |
+| V5 | — | | kein `Exception`-Eintrag im Protokoll. Microsoft Defender nahm die `Eudora.exe` um 16:47 in Quarantäne, danach erschien „Error Loading Resource DLL (EudoraRes.dll)“; das ist der bekannte Fehlalarm [E-124](BEFUNDE.md#e-124), kein Absturz von Eudora. Das Windows-Ereignisprotokoll liegt auf Gregors Rechner draußen und ist nicht gezählt |
+| V6 | — | | Sitzung 16:49: sieben Mal `mdi-gewechselt=ja` ohne `Wazoo-Leiste wird versteckt`, Strg+W schloss also jedes Mal ein Fenster statt einer Leiste. Ob ein Doppelklick in *Mailboxes* vorausging, zeigt das Protokoll nicht; Gregors Urteil fehlt |
+
+**Nebenbei, kein Testpunkt:** Strg+K auf die Mail „test am mich“ (von `markus.bakus@gmx.de` an `Markus.Bakus@gmx.de`) brachte *„Eudora could not find any usable addresses … except maybe your own address“*. Das ist das Verhalten des Originals: Eudora nimmt die eigene Adresse vorher heraus (`namenick.cpp:1763-1764`, *Include yourself* = aus); bei einer Mail eines anderen Absenders kommt der Dialog.
 
 ## Kurztest 7.2.0.125 — überholt durch 7.2.0.127
 
