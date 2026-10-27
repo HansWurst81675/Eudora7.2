@@ -49,8 +49,8 @@ beschädigt, steht oben.
 
 | | wer | Was noch fehlt | Wie zu prüfen |
 |---|---|---|---|
-| **E-160** | Gregor | Gregors Prüfung an Paket 1.0.126 (TESTPLAN V4): *Tools → Personalities*, Rechtsklick in die Liste → *New...*, die Windows-Meldung darf nicht komm… | **GREGOR** — TESTPLAN V4; am Prüfstand bisher nicht gemessen. |
-| **E-137** | Gregor | Gregors Prüfung an 1.0.126: Klick auf Titelzeile und Rand der **schwebenden** Leiste (V1, V2) und auf eine Beschriftung der **angedockten** Leiste (V… | **GREGOR** — TESTPLAN V1 bis V3 an Paket 1.0.126; am Prüfstand misst `tools/messen-e137.ps1` V1 und V2 mit Fensterbotschaften. Eine angedockte Leiste hat keine eigene Titelzeile und keine… |
+| **E-160** | Gregor | Gregors Prüfung an Paket 1.0.127 (TESTPLAN V4): *Tools → Personalities*, Rechtsklick in die Liste → *New...*, die Windows-Meldung darf nicht komm… | **GREGOR** — TESTPLAN V4; am Prüfstand bisher nicht gemessen. |
+| **E-137** | Gregor | Gregors Prüfung an 1.0.127 (TESTPLAN V1–V3, Gegenprobe V6): Klick auf Titelzeile und Rand der **schwebenden** Leiste (V1, V2) und auf eine Beschrif… | **GREGOR** — TESTPLAN V1 bis V3 und V6 an Paket 1.0.127; am Prüfstand misst `tools/messen-e137.ps1` V1 und V2 mit Fensterbotschaften. Eine angedockte Leiste hat keine eigene Titelzeile un… |
 
 <!-- ziel-stand: Ende -->
 
@@ -174,7 +174,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 27.10.2026.** Quellstand **7.2.0.126** / `VERSION` **1.0.126** (Testpaket); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 27.10.2026.** Quellstand **7.2.0.127** / `VERSION` **1.0.127** (Testpaket); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 
