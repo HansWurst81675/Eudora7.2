@@ -105,7 +105,10 @@ das geschnürt und nie getestet wurde. Inhalt wie 7.2.0.126, dazu:
 
 * **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W nach einem Doppelklick auf ein Postfach in
   *Mailboxes* soll wieder das Postfach schließen** (am Programm nicht gemessen,
-  TESTPLAN V6). In 7.2.0.126 hätte es die Leiste
+  TESTPLAN V6). Ausnahme: war das Postfach beim Doppelklick schon das vorderste
+  Fenster, verschwindet bei Strg+W weiterhin die Leiste *Mailboxes* und das
+  Postfach bleibt offen; es geht nichts verloren ([PRÜFER-63](Befunde/PRUEFER-63.md) K1,
+  vermerkt in [E-137](Intern/BEFUNDE.md#e-137)). In 7.2.0.126 hätte es die Leiste
   *Mailboxes* versteckt, weil die gemerkte „zuletzt angeklickte Leiste“ stehen blieb,
   obwohl inzwischen ein neues Fenster aktiv war ([PRÜFER-62](Befunde/PRUEFER-62.md) K1). Die
   Merkung gilt jetzt nur, solange dasselbe Fenster aktiv ist, und verfällt beim
