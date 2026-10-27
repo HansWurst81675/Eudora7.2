@@ -260,12 +260,12 @@ das Messdatum und damit die erzeugten Listen ändert. Hindert den PR nicht.
 ## <a id="l-88.10"></a>L-88.10 — Hinweis: PRÜFER-63 sagt jetzt mit Verweis „E-165 … nicht vergeben“
 
 **Was passiert:** `befunde-verlinken.pl` hat in einem abgeschlossenen
-Prüferbericht den Satz *„[E-165](../Intern/BEFUNDE.md#e-165) und E-166 sind nicht vergeben“* mit einem
+Prüferbericht den Satz *„[E-165](../Intern/BEFUNDE.md#e-165) und [E-166](../Intern/BEFUNDE.md#e-166) sind nicht vergeben“* mit einem
 Verweis auf den inzwischen vergebenen [E-165](../Intern/BEFUNDE.md#e-165) versehen; wer klickt, landet bei
 der Vervollständigungsbox.
 
 * **Belegt**, `Befunde/PRUEFER-63.md:186`: *„Keine.
-  [E-165](../Intern/BEFUNDE.md#e-165) und E-166 sind nicht vergeben.“*
+  [E-165](../Intern/BEFUNDE.md#e-165) und [E-166](../Intern/BEFUNDE.md#e-166) sind nicht vergeben.“*
   (Commit `32773377`).
 
 Geschichtlich richtig, nur der Verweis ist neu. Ob das Werkzeug Sätze mit
