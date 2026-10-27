@@ -1,11 +1,48 @@
-# Testplan für Gregor — Quellstand 7.2.0.125 / `VERSION` 1.0.125, Stand 26.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.127 / `VERSION` 1.0.127, Stand 27.10.2026
 
-> **Testpaket 7.2.0.125** (Paket 1.0.125) — Kurztest direkt hierunter. Die
-> Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen, ihre Ergebnisse stehen
-> weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Test und deinem Ja
+> **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter. Das
+> Paket 1.0.126 bitte **nicht** testen: es wurde geschnürt, dann fand der
+> PRÜFER eine Nebenwirkung (V6), und 1.0.127 ersetzt es. Das
+> Testpaket 7.2.0.125 ist überholt (U1 nein, U2 bis U4 gehen in V2, V3 und V5
+> auf), die Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen; alle
+> Ergebnisse stehen weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Test und deinem Ja
 > wird das Release **7.2.1.<n>** gebaut.
 
-## Was jetzt zu testen ist — Testpaket 7.2.0.125 (Kurztest)
+## Was jetzt zu testen ist — Testpaket 7.2.0.127 (Kurztest)
+
+> Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.127-release`, neben dein
+> 1.0.125. Geprüft wird nur, was sich gegenüber 7.2.0.125 geändert hat, dazu
+> U2 bis U4 aus 7.2.0.125, die noch offen waren (jetzt V2, V3 und V5).
+
+**Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.125-release\Mailverzeichnis`
+nach `C:\Users\Gregor\Eudora72-1.0.127-release\Mailverzeichnis` kopieren, **ohne**
+`eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
+starten. In der Titelzeile muss **7.2.0.127** und **Paket 1.0.127** stehen.
+
+| Nr. | Was | Wo | Was zu tun ist | Was herauskommen muss |
+|---|---|---|---|---|
+| V1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail aus `In` geöffnet | das Filterfenster öffnen (*Tools → Filters*) und abdocken, so dass es **schwebt**; erst in die Mail klicken, dann auf die **Titelzeile** des Filterfensters klicken, dann **Strg+W** | nur das Filterfenster verschwindet, die Mail bleibt offen |
+| V2 | [E-137](BEFUNDE.md#e-137) | wie V1 | Filterfenster wieder öffnen (schwebend); erst in die Mail klicken, dann auf den **Rand** des Filterfensters klicken, dann **Strg+W** | wie V1 |
+| V3 | [E-137](BEFUNDE.md#e-137) | wie V1 | Filterfenster wieder öffnen und **andocken**; erst in die Mail klicken, dann auf eine **Beschriftung** im Filterfenster (etwa „Match“), dann **Strg+W** | wie V1 |
+| V4 | [E-160](BEFUNDE.md#e-160) | lokal | *Tools → Personalities* öffnen (Register *Persona*), in die Liste rechtsklicken → *New...* | der Assistent für die neue Persönlichkeit erscheint **ohne** vorherige Windows-Meldung „kein E-Mail-Programm zugeordnet“; danach den Assistenten schließen, ohne etwas anzulegen |
+| V5 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.127-release` sein |
+| V6 | [E-137](BEFUNDE.md#e-137) (Gegenprobe, [PRÜFER-62](../Befunde/PRUEFER-62.md) K1) | lokal | die Leiste *Mailboxes* öffnen (*Tools → Mailboxes*), dort ein lokales Postfach **doppelklicken**, das gerade **nicht** offen ist (etwa `Junk`; ist es offen, vorher schließen), gleich danach **Strg+W** | das eben geöffnete Postfach geht zu, die Leiste *Mailboxes* bleibt stehen |
+
+Geht V1, V2, V3 oder V6 schief, genügt mir die Nummer und *nein*, etwa *„V2 nein“*: Ich lese dann in deiner
+`eudora.log` die Zeilen `E-137 Strg-W angekommen`.
+
+### <a id="ergebnis-7-2-0-127"></a>Ergebnis am Testpaket 7.2.0.127
+
+| Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
+|---|---|---|---|
+| V1 | — | | |
+| V2 | — | | |
+| V3 | — | | |
+| V4 | — | | |
+| V5 | — | | |
+| V6 | — | | |
+
+## Kurztest 7.2.0.125 — überholt durch 7.2.0.127
 
 > Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.125-release`, neben dein
 > 1.0.124. Geprüft wird nur, was sich gegenüber 7.2.0.124 geändert hat.
@@ -26,10 +63,10 @@ starten. In der Titelzeile muss **7.2.0.125** und **Paket 1.0.125** stehen.
 
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
-| U1 | — | | |
-| U2 | — | | |
-| U3 | — | | |
-| U4 | — | | |
+| U1 | **nein** | 26.10.2026 | Gregor: *„E-137, T1 FAILED“* (gemeint ist U1). Im Protokoll nach dem Klick auf den Rahmen keine E-137-Zeile; neuer Anlauf für 7.2.0.126 ([E-137](BEFUNDE.md#e-137)). Nebenbei gefunden: [E-160](BEFUNDE.md#e-160) (Windows-Meldung bei *Persona* → *Neu*) |
+| U2 | — | | nicht getestet, geht in V2 an 7.2.0.127 auf |
+| U3 | — | | nicht getestet, geht in V3 an 7.2.0.127 auf |
+| U4 | — | | nicht getestet, geht in V5 an 7.2.0.127 auf |
 
 ## Kurztest 7.2.0.124 — abgeschlossen
 

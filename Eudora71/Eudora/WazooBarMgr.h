@@ -34,6 +34,7 @@ public:
 	BOOL ActivateWazooWindow(CMDIFrameWnd* pMainFrame, CRuntimeClass* pRuntimeClass);
 
 	CWazooBar* GetWazooBarWithFocus() const;
+	CWazooBar* GetWazooBarAt(HWND hWnd) const;	// E-137, fuenfter Teil
 	void SetActiveWazooWindows();
 
 	CWazooBar *FindWazooWnd(CRuntimeClass *pRuntimeClass) const;

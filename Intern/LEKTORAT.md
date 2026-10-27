@@ -1805,6 +1805,87 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Zweiundneunzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-86 und der Übernahme von PRÜFER-63 vor dem PR des Zweigs `0.125_ergebnisse` nach `main`, 27.10.2026 (Bericht: `Befunde/LEKTOR-87.md`)
+
+Lauf über `ecbdbba9..212f826f` (LEKTOR-86 eingearbeitet, PRÜFER-63
+übernommen). **2 Funde** (1 unklar, 1 veraltet). L-86.1 bis L-86.7 alle
+erledigt; der Rest aus PRÜFER-63 K1 steht richtig in E-137, V6 trägt die
+Vorbedingung aus K3. **Unklar:** `CHANGELOG.md:106-108` verspricht für jeden
+Doppelklick auf ein Postfach, dass Strg+W wieder das Postfach schließt — der
+Restfall (Postfach schon vorn: die Leiste verschwindet) fehlt
+([L-87.1](../Befunde/LEKTOR-87.md#l-87.1), vor dem PR empfohlen).
+`WEITERMACHEN.md:135` nennt PRÜFER-63 nicht
+([L-87.2](../Befunde/LEKTOR-87.md#l-87.2)). Für Gregor offen: was vor der
+Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio.
+
+## Einundneunzigster Durchgang — Kurzprüfung vor dem PR des Zweigs `0.125_ergebnisse` nach `main`: Berichtigungen zu LEKTOR-85, Korrektur PRÜFER-62 K1/K2, Fassung 7.2.0.127 / Paket 1.0.127, 27.10.2026 (Bericht: `Befunde/LEKTOR-86.md`)
+
+Lauf über `634414a0..ce5cda3e` (LEKTOR-85 eingearbeitet, K1/K2-Korrektur,
+Fassungssprung, Prüfstand 39/39, Paket 1.0.127). **7 Funde** (2 falsch,
+4 veraltet, 1 unklar). L-85.1 bis .4, .6, .7 und L-84.9 erledigt. Nirgends
+wird E-137 oder E-160 als behoben oder bestätigt ausgegeben; der Kurztest
+V1–V6 an 1.0.127 ist ohne Rückfrage ausführbar (V6-Menüweg *Tools →
+Mailboxes* am `EudoraRes.rc` belegt). **Falsch:** `PAKETE.md:173` sagt, beim
+Schnüren von 1.0.127 sei nur der CHRONIST fällig gewesen — der PRÜFER war es
+auch, die K1-Korrektur in `mainfrm.cpp` ist ungelesen
+([L-86.1](../Befunde/LEKTOR-86.md#l-86.1)); `WEITERMACHEN.md:121` nennt
+noch *„an 1.0.126 zu prüfen (V1–V3)“*
+([L-86.2](../Befunde/LEKTOR-86.md#l-86.2)). `ZIEL.md:77-78` nennt
+7.2.0.126, *Persona → Neu* und für E-137 kein V6
+([L-86.3](../Befunde/LEKTOR-86.md#l-86.3)); das Messdatum von E-137 steht
+auf 7.2.0.126, obwohl E-137a–c an 7.2.0.127 grün liefen
+([L-86.4](../Befunde/LEKTOR-86.md#l-86.4)); die K1-Korrektur heißt an drei
+Stellen „behoben“, ohne Messung am Programm
+([L-86.5](../Befunde/LEKTOR-86.md#l-86.5)). Vor dem PR: L-86.1 bis L-86.4,
+L-86.5 im selben Commit. Für Gregor offen: was vor der Marke `v7.2.1.N`
+getestet sein muss, Kriterium 0 ohne Visual Studio.
+
+## Neunzigster Durchgang — Bestand vor dem PR des Zweigs `0.125_ergebnisse` nach `main`: Berichtigungen zu LEKTOR-84, E-137 fünfter Anlauf, Prüfstandsfall E-137a–c, Paket 1.0.126, 27.10.2026 (Bericht: `Befunde/LEKTOR-85.md`)
+
+Lauf über `8e78401c..5b8cf839` (fünf Commits), Bestand der 61 `.md` auf
+Standangaben. **7 Funde** (1 falsch, 3 veraltet, 3 unklar), dazu L-84.9
+offen. L-84.1, .3, .5, .7, .8 erledigt, L-84.4 und L-84.6 bis auf Reste.
+Nirgends wird E-137 oder E-160 als behoben oder bestätigt ausgegeben; der
+Kurztest V1–V5 ist ohne Rückfrage ausführbar. **Falsch:** das Urteil von
+E-137 sagt im Kopf *„am Programm noch nicht gemessen“* und *„Zuletzt
+gemessen: 26.10.2026 an 7.2.0.125“*, derselbe Eintrag meldet den
+Prüfstandslauf am Bau 1.0.126 grün — Grenzen des Falls (Fensterbotschaft
+statt Mausklick, Befehl statt Tastendruck, Postfach statt Mail, V3 ohne
+Fall) stehen nicht im Kopf ([L-85.1](../Befunde/LEKTOR-85.md#l-85.1)).
+`ZIEL.md` meldet für E-160 *„wer ?“* und *„nicht aufgeschrieben“*, obwohl
+TESTPLAN V4 der Schritt ist ([L-85.2](../Befunde/LEKTOR-85.md#l-85.2));
+README und AUFGABEN sagen „vierter Teil“ statt fünfter Anlauf
+([L-85.3](../Befunde/LEKTOR-85.md#l-85.3)); E-137 fehlt weiter im Maßstab
+([L-85.4](../Befunde/LEKTOR-85.md#l-85.4) = L-84.2); der fünfte Anlauf
+(Haken in `PreTranslateMessage`) ist von keinem PRÜFER gelesen
+([L-85.5](../Befunde/LEKTOR-85.md#l-85.5)); `WEITERMACHEN.md:135` sagt
+„danach PR“ ([L-85.6](../Befunde/LEKTOR-85.md#l-85.6)). Vor dem PR: L-85.1
+bis L-85.4 und L-85.6, über L-85.5 entscheidet der Hauptagent. Für Gregor
+offen: was vor der Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne
+Visual Studio.
+
+## Neunundachtzigster Durchgang — Bestand nach dem Fassungssprung auf 7.2.0.126 / Paket 1.0.126 (E-137 vierter Anlauf, E-160, Kurztest V1–V5), 27.10.2026 (Bericht: `Befunde/LEKTOR-84.md`)
+
+Lauf über `903b0c6..120e09f5` (drei Commits), Bestand der 61 `.md` auf
+Standangaben. **9 Funde** (2 falsch, 4 veraltet, 3 unklar). Nirgends wird
+E-137 oder E-160 als behoben oder bestätigt ausgegeben. **Falsch:** E-160
+ist für `offene-befunde.pl`, `ziel-stand.pl` und `pruefe-befundurteile.pl`
+unsichtbar — ein kursives Zitat im fettgedruckten Urteil, dieselbe Klasse
+wie L-80.1 —, deshalb meldet `ZIEL.md` *„26 von 26 erfüllt“* und die Listen
+„Noch offen“ zählen 41 statt 42 ([L-84.1](../Befunde/LEKTOR-84.md#l-84.1));
+`WEITERMACHEN.md:12` zählt drei statt zwei am 26.10. getestete Pakete
+([L-84.6](../Befunde/LEKTOR-84.md#l-84.6)). E-137, Voraussetzung für 7.2.1
+nach Entscheidung 2, hat keine Zeile im Maßstab
+([L-84.2](../Befunde/LEKTOR-84.md#l-84.2)); sein Urteil steht in Kopf,
+„Was noch fehlt“ und Messdatum auf dem Stand vor U1
+([L-84.3](../Befunde/LEKTOR-84.md#l-84.3)); der Absatz „Stand 26.10.2026,
+21:00“ und Entscheidung 2 in `WEITERMACHEN.md` sind überholt
+([L-84.4](../Befunde/LEKTOR-84.md#l-84.4),
+[L-84.5](../Befunde/LEKTOR-84.md#l-84.5)). TESTPLAN V4 nennt *Neu* statt
+*New...* ([L-84.7](../Befunde/LEKTOR-84.md#l-84.7)). Vor dem Paket: L-84.1,
+L-84.3, L-84.7. Für Gregor offen: was vor der Marke `v7.2.1.N` getestet
+sein muss, Kriterium 0 ohne Visual Studio.
+
 ## Achtundachtzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-82 vor dem PR des Zweigs `0.123_ergebnisse` nach `main`, 26.10.2026 (Bericht: `Befunde/LEKTOR-83.md`)
 
 Lauf über `5a8e549..ce780458` (ein Commit, zwei `.md`, 3 Zeilen).

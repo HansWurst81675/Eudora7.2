@@ -37,10 +37,22 @@ void RunE137Tests(const char* szEudoraDir)
 		// Der ganze Abfangblock, als eine Folge von Anweisungen. Jede
 		// Abweichung - Bedingung verneint, Zweig ausgeschaltet, Schwerpunkt
 		// weggelassen, return vergessen - zerreisst die Folge.
-		const char* aBlock[] =
+		// Fuenfter Teil (PRUEFER-61 K1): Strg-W gilt auch der Leiste, die
+		// zuletzt angeklickt wurde - nach einem Klick auf Titelzeile oder
+		// Rand der schwebenden Leiste liegt der Fokus wieder in der Mail.
+		// Zwei Folgen: Ermitteln (mit Loeschen der Marke) und Entscheiden,
+		// dazwischen nur die Spurzeile.
+		const char* aErmitteln[] =
 		{
 			"if (wCommandID == ID_FILE_CLOSE) {",
 			"CWazooBar* pFokusLeiste = m_WazooBarMgr.GetWazooBarWithFocus();",
+			"CWazooBar* pGeklickt = m_WazooBarMgr.GetWazooBarAt(m_hE137Leiste);",
+			"m_hE137Leiste = NULL;",
+		};
+		const char* aBlock[] =
+		{
+			"PutDebugLog(DEBUG_MASK_MISC, strSpur);",
+			"if (!pFokusLeiste) pFokusLeiste = pGeklickt;",
 			"if (pFokusLeiste && pFokusLeiste->GetSafeHwnd() && pFokusLeiste->IsWindowVisible()) {",
 			"PutDebugLog(DEBUG_MASK_MISC, \"E-137 Strg-W: Wazoo-Leiste wird versteckt statt Eudora zu beenden\");",
 			"pFokusLeiste->PostMessage(WM_COMMAND, ID_SEC_HIDE, 0);",
@@ -50,13 +62,18 @@ void RunE137Tests(const char* szEudoraDir)
 		};
 		long lPos = 0;
 		bool bFolge = true;
-		for (size_t k = 0; k < sizeof(aBlock) / sizeof(aBlock[0]); k++)
+		for (int nFolge = 0; nFolge < 2 && bFolge; nFolge++)
 		{
-			const long l = QT_Stelle(pRumpf + lPos, aBlock[k]);
-			if (l < 0) { bFolge = false; TT_Fail("fehlt oder getrennt: %s", aBlock[k]); break; }
-			// Zwischen zwei Anweisungen darf nichts anderes stehen als ein Leerzeichen.
-			if (k > 0 && l > 1) { bFolge = false; TT_Fail("fehlt oder getrennt: %s", aBlock[k]); break; }
-			lPos += l + (long) strlen(aBlock[k]);
+			const char** a = nFolge == 0 ? aErmitteln : aBlock;
+			const size_t n = nFolge == 0 ? sizeof(aErmitteln) / sizeof(aErmitteln[0]) : sizeof(aBlock) / sizeof(aBlock[0]);
+			for (size_t k = 0; k < n; k++)
+			{
+				const long l = QT_Stelle(pRumpf + lPos, a[k]);
+				if (l < 0) { bFolge = false; TT_Fail("fehlt oder getrennt: %s", a[k]); break; }
+				// Innerhalb einer Folge darf zwischen zwei Anweisungen nichts anderes stehen als ein Leerzeichen.
+				if (k > 0 && l > 1) { bFolge = false; TT_Fail("fehlt oder getrennt: %s", a[k]); break; }
+				lPos += l + (long) strlen(a[k]);
+			}
 		}
 		TT_CHECK_MSG(bFolge, "der Abfangblock fuer Strg-W ist nicht mehr vollstaendig und zusammenhaengend (siehe die Zeile davor)");
 
@@ -101,9 +118,9 @@ void RunE137Tests(const char* szEudoraDir)
 
 	// Dritter Teil (Gregor am Testpaket 7.2.0.124, T1): ein Klick auf
 	// Titelzeile oder Rand des SCHWEBENDEN Fensters trifft den kleinen Rahmen
-	// QCMiniDockFrameWnd, nicht die Leiste - CWazooBar::OnMouseActivate sah
-	// ihn nie, und Strg+W schloss wieder die Mail. Der Rahmen holt den Fokus
-	// jetzt selbst in die Leiste, fuer jede Trefferzone ausser HTCLIENT.
+	// QCMiniDockFrameWnd, nicht die Leiste. Die erste Behebung sass nur in
+	// OnMouseActivate und griff an 1.0.125 nicht (U1 FAILED). Jetzt holen
+	// OnMouseActivate UND OnNcLButtonDown den Fokus ueber FokusInDieLeiste.
 	TT_BeginTest("E-137: ein Klick auf Titelzeile oder Rand einer schwebenden Leiste gibt ihr den Tastaturfokus");
 	char* pWb = QT_LiesNurCode(szEudoraDir, "workbook.cpp");
 	char* pWbKopf = QT_LiesNurCode(szEudoraDir, "workbook.h");
@@ -113,28 +130,93 @@ void RunE137Tests(const char* szEudoraDir)
 	char* pKlasse = QT_Abschnitt(pWbKopf, "class QCMiniDockFrameWnd : public SECMiniDockFrameWnd", "DECLARE_MESSAGE_MAP()");
 	TT_CHECK_MSG(pKlasse && QT_Enthaelt(pKlasse, "afx_msg int OnMouseActivate(CWnd* pDesktopWnd, UINT nHitTest, UINT message);"),
 				 "QCMiniDockFrameWnd deklariert OnMouseActivate nicht");
+	TT_CHECK_MSG(pKlasse && QT_Enthaelt(pKlasse, "afx_msg void OnNcLButtonDown(UINT nHitTest, CPoint point);"),
+				 "QCMiniDockFrameWnd deklariert OnNcLButtonDown nicht - ist der Rahmen schon aktiv, kaeme kein WM_MOUSEACTIVATE (PRUEFER-60 K6)");
 	free(pKlasse);
 	char* pMap = QT_Abschnitt(pWb, "BEGIN_MESSAGE_MAP(QCMiniDockFrameWnd, SECMiniDockFrameWnd)", "END_MESSAGE_MAP()");
-	TT_CHECK_MSG(pMap && QT_Enthaelt(pMap, "ON_WM_MOUSEACTIVATE()"),
-				 "OnMouseActivate steht nicht in der Message-Map von QCMiniDockFrameWnd - es liefe nie");
+	TT_CHECK_MSG(pMap && QT_Enthaelt(pMap, "ON_WM_MOUSEACTIVATE()"), "OnMouseActivate fehlt in der Message-Map von QCMiniDockFrameWnd");
+	TT_CHECK_MSG(pMap && QT_Enthaelt(pMap, "ON_WM_NCLBUTTONDOWN()"), "OnNcLButtonDown fehlt in der Message-Map von QCMiniDockFrameWnd");
 	free(pMap);
-	char* pRahmen = QT_Abschnitt(pWb, "int QCMiniDockFrameWnd::OnMouseActivate(", "return nErgebnis; }");
-	TT_CHECK_MSG(pRahmen != NULL, "QCMiniDockFrameWnd::OnMouseActivate nicht gefunden");
-	if (pRahmen)
+	char* pHilfe = QT_Abschnitt(pWb, "void QCMiniDockFrameWnd::FokusInDieLeiste(", "pWazooWnd->SetFocus(); }");
+	TT_CHECK_MSG(pHilfe != NULL, "QCMiniDockFrameWnd::FokusInDieLeiste nicht gefunden");
+	if (pHilfe)
 	{
-		const long lBasis = QT_Stelle(pRahmen, "SECMiniDockFrameWnd::OnMouseActivate(pDesktopWnd, nHitTest, message);");
-		const long lZone  = QT_Stelle(pRahmen, "if (nHitTest != HTCLIENT && nHitTest != HTCLOSE) {");
-		const long lSuche = QT_Stelle(pRahmen, "CWazooBar* pLeiste = DYNAMIC_DOWNCAST(CWazooBar, m_wndSECDockBar.GetFirstControlBar());");
-		const long lWenn  = QT_Stelle(pRahmen, "if (pLeiste && pLeiste->IsWindowVisible() && (!pFokus || !pLeiste->IsChild(pFokus))) {");
-		const long lSetze = QT_Stelle(pRahmen, "pWazooWnd->SetFocus();");
-		TT_CHECK_MSG(lBasis >= 0, "die Basisklasse wird nicht mehr gerufen - Ziehen und Aktivieren des Rahmens fielen weg");
-		TT_CHECK_MSG(lZone > lBasis, "der Rahmen behandelt nicht gezielt Titelzeile und Rand (HTCLIENT bleibt bei CWazooBar, HTCLOSE ausgenommen - PRUEFER-60 K4)");
-		TT_CHECK_MSG(lSuche > lZone, "der Rahmen holt die Leiste nicht aus m_wndSECDockBar (PRUEFER-60 K1/K5: eine eigene Suche blieb im Test gruen, auch wenn sie nie traf)");
-		TT_CHECK_MSG(lWenn > lSuche && lSetze > lWenn,
-					 "der Fokus wird nicht oder nicht nur dann gesetzt, wenn er ausserhalb der Leiste liegt");
-		free(pRahmen);
+		const long lZone  = QT_Stelle(pHilfe, "if (nHitTest == HTCLIENT || nHitTest == HTCLOSE) return;");
+		const long lSuche = QT_Stelle(pHilfe, "CWazooBar* pLeiste = DYNAMIC_DOWNCAST(CWazooBar, m_wndSECDockBar.GetFirstControlBar());");
+		const long lSpur  = QT_Stelle(pHilfe, "PutDebugLog(DEBUG_MASK_MISC, strSpur);");
+		const long lWenn  = QT_Stelle(pHilfe, "if (bSichtbar && !bFokusDrin && pWazooWnd && pWazooWnd->GetSafeHwnd())");
+		TT_CHECK_MSG(lZone >= 0, "Klicks in die Leiste (HTCLIENT) und auf den Schliessknopf (HTCLOSE) sind nicht ausgenommen");
+		TT_CHECK_MSG(lSuche > lZone, "die Leiste kommt nicht aus m_wndSECDockBar (PRUEFER-60 K1/K5)");
+		TT_CHECK_MSG(lSpur > lSuche && lWenn > lSpur, "die Spur steht nicht VOR der Entscheidung - ein stiller Ausstieg waere wieder unsichtbar (U1 an 1.0.125)");
+		free(pHilfe);
+	}
+	char* pAkt = QT_Abschnitt(pWb, "int QCMiniDockFrameWnd::OnMouseActivate(", "return nErgebnis; }");
+	TT_CHECK_MSG(pAkt && QT_Enthaelt(pAkt, "FokusInDieLeiste(nHitTest, \"MouseActivate\");"), "OnMouseActivate ruft FokusInDieLeiste nicht");
+	free(pAkt);
+	char* pNc = QT_Abschnitt(pWb, "void QCMiniDockFrameWnd::OnNcLButtonDown(", "SECMiniDockFrameWnd::OnNcLButtonDown(nHitTest, point); }");
+	TT_CHECK_MSG(pNc != NULL, "QCMiniDockFrameWnd::OnNcLButtonDown nicht gefunden");
+	if (pNc)
+	{
+		const long lFokus = QT_Stelle(pNc, "FokusInDieLeiste(nHitTest, \"NcLButtonDown\");");
+		const long lBasis = QT_Stelle(pNc, "SECMiniDockFrameWnd::OnNcLButtonDown(nHitTest, point);");
+		TT_CHECK_MSG(lFokus >= 0 && lBasis > lFokus, "der Fokus wird nicht VOR der Zieh-/Groessenschleife der Basisklasse gesetzt");
+		free(pNc);
 	}
 	free(pWb);
 	free(pWbKopf);
+	TT_EndTest();
+
+	// Fuenfter Teil (Gregor an 1.0.125, U1 FAILED; PRUEFER-61 K1): der
+	// Rahmen der schwebenden Leiste ist ein CMiniDockFrameWnd, die Behandler
+	// in QCMiniDockFrameWnd liefen nie. Das Hauptfenster merkt sich jetzt den
+	// letzten Klick - aus CEudoraApp::PreTranslateMessage, fuer Klicks in die
+	// Leiste UND auf den Rahmen um eine schwebende.
+	TT_BeginTest("E-137: der letzte Klick in eine Wazoo-Leiste oder auf ihren schwebenden Rahmen wird gemerkt");
+	char* pApp = QT_LiesNurCode(szEudoraDir, "eudora.cpp");
+	char* pHaupt = QT_LiesNurCode(szEudoraDir, "mainfrm.cpp");
+	char* pMgr = QT_LiesNurCode(szEudoraDir, "WazooBarMgr.cpp");
+	if (!pApp || !pHaupt || !pMgr) { TT_Fail("eudora.cpp, mainfrm.cpp oder WazooBarMgr.cpp nicht lesbar - ungeprueft ist nicht gruen"); free(pApp); free(pHaupt); free(pMgr); TT_EndTest(); return; }
+	QT_LeerraumZusammen(pApp);
+	QT_LeerraumZusammen(pHaupt);
+	QT_LeerraumZusammen(pMgr);
+	char* pPre = QT_Abschnitt(pApp, "BOOL CEudoraApp::PreTranslateMessage(MSG* pMsg)", "return (CWinApp::PreTranslateMessage(pMsg));");
+	TT_CHECK_MSG(pPre && QT_Enthaelt(pPre, "if (mes == WM_LBUTTONDOWN || mes == WM_RBUTTONDOWN || mes == WM_NCLBUTTONDOWN || mes == WM_NCRBUTTONDOWN || mes == WM_KEYDOWN || mes == WM_SYSKEYDOWN) {"),
+				 "CEudoraApp::PreTranslateMessage reicht Klicks und Tasten nicht weiter - die Marke entstuende nie");
+	TT_CHECK_MSG(pPre && QT_Enthaelt(pPre, "pHaupt->E137EingabeMerken(pMsg);"), "CEudoraApp::PreTranslateMessage ruft E137EingabeMerken nicht");
+	free(pPre);
+	char* pMerk = QT_Abschnitt(pHaupt, "void CMainFrame::E137EingabeMerken(const MSG* pMsg)", "m_hE137Leiste = NULL; break; } }");
+	TT_CHECK_MSG(pMerk != NULL, "CMainFrame::E137EingabeMerken nicht gefunden");
+	if (pMerk)
+	{
+		TT_CHECK_MSG(QT_Enthaelt(pMerk, "case WM_NCLBUTTONDOWN:"), "ein Klick auf Titelzeile oder Rand (WM_NCLBUTTONDOWN) wird nicht gemerkt - genau Gregors Fall U1");
+		TT_CHECK_MSG(QT_Enthaelt(pMerk, "CWazooBar* pLeiste = m_WazooBarMgr.GetWazooBarAt(pMsg->hwnd); m_hE137Leiste = pLeiste ? pLeiste->GetSafeHwnd() : NULL;"),
+					 "der Klick setzt die Marke nicht, oder ein Klick anderswo loescht sie nicht");
+		// PRUEFER-62 K2: ohne die W-Ausnahme loescht die Taste W selbst die
+		// Marke, bevor der Befehl ankommt - Gregors V1 scheitert, und kein
+		// anderer Test merkt es (der Pruefstand schickt ID_FILE_CLOSE direkt).
+		TT_CHECK_MSG(QT_Enthaelt(pMerk, "if (pMsg->wParam != VK_CONTROL && pMsg->wParam != VK_SHIFT && pMsg->wParam != 'W') m_hE137Leiste = NULL;"),
+					 "Strg und W loeschen die Marke - echtes Strg-W kaeme nie bei der Leiste an (PRUEFER-62 K2)");
+		// PRUEFER-62 K1: mit der Marke wird das aktive MDI-Fenster gemerkt.
+		TT_CHECK_MSG(QT_Enthaelt(pMerk, "CMDIChildWnd* pAktiv = MDIGetActive(); m_hE137MdiBeiKlick = pAktiv ? pAktiv->GetSafeHwnd() : NULL;"),
+					 "beim Klick wird das aktive MDI-Fenster nicht gemerkt (PRUEFER-62 K1)");
+		free(pMerk);
+	}
+	char* pCmd = QT_Abschnitt(pHaupt, "BOOL CMainFrame::OnCommand(", "BOOL CMainFrame::OnCmdMsg(");
+	TT_CHECK_MSG(pCmd && QT_Enthaelt(pCmd, "const BOOL bMdiGewechselt = (pMdiJetzt ? pMdiJetzt->GetSafeHwnd() : NULL) != m_hE137MdiBeiKlick; if (bMdiGewechselt) pGeklickt = NULL;"),
+				 "Strg-W nimmt die Marke auch, wenn inzwischen ein anderes Fenster aktiv ist - ein per Doppelklick geoeffnetes Postfach liesse sich nicht schliessen (PRUEFER-62 K1)");
+	free(pCmd);
+	char* pAt = QT_Abschnitt(pMgr, "CWazooBar* CWazooBarMgr::GetWazooBarAt(HWND hWnd) const", "return NULL; }");
+	TT_CHECK_MSG(pAt != NULL, "CWazooBarMgr::GetWazooBarAt nicht gefunden");
+	if (pAt)
+	{
+		TT_CHECK_MSG(QT_Enthaelt(pAt, "const HWND hOben = ::GetAncestor(hWnd, GA_ROOT);"), "der Rahmen um die schwebende Leiste wird nicht ermittelt");
+		TT_CHECK_MSG(QT_Enthaelt(pAt, "if (pWazooBar->IsFloating()) { CFrameWnd* pRahmen = pWazooBar->GetParentFrame(); if (pRahmen && pRahmen->GetSafeHwnd() == hOben) return pWazooBar; }"),
+					 "ein Klick auf den Rahmen einer schwebenden Leiste wird ihr nicht zugeordnet");
+		TT_CHECK_MSG(!QT_Enthaelt(pAt, "QCMiniDockFrameWnd"), "die Zuordnung haengt an QCMiniDockFrameWnd - diese Klasse wird nie erzeugt (PRUEFER-61 K1)");
+		free(pAt);
+	}
+	free(pApp);
+	free(pHaupt);
+	free(pMgr);
 	TT_EndTest();
 }

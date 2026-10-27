@@ -1904,6 +1904,16 @@ BOOL CEudoraApp::PreTranslateMessage(MSG* pMsg)
     // check for idle time down in CEudoraApp::OnIdle()
     UINT mes = pMsg->message;
 
+	// E-137, fuenfter Teil: das Hauptfenster merkt sich, in welche
+	// Wazoo-Leiste zuletzt geklickt wurde (CMainFrame::E137EingabeMerken).
+	if (mes == WM_LBUTTONDOWN || mes == WM_RBUTTONDOWN || mes == WM_NCLBUTTONDOWN ||
+		mes == WM_NCRBUTTONDOWN || mes == WM_KEYDOWN || mes == WM_SYSKEYDOWN)
+	{
+		CMainFrame* pHaupt = DYNAMIC_DOWNCAST(CMainFrame, AfxGetMainWnd());
+		if (pHaupt && pHaupt->GetSafeHwnd())
+			pHaupt->E137EingabeMerken(pMsg);
+	}
+
     if ( mes == WM_KEYDOWN )	// Switched form Keyup because people were letting go of the shift key too soon.
     {
 #ifdef _DEBUG

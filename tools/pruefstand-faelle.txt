@@ -261,3 +261,15 @@ E-67 | C:\Temp\E67 | 60 | log | verb-gespeichert=14 verb-auswahl=0 | verb-auswah
 # Protokoll wurde bis zum Ende geschrieben.
 ZIEL24 | C:\Temp\EBILD | 240 | log | Logging shutdown | Ausnahme in Fensterbotschaft | | messen=tools\messen-bild.ps1
 ZIEL24b | C:\Temp\EBILD | 240 | log | Logging shutdown | Ausnahme ausserhalb einer Fensterbotschaft | | messen=tools\messen-bild.ps1
+
+# -------------------------------------------------------------------------
+# E-137 - Strg-W nach einem Klick auf die schwebende Filterleiste
+# -------------------------------------------------------------------------
+# Gregor an 1.0.125 (Kurztest U1): Titelzeile des schwebenden Filterfensters
+# angeklickt, Strg+W - die Mail ging zu statt des Filterfensters. Die Unit-
+# Tests lasen nur Quelltext und waren gruen (PRUEFER-61 K1). Gemessen wird am
+# Programm: das Fenster dahinter bleibt offen, die Leiste ist versteckt, fuer
+# den Klick auf die Titelzeile (U1/V1) und auf den Rand (U2/V2).
+E-137a | C:\Temp\E137 | 90 | messung | E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1 | | | messen=tools\messen-e137.ps1
+E-137b | C:\Temp\E137 | 90 | messung | E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1 | | | messen=tools\messen-e137.ps1
+E-137c | C:\Temp\E137 | 90 | log | E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja | | | messen=tools\messen-e137.ps1

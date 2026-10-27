@@ -1039,6 +1039,46 @@ CWazooBar* CWazooBarMgr::GetWazooBarWithFocus() const
 
 
 ////////////////////////////////////////////////////////////////////////
+// GetWazooBarAt [public]
+//
+// E-137, fuenfter Teil (PRUEFER-61 K1): liefert die Wazoo-Leiste, zu der
+// das Fenster hWnd gehoert - die Leiste selbst, ein Fenster darin oder,
+// bei einer schwebenden Leiste, der kleine Rahmen um sie (Titelzeile,
+// Rand). Dieser Rahmen ist im laufenden Programm ein gewoehnlicher
+// CMiniDockFrameWnd und NICHT QCMiniDockFrameWnd: CFrameWnd::EnableDocking
+// (winfrm2.cpp:51) ueberschreibt die Klasse, die mainfrm.cpp vorher setzt.
+// Verglichen wird deshalb nur, welcher Rahmen die Leiste traegt, nicht
+// seine Klasse.
+////////////////////////////////////////////////////////////////////////
+CWazooBar* CWazooBarMgr::GetWazooBarAt(HWND hWnd) const
+{
+	if (NULL == hWnd || !::IsWindow(hWnd))
+		return NULL;
+
+	const HWND hOben = ::GetAncestor(hWnd, GA_ROOT);
+	POSITION pos = m_WazooBarList.GetHeadPosition();
+	while (pos)
+	{
+		CWazooBar* pWazooBar = (CWazooBar *) m_WazooBarList.GetNext(pos);
+		if (NULL == pWazooBar || NULL == pWazooBar->GetSafeHwnd())
+			continue;
+
+		if (pWazooBar->GetSafeHwnd() == hWnd || ::IsChild(pWazooBar->GetSafeHwnd(), hWnd))
+			return pWazooBar;
+
+		if (pWazooBar->IsFloating())
+		{
+			CFrameWnd* pRahmen = pWazooBar->GetParentFrame();
+			if (pRahmen && pRahmen->GetSafeHwnd() == hOben)
+				return pWazooBar;
+		}
+	}
+
+	return NULL;
+}
+
+
+////////////////////////////////////////////////////////////////////////
 // SetActiveWazooWindows [public]
 //
 // To support Just In Time wazoo display initialization, we must

@@ -736,6 +736,8 @@ CMainFrame::CMainFrame() :
 {
 	ASSERT(!m_pTheMainFrame);
 	m_pTheMainFrame = this;
+	m_hE137Leiste = NULL;
+	m_hE137MdiBeiKlick = NULL;
 
 	// Setting this to FALSE means that menu items without handlers do not get disabled.
 	// This is used to control enabling/disabling of menu items in Mailboxes, Transfer,
@@ -1633,6 +1635,11 @@ void CMainFrame::OnActivate(UINT nState, CWnd* pWndOther, BOOL bMinimized)
 
 void CMainFrame::OnActivateApp(BOOL bActive, DWORD dwThreadID)
 {
+	// E-137, PRUEFER-62 K1: wer zu einem anderen Programm wechselt und
+	// zurueckkommt, hat nicht zuletzt in die Leiste geklickt.
+	if (!bActive)
+		m_hE137Leiste = NULL;
+
 	if ( SearchManager::Instance() )
 		SearchManager::Instance()->OnActivateApp(bActive);
 }
@@ -3386,6 +3393,58 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 
 
 ////////////////////////////////////////////////////////////////////////
+// E137EingabeMerken [public]
+//
+// E-137, fuenfter Teil. Gregor an 1.0.125 (Kurztest U1): nach einem Klick
+// auf die Titelzeile des schwebenden Filterfensters schloss Strg-W wieder
+// die Mail, und im Protokoll stand keine einzige E-137-Zeile.
+// PRUEFER-61 K1: der Rahmen der schwebenden Leiste ist ein gewoehnlicher
+// CMiniDockFrameWnd, die Behandler in QCMiniDockFrameWnd (workbook.cpp)
+// liefen nie. Und auch dort haette es nicht gereicht: bei Titelzeile und
+// Rand ruft CMiniDockFrameWnd::OnNcLButtonDown (bardock.cpp)
+// ActivateTopParent() - das Hauptfenster wird aktiv und gibt den Fokus an
+// die Mail zurueck. Am Fokus laesst sich der Klick also nicht ablesen.
+//
+// Deshalb merkt sich das Hauptfenster hier, gerufen aus
+// CEudoraApp::PreTranslateMessage, in welche Wazoo-Leiste zuletzt geklickt
+// wurde - in die Leiste selbst oder auf den Rahmen einer schwebenden.
+// OnCommand gibt Strg-W dann dieser Leiste. Jeder andere Klick und jede
+// andere Taste loescht die Marke, damit Strg-W nach einem Wechsel per
+// Tastatur wieder das Fenster mit dem Fokus trifft.
+//
+// PRUEFER-62 K1: ein Doppelklick auf ein Postfach in der Leiste Mailboxes
+// oeffnet es OHNE weiteren Klick - die Marke stand noch, und Strg-W haette
+// die Leiste versteckt statt das neue Postfach zu schliessen. Deshalb wird
+// mit der Marke das aktive MDI-Fenster gemerkt; OnCommand nimmt die Marke
+// nur, wenn es noch dasselbe ist. Wechselt Eudora in den Hintergrund,
+// verfaellt die Marke (OnActivateApp).
+////////////////////////////////////////////////////////////////////////
+void CMainFrame::E137EingabeMerken(const MSG* pMsg)
+{
+	switch (pMsg->message)
+	{
+	case WM_LBUTTONDOWN:
+	case WM_RBUTTONDOWN:
+	case WM_NCLBUTTONDOWN:
+	case WM_NCRBUTTONDOWN:
+		{
+			CWazooBar* pLeiste = m_WazooBarMgr.GetWazooBarAt(pMsg->hwnd);
+			m_hE137Leiste = pLeiste ? pLeiste->GetSafeHwnd() : NULL;
+			CMDIChildWnd* pAktiv = MDIGetActive();
+			m_hE137MdiBeiKlick = pAktiv ? pAktiv->GetSafeHwnd() : NULL;
+		}
+		break;
+
+	case WM_KEYDOWN:
+	case WM_SYSKEYDOWN:
+		if (pMsg->wParam != VK_CONTROL && pMsg->wParam != VK_SHIFT && pMsg->wParam != 'W')
+			m_hE137Leiste = NULL;
+		break;
+	}
+}
+
+
+////////////////////////////////////////////////////////////////////////
 // OnCommand [protected, virtual]
 //
 // Override of virtual function from base class.  The idea is to change
@@ -3433,6 +3492,35 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	if (wCommandID == ID_FILE_CLOSE)
 	{
 		CWazooBar* pFokusLeiste = m_WazooBarMgr.GetWazooBarWithFocus();
+		CWazooBar* pGeklickt = m_WazooBarMgr.GetWazooBarAt(m_hE137Leiste);
+		m_hE137Leiste = NULL;
+
+		// PRUEFER-62 K1: ist seit dem Klick ein anderes MDI-Fenster aktiv
+		// geworden (Doppelklick auf ein Postfach in Mailboxes), gilt Strg-W
+		// diesem neuen Fenster, nicht der Leiste.
+		CMDIChildWnd* pMdiJetzt = MDIGetActive();
+		const BOOL bMdiGewechselt = (pMdiJetzt ? pMdiJetzt->GetSafeHwnd() : NULL) != m_hE137MdiBeiKlick;
+		if (bMdiGewechselt)
+			pGeklickt = NULL;
+
+		// E-137, fuenfter Teil: eine Zeile bei JEDEM Strg-W, vor der
+		// Entscheidung - an 1.0.125 stand nach Gregors Klick gar nichts im
+		// Protokoll, und niemand konnte sagen, welcher Weg lief.
+		CWnd* pFokus = CWnd::GetFocus();
+		char szFokus[64] = "(keiner)";
+		if (pFokus && pFokus->GetSafeHwnd())
+			::GetClassNameA(pFokus->GetSafeHwnd(), szFokus, sizeof(szFokus));
+		CString strSpur;
+		strSpur.Format("E-137 Strg-W angekommen: leiste-mit-fokus=%s zuletzt-angeklickte-leiste=%s fokus=%s mdi-gewechselt=%s",
+					   pFokusLeiste ? "ja" : "nein", pGeklickt ? "ja" : "nein", szFokus, bMdiGewechselt ? "ja" : "nein");
+		PutDebugLog(DEBUG_MASK_MISC, strSpur);
+
+		// Nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste
+		// liegt der Fokus wieder in der Mail (ActivateTopParent in
+		// CMiniDockFrameWnd::OnNcLButtonDown, bardock.cpp) - dann gilt
+		// Strg-W der Leiste, die zuletzt angeklickt wurde.
+		if (!pFokusLeiste)
+			pFokusLeiste = pGeklickt;
 		if (pFokusLeiste && pFokusLeiste->GetSafeHwnd() && pFokusLeiste->IsWindowVisible())
 		{
 			PutDebugLog(DEBUG_MASK_MISC, "E-137 Strg-W: Wazoo-Leiste wird versteckt statt Eudora zu beenden");

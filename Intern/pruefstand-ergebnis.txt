@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-26 20:54:44
-freigabe=Ansage 26.10.2026 20:50 im Chat an Gregor: voller Pruefstand 7.2.0.125, ca. 8 min, C:\Temp
-faelle=36
-bestanden=36
+zeit=2026-10-27 14:20:45
+freigabe=Gregor am 27.10.2026: 'ja, fahre mit prüfstand fort.' und 'A' (Paket 1.0.127)
+faelle=39
+bestanden=39
 fehlgeschlagen=0
 fall=[ ok ] E-131a   ohne MRUFloatXPos=-2147483648
 fall=[ ok ] E-131b   ohne MRUFloatYPos=-2147483648
@@ -40,3 +40,6 @@ fall=[ ok ] E-146    E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da lis
 fall=[ ok ] E-97     E97 ERGEBNIS dialog=1 lebt=1 datei=1
 fall=[ ok ] E-100    E100 ERGEBNIS dialog=1 lebt=1 ini=ok
 fall=[ ok ] E-67     verb-gespeichert=14 verb-auswahl=0
+fall=[ ok ] E-137a   E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1
+fall=[ ok ] E-137b   E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1
+fall=[ ok ] E-137c   E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja
