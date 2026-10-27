@@ -158,7 +158,7 @@ haben.
 
 ## 1.0.127 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.127, Zweig `0.125_ergebnisse`
 
-**Geschnürt am 27.10.2026 um 14:23 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Ersetzt 1.0.126:
+**Geschnürt am 27.10.2026 um 14:23 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Von Gregor am 27.10.2026 im Kurztest geprüft: V1 bis V6 bestanden, außerhalb der VM mit leerem Stand ([TESTPLAN](../Intern/TESTPLAN.md#ergebnis-7-2-0-127)). Ersetzt 1.0.126:
 [PRÜFER-62](../Befunde/PRUEFER-62.md) K1 fand nach dem Schnüren eine Nebenwirkung des fünften
 Anlaufs zu E-137; Gregor: „A“ — erst beheben, dann testen. Für Gregors Kurztest
 ([TESTPLAN V1–V6](../Intern/TESTPLAN.md)) vor dem Release 7.2.1.

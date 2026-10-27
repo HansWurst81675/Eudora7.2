@@ -137,7 +137,8 @@ prüfen und mit *OK* speichern.
 sie — etwa in einer Mail an dich selbst —, kommt statt des Dialogs die
 Meldung *„Eudora could not find any usable addresses … except maybe your
 own address. Create an empty nickname anyway?“*. Mit *Ja* öffnet sich der
-Dialog leer, und du trägst die Adresse selbst ein. Das ist das Verhalten des
+Dialog ohne Adresse — Kurzname und Name sind aus dem Absender vorbelegt, wenn
+er einen Namen trägt —, und du trägst die Adresse selbst ein. Das ist das Verhalten des
 Originals (`namenick.cpp`, Schalter *Include yourself* unter *Tools →
 Options → Replying*, Vorgabe aus); gemessen an Gregors Test an Paket 1.0.127,
 27.10.2026. Den Schalter einzuschalten wirkt auch auf *Reply to All* — dann

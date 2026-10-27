@@ -1,11 +1,12 @@
 # Testplan für Gregor — Quellstand 7.2.0.127 / `VERSION` 1.0.127, Stand 27.10.2026
 
-> **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter. Das
+> **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter, **am 27.10.2026
+> bestanden** (V1 bis V6, [Ergebnis](#ergebnis-7-2-0-127)). Das
 > Paket 1.0.126 bitte **nicht** testen: es wurde geschnürt, dann fand der
 > PRÜFER eine Nebenwirkung (V6), und 1.0.127 ersetzt es. Das
 > Testpaket 7.2.0.125 ist überholt (U1 nein, U2 bis U4 gehen in V2, V3 und V5
 > auf), die Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen; alle
-> Ergebnisse stehen weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Test und deinem Ja
+> Ergebnisse stehen weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Ja
 > wird das Release **7.2.1.<n>** gebaut.
 
 ## Was jetzt zu testen ist — Testpaket 7.2.0.127 (Kurztest)

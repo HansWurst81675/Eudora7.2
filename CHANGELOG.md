@@ -99,11 +99,11 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
 
-**Quellstand 7.2.0.127, Paket 1.0.127 — Testpaket, noch nicht getestet.** Ersetzt 7.2.0.126,
+**Quellstand 7.2.0.127, Paket 1.0.127 — Testpaket, von Gregor am 27.10.2026 im Kurztest geprüft: V1 bis V6 bestanden ([TESTPLAN](Intern/TESTPLAN.md#ergebnis-7-2-0-127); V1–V3 aus seinem Protokoll auf seine Anweisung).** Ersetzt 7.2.0.126,
 das geschnürt und nie getestet wurde. Inhalt wie 7.2.0.126, dazu:
 
 * **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W nach einem Doppelklick auf ein Postfach in
-  *Mailboxes* soll wieder das Postfach schließen** (am Programm nicht gemessen,
+  *Mailboxes* schließt wieder das Postfach** (von Gregor an 1.0.127 bestätigt,
   TESTPLAN V6). Ausnahme: war das Postfach beim Doppelklick schon das vorderste
   Fenster, verschwindet bei Strg+W weiterhin die Leiste *Mailboxes* und das
   Postfach bleibt offen; es geht nichts verloren ([PRÜFER-63](Befunde/PRUEFER-63.md) K1,
@@ -113,8 +113,8 @@ das geschnürt und nie getestet wurde. Inhalt wie 7.2.0.126, dazu:
   Merkung gilt jetzt nur, solange dasselbe Fenster aktiv ist, und verfällt beim
   Wechsel in ein anderes Programm. Die Protokollzeile `E-137 Strg-W angekommen`
   nennt zusätzlich `mdi-gewechselt=`. Unit-Test `TestE137.cpp` prüft das und die
-  Ausnahme für die Taste W (PRÜFER-62 K2); ohne beides rot. Gregors Gegenprobe:
-  TESTPLAN V6.
+  Ausnahme für die Taste W (PRÜFER-62 K2); ohne beides rot. Gregors Gegenprobe
+  TESTPLAN V6 bestanden.
 
 ## 7.2.0.126 — Testpaket: Strg+W nach einem Klick auf die schwebende Leiste, fünfter Anlauf ([E-137](Intern/BEFUNDE.md#e-137)); Windows-Meldung beim Anlegen einer Persönlichkeit ([E-160](Intern/BEFUNDE.md#e-160))
 
@@ -134,13 +134,13 @@ die Mail, und im Protokoll stand keine E-137-Zeile.
   `E-137 Strg-W angekommen` ins Protokoll. Unit-Test `TestE137.cpp` und **neuer
   Prüfstandsfall** `tools/messen-e137.ps1` (Klick auf Titelzeile bzw. Rand der
   schwebenden Filterleiste, dann der Befehl hinter Strg+W): am Bau 1.0.125 rot —
-  dasselbe Bild wie Gregors U1 —, am Bau 1.0.126 grün. Gregors Test steht noch aus.
+  dasselbe Bild wie Gregors U1 —, am Bau 1.0.126 grün. Von Gregor an 1.0.127 bestätigt (TESTPLAN V1–V3).
 * **[E-160](Intern/BEFUNDE.md#e-160) — beim Anlegen einer Persönlichkeit (*Tools →
   Personalities*, Rechtsklick → *New...*) soll die Windows-Meldung „kein
   E-Mail-Programm zugeordnet“ nicht mehr kommen.** Der Outlook-Import im
   Kontoassistenten meldet sich nur noch bei MAPI an, wenn in der Registry ein
   Outlook eingetragen ist — auch Outlook 2013 und neuer (PRÜFER-61 K3).
-  Unit-Test `TestE160.cpp`; am Programm noch nicht gemessen.
+  Unit-Test `TestE160.cpp`; von Gregor an 1.0.127 bestätigt (TESTPLAN V4).
 
 314 Unit-Tests, 314 bestanden; Gegenproben ohne die Behebungen je 313/314.
 

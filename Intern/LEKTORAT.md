@@ -1805,6 +1805,29 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Dreiundneunzigster Durchgang — Prüfung vor dem PR des Zweigs `0.127_test_ergebnisse` nach `main`: Gregors Kurztest an 1.0.127, E-137 und E-160 behoben, E-165 neu, ANWENDER Strg+K, 27.10.2026 (Bericht: `Befunde/LEKTOR-88.md`)
+
+Lauf über `91c92ed0..486d6a69` ohne `Arbeitsweise/`. **10 Funde** (2 falsch,
+4 veraltet, 1 ungenau, 2 unklar, 1 Hinweis). L-87.1 und L-87.2 erledigt. Die
+Umstellung von E-137 und E-160 auf „behoben, bestätigt“ kam nur in
+`BEFUNDE.md`, im TESTPLAN und in den erzeugten Listen an; ZIEL-Maßstab
+(`ZIEL.md:74-75`), CHANGELOG 7.2.0.127/.126 (fünf Stellen, darunter *„noch
+nicht getestet“* und *„Gregors Test steht noch aus“*), WEITERMACHEN (Kopf,
+Entscheidung 2, „hier weiter“ auf dem gemergten Zweig), README-Stand,
+AUFGABEN, PAKETE und TESTPLAN-Kopf nannten sie weiter ungeprüft — bei fünf
+grünen Schranken ([L-88.1](../Befunde/LEKTOR-88.md#l-88.1) bis
+[L-88.6](../Befunde/LEKTOR-88.md#l-88.6)). `Doku/ANWENDER.md` nannte den
+Dialog nach *Ja* „leer“, obwohl Kurzname und Name aus dem Absender vorbelegt
+werden ([L-88.7](../Befunde/LEKTOR-88.md#l-88.7)). Alle sieben **vom LEKTOR
+selbst berichtigt**. **Vor dem PR offen:** E-137 zählt *„viermal“* die
+Protokollzeile, der TESTPLAN zwei und eine unbezifferte
+([L-88.8](../Befunde/LEKTOR-88.md#l-88.8)). E-124 kennt den Defender-Fall an
+1.0.127 nicht ([L-88.9](../Befunde/LEKTOR-88.md#l-88.9)); ein Verweis in
+PRÜFER-63 zeigt auf den inzwischen vergebenen E-165
+([L-88.10](../Befunde/LEKTOR-88.md#l-88.10)). E-165 ist vollständig. Für
+Gregor offen: was vor der Marke `v7.2.1.N` getestet sein muss, Kriterium 0
+ohne Visual Studio.
+
 ## Zweiundneunzigster Durchgang — Kurzprüfung der Berichtigungen zu LEKTOR-86 und der Übernahme von PRÜFER-63 vor dem PR des Zweigs `0.125_ergebnisse` nach `main`, 27.10.2026 (Bericht: `Befunde/LEKTOR-87.md`)
 
 Lauf über `ecbdbba9..212f826f` (LEKTOR-86 eingearbeitet, PRÜFER-63
