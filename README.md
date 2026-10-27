@@ -98,7 +98,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.126** / `VERSION` **1.0.126** — Testpaket mit dem vierten Teil von [E-137](Intern/BEFUNDE.md#e-137) (Strg+W nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste) und [E-160](Intern/BEFUNDE.md#e-160) (Windows-Meldung beim Anlegen einer Persönlichkeit), vor dem Release 7.2.1; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.0.126 bis 7.2.0.123. Veröffentlicht ist `v1.0.120`.*
+*Stand **7.2.0.126** / `VERSION` **1.0.126** — Testpaket mit dem fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (Strg+W nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste) und [E-160](Intern/BEFUNDE.md#e-160) (Windows-Meldung beim Anlegen einer Persönlichkeit), vor dem Release 7.2.1; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.0.126 bis 7.2.0.123. Veröffentlicht ist `v1.0.120`.*
 
 ### Was geht
 

@@ -175,7 +175,7 @@ Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.126.
 
 ## 1.0.125 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.125, Zweig `0.123_ergebnisse`
 
-**Geschnürt am 26.10.2026 um 20:56 und als Testverzeichnis abgelegt; nicht veröffentlicht.**
+**Geschnürt am 26.10.2026 um 20:56 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Von Gregor am 26.10.2026 im Kurztest geprüft: U1 nicht bestanden, U2 bis U4 nicht getestet ([TESTPLAN](../Intern/TESTPLAN.md)).
 Für Gregors Kurztest ([TESTPLAN U1–U4](../Intern/TESTPLAN.md)) vor dem Release 7.2.1.
 
 | | |
@@ -191,7 +191,7 @@ Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.125.
 
 ## 1.0.124 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.124, Zweig `0.123_ergebnisse`
 
-**Geschnürt am 26.10.2026 um 13:10 und als Testverzeichnis abgelegt; nicht veröffentlicht.**
+**Geschnürt am 26.10.2026 um 13:10 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Von Gregor am 26.10.2026 im Kurztest geprüft: T1 im zweiten Durchgang, T2, T3 und T5 bestanden, T4 und T6 nicht ([TESTPLAN](../Intern/TESTPLAN.md)).
 Für Gregors Kurztest ([TESTPLAN T1–T6](../Intern/TESTPLAN.md)) vor dem Release 7.2.1.
 
 | | |

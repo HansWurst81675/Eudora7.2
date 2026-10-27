@@ -41,7 +41,7 @@ keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 25 von 26 erfüllt, 1 offen.** Diese Übersicht wird aus den
+**Stand: 25 von 27 erfüllt, 2 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
@@ -49,7 +49,8 @@ beschädigt, steht oben.
 
 | | wer | Was noch fehlt | Wie zu prüfen |
 |---|---|---|---|
-| **E-160** | ? | Gregors Prüfung im nächsten Testpaket: *Persona* → Rechtsklick → *Neu*, die Windows-Meldung darf nicht kommen. **Stufe: unkritisch** (Meldung oh… | — **nicht aufgeschrieben** |
+| **E-160** | Gregor | Gregors Prüfung an Paket 1.0.126 (TESTPLAN V4): *Tools → Personalities*, Rechtsklick in die Liste → *New...*, die Windows-Meldung darf nicht komm… | **GREGOR** — TESTPLAN V4; am Prüfstand bisher nicht gemessen. |
+| **E-137** | Gregor | Gregors Prüfung an 1.0.126: Klick auf Titelzeile und Rand der **schwebenden** Leiste (V1, V2) und auf eine Beschriftung der **angedockten** Leiste (V… | **GREGOR** — TESTPLAN V1 bis V3 an Paket 1.0.126; am Prüfstand misst `tools/messen-e137.ps1` V1 und V2 mit Fensterbotschaften. Eine angedockte Leiste hat keine eigene Titelzeile und keine… |
 
 <!-- ziel-stand: Ende -->
 
@@ -74,6 +75,7 @@ beschädigt, steht oben.
 | Kriterium 4 | [E-156](Intern/BEFUNDE.md#e-156) | im Paket lagen seit August sechs Debug-Fassungen, Eudora stürzte in `ucrtbased.dll` ab (**behoben** auf dem Zweig `0.123_ergebnisse`, kommt mit 7.2.0.124; Paketprüfung erst rot, dann grün; von Gregor am 26.10.2026 an Paket 1.0.124 bestätigt, TESTPLAN T5) |
 | Post wird verfälscht | [E-158](Intern/BEFUNDE.md#e-158) | beim Weiterleiten einer Textmail stand `</x-html>` in der gesendeten Nachricht (**behoben** auf dem Zweig `0.123_ergebnisse`, kommt mit 7.2.0.124; von Gregor am 26.10.2026 an Paket 1.0.124 bestätigt, TESTPLAN T3) |
 | Kriterium 3 | [E-160](Intern/BEFUNDE.md#e-160) | beim Anlegen einer Persönlichkeit (*Persona* → *Neu*) zeigte Windows „kein E-Mail-Programm zugeordnet“, weil der Outlook-Import auch ohne Outlook MAPI lud (**Behebung eingebaut**, kommt mit 7.2.0.126; Unit-Test rot ohne und grün mit, am Programm noch nicht gemessen — TESTPLAN V4) |
+| Vor 7.2.1 beheben (Entscheidung 2) | [E-137](Intern/BEFUNDE.md#e-137) | Strg+W in einer Wazoo-Leiste (Filter, Adressbuch) schloss die Mail dahinter oder beendete Eudora, statt nur die Leiste zu verstecken (angedockt an 1.0.123 und 1.0.124 von Gregor bestätigt; nach einem Klick auf die **schwebende** Leiste an 1.0.125 nicht bestanden; fünfter Anlauf in 7.2.0.126, am Prüfstand rot an 1.0.125 und grün an 1.0.126 — TESTPLAN V1–V3) |
 | Kriterium 3 | [E-148](Intern/BEFUNDE.md#e-148) | Eudora vertraute vier kompromittierten eMudhra-Wurzeln (**behoben**, auf `main`, kommt mit 7.2.0.123 und 7.2.1.x; GMX und freenet mit OpenSSL gegen die neue Liste gemessen, mit Eudora selbst von Gregor am 26.10.2026 an Paket 1.0.123 bestätigt, TESTPLAN K3) |
 | Kriterium 2 | [E-146](Intern/BEFUNDE.md#e-146) | umbenannte IMAP-Ordner hießen in Eudora anders als am Server, auch nach einer Ablehnung (**behoben auf dem Zweig `vor-testpaket-7.2.0.123`**, kommt mit 7.2.0.123; am Prüfstand erst rot, dann grün) |
 | Bekannte Fehler in der README | **keine Voraussetzung, durch Entscheidung** — die Befunde selbst bleiben offen | Von Gregor am 25. und 26.10.2026 entschieden: sie stehen unter „Bekannte Fehler“ in der [README](README.md) und werden nach 7.2.1 angegangen. Darunter der Entwurf aus einem IMAP-Ordner nach `Out` ([E-142](Intern/BEFUNDE.md#e-142); vereinbart ist nur ein Hinweis, eingebaut am 26.10.2026), dazu [E-144](Intern/BEFUNDE.md#e-144), [E-143](Intern/BEFUNDE.md#e-143), [E-139](Intern/BEFUNDE.md#e-139), [E-136](Intern/BEFUNDE.md#e-136), [AN-1](Intern/BEFUNDE.md#an-1), die Nebenwirkung von [E-77](Intern/BEFUNDE.md#e-77) auf ältere Nachrichten mit Ablage, [E-140](Intern/BEFUNDE.md#e-140), [E-141](Intern/BEFUNDE.md#e-141), [E-145](Intern/BEFUNDE.md#e-145) |
