@@ -183,7 +183,7 @@ Postfach vorn haben)“. Als Spur ergänzen: im `eudora.log` steht
 
 ## Neue Kennungen
 
-Keine. E-165 und E-166 sind nicht vergeben.
+Keine. [E-165](../Intern/BEFUNDE.md#e-165) und E-166 sind nicht vergeben.
 
 ## Übersicht
 

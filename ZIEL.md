@@ -41,16 +41,13 @@ keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 25 von 27 erfüllt, 2 offen.** Diese Übersicht wird aus den
+**Stand: 27 von 27 erfüllt, 0 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
 beschädigt, steht oben.
 
-| | wer | Was noch fehlt | Wie zu prüfen |
-|---|---|---|---|
-| **E-160** | Gregor | Gregors Prüfung an Paket 1.0.127 (TESTPLAN V4): *Tools → Personalities*, Rechtsklick in die Liste → *New...*, die Windows-Meldung darf nicht komm… | **GREGOR** — TESTPLAN V4; am Prüfstand bisher nicht gemessen. |
-| **E-137** | Gregor | Gregors Prüfung an 1.0.127 (TESTPLAN V1–V3, Gegenprobe V6): Klick auf Titelzeile und Rand der **schwebenden** Leiste (V1, V2) und auf eine Beschrif… | **GREGOR** — TESTPLAN V1 bis V3 und V6 an Paket 1.0.127; am Prüfstand misst `tools/messen-e137.ps1` V1 und V2 mit Fensterbotschaften. Eine angedockte Leiste hat keine eigene Titelzeile un… |
+**Alle Zeilen des Maßstabs sind erfüllt.**
 
 <!-- ziel-stand: Ende -->
 
