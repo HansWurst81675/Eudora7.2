@@ -19,6 +19,14 @@ nach `C:\Users\Gregor\Eudora72-1.0.127-release\Mailverzeichnis` kopieren, **ohne
 `eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
 starten. In der Titelzeile muss **7.2.0.127** und **Paket 1.0.127** stehen.
 
+**Oder mit leerem Stand** (Gregor, 27.10.2026: außerhalb der VM, Mail frisch abrufen): das ZIP
+`Releases\Eudora72-1.0.127-release.zip` aus der VM mitnehmen (es liegt nicht auf GitHub;
+SHA-256 `fe72349f19b2503b9266d752e2e20407024bb892ab972eaad1430d3f870f2a2f`), auspacken und das
+mitgelieferte `Mailverzeichnis` **behalten** — darin steht die `Eudora.ini` mit `LogLevel=58527`,
+ohne sie bleibt das Protokoll leer und ich kann ein „nein“ nicht auswerten. Konto einrichten,
+Mail abrufen, dann V1 bis V6. Für V6 ein Postfach nehmen, das nach dem Start nicht offen ist
+(etwa `Trash`; `Junk` gibt es in einem frischen Stand nicht immer).
+
 | Nr. | Was | Wo | Was zu tun ist | Was herauskommen muss |
 |---|---|---|---|---|
 | V1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail aus `In` geöffnet | das Filterfenster öffnen (*Tools → Filters*) und abdocken, so dass es **schwebt**; erst in die Mail klicken, dann auf die **Titelzeile** des Filterfensters klicken, dann **Strg+W** | nur das Filterfenster verschwindet, die Mail bleibt offen |
