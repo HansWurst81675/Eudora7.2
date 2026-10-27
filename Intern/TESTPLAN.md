@@ -10,7 +10,7 @@
 
 > Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.126-release`, neben dein
 > 1.0.125. Geprüft wird nur, was sich gegenüber 7.2.0.125 geändert hat, dazu
-> U2 und U3 aus 7.2.0.125, die noch offen waren.
+> U2 bis U4 aus 7.2.0.125, die noch offen waren (jetzt V2, V3 und V5).
 
 **Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.125-release\Mailverzeichnis`
 nach `C:\Users\Gregor\Eudora72-1.0.126-release\Mailverzeichnis` kopieren, **ohne**
@@ -22,11 +22,11 @@ starten. In der Titelzeile muss **7.2.0.126** und **Paket 1.0.126** stehen.
 | V1 | [E-137](BEFUNDE.md#e-137) | lokal, eine Mail aus `In` geöffnet | das Filterfenster öffnen (*Tools → Filters*) und abdocken, so dass es **schwebt**; erst in die Mail klicken, dann auf die **Titelzeile** des Filterfensters klicken, dann **Strg+W** | nur das Filterfenster verschwindet, die Mail bleibt offen |
 | V2 | [E-137](BEFUNDE.md#e-137) | wie V1 | Filterfenster wieder öffnen (schwebend); erst in die Mail klicken, dann auf den **Rand** des Filterfensters klicken, dann **Strg+W** | wie V1 |
 | V3 | [E-137](BEFUNDE.md#e-137) | wie V1 | Filterfenster wieder öffnen und **andocken**; erst in die Mail klicken, dann auf eine **Beschriftung** im Filterfenster (etwa „Match“), dann **Strg+W** | wie V1 |
-| V4 | [E-160](BEFUNDE.md#e-160) | – | links die Leiste *Persona* öffnen, Rechtsklick → *Neu* | der Assistent für die neue Persönlichkeit erscheint **ohne** vorherige Windows-Meldung „kein E-Mail-Programm zugeordnet“; danach den Assistenten schließen, ohne etwas anzulegen |
+| V4 | [E-160](BEFUNDE.md#e-160) | lokal | *Tools → Personalities* öffnen (Register *Persona*), in die Liste rechtsklicken → *New...* | der Assistent für die neue Persönlichkeit erscheint **ohne** vorherige Windows-Meldung „kein E-Mail-Programm zugeordnet“; danach den Assistenten schließen, ohne etwas anzulegen |
 | V5 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.126-release` sein |
 
-Geht V1, V2 oder V3 schief, genügt mir *„V1 nein“*: Ich lese dann in deiner
-`eudora.log` die Zeilen `E-137 Klick auf den Rahmen der schwebenden Leiste`.
+Geht V1, V2 oder V3 schief, genügt mir die Nummer und *nein*, etwa *„V2 nein“*: Ich lese dann in deiner
+`eudora.log` die Zeilen `E-137 Strg-W angekommen`.
 
 ### <a id="ergebnis-7-2-0-126"></a>Ergebnis am Testpaket 7.2.0.126
 

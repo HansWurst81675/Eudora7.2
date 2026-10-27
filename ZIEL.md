@@ -41,13 +41,15 @@ keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 
 <!-- ziel-stand: Anfang -->
 
-**Stand: 26 von 26 erfüllt, 0 offen.** Diese Übersicht wird aus den
+**Stand: 25 von 26 erfüllt, 1 offen.** Diese Übersicht wird aus den
 Urteilen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) **erzeugt** — `tools/ziel-stand.pl`
 setzt sie und weist im `pre-commit` ab, wenn sie nicht stimmt. Die Reihenfolge ist
 die der Gruppen unten: was Post verfälscht oder eine fremde Installation
 beschädigt, steht oben.
 
-**Alle Zeilen des Maßstabs sind erfüllt.**
+| | wer | Was noch fehlt | Wie zu prüfen |
+|---|---|---|---|
+| **E-160** | ? | Gregors Prüfung im nächsten Testpaket: *Persona* → Rechtsklick → *Neu*, die Windows-Meldung darf nicht kommen. **Stufe: unkritisch** (Meldung oh… | — **nicht aufgeschrieben** |
 
 <!-- ziel-stand: Ende -->
 

@@ -24,6 +24,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-160](Intern/BEFUNDE.md#e-160)** | Beim Anlegen einer neuen Persönlichkeit zeigt Windows „Zum Ausführen der gewünschten … | **nie gemessen** | Gregors Prüfung im nächsten Testpaket: *Persona* → Rechtsklick → *Neu*, die Windows-Meldung darf nicht kommen. **Stufe: unkritisch** (Meldung oh… |
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
@@ -36,7 +37,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt nach jedem Programmstart einmal… | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
-| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | 26.10.2026 an 7.2.0.124 | Gregors Prüfung an 1.0.125: Klick auf Titelzeile und Rand der **schwebenden** Leiste (U1, U2) und auf eine Beschriftung der **angedockten** Leiste (U… |
+| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | 26.10.2026 an 7.2.0.125 | Gregors Prüfung an 1.0.126: Klick auf Titelzeile und Rand der **schwebenden** Leiste (V1, V2) und auf eine Beschriftung der **angedockten** Leiste (V… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 — **veraltet** | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
@@ -97,25 +98,31 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## 7.2.0.126 — Testpaket: Strg+W nach einem Klick auf die schwebende Leiste, vierter Anlauf ([E-137](Intern/BEFUNDE.md#e-137)); keine Windows-Meldung mehr beim Anlegen einer Persönlichkeit ([E-160](Intern/BEFUNDE.md#e-160))
+## 7.2.0.126 — Testpaket: Strg+W nach einem Klick auf die schwebende Leiste, fünfter Anlauf ([E-137](Intern/BEFUNDE.md#e-137)); Windows-Meldung beim Anlegen einer Persönlichkeit ([E-160](Intern/BEFUNDE.md#e-160))
 
 **Quellstand 7.2.0.126, Paket 1.0.126 — Testpaket, noch nicht getestet.** Gregors
 Kurztest an 7.2.0.125 ([TESTPLAN](Intern/TESTPLAN.md)): U1 nicht bestanden — nach einem
 Klick auf die Titelzeile des schwebenden Filterfensters schloss Strg+W wieder
 die Mail, und im Protokoll stand keine E-137-Zeile.
 
-* **[E-137](Intern/BEFUNDE.md#e-137) — die Fokusübergabe in die schwebende Leiste
-  hängt jetzt zusätzlich am Linksklick auf Titelzeile, Rand oder Ecke**
-  (`QCMiniDockFrameWnd::OnNcLButtonDown`), nicht mehr nur an der Aktivierung des
-  Rahmens. Beide Wege schreiben **vor** jeder Entscheidung eine Zeile
-  `E-137 Klick auf den Rahmen der schwebenden Leiste` ins Protokoll — geht es
-  wieder schief, zeigt das Protokoll, welcher Weg lief und warum er nichts tat.
-  Unit-Test `TestE137.cpp` angepasst.
-* **[E-160](Intern/BEFUNDE.md#e-160) — beim Anlegen einer Persönlichkeit (*Persona* →
-  Rechtsklick → *Neu*) kommt keine Windows-Meldung „kein E-Mail-Programm
-  zugeordnet“ mehr.** Der Outlook-Import im Kontoassistenten meldet sich nur noch
-  bei MAPI an, wenn in der Registry ein Outlook eingetragen ist. Unit-Test
-  `TestE160.cpp` (313 Tests, 313 bestanden; ohne die Behebung 312/313).
+* **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W gilt jetzt der Leiste, in die oder
+  auf deren schwebenden Rahmen zuletzt geklickt wurde.** Warum es an 1.0.125
+  nicht ging ([PRÜFER-61](Befunde/PRUEFER-61.md) K1): der Rahmen der schwebenden
+  Leiste ist im Programm nicht Eudoras eigene Klasse — MFC überschreibt sie beim
+  Start —, die Behebungen aus 7.2.0.125 liefen nie; und ein Klick auf die
+  Titelzeile gibt den Fokus ohnehin an die Mail zurück. Das Hauptfenster merkt
+  sich deshalb den letzten Klick (`CMainFrame::E137EingabeMerken`), unabhängig
+  von Rahmenklasse und Fokus. Jedes Strg+W schreibt die Zeile
+  `E-137 Strg-W angekommen` ins Protokoll. Unit-Test `TestE137.cpp`; am Programm
+  noch nicht gemessen.
+* **[E-160](Intern/BEFUNDE.md#e-160) — beim Anlegen einer Persönlichkeit (*Tools →
+  Personalities*, Rechtsklick → *New...*) soll die Windows-Meldung „kein
+  E-Mail-Programm zugeordnet“ nicht mehr kommen.** Der Outlook-Import im
+  Kontoassistenten meldet sich nur noch bei MAPI an, wenn in der Registry ein
+  Outlook eingetragen ist — auch Outlook 2013 und neuer (PRÜFER-61 K3).
+  Unit-Test `TestE160.cpp`; am Programm noch nicht gemessen.
+
+314 Unit-Tests, 314 bestanden; Gegenproben ohne die Behebungen je 313/314.
 
 ## 7.2.0.125 — Testpaket: Strg+W nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste ([E-137](Intern/BEFUNDE.md#e-137))
 
