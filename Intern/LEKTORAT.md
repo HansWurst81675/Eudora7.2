@@ -1805,6 +1805,28 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Einundneunzigster Durchgang — Kurzprüfung vor dem PR des Zweigs `0.125_ergebnisse` nach `main`: Berichtigungen zu LEKTOR-85, Korrektur PRÜFER-62 K1/K2, Fassung 7.2.0.127 / Paket 1.0.127, 27.10.2026 (Bericht: `Befunde/LEKTOR-86.md`)
+
+Lauf über `634414a0..ce5cda3e` (LEKTOR-85 eingearbeitet, K1/K2-Korrektur,
+Fassungssprung, Prüfstand 39/39, Paket 1.0.127). **7 Funde** (2 falsch,
+4 veraltet, 1 unklar). L-85.1 bis .4, .6, .7 und L-84.9 erledigt. Nirgends
+wird E-137 oder E-160 als behoben oder bestätigt ausgegeben; der Kurztest
+V1–V6 an 1.0.127 ist ohne Rückfrage ausführbar (V6-Menüweg *Tools →
+Mailboxes* am `EudoraRes.rc` belegt). **Falsch:** `PAKETE.md:173` sagt, beim
+Schnüren von 1.0.127 sei nur der CHRONIST fällig gewesen — der PRÜFER war es
+auch, die K1-Korrektur in `mainfrm.cpp` ist ungelesen
+([L-86.1](../Befunde/LEKTOR-86.md#l-86.1)); `WEITERMACHEN.md:121` nennt
+noch *„an 1.0.126 zu prüfen (V1–V3)“*
+([L-86.2](../Befunde/LEKTOR-86.md#l-86.2)). `ZIEL.md:77-78` nennt
+7.2.0.126, *Persona → Neu* und für E-137 kein V6
+([L-86.3](../Befunde/LEKTOR-86.md#l-86.3)); das Messdatum von E-137 steht
+auf 7.2.0.126, obwohl E-137a–c an 7.2.0.127 grün liefen
+([L-86.4](../Befunde/LEKTOR-86.md#l-86.4)); die K1-Korrektur heißt an drei
+Stellen „behoben“, ohne Messung am Programm
+([L-86.5](../Befunde/LEKTOR-86.md#l-86.5)). Vor dem PR: L-86.1 bis L-86.4,
+L-86.5 im selben Commit. Für Gregor offen: was vor der Marke `v7.2.1.N`
+getestet sein muss, Kriterium 0 ohne Visual Studio.
+
 ## Neunzigster Durchgang — Bestand vor dem PR des Zweigs `0.125_ergebnisse` nach `main`: Berichtigungen zu LEKTOR-84, E-137 fünfter Anlauf, Prüfstandsfall E-137a–c, Paket 1.0.126, 27.10.2026 (Bericht: `Befunde/LEKTOR-85.md`)
 
 Lauf über `8e78401c..5b8cf839` (fünf Commits), Bestand der 61 `.md` auf
