@@ -10,7 +10,7 @@ Bestandsdurchgang. Lauf über `ecbdbba9..212f826f` — im Kern `f2619654`
 `212f826f` ([LEKTOR-86](LEKTOR-86.md#lektor-86) eingearbeitet: acht Dateien, 16 Zeilen), gemessen im
 Arbeitsbaum `Eudora7.2-wt-lektor` auf `wt/lektor-20261027d`.
 
-**Ergebnis vorweg.** **2 Funde: 1 unklar, 1 veraltet.**
+**Ergebnis vorweg.** **2 Funde: 1 unklar, 1 veraltet — beide berichtigt** (siehe [L-87.1](#l-87.1), [L-87.2](#l-87.2)).
 [L-86.1](LEKTOR-86.md#l-86.1) bis [L-86.7](LEKTOR-86.md#l-86.7) sind alle
 erledigt. Nirgends wird [E-137](../Intern/BEFUNDE.md#e-137) (Strg+W auf einer Leiste schließt die
 Mail statt der Leiste) oder [E-160](../Intern/BEFUNDE.md#e-160) (Windows-Meldung beim Anlegen einer
@@ -105,6 +105,12 @@ Verhalten, das der Eintrag als korrigiert beschreibt.
 wenn das Postfach schon vorn war (dann verschwindet weiter die Leiste,
 [PRÜFER-63](Befunde/PRUEFER-63.md) K1)“*. **Vor dem PR empfohlen.**
 
+**Berichtigt** vom LEKTOR selbst im Auftrag des Hauptagenten, 27.10.2026:
+`CHANGELOG.md:108-111` nennt jetzt den Restfall in Klartext (*„Ausnahme:
+war das Postfach beim Doppelklick schon das vorderste Fenster, verschwindet
+bei Strg+W weiterhin die Leiste \*Mailboxes\* … es geht nichts verloren“*).
+
+
 ## <a id="l-87.2"></a>L-87.2 — veraltet: „hier weiter“ in WEITERMACHEN nennt PRÜFER-63 nicht
 
 **Was passiert:** wer morgen bei `Intern/WEITERMACHEN.md:135` einsteigt,
@@ -122,6 +128,12 @@ bleibt; *„Als Nächstes“* nennt nur noch den CHRONIST als fällig, was mit
 **Was zu tun wäre:** nach *„(V6)“* *„; [PRÜFER-63] liest sie gegen: hält,
 Rest bei schon vorderstem Postfach in [E-137](../Intern/BEFUNDE.md#e-137) vermerkt, V6 mit
 Vorbedingung“*. Hindert den PR nicht.
+
+**Berichtigt** vom LEKTOR selbst im Auftrag des Hauptagenten, 27.10.2026:
+`Intern/WEITERMACHEN.md:135` nennt PRÜFER-63 (Korrektur gegengelesen, hält,
+Restfall in [E-137](../Intern/BEFUNDE.md#e-137) vermerkt, V6 mit Vorbedingung) und [LEKTOR-86](LEKTOR-86.md#lektor-86)/-87 als
+eingearbeitet.
+
 
 ---
 
