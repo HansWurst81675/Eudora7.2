@@ -28,7 +28,7 @@ starten. In der Titelzeile muss **7.2.0.127** und **Paket 1.0.127** stehen.
 | V5 | [E-156](BEFUNDE.md#e-156) | – | während des ganzen Tests | kein Absturz; danach zähle ich im Windows-Ereignisprotokoll, es müssen **null** Abstürze aus `Eudora72-1.0.127-release` sein |
 | V6 | [E-137](BEFUNDE.md#e-137) (Gegenprobe, [PRÜFER-62](../Befunde/PRUEFER-62.md) K1) | lokal | die Leiste *Mailboxes* öffnen (*Tools → Mailboxes*), dort ein lokales Postfach **doppelklicken**, das gerade **nicht** offen ist (etwa `Junk`; ist es offen, vorher schließen), gleich danach **Strg+W** | das eben geöffnete Postfach geht zu, die Leiste *Mailboxes* bleibt stehen |
 
-Geht V1, V2 oder V3 schief, genügt mir die Nummer und *nein*, etwa *„V2 nein“*: Ich lese dann in deiner
+Geht V1, V2, V3 oder V6 schief, genügt mir die Nummer und *nein*, etwa *„V2 nein“*: Ich lese dann in deiner
 `eudora.log` die Zeilen `E-137 Strg-W angekommen`.
 
 ### <a id="ergebnis-7-2-0-127"></a>Ergebnis am Testpaket 7.2.0.127
@@ -42,7 +42,7 @@ Geht V1, V2 oder V3 schief, genügt mir die Nummer und *nein*, etwa *„V2 nein�
 | V5 | — | | |
 | V6 | — | | |
 
-## Kurztest 7.2.0.125 — überholt durch 7.2.0.126
+## Kurztest 7.2.0.125 — überholt durch 7.2.0.127
 
 > Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.125-release`, neben dein
 > 1.0.124. Geprüft wird nur, was sich gegenüber 7.2.0.124 geändert hat.
@@ -64,9 +64,9 @@ starten. In der Titelzeile muss **7.2.0.125** und **Paket 1.0.125** stehen.
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
 | U1 | **nein** | 26.10.2026 | Gregor: *„E-137, T1 FAILED“* (gemeint ist U1). Im Protokoll nach dem Klick auf den Rahmen keine E-137-Zeile; neuer Anlauf für 7.2.0.126 ([E-137](BEFUNDE.md#e-137)). Nebenbei gefunden: [E-160](BEFUNDE.md#e-160) (Windows-Meldung bei *Persona* → *Neu*) |
-| U2 | — | | nicht getestet, geht in V2 an 7.2.0.126 auf |
-| U3 | — | | nicht getestet, geht in V3 an 7.2.0.126 auf |
-| U4 | — | | nicht getestet, geht in V5 an 7.2.0.126 auf |
+| U2 | — | | nicht getestet, geht in V2 an 7.2.0.127 auf |
+| U3 | — | | nicht getestet, geht in V3 an 7.2.0.127 auf |
+| U4 | — | | nicht getestet, geht in V5 an 7.2.0.127 auf |
 
 ## Kurztest 7.2.0.124 — abgeschlossen
 

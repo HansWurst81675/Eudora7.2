@@ -37,7 +37,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt nach jedem Programmstart einmal… | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
-| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | 27.10.2026 an 7.2.0.126 | Gregors Prüfung an 1.0.127 (TESTPLAN V1–V3, Gegenprobe V6): Klick auf Titelzeile und Rand der **schwebenden** Leiste (V1, V2) und auf eine Beschrif… |
+| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | 27.10.2026 an 7.2.0.127 | Gregors Prüfung an 1.0.127 (TESTPLAN V1–V3, Gegenprobe V6): Klick auf Titelzeile und Rand der **schwebenden** Leiste (V1, V2) und auf eine Beschrif… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 — **veraltet** | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
@@ -104,7 +104,8 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 das geschnürt und nie getestet wurde. Inhalt wie 7.2.0.126, dazu:
 
 * **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W nach einem Doppelklick auf ein Postfach in
-  *Mailboxes* schließt wieder das Postfach.** In 7.2.0.126 hätte es die Leiste
+  *Mailboxes* soll wieder das Postfach schließen** (am Programm nicht gemessen,
+  TESTPLAN V6). In 7.2.0.126 hätte es die Leiste
   *Mailboxes* versteckt, weil die gemerkte „zuletzt angeklickte Leiste“ stehen blieb,
   obwohl inzwischen ein neues Fenster aktiv war ([PRÜFER-62](Befunde/PRUEFER-62.md) K1). Die
   Merkung gilt jetzt nur, solange dasselbe Fenster aktiv ist, und verfällt beim

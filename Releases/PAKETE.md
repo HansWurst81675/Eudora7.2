@@ -170,7 +170,7 @@ Anlaufs zu E-137; Gregor: „A“ — erst beheben, dann testen. Für Gregors Ku
 | Gegen den Bau gemessen | `Eudora.exe`, `EudoraRes.dll`, `OLImport.eif`, `Imap.dll` und `QCSSL.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `7.2.0.127 / Paket 1.0.127+ea3ebcbd`, mit `cmp` gemessen); die Spurmarke `mdi-gewechselt` steht in der `Eudora.exe` |
 | Geprüft vorher | 314 Unit-Tests, 19 Schranken, 39 Prüfstandsfälle in **einem** vollen Lauf, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md), Gesamturteil BESTANDEN) |
 | `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„JA“*; 39 ausführbare Dateien, keine enthält eine Debug-Laufzeit |
-| Rollenschranke | gebaut mit `-RollenSindGelaufen`: [PRÜFER-62](../Befunde/PRUEFER-62.md) und [LEKTOR-85](../Befunde/LEKTOR-85.md) waren gelaufen und eingearbeitet; danach nur die Behebung von PRÜFER-62 K1/K2 und der Versionssprung; fällig blieb der CHRONIST, der nur Lehren betrifft |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen`: [PRÜFER-62](../Befunde/PRUEFER-62.md) und [LEKTOR-85](../Befunde/LEKTOR-85.md) waren gelaufen und eingearbeitet; danach nur die Behebung von PRÜFER-62 K1/K2 und der Versionssprung. **Fällig waren beim Schnüren PRÜFER und CHRONIST:** die K1-Behebung hatte noch niemand gegengelesen — das hat [PRÜFER-63](../Befunde/PRUEFER-63.md) nach dem Schnüren nachgeholt (hält, kein Fund entwertet den Kurztest); der CHRONIST betrifft nur Lehren |
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.127.
 
