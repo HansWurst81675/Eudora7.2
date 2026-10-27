@@ -1,6 +1,6 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-26 20:54:44
-freigabe=Ansage 26.10.2026 20:50 im Chat an Gregor: voller Pruefstand 7.2.0.125, ca. 8 min, C:\Temp
+zeit=2026-10-27 12:37:32
+freigabe=Gregor am 27.10.2026: 'ja, fahre mit prüfstand fort.'
 faelle=36
 bestanden=36
 fehlgeschlagen=0
