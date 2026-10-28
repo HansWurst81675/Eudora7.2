@@ -1824,6 +1824,24 @@ unter *kritisch* führt ([L-90.5](../Befunde/LEKTOR-90.md#l-90.5)); FILTER,
 ANWENDER und README sagen ohne Einschränkung, die Junk-Punktzahl bleibe 0 —
 E-166 belegt, dass die Zusätze auf Gregors Rechner laden
 ([L-90.6](../Befunde/LEKTOR-90.md#l-90.6)).
+**Auf Gregors Zusatzauftrag** (*„testbericht, testplan, prüfbericht usw.
+auch auf unstimmigkeiten prüfen - wichtig.“*) sieben weitere Funde in den
+Prüf- und Testdokumenten, zusammen **18** (2 falsch, 4 veraltet,
+5 unvollständig, 4 ungenau, 3 Hinweise). Der schwerste: im Prüfstand
+`C:\Temp\E166` liegt ein `Exception.log` vom 28.10. 13:35:16 —
+Zugriffsverletzung im Konto-Assistenten (`CWizardYourNamePage::OnWizardNext`
+→ `ErrorDialog`), am Paket-Bau 1.0.127; `TESTLAEUFE.md:556` und E-166
+erwähnen ihn nicht ([L-90.12](../Befunde/LEKTOR-90.md#l-90.12)). Dazu: der
+TESTPLAN-Kopf verspricht nach Gregors Ja das Release, E-166 verlangt vorher
+ein Testpaket ([L-90.13](../Befunde/LEKTOR-90.md#l-90.13)); PAKETE 1.0.127
+ohne den Defender-Alarm an seiner `EudoraRes.dll`
+([L-90.14](../Befunde/LEKTOR-90.md#l-90.14)); die Notiz zu `v1.0.120` ohne
+Junk-Filter ([L-90.16](../Befunde/LEKTOR-90.md#l-90.16)); die
+Startwege-Schranke sah am 28.10. einen Start, `Audit.log` zeigt zwanzig
+([L-90.18](../Befunde/LEKTOR-90.md#l-90.18)). Prüfstandsbuch und Fälle
+deckungsgleich (41/41). Für Gregor: ob E-166 ins Release 7.2.1 kommt, ob
+die veröffentlichte Notiz zu `v1.0.120` geändert wird, Testumfang vor
+`v7.2.1.N`, Kriterium 0.
 
 ## Vierundneunzigster Durchgang — Prüfung vor dem Merge von PR #180 (`0.127_test_ergebnisse`): E-166 Junk-Frage, S-3c erweitert, Freigabe-Schranke, Stand-Köpfe 28.10.2026 (Bericht: `Befunde/LEKTOR-89.md`)
 

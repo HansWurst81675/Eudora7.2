@@ -13,8 +13,13 @@ und gibt der Stand-Vermerk in `Intern/WEITERMACHEN.md` den Tag richtig
 wieder? Gemessen im Arbeitsbaum `Eudora7.2-wt-lektor` auf
 `wt/lektor-20261028` (= `473f570f`).
 
-**Ergebnis vorweg.** **11 Funde: 2 falsch, 3 veraltet, 2 unvollständig,
-3 ungenau, 1 Hinweis.** Der Einstieg für die nächste Sitzung stimmt nicht
+**Ergebnis vorweg.** **18 Funde: 2 falsch, 4 veraltet, 5 unvollständig,
+4 ungenau, 3 Hinweise** — elf im Bestand, sieben in den Prüf- und
+Testdokumenten (Zusatzauftrag Gregors, [eigener Abschnitt](#pruefdokumente)).
+**Der schwerste neue Fund steht dort:** am Prüfstand ist Eudora um 13:35 im
+Konto-Assistenten mit einer Zugriffsverletzung abgestürzt; das
+`Exception.log` liegt im Prüfstand, aber weder das Laufprotokoll noch [E-166](../Intern/BEFUNDE.md#e-166)
+erwähnen es ([L-90.12](#l-90.12)). Der Einstieg für die nächste Sitzung stimmt nicht
 mehr: `Intern/WEITERMACHEN.md` sagt, [E-166](../Intern/BEFUNDE.md#e-166) sei am Prüfstand *„nicht
 nachstellbar“* und gehe erst weiter, wenn Gregor die beiden Bibliotheken
 bringt — beides ist seit dem Nachmittag überholt; Zweig, Behebung und
@@ -385,6 +390,189 @@ als Fehler zählen (oder sie dann als *„nicht ausführbar“* ausweisen).
 
 ---
 
+## <a id="pruefdokumente"></a>Prüf- und Testdokumente
+
+Zusatzauftrag von Gregor am 28.10.2026: *„testbericht, testplan, prüfbericht
+usw. auch auf unstimmigkeiten prüfen - wichtig.“* Gelesen:
+`Intern/TESTPLAN.md` (Kopf, Kurztest 7.2.0.127, Ergebnistabelle),
+`Intern/PRUEFBERICHT.md`, `Intern/TESTBERICHT-E125.md`,
+`Releases/PRUEFBERICHT.md`, `Intern/pruefstand-ergebnis.txt` und
+`Intern/pruefstand-buch.tsv` gegen `tools/pruefstand-faelle.txt`,
+`Releases/PAKETE.md` (1.0.127, 1.0.126), `Releases/1.0.120/` und
+`Releases/1.0.117/RELEASE-NOTIZEN.md`, `tools/TESTLAEUFE.md` (28.10.) gegen
+`C:\Temp\E166\Mailverzeichnis\Audit.log`, `eudora.log` und `Exception.log` —
+nur gelesen, nichts gestartet.
+
+## <a id="l-90.12"></a>L-90.12 — unvollständig: ein Absturz am Prüfstand um 13:35 steht in keinem Dokument
+
+**Was passiert:** beim sechsten Lauf am Nachmittag ist Eudora (Paket-Bau
+1.0.127) im Konto-Assistenten mit einer Zugriffsverletzung abgestürzt. Das
+Laufprotokoll verzeichnet den Lauf wie jeden anderen, der Befund nennt die
+Läufe 4–7 nur *„Erkundung“* mit einem Fehler im Messskript. Ob das ein
+Fehler in Eudora ist oder nur vom Messskript ausgelöst, hat niemand
+angesehen — genau die Lücke, die [E-157](../Intern/BEFUNDE.md#e-157) beschreibt
+(*„die Prüfstandsläufe … sehen keine Abstürze“*).
+
+* **Gemessen** (gelesen), `C:\Temp\E166\Mailverzeichnis\Exception.log`
+  (einziger Eintrag): *„Wed Oct 28 13:35:16 2026 / 7.2.0.127“*, *„Eudora.exe
+  caused an EXCEPTION_ACCESS_VIOLATION in module mfc140.dll at
+  0023:74890C64“*; Stapel: `CWizardYourNamePage::OnWizardNext()` …
+  `WizardYourNamePage.cpp, line 0095` → `ErrorDialog()` (`guiutils.cpp`
+  `:952`) → `AlertDialog()` (`:932`) → `DispatchMessageA` → `mfc140.dll` →
+  Absturz in `mfc140.dll`.
+* **Gemessen**, `Audit.log` im selben Verzeichnis: Start `2610281334`
+  **ohne** zugehörige Beenden-Zeile (alle anderen 19 Starts seit 10:59
+  haben eine).
+* **Belegt**, `tools/TESTLAEUFE.md:556`: *„2026-10-28 13:35:19 | `C:\Temp\E166`
+  | … | Hauptfenster 394286 - Eudora [Eudora 7.2.0.127 / Paket
+  1.0.127+ea3ebcbd …] Schliesszeit 5.1 s.“* — kein Wort vom Absturz.
+* **Belegt**, `Intern/BEFUNDE.md:383`: *„Läufe 4–7 waren Erkundung des
+  Assistenten (Fehler im Messskript: `PSM_PRESSBUTTON` falsch beziffert,
+  dann `WM_COMMAND` ohne Knopf-Handle …)“* — kein Absturz.
+  **Gemessen**: `grep 'OnWizardNext\|WizardYourNamePage'
+  Intern/BEFUNDE.md` findet nur zwei fremde Stellen (`:5825`, `:5990`).
+* **Belegt am Quelltext**, `AccountWizard/Src/WizardYourNamePage.cpp:91-96`:
+  bei leerem Namen `::ErrorDialog( IDS_ERR_WIZARD_NONAME)`, danach
+  `GetDlgItem( IDC_EDIT_YOURNAME)->SetFocus ()`. **Vermutung, nicht
+  gemessen:** während die Fehlermeldung modal offen war, schickte das
+  Messskript weitere Knopfbefehle an die Seite; die Seite wurde darunter
+  abgebaut, und `GetDlgItem(...)` lieferte `NULL` (`EAX=00000000`,
+  `ECX=00000000` im Registersatz). Ob ein Anwender das mit Doppelklick auf
+  *Weiter* auch auslösen kann, ist offen.
+
+**Was zu tun wäre:** den Absturz in [E-166](../Intern/BEFUNDE.md#e-166) (Lauf 6) und an
+`TESTLAEUFE.md:556` vermerken; Stapel gegen die PDB des Baus `ea3ebcbd`
+auflösen; nach `befund-suchen.pl WizardYourNamePage` entscheiden, ob ein
+eigener Befund nötig ist. Dass der Prüfstand den Absturz nicht meldet,
+gehört zu [E-157](../Intern/BEFUNDE.md#e-157).
+
+## <a id="l-90.13"></a>L-90.13 — veraltet: TESTPLAN verspricht nach Gregors Ja das Release, E-166 verlangt vorher ein neues Testpaket
+
+**Was passiert:** der Kopf des Testplans sagt Gregor, nach seinem Ja werde
+7.2.1 gebaut. Der Befund, der seit heute Nachmittag auf dem Zweig behoben
+ist, sagt, Gregor müsse ihn *„im nächsten Testpaket“* prüfen. Beides
+zusammen geht nur, wenn das Release ohne [E-166](../Intern/BEFUNDE.md#e-166) kommt — das steht nirgends.
+
+* **Belegt**, `Intern/TESTPLAN.md:9-10`: *„Veröffentlicht ist `v1.0.120`.
+  Nach deinem Ja wird das Release \*\*7.2.1.<n>\*\* gebaut.“*
+* **Belegt**, `Intern/BEFUNDE.md:383`: *„\*\*Was noch fehlt:\*\* Gregors Test
+  im nächsten Testpaket. \*\*Wie zu pruefen:\*\* … \*\*GREGOR\*\* —
+  Junk-Frage beantworten, \*Konto → Eigenschaften\* öffnen und mit OK
+  schließen, Eudora beenden und neu starten“*.
+* **Gemessen**: `grep -c 'E-166' Intern/TESTPLAN.md` → 0.
+
+**Was zu tun wäre:** nach Gregors Antwort auf die erste Frage unten den
+TESTPLAN-Kopf anpassen. Bis dahin ist der Satz nicht mehr sicher wahr.
+
+## <a id="l-90.14"></a>L-90.14 — unvollständig: PAKETE 1.0.127 kennt den Defender-Alarm an seiner `EudoraRes.dll` nicht
+
+**Was passiert:** Defender nimmt die `EudoraRes.dll` **aus dem ZIP 1.0.127**
+schon beim Lesen in Quarantäne. Wer das Paket weitergibt oder neu auspackt,
+bekommt *„Error Loading Resource DLL“*. Der Paketeintrag, der sonst bei
+früheren Paketen eine eigene Zeile *„Defender“* führt, sagt dazu nichts.
+
+* **Belegt**, `Intern/BEFUNDE.md:370` ([E-124](../Intern/BEFUNDE.md#e-124)): *„Defender nahm dreimal die
+  `EudoraRes.dll` aus Paket 1.0.127 in Quarantäne (14:10:20, 14:10:28 und
+  14:17:49 …)“*; `Intern/TESTPLAN.md:51` (V5, 27.10.): *„Microsoft Defender
+  nahm die `Eudora.exe` um 16:47 in Quarantäne“*.
+* **Belegt**, `Releases/PAKETE.md:159-174` (Abschnitt 1.0.127): Zeilen
+  Testverzeichnis, ZIP, Gegen den Bau gemessen, Geprüft vorher,
+  `paket-pruefen.ps1`, Rollenschranke — **keine** Zeile *Defender*;
+  Gegenstück `Releases/PAKETE.md:359` (1.0.113) *„| Defender | \*\*1.0.113
+  wurde am 20.10.2026 um 20:33:12 beim Starten eingezogen\*\*“*.
+
+**Was zu tun wäre:** Zeile *Defender* im Abschnitt 1.0.127 mit beiden
+Fällen (27.10. `Eudora.exe` bei Gregor, 28.10. `EudoraRes.dll` am
+Prüfstand), Verweis auf [E-124](../Intern/BEFUNDE.md#e-124).
+
+## <a id="l-90.15"></a>L-90.15 — ungenau: PAKETE 1.0.127 sagt im selben Abschnitt zweierlei über Gregors Testverzeichnis
+
+**Was passiert:** der Kopf sagt, Gregor habe mit leerem Stand außerhalb der
+VM getestet; die Tabellenzeile darunter, er kopiere seine Daten aus 1.0.125
+in das Testverzeichnis. Beschrieben ist einmal der Plan, einmal das, was
+geschah.
+
+* **Belegt**, `Releases/PAKETE.md:161` *„V1 bis V6 bestanden, außerhalb der
+  VM mit leerem Stand“*; `:167` *„Das Mailverzeichnis darin ist leer bis auf
+  `Eudora.ini` mit `LogLevel=58527`; Gregor kopiert seine Daten aus 1.0.125
+  hinein“*. Dazu `Intern/TESTPLAN.md:47`: *„Gregor testete außerhalb der VM
+  mit leerem Stand“*; [E-166](../Intern/BEFUNDE.md#e-166) nennt das Verzeichnis seines zweiten
+  Protokolls `C:\Temp\Eudora72-1.0.127-release` (`BEFUNDE.md:383`).
+
+**Was zu tun wäre:** die Zeile auf *„abgelegt in …; getestet hat Gregor aus
+dem ZIP mit leerem Stand außerhalb der VM“*. Hindert nichts.
+
+## <a id="l-90.16"></a>L-90.16 — unvollständig: die Release-Notiz zu `v1.0.120` nennt den Junk-Filter nicht unter dem, was ausfällt
+
+**Was passiert:** die veröffentlichte Notiz zum letzten Release zählt auf,
+was ohne die beiden Bibliotheken ausfällt — Verzeichnisdienste und S/MIME.
+Der Junk-Filter, seit dem 28.10. am Programm gemessen, fehlt. Sie ist die
+einzige der geprüften Stellen, die nach außen geht.
+
+* **Belegt**, `Releases/1.0.120/RELEASE-NOTIZEN.md:82-83`: *„Was aus [[E-47](../Intern/BEFUNDE.md#e-47)]
+  tatsächlich ausfällt, sind die \*\*Verzeichnisdienste\*\*: LDAP, Ph,
+  `EudoraBk` und S/MIME.“*
+* **Belegt**, `Intern/BEFUNDE.md:2975-2976` (S-3c): *„`Plugins\SpamWatch.dll`
+  | MFC71, MSVCP71 | Junk-Filter (gemessen 28.10.2026, [[E-166](../Intern/BEFUNDE.md#e-166)])“*,
+  *„`Plugins\SpamHeaders.dll` … Junk-Einstufung aus Kopfzeilen“*.
+* Ältere Notiz, geschichtlich: `Releases/1.0.117/RELEASE-NOTIZEN.md:101`
+  *„Adressbuch, LDAP und S/MIME fehlen weiterhin.“* — von der Notiz 1.0.120
+  (`:78-79`) ausdrücklich als falsch bezeichnet; kein neuer Fund.
+
+**Was zu tun wäre:** im Repo ergänzen; ob auch der veröffentlichte Text auf
+GitHub geändert wird, ist Gregors Entscheidung (siehe unten).
+
+## <a id="l-90.17"></a>L-90.17 — Hinweis: `pruefstand-ergebnis.txt` ist ein Teillauf, ohne es zu sagen — und hat keinen Leser
+
+**Was passiert:** die Datei zeigt jetzt *„faelle=2“* — den Teillauf
+`-Nur E-166` —, wo bis gestern 39 standen. Als Gesamtstand ausgegeben wird
+sie nirgends; aber sie kennzeichnet sich auch nicht als Teillauf, und das
+Werkzeug, für das sie laut Kommentar geschrieben wird, liest sie nicht.
+
+* **Gemessen**, `Intern/pruefstand-ergebnis.txt:2-5`: *„zeit=2026-10-28
+  14:21:05“*, *„faelle=2“*, *„bestanden=2“* — kein `-Nur`, kein
+  *Teillauf*. Vorher (`git show 473f570f`): *„faelle=39 / bestanden=39“*.
+* **Belegt**, `tools/pruefstand-lauf.ps1:400-401`: *„Ergebnis ablegen, damit
+  tools/pruefbericht.pl es LESEN kann statt es zu behaupten.“* — **gemessen**:
+  `tools/pruefbericht.pl` liest `Intern/pruefstand-buch.tsv` (`:180-182`)
+  und nennt `pruefstand-ergebnis.txt` nur in der Ausnahmeliste für
+  `git status` (`:87`); sonst kein Leser im Repo (`git grep -l
+  pruefstand-ergebnis` → nur diese beiden Werkzeuge).
+* **Gemessen**, kein `.md` nennt die Datei als Gesamtstand (`git grep -n
+  'pruefstand-ergebnis' -- '*.md'` ohne `Befunde/`, `Arbeitsweise/`: kein
+  Treffer). Das Buch ist vollständig: 41 Fälle in `pruefstand-faelle.txt`,
+  41 Zeilen in `pruefstand-buch.tsv`, deckungsgleich (`diff` der
+  sortierten Kennungen leer); 39 davon am Bau `+ea3ebcbd` vom 27.10., E-166a/b
+  am Bau `+772ed08d` vom 28.10.
+
+**Was zu tun wäre:** im Ergebnis eine Zeile `nur=<Kennungen>` bei einem
+Teillauf, und den Kommentar `:400-401` auf den heutigen Leser (keinen)
+berichtigen — oder die Datei abschaffen. Werkzeug, kein `.md`.
+
+## <a id="l-90.18"></a>L-90.18 — Hinweis: die Startwege-Schranke zählte am 28.10. einen Start, der Prüfstand hatte zwanzig
+
+**Was passiert:** die Schranke, die prüft, ob jeder eigene Eudora-Start im
+Protokoll steht, meldete für den 28.10. einen Start und 23 Protokollzeilen —
+und *„grün“*. Sie sieht je Prüfstand nur den letzten Start, weil
+`pruefstand-lauf.ps1` das Protokoll vor jedem Lauf löscht. Ein Start ohne
+Protokollzeile vor dem letzten fiele ihr nicht auf.
+
+* **Gemessen**, Commit-Haken bei diesem Bericht: *„2026-10-28   Starts  1
+  Protokollzeilen 23   ohne Zeile  0“*, *„Jeder eigene Eudora-Start am
+  2026-10-28 steht im Protokoll.“*
+* **Gemessen**, `C:\Temp\E166\Mailverzeichnis\Audit.log`: 20 Zeilen
+  `… 32 15 1 720 127` (Start) zwischen `2610281059` und `2610281420`; dazu
+  vor dem Neuauspacken um 10:59 die beiden Starts 10:53 (`TESTLAEUFE.md:546-547`).
+  Die 20 Starts passen Stück für Stück zu `TESTLAEUFE.md:549-568`
+  (Zeitstempel dort = Ende des Laufs; 13:35:19 = Absturz,
+  [L-90.12](#l-90.12)).
+* **Belegt**, `tools/WERKZEUGE.md:130`: *„\*\*Löscht das alte Protokoll vor
+  jedem Lauf\*\*“*.
+
+**Was zu tun wäre:** `pruefe-startwege.pl` zusätzlich `Audit.log` zählen
+lassen (Zeilen `32 15` je Tag) — die Datei überlebt das Löschen von
+`eudora.log`. Werkzeug, kein `.md`.
+
 ## Geprüft ohne Fund
 
 * **[E-166](../Intern/BEFUNDE.md#e-166), Quelltextangaben** (belegt): `persona.cpp:213` `Modify`,
@@ -413,6 +601,29 @@ als Fehler zählen (oder sie dann als *„nicht ausführbar“* ausweisen).
 * **ZIEL**: nennt [E-166](../Intern/BEFUNDE.md#e-166) nicht; 27 von 27 unberührt (richtig, solange [E-166](../Intern/BEFUNDE.md#e-166)
   nicht ins Release-Kriterium aufgenommen wird).
 
+* **TESTPLAN, Ergebnis 7.2.0.127** (`Intern/TESTPLAN.md:45-52`) gegen
+  [E-166](../Intern/BEFUNDE.md#e-166): Sitzungen 16:37 (V1–V3) und 16:49 (V6) sind dieselben, die [E-166](../Intern/BEFUNDE.md#e-166)
+  für das erste Protokoll nennt; *„16:37 endete ohne `Logging shutdown`,
+  Defender“* ([E-166](../Intern/BEFUNDE.md#e-166)) passt zu V5 *„Defender nahm die `Eudora.exe` um 16:47
+  in Quarantäne“*. Datum überall 27.10.2026. Die vier Zeilen
+  `E-137 Strg-W angekommen` (V3: *„Zeilen 2835 und 3100“* plus 3172, 3186)
+  stimmen mit [E-137](../Intern/BEFUNDE.md#e-137) überein ([LEKTOR-88](LEKTOR-88.md#lektor-88) [L-88.8](LEKTOR-88.md#l-88.8)).
+* **`Releases/PRUEFBERICHT.md`**: Kopf *„`7.2.0.127` … Commit `46f4a5f5` …
+  Erstellt 2026-10-27 14:23 … BESTANDEN“*, 39 Prüfstandsfälle am Bau
+  `+ea3ebcbd` — stimmt mit `PAKETE.md:171` und den 39 Buchzeilen vom 27.10.
+  Er beschreibt das Paket 1.0.127, nicht den Zweig; ein `--vergleich` heute
+  würde E-166a/b als *neu hinzugekommen* melden — erwartet, kein Fund.
+* **`Intern/PRUEFBERICHT.md`** erklärt sich im Kopf als abgeschlossener
+  Bericht vom 30.08.2026; **`Intern/TESTBERICHT-E125.md`** als
+  abgeschlossen zum Paket 1.0.122 — beide stimmen mit dem Urteil von
+  [E-125](../Intern/BEFUNDE.md#e-125) (*„behoben in 7.2.0.122 – … von Gregor am 23.10.2026 an 1.0.122
+  bestätigt“*).
+* **`tools/TESTLAEUFE.md:546-568`** gegen `Audit.log`: jede Zeile ab 11:00
+  hat einen Start im Prüfstand, kein Start ohne Zeile (Ausnahme der
+  Absturz, [L-90.12](#l-90.12), der als Lauf verzeichnet ist, nur ohne
+  Vermerk). Zwei Zeilen tragen keine Bau-Kennung (`:550` 11:01:32, `:561`
+  14:11:52) — bei beiden ist nicht ablesbar, welcher Bau lief.
+
 ## Nicht geprüft
 
 * Gregors beide Protokolle (`test_0.127`, `eudora_20261027.zip`) — nicht in
@@ -430,6 +641,10 @@ als Fehler zählen (oder sie dann als *„nicht ausführbar“* ausweisen).
   ([L-90.4](#l-90.4)); die Behebung ist eine Zeile, gebaut und am Prüfstand
   grün, aber noch nicht von dir getestet. Ob 7.2.1 auf deinen Test an einem
   neuen Testpaket wartet oder ohne [E-166](../Intern/BEFUNDE.md#e-166) geht, ist deine Entscheidung.
+* **Die veröffentlichte Notiz zu `v1.0.120` auf GitHub** nennt den
+  Junk-Filter nicht unter dem, was ausfällt ([L-90.16](#l-90.16)). Die
+  Datei im Repo kann der Hauptagent ergänzen; ob der veröffentlichte Text
+  des Releases geändert wird, entscheidest du.
 * **Was vor der Marke `v7.2.1.N` getestet sein muss**
   ([L-74.10](LEKTOR-74.md#l-74.10)) — unverändert offen.
 * **Kriterium 0 ohne Visual Studio** ([L-77.3](LEKTOR-77.md#l-77.3)) —
