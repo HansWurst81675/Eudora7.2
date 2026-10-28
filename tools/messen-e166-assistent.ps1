@@ -152,11 +152,29 @@ if ($junk -ne [IntPtr]::Zero) {
 if ($env:E166_KONTO -eq '1') {
     $haupt = [IntPtr]::Zero
     foreach ($h in [E166A]::Fenster([uint32] $p.Id)) { if ([E166A]::Klasse($h) -eq 'EudoraMainWindow') { $haupt = $h } }
-    $vorher = @([E166A]::Kinder($haupt) | Where-Object { [E166A]::Klasse($_) -eq 'SysListView32' })
+    # alle Fenster des Prozesses: eine schwebende Leiste haengt nicht unter dem Hauptfenster
+    function Listen { @([E166A]::Fenster([uint32] $p.Id) | ForEach-Object { [E166A]::Kinder($_) } | Where-Object { [E166A]::Klasse($_) -eq 'SysListView32' }) }
+    $vorher = Listen
     [void][E166A]::PostMessage($haupt, 0x0111, [IntPtr]32947, [IntPtr]::Zero)
     Start-Sleep -Seconds 2
-    $neu = @([E166A]::Kinder($haupt) | Where-Object { [E166A]::Klasse($_) -eq 'SysListView32' -and $vorher -notcontains $_ })
+    $alle = Listen
+    Write-Output ('E166A Listen im Prozess: ' + $alle.Count)
+    $neu = @($alle | Where-Object { $vorher -notcontains $_ })
     Write-Output ('E166A Persoenlichkeiten-Ansicht: ' + $neu.Count + ' neue Liste(n)')
+    if ($neu.Count -eq 0) {
+        # Stand die Ansicht schon (Eudora stellt offene Leisten wieder her),
+        # entsteht keine neue Liste - am 28.10.2026 so geschehen, die Messung
+        # lief dann ohne Konto-Schritt. Merkmal statt Neuheit: die Liste mit
+        # dem Eintrag "<Dominant>", gelesen ueber UI Automation.
+        Add-Type -AssemblyName UIAutomationClient, UIAutomationTypes
+        $neu = @($alle | Where-Object {
+            $el = [System.Windows.Automation.AutomationElement]::FromHandle($_)
+            $c  = New-Object System.Windows.Automation.PropertyCondition(
+                      [System.Windows.Automation.AutomationElement]::NameProperty, '<Dominant>')
+            $null -ne $el.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $c)
+        })
+        Write-Output ('E166A Persoenlichkeiten-Ansicht am Eintrag <Dominant>: ' + $neu.Count + ' Liste(n)')
+    }
     if ($neu.Count -eq 1) {
         $dlgVorher = @([E166A]::Fenster([uint32] $p.Id) | Where-Object { [E166A]::Klasse($_) -eq '#32770' })
         [void][E166A]::PostMessage($neu[0], 0x800B, [IntPtr]::Zero, [IntPtr]::Zero)   # msgPersViewEditDom = WM_APP+11
