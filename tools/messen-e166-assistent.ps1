@@ -186,8 +186,11 @@ if ($env:E166_KONTO -eq '1') {
             foreach ($k in [E166A]::Kinder($blatt[0])) { if ([E166A]::GetDlgCtrlID($k) -eq 1 -and [E166A]::Klasse($k) -eq 'Button') { $ok = $k } }
             [void][E166A]::PostMessage($blatt[0], 0x0111, [IntPtr]1, $ok)
             Start-Sleep -Seconds 2
-            Write-Output ('E166A Konto-Eigenschaften nach OK noch da: ' + [E166A]::IsWindow($blatt[0]))
-            $reihenfolge += 'konto-ok'
+            $nochDa = [E166A]::IsWindow($blatt[0])
+            Write-Output ('E166A Konto-Eigenschaften nach OK noch da: ' + $nochDa)
+            # Nur melden, wenn das Fenster wirklich zu ist (PRUEFER-64 K2) -
+            # sonst waere E-166a gruen, ohne dass Modify lief.
+            if (-not $nochDa) { $reihenfolge += 'konto-ok' } else { $reihenfolge += 'konto-offen' }
         }
     }
 }
