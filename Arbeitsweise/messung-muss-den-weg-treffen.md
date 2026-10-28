@@ -402,3 +402,26 @@ Ergebnis — und ein beruhigendes Ergebnis schließt den Fund.
 - **Wortwahl im Befund:** *„nicht nachstellbar"* nur, wenn die Vorbedingung
   belegt hergestellt wurde. Sonst heißt es *„nicht gemessen — die
   Vorbedingung X wurde im Messlauf nicht hergestellt"*.
+
+## Nachtrag 28.10.2026 (CHRONIST), Fall 12: das Messskript klickte, der Assistent speicherte nichts
+
+Zeiten MEZ, E-166 am Prüfstand `C:\Temp\E166`, gemessen an Transkript `72be6093…` und `tools/TESTLAEUFE.md`.
+
+| Zeit | Was | Weg getroffen? | erkannt |
+|---|---|---|---|
+| 13:32:58 | Lauf mit relativem `-File tools\testlauf.ps1` im PowerShell-Werkzeug | nein, Eudora startete gar nicht. Die gefilterte Ausgabe zeigte die Zeilen 247–288 der `eudora.log` eines **früheren** Laufs | 13:33:06 mit `-NurPruefen` ([[gekuerzte-ausgabe-ist-kein-ergebnis]]) |
+| 13:33:38 | „Weiter“ im Konto-Assistenten als `PSM_PRESSBUTTON`, eingetragen als `0x0470` | nein, der Assistent blieb auf Seite 1 | 13:34:09, „berichtigt“ auf `0x046F` |
+| 13:34:18 | derselbe Lauf mit `0x046F` | nein, wieder Seite 1 | 13:34:47: Wechsel auf `WM_COMMAND`, im Skript steht seither *„PSM_PRESSBUTTON wirkte am 28.10. nicht“* |
+| 13:34:54–13:36:36 | `WM_COMMAND` mit `ID_WIZNEXT`/`ID_WIZFINISH`, `lParam` = 0 | halb: Die Seiten wechselten, aber `CPropertySheet::OnCommand` (MFC `dlgprop.cpp`) übernimmt das Ergebnis nur, wenn `lParam` das Knopf-Handle trägt. `DoModal` lieferte 0, und der Assistent speicherte nichts | 13:36:40: *„Auch mit dem vollständig durchgefahrenen Assistenten bleibt die Antwort erhalten (`AskedAboutJunk=6`). Auffällig ist aber, dass kein Konto in der INI steht.“* Ursache 13:37:32 |
+| 14:11:52, 14:12:51, 14:13:47 | Lauf 9 am neuen Bau mit `E166_KONTO=1` | nein: *„Persoenlichkeiten-Ansicht: 0 neue Liste(n)“*. Der Konto-Schritt fiel still aus, in der INI stand `AskedAboutJunk=6`, also „grün“ | jedes Mal an `reihenfolge=junk-no` ohne `konto-ok` |
+
+**Neu gemessen (belegt am SDK-Kopf):** `PSM_PRESSBUTTON` ist `WM_USER + 113` = **`0x0471`** (`Windows Kits\10\Include\10.0.22621.0\um\prsht.h:718`). `0x0470` ist `PSM_SETWIZBUTTONS` (`:700`), `0x046F` ist `PSM_SETTITLEA` (`:686`). Beide Werte waren falsch, und die „Berichtigung“ ging in die falsche Richtung. Der Satz im Skript, `PSM_PRESSBUTTON` habe nicht gewirkt, ist eine widerlegte Aussage: Die Botschaft wurde nie geschickt. `BEFUNDE.md` E-166 sagt nur *„`PSM_PRESSBUTTON` falsch beziffert“*, und das stimmt.
+
+**Gegriffen haben** zwei Dinge: der Ausreißer „kein Konto in der INI“ ([[ausreisser-ist-der-befund]]) und die Zeile `reihenfolge=`, die jeden ausgeführten Schritt aufzählt. Ohne sie hätten drei grüne Läufe am neuen Bau eine Behebung bestätigt, deren Auslöser (*Konto → Eigenschaften* mit OK) gar nicht lief. Der Satz um 13:36:40 nannte aber zuerst das Ergebnis und dann den Ausreißer. Richtig ist die umgekehrte Reihenfolge. In `BEFUNDE.md` E-166 steht *„Zwei Messläufe am neuen Bau zählten nicht“*. Gezählt sind es **drei** (14:11:52, 14:12:51, 14:13:47, alle mit *„0 neue Liste(n)“*).
+
+**Zum Wiederverwenden:** Der Regressionsfall E-166a prüft den Weg (`reihenfolge=junk-no,konto-ok`), E-166b danach das Ergebnis (`AskedAboutJunk=6`). An Paket 1.0.127 war E-166a grün und E-166b rot (14:19:01). So sieht eine Gegenprobe aus, die nicht aus dem falschen Grund rot werden kann.
+
+**How to apply, zusätzlich:**
+- Jedes Messskript gibt eine Zeile aus, die jeden **ausgeführten** Schritt nennt, und der Fall prüft diese Zeile vor dem Ergebnis. Ein Schritt, der sein Fenster nicht findet, bricht den Lauf mit einer `FEHL`-Zeile ab, statt still weiterzulaufen.
+- Eine Fensterbotschaft wird aus dem SDK-Kopf beziffert (`grep -rn "define PSM_PRESSBUTTON" "…/Windows Kits/10/Include"`), nie aus dem Gedächtnis. Wirkt eine Botschaft nicht, wird zuerst ihr Wert gegen den Kopf geprüft, bevor sie für unwirksam erklärt wird.
+- Knopfbefehle als `WM_COMMAND` tragen das gemessene Knopf-Handle im `lParam` ([[keine-tastendruecke-verschicken]]).

@@ -84,7 +84,7 @@ if ($assi -ne [IntPtr]::Zero) {
 }
 
 $reihenfolge = @()
-# E166_ERKUNDEN=<n>: n-mal "Weiter" (WM_COMMAND ID_WIZNEXT 12324; PSM_PRESSBUTTON wirkte am 28.10. nicht) und jede Seite
+# E166_ERKUNDEN=<n>: n-mal "Weiter" (WM_COMMAND ID_WIZNEXT 12324; PSM_PRESSBUTTON ist 0x0471 = WM_USER+113, prsht.h - am 28.10. wurde erst 0x0470, dann 0x046F geschickt, also nie PSM_PRESSBUTTON; CHRONIST 28.10.) und jede Seite
 # mit ihren sichtbaren Kindern ausgeben; danach wie sonst abbrechen.
 $erkunden = [int]$env:E166_ERKUNDEN
 for ($i = 1; $i -le $erkunden -and [E166A]::IsWindow($assi); $i++) {

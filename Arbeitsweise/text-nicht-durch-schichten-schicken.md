@@ -469,3 +469,23 @@ Beide Male hat die Messung danach gegriffen, der Schaden kam nicht in einen Comm
 **How to apply, zusätzlich:**
 - Zwischendateien mit Rückstrich, Anführungszeichen oder Nicht-ASCII-Zeichen entstehen **nur** mit dem Write-Werkzeug. Ein Heredoc ist für solchen Text kein Weg, auch nicht in Hochkommas.
 - `\x{…}` über 255 nie in einem Perl-Einzeiler, der eine Datei roh umschreibt. Das Zeichen gehört als UTF-8-Bytes in die Zwischendatei.
+
+## Nachtrag 28.10.2026 (CHRONIST): Fall 27 bis 30, jeder mit Regel in dieser Datei
+
+Zeiten MEZ, gemessen an den Transkripten `15164e13…` und `72be6093…` und an den Dateien.
+
+| Fall | Zeit | Was | Regel hier | Folge |
+|---|---|---|---|---|
+| 27 | 27.10. 17:24:02 | Stand-Vermerk per `perl -i -pe 's/…/… E-165 am Prüfstand` + Pfad mit `\\Temp\\E135-box` im Ersatz `…/'` | 14.10., Fall 16–18: `\E` beendet eine Umschaltung, Pfade nie inline | In `memory/stand-27-10-2026.md:20` und im gespiegelten `Arbeitsweise/stand-27-10-2026.md:20` steht **`C:Temp135-box`**, seit `9c71a176` auch auf `main`. Bis zu diesem Lauf nicht bemerkt (gemessen am 28.10. mit `grep`) |
+| 28 | 28.10. 10:58:01 | E-166-Text per `BEGIN{… local $/; $n=<F>; chomp $n …}` eingesetzt | 14.10., 25.10. und 26.10.: nie `chomp` unter `local $/` | Zeilenumbruch mitten in der Tabellenzeile E-166 (LF 8795 → 8796). Erkannt um 10:58:14 an der Byte-Messung, behoben um 10:58:16 |
+| 29 | 28.10. 14:02:35 | `perl -i -e 'local $/; $_=<STDIN>; …; print' < persona.cpp > persona.neu && cp …` | oben: `tools/ersetze-bereich.pl` | Perl meldete *„-i used with no filenames on the command line, reading from STDIN“*. `-i` war wirkungslos, die Umleitung rettete das Ergebnis. Die Warnung stand in der Ausgabe und wurde nicht gelesen |
+| 30 | 28.10. 14:03:53 | `perl -i -e '… <STDIN> …; print @l' tools/WERKZEUGE.md < tools/WERKZEUGE.md 2>/dev/null` | dieselbe | Das Skript las selbst von `<STDIN>`. Der Dateiname stand in `@ARGV`, wurde aber nie über `<>` geöffnet, also schrieb `-i` nichts, und `print` ging auf die Standardausgabe: **111,5 KB** im Werkzeugergebnis. `2>/dev/null` verschluckte die Warnung, die 78 Sekunden vorher bei Fall 29 schon dastand. Erkannt um 14:04:00, die Datei war unverändert (14:04:03 gemessen) |
+
+**Warum Fall 27 durch die Schranke ging (belegt am Quelltext):** `tools/pruefe-rueckstrich.pl:61` nimmt `Arbeitsweise/` ganz aus, weil die Lehren den Fehler absichtlich zitieren. Stand-Vermerke (`stand-*.md`) und Entscheidungsnotizen (`entscheidung-*.md`) liegen im selben Verzeichnis und werden deshalb nie geprüft. Im Gedächtnisverzeichnis, wo sie geschrieben werden, läuft gar keine Schranke. Eine Ausnahme, die für Zitate gedacht ist, deckt einen ganzen Ort ab ([[schranke-teilt-nicht-die-annahme]]).
+
+**Gegenstück zum 27.10., gemessen:** Viermal ging am 28.10. ein Text mit einfachem Rückstrich (`C:\Temp\E166`) durch `cat > … <<'EOF'` (10:57:52, 11:04:47, 11:05:01, 14:03:53). Um 11:05:20 war jeder Pfad in `BEFUNDE.md` heil, und in `tools/WERKZEUGE.md` steht er richtig (gemessen am Commit `473f570f`). Halbiert wurde am 27.10. ein **doppelter** Rückstrich in C-Quelltext. Die Regel vom 27.10. (*„nur mit dem Write-Werkzeug“*) bleibt trotzdem, denn vorher weiß man nicht, welche Art von Rückstrich kommt.
+
+**How to apply, zusätzlich:**
+- `perl -i` wirkt nur auf Dateien, die über `<>` aus `@ARGV` gelesen werden. Wer `<STDIN>` liest, schreibt ohne `-i` in eine neue Datei im Scratchpad, misst sie und kopiert sie dann zurück, oder nimmt gleich `tools/ersetze-bereich.pl`.
+- *„-i used with no filenames“* ist ein Abbruchgrund, kein Rauschen. `2>/dev/null` hinter einem schreibenden Perl ist ausgeschlossen ([[gekuerzte-ausgabe-ist-kein-ergebnis]]).
+- **Vorschlag für die Schranke (nicht gebaut):** `pruefe-rueckstrich.pl` nimmt in `Arbeitsweise/` nur Lehren aus (`type: feedback` im Kopf). `stand-*.md`, `entscheidung-*.md` und `CHRONIST-*.md` werden geprüft. Gegenprobe: `perl tools/pruefe-rueckstrich.pl --commit 9c71a176` muss rot werden (heute grün, weil ausgenommen), eine Lehre, die `C:Temp105` zitiert, bleibt grün.

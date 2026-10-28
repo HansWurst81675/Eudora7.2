@@ -26,3 +26,7 @@ Zeiten MEZ, gemessen am Transkript (Textzeilen der Antworten, nach englischen Fu
 **Vermutung, nicht gemessen:** Die Zusammenfassung nach einer Kompaktierung ist englisch (*„This session is being continued …“*, *„Primary Request and Intent“*). Was danach kommt, setzt deren Sprache fort, bis Gregor schreibt. Die drei Zeilen vom 27.10. kamen jeweils mitten in einer Reparatur, als der Blick auf dem Werkzeug lag.
 
 **How to apply, zusätzlich:** Nach *„This session is being continued“* ist die erste Zeile an Gregor deutsch, bevor ein Werkzeug läuft. Englischer Werkzeugtext (Fehlermeldungen, Ausgaben) wird zitiert, nicht fortgesetzt.
+
+## Nachtrag 28.10.2026 (CHRONIST): eine englische Zeile
+
+Gezählt wie am 27.10., Transkript `72be6093…`: Unter 72 Antworttexten der Sitzung ist einer englisch, um 13:33:07 MEZ: *„The working directory had shifted. I'm using absolute paths now.“* Das war 64 Minuten nach der Kompaktierung (12:29), mitten in einer Reparatur und direkt nach einer **deutschen** PowerShell-Fehlermeldung. Gregor hat nicht nachgefragt. Das passt zur zweiten Hälfte der Vermutung vom 27.10. (*„mitten in einer Reparatur, als der Blick auf dem Werkzeug lag“*). Die erste Hälfte (*„setzt die Sprache der Zusammenfassung fort“*) erklärt diesen Fall nicht. Belegt ist nur die Zeile.
