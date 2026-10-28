@@ -162,6 +162,7 @@ eine Datei liest, liest diese.
 | [stand-24-10-2026-spaet](stand-24-10-2026-spaet.md) | Stand beim Abschalten am 24.10.2026 spaet - PRUEFER-50 nur als Zwischenstand gesichert, E-148 als naechstes, angleichen.sh will \"main\" |
 | [stand-25-10-2026-abend](stand-25-10-2026-abend.md) | Uebergabe 25.10.2026 spaet - RC1_vorbereiten als PR gemeldet; morgen zuerst CHRONIST, dann E-142-Hinweis, E-146, Logzeile, E-132-Pruefstandsfall, LEKTOR-61-Funde, Testpaket 7.2.0.123 |
 | [stand-26-10-2026-nacht](stand-26-10-2026-nacht.md) | 26.10. 22:45 — 9 Dateien UNGESICHERT im Hauptbaum (E-137 vierter Anlauf, E-160), Zweig 0.123_ergebnisse gemergt; zuerst Zweignamen 0.125_ergebnisse von Gregor bestätigen lassen |
+| [stand-28-10-2026](stand-28-10-2026.md) | 28.10. abends — E-166 behoben (Zweig e166-junk_message_fix); LEKTOR-90 fand einen Absturz im Konto-Assistenten am Prüfstand; CHRONIST lief beim Schluss noch |
 | [stand-27-10-2026](stand-27-10-2026.md) | 27.10. nachmittags — PR #179 gemergt (7.2.0.127 auf main); Gregor testet V1–V6 an 1.0.127; Zweig 0.127_test_ergebnisse |
 | [powershell-ist-nicht-bash](powershell-ist-nicht-bash.md) | Im PowerShell-Werkzeug gibt es kein perl, und ein Alias schlägt eine gleichnamige Funktion (Lp = Out-Printer); am 27.10.2026 dreimal, eine Gegenprobe lief dadurch auf unverändertem Quelltext |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
