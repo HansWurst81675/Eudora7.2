@@ -1805,6 +1805,37 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Vierundneunzigster Durchgang — Prüfung vor dem Merge von PR #180 (`0.127_test_ergebnisse`): E-166 Junk-Frage, S-3c erweitert, Freigabe-Schranke, Stand-Köpfe 28.10.2026 (Bericht: `Befunde/LEKTOR-89.md`)
+
+Lauf über `2a8f5649..978a852a` und Bestand der 61 `.md` ohne `Arbeitsweise/`
+und `Befunde/`. **10 Funde** (3 falsch, 3 veraltet, 2 ungenau, 2 Hinweise),
+nichts berichtigt (Auftrag: nur Bericht und Fahrtenbuch). L-88.1 bis L-88.8
+erledigt; L-88.9 offen, L-88.10 verschärft (`2a8f5649` hat in PRÜFER-63 auch
+E-166 verlinkt). Die Stand-Köpfe vom 28.10. sind in ihren Fassungsangaben
+wahr (Quellstand seit `ea3ebcbd` unverändert, gemessen). **Falsch:** S-3c und
+der Kopf von S-3 sagen, ohne `MFC71.DLL` falle *„vor allem das Adressbuch“*
+aus — README, ANWENDER, AUFGABEN, PORTIERUNG und WEITERMACHEN sagen das
+Gegenteil ([L-89.1](../Befunde/LEKTOR-89.md#l-89.1)); E-166 sagt, der Dialog
+schreibe keine Protokollzeile, und findet sie später selbst
+(`guiutils.cpp:173`) — Gregors erstes Protokoll ist deshalb nie danach
+durchsucht ([L-89.2](../Befunde/LEKTOR-89.md#l-89.2)); `FILTER.md:491-495`
+sagt, auch `MSVCR71.dll` fehle im Paket
+([L-89.9](../Befunde/LEKTOR-89.md#l-89.9)). Dazu zwei überholte Sätze in
+E-166 ([L-89.3](../Befunde/LEKTOR-89.md#l-89.3)), S-3-Kopf ohne die Messung
+vom 28.10. ([L-89.4](../Befunde/LEKTOR-89.md#l-89.4)), der erste nicht
+abgesprochene Start ohne Vermerk in `TESTLAEUFE.md:546`
+([L-89.5](../Befunde/LEKTOR-89.md#l-89.5)), „hier weiter“ nennt CHRONIST und
+PR als nächsten Schritt und eine Ankündigung als Freigabe
+([L-89.6](../Befunde/LEKTOR-89.md#l-89.6)), PR-Beschreibung ohne E-166
+([L-89.7](../Befunde/LEKTOR-89.md#l-89.7)), DEFENDER-FEHLALARM *„seit dem
+23.10. nichts Neues“* ([L-89.8](../Befunde/LEKTOR-89.md#l-89.8)), Junk-Filter
+fehlt in den Anwendergrenzen ([L-89.10](../Befunde/LEKTOR-89.md#l-89.10)).
+Vor dem Merge empfohlen: L-89.1, L-89.2, L-89.6. Für Gregor offen: ob
+`MFC71.DLL`/`MSVCP71.dll` für den Prüfstand beschafft werden dürfen, was vor
+der Marke `v7.2.1.N` getestet sein muss, Kriterium 0 ohne Visual Studio
+(sein Rechner hat die VC-7.1-Laufzeit, ist also kein Rechner ohne
+Nachinstallation).
+
 ## Dreiundneunzigster Durchgang — Prüfung vor dem PR des Zweigs `0.127_test_ergebnisse` nach `main`: Gregors Kurztest an 1.0.127, E-137 und E-160 behoben, E-165 neu, ANWENDER Strg+K, 27.10.2026 (Bericht: `Befunde/LEKTOR-88.md`)
 
 Lauf über `91c92ed0..486d6a69` ohne `Arbeitsweise/`. **10 Funde** (2 falsch,
