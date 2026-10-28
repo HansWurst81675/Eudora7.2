@@ -15,7 +15,7 @@ Grenzen, die **bleiben** — und die zwei, drei Mängel, die ein Anwender im
 Alltag am ehesten merkt.
 
 * **Kein fertiges Installationsprogramm.** Es gibt ein ZIP, sonst nichts.
-* **LDAP, Ph, S/MIME und die Suche über den Verzeichnisdienst fallen aus —
+* **LDAP, Ph, S/MIME, der Junk-Filter und die Suche über den Verzeichnisdienst fallen aus —
   das eigene Adressbuch nicht.** Diese Teile brauchen
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
@@ -125,6 +125,24 @@ Wie ein Filter entsteht, wann er läuft, was seine fünf Aktionen tun, wo die
 Regeln gespeichert werden und was es mit der Junk-Punktzahl auf sich hat:
 [FILTER.md](../Intern/FILTER.md). Dort steht auch, warum diese Punktzahl hier bei
 jeder eingehenden Nachricht **0** bleibt.
+
+### Eine Adresse ins Adressbuch aufnehmen
+
+Die Mail öffnen oder in der Postfachliste markieren, dann **Strg+K** — oder
+*Special → Make Address Book Entry*. Eudora nimmt die Adressen der Mail und
+öffnet den Dialog für den neuen Eintrag; dort Kurzname, Name und Adresse
+prüfen und mit *OK* speichern.
+
+**Deine eigene Adresse nimmt Eudora vorher heraus.** Steht in der Mail nur
+sie — etwa in einer Mail an dich selbst —, kommt statt des Dialogs die
+Meldung *„Eudora could not find any usable addresses … except maybe your
+own address. Create an empty nickname anyway?“*. Mit *Ja* öffnet sich der
+Dialog ohne Adresse — Kurzname und Name sind aus dem Absender vorbelegt, wenn
+er einen Namen trägt —, und du trägst die Adresse selbst ein. Das ist das Verhalten des
+Originals (`namenick.cpp`, Schalter *Include yourself* unter *Tools →
+Options → Replying*, Vorgabe aus); gemessen an Gregors Test an Paket 1.0.127,
+27.10.2026. Den Schalter einzuschalten wirkt auch auf *Reply to All* — dann
+stehst du selbst mit in der Empfängerliste.
 
 ### Was nicht in der Oberfläche steht
 

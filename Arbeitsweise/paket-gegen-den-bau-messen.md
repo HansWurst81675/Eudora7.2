@@ -145,3 +145,18 @@ Handvergleich vom 15.10. ist der Weg, bis das Werkzeug ihn kann.
 **Vorschlag für die Hauptsitzung (nicht gebaut):** `paket-pruefen.ps1
 -Vorgaenger <Verzeichnis>` meldet beide Richtungen; Gegenprobe: 1.0.96 vor dem
 Herausnehmen von `LDAP32.DLL` gegen 1.0.95 muss die Datei nennen.
+
+## Nachtrag 27.10.2026 (CHRONIST): seit August sechs Debug-Dateien, weil Bau und Prüfung dieselbe Endung fragten
+
+Zeiten MEZ, 26.10., gemessen am Transkript, belegt an [[E-156]] in `Intern/BEFUNDE.md`.
+
+Gregor 11:22:30: *„warum haben wir eine mischung aus debug und release? darf nicht vorkommen!“* Meine Erklärung 11:22:42: `paket-bauen.ps1` legt die frischen Dateien über die Grundlage `Eudora72-1.0.2-lauffaehig.zip` vom 30.08., *„aber nur, was auf `.exe` oder `.dll` endet. Alles andere bleibt aus der Grundlage stehen. `paket-pruefen.ps1` prüft die Laufzeit ebenfalls nur bei `.exe` und `.dll`.“* So liefen `NSImport.eif`, `OEImport.eif` und `OLImport.eif` als Debug-Fassung in **jedem** Paket seit August mit. Dazu kamen `EuShlExt.dll`, `EudoraNS.dll` und `swEudora.exe`, die nicht aus dem Release-Bau stammten. Gezählt wurden **34 Abstürze in `ucrtbased.dll`** in Gregors Paketen 1.0.3 bis 1.0.123 (11:44:19), dazu 164 Eudora-Absturzberichte seit dem 30.08. im Windows-Archiv `WER\ReportArchive` (11:38:41).
+
+Drei Lehren dieser Sammlung hätten es früher zeigen können:
+- **Diese hier, Nachtrag 13.10.:** *„als Grundlage das ZIP des letzten Tags statt 1.0.2“*. Vorgeschlagen, nicht gebaut. Die Grundlage 1.0.2 war 13 Tage später die Quelle der sechs Dateien.
+- **[[schranke-teilt-nicht-die-annahme]]:** Der Paketbau wählte nach Endung, und die Paketprüfung wählte nach derselben Endung. Die Prüfung konnte nur finden, was der Bau auch hätte richtig machen können.
+- **[[eingebaute-messung-auslesen]]:** Windows hatte jeden Absturz seit August protokolliert. Gelesen wurde das Archiv erst, als Gregor fragte, *„was sind es alles für crash reports hier?“* (11:38:06).
+
+Behoben am selben Vormittag (`ec177b26`, 11:30): Ausführbares wird am Dateikopf (`MZ`/`PE`) erkannt, nicht an der Endung. Fehlt eine Release-Fassung, bricht der Bau ab. Die Prüfung weist jede Datei mit Debug-Laufzeit ab. Gegenprobe: 1.0.123 mit genau den sechs Dateien rot, Probepaket grün. Gregor an 1.0.124 (T5): 0 Abstürze.
+
+**How to apply, zusätzlich:** Eine Prüfung, die einen Fehler des Paketbaus fangen soll, wählt ihren Umfang **nicht** nach demselben Merkmal wie der Bau. Hier: Der Bau wählt nach Endung, also zählt die Prüfung jede Datei im Paket.

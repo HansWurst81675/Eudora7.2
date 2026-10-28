@@ -24,7 +24,8 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-160](Intern/BEFUNDE.md#e-160)** | Beim Anlegen einer neuen Persönlichkeit zeigt Windows „Zum Ausführen der gewünschten … | **nie gemessen** | Gregors Prüfung an Paket 1.0.127 (TESTPLAN V4): *Tools → Personalities*, Rechtsklick in die Liste → *New...*, die Windows-Meldung darf nicht komm… |
+| **[E-166](Intern/BEFUNDE.md#e-166)** | Die Frage „Automatically put junk mail in the Junk mailbox?“ kam beim Testen mehrmals … | 28.10.2026 an 7.2.0.127 | (1) am Quelltext klären, wie der Dialog von 22:26 ohne Tastenzeile enden kann (z. B. ob die Abrufmeldungen aus der Nachrichtenschleife des offenen Di… |
+| **[E-165](Intern/BEFUNDE.md#e-165)** | Die Vervollständigungsbox im To:-Feld sieht mit einem einzigen Treffer verbaut aus — wi… | **nie gemessen** | am Prüfstand `C:\Temp\E135-box` mit **einem** passenden Kurznamen messen (Außen- und Innenmaß der Box und der Liste, Bildlaufleisten-Stil), danach … |
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
@@ -37,7 +38,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-140](Intern/BEFUNDE.md#e-140)** | Zwei weitere Speicherwege gehen an der Zeichensatz-Ergaenzung vorbei — *File → Save As… | **nie gemessen** | jede Messung — niemand hat diese beiden Wege je gefahren. Zu messen: aus dem Nachrichtenfenster und aus dem Verfassen-Fenster je eine Nachricht mit … |
 | **[E-139](Intern/BEFUNDE.md#e-139)** | Die Meldung „Rechtschreibprüfung nicht vorhanden" kommt nach jedem Programmstart einmal… | **nie gemessen** | der Einbau in `ZeigeHinweisEinmal()` (`spell.cpp:58`) — statt `AfxMessageBox` ein `NoteDialog(<neuer INI-Schlüssel>, <neue Zeichenkette>)`. Zwei Di… |
 | **[E-138](Intern/BEFUNDE.md#e-138)** | Nach dem Herunterladen von GitHub lässt sich Eudora.exe nicht starten — nur der Umweg … | **nie gemessen** | an der Doku nichts mehr. Der Hinweis steht seit dem 23.10.2026 in **vier** Dateien, von [LEKTOR-52](Befunde/LEKTOR-52.md) nachgezählt: `README.md`… |
-| **[E-137](Intern/BEFUNDE.md#e-137)** | Strg-W auf der Wazoo-Leiste (Adressbuch, Filter, Postfächer — ein Fenster, verschiedene… | 27.10.2026 an 7.2.0.127 | Gregors Prüfung an 1.0.127 (TESTPLAN V1–V3, Gegenprobe V6): Klick auf Titelzeile und Rand der **schwebenden** Leiste (V1, V2) und auf eine Beschrif… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 — **veraltet** | die Stelle, an der beim Speichern nach windows-1252 umkodiert wird. Sie ist **nicht** gefunden — die einzige CP1252-Umwandlung mit dem E-90-Filter i… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
@@ -58,7 +58,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[S-6](Intern/BEFUNDE.md#s-6)** | Bereiche überlagern sich | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | das Nachstellen — ob sich die Bereiche heute überhaupt noch überlagern, ist seit dem 30.08.2026 **nie geprüft** worden. Die beiden damals genannt… |
 | **[NP2-3](Intern/BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Behebung selbst — `CPaletteDC::BitBltTransparent` (`OTShim_Werkzeugleiste.cpp:239`) meldet unverändert Erfolg, ohne gezeichnet zu haben. Seit d… |
 | **[NP3-3](Intern/BEFUNDE.md#np3-3)** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | eine Zeile Text — der Kommentar in `OTShim_Bild.h:326-330` sagt weiterhin *„an drei von fünf Stellen"* und zählt die Aufrufstellen damit falsch.… |
-| **[S-3](Intern/BEFUNDE.md#s-3)** | erster Lauf durch Gregor: drei Beobachtungen | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | allein S-3c (die beiden Laufzeitbibliotheken) — `MFC71.DLL` und `MSVCP71.dll` fehlen dauerhaft, damit fallen Adressbuch (`EudoraBk.dll`), LDAP (`Lda… |
+| **[S-3](Intern/BEFUNDE.md#s-3)** | erster Lauf durch Gregor: drei Beobachtungen | 28.10.2026 an 7.2.0.127 | allein S-3c (die beiden Laufzeitbibliotheken) — `MFC71.DLL` und `MSVCP71.dll` fehlen dauerhaft, damit fallen die Verzeichnisdienste aus (Protokoll `… |
 | **[NP2-2](Intern/BEFUNDE.md#np2-2)** | SysColorChange() tut nicht, was daneben steht | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | nur die Berichtigung des irreführenden Kommentars an `OTShim_Werkzeugleiste.cpp:326-328` (**nicht** an den drei Stellen, die hier bis zum 22.10.2026 … |
 | **[NP3-2](Intern/BEFUNDE.md#np3-2)** | OnToolHitTest als int statt INT_PTR — x64-Sperre | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Umstellung auf `INT_PTR` — `OnToolHitTest` ist an elf Stellen noch `int`: `OTShim_Reiter.cpp:1032`/`.h:570`, `OTShim_Werkzeugleiste.cpp:595`, `P… |
 | **[A-1](Intern/BEFUNDE.md#a-1)** | Erscheinungsbild: fünf Punkte umgesetzt | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | nur `SECDockBar::SetControlBarWidthsInRow` (`OTShim.cpp:2830`) ist ein leerer Rumpf — die prozentualen Zeilenbreiten. **Niemand ruft sie auf**, die … |
@@ -100,11 +100,11 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
 
-**Quellstand 7.2.0.127, Paket 1.0.127 — Testpaket, noch nicht getestet.** Ersetzt 7.2.0.126,
+**Quellstand 7.2.0.127, Paket 1.0.127 — Testpaket, von Gregor am 27.10.2026 im Kurztest geprüft: V1 bis V6 bestanden ([TESTPLAN](Intern/TESTPLAN.md#ergebnis-7-2-0-127); V1–V3 aus seinem Protokoll auf seine Anweisung).** Ersetzt 7.2.0.126,
 das geschnürt und nie getestet wurde. Inhalt wie 7.2.0.126, dazu:
 
 * **[E-137](Intern/BEFUNDE.md#e-137) — Strg+W nach einem Doppelklick auf ein Postfach in
-  *Mailboxes* soll wieder das Postfach schließen** (am Programm nicht gemessen,
+  *Mailboxes* schließt wieder das Postfach** (von Gregor an 1.0.127 bestätigt,
   TESTPLAN V6). Ausnahme: war das Postfach beim Doppelklick schon das vorderste
   Fenster, verschwindet bei Strg+W weiterhin die Leiste *Mailboxes* und das
   Postfach bleibt offen; es geht nichts verloren ([PRÜFER-63](Befunde/PRUEFER-63.md) K1,
@@ -114,8 +114,8 @@ das geschnürt und nie getestet wurde. Inhalt wie 7.2.0.126, dazu:
   Merkung gilt jetzt nur, solange dasselbe Fenster aktiv ist, und verfällt beim
   Wechsel in ein anderes Programm. Die Protokollzeile `E-137 Strg-W angekommen`
   nennt zusätzlich `mdi-gewechselt=`. Unit-Test `TestE137.cpp` prüft das und die
-  Ausnahme für die Taste W (PRÜFER-62 K2); ohne beides rot. Gregors Gegenprobe:
-  TESTPLAN V6.
+  Ausnahme für die Taste W (PRÜFER-62 K2); ohne beides rot. Gregors Gegenprobe
+  TESTPLAN V6 bestanden.
 
 ## 7.2.0.126 — Testpaket: Strg+W nach einem Klick auf die schwebende Leiste, fünfter Anlauf ([E-137](Intern/BEFUNDE.md#e-137)); Windows-Meldung beim Anlegen einer Persönlichkeit ([E-160](Intern/BEFUNDE.md#e-160))
 
@@ -135,13 +135,13 @@ die Mail, und im Protokoll stand keine E-137-Zeile.
   `E-137 Strg-W angekommen` ins Protokoll. Unit-Test `TestE137.cpp` und **neuer
   Prüfstandsfall** `tools/messen-e137.ps1` (Klick auf Titelzeile bzw. Rand der
   schwebenden Filterleiste, dann der Befehl hinter Strg+W): am Bau 1.0.125 rot —
-  dasselbe Bild wie Gregors U1 —, am Bau 1.0.126 grün. Gregors Test steht noch aus.
+  dasselbe Bild wie Gregors U1 —, am Bau 1.0.126 grün. Von Gregor an 1.0.127 bestätigt (TESTPLAN V1–V3).
 * **[E-160](Intern/BEFUNDE.md#e-160) — beim Anlegen einer Persönlichkeit (*Tools →
   Personalities*, Rechtsklick → *New...*) soll die Windows-Meldung „kein
   E-Mail-Programm zugeordnet“ nicht mehr kommen.** Der Outlook-Import im
   Kontoassistenten meldet sich nur noch bei MAPI an, wenn in der Registry ein
   Outlook eingetragen ist — auch Outlook 2013 und neuer (PRÜFER-61 K3).
-  Unit-Test `TestE160.cpp`; am Programm noch nicht gemessen.
+  Unit-Test `TestE160.cpp`; von Gregor an 1.0.127 bestätigt (TESTPLAN V4).
 
 314 Unit-Tests, 314 bestanden; Gegenproben ohne die Behebungen je 313/314.
 

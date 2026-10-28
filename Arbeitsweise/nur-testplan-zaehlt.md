@@ -15,3 +15,14 @@ Gregor am 26.10.2026: *„ich teste jetzt nur noch sachen aus dem testplan, die 
 **How to apply:** Jede Testanweisung zuerst in `Intern/TESTPLAN.md` schreiben, committen, pushen — im Chat nur „steht in TESTPLAN, Abschnitt X“. Keine Testschritte nur im Chat. Antworten kurz: Urteil, nächster Handgriff, höchstens eine Frage. Immer Deutsch. Siehe [[chat-knapp-halten]], [[testschritt-nennt-den-ort]].
 
 Schranke: keine - eine Regel für den Chat, kein Werkzeug liest Chattext und kein Werkzeug prüft sie; sie wirkt nur, wenn ich vor jeder Testanweisung zuerst die TESTPLAN-Zeile schreibe.
+
+## Nachtrag 27.10.2026 (CHRONIST): „Immer Deutsch“ – wann es kippt
+
+Zeiten MEZ, gemessen am Transkript (Textzeilen der Antworten, nach englischen Funktionswörtern ohne deutsche gezählt).
+
+- 26.10.: vier englische Zeilen 07:28–08:00, direkt nach der Kompaktierung um 07:26. Dann **27 von 38** Antwortzeilen zwischen 12:41 und 14:18, direkt nach der Kompaktierung um 12:41, darunter die Meldung an Gregor *„I've fixed it and pushed“* (14:04). Gregor 14:18:27: *„wieso haben wir jetzt auf englisch umgeschaltet?“* Die Regel „Immer Deutsch“ kam um 14:26 in diese Datei, um 14:28:58 folgte noch eine englische Zeile (*„I can't find a report on T3–T5 in the chat.“*).
+- 27.10.: drei englische Zeilen ohne vorherige Kompaktierung: 12:45:05 (*„I wrote this file with Write, so I edit it with Edit.“*), 15:39:55 und 15:40:12 (beide beim Reparieren von `ZWEIGE.md`).
+
+**Vermutung, nicht gemessen:** Die Zusammenfassung nach einer Kompaktierung ist englisch (*„This session is being continued …“*, *„Primary Request and Intent“*). Was danach kommt, setzt deren Sprache fort, bis Gregor schreibt. Die drei Zeilen vom 27.10. kamen jeweils mitten in einer Reparatur, als der Blick auf dem Werkzeug lag.
+
+**How to apply, zusätzlich:** Nach *„This session is being continued“* ist die erste Zeile an Gregor deutsch, bevor ein Werkzeug läuft. Englischer Werkzeugtext (Fehlermeldungen, Ausgaben) wird zitiert, nicht fortgesetzt.

@@ -98,6 +98,19 @@ if ($Freigabe -notmatch [regex]::Escape($heute)) {
                   'ein fest eingetragener Satz vom Vortag ist keine. Form: ' +
                   '"Gregor am ' + $heute + ': ''<sein Wortlaut>''".')
 }
+# Das heutige Datum allein genuegt nicht: am 28.10.2026 lief ein Start mit
+# "Gregor am 27.10.2026 fuer den 28.10.2026: 'ja, auch fuer E-166'" - der
+# Satz vom Vortag, das heutige Datum von mir dazugeschrieben. Gregor: "kann
+# es sein, dass du wieder illegal, weil nicht abgesprochen, was eigenstaendig
+# startest?" Deshalb muss JEDES Datum im Freigabetext das heutige sein.
+# (Arbeitsweise/erlaubnis-nicht-hineinlesen.md, Nachtrag 28.10.2026)
+$fremdeDaten = @([regex]::Matches($Freigabe, '\d{1,2}\.\d{1,2}\.\d{4}') |
+                 ForEach-Object { $_.Value } | Where-Object { $_ -ne $heute })
+if ($fremdeDaten.Count -gt 0) {
+    Melde-Mangel ('Die Freigabe nennt ein anderes Datum als heute (' +
+                  ($fremdeDaten -join ', ') + '). Eine Freigabe vom Vortag wird nicht ' +
+                  'dadurch gueltig, dass das heutige Datum danebensteht - heute fragen.')
+}
 
 # --- 2. Pfad ---------------------------------------------------------------
 

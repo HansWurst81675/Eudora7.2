@@ -70,3 +70,15 @@ der Leser sah.
    nur, was gemessen ist).
 5. **Der Hinweis im `pre-commit` kommt früh genug.** Am 21.10. lief der
    Commit mit dem Entwurf acht Minuten vor dem Abschicken.
+
+## Nachtrag 27.10.2026 (CHRONIST): „Zeilen 23 bis 25“ – auf welchem Stand?
+
+Zeiten MEZ, 26.10., gemessen am Transkript. Gregor 14:30:14: *„die anweisungen zu T3, T4 und T5 finde ich wo?“* Antwort 14:30:16: *„in `Intern/TESTPLAN.md`, im Abschnitt … ganz oben in der Datei, die Zeilen 23 bis 25.“* Das stimmte für meinen Arbeitsbaum. Gregor liest aber GitHub, und dort `main`. Gregor 14:30:56: *„falsch: wenn ich im testplan https://github.com/…/blob/main/Intern/TESTPLAN.md nach T3 suche, finde ich nichts.“* Der Kurztest lag nur auf `0.123_ergebnisse`, der PR war noch nicht gestellt.
+
+Dieselbe Verwechslung am Vormittag, andersherum: Gregor mergte um 09:52 *„damit ich einen aktuellen test plan habe“* und sprang mit dem Anker `#m1-e132` direkt zu M1. M1 verweist nicht auf Teil 0, der davor zu tun war. 09:54:39: *„was ist teil 0? steht nichts im testeplan!“*
+
+Für Gregor ist eine Datei im Repo das, was er auf GitHub unter `main` sieht. Jede Ortsangabe ohne Zweig meint für ihn `main` ([[nur-testplan-zaehlt]], [[testschritt-nennt-den-ort]]).
+
+**How to apply, zusätzlich:**
+- Eine Ortsangabe an Gregor ist ein **Link mit Zweig**, nie „Datei, Zeile N“. Steht es noch nicht auf `main`, steht das im selben Satz: *„noch nur auf `0.123_ergebnisse`: <Link>“*.
+- Ein Abschnitt, auf den ein Anker zielt, nennt seine Vorbedingung selbst („vorher Teil 0“), denn der Anker überspringt alles davor.

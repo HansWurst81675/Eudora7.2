@@ -491,8 +491,11 @@ Von Hand markieren Sie über *Message → Junk* beziehungsweise *Not Junk*
 Die beiden mitgelieferten Module **`SpamWatch.dll`** und
 **`SpamHeaders.dll`** (in `Eudora71/Bin/Release/Plugins/`) brauchen
 `MFC71.DLL`, `MSVCP71.dll` und `MSVCR71.dll` — nachgemessen an den
-Importtabellen der beiden Dateien. Diese drei Bibliotheken von 2003 hat
-Microsoft nie zur Weitergabe freigegeben; sie liegen nicht im Paket. Das ist
+Importtabellen der beiden Dateien; ebenso `SMIME.dll`. `MFC71.DLL` und
+`MSVCP71.dll` von 2003 hat Microsoft nie zur Weitergabe freigegeben; sie
+liegen nicht im Paket. `MSVCR71.dll` ersetzt der eigene Nachbau
+([B-1](BEFUNDE.md#b-1)). Am Programm gemessen am 28.10.2026: ohne die beiden
+laden die drei Zusätze nicht ([E-166](BEFUNDE.md#e-166)). Das ist
 Befund [**E-47**](BEFUNDE.md#e-47).
 
 `LoadLibrary` schlägt in diesem Fall fehl, und `Trnslate.cpp:3150-3157`

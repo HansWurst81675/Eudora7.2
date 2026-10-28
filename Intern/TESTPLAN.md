@@ -1,11 +1,12 @@
-# Testplan für Gregor — Quellstand 7.2.0.127 / `VERSION` 1.0.127, Stand 27.10.2026
+# Testplan für Gregor — Quellstand 7.2.0.127 / `VERSION` 1.0.127, Stand 28.10.2026 (Inhalt seit 27.10.2026 unverändert)
 
-> **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter. Das
+> **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter, **am 27.10.2026
+> bestanden** (V1 bis V6, [Ergebnis](#ergebnis-7-2-0-127)). Das
 > Paket 1.0.126 bitte **nicht** testen: es wurde geschnürt, dann fand der
 > PRÜFER eine Nebenwirkung (V6), und 1.0.127 ersetzt es. Das
 > Testpaket 7.2.0.125 ist überholt (U1 nein, U2 bis U4 gehen in V2, V3 und V5
 > auf), die Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen; alle
-> Ergebnisse stehen weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Test und deinem Ja
+> Ergebnisse stehen weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Ja
 > wird das Release **7.2.1.<n>** gebaut.
 
 ## Was jetzt zu testen ist — Testpaket 7.2.0.127 (Kurztest)
@@ -18,6 +19,14 @@
 nach `C:\Users\Gregor\Eudora72-1.0.127-release\Mailverzeichnis` kopieren, **ohne**
 `eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
 starten. In der Titelzeile muss **7.2.0.127** und **Paket 1.0.127** stehen.
+
+**Oder mit leerem Stand** (Gregor, 27.10.2026: außerhalb der VM, Mail frisch abrufen): das ZIP
+`Releases\Eudora72-1.0.127-release.zip` aus der VM mitnehmen (es liegt nicht auf GitHub;
+SHA-256 `fe72349f19b2503b9266d752e2e20407024bb892ab972eaad1430d3f870f2a2f`), auspacken und das
+mitgelieferte `Mailverzeichnis` **behalten** — darin steht die `Eudora.ini` mit `LogLevel=58527`,
+ohne sie bleibt das Protokoll leer und ich kann ein „nein“ nicht auswerten. Konto einrichten,
+Mail abrufen, dann V1 bis V6. Für V6 ein Postfach nehmen, das nach dem Start nicht offen ist
+(etwa `Trash`; `Junk` gibt es in einem frischen Stand nicht immer).
 
 | Nr. | Was | Wo | Was zu tun ist | Was herauskommen muss |
 |---|---|---|---|---|
@@ -35,12 +44,14 @@ Geht V1, V2, V3 oder V6 schief, genügt mir die Nummer und *nein*, etwa *„V2 n
 
 | Nr. | Ergebnis (Gregor) | Datum | Bemerkung |
 |---|---|---|---|
-| V1 | — | | |
-| V2 | — | | |
-| V3 | — | | |
-| V4 | — | | |
-| V5 | — | | |
-| V6 | — | | |
+| V1 | **ja** (aus dem Protokoll) | 27.10.2026 | Gregor testete außerhalb der VM mit leerem Stand und frisch abgerufener Post und sagte: *„du kannst die ergebnisse jetzt übernehmen.“* Sein `eudora.log` (geteilter Ordner `test_0.127`), Sitzung 16:37: zweimal `E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja fokus=ListBox mdi-gewechselt=nein`, danach `Wazoo-Leiste wird versteckt`. Das ist der Weg aus V1/V2: Fokus in der Postfachliste, Klick auf den schwebenden Rahmen, die Leiste wird versteckt. Ob ein Klick auf die Titelzeile oder auf den Rand ging, zeigt die Zeile nicht |
+| V2 | **ja** (aus dem Protokoll) | 27.10.2026 | wie V1, dieselben zwei Zeilen |
+| V3 | **ja** (aus dem Protokoll) | 27.10.2026 | zwei Zeilen mit dem Fokus in der Leiste, beide gleich gefolgt von `Wazoo-Leiste wird versteckt`: Protokollzeile 3172 (Programmzeit 9.31) `E-137 Strg-W angekommen: leiste-mit-fokus=ja zuletzt-angeklickte-leiste=ja fokus=ListBox` und Zeile 3186 (10.23) `… leiste-mit-fokus=ja zuletzt-angeklickte-leiste=ja fokus=Button` — ein Knopf oder Gruppenfeld wie „Match“. Ob die Leiste angedockt war, zeigt das Protokoll nicht. Zusammen mit V1/V2 (Zeilen 2835 und 3100) genau vier Zeilen `E-137 Strg-W angekommen` |
+| V4 | **ja** | 27.10.2026 | Gregor: *„V4: PASSED“* — keine Windows-Meldung beim Anlegen einer Persönlichkeit ([E-160](BEFUNDE.md#e-160)) |
+| V5 | **ja** | 27.10.2026 | Gregor: *„der absturz war keiner: defender hat eudora einfach wieder plötzlich beendet.“* Dazu: kein `Exception`-Eintrag im Protokoll. Microsoft Defender nahm die `Eudora.exe` um 16:47 in Quarantäne, danach erschien „Error Loading Resource DLL (EudoraRes.dll)“; das ist der bekannte Fehlalarm [E-124](BEFUNDE.md#e-124), kein Absturz von Eudora. Das Windows-Ereignisprotokoll liegt auf Gregors Rechner draußen und ist nicht gezählt |
+| V6 | **ja** | 27.10.2026 | Gregor: *„V6: passed“*. Dazu im Protokoll, Sitzung 16:49: sieben Mal `mdi-gewechselt=ja` ohne `Wazoo-Leiste wird versteckt`, Strg+W schloss also jedes Mal ein Fenster statt einer Leiste. Ob ein Doppelklick in *Mailboxes* vorausging, zeigt das Protokoll nicht |
+
+**Nebenbei, kein Testpunkt:** Strg+K auf die Mail „test am mich“ (von `markus.bakus@gmx.de` an `Markus.Bakus@gmx.de`) brachte *„Eudora could not find any usable addresses … except maybe your own address“*. Das ist das Verhalten des Originals: Eudora nimmt die eigene Adresse vorher heraus (`namenick.cpp:1763-1764`, *Include yourself* = aus); bei einer Mail eines anderen Absenders kommt der Dialog.
 
 ## Kurztest 7.2.0.125 — überholt durch 7.2.0.127
 

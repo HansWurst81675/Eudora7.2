@@ -138,3 +138,25 @@ eine der beiden Stellen behob; drei Läufe zeigten dort dreimal `alias h`
 alter Stand dasteht, nicht, dass er mehrfach gemessen wurde. Die Erweiterung
 wäre: nennt der Befund Gregors Häufigkeitswort, muss die Zeile „Gemessen"
 eine Anzahl ≥ 3 tragen.
+
+## Nachtrag 27.10.2026 (CHRONIST): E-137, fünf Anläufe, und die Schranke sah sieben Pakete lang nichts
+
+Zeiten MEZ, gemessen am Transkript und an `Releases/PAKETE.md`. Dieselbe Tabelle wie am 15.10., nur mit Strg+W:
+
+| Anlauf | Behebung | eigener Prüfstand | bei Gregor |
+|---|---|---|---|
+| 1 (25.10. 20:37, `ed0d53a2`) | in `OnCmdMsg`, nie erreicht | keiner | — (PRUEFER-56 fand es) |
+| 2 (25.10. 21:23, `78f2ad2a`) | in `OnCommand` | keiner | angedockt *„e-137 PASSED“* (26.10. 10:42), eine Minute später *„jetzt wieder CTRL-W schließt nicht das filter fenster“* (10:43), T1 an 1.0.124 *„FAILED“* (13:50) |
+| 3 (26.10. 14:04, `0b0b50de`) | Rahmen der schwebenden Leiste (`QCMiniDockFrameWnd`) | keiner; übersetzte bis 20:47 nicht einmal | U1 an 1.0.125: *„E-137, T1 FAILED“* (22:19) |
+| 4 (26.10. abends, `73f706a5`) | dazu `OnNcLButtonDown` | keiner | nie ausgeliefert; PRUEFER-61 (27.10. 11:25): der Rahmen ist gar kein `QCMiniDockFrameWnd` |
+| 5 (27.10. 11:29) | Hauptfenster merkt sich die zuletzt angeklickte Leiste | **erst nach Gregors Frage:** Fälle E-137a–c, rot an 1.0.125, grün an 1.0.126 (12:44–12:49) | *„V1–V3“* bestanden an 1.0.127 (17:15) |
+
+Um 12:31:45 stand der Befehl zum Schnüren von 1.0.126 schon fest (*„Jetzt warte ich auf das Ergebnis des Prüfstands“*) – der Prüfstand hatte zu dem Zeitpunkt **keinen** Fall, der Gregors U1 nachstellt. Gregor um 12:38:27: *„gibt es jetzt auch einen neuen test, der den fehler von 0.125 abdeckt und prüft?“* Meine Antwort 12:40:12: *„Nein, einen Test, der den Fehler von 1.0.125 tatsächlich gefangen hätte, gibt es noch nicht.“* Der Fall war acht Minuten später fertig (`tools/messen-e137.ps1`, Fensterbotschaften an ein gemessenes Handle). **Zum dritten Mal war Gregor der Prüfstand**, und die Regel dieser Datei hätte es verhindert.
+
+**Warum die Schranke schwieg (gemessen):** `tools/pruefe-nachgestellt.pl` prüft nur Zeilen `| Gemessen |` in Abschnitten, deren Zeile `Testverzeichnis` das Wort „bereitgestellt“ trägt (Zeilen 83–85, 96). Die Abschnitte für 1.0.121 bis 1.0.127 in `PAKETE.md` haben **keine einzige** solche Zeile, sie heißen jetzt `| Gegen den Bau gemessen |`, und das Testverzeichnis ist „abgelegt“. 1.0.111 bis 1.0.120 hatten sie noch (bis auf 116–118). Die Schranke ist seit sieben Paketen blind, ohne einen Ton zu sagen ([[pruefstand-kann-blind-sein]], [[schranke-teilt-nicht-die-annahme]]).
+
+**How to apply, zusätzlich:**
+- Meldet Gregor „FAILED“, ist der **nächste Handgriff der Prüfstandsfall**, nicht die nächste Behebung. Zwischen U1 (26.10. 22:19) und dem Fall (27.10. 12:49) lagen zwei Behebungen ohne Fall.
+- Ein Paket, dessen Abschnitt keinen roten alten Stand nennt, ist nicht fertig, egal wie die Tabellenzeile heißt.
+
+**Vorschlag für die Schranke (nicht gebaut):** `pruefe-nachgestellt.pl` erkennt den Paketabschnitt an der Überschrift `## 1.0.N`, nicht an „bereitgestellt“, und verlangt in **irgendeiner** Zeile des Abschnitts einen roten alten Stand (Muster wie bisher). Fehlt sie, meldet sie das. Gegenprobe: Abschnitt 1.0.125 (kein Fall) muss rot werden, 1.0.127 („rot an 1.0.125, grün an 1.0.126 und 1.0.127“ steht in BEFUNDE E-137, im Abschnitt nachzutragen) grün.
