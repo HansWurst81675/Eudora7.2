@@ -215,6 +215,13 @@ BOOL CPersonality::Modify(const CPersParams& Params)
 	if ( !IsA(Params.PersName) )
 		return FALSE;
 
+	// E-166: erst den INI-Zwischenspeicher schreiben. RemoveAllFromCache unten
+	// verwirft sonst jede noch nicht geschriebene Einstellung (z. B. die Antwort
+	// auf die Junk-Frage, AskedAboutJunk) - wie SetCurrent oben. Vor
+	// SavePersonaInfo, damit alte Werte im Speicher die neuen Kontodaten nicht
+	// ueberschreiben.
+	FlushINIFile();
+
 	if ( !SavePersonaInfo(Params, false) )
 		return FALSE;
 
