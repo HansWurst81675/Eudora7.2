@@ -24,7 +24,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-166](Intern/BEFUNDE.md#e-166)** | Die Frage „Automatically put junk mail in the Junk mailbox?“ kam beim Testen mehrmals … | **nie gemessen** | am Prüfstand mit leerem Stand messen: einmal *Yes*, Eudora regulär beenden, neu starten — kommt die Frage? Dann dasselbe mit hart beendetem Prozes… |
+| **[E-166](Intern/BEFUNDE.md#e-166)** | Die Frage „Automatically put junk mail in the Junk mailbox?“ kam beim Testen mehrmals … | 28.10.2026 an 7.2.0.127 | `MFC71.DLL` und `MSVCP71.dll` in das Programmverzeichnis des Prüfstands — woher Gregors Rechner sie hat, ist nicht bekannt —, dann am Prüfstand … |
 | **[E-165](Intern/BEFUNDE.md#e-165)** | Die Vervollständigungsbox im To:-Feld sieht mit einem einzigen Treffer verbaut aus — wi… | **nie gemessen** | am Prüfstand `C:\Temp\E135-box` mit **einem** passenden Kurznamen messen (Außen- und Innenmaß der Box und der Liste, Bildlaufleisten-Stil), danach … |
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
