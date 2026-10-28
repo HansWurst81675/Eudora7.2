@@ -21,3 +21,5 @@ Gregor am 25.10.2026 auf die Frage aus LEKTOR-61 (offene, fuer Anwender sichtbar
 Schranke: keine - eine Entscheidung zum Umfang von 7.2.1; erledigt, wenn die drei behoben und die fuenf in der README stehen.
 
 **E-137, Verhalten von Gregor festgelegt (25.10.2026):** *„e-137: sollte z.b. nur das filter fenster geschlossen werden. alternativ mit Ctrl-L (wie öffnen, so wieder schließen). aktuell nur rechtsklick auf den rahmen -> hide."* Also: `Strg+W` auf einer Wazoo-Leiste **versteckt nur diese Leiste** — derselbe Weg wie Rechtsklick → *Hide* — und beendet Eudora nie. `Strg+L` als Umschalter (öffnen/schließen) ist die Alternative; zuerst Strg+W bauen, Strg+L nur, wenn es das Verhalten anderer Fenster nicht ändert. Vorher messen, WAS heute Eudora beendet (BEFUNDE.md E-137 "Was noch fehlt").
+
+**Bestätigt 28.10.2026:** Gregor auf die Frage, ob E-139 doch vor 7.2.1 behoben wird: *„nein, erst danach“*. E-139 bleibt bis nach 7.2.1 nur in der README.
