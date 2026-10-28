@@ -15,7 +15,7 @@ Grenzen, die **bleiben** — und die zwei, drei Mängel, die ein Anwender im
 Alltag am ehesten merkt.
 
 * **Kein fertiges Installationsprogramm.** Es gibt ein ZIP, sonst nichts.
-* **LDAP, Ph, S/MIME und die Suche über den Verzeichnisdienst fallen aus —
+* **LDAP, Ph, S/MIME, der Junk-Filter und die Suche über den Verzeichnisdienst fallen aus —
   das eigene Adressbuch nicht.** Diese Teile brauchen
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
   Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund

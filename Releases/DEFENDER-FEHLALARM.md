@@ -1,6 +1,6 @@
 # Fehlalarm bei Microsoft melden — fertig ausgefüllt
 
-**Stand 28.10.2026** (seit dem 23.10.2026 nichts Neues; am 25., 26., 27. und 28.10.2026 nicht erneut abgefragt) — am 23.10.2026 aus Gregors gespeicherter Vorgangsseite gelesen: der Vorgang ist **abgewiesen**, nicht in Arbeit (siehe unten); am 22.10.2026 nicht erneut abgefragt; am Text ist nichts geändert, er ist eingereicht. Gehört zu [E-124](../Intern/BEFUNDE.md#e-124). Auf Gregors
+**Stand 28.10.2026** (am Vorgang bei Microsoft seit dem 23.10.2026 nichts Neues; am 25., 26., 27. und 28.10.2026 nicht erneut abgefragt. Der Alarm selbst kam am 26.10.2026 an 1.0.124 und am 27.10.2026 an 1.0.127 wieder, siehe [E-124](../Intern/BEFUNDE.md#e-124)) — am 23.10.2026 aus Gregors gespeicherter Vorgangsseite gelesen: der Vorgang ist **abgewiesen**, nicht in Arbeit (siehe unten); am 22.10.2026 nicht erneut abgefragt; am Text ist nichts geändert, er ist eingereicht. Gehört zu [E-124](../Intern/BEFUNDE.md#e-124). Auf Gregors
 Ansage vom 20.10.2026: *„ja, melde den fehlalarm bei microsoft"*.
 
 **Warum das hier als Datei liegt und nicht erledigt ist.** Das Formular
