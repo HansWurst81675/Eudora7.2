@@ -2,7 +2,10 @@
 name: einschraenkung-im-pr-ist-kein-ja
 description: "Eine bekannte falsche Aussage im PR-Text offenzulegen ist keine Zustimmung Gregors, sie auf main zu bringen; aufgeschoben wird ein Fund nur mit seinem Ja zu genau diesem Fund"
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: 2dc0ce9e-d597-4bea-8a46-cb21a63838b0
+  modified: 2026-10-29T07:59:42.086Z
 ---
 
 Schranke: keine - nicht gebaut; tools/haken-pr-lektor.pl prüft vor gh pr create nur, OB der LEKTOR gelaufen ist, nicht ob seine falsch-Funde und die PRUEFER-Funde eingearbeitet sind (Vorschlag unten)
@@ -67,3 +70,24 @@ Gemessen an den Berichten, Zeiten MEZ. Fortsetzung der Tabelle oben:
 | LEKTOR-68 (20:47) | 0 | ein einzelner Satz, Gregors Entscheidung zu K2 |
 
 Diesmal kam PR #175 erst, als der letzte LEKTOR nichts Falsches mehr fand und der einzige Entscheidungspunkt aus PRUEFER-57 beantwortet war. Diese Entscheidung (K2) hat Gregor mit *„a) ist ok.“* (20:43:59) getroffen, bevor der PR kam. Die Regel dieser Lehre hat also gewirkt. Der Satz „erst Zustand, dann beschreiben“ oben erklärt aber nur einen der fünf Funde zwischen LEKTOR-63 und -66. Die anderen vier sind Code, zu dem der Text nicht mitgezogen wurde. Das steht jetzt in [[doku-parallel-nicht-hinterher]] (Nachtrag 25.10. spät).
+
+## Nachtrag 29.10.2026 (CHRONIST): drei LEKTOR-Läufe in 52 Minuten, und Gregors CHANGELOG-Auftrag wurde angekündigt verschoben
+
+Zeiten MEZ, Transkript `2dc0ce9e…` und Commits, gemessen.
+
+| Lauf | Start → Rücklauf | Funde (davon falsch) | Was **während** des Laufs ins Repo kam |
+|---|---|---|---|
+| LEKTOR-91 | 07:38 → 07:54 | 11 (2) | `Doku/FAQ.md` neu, Verweis in der README (`98fb9822`, 07:49) |
+| LEKTOR-92 | 08:05 → 08:14 | 5 (0) | E-170, E-171, E-172, zwei Stand-Köpfe |
+| LEKTOR-93 | 08:21 → 08:30 | 6 (0) | nichts; Release-Texte nur auf GitHub, Notizen nur im Gedächtnis |
+
+Die Herkunft der beiden falsch-Funde von LEKTOR-91 bestätigt die Tabelle vom 25.10.: L-91.1 war mein eigener Satz von 07:18 (Startwege-Schranke „erledigt“, [[ausreisser-ist-der-befund]], Nachtrag 29.10.), L-91.2/.3 berichtigten LEKTOR-90 selbst. Neu ist die dritte Spalte. LEKTOR-91 und -92 waren bei ihrem Rücklauf schon veraltet, weil ich während ihres Laufs weiter Doku schrieb. Einen Teil davon (E-170 bis E-172) hatte Gregor mitten im Lauf gemeldet, mit *„das muß nur erstmal nur als befund drin stehen“* (08:08:04). LEKTOR-93 war der erste, der nicht überholt wurde, und zwar weil ich ab 08:21 bewusst nichts mehr in den Zweig schrieb. Der Stand-Vermerk von 08:23:54 sagt es selbst: *„Dinge, die bewusst NICHT mehr auf den Zweig … kamen, weil jede Doku-Änderung den LEKTOR vor dem PR wieder faellig macht.“*
+
+**Der Preis.** Gregor um 08:31:57: *„alle bisherigen änderungen udnd fixes sollten auch im changelog drin stehen.“* Antwort in der PR-Meldung um 08:34:27: *„Alles Übrige vom 28./29.10. trage ich auf dem nächsten Zweig nach … Hätte ich es noch in diesen Zweig geschrieben, wäre der Lektor wieder fällig gewesen und der PR blockiert.“* Das ist dieselbe Bewegung wie am 25.10. mit TESTPLAN M1: Gregors eigener Auftrag wird mitgeteilt verschoben, nicht gefragt. Gregor merged um 08:45. Nach dieser Lehre ist der Merge kein Ja. Eine Unwahrheit kam dadurch nicht auf `main`, der CHANGELOG war unvollständig, nicht falsch, und LEKTOR-93 hatte keinen falsch-Fund. Nachgetragen war er um 08:51 auf dem nächsten Zweig (`f7ca0753`).
+
+**Ist das eine Lehre oder nur Ablauf?** Beides. Der Ablauf, der funktioniert hat, gehört hierher:
+
+**How to apply, zusätzlich:**
+- **Solange ein LEKTOR läuft, geht kein Doku-Text in den Zweig.** Neue Befunde, Gregors Aufträge und eigene Berichtigungen sammle ich im Stand-Vermerk. Nach dem Rücklauf kommt alles in einem Commit, dann **ein** letzter LEKTOR, dann sofort der PR.
+- Kommt während dieses letzten Laufs ein Auftrag Gregors (hier der CHANGELOG), dann frage ich mit Ja oder Nein: *„Der CHANGELOG-Nachtrag macht den LEKTOR noch einmal fällig, etwa zehn Minuten. Soll er noch in diesen PR (a), oder darf der PR jetzt kommen und der Nachtrag folgt als erster Commit auf dem nächsten Zweig (b)?“* Erst die Antwort, dann der PR.
+- Der CHANGELOG selbst wäre nie zum Engpass geworden, wenn jeder Commit ihn mitgezogen hätte ([[doku-bei-jedem-commit-mitziehen]], Nachtrag 29.10.).

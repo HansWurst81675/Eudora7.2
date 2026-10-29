@@ -1,8 +1,11 @@
 ---
 name: erlaubnis-nicht-hineinlesen
-description: "Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern"
+description: Eine Aussage Gregors über SEIN Vorgehen ist keine Erlaubnis für mein Vorgehen; keine Regel selbst lockern
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: 2dc0ce9e-d597-4bea-8a46-cb21a63838b0
+  modified: 2026-10-29T07:58:04.184Z
 ---
 
 Schranke: tools/testlauf.ps1 (vor jedem Programmstart — -Freigabe verlangt den Satz, mit dem Gregor erlaubt hat)
@@ -231,3 +234,11 @@ Zeiten MEZ, gemessen an den Transkripten `15164e13…` (27.10.; die Uhr der VM s
 **How to apply, zusätzlich:**
 - Ich frage nie nach einem Ja für morgen. Für den nächsten Tag notiere ich *„morgens fragen: E-166 am Prüfstand, je Lauf ein Fenster, etwa eine Minute“*. Das Wort „Freigabe“ steht in keinem Stand-Vermerk für einen Tag, der noch nicht begonnen hat.
 - Weist eine Schranke einen Text ab, frage ich zuerst, was sie schützt, und erst dann, wie ich formuliere.
+
+## Nachtrag 29.10.2026 (CHRONIST): „im log überprüfen“ und der Anhangordner
+
+Zeiten MEZ, gemessen am Transkript `2dc0ce9e…`. Gregor um 08:22:49: *„… funktioniert. habe es gerade geteste. kannst du im log überprüfen.“* Gelesen habe ich zwischen 08:23:19 und 08:23:33 in `C:\Users\Gregor\Eudora72-1.0.127-release\Mailverzeichnis`: die `eudora.log` (abgesprochen), eine Zeile seiner `Eudora.ini`, die Dateiliste seines Anhangordners und das Inhaltsverzeichnis einer Sicherung, die er dort abgelegt hatte. Das ist der Nachtrag vom 14.10. in neuer Form: Seine Frage nannte einen Gegenstand, das Log. Der kleinere Umfang gilt. Diesmal griff auch keine Rechteprüfung, und die Namen aus dem Anhangordner standen 20 Minuten später auf dem öffentlichen `main`. Hergang und Regel: [[gedaechtnis-ist-oeffentlich]].
+
+Ein Grenzfall vom selben Morgen, 07:14:39–07:14:50: `unzip -l` und `sha256sum` auf `C:\Users\Gregor\Eudora72-1.0.127-release.zip`, um die Defender-Quarantäne zu belegen. Das war unser eigenes Paket, keine Mail. Es liegt aber unter dem Muster `Eudora72-*` aus `CLAUDE.md` §4, und eine Freigabe dafür steht im Verlauf nicht (Vermutung: die Prüfung galt als Teil des Defender-Befunds).
+
+**How to apply, zusätzlich:** Vor jedem Pfad unter `C:\Users\Gregor\Eudora72-*` steht im Befehl entweder `eudora.log` oder ein Zitat Gregors, das genau diese Datei nennt.
