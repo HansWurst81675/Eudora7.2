@@ -133,3 +133,4 @@
 - [CHRONIST 27.10.2026](CHRONIST-2026-10-27.md) — Lauf über 26.10. 07:18 bis 27.10. 17:26: eine neue Lehre, dreizehn Nachträge; pruefe-nachgestellt.pl seit 1.0.121 blind, E-137 fünf Anläufe, CHRONIST sechsmal fällig
 - [Stand 28.10.2026](stand-28-10-2026.md) — E-166 behoben; Absturz im Konto-Assistenten (LEKTOR-90 L-90.12) zuerst; CHRONIST prüfen
 - [CHRONIST 28.10.2026](CHRONIST-2026-10-28.md) — Lauf über 27.10. 17:00 bis 28.10. 15:28: keine neue Lehre, elf Nachträge; PSM_PRESSBUTTON ist 0x0471, pruefe-rueckstrich.pl blind für Stand-Vermerke, powershell-ist-nicht-bash wörtlich wiederholt
+- [Stand 29.10.2026](stand-29-10-2026.md) — nach PR e166-junk_message_fix: FAQ TidyAttach bestaetigt nachtragen, LEKTOR-93-Funde, #181 FAQ-Link
