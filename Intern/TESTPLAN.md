@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.0.127 / `VERSION` 1.0.127, Stand 28.10.2026 (Inhalt seit 27.10.2026 unverändert)
+# Testplan für Gregor — Quellstand 7.2.0.127 / `VERSION` 1.0.127, Stand 29.10.2026 (Prüfschritt zu E-166 für das Release ergänzt)
 
 > **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter, **am 27.10.2026
 > bestanden** (V1 bis V6, [Ergebnis](#ergebnis-7-2-0-127)). Das
@@ -7,7 +7,26 @@
 > Testpaket 7.2.0.125 ist überholt (U1 nein, U2 bis U4 gehen in V2, V3 und V5
 > auf), die Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen; alle
 > Ergebnisse stehen weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Ja
-> wird das Release **7.2.1.<n>** gebaut.
+> wird das Release **7.2.1.<n>** gebaut; an ihm prüfst du zusätzlich
+> [E-166](#e-166-am-release) — erst danach wird es veröffentlicht.
+
+## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
+
+> Kein eigenes Testpaket — du prüfst es an der Release-Fassung (Entscheidung
+> 15 in [WEITERMACHEN](WEITERMACHEN.md)). Alles im **lokalen** Eudora, kein
+> IMAP-Ordner. Voraussetzung: ein **leeres** Mailverzeichnis im Release-Verzeichnis,
+> sonst ist die Frage schon beantwortet und kommt gar nicht.
+
+1. Eudora mit `Eudora starten.cmd` im Release-Verzeichnis starten. Es kommen der
+   Konto-Assistent und die Frage *„Automatically put junk mail in the Junk
+   mailbox?“*. Den Assistenten wie gewohnt ausfüllen, die Frage mit **No**
+   beantworten.
+2. *Tools → Personalities*, in der Liste Rechtsklick auf **`<Dominant>`** →
+   *Properties*, das Fenster mit **OK** schließen (nichts ändern).
+3. Eudora mit *File → Exit* beenden und mit `Eudora starten.cmd` neu starten.
+
+**Bestanden:** beim zweiten Start kommt die Junk-Frage **nicht** wieder. Kommt
+sie, ist E-166 nicht behoben — dann bitte melden.
 
 ## Was jetzt zu testen ist — Testpaket 7.2.0.127 (Kurztest)
 
