@@ -1805,6 +1805,38 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Neunundneunzigster Durchgang — Datenschutz nach PR #184 und #185, Release-Vorbereitung 7.2.1, 29.10.2026 (Bericht: `Befunde/LEKTOR-94.md`)
+
+Lauf auf `1ba04dbc` (= `main` nach #185). Nichts berichtigt (Auftrag: nur
+Bericht und Fahrtenbuch). Gesucht mit der lokalen Suchliste über das ganze
+Repo, die Zweige auf GitHub, die Commit-Nachrichten seit `750eb814` und die
+22 Release-Texte, dazu über jede seit dem Originalimport hinzugekommene
+Zeile nach Adressen, Betreffmustern, Message-IDs, Ordner- und
+Anhangnamen. **Die Muster der Liste kommen im aktuellen Stand nicht mehr
+vor** (0 gegen 67 vor #184). **Was nicht in der Liste stand, ist
+geblieben:** Anhang-Dateinamen aus einer beruflichen Mail
+([L-94.1](../Befunde/LEKTOR-94.md#l-94.1)), Unterzeichner, Absenderdomain
+und Bildnamen eines Rundbriefs bis in Unit-Tests
+([L-94.2](../Befunde/LEKTOR-94.md#l-94.2)), die Betreffzeile einer privaten
+Anzeigen-Unterhaltung ([L-94.3](../Befunde/LEKTOR-94.md#l-94.3)),
+Firmennamen dreier Absender, obwohl der Commit sie als ersetzt meldet
+([L-94.4](../Befunde/LEKTOR-94.md#l-94.4)). Geschichte, sechs gemergte
+Zweige und die PR-Diffs zeigen alles Entfernte weiter
+([L-94.7](../Befunde/LEKTOR-94.md#l-94.7), Gregors Entscheidung). Die
+Ersetzungen haben an drei Stellen Grammatik zerbrochen und an zwei Belege
+verschoben: `Ware` gegen `Waren` bei der E-94-Messung
+([L-94.10](../Befunde/LEKTOR-94.md#l-94.10)), `Werbemail-A` für eine Mail,
+die keine Werbung war ([L-94.11](../Befunde/LEKTOR-94.md#l-94.11)). Das
+Release passt im Wesentlichen zusammen (CHANGELOG, README, FAQ, TESTPLAN,
+Entscheidungen 15–17); drei ältere Release-Texte haben noch je einen toten
+Link ([L-94.14](../Befunde/LEKTOR-94.md#l-94.14)). Von den 6 Funden aus
+[LEKTOR-93](../Befunde/LEKTOR-93.md#lektor-93) 4 erledigt, L-93.2 und
+L-93.3 teilweise. Zusammen **18 Funde** (8 Datenschutz, 4 Sätze und
+Belege, 6 Release und Buchführung). Neu für Gregor: Geschichte
+umschreiben oder mindestens die sechs gemergten Zweige löschen;
+Firmennamen der Werbe-Absender; zwei Release-Texte mit einem Wort aus
+einer Werbe-Betreffzeile.
+
 ## Achtundneunzigster Durchgang — Nachlauf unmittelbar vor dem PR `e166-junk_message_fix`: LEKTOR-92 eingearbeitet, E-170 bis E-172 neu, 29.10.2026 (Bericht: `Befunde/LEKTOR-93.md`)
 
 Lauf über `e54bb5d9..d72c86bd`, kein Vollbestand. Nichts berichtigt
