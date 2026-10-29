@@ -1805,6 +1805,10 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Hundertunderster Durchgang — Bestand nach Gregors Test an 7.2.1.128, Form von Tabellen, 29.10.2026 (Bericht: `Befunde/LEKTOR-96.md`)
+
+Lauf auf `159d3955`. Im Gange — Ergebnis folgt.
+
 ## Hundertster Durchgang — Nummernschema 7.2.0.N / 7.2.1.N und Release 7.2.1.128, 29.10.2026 (Bericht: `Befunde/LEKTOR-95.md`)
 
 Lauf auf `640e1a0e`, während des Laufs vorgespult auf `b74a1e81` (Paket
