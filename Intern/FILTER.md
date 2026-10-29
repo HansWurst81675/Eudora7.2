@@ -498,11 +498,21 @@ liegen nicht im Paket. `MSVCR71.dll` ersetzt der eigene Nachbau
 laden die drei Zusätze nicht ([E-166](BEFUNDE.md#e-166)). Das ist
 Befund [**E-47**](BEFUNDE.md#e-47).
 
-`LoadLibrary` schlägt in diesem Fall fehl, und `Trnslate.cpp:3150-3157`
+**Ausnahme: die beiden Dateien liegen schon auf dem Rechner.** Andere Software
+bringt `MFC71.DLL` und `MSVCP71.dll` manchmal mit und legt sie nach
+`C:\Windows\SysWOW64`. Dann findet Windows sie dort, die Zusätze laden wie im
+Original, und die Junk-Bewertung arbeitet — alles unter *Praktisch heißt das*
+gilt dann **nicht**. Gemessen am 28.10.2026 am Prüfstand mit den beiden Dateien
+aus Gregors `SysWOW64` neben `Eudora.exe` ([E-166](BEFUNDE.md#e-166)); auf
+Gregors Rechner kam die Junk-Frage, die nur mit geladenem Zusatz erscheint
+(`eudora.cpp:1792`). Ob Ihr Rechner sie hat: im Explorer
+`C:\Windows\SysWOW64\mfc71.dll` suchen.
+
+Fehlen die beiden Dateien, schlägt `LoadLibrary` fehl, und `Trnslate.cpp:3150-3157`
 überspringt das Modul **ohne sichtbare Meldung** — die einzige Ausgabe ist
 ein `TRACE`, das es im Freigabebau nicht gibt.
 
-**Praktisch heißt das:**
+**Praktisch heißt das — ohne die beiden Dateien:**
 
 * Jede eingehende Nachricht behält die Punktzahl **0**.
 * `MinScoreToJunk` greift damit bei keinem Wert ab 1 — und bei **0** greift
@@ -724,7 +734,7 @@ vollständige Stand steht in [BEFUNDE.md](BEFUNDE.md).
 | [**E-68**](BEFUNDE.md#e-68), halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
 | [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` übersprang eine nicht lesbare Nachricht lautlos (nur diese, die übrigen werden weiter gefiltert). **Ab 7.2.0.106 (nicht veröffentlicht) steht sie mit Betreff, Postfach und Grund in *Task Errors***; **ab 7.2.0.109/7.2.0.110** nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden ([PRÜFER-36](../Befunde/PRUEFER-36.md) P3, [PRÜFER-38](../Befunde/PRUEFER-38.md) R1–R3). Keine dieser Fassungen ist veröffentlicht; von Gregor noch nicht bestätigt |
 | [**E-71**](BEFUNDE.md#e-71) | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
-| [**E-47**](BEFUNDE.md#e-47) | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** jede eingehende Nachricht behält die Junk-Punktzahl 0, eine Regel auf *Junk Score* trifft also nie |
+| [**E-47**](BEFUNDE.md#e-47) | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** ohne `MFC71.DLL`/`MSVCP71.dll` auf dem Rechner behält jede eingehende Nachricht die Junk-Punktzahl 0, eine Regel auf *Junk Score* verhält sich dann wie oben unter *Praktisch heißt das* beschrieben ([Ausnahme](#warum-die-junk-bewertung-hier-nicht-arbeitet)) |
 
 Behoben, aber gut zu wissen, weil sie erklären, warum ältere `Filters.pce`
 beschädigt sein können: [**E-64**](BEFUNDE.md#e-64), [**E-67**](BEFUNDE.md#e-67) (Korrektur seit 7.2.0.43, am 17.10.2026 gemessen), [**E-72**](BEFUNDE.md#e-72), [**E-73**](BEFUNDE.md#e-73), [**E-74**](BEFUNDE.md#e-74), [**E-75**](BEFUNDE.md#e-75). Ebenfalls behoben: [**E-76**](BEFUNDE.md#e-76), das freischwebende Filterfenster lässt sich wieder nach unten vergrößern (7.2.0.49, von Gregor am 11.09.2026 bestätigt).

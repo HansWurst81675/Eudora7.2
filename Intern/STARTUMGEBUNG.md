@@ -116,10 +116,12 @@ Laufzeit-DLLs ins Paket, die **nicht weitergegeben werden dürfen**.
    eigenen Nachbau unter `Eudora71/VC71Bruecke` — 1429 Weiterleitungen auf die
    von Windows mitgelieferte `msvcrt.dll`, siehe Befund [B-1](BEFUNDE.md#b-1).
 
-   `MFC71.DLL` und `MSVCP71.dll` fehlen weiterhin und sind nicht nachbaubar
-   (`MFC71` wird über 157 Ordinale importiert). Dadurch fallen **die Verzeichnisdienste
-   (EudoraBk-Protokoll, LDAP, Ph), Junk-Filter und S/MIME** aus; das eigene
-   Adressbuch arbeitet (gemessen 28.10.2026, Befund E-166). Mailabruf und -versand sind davon nicht betroffen.
+   `MFC71.DLL` und `MSVCP71.dll` fehlen im Paket weiterhin und sind nicht nachbaubar
+   (`MFC71` wird über 157 Ordinale importiert). Liegen sie nicht schon auf dem
+   Rechner ([FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)), fallen dadurch **die Verzeichnisdienste
+   (EudoraBk-Protokoll, LDAP, Ph), Junk-Filter und S/MIME** aus (für die drei
+   Zusätze gemessen 28.10.2026, [E-166](BEFUNDE.md#e-166)); das eigene
+   Adressbuch arbeitet. Mailabruf und -versand sind davon nicht betroffen.
 
 3. **Eine `Eudora.ini` ins Mailverzeichnis.** Vorlage:
    `InstallersForEudora/Eudora7.1/Data/INIfiles/eudora.ini`.

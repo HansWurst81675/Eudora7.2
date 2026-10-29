@@ -273,3 +273,15 @@ ZIEL24b | C:\Temp\EBILD | 240 | log | Logging shutdown | Ausnahme ausserhalb ein
 E-137a | C:\Temp\E137 | 90 | messung | E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1 | | | messen=tools\messen-e137.ps1
 E-137b | C:\Temp\E137 | 90 | messung | E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1 | | | messen=tools\messen-e137.ps1
 E-137c | C:\Temp\E137 | 90 | log | E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja | | | messen=tools\messen-e137.ps1
+# -------------------------------------------------------------------------
+# E-166 - die Antwort auf die Junk-Frage ueberlebt Konto -> Eigenschaften
+# -------------------------------------------------------------------------
+# CPersonality::Modify leerte den INI-Zwischenspeicher ohne ihn zu schreiben;
+# die Junk-Antwort ging verloren, die Frage kam beim naechsten Start wieder.
+# Am 28.10.2026 rot am Paket 1.0.127 (AskedAboutJunk fehlte), gruen nach der
+# Behebung. E-166a sichert, dass der Weg wirklich lief (sonst waere b
+# vakuum-gruen: ohne Junk-Frage steht AskedAboutJunk=6 einfach stehen).
+# Braucht MFC71.DLL und msvcp71.dll im Pruefstand - nicht im Repo, siehe
+# tools/messen-e166-konto.ps1; -Vorbereiten bricht sonst ab.
+E-166a | C:\Temp\E166 | 20 | messung | reihenfolge=junk-no,konto-ok | | | messen=tools\messen-e166-konto.ps1
+E-166b | C:\Temp\E166 | 20 | ini | AskedAboutJunk=6 | | | messen=tools\messen-e166-konto.ps1

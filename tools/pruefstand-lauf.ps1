@@ -397,15 +397,17 @@ foreach ($m in $meldungen) { Write-Host $m }
 Write-Host '  ------------------------------------------------------------'
 Write-Host ("  Ergebnis: {0} Faelle, {1} bestanden, {2} fehlgeschlagen" -f $liste.Count, $bestanden, $fehl)
 
-# Ergebnis ablegen, damit tools/pruefbericht.pl es LESEN kann statt es zu
-# behaupten. Der Bericht kann diesen Lauf nicht selbst ausloesen - er oeffnet
-# Fenster und braucht Gregors Freigabe. Die Zeitmarke steht mit drin, damit
-# der Bericht merkt, wenn das Ergebnis aelter ist als der Bau.
+# Ergebnis des LETZTEN Laufs ablegen. Gedacht war es fuer tools/pruefbericht.pl;
+# der liest seit dem 25.10.2026 das Buch weiter unten und diese Datei nicht
+# mehr - einen Leser hat sie derzeit nicht (LEKTOR-90 L-90.17, gemessen mit
+# git grep am 29.10.2026). Ein Teillauf mit -Nur traegt eine Zeile "nur=",
+# damit niemand "faelle=2" fuer den Gesamtstand haelt.
 $ergebnisdatei = Join-Path $wurzel 'Intern\pruefstand-ergebnis.txt'
 $zeilen = @()
 $zeilen += "# Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern."
 $zeilen += "zeit=" + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss')
 $zeilen += "freigabe=" + $Freigabe
+if ($Nur) { $zeilen += "nur=" + $Nur + "   (Teillauf, nicht der Gesamtstand)" }
 $zeilen += "faelle=" + $liste.Count
 $zeilen += "bestanden=" + $bestanden
 $zeilen += "fehlgeschlagen=" + $fehl

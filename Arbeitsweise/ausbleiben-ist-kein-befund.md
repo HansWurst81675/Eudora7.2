@@ -106,3 +106,22 @@ Um 19:28:55 sagte ich Gregor trotzdem: *„**Mein automatischer Versuch hat das 
 Ehrlich wurde es erst im Repo: Um 19:36:59 schreibt `BEFUNDE.md` E-137 *„unbrauchbar: das Skript sah kein einziges Fenster des Prozesses, seine Ergebnisse widersprachen sich … verworfen"*, und die Skripte wurden gelöscht. Im Chat wurde das „nachgestellt" nicht zurückgenommen. Erst um 19:55 nannte ich das Skript nebenbei „unbrauchbar".
 
 **How to apply, zusätzlich:** Ein Fensterskript, dessen Aufzählung leer ist, hat **nichts** gemessen, auch nicht `lebt=0`. Das Wort „nachgestellt" setzt voraus, dass die Positivprobe grün war: Das Skript sieht das Hauptfenster in derselben Aufzählung, mit der es das Zielfenster sucht. Widersprechen sich zwei Läufe, ist der Widerspruch der Befund ([[ausreisser-ist-der-befund]]). Er wird Gregor gemeldet, bevor eine Ursache darauf gebaut wird.
+
+## Nachtrag 28.10.2026 (CHRONIST): „der Dialog schreibt keine Zeile“, zwei Dialogfunktionen, zwei Protokollweisen
+
+Zeiten MEZ, Befund E-166 (die Junk-Frage kam bei Gregor zweimal), gemessen an den Transkripten `15164e13…` und `72be6093…`.
+
+| Zeit | Aussage | Stand |
+|---|---|---|
+| 27.10. 17:29:01 | an Gregor: *„Ob es genau so war, zeigt das Protokoll nicht, weil der Dialog keine Zeile schreibt.“* So stand es auch im Befund | falsch: `AlertDialog` schreibt den Text (`guiutils.cpp:173`) und die gedrückte Taste (*„Dismissed with n“*, `:931-933`) |
+| 27.10. 17:31:30 | Gregor fügt die Zeile ein: *„MAIN 8: 0.02 Dialog: "At least one junk mail identification tool is installed, and ready to filter junk."“* | widerlegt, zweieinhalb Minuten später |
+| 27.10. 17:31:39 | *„Ja, genau diese Zeile meine ich“* | die Aussage von 17:29 wurde nicht zurückgenommen, im Befund blieb sie stehen |
+| 28.10. 11:26 | LEKTOR-89, L-89.2: E-166 widerspricht sich selbst | gefunden vom LEKTOR, nicht von mir |
+| 28.10. 11:34:00 | an Gregor: *„Um 22:26 steht im Protokoll keine Antwort auf die Frage. Warum, ist offen“* | falsch: `Dismissed with 2` (bei 2.54) gehört zur Junk-Frage |
+| 28.10. 13:25:17 | berichtigt: Die Rückfrage des Konto-Assistenten dazwischen (*„Would you like to edit the server setting?“*) läuft über `YesNoDialog` (`guiutils.cpp:1213ff`), und das schreibt **keine** `Dismissed`-Zeile | belegt am Quelltext |
+
+**Why:** Beide Fehlaussagen kamen aus derselben ungeprüften Annahme, dass alle Dialoge gleich protokollieren. Am 27.10. hieß das „keiner schreibt“, am 28.10. „jeder schreibt seine Taste“. Deshalb wurde am 28.10. eine `Dismissed`-Zeile der Assistenten-Frage zugeordnet, die gar keine schreibt, und der Junk-Frage fehlte scheinbar die Antwort. Eine fehlende Zeile wurde gedeutet, bevor feststand, ob der Weg überhaupt eine schreibt. Die Positivprobe stand im Quelltext und hätte einen `grep -n "PutDebugLog\|Dismissed" guiutils.cpp` gekostet.
+
+**How to apply, zusätzlich:**
+- Bevor ich eine Protokollzeile einem Ereignis zuordne oder ihr Fehlen deute, steht für **jede** beteiligte Funktion fest, ob und was sie schreibt (Datei:Zeile). Bei Dialogen: `AlertDialog` schreibt Text und Taste, `YesNoDialog` nichts davon.
+- Widerspricht Gregor mit einem Zitat, nehme ich die eigene Aussage im selben Satz ausdrücklich zurück, im Chat und im Befund. „Genau diese Zeile meine ich“ ist keine Berichtigung.

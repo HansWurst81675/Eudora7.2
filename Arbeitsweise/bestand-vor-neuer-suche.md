@@ -111,3 +111,15 @@ Lesezeitpunkt und ein Werkzeug ohne Aufrufstelle sind derselbe Fehler
 
 Siehe ausserdem [[pruefen-statt-vermuten]] — dort wird die vorhandene **Quelle**
 geoeffnet, hier der vorhandene **Befund**.
+
+## Nachtrag 28.10.2026 (CHRONIST): eine Rechtsauskunft aus dem Gedächtnis, die Antwort stand in FILTER.md
+
+Zeiten MEZ, Transkript `72be6093…`, gemessen.
+
+Gregor um 11:21:26: *„MFC71.DLL und MSVCP71.dll. -> wo liegen sie? soll ich sie von anderen PC kopiern?“* Meine Antwort um 11:23:10 enthielt: *„Rechtlich sind beide Teil der Laufzeit von Visual Studio 2003, die Microsoft zur Weitergabe mit Programmen freigegeben hat.“* `Intern/FILTER.md:491-495` sagt seit dem 22.10. (`c28cde84`) das Gegenteil: *„`MFC71.DLL` und `MSVCP71.dll` von 2003 hat Microsoft nie zur Weitergabe freigegeben“*. Deshalb liegen sie nicht im Paket. Gefunden hat es LEKTOR-89 (L-89.9, zurück um 11:26). Gregor gegenüber berichtigt habe ich es um 11:34:00: *„Vorhin habe ich geschrieben, Microsoft habe sie zur Weitergabe freigegeben. Das war falsch.“*
+
+Um 11:02:01 hatte ich `befund-suchen.pl MFC71` laufen lassen. Es fand S-3c, sieht aber nur `BEFUNDE.md`. `FILTER.md` kam nicht vor. Der Bestand wurde also gelesen, nur nicht dort, wo die Antwort stand. Eine Aussage über Weitergabe ist außerdem eine **Rechtsauskunft**. Wäre Gregor ihr gefolgt, lägen die beiden DLLs im nächsten Paket.
+
+**How to apply, zusätzlich:**
+- Vor jeder Aussage über Lizenz, Weitergabe oder Herkunft einer Datei kommt `grep -rn -i "<Dateiname>" Intern/ Doku/ README.md PORTIERUNG.md LICENSE`, und jeder Treffer wird gelesen. `befund-suchen.pl` allein reicht dafür nicht.
+- Steht nichts im Repo, lautet die Antwort *„nicht im Repo geprüft“*. Allgemeinwissen über Microsoft-Laufzeiten ist eine Vermutung und wird so genannt ([[ursache-nur-gemessen-behaupten]]).
