@@ -99,9 +99,9 @@ my @belege = (
     #    liess die echte E-69-Zeile durchfallen: "auch an 7.2.0.88
     #    (C:\Temp\E118-0088), also ein Originalfehler von QUALCOMM".
     ['an einer aelteren Fassung gemessen',
-     qr/\b(?:an|in)\s+(?:7\.2\.0\.|1\.0\.)\d+[^|]{0,120}?(?:gleich|ebenso|genauso|auch|gemessen|nachgestellt|belegt|gezeigt|reproduziert)/i],
+     qr/\b(?:an|in)\s+(?:7\.2\.[01]\.|1\.0\.)\d+[^|]{0,120}?(?:gleich|ebenso|genauso|auch|gemessen|nachgestellt|belegt|gezeigt|reproduziert)/i],
     ['an einer aelteren Fassung gemessen',
-     qr/\b(?:auch|ebenso|genauso|gleich|schon|bereits)\s+(?:an|in)\s+(?:7\.2\.0\.|1\.0\.)\d+/i],
+     qr/\b(?:auch|ebenso|genauso|gleich|schon|bereits)\s+(?:an|in)\s+(?:7\.2\.[01]\.|1\.0\.)\d+/i],
 
     # 2. Am Original gemessen: Hermes, Eudora 7.1, der Originalbau, der
     #    Entwurf QUALCOMMs im Quelltext.

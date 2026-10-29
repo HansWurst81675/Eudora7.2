@@ -197,7 +197,9 @@ my %buch;      # kennung -> [ergebnis, zeit, pruefstand, bau, gemessen]
 my $bin_kennung = '';
 {
     my $exe = lies("$wurzel/Eudora71/Bin/Release/Eudora.exe") // '';
-    ($bin_kennung) = $exe =~ /(Eudora \d+\.\d+\.\d+\.\d+ \/ Paket [ -~]+)/;
+    # Seit 7.2.0.128 ohne " / Paket 1.0.N" (kennung-erzeugen.pl); alte Bauten
+    # tragen es noch, beide Formen werden erkannt.
+    ($bin_kennung) = $exe =~ /(Eudora \d+\.\d+\.\d+\.\d+(?: \/ Paket [0-9.]+)?\+[0-9a-f]+\*? \d{4}-\d\d-\d\d \d\d:\d\d)/;
     $bin_kennung //= '';
 }
 my (@stand_zeilen, $st_gruen, $st_rot, $st_fehlt, $st_alt);

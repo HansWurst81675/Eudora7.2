@@ -133,6 +133,8 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 * `tools/pruefe-startwege.pl` zählt auch `Audit.log`; Grenze: nur Starts nach der letzten Kopie der `Eudora.exe` (in [WERKZEUGE](tools/WERKZEUGE.md) beschrieben).
 * `tools/pruefstand-lauf.ps1` kennzeichnet einen Teillauf im Ergebnis mit `nur=`.
 * Neues Messskript `tools/messen-assistent-wiedereintritt.ps1` (zu [E-168](Intern/BEFUNDE.md#e-168)).
+* **Neues Nummernschema** (Gregors Entscheidung 10, am 29.10.2026 bestätigt): `VERSION` trägt die ganze Nummer, `7.2.0.N` für ein Testpaket, `7.2.1.N` für ein Release; die Endnummer zählt über 1.0.127 hinweg weiter. Die Titelzeile heißt `Eudora 7.2.1.N+<commit> <Zeit>`, ohne „/ Paket“. Umgestellt sind `kennung-erzeugen.pl`, die drei Leser der Kennung (`pruefbericht.pl`, `pruefstand-lauf.ps1`, `pruefstaende-auffrischen.ps1`), `release-veroeffentlichen.ps1`, `pruefe-fassungsnummer.pl`, `doku-pruefen.pl`, `pruefe-doku-takt.pl`, `pruefe-stand-md.pl`, `offene-befunde.pl`, `spuren-auswerten.pl`, `pruefe-aussenstand.pl`, `pruefe-behoben-ausgeliefert.pl`, `pruefe-release-buchfuehrung.pl`, `pruefe-nachgestellt.pl` und `pruefe-original-belegt.pl`. Alle lesen weiter auch die alte Form. Beschrieben in [PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen).
+* Zwei Selbsttests in `pruefe-release-buchfuehrung.pl` waren seit dem Umzug von AUFGABEN und WEITERMACHEN nach `Intern/` rot, ohne dass es jemand bemerkt hat; die Erwartungen sind nachgezogen.
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
 

@@ -126,7 +126,9 @@ sub fassungen_der_exe {
     my ($inhalt) = @_;
     return () unless defined $inhalt;
     my %v;
-    while ($inhalt =~ /(7\x00\.\x002\x00\.\x000\x00\.\x00(?:\d\x00)+)/g) {
+    # 7.2.0.NN (Testpaket) und seit dem 29.10.2026 7.2.1.NN (Release, Gregors
+    # Entscheidung 10 in Intern/WEITERMACHEN.md).
+    while ($inhalt =~ /(7\x00\.\x002\x00\.\x00[01]\x00\.\x00(?:\d\x00)+)/g) {
         my $s = $1;
         $s =~ s/\x00//g;
         $v{$s} = 1;
@@ -142,8 +144,8 @@ sub urteile {
     for my $z (split /\n/, $befunde) {
         next unless $z =~ /^\s*\|\s*$ANKER\s*\**\s*([A-Z]{1,3}\d*-\d+)\b/;
         my $kennung = $1;
-        next unless $z =~ /behoben\s+in\s+\**\s*7\.2\.0\.(\d+)\b/i;
-        my $fassung = $1;
+        next unless $z =~ /behoben\s+in\s+\**\s*(7\.2\.[01]\.(\d+))\b/i;
+        my ($voll, $fassung) = ($1, $2);
 
         # "von Gregor ... bestaetigt" - dieselbe Wendung, die
         # pruefe-behoben-belegt.pl als Beleg anerkennt. Eine Verneinung davor
@@ -153,7 +155,7 @@ sub urteile {
             my $dazwischen = $1;
             $bestaetigt = 1 unless $dazwischen =~ /\b(?:nicht|kein|noch\s+nicht|ohne)\b/i;
         }
-        push @u, { kennung => $kennung, fassung => $fassung,
+        push @u, { kennung => $kennung, fassung => $fassung, voll => $voll,
                    bestaetigt => $bestaetigt };
     }
     return @u;
@@ -177,9 +179,13 @@ sub pruefe {
                         . "7.2.0.NN - die Versionsressource fehlt oder ist anders";
             next;
         }
-        my ($nr) = $p =~ /1\.0\.(\d+)/;
-        unless (grep { $_ eq "7.2.0.$nr" } @gefunden) {
-            push @mangel, "Paket $p heisst 1.0.$nr, seine Eudora.exe meldet aber "
+        # Bis 1.0.127 hiess das Paket 1.0.NN und trug 7.2.0.NN; seit 7.2.0.128
+        # heisst es wie seine Fassung und muss sie GANZ tragen - ein
+        # 7.2.0.128-Bau in einem Paket 7.2.1.128 waere sonst unsichtbar.
+        my ($nr) = $p =~ /(\d+)$/;
+        my $soll = $p =~ /^1\.0\./ ? "7.2.0.$nr" : $p;
+        unless (grep { $_ eq $soll } @gefunden) {
+            push @mangel, "Paket $p heisst $p, seine Eudora.exe meldet aber "
                         . join(' und ', @gefunden)
                         . " - der Name des Pakets und sein Inhalt sagen Verschiedenes";
             next;
@@ -225,19 +231,19 @@ sub pruefe {
         next if $u->{fassung} <= $hoechste;
 
         if ($u->{fassung} <= $dokumentiert) {
-            push @hinweis, "$u->{kennung} (behoben in 7.2.0.$u->{fassung}, "
+            push @hinweis, "$u->{kennung} (behoben in " . ($u->{voll} // "7.2.0.$u->{fassung}") . ", "
                          . "bestaetigt) ist HIER nicht pruefbar - das Paket "
                          . "liegt nicht vor. Releases/PAKETE.md fuehrt Pakete "
-                         . "bis 1.0.$dokumentiert, die Fassung liegt also "
+                         . "bis Nummer $dokumentiert, die Fassung liegt also "
                          . "darunter; GEMESSEN ist damit nichts";
             $geprueft--;
             next;
         }
 
-        push @mangel, "$u->{kennung} gilt als behoben in 7.2.0.$u->{fassung} UND "
+        push @mangel, "$u->{kennung} gilt als behoben in " . ($u->{voll} // "7.2.0.$u->{fassung}") . " UND "
                     . "als von Gregor bestaetigt - ein Paket dieser Fassung gibt "
-                    . "es aber nirgends: hier liegt hoechstens 7.2.0.$hoechste, "
-                    . "und Releases/PAKETE.md fuehrt hoechstens 1.0.$dokumentiert. "
+                    . "es aber nirgends: hier liegt hoechstens Nummer $hoechste, "
+                    . "und Releases/PAKETE.md fuehrt hoechstens Nummer $dokumentiert. "
                     . "An welchem Stand soll er das bestaetigt haben?";
     }
 
@@ -278,6 +284,20 @@ if (grep { $_ eq '--tests' } @ARGV) {
                                         '1.0.72' => ['7.2.0.72'] }, [], 0);
     $pruef->('stimmige Pakete laufen durch', join('|', @$m_ok), '');
     $pruef->('und es wurde etwas geprueft', $g_ok >= 2 ? 'ja' : "nein ($g_ok)", 'ja');
+
+    # --- Neue Form ab 7.2.0.128 (Gregors Entscheidung 10) -----------------
+    my $exe721 = "MZ" . join('', map { "$_\x00" } split //, '7.2.1.128') . "x";
+    $pruef->('Fassung 7.2.1 aus der Versionsressource',
+             join(',', fassungen_der_exe($exe721)), '7.2.1.128');
+    my ($m_n1) = pruefe({ '7.2.1.128' => ['7.2.1.128'], '1.0.127' => ['7.2.0.127'] }, [], 0);
+    $pruef->('neues und altes Paket nebeneinander laufen durch', join('|', @$m_n1), '');
+    my ($m_n2) = pruefe({ '7.2.1.128' => ['7.2.0.128'] }, [], 0);
+    $pruef->('Release-Paket mit Testbau wird abgewiesen',
+             (grep { /heisst 7\.2\.1\.128, seine Eudora\.exe meldet aber 7\.2\.0\.128/ } @$m_n2)
+             ? 'ja' : 'nein (' . join('|', @$m_n2) . ')', 'ja');
+    my @u_neu = urteile("| E-200 | x | **behoben in 7.2.1.130**, von Gregor best\xc3\xa4tigt |\n");
+    $pruef->('Urteil mit 7.2.1 gelesen',
+             (@u_neu == 1 && $u_neu[0]{fassung} == 130 && $u_neu[0]{voll} eq '7.2.1.130') ? 'ja' : 'nein', 'ja');
 
     # --- Urteile aus Intern/BEFUNDE.md lesen -------------------------------------
     my $bef = "| E-108 | Absturz | **behoben in 7.2.0.72**, von Gregor am laufenden Programm best"
@@ -334,10 +354,10 @@ if (grep { $_ eq '--tests' } @ARGV) {
 
 # ---------------------------------------------------------------------------
 my %pakete;
-for my $verz (glob("$wurzel/Releases/Eudora72-1.0.*-release")) {
+for my $verz (glob("$wurzel/Releases/Eudora72-1.0.*-release"), glob("$wurzel/Releases/Eudora72-7.2.*-release")) {
     next unless -d $verz;
-    my ($name) = $verz =~ /(Eudora72-1\.0\.\d+-release)/ or next;
-    my ($nr)   = $name =~ /(1\.0\.\d+)/;
+    my ($name) = $verz =~ /(Eudora72-(?:1\.0|7\.2\.[01])\.\d+-release)/ or next;
+    my ($nr)   = $name =~ /((?:1\.0|7\.2\.[01])\.\d+)/;
     my $exe = "$verz/Eudora.exe";
     next unless -f $exe;
     $pakete{$nr} = [ fassungen_der_exe(lies_ende($exe)) ];
@@ -360,9 +380,9 @@ for my $verz (glob("$wurzel/Releases/Eudora72-1.0.*-release")) {
 # Die ZIPs sind in .gitignore. Im frischen Klon liegt also keines - dann greift
 # weiter unten "NICHTS GEPRUEFT ist kein gruenes Ergebnis" (E-109, Punkt 4).
 #
-for my $zip (glob("$wurzel/Releases/Eudora72-1.0.*-release.zip")) {
+for my $zip (glob("$wurzel/Releases/Eudora72-1.0.*-release.zip"), glob("$wurzel/Releases/Eudora72-7.2.*-release.zip")) {
     next unless -f $zip;
-    my ($nr) = $zip =~ /(1\.0\.\d+)/ or next;
+    my ($nr) = $zip =~ /Eudora72-((?:1\.0|7\.2\.[01])\.\d+)-release/ or next;
     next if $pakete{$nr};                 # entpackt vorhanden, das zaehlt zuerst
 
     # NICHT entpacken. Am 20.10.2026 um 20:45:19 hat Defender die hier
@@ -395,7 +415,7 @@ my @u = urteile(lies("$wurzel/Intern/BEFUNDE.md"));
 # als das einzige mitversionierte Paket; siehe den Kasten bei Pruefung B.
 my $dokumentiert = 0;
 for my $z (split /\n/, (lies("$wurzel/Releases/PAKETE.md") || '')) {
-    next unless $z =~ /^##\s+1\.0\.(\d+)\b/;
+    next unless $z =~ /^##\s+(?:1\.0|7\.2\.[01])\.(\d+)\b/;
     $dokumentiert = $1 if $1 > $dokumentiert;
 }
 

@@ -55,8 +55,12 @@ for my $a (@ARGV) {
 my $VEROEFFENTLICHT = qr/
     \bver (?:\xc3\xb6|oe) ffentlicht \s+ ist \s+
     (?: inzwischen \s+ | weiterhin \s+ | jetzt \s+ )?
-    \**\s* `? (v?1\.0\.\d+) `?
+    \**\s* `? (v?(?:1\.0|7\.2\.[01])\.\d+) `?
 /xi;
+# Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) heisst
+# ein Release v7.2.1.N, ein Testpaket 7.2.0.N; bis 1.0.127 hiess beides 1.0.N.
+# Die Endnummer zaehlt ueber alle Formen weiter, verglichen wird deshalb sie.
+my $NUMMER = qr/(?:1\.0|7\.2\.[01])\.\d+/;
 
 # "noch nicht", "nie" und "nicht geschnuert" behaupten alle KEIN Paket.
 # 1.0.107 bis 1.0.109 stehen als "nie geschnuert" in der Buchfuehrung - der
@@ -94,12 +98,12 @@ sub pruefe_text {
                 my $genannt = normnr($1);
                 push @funde,
                     "nennt v$genannt als veroeffentlicht, draussen ist v$neueste"
-                    if $genannt ne $neueste;
+                    if nummer($genannt) != nummer($neueste);
             }
         }
 
         next unless $ist_pakete;
-        next unless $zeile =~ /^##\s+(1\.0\.\d+)\s/;
+        next unless $zeile =~ /^##\s+($NUMMER)\s/;
         my $nr = $1;
         next if defined $JUENGSTE_AB && nummer($nr) < $JUENGSTE_AB;
         my $da = $hat_zip->($nr) ? 1 : 0;
@@ -136,7 +140,14 @@ if ($SELBSTTEST) {
         ['Zitat zaehlt nicht',            "> Veroeffentlicht ist `v1.0.113`.\n",          '1.0.119', 0, 0],
         ['Ueberschrift ohne Urteil',      "## 1.0.120 - Quellstand 7.2.0.120\n",          '1.0.119', 1, 0],
         ['ohne gh-Stand nichts pruefen',  'Veroeffentlicht ist `v1.0.113`.',              undef,     0, 0],
+        # Neue Form ab 7.2.0.128 (Gregors Entscheidung 10)
+        ['neu: Release richtig',          'Veroeffentlicht ist `v7.2.1.128`.',            '7.2.1.128', 0, 0],
+        ['neu: altes Release genannt',    'Veroeffentlicht ist `v1.0.120`.',              '7.2.1.128', 0, 1],
+        ['neu: Quellstand-Form, gleiche Nr', 'Veroeffentlicht ist 7.2.0.120.',            '1.0.120',   0, 0],
+        ['neu: Testpaket, ZIP fehlt',     "## 7.2.0.128 - geschnuert am 30.10.2026\n",    '1.0.120',   1, 1],
+        ['neu: Testpaket, ZIP da',        "## 7.2.0.119 - geschnuert am 30.10.2026\n",    '1.0.120',   1, 0],
     );
+    $zip = sub { return $_[0] eq '1.0.119' || $_[0] eq '7.2.0.119' };
     my ($ok, $n) = (0, 0);
     for my $t (@faelle) {
         my ($name, $text, $neu, $pak, $erwartet) = @$t;
@@ -163,7 +174,9 @@ print "  ------------------------------------------------------------\n";
 
 my $neueste;
 my $gh = `gh release list --limit 1 2>&1`;
-if ($? == 0 && $gh =~ /\bv?(1\.0\.\d+)\b/) {
+# Die Marke steht in der dritten Spalte; der Titel davor nennt bis 1.0.120
+# auch "7.2.0.120" und darf nicht fuer die Marke gehalten werden.
+if ($? == 0 && $gh =~ /\tv($NUMMER)\t/) {
     $neueste = $1;
     printf "    neueste Marke laut gh:   v%s\n", $neueste;
 }
@@ -173,11 +186,11 @@ else {
 }
 
 my %da;
-for my $z (glob 'Releases/Eudora72-1.0.*-release.zip') {
-    $da{$1} = 1 if $z =~ /Eudora72-(1\.0\.\d+)-release\.zip/;
+for my $z (glob('Releases/Eudora72-1.0.*-release.zip'), glob('Releases/Eudora72-7.2.*-release.zip')) {
+    $da{$1} = 1 if $z =~ /Eudora72-($NUMMER)-release\.zip/;
 }
-for my $v (glob 'Releases/1.0.*') {
-    $da{$1} = 1 if -d $v && $v =~ m{Releases/(1\.0\.\d+)$};
+for my $v (glob('Releases/1.0.*'), glob('Releases/7.2.*')) {
+    $da{$1} = 1 if -d $v && $v =~ m{Releases/($NUMMER)$};
 }
 printf "    ZIPs/Verzeichnisse:      %d\n", scalar keys %da;
 my $hat = sub { return exists $da{ $_[0] } };
@@ -185,7 +198,7 @@ my $hat = sub { return exists $da{ $_[0] } };
 # Die sechs juengsten Paketabschnitte - nur sie sagen etwas ueber heute.
 my @nummern = sort { $b <=> $a } map { nummer($_) } keys %da;
 my $ab_nummer = @nummern >= 6 ? $nummern[5] : 0;
-printf "    geprueft ab Paket:       1.0.%d\n", $ab_nummer;
+printf "    geprueft ab Nummer:      %d\n", $ab_nummer;
 
 # Intern/LEKTORAT.md ist ein Verzeichnis alter Berichte - jede Zeile beschreibt,
 # was EIN Bericht damals sagte. Ein Archiv behauptet nichts ueber heute,

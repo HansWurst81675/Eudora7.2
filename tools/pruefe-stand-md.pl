@@ -156,7 +156,10 @@ for my $f (@dateien) {
             . "Eudora71/Version.h sagt $quellstand";
         }
     }
-    if ($paket and $standzeile =~ /Paket[^\n]{0,12}?(\d+\.\d+\.\d+)/) {
+    # Seit 7.2.0.128 ist die Paketnummer vierteilig (Gregors Entscheidung 10,
+    # Intern/WEITERMACHEN.md); ohne die vierte Gruppe wuerde aus
+    # "Paket 7.2.0.128" nur "7.2.0" gelesen.
+    if ($paket and $standzeile =~ /Paket[^\n]{0,12}?(\d+\.\d+\.\d+(?:\.\d+)?)/) {
         my $genannt = $1;
         if ($genannt ne $paket) {
             push @mangel,

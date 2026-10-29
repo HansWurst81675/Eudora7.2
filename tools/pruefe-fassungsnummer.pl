@@ -77,42 +77,64 @@ sub lies {
 # --- Die vier Quellen, jede einzeln lesbar, damit der Selbsttest sie stellen
 #     kann -------------------------------------------------------------------
 
+# Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) traegt
+# VERSION dieselbe vierteilige Nummer wie Version.h - 7.2.0.N fuer ein
+# Testpaket, 7.2.1.N fuer ein Release -, und die Endnummer zaehlt ueber beide
+# weiter. Verglichen wird deshalb weiter die LETZTE Stelle; die alte Form
+# 1.0.N bleibt lesbar, weil PAKETE.md und die Tags bis 1.0.127 sie tragen.
 sub nr_aus_version {
     my ($t) = @_;
     return undef unless defined $t;
+    return $1 if $t =~ /\b\d+\.\d+\.\d+\.(\d+)\b/;
     return $t =~ /\b1\.0\.(\d+)\b/ ? $1 : undef;
 }
 
 sub nr_aus_versionh {
     my ($t) = @_;
     return undef unless defined $t;
-    return $t =~ /EUDORA_BUILD_VERSION\s+"7\.2\.0\.(\d+)"/ ? $1 : undef;
+    return $t =~ /EUDORA_BUILD_VERSION\s+"\d+\.\d+\.\d+\.(\d+)"/ ? $1 : undef;
+}
+
+# Die ganze Nummer, nur fuer die vierteilige Form - 7.2.0.128 und 7.2.1.128
+# haben dieselbe letzte Stelle und sind doch zwei Staende.
+sub voll_aus_version {
+    my ($t) = @_;
+    return undef unless defined $t;
+    return $t =~ /^\s*(\d+\.\d+\.\d+\.\d+)\s*$/ ? $1 : undef;
+}
+
+sub voll_aus_versionh {
+    my ($t) = @_;
+    return undef unless defined $t;
+    return $t =~ /EUDORA_BUILD_VERSION\s+"(\d+\.\d+\.\d+\.\d+)"/ ? $1 : undef;
 }
 
 # Alle Abschnittsnummern aus Releases/PAKETE.md, mit ihrer Haeufigkeit.
+# "## 1.0.127 - ..." (bis 1.0.127) und "## 7.2.0.128 - ..." (danach).
 sub abschnitte_aus_pakete {
     my ($t) = @_;
     my %n;
     return %n unless defined $t;
     for my $z (split /\n/, $t) {
-        next unless $z =~ /^##\s+1\.0\.(\d+)\b/;
+        next unless $z =~ /^##\s+(?:1\.0|\d+\.\d+\.\d+)\.(\d+)\b/;
         $n{$1}++;
     }
     return %n;
 }
 
+# v1.0.120 (bis 1.0.127) und v7.2.1.128 (danach).
 sub nummern_aus_tags {
     my (@tags) = @_;
     my %n;
     for my $t (@tags) {
-        $n{$2} = 1 if $t =~ /^v(\d+\.\d+)\.(\d+)$/;
+        $n{$1} = 1 if $t =~ /^v(?:1\.0|\d+\.\d+\.\d+)\.(\d+)$/;
     }
     return sort { $a <=> $b } keys %n;
 }
 
 # --- Der Kern, ohne Dateizugriff -------------------------------------------
 sub pruefe {
-    my ($nr_version, $nr_versionh, $abschnitte, $tags) = @_;
+    my ($nr_version, $nr_versionh, $abschnitte, $tags, $voll_version, $voll_versionh) = @_;
     my (@mangel, @hinweis);
     my $geprueft = 0;
 
@@ -124,22 +146,32 @@ sub pruefe {
 
     # A.
     $geprueft++;
-    push @mangel, "VERSION sagt 1.0.$nr_version, Eudora71/Version.h sagt "
-                . "7.2.0.$nr_versionh - eine der beiden ist hochgezaehlt worden, "
+    push @mangel, "VERSION sagt Nummer $nr_version, Eudora71/Version.h sagt "
+                . "Nummer $nr_versionh - eine der beiden ist hochgezaehlt worden, "
                 . "die andere nicht"
         if $nr_version != $nr_versionh;
+
+    # A2. Vierteilige VERSION: die ganze Nummer muss stimmen, nicht nur die
+    #     letzte Stelle - sonst geht ein 7.2.0.128-Bau als 7.2.1.128 durch.
+    if (defined $voll_version) {
+        $geprueft++;
+        push @mangel, "VERSION sagt $voll_version, Eudora71/Version.h sagt "
+                    . ($voll_versionh // '(nicht lesbar)')
+                    . " - beide muessen dieselbe Nummer tragen"
+            unless defined $voll_versionh and $voll_version eq $voll_versionh;
+    }
 
     # B.
     for my $n (sort { $a <=> $b } keys %$abschnitte) {
         $geprueft++;
         push @mangel, "Releases/PAKETE.md hat $abschnitte->{$n} Abschnitte fuer "
-                    . "1.0.$n - dieselbe Nummer ist zweimal vergeben worden"
+                    . "Nummer $n - dieselbe Nummer ist zweimal vergeben worden"
             if $abschnitte->{$n} > 1;
     }
 
     # C.
     $geprueft++;
-    push @mangel, "1.0.$nr_version ist vergeben, hat aber keinen Abschnitt in "
+    push @mangel, "Nummer $nr_version ist vergeben, hat aber keinen Abschnitt in "
                 . "Releases/PAKETE.md - ueber diese Luecke vergibt die naechste "
                 . "Sitzung dieselbe Nummer noch einmal"
         unless $abschnitte->{$nr_version};
@@ -147,8 +179,8 @@ sub pruefe {
     # D.
     for my $t (@$tags) {
         $geprueft++;
-        push @mangel, "Das Tag v1.0.$t ist hoeher als die vergebene Nummer "
-                    . "1.0.$nr_version - jemand anders hat die $t schon verbraucht"
+        push @mangel, "Ein Tag mit Nummer $t ist hoeher als die vergebene Nummer "
+                    . "$nr_version - jemand anders hat die $t schon verbraucht"
             if $t > $nr_version;
     }
 
@@ -157,8 +189,8 @@ sub pruefe {
     # abgeschaltet.
     my @ohne = grep { !$abschnitte->{$_} } @$tags;
     push @hinweis, scalar(@ohne) . " veroeffentlichte Fassung(en) haben keinen "
-                 . "Abschnitt in Releases/PAKETE.md: "
-                 . join(', ', map { "1.0.$_" } @ohne)
+                 . "Abschnitt in Releases/PAKETE.md: Nummer "
+                 . join(', ', @ohne)
                  . " (offener Mangel M-4, kein Grund abzuweisen)"
         if @ohne;
 
@@ -193,6 +225,25 @@ if (grep { $_ eq '--tests' } @ARGV) {
     $pruef->('Tags numerisch', join(',', nummern_aus_tags(qw(v1.0.9 v1.0.72 v1.0.64))),
              '9,64,72');
 
+    # --- Die neue vierteilige Form (ab 7.2.0.128) -------------------------
+    $pruef->('VERSION vierteilig', nr_aus_version("7.2.1.128\n"), '128');
+    $pruef->('VERSION vierteilig, ganz', voll_aus_version("7.2.1.128\n"), '7.2.1.128');
+    $pruef->('VERSION alt hat keine ganze Nummer',
+             defined voll_aus_version("1.0.127\n") ? 'doch' : 'keine', 'keine');
+    $pruef->('Version.h 7.2.1', nr_aus_versionh(
+        "#define EUDORA_BUILD_VERSION   \"7.2.1.128\"\n"), '128');
+    $pruef->('Tags alt und neu gemischt',
+             join(',', nummern_aus_tags(qw(v1.0.120 v7.2.1.128 v7.2.1))), '120,128');
+    my %gemischt = abschnitte_aus_pakete("## 7.2.0.128 - Testpaket\n\n## 1.0.127 - Testpaket\n");
+    $pruef->('PAKETE.md alt und neu gemischt',
+             join(',', sort { $a <=> $b } keys %gemischt), '127,128');
+    my ($m_neu) = pruefe(128, 128, \%gemischt, [120], '7.2.1.128', '7.2.1.128');
+    $pruef->('vierteilig und gleich ist kein Mangel', join(' | ', @$m_neu), '');
+    my ($m_a2) = pruefe(128, 128, \%gemischt, [120], '7.2.1.128', '7.2.0.128');
+    $pruef->('gleiche Endnummer, anderer Stand',
+             (grep { /VERSION sagt 7\.2\.1\.128, Eudora71\/Version\.h sagt 7\.2\.0\.128/ } @$m_a2)
+             ? 'ja' : 'nein', 'ja');
+
     # --- DER ERLAUBTE FALL, und er ist der wichtigere ---------------------
     #
     # 1.0.70 und 1.0.71 wurden gebaut und nie veroeffentlicht. Es gibt also
@@ -202,31 +253,31 @@ if (grep { $_ eq '--tests' } @ARGV) {
              join(' | ', @$m_ok), '');
     $pruef->('und es wurde etwas geprueft', $g_ok >= 4 ? 'ja' : "nein ($g_ok)", 'ja');
     $pruef->('Tags ohne Abschnitt sind nur ein Hinweis',
-             (grep { /1\.0\.9, 1\.0\.64/ } @$h_ok) ? 'ja' : 'nein (' . join('|', @$h_ok) . ')',
+             (grep { /Nummer 9, 64/ } @$h_ok) ? 'ja' : 'nein (' . join('|', @$h_ok) . ')',
              'ja');
 
     # --- A: die halb hochgezaehlte Kollision ------------------------------
     my ($m_a) = pruefe(72, 71, \%a, [72]);
     $pruef->('VERSION und Version.h auseinander',
-             (grep { /VERSION sagt 1\.0\.72, Eudora71\/Version\.h sagt 7\.2\.0\.71/ } @$m_a)
+             (grep { /VERSION sagt Nummer 72, Eudora71\/Version\.h sagt Nummer 71/ } @$m_a)
              ? 'ja' : 'nein', 'ja');
 
     # --- B: DER ECHTE FALL "zwei Fassungsnummern 1.0.68" ------------------
     my %doppelt = (68 => 2, 72 => 1);
     my ($m_b) = pruefe(72, 72, \%doppelt, [72]);
     $pruef->('dieselbe Nummer zweimal in PAKETE.md',
-             (grep { /2 Abschnitte fuer 1\.0\.68/ } @$m_b) ? 'ja' : 'nein', 'ja');
+             (grep { /2 Abschnitte fuer Nummer 68/ } @$m_b) ? 'ja' : 'nein', 'ja');
 
     # --- C: vergeben, aber nicht eingetragen ------------------------------
     my ($m_c) = pruefe(73, 73, \%a, [72]);
     $pruef->('Nummer ohne Abschnitt',
-             (grep { /1\.0\.73 ist vergeben, hat aber keinen Abschnitt/ } @$m_c)
+             (grep { /Nummer 73 ist vergeben, hat aber keinen Abschnitt/ } @$m_c)
              ? 'ja' : 'nein', 'ja');
 
     # --- D: ein Tag hoeher als die eigene Nummer --------------------------
     my ($m_d) = pruefe(72, 72, \%a, [72, 73]);
     $pruef->('fremdes Tag hoeher als die eigene Nummer',
-             (grep { /Tag v1\.0\.73 ist hoeher/ } @$m_d) ? 'ja' : 'nein', 'ja');
+             (grep { /Tag mit Nummer 73 ist hoeher/ } @$m_d) ? 'ja' : 'nein', 'ja');
 
     if ($fehler) {
         printf "\n  %d von %d Selbsttests fehlgeschlagen.\n\n", $fehler, $nr;
@@ -242,23 +293,25 @@ if (grep { $_ eq '--tests' } @ARGV) {
 # ---------------------------------------------------------------------------
 my $nr_version  = nr_aus_version(lies("$wurzel/VERSION"));
 my $nr_versionh = nr_aus_versionh(lies("$wurzel/Eudora71/Version.h"));
+my $voll_version  = voll_aus_version(lies("$wurzel/VERSION"));
+my $voll_versionh = voll_aus_versionh(lies("$wurzel/Eudora71/Version.h"));
 my %abschnitte  = abschnitte_aus_pakete(lies("$wurzel/Releases/PAKETE.md"));
 my @tags        = nummern_aus_tags(
                       grep { length } split /\n/, `git -C "$wurzel" tag 2>/dev/null`);
 
 my ($mangel, $hinweis, $geprueft) =
-    pruefe($nr_version, $nr_versionh, \%abschnitte, \@tags);
+    pruefe($nr_version, $nr_versionh, \%abschnitte, \@tags, $voll_version, $voll_versionh);
 
 printf "\n  %s\n  Fassungsnummern gegeneinander\n  %s\n", '-' x 60, '-' x 60;
 printf "    VERSION                        %s\n",
-    defined $nr_version ? "1.0.$nr_version" : '(nicht lesbar)';
+    defined $nr_version ? ($voll_version // "1.0.$nr_version") : '(nicht lesbar)';
 printf "    Eudora71/Version.h             %s\n",
-    defined $nr_versionh ? "7.2.0.$nr_versionh" : '(nicht lesbar)';
-printf "    Releases/PAKETE.md             %d Abschnitt(e), hoechster %s\n",
+    defined $nr_versionh ? $voll_versionh : '(nicht lesbar)';
+printf "    Releases/PAKETE.md             %d Abschnitt(e), hoechste Nummer %s\n",
     scalar(keys %abschnitte),
-    (keys %abschnitte) ? '1.0.' . (sort { $b <=> $a } keys %abschnitte)[0] : '-';
-printf "    Tags                           %d, hoechstes %s\n",
-    scalar @tags, @tags ? 'v1.0.' . $tags[-1] : '-';
+    (keys %abschnitte) ? (sort { $b <=> $a } keys %abschnitte)[0] : '-';
+printf "    Tags                           %d, hoechste Nummer %s\n",
+    scalar @tags, @tags ? $tags[-1] : '-';
 printf "    Einzelpruefungen               %d\n", $geprueft;
 
 print "\n  HINWEIS: $_\n" for @$hinweis;

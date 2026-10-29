@@ -190,7 +190,9 @@ for my $zeile (split /\n/, $befunde) {
     #
     # zaehlt. Ein Datum irgendwo im Fliesstext zaehlt NICHT - genau solche
     # Daten haben die Liste jahrelang glaubwuerdig aussehen lassen.
-    if ($urteil =~ /\*\*Zuletzt gemessen:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.0\.\d+)\*\*/) {
+    # 7.2.0.N (Testpaket) und seit dem 29.10.2026 auch 7.2.1.N (Release);
+    # die Endnummer zaehlt ueber beide weiter.
+    if ($urteil =~ /\*\*Zuletzt gemessen:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.[01]\.\d+)\*\*/) {
         $gemessen{$k} = "$1 an $2";
         my ($nr) = $2 =~ /\.(\d+)$/;
         $messnummer{$k} = $nr;
@@ -208,7 +210,7 @@ for my $zeile (split /\n/, $befunde) {
     # gemessen / belegt am Quelltext / Vermutung. Die Uebersicht kannte
     # nur eines. Jetzt zwei - die Vermutung bleibt draussen, sie gehoert
     # nicht in eine Spalte, die Glaubwuerdigkeit behauptet.
-    elsif ($urteil =~ /\*\*Zuletzt belegt am Quelltext:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.0\.\d+)\*\*/) {
+    elsif ($urteil =~ /\*\*Zuletzt belegt am Quelltext:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.[01]\.\d+)\*\*/) {
         $gemessen{$k}   = "$1 an $2 (Quelltext)";
         $quelltext{$k}  = 1;
         my ($nr) = $2 =~ /\.(\d+)$/;
@@ -316,7 +318,7 @@ if (open my $vh, '<:raw', "$wurzel/Eudora71/Version.h") {
     local $/;
     my $v = <$vh>;
     close $vh;
-    ($aktuell) = $v =~ /EUDORA_BUILD_VERSION\s+"7\.2\.0\.(\d+)"/;
+    ($aktuell) = $v =~ /EUDORA_BUILD_VERSION\s+"\d+\.\d+\.\d+\.(\d+)"/;
     $aktuell ||= 0;
 }
 my ($zahl_aktuell, $zahl_alt, $zahl_nie) = (0, 0, 0);
@@ -401,7 +403,7 @@ print "\n  ------------------------------------------------------------\n";
 print "  offene-befunde\n";
 print "  ------------------------------------------------------------\n";
 printf "    offen laut Intern/BEFUNDE.md  %2d\n", scalar @offene;
-printf "      davon aktuell gemessen      %2d  (ab 7.2.0.%d)\n", $zahl_aktuell, ($aktuell > 5 ? $aktuell - 5 : 0);
+printf "      davon aktuell gemessen      %2d  (ab Nummer %d)\n", $zahl_aktuell, ($aktuell > 5 ? $aktuell - 5 : 0);
 printf "        davon nur am Quelltext    %2d  (gegengelesen, kein Lauf)\n", $zahl_quelltext;
 printf "      davon veraltet gemessen     %2d\n", $zahl_alt;
 printf "      davon NIE gemessen          %2d\n", $zahl_nie;

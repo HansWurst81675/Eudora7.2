@@ -45,14 +45,29 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 
 ## Drei Zählungen, und wie sie zusammenhängen
 
+> **Seit dem 29.10.2026 gibt es keine eigene Paketnummer `1.0.x` mehr**
+> (Gregors Entscheidung 10 in [WEITERMACHEN.md](../Intern/WEITERMACHEN.md)).
+> `VERSION` trägt dieselbe vierteilige Nummer wie `Eudora71/Version.h`:
+> **`7.2.0.N` für ein Testpaket, `7.2.1.N` für ein Release**. ZIP
+> (`Eudora72-7.2.1.N-release.zip`), Marke (`v7.2.1.N`) und Titelzeile
+> (`Eudora 7.2.1.N+<commit> <Zeit>`) heißen genauso. Die **Endnummer zählt
+> über beide Formen weiter**, auch über die alte: auf 1.0.127 folgt 128. Zwei
+> Stände tragen also nie dieselbe Endnummer, und die Werkzeuge, die nur die
+> letzte Stelle vergleichen, bleiben eindeutig. Alles unterhalb dieses Kastens
+> beschreibt die Zählung bis 1.0.127; die Abschnitte bis dahin behalten ihre
+> Namen.
+
 | Zählung | wo sie steht | wo man sie sieht |
 |---|---|---|
 | **Produktversion** `7.2.0.x` | `Eudora71/Version.h` (`EUDORA_BUILD_DESC` → String `IDS_VERSION`) | *Hilfe → Über Eudora*, Startbildschirm, und der `X-Mailer`-Kopf jeder gesendeten Mail. **Nicht** in den Dateieigenschaften: `Eudora.exe` hat gar keinen `VS_VERSION_INFO`-Block (nachgesehen am 07.09.2026 in `Eudora71/Eudora/*.rc`) |
-| **Paketversion** `1.0.x` | Datei `VERSION` | Name des ZIP, Bau-Kennung in der Titelleiste |
+| **Paketversion** `1.0.x` (bis 1.0.127) | Datei `VERSION` | Name des ZIP, Bau-Kennung in der Titelleiste |
 | **QCSSL-Version** `1.0.x` | `qcssl.rc` | Versionsressource der `QCSSL.dll` |
 
-**Verabredung: Produkt- und Paketversion haben dieselbe letzte Stelle.**
-Paket 1.0.3 trägt Produktversion 7.2.0.3. `tools/kennung-erzeugen.pl` warnt,
+**Verabredung bis 1.0.127: Produkt- und Paketversion haben dieselbe letzte
+Stelle.** Paket 1.0.3 trägt Produktversion 7.2.0.3. **Seit 7.2.0.128 muss
+`VERSION` mit `EUDORA_BUILD_VERSION` ganz übereinstimmen** — sonst ginge ein
+Testbau 7.2.0.N als Release 7.2.1.N durch. `tools/kennung-erzeugen.pl` warnt,
+`tools/pruefe-fassungsnummer.pl` und `tools/pruefe-doku-takt.pl` weisen ab,
 wenn die beiden auseinanderlaufen — bei der `QCSSL.dll` sind genau so zwei
 verschiedene Binärdateien unter derselben Kennung ausgeliefert worden.
 
@@ -72,6 +87,12 @@ Für die nächste Nummer sind es **fünf Zeilen in zwei Dateien**. Beispiel: von
 | `Eudora71/Version.h` | `EUDORA_BUILD_NUMBER` | `7,2,0,18` | `7,2,0,19` |
 | `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.18\0"` | `…7.2.0.19\0` |
 | `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.18"` | `"7.2.0.19"` |
+
+**Seit 7.2.0.128** steht in `VERSION` die ganze Nummer (`7.2.0.128` statt
+`1.0.128`). Für ein Release ändert sich außerdem die dritte Stelle:
+`EUDORA_VERSION3` von `0` auf `1`, und in `EUDORA_BUILD_NUMBER`,
+`EUDORA_BUILD_DESC` und `EUDORA_BUILD_VERSION` entsprechend `7,2,1,N` bzw.
+`7.2.1.N` — **sechs Zeilen**.
 
 > **`EUDORA_BUILD_NUMBER` ist seit 7.2.0.13 nicht mitgezogen worden** und steht
 > am 07.09.2026 auf `7,2,0,12`, während die drei anderen Angaben auf `18`
@@ -122,8 +143,8 @@ existierenden Eudora-Code und startet die Testfrist neu — Befund PR-2.8.
 | als Zahl | `eudora.cpp:551`, `:1069`, `QComApplication.cpp:610` (`EUDORA_VERSION4`) |
 
 Die Bau-Kennung in der Titelleiste ist davon unabhängig: sie kommt aus
-`tools/kennung-erzeugen.pl` und enthält **Produktversion, Paketversion und
-Commit**. Sie ist damit die einzige Angabe, die zwei Bauten derselben Version
+`tools/kennung-erzeugen.pl` und enthält **die Fassung und den Commit** (bis
+1.0.127 zusätzlich „/ Paket 1.0.N“). Sie ist damit die einzige Angabe, die zwei Bauten derselben Version
 unterscheidet — **und genau sie fehlt, solange kein Postfach offen ist**
 (Befund E-7). In dem Zustand, in dem der Absturz auftrat, sagt der Titel nur
 „Eudora".

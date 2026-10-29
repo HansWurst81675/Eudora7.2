@@ -30,7 +30,7 @@ $dateien = @('Eudora.exe', 'EudoraRes.dll', 'EuLang.dll', 'Imap.dll', 'QCSocket.
 function Kennung([string] $exe) {
     if (-not (Test-Path -LiteralPath $exe)) { return '(keine Eudora.exe)' }
     $t = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($exe))
-    $m = [regex]::Match($t, 'Eudora \d+\.\d+\.\d+\.\d+ / Paket [0-9.]+\+[0-9a-f]+\*? \d{4}-\d\d-\d\d \d\d:\d\d')
+    $m = [regex]::Match($t, 'Eudora \d+\.\d+\.\d+\.\d+(?: / Paket [0-9.]+)?\+[0-9a-f]+\*? \d{4}-\d\d-\d\d \d\d:\d\d')
     if ($m.Success) { $m.Value } else { '(Baukennung nicht gefunden)' }
 }
 
