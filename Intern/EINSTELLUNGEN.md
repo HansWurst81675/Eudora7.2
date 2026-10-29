@@ -174,8 +174,8 @@ Schon vollständig anderswo, deshalb hier nur der Zeiger:
   `DeleteFetchedJunk` und `MinScoreToJunk`: [FILTER.md](FILTER.md).
 * **`SSLSendUse` / `SSLReceiveUse`**, die Bedeutung der Werte 0–3 und die
   zugehörigen Ports: [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md).
-* **Die Abweichungen dieser Portierung vom Original** — die Liste direkt
-  hierunter.
+* **Die Abweichungen dieser Portierung vom Original** — die beiden Tabellen
+  direkt hierunter.
 
 ### <a id="abweichungen"></a>Was hier anders eingestellt ist als im Original — und warum
 
@@ -197,58 +197,26 @@ schreiben (Abschnitt beachten, siehe Abschnitt 1).
 
 **Für neu angelegte Mailverzeichnisse** (aus der `DEudora.ini` im Paket):
 
-* **`LeaveMailOnServer`** (`[Settings]`) — hier **1**, im Original 0.
-  Abgeholte Post bleibt auf dem Server. Mit 0 löscht Eudora jede Nachricht
-  auf dem Server, sobald sie abgeholt ist; Gregor verlangte, dass neue Konten
-  das nicht tun ([A-1](BEFUNDE.md#a-1)).
-* **`DeleteFetchedJunk`** (`[Settings]`) — hier **0**, im Original 1.
-  Als Junk Eingestuftes wurde auf dem **Server** gelöscht; Gregors Postfach
-  war danach leer ([E-74](BEFUNDE.md#e-74), Gregor am 10.09.2026:
-  *„DeleteFetchedJunk=0“*).
-* **`SSLReceiveUse`** (`[Settings]`) — hier **2**, im Original 1.
-  TLS ab der ersten Sekunde auf eigenem Port (POP3 995). Mit 1 fällt Eudora
-  auf Klartext zurück, wenn der Server kein STARTTLS anbietet; heutige Server
-  verlangen TLS. Gemessen am 06.09.2026 ([ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md)).
-* **`SSLSendUse`** (`[Settings]`) — hier **2**, im Original 1.
-  Dasselbe für den Versand (SMTP 465).
-* **`UseMyFilterWindowPosition`** (`[Window Position]`) — hier **1**, im
-  Original 0. Mit 0 zog Eudora die linke Spalte des Filterfensters nach jedem
-  Neustart wieder breiter; Gregor am 11.09.2026: *„die breite der linken
-  spalte beim filter wird nicht über den neustart gespeichert“*.
-* **`LogLevel`** (`[Debug]`) — hier **58527**, im Original 25759.
-  58527 = 25759 + 32768: schaltet die **Spurmarken dieser Portierung** ein,
-  damit ein Protokoll die Messpunkte enthält
-  ([ANWENDER.md](../Doku/ANWENDER.md#mehr-ins-protokoll-schreiben-lassen)).
-  Der Schalter 32 (Kennwort im Klartext) bleibt aus.
+| Schlüssel | Abschnitt | hier | Original | warum |
+|---|---|---|---|---|
+| `LeaveMailOnServer` | `[Settings]` | **1** | 0 | Abgeholte Post bleibt auf dem Server. Mit 0 löscht Eudora jede Nachricht auf dem Server, sobald sie abgeholt ist; Gregor verlangte, dass neue Konten das nicht tun ([A-1](BEFUNDE.md#a-1)) |
+| `DeleteFetchedJunk` | `[Settings]` | **0** | 1 | Als Junk Eingestuftes wurde auf dem **Server** gelöscht; Gregors Postfach war danach leer ([E-74](BEFUNDE.md#e-74), Gregor am 10.09.2026: *„DeleteFetchedJunk=0“*) |
+| `SSLReceiveUse` | `[Settings]` | **2** | 1 | TLS ab der ersten Sekunde auf eigenem Port (POP3 995). Mit 1 fällt Eudora auf Klartext zurück, wenn der Server kein STARTTLS anbietet; heutige Server verlangen TLS. Gemessen am 06.09.2026 ([ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md)) |
+| `SSLSendUse` | `[Settings]` | **2** | 1 | dasselbe für den Versand (SMTP 465) |
+| `UseMyFilterWindowPosition` | `[Window Position]` | **1** | 0 | Mit 0 zog Eudora die linke Spalte des Filterfensters nach jedem Neustart wieder breiter; Gregor am 11.09.2026: *„die breite der linken spalte beim filter wird nicht über den neustart gespeichert“* |
+| `LogLevel` | `[Debug]` | **58527** | 25759 | 58527 = 25759 + 32768: schaltet die **Spurmarken dieser Portierung** ein, damit ein Protokoll die Messpunkte enthält ([ANWENDER.md](../Doku/ANWENDER.md#mehr-ins-protokoll-schreiben-lassen)). Der Schalter 32 (Kennwort im Klartext) bleibt aus |
 
 **Im Programm selbst** (gilt für jedes Mailverzeichnis):
 
-* **`CtrlJMapping`** (`[Settings]`) — eingebaut 0 wie im Original; beim
-  ersten Start **ohne** Filter setzt diese Portierung **2** (*Filter
-  Messages*), das Original in derselben Lage 1 (*Junk*). Strg+J soll filtern,
-  nicht Post nach *Junk* verschieben (`mainfrm.cpp:7937-7949`,
-  [E-75](BEFUNDE.md#e-75), [FILTER.md](FILTER.md#das-tastenkürzel-ist-nicht-fest)).
-* **`FilterMayDeleteFromServer`** (`[Settings]`) — hier **0**, im Original
-  *gibt es den Schlüssel nicht*. Eine Filteraktion durfte Post auf dem Server
-  löschen; jetzt erst mit 1 (`filtersd.cpp:1133`, [E-73](BEFUNDE.md#e-73)).
-* **`KeepHTMLInResponses`** (`[Settings]`) — hier **1**, im Original *gibt es
-  ihn nicht*. Antworten und Weiterleiten behalten die HTML-Auszeichnung der
-  Ursprungsnachricht (`EudoraRes.rc:7685`, [E-87](BEFUNDE.md#e-87)).
-* **`ForwardOriginalHTML`** (`[Settings]`) — hier **1**, im Original *gibt es
-  ihn nicht*. Beim Antworten und Weiterleiten wird das Original-HTML
-  übernommen (`EudoraRes.rc:7686`, [E-88](BEFUNDE.md#e-88)).
-* **`FloatCx<id>`, `FloatCy<id>`** (`[ToolBar-ToolBarManager]`) — hier
-  gespeichert, im Original *gibt es sie nicht*. Die Größe eines
-  losgerissenen Fensters überlebt den Neustart
-  (`OTShim_Werkzeugleiste.cpp:4449`, [E-84](BEFUNDE.md#e-84)).
-* **`TabooHeaders`** (`[Settings]`) — hier **44** Einträge, im Original 28.
-  *Blah Blah Blah* versteckt auch heutige Kopfzeilen (`X-`, `DKIM-`, `ARC-`,
-  `Authentication-Results`, `List-`, `Autocrypt` u. a., 16 neue); sonst
-  stünden sie bei jeder Mail sichtbar über dem Text ([E-80](BEFUNDE.md#e-80)).
-* **`MessageStyleSheet`** (`[Settings]`) — hier mit einer zusätzlichen Regel
-  für die Kopfzeilen (`SPAN.EUDORAHEADER`), im Original ohne. Bei Mails mit
-  dunklem Hintergrund standen die Kopfzeilen schwarz auf schwarz
-  (`EudoraRes.rc:8152`, [E-81](BEFUNDE.md#e-81)).
+| Schlüssel | Abschnitt | hier | Original | warum |
+|---|---|---|---|---|
+| `CtrlJMapping` | `[Settings]` | eingebaut 0; beim ersten Start **ohne** Filter **2** (*Filter Messages*) | eingebaut 0; in derselben Lage 1 (*Junk*) | Strg+J soll filtern, nicht Post nach *Junk* verschieben (`mainfrm.cpp:7937-7949`, [E-75](BEFUNDE.md#e-75), [FILTER.md](FILTER.md#das-tastenkürzel-ist-nicht-fest)) |
+| `FilterMayDeleteFromServer` | `[Settings]` | **0** | *gibt es nicht* | Eine Filteraktion durfte Post auf dem Server löschen; jetzt erst mit 1 (`filtersd.cpp:1133`, [E-73](BEFUNDE.md#e-73)) |
+| `KeepHTMLInResponses` | `[Settings]` | **1** | *gibt es nicht* | Antworten und Weiterleiten behalten die HTML-Auszeichnung der Ursprungsnachricht (`EudoraRes.rc:7685`, [E-87](BEFUNDE.md#e-87)) |
+| `ForwardOriginalHTML` | `[Settings]` | **1** | *gibt es nicht* | Beim Antworten und Weiterleiten wird das Original-HTML übernommen (`EudoraRes.rc:7686`, [E-88](BEFUNDE.md#e-88)) |
+| `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | gespeichert | *gibt es nicht* | Die Größe eines losgerissenen Fensters überlebt den Neustart (`OTShim_Werkzeugleiste.cpp:4449`, [E-84](BEFUNDE.md#e-84)) |
+| `TabooHeaders` | `[Settings]` | **44** Einträge | 28 | *Blah Blah Blah* versteckt auch heutige Kopfzeilen (`X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `List-`, `Autocrypt` u. a., 16 neue); sonst stünden sie bei jeder Mail sichtbar über dem Text ([E-80](BEFUNDE.md#e-80)) |
+| `MessageStyleSheet` | `[Settings]` | mit zusätzlicher Regel für die Kopfzeilen (`SPAN.EUDORAHEADER`) | ohne | Bei Mails mit dunklem Hintergrund standen die Kopfzeilen schwarz auf schwarz (`EudoraRes.rc:8152`, [E-81](BEFUNDE.md#e-81)) |
 
 *Nachgesehen am 29.10.2026:* Werte „hier“ in `tools/DEudora.ini` und
 `Eudora71/Eudora/EudoraRes.rc`, Werte „Original“ im ersten Commit
