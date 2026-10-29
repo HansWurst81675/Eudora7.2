@@ -2,7 +2,10 @@
 name: ausreisser-ist-der-befund
 description: "Was in der eigenen Messausgabe steht und nicht ins Ergebnis passt, ist der Befund - nicht das Rauschen, das man wegerklaert"
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: 2dc0ce9e-d597-4bea-8a46-cb21a63838b0
+  modified: 2026-10-29T07:58:24.490Z
 ---
 
 Schranke: keine - dass ich eine Zeile meiner eigenen Ausgabe weggedeutet habe, steht nirgends; im Repo bleibt die gerundete Zahl stehen, nicht die Zeile, die ihr widersprochen hat. Vorschlag fuer eine Schranke am Ende dieser Datei.
@@ -87,3 +90,18 @@ Schranke — sie zu bauen ist PRÜFERs Feld, nicht meins.
 Siehe [[pruefen-statt-vermuten]], [[eingebaute-messung-auslesen]],
 [[zwei-werte-in-eine-ausgabe]], [[widerlegte-vermutungen-aufschreiben]] und
 [[pruefumfang-nicht-von-hand]].
+
+## Nachtrag 29.10.2026 (CHRONIST): ein Absturz und eine Eins, beide in der eigenen Ausgabe
+
+Zeiten MEZ, gemessen an `72be6093…` und `2dc0ce9e…`.
+
+**1. Der Absturz vom 28.10. (heute E-168).** Lauf 6 zum Konto-Assistenten, gestartet 13:34:54, Ausgabe 13:35:19. In der (mit `Select-String` gefilterten) Ausgabe stand dreimal hintereinander dieselbe Seite, *„Your Name:“* mit leerem Feld, als Seite 3, 4 und 5, dazu `reihenfolge=assistent-abgebrochen` und `Beendet: True`. Um 13:35:24 schrieb ich: *„Der Weg funktioniert.“* Zwischen 13:35:19 und 13:35:24 war Eudora um 13:35:16 mit einer Zugriffsverletzung abgestürzt (`Exception.log` am Prüfstand). Gefunden hat es LEKTOR-90 (L-90.12), nicht ich. Auch der CHRONIST vom 28.10. hat Lauf 6 gelesen und den Absturz nicht gesehen. Drei gleiche Seiten nach drei *Weiter* sind der Ausreißer: Die Seite ging nicht weiter, weil eine Meldung offen war. Am 29.10. gemessen: Der Assistent ist dann gesperrt, nur das eigene `PostMessage` kam durch. Nachstellen ließ sich der Absturz nicht (drei Läufe, einer mit der alten `Eudora.exe`). Die Ursache bleibt offen, „erledigt“ in E-168 heißt: für Anwender nicht erreichbar, mit Gregors *„ja, so eintragen“* (07:09:04).
+
+Mitgewirkt hat ein Werkzeugmangel (belegt am Quelltext): `tools/testlauf.ps1` prüft einen Prozess, der **während der Messung** endet, nicht. Der Exitcode wird nur ausgegeben, wenn der Prozess vor dem Hauptfenster endet (`:331–333`). Danach steht nur `Beendet: True` (`:382`), gleich ob Eudora regulär schloss oder abstürzte. Einen Blick auf ein neues `Exception.log` gibt es nicht.
+
+**2. Die Startwege-Schranke, 29.10.** Um 07:17:55 lief die umgebaute `pruefe-startwege.pl --tag 2026-10-28` und meldete in **einer** Zeile: `Starts 1   Protokollzeilen 23   ohne Zeile 0`, darunter *„Jeder eigene Eudora-Start am 2026-10-28 steht im Protokoll.“* Bekannt waren 21 Starts an diesem Tag (CHRONIST vom 28.10.). Um 07:18:37 stand in `tools/WERKZEUGE.md`, die Schranke zähle jetzt `Audit.log`, um 07:18:57 in `WEITERMACHEN.md` L-90.18 als erledigt. LEKTOR-91 (L-91.1, 07:54) fand die Ursache: `pruefe-startwege.pl:163` verwirft jeden Start vor der Änderungszeit der `Eudora.exe`, und die wurde am 28.10. um 14:19:06 getauscht. Berichtigt wurde die Meldung um 07:56:52, nicht die Schranke. Eins gegen 23 in derselben Zeile ist die Gestalt dieser Lehre ([[zwei-werte-in-eine-ausgabe]]), und die Gegenprobe gegen den echten Fall, für den die Änderung gebaut wurde, war genau dieser Aufruf ([[schranke-gegentesten]]).
+
+**How to apply, zusätzlich:**
+- Steht in einer Prüfstandsausgabe dieselbe Seite oder derselbe Zustand mehrfach, obwohl jeder Schritt weiterschalten sollte, ist das der erste Befund, vor jedem „funktioniert“.
+- Nach jedem Prüfstandslauf wird `Exception.log` im Mailverzeichnis gezählt (Zeitstempel gegen den Laufbeginn). Besser im Werkzeug: `testlauf.ps1` meldet *„Prozess endete während der Messung, Exitcode X“* und ein neues `Exception.log` als `FEHL` (Vorschlag, nicht gebaut; Gegenprobe: der Lauf vom 28.10. 13:34:54 müsste rot werden).
+- Eine Erledigung wird erst gemeldet, wenn die Ausgabe für den Fall, der sie verlangt hat, die erwartete Zahl zeigt.

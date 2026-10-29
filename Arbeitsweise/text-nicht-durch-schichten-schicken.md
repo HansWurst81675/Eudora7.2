@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-10-14T06:48:34.529Z
+  modified: 2026-10-29T07:57:45.779Z
 ---
 
 Schranke: tools/pruefe-rueckstrich.pl (pre-commit 14d seit 14.10.2026 — weist einen Windows-Pfad ohne Rückstrich im Zuwachs einer .md ab) und tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile)
@@ -489,3 +489,37 @@ Zeiten MEZ, gemessen an den Transkripten `15164e13…` und `72be6093…` und an 
 - `perl -i` wirkt nur auf Dateien, die über `<>` aus `@ARGV` gelesen werden. Wer `<STDIN>` liest, schreibt ohne `-i` in eine neue Datei im Scratchpad, misst sie und kopiert sie dann zurück, oder nimmt gleich `tools/ersetze-bereich.pl`.
 - *„-i used with no filenames“* ist ein Abbruchgrund, kein Rauschen. `2>/dev/null` hinter einem schreibenden Perl ist ausgeschlossen ([[gekuerzte-ausgabe-ist-kein-ergebnis]]).
 - **Vorschlag für die Schranke (nicht gebaut):** `pruefe-rueckstrich.pl` nimmt in `Arbeitsweise/` nur Lehren aus (`type: feedback` im Kopf). `stand-*.md`, `entscheidung-*.md` und `CHRONIST-*.md` werden geprüft. Gegenprobe: `perl tools/pruefe-rueckstrich.pl --commit 9c71a176` muss rot werden (heute grün, weil ausgenommen), eine Lehre, die `C:Temp105` zitiert, bleibt grün.
+
+## Nachtrag 29.10.2026 (CHRONIST): Fall 31 bis 33, Gregors Frage und ein Versprechen, das 56 Minuten hielt
+
+Gregor am 29.10.2026 um 07:24:48 MEZ, als Einwurf mitten in einem Block von 46 Werkzeugaufrufen:
+
+> *„das mit den backslashes, die immer wieder fehlen, das hast du seit anfang des projektes immer noch nicht im griff, was? ich lese diese meldungen immer wieder - hat der chronist nicht dazu gefunden und bemängelt? aber das scheinst du ja standhaft zu ignorieren, oder möchtest du nichts dazu lernen, was?“*
+
+Die Antwort auf seine Frage ist ja: Der CHRONIST vom 28.10. hat Fall 27 bis 30 hier eingetragen und die Lücke der Schranke für Stand-Vermerke vorgeschlagen (oben). Gebaut wurde nichts davon, und 16 Stunden später kamen die nächsten drei Fälle. Zeiten MEZ, gemessen an `72be6093…` und `2dc0ce9e…`.
+
+| Fall | Zeit | Was | Regel hier | Folge |
+|---|---|---|---|---|
+| 31 | 28.10. 15:38:30 | Stand-Vermerk `memory/stand-28-10-2026.md` per `perl -0777 -i -pe 's/…/… C:\\Temp\\E166\\…/'`, **während der CHRONIST über Fall 27 lief** | Fall 16–18 (14.10.), Fall 27 (28.10., derselbe Ort) | `od -c` zeigte `C:Temp166Mailverzeichnisxception.log`: jedes `\E` war als Ende einer Umschaltung gedeutet worden und mit seinem `E` verschwunden. Um 15:38:47 mit `\x5c` im Ersatz repariert. Die Meldung dazu war englisch: *„The path was mangled again (backslashes lost).“* Keine Schranke sah es, denn im Gedächtnisverzeichnis läuft keine (oben, 28.10.) |
+| 32 | 29.10. 07:13:20 | Junk-Aussagen per Ersatzskript `junk.pl` aus einem Hier-Dokument in sechs Dateien, Pfad als `"…C:\\Windows\\SysWOW64…"` in einem Perl-String | 12.10. (Fall 11/12): Text mit `\\` nur mit dem Write-Werkzeug; 14.10.: `use warnings FATAL => 'all'` im Ersatzskript | **`C:WindowsSysWOW64`** dreimal (`Intern/FILTER.md:503`, `:509`, `README.md:166`). Das Skript meldete nur *„syntax OK“* und Ersetzungszahlen, eine Warnung gab es ohne `use warnings` nicht |
+| 33 | 29.10. 07:15:20 | Defender-Zeile für `Releases/PAKETE.md` per Hier-Dokument, Pfad `C:\\Users\\Gregor\\Eudora72-…` in einem Perl-String | dieselben | **`C:SERSGREGORudora72-1.0.127-release.zip`** (`\U` schaltet auf Großschrift, `\E` beendet sie), also wörtlich der Fall vom 14.10. 05:55:40 |
+
+`pruefe-rueckstrich.pl` hat beim ersten Commitversuch (07:20:18) abgewiesen. Um 07:22:32–40 waren alle vier Pfade **mit dem Edit-Werkzeug** berichtigt, auf `main` kam nichts. Die Schranke hat getan, wofür sie gebaut ist. Gregor liest aber ihre Abweisungen mit, und jede steht für einen Schreibweg, den die Regel seit dem 12.10. verbietet.
+
+**Das Versprechen danach, gemessen.** Um 07:27:34 schrieb ich: *„Die Regel ab jetzt: `.md`-Dateien ändere ich nur noch mit dem Edit-Werkzeug. … Damit das nicht wieder an meinem Gedächtnis hängt, kann ich einen Haken bauen, der ein `perl -i` auf `.md`-Dateien abweist. Sag mir, ob du das willst.“* Danach liefen 87 Edit- und Write-Aufrufe, im Repo hielt die Regel. Im Gedächtnisverzeichnis nicht:
+
+| Zeit | Befehl | Datei |
+|---|---|---|
+| 08:23:54 | `cat > stand-29-10-2026.md <<'EOF'` und `echo … >> MEMORY.md` | zwei `.md` |
+| 08:26:03 | `perl -0777 -i -pe 's/…/…/'` mit `\\/` und `\\@` im Ersatz | `stand-29-10-2026.md` |
+| 08:33:52 | `cat >> stand-29-10-2026.md <<'EOF'` | `stand-29-10-2026.md` |
+
+Kein Rückstrich ging dabei verloren, weil in den drei Texten kein Windows-Pfad stand. Gebrochen war das Versprechen trotzdem, 56 Minuten nach dem Satz, und zwar genau an dem Ort, an dem Fall 27 und 31 entstanden sind. **Die Frage nach dem Haken blieb unbeantwortet.** Sie stand im zweiten von fünf Abschnitten derselben Nachricht, neben einer zweiten Frage (E-166 ins Release, ja oder nein). Gregor beantwortete um 07:32:08 die zweite. Die erste kam nicht wieder ([[chat-knapp-halten]]: höchstens eine Frage).
+
+**Urteil: Ein weiterer Nachtrag reicht nicht.** 33 Fälle seit dem 06.09., die Regel „nur Write/Edit“ steht seit dem 12.10. hier, und sie hielt am 29.10. keine Stunde. Wirksam war jedes Mal nur, was ohne mein Zutun läuft ([[schranke-gehoert-in-den-haken]]): `pruefe-rueckstrich.pl` im Commit-Haken, und das nur im Repo. Der Schreibweg selbst ist ein Werkzeugaufruf, den kein Git-Haken sieht.
+
+**Vorschlag für die Schranke (nicht gebaut, braucht Gregors Ja, weil es `.claude/settings.json` ändert):** ein `PreToolUse`-Haken auf das Bash- und das PowerShell-Werkzeug, der einen Befehl abweist, wenn er (a) eine `.md` schreibt (`perl … -i` mit `.md` in der Zeile, `cat >`/`>>` oder `tee` auf `*.md`, `sed -i` auf `*.md`) oder (b) in einem Perl-Ersatz oder Hier-Dokument ein Laufwerk mit Rückstrich trägt (`[A-Z]:\\`). Die Abweisung nennt die Abhilfe: Edit- oder Write-Werkzeug. Für Latin-1-Quellen unter `Eudora71/` gilt (a) nicht, dort bleibt `tools/ersetze-bereich.pl`. **Gegenprobe:** die Befehle von 07:13:20 und 07:15:20 (Fall 32, 33) und 08:26:03 müssen abgewiesen werden, ein Edit an `README.md` und ein `perl -i` auf eine `.cpp` müssen durchgehen.
+
+**How to apply, zusätzlich:**
+- Eine Frage nach einer Schranke steht allein im letzten Satz der Nachricht. Bleibt sie unbeantwortet, wird sie in der nächsten Nachricht wiederholt, nicht vergessen.
+- Ein Versprechen im Chat („ab jetzt nur noch …“) ist keine Schranke. Es gehört mit Uhrzeit in diese Datei, und der nächste CHRONIST zählt nach, ob es gehalten hat.

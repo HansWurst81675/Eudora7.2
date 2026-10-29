@@ -2,7 +2,10 @@
 name: doku-bei-jedem-commit-mitziehen
 description: "README.md und PORTIERUNG.md gehoeren in denselben Commit wie die Aenderung, nicht nachtraeglich auf Zuruf"
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: 2dc0ce9e-d597-4bea-8a46-cb21a63838b0
+  modified: 2026-10-29T08:00:27.862Z
 ---
 
 Schranke: tools/doku-pruefen.pl (pre-commit, pre-push)
@@ -49,3 +52,21 @@ ist hier kein Beiwerk: sie ist der Uebergabestand zwischen langen Sitzungen.
 **How to apply:** Nicht auf Zuruf warten und nicht ans Sitzungsende schieben.
 Zum Commit-Ablauf aus [[commit-auf-extra-branch-und-pushen]] gehoert der
 Doku-Abgleich als fester Schritt dazu, bevor `git commit` laeuft.
+
+## Nachtrag 29.10.2026 (CHRONIST): der CHANGELOG, zwei Monate nach „muss ich dich an alles erinnern?“
+
+Gregor am 29.10.2026 um 08:31:57 MEZ, als Einwurf: *„alle bisherigen änderungen udnd fixes sollten auch im changelog drin stehen.“*
+
+Gemessen an den 23 Commits des Zweigs `e166-junk_message_fix` (`git log aef8f880^1..aef8f880^2`, je Commit `git show -- CHANGELOG.md`):
+
+- **Die Behebung von E-166** kam am 28.10. um 15:06 (`249e4f95`) in den Quelltext. Im Abschnitt *„Im Quellstand, noch in keinem Paket“* stand sie erst am 29.10. um 07:25 (`1e54773d`), nachdem LEKTOR-90 es angemahnt hatte (meine Meldung am 28.10. um 15:44: *„fehlt E-166 im CHANGELOG und in der README“*), also 16 Stunden später.
+- **Sieben Commits berührten den CHANGELOG.** Vier davon änderten nur die Befundtabelle, die `offene-befunde.pl -schreiben` erzeugt. Die drei übrigen schrieben oder berichtigten nur die E-166-Zeile.
+- **Nicht im CHANGELOG bis zum Merge:** die neue `Doku/FAQ.md` (`98fb9822`, `01f583db`), die Änderung an `tools/pruefe-startwege.pl` und `tools/pruefstand-lauf.ps1` (`1e54773d`), die berichtigten Release-Texte auf GitHub, E-168 als Eintrag (nur in der Tabelle).
+
+Nachgetragen wurde alles um 08:51 auf dem nächsten Zweig (`f7ca0753`), 20 Minuten nach Gregors Satz. Warum es nicht in den PR kam: [[einschraenkung-im-pr-ist-kein-ja]], Nachtrag 29.10.
+
+**Why, zusätzlich:** Die Schranke dieser Lehre (`doku-pruefen.pl`) prüft Querverweise und Versionsnummern, nicht, ob ein Commit, der eine Datei unter `Doku/`, `tools/` oder `Eudora71/` anlegt oder ändert, eine Zeile im CHANGELOG mitbringt. Die erzeugte Befundtabelle sieht aus wie Pflege und ist keine.
+
+**How to apply, zusätzlich:**
+- Ein Commit mit neuer Anwenderdatei (`Doku/*`), einer Behebung oder einer geänderten Schranke bringt seine Zeile unter *„Im Quellstand, noch in keinem Paket“* mit. Ein LEKTOR-Fund „fehlt im CHANGELOG“ ist ein Zeichen, dass das zu spät kam.
+- Vorschlag für die Schranke (nicht gebaut): `pruefe-changelog-zuwachs.pl` im `pre-commit` weist ab, wenn der Commit unter `Eudora71/` eine Quelldatei oder unter `Doku/` eine Datei ändert und `CHANGELOG.md` im selben Commit außerhalb der erzeugten Tabelle keine Zeile gewinnt. Gegenprobe: `98fb9822` (FAQ neu, kein CHANGELOG) muss abgewiesen werden, `1e54773d` muss durchgehen.

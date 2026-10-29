@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: fa3529ec-b364-4d3f-89ee-3444ba209862
-  modified: 2026-10-26T13:26:25.645Z
+  modified: 2026-10-29T08:00:56.387Z
 ---
 
 Gregor am 26.10.2026: *„ich teste jetzt nur noch sachen aus dem testplan, die im repo stehen. habe keine lust, hier in dem vielen text nach einzelnen hinweisen und anweisungen zu suchen.“* Davor: *„in dem chat steht so viel für mich unnützliches zeug drin, ich finde die wichtigen antworten und aussagen einfach nicht.“*
@@ -30,3 +30,7 @@ Zeiten MEZ, gemessen am Transkript (Textzeilen der Antworten, nach englischen Fu
 ## Nachtrag 28.10.2026 (CHRONIST): eine englische Zeile
 
 Gezählt wie am 27.10., Transkript `72be6093…`: Unter 72 Antworttexten der Sitzung ist einer englisch, um 13:33:07 MEZ: *„The working directory had shifted. I'm using absolute paths now.“* Das war 64 Minuten nach der Kompaktierung (12:29), mitten in einer Reparatur und direkt nach einer **deutschen** PowerShell-Fehlermeldung. Gregor hat nicht nachgefragt. Das passt zur zweiten Hälfte der Vermutung vom 27.10. (*„mitten in einer Reparatur, als der Blick auf dem Werkzeug lag“*). Die erste Hälfte (*„setzt die Sprache der Zusammenfassung fort“*) erklärt diesen Fall nicht. Belegt ist nur die Zeile.
+
+## Nachtrag 29.10.2026 (CHRONIST): vier englische Zeilen, alle beim Reparieren oder Prüfen
+
+Gezählt wie oben. 28.10. ab 15:28 MEZ: 21 Antworttexte, einer englisch (15:38:33, *„The path was mangled again (backslashes lost). I'm fixing it with `\x5c`.“*). 29.10. bis 08:47 MEZ: 46 Antworttexte, drei englisch oder halb: 07:49:27 (*„I schreibe die Label-Antwort …“*), 08:21:56 (*„Excluded — safe to commit.“*), 08:31:30 (*„No links ended up inside code spans. Commit and push.“*). Keine Kompaktierung davor. Alle vier stehen direkt nach einer Werkzeugausgabe, die ich gerade prüfte (Rückstrich, Haken-Ausnahme, Codespannen). Gregor hat nicht nachgefragt. Die zweite Hälfte der Vermutung vom 27.10. hat damit acht Fälle aus drei Tagen für sich (27.10.: drei, 28.10.: zwei, 29.10.: drei), die erste keinen weiteren.

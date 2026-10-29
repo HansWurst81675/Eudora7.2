@@ -134,3 +134,5 @@
 - [Stand 28.10.2026](stand-28-10-2026.md) — E-166 behoben; Absturz im Konto-Assistenten (LEKTOR-90 L-90.12) zuerst; CHRONIST prüfen
 - [CHRONIST 28.10.2026](CHRONIST-2026-10-28.md) — Lauf über 27.10. 17:00 bis 28.10. 15:28: keine neue Lehre, elf Nachträge; PSM_PRESSBUTTON ist 0x0471, pruefe-rueckstrich.pl blind für Stand-Vermerke, powershell-ist-nicht-bash wörtlich wiederholt
 - [Stand 29.10.2026](stand-29-10-2026.md) — nach PR e166-junk_message_fix: FAQ TidyAttach bestaetigt nachtragen, LEKTOR-93-Funde, #181 FAQ-Link
+- [Gedächtnis ist öffentlich](gedaechtnis-ist-oeffentlich.md) — memory/ wird nach Arbeitsweise/ gespiegelt und steht auf dem öffentlichen main; aus Gregors Mailverzeichnis nur Zahlen, nie Namen; „im log“ heißt eudora.log
+- [CHRONIST 29.10.2026](CHRONIST-2026-10-29.md) — Lauf über 28.10. 15:28 bis 29.10. 08:47: eine neue Lehre, acht Nachträge; Anhangnamen auf main, Rückstrich Fall 31–33 und „nur noch Edit“ hielt 56 Minuten, Absturz als Ausreißer übersehen
