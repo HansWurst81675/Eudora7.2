@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: fa3529ec-b364-4d3f-89ee-3444ba209862
-  modified: 2026-10-25T17:22:12.126Z
+  modified: 2026-10-29T08:00:44.883Z
 ---
 
 Schranke: keine - die Filter stehen in Wegwerfbefehlen, die kein Commit-Haken sieht. Machbar waere ein PreToolUse-Haken, der `git commit` und `git push` mit nachfolgendem `|` abweist (Vorschlag des CHRONIST vom 25.10.2026, nicht gebaut); fuer `head` hinter einer Suche gibt es keine mechanische Pruefung, nur die Regel unten.
@@ -68,3 +68,13 @@ Zeiten MEZ, Transkript `72be6093…`, gemessen.
 Alle drei wurden in Sekunden bemerkt, weil die Ausgabe nicht zum erwarteten Ergebnis passte. Der erste und der dritte Fall hatten denselben Aufbau: ein gefilterter Startbefehl, dahinter das Lesen der Ergebnisdatei. Scheitert der Start, zeigt die zweite Hälfte den **alten** Zustand der Datei, und das sieht aus wie eine Messung. Im dritten Fall hing dahinter mit `;` noch der zweite Start (Lauf 10). Wäre nur der erste abgewiesen worden, hätte Lauf 10 auf einem Stand ohne Lauf 9 gemessen.
 
 **How to apply, zusätzlich:** Ein Prüfstandsstart wird nicht mit `Select-String` gefiltert. Seine Ausgabe geht in eine Datei im Scratchpad, die danach gelesen wird. Die Ergebnisdatei wird nur gelesen, und ein zweiter Lauf nur gestartet, wenn der erste `Beendet: True` gemeldet hat: mit `&&` oder `if ($?)`, nie mit `;`.
+
+## Nachtrag 29.10.2026 (CHRONIST): ein vierter Filter am 28.10. und ein Push hinter einem abgewiesenen Commit
+
+Zeiten MEZ, Transkript `72be6093…`, gemessen.
+
+**Lauf 6, 13:34:54.** Derselbe Aufbau wie die Fälle oben: `testlauf.ps1 … | Select-String 'E166A Seite|E166A   |ERGEBNIS|Beendet' | Select-Object -Skip 14 | Where-Object { … }`. In diesem Lauf stürzte Eudora um 13:35:16 ab (heute E-168). Sichtbar blieben drei gleiche Assistentenseiten und `Beendet: True`. Der CHRONIST vom 28.10. hat die drei Filter von 13:32, 14:03 und 14:10 gezählt, diesen vierten nicht. Was der Filter verschluckte, ist hier nicht entscheidend, denn `testlauf.ps1` meldet einen Absturz während der Messung gar nicht ([[ausreisser-ist-der-befund]], Nachtrag 29.10.). Entscheidend ist, dass der Filter auch den Platz wegnimmt, an dem eine solche Meldung künftig stünde.
+
+**15:46:48.** `git commit -q -F - <<'EOF' >/dev/null 2>&1 … EOF; echo "commit rc=$?"; git push -q origin e166-junk_message_fix >/dev/null 2>&1; echo "push rc=$?"`. Ergebnis: `commit rc=1`, `push rc=0`. Der Haken hatte abgewiesen (`lehren-uebersicht.pl`), der Push schob den alten Stand ein zweites Mal. Drei Sekunden vorher stand im Chat *„Die Backslashes sind erhalten. Ich committe und pushe.“* Gregor suchte in dieser Zeit auf GitHub nach dem Absturz-Hinweis, fand um 15:48:02 eine alte Stelle von 1.0.98 und schrieb um 15:49:47 *„weitermachen.md ist vor 9 min.“*, er sah also `8ef3c3d`. Gemeldet habe ich die Abweisung um 15:47:22, der richtige Stand war um 15:49:34 oben. Regel 2 oben (*„`git commit` und `git push` nie in eine Pipe“*) und der Nachtrag vom 27.10. (*„mit `&&`, nie mit `;`“*) standen beide da.
+
+**How to apply, zusätzlich:** Ein Push hängt mit `&&` am Commit. Wer Gregor gerade einen Stand auf GitHub zeigen will, meldet ihn erst, wenn `git log origin/<zweig> -1` die neue Kennung zeigt.

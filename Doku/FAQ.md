@@ -52,9 +52,16 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
 4. *Action:* **Make Label** → `Wichtig`. Weitere Aktionen (etwa *Transfer To*)
    lassen sich darunter anhängen.
 
+**Bekannte Einschränkung:** wird eine Mail mit Label später zwischen zwei
+Ordnern **desselben IMAP-Kontos** verschoben, ist das Label danach weg — Eudora
+speichert Labels nur bei sich, nicht auf dem Server
+([E-170](../Intern/BEFUNDE.md#e-170); eine Abhilfe kommt erst nach dem Release 7.2.1).
+
 *Am Quelltext nachgesehen (29.10.2026):* Aktion *Make Label* in
-`EudoraRes.rc:6088`, ausgeführt in `filtersd.cpp:1222-1226`. Am Programm noch
-nicht geprüft.
+`EudoraRes.rc:6089`, ausgeführt in `filtersd.cpp:1222-1226`. **Am Programm
+geprüft** von Gregor am 29.10.2026 an Paket 1.0.127: ein Filter auf
+`From:` mit *Transfer To*, *Make Label* (Label 6) und *Skip Rest* färbte die
+Mail grün.
 
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund
@@ -88,4 +95,8 @@ geschieht, die Eudora selbst anhängt (*Never*, *After sending message*,
 
 *Am Quelltext nachgesehen (29.10.2026):* `EudoraRes.rc:435-446` (Seite
 *Attachments*), Vorgaben `EudoraRes.rc:8232` (`TidyAttach\n0`) und `:8813`
-(`AutoAttachedDeleteTrash\n1`). Am Programm noch nicht geprüft.
+(`AutoAttachedDeleteTrash\n1`). **Am Programm geprüft** von Gregor am
+29.10.2026 an Paket 1.0.127 (*„funktioniert“*): mit `TidyAttach=1` waren nach
+*Empty Trash* die fünf Anhänge der gelöschten Mail aus dem Anhangverzeichnis
+verschwunden, die übrigen Dateien blieben (gegen Gregors Sicherung des
+Verzeichnisses verglichen; `eudora.log`: *„Emptying Trash“*).

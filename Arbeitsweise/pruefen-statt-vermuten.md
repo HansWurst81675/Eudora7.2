@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-10-13T09:45:00.000Z
+  modified: 2026-10-29T07:59:04.059Z
 ---
 
 Schranke: keine - ob ich vor einer Aussage die Quelle geöffnet habe, ist im Repo nicht sichtbar; stehen bleibt nur die Aussage, nicht ihr Weg
@@ -265,3 +265,21 @@ Die Antwort stand die ganze Zeit in einer Datei, die Gregor hingelegt und genann
 - Nennt Gregor einen Ordner mit Bildschirmfotos, lese ich **das neueste zuerst, einzeln**, und erst dann, wenn es nicht reicht, das nächste.
 - Lehnt Gregor einen Lesestapel ab, ist die nächste Zeile eine Frage nach **der** Datei, keine Vermutung zur Ursache.
 - Solange das Beweisstück ungelesen ist, gibt es keine Aussage dazu, welche eigene Änderung beteiligt ist oder nicht.
+
+## Nachtrag 29.10.2026 (CHRONIST): „am Quelltext nachgesehen“, zwei Zeilen aus dem Gedächtnis
+
+Zeiten MEZ, Transkript `2dc0ce9e…`, gemessen.
+
+| Zeit | Was |
+|---|---|
+| 07:27:34 | zu Gregors Wünschen aus Issue #181: *„Das prüfe ich aber erst am Quelltext und schätze es nicht aus dem Gedächtnis“* |
+| 07:40:04 | ein `grep` in `EudoraRes.rc`. In seiner Ausgabe stehen nebeneinander der Knopf *„Delete attachments when emptying &Trash“* (`:435`), elf Zeilen tiefer `IDS_INI_AUTO_ATTACHED_DELETE_TRASH` (`:446`) und dessen Eintrag `"AutoAttachedDeleteTrash\n1"` (`:8813`) |
+| 07:40:20 | Tabelle an Gregor, eingeleitet mit *„habe ich am Quelltext (`EudoraRes.rc`) nachgesehen“*: die Option heiße `AutoAttachedDeleteTrash`, *„Vorgabe **an**“*; und *„Eudora schreibt in jede abgeholte Mail die Kopfzeile `X-Persona: <Kontoname>`“* |
+| 07:47:23–07:47:57 | erst jetzt `compmsgd.cpp` und `filtersd.cpp` gelesen: `X-Persona` nur bei *„non-default personality“*; der Knopf gehört zu `IDS_INI_TIDY_ATTACH` (`:436`), Vorgabe `TidyAttach\n0` (`:8232`) |
+| 07:51:56 | *„Zwei Korrekturen zu meiner Tabelle von vorhin“*: Option ab Werk **aus**, `X-Persona` nur bei zusätzlichen Konten |
+
+Zwischen dem `grep` und der Tabelle lagen 16 Sekunden. Die erste falsche Zeile kam aus einer **falsch zugeordneten Nachbarzeile** der eigenen Ausgabe: `AutoAttachedDeleteTrash` ist ein anderer Schalter, der dritte Optionsknopf unter *„Delete automatic attachments“* (*Never / After sending message / When message emptied from Trash*, `:438–447`). Die zweite stand in keiner Ausgabe, sie kam aus dem Gedächtnis. Beide trugen das Etikett „am Quelltext nachgesehen“. Gregor hat auf die falsche X-Persona-Zeile hin gehandelt: *„zu Kopfzeile X-Persona: <Kontoname>.: schreib es ins issue als antwort, zusätzlich ins readme …“* (07:47:12). Ins Issue ging sie erst nach dem Nachlesen, also richtig. Die Berichtigung kam ungefragt, mit *„Korrekturen“* im Titel, und Issue und FAQ trugen von Anfang an den Satz *„nur am Quelltext nachgesehen, am Programm noch nicht durchgeklickt“*. Gregor hat danach zwei der drei Antworten am Programm bestätigt (07:58:13 Labels, 08:22:49 Anhänge löschen).
+
+**How to apply, zusätzlich:**
+- „Am Quelltext nachgesehen“ steht nur über einer Zeile, deren Datei und Zeilennummer ich in derselben Nachricht nennen kann. Eine Zeile ohne Fundstelle ist eine Vermutung und wird so genannt ([[ursache-nur-gemessen-behaupten]]).
+- Eine Vorgabe (Default) liest man am Schlüssel, nicht am Knopf: `IDS_INI_…` am Steuerelement suchen, dann dessen Eintrag in der Zeichenkettentabelle (`"Name\nWert"`). Zwei Treffer nebeneinander in einer `grep`-Ausgabe gehören nicht zusammen, nur weil sie nebeneinander stehen.
