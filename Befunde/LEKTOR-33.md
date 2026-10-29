@@ -51,21 +51,21 @@ in der angegebenen Größe **über** dem Text statt darauf. Geprüft wird damit
 Größe und Überdeckung **eines** Bildes.
 
 * [E-95](../Intern/BEFUNDE.md#e-95) ist ein anderes Fehlerbild: im Verfassenfenster wurden
-  Bilder **zerschnitten** bzw. auf 20×20 **gequetscht** — an der **Doctolib**-Nachricht
-  (eingebettete `cid:`-Bilder) und an der FairToner-Nachricht.
+  Bilder **zerschnitten** bzw. auf 20×20 **gequetscht** — an der **Werbemail-A**-Nachricht
+  (eingebettete `cid:`-Bilder) und an der Werbemail-B.
 * [E-96](../Intern/BEFUNDE.md#e-96) betrifft **mehrere** Bilder unterschiedlicher Höhe
   hintereinander (jedes bekam die Zeilenhöhe des ersten). Gemessen nur im eigenen
   Lauf vom 15.09.2026.
 
 In `BEFUNDE.md`, `WEITERMACHEN.md`, `TESTPLAN.md`, `CHANGELOG.md` und allen
-`Befunde/*.md` steht **kein** Zitat Gregors zu Doctolib, FairToner oder
+`Befunde/*.md` steht **kein** Zitat Gregors zu Werbemail-A, Werbemail-B oder
 abgeschnittenen Bildern nach dem 15.09.2026. Die Urteilszeile zu
 [E-95](../Intern/BEFUNDE.md#e-95) sagt selbst *„von Gregor noch nicht am laufenden
 Programm bestätigt“*. TESTPLAN C3 führt beide zu Recht als offen.
 
 **Was Gregor dafür tun müsste** (aus `WEITERMACHEN.md`, Zeile *VON GREGOR ZU
 PRÜFEN, 15.09.2026*, und `CHANGELOG.md` 7.2.0.63): mit 1.0.87 oder 1.0.88 die
-**Doctolib**- und die **FairToner**-Nachricht je einmal **beantworten** und
+**Werbemail-A**- und die **Werbemail-B**-Nachricht je einmal **beantworten** und
 **weiterleiten**. Zu sehen sein muss: kein Bild abgeschnitten, keines auf 20×20
 gequetscht, jedes Bild in eigener Höhe, der Text frei.
 
@@ -76,7 +76,7 @@ Bilder in der **angegebenen** Größe“*. Das ist das Kriterium von
 [E-112](../Intern/BEFUNDE.md#e-112), nicht von [E-95](../Intern/BEFUNDE.md#e-95) — und genau diese Formulierung lädt
 dazu ein, die E-112-Bestätigung als Erledigung von [E-95](../Intern/BEFUNDE.md#e-95) zu lesen. `WEITERMACHEN.md`
 beschreibt [E-95](../Intern/BEFUNDE.md#e-95)/[E-96](../Intern/BEFUNDE.md#e-96) dagegen als *„die Bilder behalten ihre wirkliche Größe, und
-jedes bekommt seine eigene Zeilenhöhe“* mit den Doctolib- und FairToner-Nachrichten.
+jedes bekommt seine eigene Zeilenhöhe“* mit den Werbemail-A- und Werbemail-Ben.
 **Vorschlag:** die beiden C3-Zeilen auf den Handgriff aus [L-33.4](#l-33.4)
 umschreiben. Nicht selbst geändert, weil das die Prüfanweisung an Gregor ändert.
 

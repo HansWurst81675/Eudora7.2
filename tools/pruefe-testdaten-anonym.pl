@@ -43,15 +43,13 @@ sub keine_einheitsziffer {
 }
 my @MUSTER = (
     # --- Namen, die in diesem Projekt vorkommen --------------------------
-    [ qr/gregor/i,                      'Vorname des Anwenders'                 ],
-    [ qr/czempik/i,                     'Nachname des Anwenders'                ],
-    [ qr/markus/i,                      'Vorname aus den Originalnachrichten'   ],
-    [ qr/bakus/i,                       'Nachname aus den Originalnachrichten'  ],
-    [ qr/noname007/i,                   'Kontoname des Anwenders'               ],
-    [ qr/heimann/i,                     'Personenname aus einem Impressum'      ],
-    [ qr/doctolib/i,                    'Name des Terminportals'                ],
-    [ qr/dernburgstrasse/i,             'Strassenname aus einem Impressum'      ],
-    [ qr/albert-einstein-ring/i,        'Strassenname aus einem Impressum'      ],
+    # Die echten Namen (Anwender, Absender, Impressen) stehen NICHT hier: das
+    # Repo ist oeffentlich (Gregor am 29.10.2026: "solche daten haben jetzt und
+    # in zukunft nicht im oeffentlichen repo zu suchen!"). Sie kommen aus der
+    # lokalen, von Git ignorierten Datei tools/anonym-begriffe.lokal, eine
+    # Zeile je Muster: <Regex><TAB><Klartextname>. Fehlt die Datei, meldet
+    # die Schranke das; die allgemeinen Muster unten wirken trotzdem.
+    [ qr/quarkfeld/i,                   'Probename fuer den Selbsttest'         ],
 
     # --- Postfachanbieter der Originalnachrichten -------------------------
     [ qr/\bweb\.de\b/i,                 'Wirtsname des Absenderpostfachs'       ],
@@ -78,6 +76,20 @@ my @MUSTER = (
     [ qr/\bbu=(?!10000000000\b)\d{6,}/, 'Kontonummer in einer Verfolgungsadresse'],
     [ qr/\bupn=u\d{3}\./,               'Empfaengertoken in einem Zaehlpixel'   ],
 );
+
+# Lokale Ausschlussliste (siehe oben) dazuladen.
+my $LOKAL = 'tools/anonym-begriffe.lokal';
+my $LOKAL_GELADEN = 0;
+if (open(my $lh, '<:raw', $LOKAL)) {
+    while (my $z = <$lh>) {
+        $z =~ s/\r?\n$//;
+        next if $z =~ /^\s*(#|$)/;
+        my ($muster, $was) = split /\t/, $z, 2;
+        push @MUSTER, [ qr/$muster/i, (defined $was && length $was) ? $was : 'Begriff aus der lokalen Liste' ];
+        $LOKAL_GELADEN++;
+    }
+    close($lh);
+}
 
 # E-Mail-Adresse. Bewusst weit gefasst, damit nichts durchrutscht.
 my $ADRESSE = qr/[A-Za-z0-9._%+\-]+\@[A-Za-z0-9.\-]+\.[A-Za-z]{2,}/;
@@ -126,7 +138,7 @@ sub tests {
     my @faelle = (
         # [ Name, Inhalt, erwartet_abgewiesen, Begruendung ]
         [ 'echte Adresse',
-          "From: gregor.czempik\@web.de\r\n", 1,
+          "From: vorname.nachname\@web.de\r\n", 1,
           'eine echte Adresse muss abgewiesen werden' ],
         [ 'Platzhalteradresse',
           "From: absender\@beispiel.invalid\r\n", 0,
@@ -141,10 +153,10 @@ sub tests {
           "<a href=\"mailto:kunde\@firma.de\">schreiben</a>", 1,
           'auch im Rumpf, nicht nur in Kopfzeilen' ],
         [ 'Adresse in einer Empfangszeile',
-          "Received: from a by b for <markus.bakus\@gmx.de>;\r\n", 1,
+          "Received: from a by b for <vorname.nachname\@gmx.de>;\r\n", 1,
           'auch in Received-Zeilen' ],
         [ 'Personenname ohne Adresse',
-          "Geschaeftsfuehrer: Paul Heimann\r\n", 1,
+          "Geschaeftsfuehrer: Paul Quarkfeld\r\n", 1,
           'ein Name allein reicht zur Abweisung' ],
         [ 'Anschrift',
           "Musterfirma GmbH, Irgendweg 3, 14057 Berlin\r\n", 1,
@@ -256,7 +268,9 @@ for my $p (@dateien) {
            @f ? scalar(@f) . ' Beanstandung(en)' : 'sauber';
     push @fehler, @f;
 }
-printf "Gelesen: %d Byte in %d Datei(en)\n\n", $bytes, scalar(@dateien);
+printf "Gelesen: %d Byte in %d Datei(en)\n", $bytes, scalar(@dateien);
+printf "Lokale Ausschlussliste %s: %s\n\n", $LOKAL,
+       $LOKAL_GELADEN ? "$LOKAL_GELADEN Muster" : 'FEHLT - persoenliche Namen werden nicht geprueft';
 
 if (@fehler) {
     print "ROT: " . scalar(@fehler) . " Beanstandung(en)\n";

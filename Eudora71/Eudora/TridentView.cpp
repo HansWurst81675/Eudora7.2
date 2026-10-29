@@ -1609,7 +1609,7 @@ BOOL CTridentView::LoadMessage()
 	// Am Nachbau ist der naheliegende Verdacht bereits WIDERLEGT
 	// (tools/e86-fassung-bauen.pl, tools/e86-messen.ps1): MSHTML verwirft das
 	// <style> der Mail nicht und uebernimmt ihren Hintergrund, gemessen an
-	// allen fuenf Nachrichten aus dem WaipuTV-Postfach.
+	// allen fuenf Nachrichten aus dem <Ordner>-Postfach.
 	if ( (QCLogFileMT::DebugMask & DEBUG_MASK_MISC) != 0 )
 	{
 		CString		szKopie = EudoraDir + "E86-Anzeige.htm";

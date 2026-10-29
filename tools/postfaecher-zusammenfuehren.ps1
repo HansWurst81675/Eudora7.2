@@ -13,7 +13,7 @@
 # WAS ES TUT
 #
 #   1. Nimmt das Mailverzeichnis von 1.0.36 als Grundlage - nur dort stehen
-#      die Persoenlichkeit und die descmap.pce mit GMX und HW_Bxo. Ohne die
+#      die Persoenlichkeit und die descmap.pce mit GMX und <Ordner>. Ohne die
 #      taucht GMX.mbx in der Postfachliste gar nicht auf.
 #   2. Legt In.mbx (1.0.28) und Out.mbx (1.0.32) dazu.
 #   3. Loescht die zugehoerigen .toc - Eudora baut sie beim Start neu auf -

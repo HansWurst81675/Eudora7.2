@@ -4,7 +4,7 @@ Lauf am 14.10.2026 auf `wt/lektor`, nach dem Merge von `origin/e-118_HTML_header
 (`d7439ee6`, schnell vorgespult). Anlass: 7.2.0.90 baut [E-118](../Intern/BEFUNDE.md#e-118) Teil 2
 (eingebettete Bilder beim Hochladen) und [E-121](../Intern/BEFUNDE.md#e-121) (Datenverlust beim
 Verschieben in einen IMAP-Ordner) ein und schreibt [E-122](../Intern/BEFUNDE.md#e-122) auf.
-[E-118](../Intern/BEFUNDE.md#e-118) ist von Gregor an 1.0.89 bestätigt (waipu.tv-Mail), bei der
+[E-118](../Intern/BEFUNDE.md#e-118) ist von Gregor an 1.0.89 bestätigt (Newsletter-Mail), bei der
 SoftMaker-Mail fehlten an 1.0.89 die eingebetteten Bilder.
 
 **Umfang aus der Quelle:** `git ls-files '*.md'` ohne `Befunde/` und `Arbeitsweise/`
@@ -36,7 +36,7 @@ Die Liste in `WEITERMACHEN.md` nennt jetzt [E-122](../Intern/BEFUNDE.md#e-122), 
 | Datei, Stelle | stand | jetzt |
 |---|---|---|
 | `ZIEL.md`, Maßstab 7.2.1.0, Zeile [E-118](../Intern/BEFUNDE.md#e-118) | *„eingebaut in 7.2.0.89, von Gregor … bestätigt“* | dazu *„Teil 2, eingebettete Bilder, eingebaut in 7.2.0.90, noch nicht bestätigt“* |
-| `TESTPLAN.md` C5, Zeile [E-118](../Intern/BEFUNDE.md#e-118) (✅) | nur *„bestätigt 14.10.2026 an 1.0.89“*, obwohl der Handgriff „Bilder“ verlangt | dazu *„(waipu.tv-Mail). **Nicht bestanden** bei der SoftMaker-Mail … Teil 2, zu prüfen an 1.0.90“* |
+| `TESTPLAN.md` C5, Zeile [E-118](../Intern/BEFUNDE.md#e-118) (✅) | nur *„bestätigt 14.10.2026 an 1.0.89“*, obwohl der Handgriff „Bilder“ verlangt | dazu *„(Newsletter-Mail). **Nicht bestanden** bei der SoftMaker-Mail … Teil 2, zu prüfen an 1.0.90“* |
 | `README.md`, bekannte Fehler, [E-118](../Intern/BEFUNDE.md#e-118) | *„von Gregor noch nicht bestätigt“* | *„von Gregor am 14.10.2026 an 1.0.89 bestätigt“*; Satz zu Teil 2 mit *„am IMAP-Prüfserver gemessen, von Gregor noch nicht bestätigt“* |
 | `WEITERMACHEN.md`, Zeile *Paket 1.0.89* | *„von Gregor noch nicht getestet“* | getestet am 14.10.2026, [E-118](../Intern/BEFUNDE.md#e-118) bestätigt, SoftMaker-Bilder fehlten, [E-105](../Intern/BEFUNDE.md#e-105) noch nicht geprüft |
 | `Releases/PAKETE.md`, 1.0.89 | keine Zeile zu Gregors Test | Zeile *„Gregors Test, 14.10.2026“* wie bei 1.0.86/1.0.87 |

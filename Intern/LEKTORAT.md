@@ -1309,7 +1309,7 @@ vor dem Einbau zeigten ([L-33.3](../Befunde/LEKTOR-33.md#l-33.3)).
 
 Der Kern: [E-95](BEFUNDE.md#e-95) und [E-96](BEFUNDE.md#e-96) bleiben offen. Gregors Bestätigung von
 [E-112](BEFUNDE.md#e-112) an 1.0.86 gilt einem Logo in der Kleinanzeigen-Nachricht, nicht den
-zerschnittenen Doctolib-Bildern und nicht mehreren Bildern verschiedener Höhe
+zerschnittenen Bildern der Werbemail-A und nicht mehreren Bildern verschiedener Höhe
 ([L-33.4](../Befunde/LEKTOR-33.md#l-33.4)); der C3-Handgriff im Testplan nennt aber das E-112-Kriterium
 ([L-33.5](../Befunde/LEKTOR-33.md#l-33.5)). Offen außerdem: `release-veroeffentlichen.ps1` schreibt Ortszeit
 und hängt hinter ein Blockzitat ([L-33.6](../Befunde/LEKTOR-33.md#l-33.6)).

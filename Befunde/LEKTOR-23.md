@@ -4,8 +4,8 @@ Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Alle drei Mä
 
 
 ## Bestätigt (gemessen)
-- In.mbx Fall 06: vorher 4 Zeilen (`bestel` / ` len und 1` / ` 5 Prozent sparen bis zum Wochenend` / ` e!`), nachher eine Zeile `Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wochenende!`.
-- In.toc: vorher `Pruefung E-94: Toner bestel`, nachher `... bis zum Wo`.
+- In.mbx Fall 06: vorher 4 Zeilen (`bestel` / ` len und 1` / ` 5 Prozent sparen bis zum Wochenend` / ` e!`), nachher eine Zeile `Pruefung E-94: Ware bestellen und 15 Prozent sparen bis zum Wochenende!`.
+- In.toc: vorher `Pruefung E-94: Ware bestel`, nachher `... bis zum Wo`.
 - attach: je 7 Dateien, alle mit .pdf; eudora.log Version 7.2.0.83 / 7.2.0.84.
 - tests84.txt: 188 Tests, 188 bestanden. Version.h 7.2.0.84, VERSION 1.0.84, Eudora.exe FileVersion 7.2.0.84 (14:03:59).
 - offene-befunde.pl: 28/28, "deckt". doku-pruefen.pl: kein Widerspruch; nur Hinweise (PORTIERUNG.md, Testdaten/README.md, tools/WERKZEUGE.md, tools/ZWEIGE.md, tools/pruefdaten/LIESMICH.md nennen 7.2.0.84 nicht).

@@ -13,7 +13,7 @@ E-89 Bilder im Editor: gesamt=25 unveraendert=22 aus-CSS=0 Vorgabe=3
      gedeckelt=0 geaendert=1 Bytes vorher=62057 nachher=62105
 ```
 
-**`aus-CSS=0`** — in dieser Nachricht (FairToner.de, *„Jetzt bestellen: 10 %
+**`aus-CSS=0`** — in dieser Nachricht (Werbemail-B, *„Jetzt bestellen: 10 %
 Rabatt …"*) hatte **kein einziges** Bild seine Größe im CSS. **`gedeckelt=0`** —
 keines war zu breit. **22 von 25** trugen bereits brauchbare Attribute. Die
 Umschrift hat 48 Bytes von 62057 geändert, und die Bilder überlappen trotzdem.
@@ -82,7 +82,7 @@ if (style->ascent < embed_ptr->height)
 **Der HTML-Leser wirft genau diesen Wert wieder weg.** Ein 150 Bildpunkte hohes
 Bild sitzt dann in einer Zeile, die nur so hoch ist wie der Text — und deckt
 die Zeilen darüber zu. Das ist genau das Bild, das Gregor geschickt hat:
-Tonerkartusche über *„Artikelnummer"* und *„Nachbestellung mit Order-No"*.
+Produktbild über *„Artikelnummer"* und *„Nachbestellung mit Order-No"*.
 
 **Kein Portierungsfehler.** Die Stelle ist in allen vier Fassungen im Repo
 Zeichen für Zeichen gleich: `Eudora71/Eudora/PGHTMIMP.CPP:2109`,

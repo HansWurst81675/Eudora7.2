@@ -1127,7 +1127,7 @@ E-123 Warteschlange: konto=1 eintraege=1 zustand=0 nur-belegt=0 laeuft=0 uebertr
 ```
 
 **Ein Eintrag in der Warteschlange, gezählt als null.** In `actionqueue.dat`
-stand er: `<ActionType>transfersame</ActionType>`, `INBOX` → `HW_Box`, fünf
+stand er: `<ActionType>transfersame</ActionType>`, `INBOX` → `<Ordner>`, fünf
 Nachrichten.
 
 **Die Ursache** (`ImapActionQueue.cpp:4007` und `:3768`): gezählt wurde
@@ -1530,7 +1530,7 @@ Derselbe Stand wie 7.2.0.106, nur mit dem Grundtext *„message text is empty“
 
 ## 7.2.0.89 — HTML-Mail im IMAP-Ordner behält ihren Typ (E-118) — **nicht einzeln veröffentlicht, enthalten in `v1.0.101`, Zweig `e-118_HTML_header`**
 
-**Von Gregor am 14.10.2026 an 1.0.89 bestätigt** (waipu.tv-Mail in den IMAP-Ordner verschoben, erscheint als HTML; *„main von in box in die imap box verschoben“*).
+**Von Gregor am 14.10.2026 an 1.0.89 bestätigt** (Newsletter-Mail in den IMAP-Ordner verschoben, erscheint als HTML; *„main von in box in die imap box verschoben“*).
 
 **[E-118](Intern/BEFUNDE.md#e-118):** Eudora legt eine empfangene HTML-Mail lokal als `<x-html> … </x-html>` ab. Beim Hochladen in einen IMAP-Ordner (`EuImap/src/ImapAppend.cpp`) wurden alle `Content-*`-Köpfe verworfen und für den Text keiner (einteilig) bzw. fest `text/plain` (mehrteilig) geschrieben; der Server zeigte den HTML-Quelltext samt Hülle. Jetzt erkennt `E118Huelle` die Hülle, streift sie ab und schreibt `Content-Type: text/html` mit Zeichensatz; ohne Hülle `text/plain` mit Zeichensatz; bei Bytes über 0x7F `Content-Transfer-Encoding: 8bit`. Test zuerst: `Tests/TestE118.cpp`, Testsuite **207/207**, Gegentest mit verstellter Erkennung 2 rot. **Am laufenden Programm gemessen (14.10.2026)** am IMAP-Prüfserver (`tools/imap-pruefserver.pl --ablage`, neu mit `APPEND`), Weg: POP-Abruf, Filter überträgt in den IMAP-Ordner `Ablage` (`C:\Temp\E118`): 7.2.0.89 lädt `Content-Type: text/html; charset="iso-8859-1"` und `Content-Transfer-Encoding: 8bit` hoch, ohne `<x-html>`, Umlaut-Bytes unverändert; mit Euro-Zeichen (0x80) `charset="windows-1252"`. Gegenprobe 7.2.0.88 (`C:\Temp\E118-0088`): kein `Content-Type`, `<x-html>` im Rumpf. Prüfnachrichten `Testdaten/e118-html-in-imap-ordner.eml`, `Testdaten/e118-euro-in-imap-ordner.eml`. **Nachgebessert nach der Messung (MESSSTAND):** Bytes 0x80–0x9F gibt es in ISO-8859-1 nicht; steht eines im Text, heißt der Zeichensatz `windows-1252` (`E118Achtbit` liefert 2). 
 
@@ -1582,8 +1582,8 @@ ohne Fehlerzeile; **Testsuite 188/188**; Abruf der sieben Prüfnachrichten über
 
 | | 7.2.0.83 (`C:\Temp\E94-vorher`) | 7.2.0.84 (`C:\Temp\E94-nachher`) |
 |---|---|---|
-| Fall 06, `Subject:` in `In.mbx` | vier Zeilen, gefaltet bei `bestel` / `len und 1` / `5 Prozent …` / `e!` | **eine Zeile**: `Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wochenende!` |
-| Fall 06, Postfachliste (`In.toc`) | `Pruefung E-94: Toner bestel` | `Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wo` (die übliche Feldlänge) |
+| Fall 06, `Subject:` in `In.mbx` | vier Zeilen, gefaltet bei `bestel` / `len und 1` / `5 Prozent …` / `e!` | **eine Zeile**: `Pruefung E-94: Ware bestellen und 15 Prozent sparen bis zum Wochenende!` |
+| Fall 06, Postfachliste (`In.toc`) | `Pruefung E-94: Ware bestel` | `Pruefung E-94: Ware bestellen und 15 Prozent sparen bis zum Wo` (die übliche Feldlänge) |
 | Fälle 00–05, Anhänge | alle mit vollem Namen und `.pdf` | **unverändert** heil; Fall 03 hat 216 Zeichen (vorher 217), weil `C:\Temp\E94-nachher\…` einen Buchstaben länger ist als `E94-vorher`; mit Pfad je 259 |
 
 Keine `Exception.log`. **PRUEFER-21:** *kann ausgeliefert werden*; sein niedriger
@@ -1593,17 +1593,17 @@ fällt) ist in `05bbaba` behoben.
 **Über IMAP an Gregors Postfach gemessen, 12.10.2026:** Gregor hat mit Paket
 1.0.84 neu abgerufen; ausgewertet von mir, mit seiner Erlaubnis nur gelesen
 (`Imap\Dominant\INBOX\INBOX.mbx`, nur die `Subject:`-Zeilen). Darunter ist
-**die Toner-Nachricht selbst** (web.de-Webmailer). Ihr Betreff steht jetzt in
-**einer** Zeile: `Fw:  [Letzte Chance] Toner  bestellen & 15 % sparen … Nur bis
+**die Werbe-Nachricht selbst** (web.de-Webmailer). Ihr Betreff steht jetzt in
+**einer** Zeile: `Fw:  [Letzte Chance] Ware  bestellen & 15 % sparen … Nur bis
 zum Wochenende! ?` — in seiner 1.0.75-`INBOX.mbx` war dieselbe Nachricht bei
 `& 1|5` und `Nur b|is` gefaltet. Von zwei abgerufenen Nachrichten ist keine mehr
-gefaltet. Das doppelte Leerzeichen in `Toner  bestellen` stand schon in 1.0.75 so
+gefaltet. Das doppelte Leerzeichen in `Ware  bestellen` stand schon in 1.0.75 so
 da (Absender); das Emoji davor erscheint weiter als Fragezeichen bzw. Ersatzzeichen — das ist [**E-90**](Intern/BEFUNDE.md#e-90),
 nicht [E-94](Intern/BEFUNDE.md#e-94).
 
-**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw:  [Letzte Chance] Toner  bestellen & 15 % sparen  – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht [E-94](Intern/BEFUNDE.md#e-94):** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit [E-90](Intern/BEFUNDE.md#e-90), nicht untersucht.
+**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw:  [Letzte Chance] Ware  bestellen & 15 % sparen  – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht [E-94](Intern/BEFUNDE.md#e-94):** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit [E-90](Intern/BEFUNDE.md#e-90), nicht untersucht.
 
-**Gregors Fall:** *„Toner bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
+**Gregors Fall:** *„Ware bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
 — der web.de-Webmailer zerlegt einen langen Betreff in mehrere kodierte Wörter
 (`=?UTF-8?Q?…?=`) und faltet dazwischen, die Grenzen mitten im Wort. Das darf er.
 RFC 2047, 6.2: der Leerraum zwischen zwei benachbarten kodierten Wörtern wird
@@ -1616,7 +1616,7 @@ Leerzeichen.
 | | Ergebnis vor der Behebung |
 |---|---|
 | Testsuite, neu: `Test_GefalteteKodierteWoerter` (POP) und `…Imap` | **rot**: ist `bestel` 0D 0A 20 `len`, soll `bestellen` |
-| Prüfnachricht 06 (`tools/anhang-pruefdaten.pl --pop`), 7.2.0.83, `C:\Temp\E94-vorher` | `In.mbx`: `Subject: Pruefung E-94: Toner bestel` / ` len und 1` / ` 5 Prozent …` — **Postfachliste nur `Pruefung E-94: Toner bestel`**, weil `summary.cpp` nur die erste Zeile einer gefalteten Kopfzeile liest |
+| Prüfnachricht 06 (`tools/anhang-pruefdaten.pl --pop`), 7.2.0.83, `C:\Temp\E94-vorher` | `In.mbx`: `Subject: Pruefung E-94: Ware bestel` / ` len und 1` / ` 5 Prozent …` — **Postfachliste nur `Pruefung E-94: Ware bestel`**, weil `summary.cpp` nur die erste Zeile einer gefalteten Kopfzeile liest |
 
 **Behoben an zwei Stellen, je in POP und IMAP:**
 
@@ -2480,7 +2480,7 @@ dort nicht messbar. **Nur sein Lauf kann sie belegen.**
 
 ## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
 
-> **Zu prüfen:** die Doctolib-Nachricht (oder eine andere mit Logo)
+> **Zu prüfen:** die Werbemail-A (oder eine andere mit Logo)
 > **weiterleiten** und ins Verfassenfenster sehen. Liegt noch etwas über dem
 > Text? Falls ja: `eudora.log` schicken — die Antwort steht dann darin.
 
@@ -2492,7 +2492,7 @@ nachgestellt — 23.537 Byte, byte-genau aus dem Postfach gelöst, fünf Bilder.
 was im HTML steht:
 
 ```
-attr=0x0     embed=0x0     ascent=13     ← das Doctolib-Logo
+attr=0x0     embed=0x0     ascent=13     ← das Logo der Werbemail-A
 attr=80x80   embed=80x80   ascent=80
 attr=98x35   embed=98x35   ascent=35
 attr=117x35  embed=117x35  ascent=35
@@ -2537,13 +2537,13 @@ Gemessen, beide Fälle, mit derselben Nachricht:
 | Bild **nicht ladbar** | `ascent=13` | `ascent=48` |
 
 **Das ist nicht der Notbehelf von früher.** Bis 7.2.0.62 wurde die
-*Bildgröße* auf 20×20 geraten — das hat Gregors Tonerkartusche zu einem
+*Bildgröße* auf 20×20 geraten — das hat Gregors Produktbild zu einem
 Streifen gequetscht und wurde deshalb entfernt. Hier wird **nur die Zeile**
 hoch genug gemacht; an Breite und Höhe des Bildes ändert sich nichts, es kann
 sich nichts verzerren.
 
 Die 48 sind begründet, nicht geraten: groß genug, dass die üblichen Kopfbilder
-einer Werbemail nicht mehr in den Text ragen — das Doctolib-Logo ist 60 hoch,
+einer Werbemail nicht mehr in den Text ragen — das Logo der Werbemail-A ist 60 hoch,
 die vier anderen Bilder derselben Nachricht 24 bis 80 — und klein genug, dass
 eine Zeile mit einem kleinen Symbol keine auffällige Lücke reißt.
 
@@ -2584,7 +2584,7 @@ als Zeichenkette. Im Protokoll standen zwölf Zeilen der Form
 als `cid:`, `data:` oder `http:` kommt — und genau diese Frage stand bei [E-95](Intern/BEFUNDE.md#e-95)
 vier Fassungen lang offen.
 
-Jetzt: `src=https://www.doctolib.fr/email_la…`
+Jetzt: `src=https://absender.invalid/email_la…`
 
 ### Die Kopfzeilen der gespeicherten Nachricht kleben nicht mehr zusammen (E-104)
 
@@ -2858,7 +2858,7 @@ in [BEFUNDE.md](Intern/BEFUNDE.md).
 
 ## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
 
-> **Zu prüfen:** Doctolib- und FairToner-Nachricht weiterleiten **und**
+> **Zu prüfen:** Werbemail-A- und Werbemail-B weiterleiten **und**
 > beantworten. Die Bilder müssen in ihrer **wirklichen** Größe dastehen und der
 > Text **frei** bleiben.
 
@@ -2878,7 +2878,7 @@ attr=80x80   ascent=80
 ```
 
 In derselben Messung stand aber auch `attr=20x20` — und genau das war auf
-seinem Bild die Tonerkartusche: **kein abgeschnittenes Bild, sondern eines, das
+seinem Bild die Produktbild: **kein abgeschnittenes Bild, sondern eines, das
 wir auf 20×20 gequetscht hatten.**
 
 Paige kennt die wirkliche Größe, sobald es die Datei geladen hat; die Spalte
@@ -2902,7 +2902,7 @@ mehr.
 
 ## 7.2.0.62 — jedes Bild bekam die Zeilenhöhe des ersten (E-96)
 
-> **Zu prüfen:** die Doctolib-Nachricht weiterleiten. Die Bilder müssen
+> **Zu prüfen:** die Werbemail-A weiterleiten. Die Bilder müssen
 > **vollständig** dastehen und der Text **frei** bleiben. Falls nicht: im
 > Protokoll steht bei `LogLevel=58527` je Bild eine Zeile
 > `E-95 Bild: attr=… embed=… ascent=… text-asc=…` — die sagt, wo es klemmt.
@@ -2931,7 +2931,7 @@ solange noch kein Bild eingefügt wurde.
 
 **Das erklärt, warum vier Fassungen lang jede Änderung an der Bildgröße mal
 half und mal nicht:** gedreht wurde am ersten Bild, alle folgenden übernahmen
-dessen Höhe blind. Bei der Doctolib-Nachricht steht der kleine Schriftzug vor
+dessen Höhe blind. Bei der Werbemail-A steht der kleine Schriftzug vor
 dem großen blauen Kreis — deshalb wurde dort abgeschnitten.
 
 **Kein Portierungsfehler:** die Stelle ist in allen vier Kopien im Repo
@@ -2948,16 +2948,16 @@ hier eine eigene Regel gibt: *das Paket gegen den Bau messen.*
 
 ## 7.2.0.61 — eingebettete und externe Bilder werden endlich unterschieden (E-95)
 
-> **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Die
+> **Noch nicht bestätigt.** Zu prüfen: die Werbemail-A weiterleiten. Die
 > Bilder müssen **vollständig** dastehen und der Text **frei** bleiben — beides
 > zugleich, zum ersten Mal.
 
-**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Doctolib-Kreis war
+**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Kreis im Logo der Werbemail-A war
 **blau**, nicht grau. Paige hatte das Bild also **geladen** und kannte seine
 echte Größe genau — es ist in der Nachricht **eingebettet** (`cid:`). Unser
 `height="20"` überschrieb diese Größe und schnitt das Bild ab.
 
-Bei der FairToner-Nachricht dagegen standen graue Kästen: dort sind die Bilder
+Bei der Werbemail-B dagegen standen graue Kästen: dort sind die Bilder
 **extern** (`http://…`), werden beim Verfassen nicht geholt, und Paige weiß
 nichts über ihre Größe. **Nur dort hilft eine Vorgabe.**
 
@@ -2993,7 +2993,7 @@ Die Spurmarke nennt jetzt `eingebettet=N`.
 
 ## 7.2.0.60 — ein kleines Vorgabemaß für Bilder ohne Höhe (E-89, dritter Anlauf)
 
-> **Noch nicht bestätigt.** Zu prüfen: die Doctolib-Nachricht weiterleiten. Der
+> **Noch nicht bestätigt.** Zu prüfen: die Werbemail-A weiterleiten. Der
 > blaue Kreis darf den Verifizierungscode nicht mehr zudecken.
 
 **Warum es einen dritten Anlauf braucht — wir haben uns selbst im Weg
@@ -3004,7 +3004,7 @@ aus der Bilddatei. Fehlt das Attribut, ist er null, der ganze Block wird
 zu.
 
 Die 200×90-Vorgabe, die in 7.2.0.58 **entfernt** wurde, war das, was diesen Wert
-bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Doctolib-Nachricht:
+bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Werbemail-A:
 
 ```
 E-89 Bilder im Editor: gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0
@@ -3022,7 +3022,7 @@ Drei Anläufe an einem Tag: 200×90 (zu groß), gar nichts (Text wird zugedeckt)
 20×20. Gregors Entscheidung: *„ok, option a"*.
 
 **Von Gregor an 1.0.60 gemessen — der Text ist frei, aber die Bilder werden
-zerschnitten ([E-95](Intern/BEFUNDE.md#e-95)).** Auf seinem Bild ist der blaue Doctolib-Kreis **blau**,
+zerschnitten ([E-95](Intern/BEFUNDE.md#e-95)).** Auf seinem Bild ist der blaue Kreis im Logo der Werbemail-A **blau**,
 nicht grau: Paige hat das Bild geladen und kennt seine echte Größe. Es ist
 **eingebettet** (`cid:`), und unser `height="20"` schneidet es ab. Bei externen
 Bildern (`http:`) ist die Vorgabe dagegen richtig — dort weiß Paige nichts. Die
@@ -3031,7 +3031,7 @@ Unterscheidung fehlt und kommt in 7.2.0.61.
 **Tests: 150 von 150.**
 
 **Neu aufgeschrieben, nicht behoben:** die Betreffzeile wird mitten im Wort
-umbrochen (`Toner bestel len`, `Wochenend e!`). Das sind **nicht** die Stellen, an
+umbrochen (`Ware bestel len`, `Wochenend e!`). Das sind **nicht** die Stellen, an
 denen Emoji entfernt wurden — `15 %` steht korrekt zusammen — die Messung dazu steht bei [**E-90**](Intern/BEFUNDE.md#e-90) (**offen**, als Grenze eingestuft und zurückgestellt, nicht behoben). Ursache
 noch ungemessen, siehe [BEFUNDE.md](Intern/BEFUNDE.md) unter [E-94](Intern/BEFUNDE.md#e-94).
 
@@ -3086,7 +3086,7 @@ die die neue Regel den eigenen Text verschlucken könnte.
 ## 7.2.0.58 — die Bildhöhe zählt wieder für die Zeilenhöhe (E-89)
 
 > **Von Gregor am 14.09.2026 an 1.0.58 bestätigt.** Auf seinem Bild steht die
-> Tonerkartusche sauber über ihrem Text, „Artikelnummer" und „Nachbestellung
+> Produktbild sauber über ihrem Text, „Artikelnummer" und „Nachbestellung
 > mit Order No" sind frei und lesbar. Auf die Rückfrage, wo noch etwas
 > überlappe: *„keine überlappung."*
 
@@ -3128,7 +3128,7 @@ festhielten; sie prüfen jetzt das Gegenteil.
 ## 7.2.0.57 — der Versuch, die Bilder im Verfassenfenster zu bändigen (E-89, **wirkt nicht**)
 
 > **Von Gregor am 14.09.2026 an 1.0.57 gemessen und abgelehnt:** *„findest du,
-> es ist leserlich? ich nicht!"* Auf seinem Bild liegt die Tonerkartusche über
+> es ist leserlich? ich nicht!"* Auf seinem Bild liegt die Produktbild über
 > „Artikelnummer" und „Nachbestellung mit Order-No", darunter steht ein leerer
 > grauer Kasten. **Die Spurmarke aus seinem Lauf widerlegt die angenommene
 > Ursache:** `gesamt=25 unveraendert=22 aus-CSS=0 Vorgabe=3 gedeckelt=0` — kein
@@ -4302,11 +4302,11 @@ geprüft wurde:
 
 ```
 E-64 FilterMsg: Liste=1 Filter=3 verlangt WhenToApply=4 vorhandene Masken=[5,5,5]
-E-64 Match=0 Filter="From:angebot@waipu.invalid" … Betreff="Hans, unsere TV-Empfehlungen der Woche"
+E-64 Match=0 Filter="From:angebot@absender.invalid" … Betreff="<Betreff eines Newsletters>"
 ```
 
-`Match=0` war korrekt: die Nachricht kommt von `neues@waipu.invalid`, der
-Filter sucht `angebot@waipu.invalid`. Gregors eigenes Urteil dazu:
+`Match=0` war korrekt: die Nachricht kommt von `neues@absender.invalid`, der
+Filter sucht `angebot@absender.invalid`. Gregors eigenes Urteil dazu:
 *„fehlalarm: die mail adresse war im filter eine andere"*. Damit ist [**E-64**](Intern/BEFUNDE.md#e-64)
 an einem Fall mit drei Filtern und mehreren Nachrichten bestätigt.
 
@@ -4354,7 +4354,7 @@ wuchs trotzdem von 174 196 auf 501 987 Bytes.
 
 **Gegenprobe am Bestand:** von zwölf Nachrichten in `Junk.mbx` haben zehn
 keinen Filtergrund. Sechs davon kommen von `konto-freenet@gregor.invalid`
-— für die sieht Gregors zweiter Filter ausdrücklich `HW_Bxo.mbx` als Ziel
+— für die sieht Gregors zweiter Filter ausdrücklich `<Ordner>.mbx` als Ziel
 vor. Diese Datei ist 0 Bytes groß.
 
 ### E-75 — Strg+J war auf „Junk" umgelegt worden
@@ -5161,7 +5161,7 @@ Anordnungsdurchlauf zog es gerade. Das war „das Fenster verändern".
 Behoben, indem der Balken in **`OnSize`** entsteht statt in `OnSizeParent`:
 `WM_SIZE` kommt, nachdem das Fenster seine Größe hat.
 
-Die doppelten Karten in seinem Bildschirmfoto — *„In"* und *„markus bakus,
+Die doppelten Karten in seinem Bildschirmfoto — *„In"* und *„<Name>,
 10:02"* je zweimal — kamen aus derselben Wurzel: `RecalcLayout` ordnet neu an,
 erklärt aber nichts für ungültig, was an der alten Stelle stand.
 `OnSplitterMoved` frischt jetzt mit
@@ -5687,8 +5687,8 @@ stehen ließ.
 
 Am 07.09.2026 mit dieser Fassung: *„mail können jetzt abgeschickt werden."*
 Sein Bildschirmfoto zeigt den vollen Kreis — im Postfach *Out* die gesendete
-Nachricht „test von freenet nach GMX" um 10:01, im Postfach *In* die Antwort
-darauf um 10:02: „Re: test von freenet nach GMX — ja, ist da." Mit Zitat der
+Nachricht „<eigene Testmail>" um 10:01, im Postfach *In* die Antwort
+darauf um 10:02: „Re: <eigene Testmail>" Mit Zitat der
 eigenen Zeile.
 
 **Damit sind Kriterium 5 und 6 aus [ZIEL.md](ZIEL.md) erfüllt.** Von den neun

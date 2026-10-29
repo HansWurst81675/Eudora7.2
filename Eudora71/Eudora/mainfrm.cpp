@@ -8435,7 +8435,7 @@ void CMainFrame::InitJunkMenus()
 			//
 			// Gregor filterte mit Strg+J, wie er es seit jeher tat, und
 			// junkte in Wahrheit neun Nachrichten nach Junk.mbx - sechs
-			// davon gegen seinen eigenen Filter, der HW_Bxo.mbx als Ziel
+			// davon gegen seinen eigenen Filter, der <Ordner>.mbx als Ziel
 			// hatte. Im Protokoll fehlt zu diesem Lauf jede E-64-Marke:
 			// FilterMsg wurde nie gerufen.
 			//

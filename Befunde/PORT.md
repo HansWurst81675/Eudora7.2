@@ -205,7 +205,7 @@ Falle, wenn man beides setzt und nur eines ändert.
 ### 4. Der Anmeldefehler — hängt **nicht** am Port
 
 Der Verdacht aus dem Auftrag war: Eudora kürzt `POPAccount` an der falschen
-Stelle und sendet `adventskalender-mails` statt der vollen Adresse.
+Stelle und sendet `<Testkonto>` statt der vollen Adresse.
 **Das ist nachgesehen und trifft nicht zu.**
 
 `POPSession.cpp:2153-2160`:

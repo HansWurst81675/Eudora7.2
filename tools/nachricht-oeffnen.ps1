@@ -107,11 +107,17 @@ $sammeln = [Fenster+EnumProc] {
 # Dem Start Zeit lassen: die Postfachfenster aus [Settings] OpenWindow*
 # erscheinen erst, wenn das Hauptfenster steht. Der erste Anlauf hat zu
 # frueh gemessen und gar kein Postfachfenster gefunden.
+# Postfachnamen, an denen ein Postfachfenster erkannt wird. Nur die Standard-
+# postfaecher - Gregors eigene Ordnernamen stehen nicht im oeffentlichen Repo
+# (29.10.2026). Weitere Namen bei Bedarf ueber die Umgebungsvariable
+# EUDORA_POSTFAECHER, durch | getrennt.
+$postfachMuster = '^(In|Out|Junk|Trash' + $(if ($env:EUDORA_POSTFAECHER) { '|' + $env:EUDORA_POSTFAECHER } else { '' }) + ')$'
+
 $warten = 0
 do {
     $script:gefunden = @()
     [void][Fenster]::EnumWindows($sammeln, [IntPtr]::Zero)
-    $da = @($script:gefunden | Where-Object { $_.Sicht -and $_.Titel -match '^(In|Out|Junk|Trash|GMX|HW_Bxo|WaipuTV)$' })
+    $da = @($script:gefunden | Where-Object { $_.Sicht -and $_.Titel -match $postfachMuster })
     if ($da.Count -gt 0) { break }
     Start-Sleep -Milliseconds 700
     $warten++
@@ -146,7 +152,7 @@ $WM_LBUTTONDBLCLK = 0x0203
 # gesucht statt ueber den Klassennamen.
 $postfach = @($script:gefunden | Where-Object {
     $_.Sicht -and $_.Klasse -match '^Afx:' -and
-    $_.Titel -match '^(In|Out|Junk|Trash|GMX|HW_Bxo|WaipuTV)$'
+    $_.Titel -match $postfachMuster
 }) | Select-Object -First 1
 
 $ziel = $null

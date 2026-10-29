@@ -147,7 +147,7 @@ Erklärung, warum drei Fassungen hintereinander danebengingen.
 | | |
 |---|---|
 | **Gemessen** | `README.md`, Abschnitt *Wo die Grenzen liegen*: **[E-98](../Intern/BEFUNDE.md#e-98)** und **[E-77](../Intern/BEFUNDE.md#e-77)** stehen da, **[E-94](../Intern/BEFUNDE.md#e-94)** und **[E-105](../Intern/BEFUNDE.md#e-105)** nicht (`grep -c 'E-94' README.md` → 0). Ebenso im CHANGELOG-Abschnitt *Noch offen*: **[E-105](../Intern/BEFUNDE.md#e-105)**, **[E-109](../Intern/BEFUNDE.md#e-109)** und die sieben LF-Weiterleitungen fehlten |
-| **Warum [E-94](../Intern/BEFUNDE.md#e-94) dorthin gehört** | Der Fehler trifft den **Empfänger**, nicht den Absender: `Toner bestel len`, `Wochenend e!` in der Betreffzeile jeder gesendeten Nachricht. Wer das Programm benutzt, sieht es selbst nie |
+| **Warum [E-94](../Intern/BEFUNDE.md#e-94) dorthin gehört** | Der Fehler trifft den **Empfänger**, nicht den Absender: `Ware bestel len`, `Wochenend e!` in der Betreffzeile jeder gesendeten Nachricht. Wer das Programm benutzt, sieht es selbst nie |
 | **Berichtigt** | **ja**: `README.md` um [E-94](../Intern/BEFUNDE.md#e-94) und [E-105](../Intern/BEFUNDE.md#e-105) ergänzt, `CHANGELOG.md` *Noch offen* um [E-109](../Intern/BEFUNDE.md#e-109), [E-105](../Intern/BEFUNDE.md#e-105) und die LF-Weiterleitungen (letztere ausdrücklich **ohne** Nummer, weil noch nicht entschieden ist, ob Eudora sie verursacht) |
 
 ---
@@ -291,7 +291,7 @@ Ohne diese Unterscheidung liest sich [E-110](../Intern/BEFUNDE.md#e-110) wie ein
 
 | | |
 |---|---|
-| **Belegt** | Lesefenster vollständig, Verfassenfenster teilweise grau; Fassung `7.2.0.72 / 1.0.72+e2f2d07`, Nachricht `Re: FW: Durchbrechen Sie die Eskalations-Spirale` |
+| **Belegt** | Lesefenster vollständig, Verfassenfenster teilweise grau; Fassung `7.2.0.72 / 1.0.72+e2f2d07`, Nachricht `Re: FW: <Betreff>` |
 | **Ausdrücklich kein Rückschritt** | Die Kästen haben die **richtige Größe**, der Text liegt **nicht** darüber — **[E-103](../Intern/BEFUNDE.md#e-103) und [E-106](../Intern/BEFUNDE.md#e-106) arbeiten.** Dieser Satz steht im Eintrag, damit beim nächsten Mal nicht am falschen Ende gesucht wird |
 | **Verdacht, als ungemessen gekennzeichnet** | Die Gabelung `PgEmbeddedImage.cpp:362-415`, am Quelltext nachgeschlagen und Zeile für Zeile bestätigt: MIME-Speicher (`GetPartAsFile`, `:382`) → `if (!(*filePath))` (`:387`) → Netzabruf nur bei `bAllowThreadedFetch` (`:389`, `:401`), sonst `fRet = true` mit QUALCOMMs Kommentar (`:407-414`). Dazu `eCallback`: `false` bei `EMBED_PREPARE_IMAGE` (`:268`), `true` bei `EMBED_LOAD_IMAGE` (`:280`) |
 | **Eine zweite Gabelung, selbst gefunden** | Der MIME-Speicher-Weg hängt an `pSB->pMessage` (`:376-377`), gesetzt in `PgMsgView.cpp:181-182`. Bei einer **Antwort** entsteht das zitierte HTML neu über `QuoteText`, die `cid:`-Verweise zeigen aber auf den MIME-Speicher der **Original**nachricht. **Und die naheliegende Abkürzung ist widerlegt:** `PgStuffBucket::kMessage` deckt laut Kommentar (`PgStuffBucket.h:21`) *„comp, read, preview"* — das Verfassenfenster fällt an der Abfrage in `:362` also **nicht** heraus. Entschieden wird es an `pMessage`, nicht an `kind` |

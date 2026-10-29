@@ -2151,7 +2151,7 @@ void PaigeHTMLImportFilter::PopStyle (pg_boolean bFontTag /*= false*/)
 //
 // 48 Punkte, und die Zahl ist begruendet, nicht geraten: sie ist gross genug,
 // dass die ueblichen Kopfbilder einer Werbemail nicht mehr in den Text
-// hineinragen - Gregors Doctolib-Logo ist 60 hoch, die vier anderen Bilder
+// hineinragen - Gregors Logo der Werbemail-A ist 60 hoch, die vier anderen Bilder
 // derselben Nachricht 24 bis 80 - und klein genug, dass eine Zeile mit einem
 // kleinen Symbol keine auffaellige Luecke reisst.
 //
@@ -2506,7 +2506,7 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 	               // Hierher kommt, was im HTML kein height traegt. Die Zeile
 	               // behaelt dann die Texthoehe von 13 Punkten, waehrend das
 	               // Bild sehr wohl gezeichnet wird. Gemessen am 17.09.2026 an
-	               // Gregors Doctolib-Nachricht, dasselbe Bild zweimal:
+	               // Gregors Werbemail-A, dasselbe Bild zweimal:
 	               //
 	               //   E-95 Bild:      attr=0x0 embed=0x0 ascent=13
 	               //   E-103 Nachtrag: quelle=202x60
@@ -2528,7 +2528,7 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 	               // Deshalb wird hier eine MINDESTZEILENHOEHE reserviert.
 	               //
 	               // WAS DAS NICHT IST: der Notbehelf 20x20 bis 7.2.0.62. Der
-	               // hat die BILDGROESSE geraten und Gregors Tonerkartusche zu
+	               // hat die BILDGROESSE geraten und Gregors Produktbild zu
 	               // einem Streifen gequetscht. Hier wird nur die ZEILE hoch
 	               // genug gemacht; an Breite und Hoehe des Bildes aendert
 	               // sich nichts, es kann sich nichts verzerren.
@@ -3538,7 +3538,7 @@ void PaigeHTMLImportFilter::ProcessEmbed (void)
    //
    // Das erklaert beide Symptome, die vier Fassungen lang im Kreis gefuehrt
    // haben: ist das erste Bild KLEIN und ein spaeteres gross, wird das
-   // spaetere abgeschnitten (Gregors Doctolib-Nachricht, wo der Schriftzug
+   // spaetere abgeschnitten (Gregors Werbemail-A, wo der Schriftzug
    // vor dem blauen Kreis kommt). Ist das erste GROSS, klafft danach
    // Leerraum. Und es erklaert, warum jede Aenderung an der Bildgroesse mal
    // half und mal nicht - wir haben am ersten Bild gedreht, und der Rest
