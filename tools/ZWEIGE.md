@@ -53,7 +53,9 @@ e-105-doppelte-bilder
 `Eudora71/Version.h`, im CHANGELOG und in `Releases/PAKETE.md` — viermal; ein
 fünftes Mal im Zweignamen hilft niemandem und ist beim nächsten Hochzählen
 falsch. Ein Zweig, der **nur** eine Fassung schnürt und keinen Befund behebt,
-heißt weiter `release_1.0.NN`; das ist der Ausnahmefall, nicht die Regel.
+heißt `release-7.2.1` (Gregor am 29.10.2026: *„release-7.2.1 als zweigname
+weiterverwenden“*; bis 1.0.127 hieß er `release_1.0.NN`); das ist der
+Ausnahmefall, nicht die Regel.
 
 **Gibt es noch keine Kennung**, wird der Befund zuerst in `BEFUNDE.md`
 angelegt — vorher `perl tools/befund-suchen.pl <Datei oder Funktion>`, sonst

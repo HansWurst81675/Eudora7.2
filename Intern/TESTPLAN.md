@@ -13,7 +13,8 @@
 > testen … auch andere dinge, nicht nur e-166“*); der Maßstab in
 > [ZIEL.md](../ZIEL.md) nennt vor der Marke die neun Kriterien an einem
 > frischen Paket ([Teil 1](#teil-1-kriterien) des
-> Plans zu 7.2.0.123). Deine Ergebnisse kommen hierher. Erst mit deinem Ja
+> Plans zu 7.2.0.123, acht Zeilen K0/K1 bis K8; als Titelzeile gilt dort die
+> oben genannte von 7.2.1.128, nicht 7.2.0.123). Deine Ergebnisse kommen hierher. Erst mit deinem Ja
 > wird es als `v7.2.1.128` veröffentlicht.
 > Veröffentlicht ist bis dahin `v1.0.120`. Am Bau vorher geprüft: 314
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
