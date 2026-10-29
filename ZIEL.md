@@ -93,7 +93,12 @@ zurückgestellte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/
 
 **Vor dem Release:** die Tabelle der Kriterien neu messen — geschehen: Gregor
 am 26.10.2026 an 7.2.0.123, [Ergebnistabelle](Intern/TESTPLAN.md#ergebnis-7-2-0-123) —, dann Gregors Test aller neun Kriterien an einem frischen
-Paket, erst danach die Marke. Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` und wird vorher umgestellt ([L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
+Paket, erst danach die Marke. **Für 7.2.1.128 von Gregor am 29.10.2026
+entschieden:** kein eigener Durchgang der neun Kriterien (*„das waren ja auch
+die ursprünglichen kriterien von ganz am anfang an, das ist inzwischen schon
+alles mehrfach getestet und geprüft, läuft stabil.“*); vor der Marke zählen
+sein Test von [E-166](Intern/BEFUNDE.md#e-166) und der weiteren Punkte, die er
+an 7.2.1.128 prüft, und sein Ja ([TESTPLAN](Intern/TESTPLAN.md)). Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` und wird vorher umgestellt ([L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
 
 
 ## Regressionstests — Anordnung vom 22.10.2026
