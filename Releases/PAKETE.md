@@ -896,7 +896,7 @@ Regel, die Newsletter mit `max-width:100%` meinen — auf Gregors Anordnung
 (`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg, statt sie zu entschlüsseln:
 im `%`-Zweig wurde das entschlüsselte Zeichen nach `*output` geschrieben, der
 Zeiger aber nicht weitergerückt — das nächste Zeichen überschrieb es. Aus
-`en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
+`ei%20Beispiel%20Bild.png` wurde `eiBeispielBild.png`, der Server
 antwortete mit **404**, Eudora legte die Fehlerseite ab und zeichnete einen
 grauen Kasten. Zehn von zwanzig Bildern in Gregors Nachricht.
 

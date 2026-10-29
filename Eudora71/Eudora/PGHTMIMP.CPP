@@ -2600,7 +2600,7 @@ pg_boolean PaigeHTMLImportFilter::DoDataTag (short tag, tag_attribute_ptr params
 	               // Format mit %.32s -, und 32 Zeichen reichen bei diesen
 	               // Adressen nicht bis zum Dateinamen. Im Protokoll sahen
 	               // deshalb ALLE Bilder gleich aus
-	               // ("https://004.frnl.de/admin/images"), was wie ein auf 32
+	               // ("https://absender.invalid/bilder"), was wie ein auf 32
 	               // Byte abgeschnittenes URL-Feld aussieht - also wie die
 	               // Ursache. Es war die Messung selbst
 	               // (Arbeitsweise/anzeige-ist-kein-zustand.md).

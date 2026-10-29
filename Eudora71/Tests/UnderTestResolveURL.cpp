@@ -14,8 +14,8 @@
 // Zeichen ueberschrieb es.
 //
 // Gemessen an Gregors Nachricht vom 18.09.2026:
-//   en%20aktuellen%20Verlust.png  ->  enaktuellenVerlust.png   (404)
-//   SVS%20NL%20FW%20(1).jpg       ->  SVSNLFW(1).jpg           (404)
+//   ei%20Beispiel%20Bild.png  ->  eiBeispielBild.png   (404)
+//   Bild%20A%20B%20(1).jpg       ->  BildAB(1).jpg           (404)
 // Zehn von zwanzig Bildern blieben deshalb graue Kaesten (Befund E-110).
 //
 // Das ist reine Zeichenkettenarbeit - Adresse rein, Adresse raus. Kein Paige,

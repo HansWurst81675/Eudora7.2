@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 2dc0ce9e-d597-4bea-8a46-cb21a63838b0
-  modified: 2026-10-29T09:07:27.788Z
+  modified: 2026-10-29T09:44:32.210Z
 ---
 
 Schranke: keine - welcher Name privat ist, erkennt kein Werkzeug; prüfbar wäre nur der Lesezugriff selbst (ein PreToolUse-Haken, der Pfade unter C:/Users/Gregor/Eudora72-*/ außer eudora.log abweist), und eine Änderung an den Einstellungen kann nur Gregor anordnen.
@@ -44,7 +44,7 @@ Zwei Fehler hintereinander. Der erste ist alt: Gregor nannte den Gegenstand (*�
 
 ## Nachtrag 29.10.2026: es war nicht nur die Notiz
 
-Gregor: *„solche daten haben jetzt und in zukunft nicht im öffentlichen repo zu suchen!“* Der Suchlauf danach fand Daten aus seinem Postfach in rund 30 Dateien, angesammelt seit September: Betreffzeilen (eine mit seinem vollen Namen und einem Gesundheitsbezug), Absender- und Firmennamen (darunter ein Arzttermin-Portal), seine Mailadresse, Konto- und Ordnernamen, Message-IDs, ein Ort aus einer Grußzeile — in Befunden, CHANGELOG, Testplan, Prüfberichten, Lehren, **Quelltextkommentaren und Unit-Tests**, und in einem Prüfwerkzeug sein Nachname als Suchmuster. Ersetzt durch Platzhalter (`<Betreff>`, `Werbemail-A`, `<Ordner>`, `<Gregors Adresse>`); die persönlichen Suchmuster liegen jetzt in `tools/anonym-begriffe.lokal` (von Git ignoriert).
+Gregor: *„solche daten haben jetzt und in zukunft nicht im öffentlichen repo zu suchen!“* Der Suchlauf danach fand Daten aus seinem Postfach in vielen Dateien, angesammelt seit September — Kopfzeilen, Namen und Dateinamen aus empfangenen Mails —, in Befunden, CHANGELOG, Testplan, Prüfberichten, Lehren, **Quelltextkommentaren, Unit-Tests und Testdaten**, und in einem Prüfwerkzeug als Suchmuster. Eine Suchliste findet nur, was sie kennt: der LEKTOR fand danach noch Stellen, die in keiner Liste standen. Ersetzt durch Platzhalter (`<Betreff>`, `Werbemail-A`, `<Ordner>`, `<Gregors Adresse>`); die persönlichen Suchmuster liegen jetzt in `tools/anonym-begriffe.lokal` (von Git ignoriert).
 
 - **Auch Quelltext und Tests sind öffentlich.** Ein Kommentar „gemessen an Gregors X-Nachricht“ nennt X nicht beim Namen; ein Test baut keine echte Mail nach, sondern eine erfundene mit `.invalid`-Adressen.
 - **Vor jedem Commit:** `perl tools/pruefe-testdaten-anonym.pl` prüft nur `Testdaten/`; für alles andere die Begriffe aus `tools/anonym-begriffe.lokal` über `git diff --cached` suchen.

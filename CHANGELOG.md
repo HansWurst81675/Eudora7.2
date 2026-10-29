@@ -1662,12 +1662,12 @@ vier Sitzungen ab 12:25, `LogLevel=91295`; ausgewertet von mir, nur gelesen):
 
 | vom Server (BODYSTRUCTURE) | gespeichert als |
 |---|---|
-| `5G-SA-NSA-Analyse_asn1Viewer_20260910.docx` (42) | unverändert, Inhalt `PK` |
-| `5G-SA-NSA-Analyse_asn1Viewer_20260910.pdf` (41) | unverändert, Inhalt `%PDF` |
-| `x_Releases_SIC-25.1.4-ZITiS_…_Archiv_20260918_Sina.tar.zip` (229) | auf 175 gekürzt **mit `.zip`**, voller Pfad 258 — die Windows-Grenze von 260; Inhalt `PK`, 351 502 Byte |
+| `anhang-a-xxxxxxxxxxxxxxxxxxxxxxxxxxxx.docx` (42) | unverändert, Inhalt `PK` |
+| `anhang-a-xxxxxxxxxxxxxxxxxxxxxxxxxxxx.pdf` (41) | unverändert, Inhalt `%PDF` |
+| `x_<langer Name, 229 Zeichen>…_.tar.zip` (229) | auf 175 gekürzt **mit `.zip`**, voller Pfad 258 — die Windows-Grenze von 260; Inhalt `PK`, 351 502 Byte |
 
 Der IMAP-Weg verliert also keine Endung. Was bei einem sehr langen Namen
-wegfällt, ist das Ende des **Stamms** (hier `…_DBAutoUpdate-…Sina.tar`), weil
+wegfällt, ist das Ende des **Stamms** (hier `…<Stammteil>….tar`), weil
 der volle Pfad sonst über 260 Zeichen ginge — vollständig ginge das nur mit
 Langpfaden (`\\?\`). Unter dem gekürzten Namen liegt die Datei inzwischen nicht mehr; im Verzeichnis stehen zwei gleich große Kopien (351 502 Byte, 12:32) unter anderen Namen — vermutlich von Gregor umbenannt, nicht nachgefragt. **Nebenbefund, nicht aus 1.0.83:** zwei PDFs im selben
 Anhangverzeichnis von 08:44/08:45 (vor 1.0.83, laut Log 7.2.0.77), je
@@ -2018,7 +2018,7 @@ entschlüsseln: im `%`-Zweig wurde das entschlüsselte Zeichen nach `*output`
 geschrieben, der Zeiger aber nicht weitergerückt — das nächste Zeichen
 überschrieb es. Das Zeichen war nicht falsch, sondern **weg**.
 
-Aus `en%20aktuellen%20Verlust.png` wurde `enaktuellenVerlust.png`, der Server
+Aus `ei%20Beispiel%20Bild.png` wurde `eiBeispielBild.png`, der Server
 antwortete mit **404**, Eudora legte die Fehlerseite ab, erkannte sie
 richtigerweise nicht als Bild und zeichnete einen grauen Kasten. **Zehn von
 zwanzig Bildern** in Gregors Nachricht.
@@ -2070,8 +2070,8 @@ weiterhin `v1.0.72`.
 werden geladen (`daten` gesetzt, `art=9`, jeweils beim **zweiten** Ruf),
 **fünf** geben auf (`ok=0 daten=0`, nach zwei bis fünf Versuchen). Die fünf
 Aufgebenden sind nachweislich die grauen Kästen: der Kasten unmittelbar über
-*„Sven von Storch"* ist `SvSunterschriftbeschnitten.jpg` (250×96), der nach
-*„Jetzt hier spenden"* ist `SpendenbannerFW2019neu.jpeg` (540×240).
+*„<Unterschrift>"* ist `bild-unterschrift.jpg` (250×96), der nach
+*„<Knopf>"* ist `bild-banner.jpeg` (540×240).
 
 **Drei meiner Erklärungen sind damit widerlegt:**
 
@@ -2105,8 +2105,8 @@ Zeichen nach `*output`, **rückt `output` aber nicht weiter**; der `else`-Zweig
 tut es mit `*output++ = *input++`. Das nächste Zeichen überschreibt das
 entschlüsselte — es ist nicht falsch, sondern **weg**.
 
-Nachgerechnet: `en%20aktuellen%20Verlust.png` wird zu
-`enaktuellenVerlust.png`, `SVS%20NL%20FW%20(1).jpg` zu `SVSNLFW(1).jpg`.
+Nachgerechnet: `ei%20Beispiel%20Bild.png` wird zu
+`eiBeispielBild.png`, `Bild%20A%20B%20(1).jpg` zu `BildAB(1).jpg`.
 Beides steht genau so in Gregors Protokoll, der Server antwortet darauf mit
 **404**, Eudora legt die Fehlerseite ab (`datei=1`), erkennt sie richtigerweise
 nicht als Bild (`intern=0`) und zeichnet einen grauen Kasten.

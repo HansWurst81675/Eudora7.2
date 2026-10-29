@@ -6,7 +6,7 @@
 // output aber nicht weitergerueckt. Das naechste Zeichen ueberschrieb es - das
 // Zeichen war also nicht falsch, sondern weg.
 //
-//   en%20aktuellen%20Verlust.png  ->  enaktuellenVerlust.png
+//   ei%20Beispiel%20Bild.png  ->  eiBeispielBild.png
 //
 // Der Server antwortete darauf mit 404, Eudora legte die Fehlerseite ab,
 // erkannte sie richtigerweise nicht als Bild und zeichnete einen grauen
@@ -44,17 +44,17 @@ void RunResolveURLTests(void)
 	// Der Anlassfall, Byte fuer Byte aus Gregors Protokoll vom 18.09.2026.
 	TT_BeginTest("E-110: %20 wird zum Leerzeichen, nicht weggeworfen");
 	{
-		Loese("https://004.frnl.de/admin/images/zivile/en%20aktuellen%20Verlust.png",
+		Loese("https://absender.invalid/bilder/ei%20Beispiel%20Bild.png",
 			  szAus, sizeof(szAus));
 
 		TT_CHECK_MSG(strcmp(szAus,
-			"https://004.frnl.de/admin/images/zivile/en aktuellen Verlust.png") == 0,
+			"https://absender.invalid/bilder/ei Beispiel Bild.png") == 0,
 			"Aus %20 muss ein Leerzeichen werden");
 
 		// Die Gegenrichtung ausdruecklich pruefen: genau DIESE Zeichenkette
 		// stand im Protokoll, und genau sie gab es nicht auf dem Server.
 		TT_CHECK_MSG(strcmp(szAus,
-			"https://004.frnl.de/admin/images/zivile/enaktuellenVerlust.png") != 0,
+			"https://absender.invalid/bilder/eiBeispielBild.png") != 0,
 			"Das ist die kaputte Fassung vom 18.09.2026 - der Server antwortete 404");
 
 		TT_Note("%s", szAus);
@@ -65,14 +65,14 @@ void RunResolveURLTests(void)
 	// Der zweite Fall aus demselben Protokoll, mit Klammern im Namen.
 	TT_BeginTest("E-110: mehrere %20 hintereinander, dazu Klammern");
 	{
-		Loese("https://004.frnl.de/admin/images/zivile/SVS%20NL%20FW%20(1).jpg",
+		Loese("https://absender.invalid/bilder/Bild%20A%20B%20(1).jpg",
 			  szAus, sizeof(szAus));
 
 		TT_CHECK_MSG(strcmp(szAus,
-			"https://004.frnl.de/admin/images/zivile/SVS NL FW (1).jpg") == 0,
+			"https://absender.invalid/bilder/Bild A B (1).jpg") == 0,
 			"Drei Sequenzen in einer Adresse, alle drei muessen ankommen");
 		TT_CHECK_MSG(strcmp(szAus,
-			"https://004.frnl.de/admin/images/zivile/SVSNLFW(1).jpg") != 0,
+			"https://absender.invalid/bilder/BildAB(1).jpg") != 0,
 			"Die kaputte Fassung vom 18.09.2026");
 	}
 	TT_EndTest();
@@ -106,8 +106,8 @@ void RunResolveURLTests(void)
 	TT_BeginTest("E-110: resolve_URL liefert dasselbe wie unescape_url");
 	{
 		static const char* apszFaelle[] = {
-			"https://beispiel.invalid/en%20aktuellen%20Verlust.png",
-			"https://beispiel.invalid/SVS%20NL%20FW%20(1).jpg",
+			"https://beispiel.invalid/ei%20Beispiel%20Bild.png",
+			"https://beispiel.invalid/Bild%20A%20B%20(1).jpg",
 			"https://beispiel.invalid/T%C3%BCr.png",
 			"https://beispiel.invalid/a%2Fb.png",
 			"https://beispiel.invalid/klammer%28auf%29.png",
@@ -135,7 +135,7 @@ void RunResolveURLTests(void)
 	TT_BeginTest("E-110: eine Adresse ohne Prozentzeichen bleibt unveraendert");
 	{
 		static const char* pszEin =
-			"https://004.frnl.de/admin/images/zivile/Totalitarismus-Watch_500x122px.jpg";
+			"https://absender.invalid/bilder/bild-c_500x122px.jpg";
 
 		Loese(pszEin, szAus, sizeof(szAus));
 

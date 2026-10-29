@@ -553,7 +553,7 @@ static void Test_VollstaendigePopAntwort(void)
 	static const char* aszKopf[] = {
 		"Return-Path: <absender@example.org>",
 		"From: =?UTF-8?B?SsO8cmdlbiBTY2jDtm4=?= <juergen@example.org>",
-		"To: gregor@freenet.de",
+		"To: empfaenger@beispiel.invalid",
 		"Subject: =?utf-8?Q?Sch=C3=B6ne_Gr=C3=BC=C3=9Fe?=",
 		"Content-Type: text/plain; charset=utf-8",
 		"Content-Transfer-Encoding: 8bit"
@@ -561,7 +561,7 @@ static void Test_VollstaendigePopAntwort(void)
 	static const char* aszKopfSoll[] = {
 		"Return-Path: <absender@example.org>",
 		"From: J\xFCrgen Sch\xF6n <juergen@example.org>",
-		"To: gregor@freenet.de",
+		"To: empfaenger@beispiel.invalid",
 		"Subject: Sch\xF6ne Gr\xFC\xDF" "e",
 		"Content-Type: text/plain; charset=utf-8",
 		"Content-Transfer-Encoding: 8bit"

@@ -69,8 +69,8 @@ void resolve_URL (pg_char_ptr source_URL, pg_char_ptr target_URL, size_t nMaxLen
          // falsch, sondern WEG.
          //
          // Gemessen an Gregors Nachricht vom 18.09.2026:
-         //   en%20aktuellen%20Verlust.png  ->  enaktuellenVerlust.png
-         //   SVS%20NL%20FW%20(1).jpg       ->  SVSNLFW(1).jpg
+         //   ei%20Beispiel%20Bild.png  ->  eiBeispielBild.png
+         //   Bild%20A%20B%20(1).jpg       ->  BildAB(1).jpg
          // Der Server antwortet darauf mit 404, Eudora legt die Fehlerseite
          // ab, erkennt sie richtigerweise nicht als Bild - und zeichnet einen
          // grauen Kasten. Zehn von zwanzig Bildern seiner Nachricht.

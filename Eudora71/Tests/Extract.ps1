@@ -211,8 +211,8 @@ Write-Region $mu $lStart $lEnd (Join-Path $OutDir "msgutils_e101.inc") $msgPath
 # Region M: resolve_URL und translate_hex (Befund E-110). resolve_URL baut aus
 # dem src-Attribut eines <img> die Adresse, unter der Eudora das Bild holt.
 # Bis zum 18.09.2026 warf es jede Prozent-Sequenz weg, statt sie zu
-# entschluesseln - "en%20aktuellen%20Verlust.png" wurde zu
-# "enaktuellenVerlust.png", der Server antwortete mit 404, und der Anwender sah
+# entschluesseln - "ei%20Beispiel%20Bild.png" wurde zu
+# "eiBeispielBild.png", der Server antwortete mit 404, und der Anwender sah
 # einen grauen Kasten. Zehn von zwanzig Bildern in Gregors Nachricht.
 #
 # Reine Zeichenkettenarbeit, Adresse rein und Adresse raus - ohne Paige, ohne
