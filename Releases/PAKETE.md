@@ -177,6 +177,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.1.128 — erstes Release 7.2.1, Zweig `release-7.2.1`
+
+**Noch nicht geschnürt.** Nummer am 29.10.2026 vergeben (Gregor: „ja, direkt 7.2.1.128 bauen, ich teste dann das erste release“). Erste Fassung im neuen Nummernschema (Kasten oben). Wird geschnürt, sobald der Prüfbericht am Bau BESTANDEN meldet; danach testet Gregor sie, den E-166-Schritt zuerst ([TESTPLAN](../Intern/TESTPLAN.md#e-166-am-release)), und erst mit seinem Ja wird sie als `v7.2.1.128` veröffentlicht.
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.1.128.
+
 ## 1.0.127 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.127, Zweig `0.125_ergebnisse`
 
 **Geschnürt am 27.10.2026 um 14:23 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Von Gregor am 27.10.2026 im Kurztest geprüft: V1 bis V6 bestanden, außerhalb der VM mit leerem Stand ([TESTPLAN](../Intern/TESTPLAN.md#ergebnis-7-2-0-127)). Ersetzt 1.0.126:

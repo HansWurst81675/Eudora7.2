@@ -29,7 +29,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-170](Intern/BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026: *„die findigs können wir erst nach dem release beheben. das muß nur erstmal nur als befund dri… |
 | **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt… |
 | **[E-165](Intern/BEFUNDE.md#e-165)** | Die Vervollständigungsbox im To:-Feld sieht mit einem einzigen Treffer verbaut aus — wi… | **nie gemessen** | am Prüfstand `C:\Temp\E135-box` mit **einem** passenden Kurznamen messen (Außen- und Innenmaß der Box und der Liste, Bildlaufleisten-Stil), danach … |
-| **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
+| **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
 | **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
@@ -101,9 +101,9 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Im Quellstand, noch in keinem Paket
+## 7.2.1.128 — erstes Release 7.2.1: Konto-Eigenschaften verlieren nichts mehr ([E-166](Intern/BEFUNDE.md#e-166)), FAQ, neues Nummernschema
 
-**Auf `main` seit PR #182 (Zweig `e166-junk_message_fix`), weiter über `release-7.2.1-vorbereiten`, `datenschutz-bereinigen`, `datenschutz-bereinigen-die_zweite` und `faq-erweitern` (PR #183 bis #186), jetzt `release-7.2.1`; Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)). Kommt mit dem Release 7.2.1.**
+**Auf `main` seit PR #182 (Zweig `e166-junk_message_fix`), weiter über `release-7.2.1-vorbereiten`, `datenschutz-bereinigen`, `datenschutz-bereinigen-die_zweite` und `faq-erweitern` (PR #183 bis #186), dann `release-7.2.1`.** Erste Fassung im neuen Nummernschema: Release `7.2.1.128`, die Endnummer zählt nach 1.0.127 weiter ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)). Gregor testet diese Fassung vor der Veröffentlichung, den E-166-Schritt zuerst ([TESTPLAN](Intern/TESTPLAN.md#e-166-am-release)); bis dahin ist sie **ungetestet**.
 
 **Im Programm**
 

@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.0.127 / `VERSION` 1.0.127, Stand 29.10.2026 (Prüfschritt zu E-166 für das Release ergänzt)
+# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 29.10.2026 (Prüfschritt zu E-166 zuerst)
 
 > **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter, **am 27.10.2026
 > bestanden** (V1 bis V6, [Ergebnis](#ergebnis-7-2-0-127)). Das
