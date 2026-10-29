@@ -1805,6 +1805,33 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Hundertster Durchgang — Nummernschema 7.2.0.N / 7.2.1.N und Release 7.2.1.128, 29.10.2026 (Bericht: `Befunde/LEKTOR-95.md`)
+
+Lauf auf `640e1a0e`, während des Laufs vorgespult auf `b74a1e81` (Paket
+7.2.1.128 geschnürt). Nichts berichtigt (Auftrag: nur Bericht und
+Fahrtenbuch). Das neue Schema steht richtig in PAKETE, MITARBEITEN,
+WERKZEUGE und den Standzeilen; **wo Anwender lesen, gilt noch das alte:**
+ANWENDER, STARTUMGEBUNG und BAUEN beschreiben die Titelzeile als
+`Eudora 7.2.0.<n> / Paket 1.0.<n>`
+([L-95.1](../Befunde/LEKTOR-95.md#l-95.1)), der CHANGELOG-Kopf erklärt
+`1.0.x` als Regel ([L-95.2](../Befunde/LEKTOR-95.md#l-95.2)). Der TESTPLAN
+sagt *„nur ein Schritt“* (E-166), ZIEL.md verlangt vor der Marke alle neun
+Kriterien ([L-95.11](../Befunde/LEKTOR-95.md#l-95.11)); README,
+WEITERMACHEN, AUFGABEN und der PAKETE-Kopf sagen seit dem Schnüren weiter
+*„noch nicht geschnürt“* ([L-95.15](../Befunde/LEKTOR-95.md#l-95.15)).
+`ausliefern.pl --pruefen`,
+von PAKETE empfohlen, bricht an `7.2.1.128` ab
+([L-95.4](../Befunde/LEKTOR-95.md#l-95.4)); PAKETE bestreitet an zwei
+Stellen die Dateiversion der `Eudora.exe`, die jetzt `7,2,1,128` trägt
+([L-95.6](../Befunde/LEKTOR-95.md#l-95.6)). Die EINSTELLUNGEN-Liste der
+Abweichungen widerspricht ihrem ersten Satz, ihre Zeilen in `EudoraRes.rc`
+stehen bis zu 22 daneben ([L-95.12](../Befunde/LEKTOR-95.md#l-95.12)).
+Keine Datei stellt 7.2.1.128 als getestet oder veröffentlicht dar. Von den
+18 Funden aus [LEKTOR-94](../Befunde/LEKTOR-94.md#lektor-94) 14 erledigt, 3
+teilweise, 1 bewusst unverändert. Zusammen **15 Funde**. Neu für Gregor:
+was er an 7.2.1.128 vor der Marke testet; wie ein Zweig heißt, der nur eine
+Fassung schnürt.
+
 ## Neunundneunzigster Durchgang — Datenschutz nach PR #184 und #185, Release-Vorbereitung 7.2.1, 29.10.2026 (Bericht: `Befunde/LEKTOR-94.md`)
 
 Lauf auf `1ba04dbc` (= `main` nach #185). Nichts berichtigt (Auftrag: nur
