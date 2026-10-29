@@ -258,8 +258,7 @@ veröffentlicht wird, steht dort nicht.
 * **Belegt**, `ZIEL.md:44-50` *„\*\*Stand: 27 von 27 erfüllt, 0 offen.\*\* …
   \*\*Alle Zeilen des Maßstabs sind erfüllt.\*\*“*; `:87-89` *„\*\*Vor dem
   Release:\*\* … dann Gregors Test aller neun Kriterien an einem frischen
-  Paket, erst danach die Marke“* — ohne [E-166](../Intern/BEFUNDE.md#e-166) (gemessen: `grep -c '[E-166](../Intern/BEFUNDE.md#e-166)'
-  ZIEL.md` → 0). `ZIEL.md:174` *„\*\*Stand 27.10.2026.\*\* Quellstand
+  Paket, erst danach die Marke“* — ohne [E-166](../Intern/BEFUNDE.md#e-166) (gemessen: die Kennung kommt in `ZIEL.md` nicht vor, `grep -c` → 0). `ZIEL.md:174` *„\*\*Stand 27.10.2026.\*\* Quellstand
   \*\*7.2.0.127\*\*“* — die Behebung auf dem Zweig fehlt.
 * **Belegt**, Gegenstück: `Intern/TESTPLAN.md:10-11` *„an ihm prüfst du
   zusätzlich [[E-166](../Intern/BEFUNDE.md#e-166)] — erst danach wird es veröffentlicht.“*
@@ -392,10 +391,10 @@ nichts zu tun hat. Die Kennung E-167 hat der PRÜFER für einen Vorschlag
 vorgemerkt; sie fehlt in `BEFUNDE.md`, und nirgends sonst steht, warum.
 
 * **Belegt**, `Befunde/PRUEFER-64.md:332-333` *„E-167 als Vorschlag für
-  [K5](#k5), aufzunehmen erst nach einer Messung. [E-168](../Intern/BEFUNDE.md#e-168)
+  K5, aufzunehmen erst nach einer Messung. [E-168](../Intern/BEFUNDE.md#e-168)
   nicht vergeben.“* — der Link kam mit `1e54773d` (gemessen: `git show
-  1e54773d -- Befunde/PRUEFER-64.md`, `-[E-168](../Intern/BEFUNDE.md#e-168) nicht vergeben` / `+[E-168](…)
-  nicht vergeben`).
+  1e54773d -- Befunde/PRUEFER-64.md` macht aus der Kennung ohne Link eine mit
+  Link, Satz sonst gleich).
 * **Gemessen**: `grep -n 'E-167' Intern/BEFUNDE.md` ohne Treffer; `git grep
   'E-167' -- '*.md' ':!Befunde'` ohne Treffer.
 * Derselbe Fall älter: `Befunde/PRUEFER-63.md:186` *„[[E-165](../Intern/BEFUNDE.md#e-165)] und [[E-166](../Intern/BEFUNDE.md#e-166)]
