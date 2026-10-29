@@ -42,6 +42,19 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
    nimmt es wieder weg.
 3. Nach Label sortieren: im Sortierfeld über der Liste *Label*.
 
+**Automatisch beim Abholen** — etwa alles vom Finanzamt rot als `Wichtig`:
+
+1. *Tools → Filters*, *New*.
+2. *Match:* **Incoming**.
+3. *Header:* **From:**, **contains**, und ein Stück der Absenderadresse, etwa
+   `finanzamt` oder die Domain der Firma.
+4. *Action:* **Make Label** → `Wichtig`. Weitere Aktionen (etwa *Transfer To*)
+   lassen sich darunter anhängen.
+
+*Am Quelltext nachgesehen (29.10.2026):* Aktion *Make Label* in
+`EudoraRes.rc:6088`, ausgeführt in `filtersd.cpp:1222-1226`. Am Programm noch
+nicht geprüft.
+
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund
 bleibt weiß und nimmt die Label-Farbe nur an, solange die Zeile ausgewählt ist.
