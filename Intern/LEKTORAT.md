@@ -1805,6 +1805,28 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Siebenundneunzigster Durchgang — Nachlauf vor dem PR `e166-junk_message_fix`: LEKTOR-91 eingearbeitet, FAQ neu, E-169 neu, 29.10.2026 (Bericht: `Befunde/LEKTOR-92.md`)
+
+Lauf über `5a235c55..01f583db` und Bestand der 62 `.md` ohne `Arbeitsweise/`
+und `Befunde/`. Nichts berichtigt (Auftrag: nur Bericht und Fahrtenbuch).
+Von den 11 Funden aus [LEKTOR-91](../Befunde/LEKTOR-91.md#lektor-91) 4 erledigt
+(L-91.6, .8, .10, .11), 7 teilweise — jeweils die Hauptstelle berichtigt,
+Nebenstellen liegen geblieben (ZIEL-Kopf 27.10., `FILTER.md:737` „trifft dann
+nie“, Abschrift `v1.0.120` „wörtlich“). **Wichtigster Fund:**
+[E-169](BEFUNDE.md#e-169) sucht die Stelle, die die Zwischendatei
+`eud*.htm` schreibt — sie ist `CTridentView::LoadMessage`
+(`TridentView.cpp:1530`), und das Lesefenster lädt dieselbe Datei (`:1633`);
+die Vermutung „Lesefenster lädt Bilder, die Zwischendatei nicht“ trägt damit
+nicht ([L-92.1](../Befunde/LEKTOR-92.md#l-92.1)). Die neue FAQ ist in sich
+stimmig, ihre Menüpfade stehen in `EudoraRes.rc` — bis auf ein
+„Sortierfeld“, das es nicht gibt ([L-92.3](../Befunde/LEKTOR-92.md#l-92.3)),
+und die Hintergrundfarbe ohne Fokus ([L-92.4](../Befunde/LEKTOR-92.md#l-92.4)).
+FILTER.md nennt für *Make Label* eine um 70 Zeilen verrutschte Fundstelle,
+die FAQ die richtige ([L-92.2](../Befunde/LEKTOR-92.md#l-92.2)). Zusammen
+**5 Funde** (1 unvollständig, 1 veraltet, 2 ungenau, 1 Hinweis); keiner
+hindert den PR. Für Gregor unverändert: die toten Links in drei
+veröffentlichten Release-Texten; Testumfang vor `v7.2.1.N`, Kriterium 0.
+
 ## Sechsundneunzigster Durchgang — Bestand nach dem Einarbeiten von LEKTOR-90, E-168 und Gregors Entscheidung 15, 29.10.2026 (Bericht: `Befunde/LEKTOR-91.md`)
 
 Lauf über `116095f5..3b8ae53a` und Bestand der 61 `.md` ohne `Arbeitsweise/`
