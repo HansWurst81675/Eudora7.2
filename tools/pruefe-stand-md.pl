@@ -156,7 +156,7 @@ for my $f (@dateien) {
             . "Eudora71/Version.h sagt $quellstand";
         }
     }
-    # Seit 7.2.0.128 ist die Paketnummer vierteilig (Gregors Entscheidung 10,
+    # Ab der Endnummer 128 ist die Paketnummer vierteilig (Gregors Entscheidung 10,
     # Intern/WEITERMACHEN.md); ohne die vierte Gruppe wuerde aus
     # "Paket 7.2.0.128" nur "7.2.0" gelesen.
     if ($paket and $standzeile =~ /Paket[^\n]{0,12}?(\d+\.\d+\.\d+(?:\.\d+)?)/) {

@@ -4,12 +4,17 @@
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
 > Repo unter `Releases\Eudora72-7.2.1.128-release.zip`). Die Titelzeile muss
 > `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36` zeigen. Das Mailverzeichnis darin
-> ist leer bis auf `Eudora.ini`. **Zu prüfen ist nur ein Schritt:**
-> [E-166](#e-166-am-release) direkt hierunter, im **lokalen** Eudora dieses
-> Verzeichnisses. [E-87/E-88](#e-87-am-release) ist schon bestanden (29.10.2026
-> an 1.0.127), der Kurztest V1 bis V6 am 27.10.2026 an 1.0.127
-> ([Ergebnis](#ergebnis-7-2-0-127)); seitdem ist im Programm nur E-166
-> dazugekommen. Erst mit deinem Ja wird es als `v7.2.1.128` veröffentlicht.
+> ist leer bis auf `Eudora.ini`. **Neu gegenüber 1.0.127 ist im Programm nur
+> E-166**, sein Schritt steht [direkt hierunter](#e-166-am-release) und braucht
+> das **leere** Mailverzeichnis dieses Pakets. [E-87/E-88](#e-87-am-release)
+> ist schon bestanden (29.10.2026 an 1.0.127), der Kurztest V1 bis V6 am
+> 27.10.2026 an 1.0.127 ([Ergebnis](#ergebnis-7-2-0-127)). **Was du darüber
+> hinaus prüfst, entscheidest du** (Gregor am 29.10.2026: *„ich werde es noch
+> testen … auch andere dinge, nicht nur e-166“*); der Maßstab in
+> [ZIEL.md](../ZIEL.md) nennt vor der Marke die neun Kriterien an einem
+> frischen Paket ([Teil 1](#teil-1-kriterien) des
+> Plans zu 7.2.0.123). Deine Ergebnisse kommen hierher. Erst mit deinem Ja
+> wird es als `v7.2.1.128` veröffentlicht.
 > Veröffentlicht ist bis dahin `v1.0.120`. Am Bau vorher geprüft: 314
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
 > ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
@@ -18,7 +23,7 @@
 
 > Kein eigenes Testpaket — du prüfst es an der Release-Fassung (Entscheidung
 > 15 in [WEITERMACHEN](WEITERMACHEN.md)), **zuerst**, in einem frisch
-> ausgepackten Release-Verzeichnis, vor dem übrigen Release-Test. Alles im **lokalen** Eudora, kein
+> ausgepackten Release-Verzeichnis. Alles im **lokalen** Eudora, kein
 > IMAP-Ordner. Voraussetzung: ein **leeres** Mailverzeichnis im Release-Verzeichnis,
 > sonst ist die Frage schon beantwortet und kommt gar nicht.
 
@@ -37,10 +42,10 @@ prüfbar** (die Junk-Zusätze laden nur, wenn `MFC71.DLL` und `MSVCP71.dll` auf
 dem Rechner liegen, [FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet))
 — dann bitte so melden, nicht als bestanden.
 
-## <a id="e-87-am-release"></a>Am Release 7.2.1 außerdem: Weiterleiten behält die HTML-Formatierung ([E-87](BEFUNDE.md#e-87), [E-88](BEFUNDE.md#e-88))
+## <a id="e-87-am-release"></a>Weiterleiten behält die HTML-Formatierung ([E-87](BEFUNDE.md#e-87), [E-88](BEFUNDE.md#e-88)) — bestanden an 1.0.127, am Release nicht mehr nötig
 
-> Beide gelten seit September als behoben, bestätigt hat es noch niemand.
-> Geeignet ist jeder **Newsletter mit farbigen Kästen, Hintergründen und
+> Beide galten seit September als behoben; bestätigt hat es Gregor am
+> 29.10.2026 an 1.0.127 (Ergebnis unten). Geeignet ist jeder **Newsletter mit farbigen Kästen, Hintergründen und
 > Bildern** (etwa einer von waipu.tv) — keine reine Textmail.
 
 1. Den Newsletter in der Postfachliste markieren, *Message → Forward*.
@@ -65,7 +70,7 @@ Protokoll: beim Verfassen `IsHTML=1`, beim Absenden `Fassung=ORIGINAL
 auf der Leitung `IsHTML=1 SendPlainOnly=0`; Empfang einmal per POP, einmal
 per IMAP als `text/HTML`. Schritt 2 (Verfassenfenster) ist nicht im Bild.
 
-## Was jetzt zu testen ist — Testpaket 7.2.0.127 (Kurztest)
+## Kurztest 7.2.0.127 — bestanden am 27.10.2026
 
 > Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.127-release`, neben dein
 > 1.0.125. Geprüft wird nur, was sich gegenüber 7.2.0.125 geändert hat, dazu
@@ -214,7 +219,7 @@ selbst `E-132`-Zeilen, die wie ein Nachweis aussehen; und, falls vorhanden,
 **C. Ab jetzt nur noch mit `Eudora starten.cmd`** im neuen Verzeichnis, dann
 Teil 1 und Teil 2 in beliebiger Reihenfolge.
 
-### Teil 1 — die neun Kriterien aus ZIEL.md, kurz
+### <a id="teil-1-kriterien"></a>Teil 1 — die neun Kriterien aus ZIEL.md, kurz
 
 | Nr. | Kriterium | Was zu tun ist | Was herauskommen muss |
 |---|---|---|---|

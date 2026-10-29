@@ -140,7 +140,7 @@ if ($SELBSTTEST) {
         ['Zitat zaehlt nicht',            "> Veroeffentlicht ist `v1.0.113`.\n",          '1.0.119', 0, 0],
         ['Ueberschrift ohne Urteil',      "## 1.0.120 - Quellstand 7.2.0.120\n",          '1.0.119', 1, 0],
         ['ohne gh-Stand nichts pruefen',  'Veroeffentlicht ist `v1.0.113`.',              undef,     0, 0],
-        # Neue Form ab 7.2.0.128 (Gregors Entscheidung 10)
+        # Neue Form ab der Endnummer 128 (Gregors Entscheidung 10)
         ['neu: Release richtig',          'Veroeffentlicht ist `v7.2.1.128`.',            '7.2.1.128', 0, 0],
         ['neu: altes Release genannt',    'Veroeffentlicht ist `v1.0.120`.',              '7.2.1.128', 0, 1],
         ['neu: Quellstand-Form, gleiche Nr', 'Veroeffentlicht ist 7.2.0.120.',            '1.0.120',   0, 0],

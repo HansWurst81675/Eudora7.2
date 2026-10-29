@@ -151,12 +151,13 @@ Laufzeit-DLLs ins Paket, die **nicht weitergegeben werden dürfen**.
    entfallen sie samt allen `ASSERT`/`VERIFY`.
 
 6. **Den Fenstertitel ablesen.** Er trägt die Bau-Kennung. Sie wird vor jedem
-   Bau von `tools/kennung-erzeugen.pl` erzeugt und hat heute die Form
-   `Eudora <Produktversion> / Paket <Paketnummer>+<Commit><Marke> <Zeitpunkt>`,
-   angehängt an das Herkunftsverzeichnis der EXE:
+   Bau von `tools/kennung-erzeugen.pl` erzeugt und hat seit 7.2.1.128 die Form
+   `Eudora <Fassung>+<Commit><Marke> <Zeitpunkt>` (bis 1.0.127 mit
+   `/ Paket <Paketnummer>` hinter der Fassung), angehängt an das
+   Herkunftsverzeichnis der EXE:
 
    ```
-   Eudora - [In]   [Eudora 7.2.0.12 / Paket 1.0.12+9512108 2026-09-06 12:34 - Eudora72-1.0.12]
+   Eudora   [Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 - Eudora72-7.2.1.128-release] - [Inbox]
    ```
 
    Ein Sternchen hinter dem Commit heißt: beim Bau lagen ungesicherte

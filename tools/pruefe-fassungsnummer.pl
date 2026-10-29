@@ -225,7 +225,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     $pruef->('Tags numerisch', join(',', nummern_aus_tags(qw(v1.0.9 v1.0.72 v1.0.64))),
              '9,64,72');
 
-    # --- Die neue vierteilige Form (ab 7.2.0.128) -------------------------
+    # --- Die neue vierteilige Form (ab der Endnummer 128) -------------------------
     $pruef->('VERSION vierteilig', nr_aus_version("7.2.1.128\n"), '128');
     $pruef->('VERSION vierteilig, ganz', voll_aus_version("7.2.1.128\n"), '7.2.1.128');
     $pruef->('VERSION alt hat keine ganze Nummer',

@@ -179,7 +179,7 @@ sub pruefe {
                         . "7.2.0.NN - die Versionsressource fehlt oder ist anders";
             next;
         }
-        # Bis 1.0.127 hiess das Paket 1.0.NN und trug 7.2.0.NN; seit 7.2.0.128
+        # Bis 1.0.127 hiess das Paket 1.0.NN und trug 7.2.0.NN; ab der Endnummer 128
         # heisst es wie seine Fassung und muss sie GANZ tragen - ein
         # 7.2.0.128-Bau in einem Paket 7.2.1.128 waere sonst unsichtbar.
         my ($nr) = $p =~ /(\d+)$/;
@@ -285,7 +285,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     $pruef->('stimmige Pakete laufen durch', join('|', @$m_ok), '');
     $pruef->('und es wurde etwas geprueft', $g_ok >= 2 ? 'ja' : "nein ($g_ok)", 'ja');
 
-    # --- Neue Form ab 7.2.0.128 (Gregors Entscheidung 10) -----------------
+    # --- Neue Form ab der Endnummer 128 (Gregors Entscheidung 10) -----------------
     my $exe721 = "MZ" . join('', map { "$_\x00" } split //, '7.2.1.128') . "x";
     $pruef->('Fassung 7.2.1 aus der Versionsressource',
              join(',', fassungen_der_exe($exe721)), '7.2.1.128');

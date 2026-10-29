@@ -100,7 +100,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.1.128** — erstes Release 7.2.1, noch nicht geschnürt und noch nicht von Gregor getestet; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123. Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)). Veröffentlicht ist `v1.0.120`.*
+*Stand **7.2.1.128** — erstes Release 7.2.1, am 29.10.2026 geschnürt, bei Gregor im Test, noch nicht veröffentlicht; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123. Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)). Veröffentlicht ist `v1.0.120`.*
 
 ### Was geht
 

@@ -99,8 +99,9 @@ unter *Noch offen*.
 3. **`Eudora starten.cmd`** doppelklicken. Beim ersten Start fragt Eudora nach
    den Zugangsdaten des Mailkontos.
 4. Die Titelzeile nennt die Fassung, zum Beispiel
-   `Eudora 7.2.0.72 / Paket 1.0.72` — diese Angabe gehört in jeden
-   Fehlerbericht.
+   `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36` — diese Angabe gehört in jeden
+   Fehlerbericht. Fassungen bis 1.0.127 zeigen sie noch in der Form
+   `Eudora 7.2.0.127 / Paket 1.0.127+…`.
 
 > **Schon ausgepackt und die `.exe` startet nicht?** Dann tragen die einzelnen
 > Dateien die Markierung. Nachträglich entfernen lässt sie sich in
@@ -250,9 +251,10 @@ Fehler gehören in die
 [Issues](https://github.com/HansWurst81675/Eudora7.2/issues) dieses Repos.
 Damit ein Bericht verwertbar ist, gehören drei Dinge hinein:
 
-1. **Die Bau-Kennung aus der Titelzeile** — sie nennt Fassung, Paketnummer und
-   den Commit, aus dem gebaut wurde, in der Form
-   `Eudora 7.2.0.<n> / Paket 1.0.<n>`. Ohne sie ist nicht zu sagen, welcher Stand
+1. **Die Bau-Kennung aus der Titelzeile** — sie nennt die Fassung und den
+   Commit, aus dem gebaut wurde, in der Form
+   `Eudora 7.2.1.<n>+<Commit> <Zeit>` (bis 1.0.127:
+   `Eudora 7.2.0.<n> / Paket 1.0.<n>+<Commit> <Zeit>`). Ohne sie ist nicht zu sagen, welcher Stand
    gemeint ist. Ein Sternchen hinter dem Commit heißt: beim Bau lagen
    ungesicherte Änderungen vor, dieser Bau ist nicht reproduzierbar.
 2. **Was Sie getan haben und was statt dessen geschah** — der Weg im Menü, der

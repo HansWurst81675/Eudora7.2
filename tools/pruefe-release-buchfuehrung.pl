@@ -397,7 +397,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     my ($n2) = neueste_paketnummer(qw(v1.0.8 v1.0.9));
     $pruef->('numerisch, nicht als Text', $n2, '9');
 
-    # Neue Form ab 7.2.0.128 (Gregors Entscheidung 10): v7.2.1.128 folgt auf
+    # Neue Form ab der Endnummer 128 (Gregors Entscheidung 10): v7.2.1.128 folgt auf
     # v1.0.120 - nach der Endnummer, nicht nach den vorderen Teilen.
     my ($n3, $tag3) = neueste_paketnummer(qw(v1.0.120 v7.2.1.128 v1.0.101));
     $pruef->('neues Tag nach altem', "$tag3/$n3", 'v7.2.1.128/128');

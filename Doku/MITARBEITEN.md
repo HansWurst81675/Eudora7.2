@@ -55,14 +55,14 @@ Eudora7.2/
 
 ### Fassungen und Pakete
 
-Zwei Nummern, und sie bedeuten Verschiedenes:
+Eine Nummer an zwei Orten; bis 1.0.127 waren es zwei verschiedene:
 
 | Nummer | steht in | bedeutet |
 |---|---|---|
 | **Quellstand**, z. B. `7.2.1.128` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
 | **Paketnummer**, z. B. `7.2.1.128` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
-Seit 7.2.0.128 sind beide Nummern **gleich**: `7.2.0.N` für ein Testpaket,
+Ab der Endnummer 128 (erste Fassung: 7.2.1.128) sind beide Nummern **gleich**: `7.2.0.N` für ein Testpaket,
 `7.2.1.N` für ein Release. Bis 1.0.127 hieß die Paketnummer `1.0.N` und
 teilte mit dem Quellstand nur die letzte Stelle; die Endnummer zählt über
 beide Formen weiter. Beide Dateien gehen gemeinsam hoch, und zwar **bevor**

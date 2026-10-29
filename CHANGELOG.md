@@ -1,8 +1,10 @@
 # Was sich geändert hat
 
-Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **Quellstand
-`7.2.0.x`** steht in `Eudora71/Version.h`, **Paketnummer `1.0.x`** in `VERSION`.
-Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
+Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **`7.2.0.N`**
+(Testpaket) bzw. **`7.2.1.N`** (Release) steht gleich in `Eudora71/Version.h`
+und `VERSION`; die Bau-Kennung im Fenstertitel nennt sie plus den Commit.
+Bis 1.0.127 trug `VERSION` eine eigene Zählung `1.0.N` mit derselben
+Endnummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).
 
 > **Wer hier neu einsteigt:** [ZIEL.md](ZIEL.md) sagt, woran „fertig" gemessen
 > wird, [README.md](README.md) wie man baut und startet, [BEFUNDE.md](Intern/BEFUNDE.md)
@@ -125,15 +127,16 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 * **Datenschutz:** Daten aus Gregors Postfach (Betreffzeilen, Absender, Adressen, Konto- und Ordnernamen, Message-IDs) sind aus Doku, Prüfberichten, Quelltextkommentaren, Tests und Werkzeugen entfernt und durch Platzhalter ersetzt (PR #184, #185 und dieser Zweig).
 * Junk-Filter und S/MIME laden doch, wenn `MFC71.DLL` und `MSVCP71.dll` schon auf dem Rechner liegen — beschrieben an einer Stelle ([FILTER.md](Intern/FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)), README, ANWENDER, PORTIERUNG, EINSTELLUNGEN und STARTUMGEBUNG verweisen dorthin.
 * Defender-Fehlalarm ([E-124](Intern/BEFUNDE.md#e-124)): am 28.10.2026 viermal die `EudoraRes.dll` aus Paket 1.0.127, auch im ZIP; der Fall vom 27.10. (`Eudora.exe` bei Gregor) nachgetragen; [DEFENDER-FEHLALARM](Releases/DEFENDER-FEHLALARM.md) und [PAKETE](Releases/PAKETE.md) ergänzt.
-* Die veröffentlichten Release-Texte `v1.0.113`, `v1.0.117` und `v1.0.120` auf GitHub zeigten mit sieben Links ins Leere (`BEFUNDE.md` liegt seit dem 22.10. unter `Intern/`) — am 29.10.2026 berichtigt.
-* Dokumentenprüfungen [LEKTOR-90](Befunde/LEKTOR-90.md) bis [LEKTOR-93](Befunde/LEKTOR-93.md) eingearbeitet (Stand-Köpfe, Menüpfade, Messangaben, Stufen).
+* Die veröffentlichten Release-Texte `v1.0.113`, `v1.0.117` und `v1.0.120` auf GitHub zeigten mit sieben Links ins Leere (`BEFUNDE.md` liegt seit dem 22.10. unter `Intern/`) — am 29.10.2026 berichtigt; dazu sechs ältere (`v1.0.2`, `v1.0.3`, `v1.0.10`, `v1.0.43`, `v1.0.72`, `v1.0.84`, Entscheidung 19 in [WEITERMACHEN](Intern/WEITERMACHEN.md)).
+* Dokumentenprüfungen [LEKTOR-90](Befunde/LEKTOR-90.md) bis [LEKTOR-95](Befunde/LEKTOR-95.md) eingearbeitet (Stand-Köpfe, Menüpfade, Messangaben, Stufen, Datenschutz, Nummernschema).
+* Neues Nummernschema in der Doku nachgezogen ([LEKTOR-95](Befunde/LEKTOR-95.md)): Titelzeile in ANWENDER, STARTUMGEBUNG und BAUEN, CHANGELOG-Kopf, Dateiversion der `Eudora.exe` in PAKETE; Zeilenangaben in der Abweichungsliste von EINSTELLUNGEN neu gemessen.
 
 **Werkzeuge**
 
 * `tools/pruefe-startwege.pl` zählt auch `Audit.log`; Grenze: nur Starts nach der letzten Kopie der `Eudora.exe` (in [WERKZEUGE](tools/WERKZEUGE.md) beschrieben).
 * `tools/pruefstand-lauf.ps1` kennzeichnet einen Teillauf im Ergebnis mit `nur=`.
 * Neues Messskript `tools/messen-assistent-wiedereintritt.ps1` (zu [E-168](Intern/BEFUNDE.md#e-168)).
-* **Neues Nummernschema** (Gregors Entscheidung 10, am 29.10.2026 bestätigt): `VERSION` trägt die ganze Nummer, `7.2.0.N` für ein Testpaket, `7.2.1.N` für ein Release; die Endnummer zählt über 1.0.127 hinweg weiter. Die Titelzeile heißt `Eudora 7.2.1.N+<commit> <Zeit>`, ohne „/ Paket“. Umgestellt sind `kennung-erzeugen.pl`, die drei Leser der Kennung (`pruefbericht.pl`, `pruefstand-lauf.ps1`, `pruefstaende-auffrischen.ps1`), `release-veroeffentlichen.ps1`, `pruefe-fassungsnummer.pl`, `doku-pruefen.pl`, `pruefe-doku-takt.pl`, `pruefe-stand-md.pl`, `offene-befunde.pl`, `spuren-auswerten.pl`, `pruefe-aussenstand.pl`, `pruefe-behoben-ausgeliefert.pl`, `pruefe-release-buchfuehrung.pl`, `pruefe-nachgestellt.pl` und `pruefe-original-belegt.pl`. Alle lesen weiter auch die alte Form. Beschrieben in [PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen).
+* **Neues Nummernschema** (Gregors Entscheidung 10, am 29.10.2026 bestätigt): `VERSION` trägt die ganze Nummer, `7.2.0.N` für ein Testpaket, `7.2.1.N` für ein Release; die Endnummer zählt über 1.0.127 hinweg weiter. Die Titelzeile heißt `Eudora 7.2.1.N+<commit> <Zeit>`, ohne „/ Paket“. Umgestellt sind `kennung-erzeugen.pl`, die drei Leser der Kennung (`pruefbericht.pl`, `pruefstand-lauf.ps1`, `pruefstaende-auffrischen.ps1`), `release-veroeffentlichen.ps1`, `pruefe-fassungsnummer.pl`, `doku-pruefen.pl`, `pruefe-doku-takt.pl`, `pruefe-stand-md.pl`, `offene-befunde.pl`, `spuren-auswerten.pl`, `pruefe-aussenstand.pl`, `pruefe-behoben-ausgeliefert.pl`, `pruefe-release-buchfuehrung.pl`, `pruefe-nachgestellt.pl` und `pruefe-original-belegt.pl`; nach [LEKTOR-95](Befunde/LEKTOR-95.md#l-95.4) auch `ausliefern.pl`, das an 7.2.1.128 abbrach. Alle lesen weiter auch die alte Form. Beschrieben in [PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen).
 * Zwei Selbsttests in `pruefe-release-buchfuehrung.pl` waren seit dem Umzug von AUFGABEN und WEITERMACHEN nach `Intern/` rot, ohne dass es jemand bemerkt hat; die Erwartungen sind nachgezogen.
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
@@ -4341,8 +4344,8 @@ Fortschrittsanzeige:
 
 ```
 6.26  E-64 FilterMsg: Liste=1 Filter=1 verlangt WhenToApply=4 … Masken=[5]
-7.38  E-64 Match=1 Filter="From:newsletter@freenet.invalid" … "Coole Comics | …"
-7.38  E-64 Match=0 Filter="From:newsletter@freenet.invalid" … "Fwd: Neue Anmeldung …"
+7.38  E-64 Match=1 Filter="From:newsletter@freenet.invalid" … "<Betreff>"
+7.38  E-64 Match=0 Filter="From:newsletter@freenet.invalid" … "<Betreff>"
 ```
 
 Das ist der echte Filterlauf, und er arbeitet **richtig**: eine Nachricht
