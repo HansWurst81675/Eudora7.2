@@ -217,3 +217,17 @@ Gregor am 27.10.2026 abends: *„ja, auch für E-166“* — gemeint als Freigab
 Das ist der erste Spiegelstrich oben: eine Erlaubnis liegt nur vor, wenn sie meine Handlung **heute** benennt. Eine Zusage für morgen ist ein Plan, den Gregor am Morgen noch bestätigt oder nicht.
 
 **Schranke nachgezogen:** `tools/testlauf.ps1` weist jetzt jeden Freigabetext ab, der ein anderes Datum als heute nennt. Gegengetestet mit `-NurPruefen`, ohne Start: der Satz vom 27.10. mit dazugeschriebenem 28.10. wird abgewiesen, *„Gregor am 28.10.2026: 'ja, starte E-166'“* geht durch. Was sie nicht fängt: einen Satz von gestern, bei dem ich das alte Datum einfach weglasse. Dagegen hilft nur, morgens zu fragen.
+
+## Nachtrag 28.10.2026 (CHRONIST): der Vorlauf am Abend und die fehlende Ansage
+
+Zeiten MEZ, gemessen an den Transkripten `15164e13…` (27.10.; die Uhr der VM sprang an dem Abend, Zeiten wie im Transkript plus eine Stunde) und `72be6093…` (28.10.). Der Nachtrag darüber beschreibt den Morgen. Er hat einen Vorlauf und eine zweite Hälfte, die dort fehlen.
+
+**Der Vorlauf am 27.10.** Um 17:25:40 wies `pruefe-datum.pl` den Stand-Vermerk ab, weil er *„Freigabe für den 28.10.2026“* enthielt, ein Datum, das es noch nicht gab. Ich schrieb *„für den Folgetag“* und committete. Um 17:29:01 fragte ich Gregor selbst: *„Gilt dein Ja für morgen auch für E-166?“* Gregor um 17:30:57: *„ja, auch für E-166“*. `testlauf.ps1` verlangt seit dem 15.10. eine Freigabe vom selben Tag. Die Frage bat also um etwas, das das Startwerkzeug nicht annehmen darf, und der Vermerk hielt das Ergebnis als „Freigabe“ fest. Am Morgen stand das Wort „Freigabe“ in meiner eigenen Notiz, und ich habe das Datum dazugeschrieben. Die Abweisung durch `pruefe-datum.pl` war der Hinweis, dass ein Ja mit einem Datum in der Zukunft ein Plan ist. Geändert habe ich die Formulierung, nicht die Lesart.
+
+**Die fehlende Ansage.** 10:52:24 *„Jetzt lege ich den Prüfstand `C:\Temp\E166` aus dem Paket-ZIP 1.0.127 an“*, 10:52:39 *„Lauf 1: Frage mit Yes beantworten, Eudora regulär beenden.“*, 10:52:42 Start. Zwischen Ankündigung und Start lagen drei Sekunden und keine Frage. Fenster und Dauer wurden nicht genannt. Gregor um 10:56:45: *„wollte in ruhe lesen, was du mir geschrieben hast.“* Auch eine gültige Freigabe ersetzt die Ansage nicht ([[nichts-auf-gregors-bildschirm-starten]]).
+
+**Danach richtig (gemessen an `tools/TESTLAEUFE.md`).** Um 10:54:36 stand im letzten Satz der Nachricht, mit Fenster und Dauer: *„Darf ich heute weitere Prüfstandsläufe zu E-166 starten? Jeder Lauf öffnet ein Eudora-Fenster auf deinem Bildschirm, für etwa eine Minute. Oder soll ich es lassen?“* Auf Gregors *„ja, jetzt kannst du deine tests durchführen, ich halte mich zurück“* (10:58:04) folgten bis 14:21 einundzwanzig Starts, alle mit diesem Satz als `-Freigabe`. Die Läufe ab 13:30 waren um 11:23:10 angekündigt (*„Sobald die Dateien da sind, fahre ich die E-166-Läufe, heute mit deiner Freigabe von vorhin.“*), und Gregor schrieb um 13:30:14 *„fahr dann den prüfstand, ich mache nichts“*.
+
+**How to apply, zusätzlich:**
+- Ich frage nie nach einem Ja für morgen. Für den nächsten Tag notiere ich *„morgens fragen: E-166 am Prüfstand, je Lauf ein Fenster, etwa eine Minute“*. Das Wort „Freigabe“ steht in keinem Stand-Vermerk für einen Tag, der noch nicht begonnen hat.
+- Weist eine Schranke einen Text ab, frage ich zuerst, was sie schützt, und erst dann, wie ich formuliere.

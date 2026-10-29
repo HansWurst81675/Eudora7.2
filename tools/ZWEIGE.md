@@ -185,6 +185,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `bild-regressionstests` | 23.10.2026 | **Von Gregor bestaetigt** (*"branch paßt"*). Regressionsfaelle zur Bilddarstellung am Pruefstand bauen (bis dahin gab es dazu nur Testsuite-Faelle), damit nach [E-113](../Intern/BEFUNDE.md#e-113) und [E-119](../Intern/BEFUNDE.md#e-119) geprueft werden kann, dass nichts kaputt ging |
 | `fix_ohne_tests` | 23.10.2026 | **Von Gregor vorgegeben** (*"branch für jetzt: fix_ohne_tests"*, dazu *"darin kannst du ja alles von jetzt an infos speichern"*). [E-130](../Intern/BEFUNDE.md#e-130) behoben (`BindExe.bat` bindet die fremden DLLs nicht mehr, die fünf DLLs wieder im Original) und die Entscheidungen des Abends eingetragen |
 | `e-116-bildbreite-px` | 23.10.2026 | **Von Gregor bestaetigt** (*"beide namen passen, leg los"*). [E-116](../Intern/BEFUNDE.md#e-116): `width="35px"` wird als 3508 gelesen; `decimal_value_percent` in `PGHTMIMP.CPP` bricht an der ersten Nicht-Ziffer ab, mit Testfall |
+| `e166-junk_message_fix` | 28.10.2026 | **Von Gregor vorgegeben** (*"ja, e166-junk_message_fix, beheben"*). [E-166](../Intern/BEFUNDE.md#e-166): `CPersonality::Modify` (`persona.cpp`) verwirft den INI-Zwischenspeicher ohne `FlushINIFile` - die Antwort auf die Junk-Frage geht verloren, wenn danach *Konto → Eigenschaften* mit OK geschlossen wird; Ursache am Pruefstand gemessen, Behebung, Messskript `tools/messen-e166-assistent.ps1` |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 

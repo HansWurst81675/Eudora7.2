@@ -39,6 +39,13 @@ Zwischenstände wie **7.2.0.123** sind Testpakete für Gregors lokalen Test,
 keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 `v7.2.1.<n>`.
 
+**Was an der Release-Fassung selbst noch geprüft wird:** die Behebung von
+[E-166](Intern/BEFUNDE.md#e-166) — Gregor prüft sie an 7.2.1.\<n\> statt an
+einem eigenen Testpaket (Entscheidung 15 in
+[WEITERMACHEN](Intern/WEITERMACHEN.md), Schritt in
+[TESTPLAN](Intern/TESTPLAN.md#e-166-am-release)). Erst danach wird
+veröffentlicht. Die Übersicht unten zählt das nicht mit.
+
 <!-- ziel-stand: Anfang -->
 
 **Stand: 27 von 27 erfüllt, 0 offen.** Diese Übersicht wird aus den
@@ -171,7 +178,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 27.10.2026.** Quellstand **7.2.0.127** / `VERSION` **1.0.127** (Testpaket); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 29.10.2026.** Quellstand **7.2.0.127** / `VERSION` **1.0.127** (Testpaket); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 

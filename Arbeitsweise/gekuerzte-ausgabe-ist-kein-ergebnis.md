@@ -54,3 +54,17 @@ Am 27.10. um 12:09:26 dasselbe Muster bei `git commit`: Fehlerausgabe nach `$TEM
 **How to apply, zusätzlich:**
 - Die Ausgabe eines git-Befehls, der den Arbeitsbaum oder den Stash verändert (`stash`, `switch`, `checkout`, `reset`, `branch -d`), wird nie weggeworfen.
 - Hängt ein Schritt vom vorigen ab, wird mit `&&` verkettet, nie mit `;`. Ein `stash pop` ohne Namen ist ausgeschlossen. Es heißt `git stash pop "stash@{N}"` mit der Nummer, die der eigene `stash push` gerade gemeldet hat ([[verwerfen-nur-mit-zaehler]]).
+
+## Nachtrag 28.10.2026 (CHRONIST): drei Filter an einem Nachmittag, zweimal mit alter Ergebnisdatei dahinter
+
+Zeiten MEZ, Transkript `72be6093…`, gemessen.
+
+| Zeit | Befehl | Was der Filter verschluckte | bemerkt |
+|---|---|---|---|
+| 13:32:58 | `testlauf.ps1 … 2>&1 \| Select-String 'E166A\|Beendet\|Mangel\|FEHL'; Select-String -Path …\eudora.log …` | PowerShells Meldung, dass `tools\testlauf.ps1` nicht gefunden wurde. Sichtbar blieben Zeilen der `eudora.log` aus dem **vorigen** Lauf | 13:33:06 |
+| 14:03:53 | `perl -i … 2>/dev/null` | die Warnung *„-i used with no filenames“* (Fall 30 in [[text-nicht-durch-schichten-schicken]]) | 14:04:00, an 111,5 KB Ausgabe |
+| 14:10:11 | `testlauf.ps1 … 2>&1 \| Select-String 'Hauptfenster\|E166A (Pers\|Konto\|ERGEBNIS)\|Beendet'; Select-String -Path …\Eudora.ini …; …` und mit `;` gleich der **zweite** Start | *„TESTLAUF ABGEWIESEN: Versionen passen nicht zusammen“*. Defender hatte die `EudoraRes.dll` genommen (E-124). Zu sehen waren nur `Exit code 1` und eine INI-Zeile | 14:10:24 (*„`testlauf.ps1` hat nicht gestartet“*) |
+
+Alle drei wurden in Sekunden bemerkt, weil die Ausgabe nicht zum erwarteten Ergebnis passte. Der erste und der dritte Fall hatten denselben Aufbau: ein gefilterter Startbefehl, dahinter das Lesen der Ergebnisdatei. Scheitert der Start, zeigt die zweite Hälfte den **alten** Zustand der Datei, und das sieht aus wie eine Messung. Im dritten Fall hing dahinter mit `;` noch der zweite Start (Lauf 10). Wäre nur der erste abgewiesen worden, hätte Lauf 10 auf einem Stand ohne Lauf 9 gemessen.
+
+**How to apply, zusätzlich:** Ein Prüfstandsstart wird nicht mit `Select-String` gefiltert. Seine Ausgabe geht in eine Datei im Scratchpad, die danach gelesen wird. Die Ergebnisdatei wird nur gelesen, und ein zweiter Lauf nur gestartet, wenn der erste `Beendet: True` gemeldet hat: mit `&&` oder `if ($?)`, nie mit `;`.

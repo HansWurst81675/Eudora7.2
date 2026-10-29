@@ -1805,6 +1805,119 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Achtundneunzigster Durchgang — Nachlauf unmittelbar vor dem PR `e166-junk_message_fix`: LEKTOR-92 eingearbeitet, E-170 bis E-172 neu, 29.10.2026 (Bericht: `Befunde/LEKTOR-93.md`)
+
+Lauf über `e54bb5d9..d72c86bd`, kein Vollbestand. Nichts berichtigt
+(Auftrag: nur Bericht und Fahrtenbuch). Von den 5 Funden aus
+[LEKTOR-92](../Befunde/LEKTOR-92.md#lektor-92) 3 erledigt (L-92.3, .4, .5),
+L-92.1 teilweise, L-92.2 offen (FILTER.md-Zeilen unverändert); von den
+LEKTOR-91-Resten L-91.1, .2, .5, .9 erledigt, .3, .4, .7 teilweise. Die
+Belege der neuen Befunde [E-170](BEFUNDE.md#e-170) (Label weg nach
+Verschieben im IMAP-Konto), [E-171](BEFUNDE.md#e-171) (*Search Mailfolder*
+ohne Auswahl meldet einen internen Fehler) und [E-172](BEFUNDE.md#e-172)
+(Mail als rohes Base64) stimmen am Quelltext, bis auf `SearchView.cpp:2591-2592`
+(richtig `:2590-2593`). **Wichtigster Fund:** E-170 begründet *wichtig* mit
+*„verschwindet still“*, die Legende führt still Verlorenes unter *kritisch*
+([L-93.2](../Befunde/LEKTOR-93.md#l-93.2)); ähnlich E-172, dessen
+*„nichts geht verloren“* ungeprüft ist ([L-93.3](../Befunde/LEKTOR-93.md#l-93.3)).
+E-169 nennt die widerlegte Vermutung weiter zuerst
+([L-93.1](../Befunde/LEKTOR-93.md#l-93.1)). Zusammen **6 Funde**
+(1 unvollständig, 3 ungenau, 2 Hinweise); keiner hindert den PR. Neu für
+Gregor: soll die FAQ, die *Make Label* mit *Transfer To* empfiehlt, E-170
+schon vor dem Release nennen ([L-93.5](../Befunde/LEKTOR-93.md#l-93.5))?
+Unverändert: die toten Links in drei veröffentlichten Release-Texten;
+Testumfang vor `v7.2.1.N`, Kriterium 0.
+
+## Siebenundneunzigster Durchgang — Nachlauf vor dem PR `e166-junk_message_fix`: LEKTOR-91 eingearbeitet, FAQ neu, E-169 neu, 29.10.2026 (Bericht: `Befunde/LEKTOR-92.md`)
+
+Lauf über `5a235c55..01f583db` und Bestand der 62 `.md` ohne `Arbeitsweise/`
+und `Befunde/`. Nichts berichtigt (Auftrag: nur Bericht und Fahrtenbuch).
+Von den 11 Funden aus [LEKTOR-91](../Befunde/LEKTOR-91.md#lektor-91) 4 erledigt
+(L-91.6, .8, .10, .11), 7 teilweise — jeweils die Hauptstelle berichtigt,
+Nebenstellen liegen geblieben (ZIEL-Kopf 27.10., `FILTER.md:737` „trifft dann
+nie“, Abschrift `v1.0.120` „wörtlich“). **Wichtigster Fund:**
+[E-169](BEFUNDE.md#e-169) sucht die Stelle, die die Zwischendatei
+`eud*.htm` schreibt — sie ist `CTridentView::LoadMessage`
+(`TridentView.cpp:1530`), und das Lesefenster lädt dieselbe Datei (`:1633`);
+die Vermutung „Lesefenster lädt Bilder, die Zwischendatei nicht“ trägt damit
+nicht ([L-92.1](../Befunde/LEKTOR-92.md#l-92.1)). Die neue FAQ ist in sich
+stimmig, ihre Menüpfade stehen in `EudoraRes.rc` — bis auf ein
+„Sortierfeld“, das es nicht gibt ([L-92.3](../Befunde/LEKTOR-92.md#l-92.3)),
+und die Hintergrundfarbe ohne Fokus ([L-92.4](../Befunde/LEKTOR-92.md#l-92.4)).
+FILTER.md nennt für *Make Label* eine um 70 Zeilen verrutschte Fundstelle,
+die FAQ die richtige ([L-92.2](../Befunde/LEKTOR-92.md#l-92.2)). Zusammen
+**5 Funde** (1 unvollständig, 1 veraltet, 2 ungenau, 1 Hinweis); keiner
+hindert den PR. Für Gregor unverändert: die toten Links in drei
+veröffentlichten Release-Texten; Testumfang vor `v7.2.1.N`, Kriterium 0.
+
+## Sechsundneunzigster Durchgang — Bestand nach dem Einarbeiten von LEKTOR-90, E-168 und Gregors Entscheidung 15, 29.10.2026 (Bericht: `Befunde/LEKTOR-91.md`)
+
+Lauf über `116095f5..3b8ae53a` und Bestand der 61 `.md` ohne `Arbeitsweise/`
+und `Befunde/`. Nichts berichtigt (Auftrag: nur Bericht und Fahrtenbuch).
+Von den 18 Funden aus [LEKTOR-90](../Befunde/LEKTOR-90.md#lektor-90) 14 erledigt,
+L-90.6 und L-90.7 teilweise, L-90.16 im Repo erledigt, aber selbst falsch,
+L-90.18 als erledigt gemeldet und nicht wirksam; L-89.4 teilweise, L-88.10
+offen. **Schwerster Fund:** die Startwege-Schranke soll seit heute
+`Audit.log` zählen und so die zwanzig Starts vom 28.10. sehen — gemessen sieht
+sie weiter **einen**, weil sie jeden Start vor der Änderungszeit der
+`Eudora.exe` verwirft und die im Prüfstand am 28.10. getauscht wurde
+([L-91.1](../Befunde/LEKTOR-91.md#l-91.1)). **Eigener Fehler berichtigt:** die
+veröffentlichte Notiz zu `v1.0.120` zählt gar nicht auf, was ausfällt — die
+Frage an Gregor aus L-90.16 war falsch gestellt
+([L-91.2](../Befunde/LEKTOR-91.md#l-91.2)). Neu nach außen: sieben Links in den
+veröffentlichten Texten `v1.0.113`, `v1.0.117`, `v1.0.120` zeigen auf
+`blob/main/BEFUNDE.md`, das seit dem 22.10. unter `Intern/` liegt
+([L-91.3](../Befunde/LEKTOR-91.md#l-91.3)). Entscheidung 15 steht stimmig in
+README, TESTPLAN, BEFUNDE und CHANGELOG — fehlt in ZIEL, das laut README als
+einzige Stelle sagt, was zu 7.2.1 fehlt ([L-91.5](../Befunde/LEKTOR-91.md#l-91.5));
+der Prüfschritt am Release wird ohne `MFC71`/`MSVCP71` grün, ohne etwas zu
+prüfen ([L-91.4](../Befunde/LEKTOR-91.md#l-91.4)). Die Junk-Ausnahme steht an
+einer Stelle (`FILTER.md:501-509`) und wird verlinkt; PORTIERUNG dehnt sie
+ungemessen auf die Verzeichnisdienste aus, vier Stellen sagen weiter
+„Punktzahl 0“ ohne Bedingung ([L-91.6](../Befunde/LEKTOR-91.md#l-91.6),
+[L-91.7](../Befunde/LEKTOR-91.md#l-91.7)). Zusammen **11 Funde** (2 falsch,
+1 veraltet, 4 unvollständig, 2 ungenau, 2 Hinweise). Für Gregor: ob die
+veröffentlichten Release-Texte berichtigt werden; Testumfang vor `v7.2.1.N`,
+Kriterium 0.
+
+## Fünfundneunzigster Durchgang — Bestand nach der Behebung von E-166 auf dem Zweig `e166-junk_message_fix`, dazu Prüf- und Testdokumente, 28.10.2026 (Bericht: `Befunde/LEKTOR-90.md`)
+
+Lauf über `7148ce09..473f570f` und Bestand der 61 `.md` ohne `Arbeitsweise/`
+und `Befunde/`. Nichts berichtigt (Auftrag: nur Bericht und Fahrtenbuch).
+L-89.1, .2, .3, .5, .7, .9, .10 erledigt; L-89.4 teilweise (zwei Verweise
+auf `#s-3`); L-89.6 und L-89.8 erledigt und am Nachmittag wieder überholt;
+L-88.9 teilweise, L-88.10 offen. **Schwerster Fund:** der Einstieg in
+`Intern/WEITERMACHEN.md:135` sagt, E-166 sei nicht nachstellbar und warte auf
+Gregors Bibliotheken und den Merge von PR #180 — alles erledigt, Zweig,
+Behebung und ausstehender Test fehlen ([L-90.1](../Befunde/LEKTOR-90.md#l-90.1)).
+E-166 ist aus „Noch offen“ verschwunden und steht in keinem
+CHANGELOG-Abschnitt und nicht unter README „Bekannte Fehler“, obwohl der
+Fehler in `v1.0.120` still Einstellungen verliert
+([L-90.3](../Befunde/LEKTOR-90.md#l-90.3), [L-90.4](../Befunde/LEKTOR-90.md#l-90.4));
+seine Stufe *wichtig* widerspricht der Legende, die verlorene Einstellungen
+unter *kritisch* führt ([L-90.5](../Befunde/LEKTOR-90.md#l-90.5)); FILTER,
+ANWENDER und README sagen ohne Einschränkung, die Junk-Punktzahl bleibe 0 —
+E-166 belegt, dass die Zusätze auf Gregors Rechner laden
+([L-90.6](../Befunde/LEKTOR-90.md#l-90.6)).
+**Auf Gregors Zusatzauftrag** (*„testbericht, testplan, prüfbericht usw.
+auch auf unstimmigkeiten prüfen - wichtig.“*) sieben weitere Funde in den
+Prüf- und Testdokumenten, zusammen **18** (2 falsch, 4 veraltet,
+5 unvollständig, 4 ungenau, 3 Hinweise). Der schwerste: im Prüfstand
+`C:\Temp\E166` liegt ein `Exception.log` vom 28.10. 13:35:16 —
+Zugriffsverletzung im Konto-Assistenten (`CWizardYourNamePage::OnWizardNext`
+→ `ErrorDialog`), am Paket-Bau 1.0.127; `TESTLAEUFE.md:556` und E-166
+erwähnen ihn nicht ([L-90.12](../Befunde/LEKTOR-90.md#l-90.12)). Dazu: der
+TESTPLAN-Kopf verspricht nach Gregors Ja das Release, E-166 verlangt vorher
+ein Testpaket ([L-90.13](../Befunde/LEKTOR-90.md#l-90.13)); PAKETE 1.0.127
+ohne den Defender-Alarm an seiner `EudoraRes.dll`
+([L-90.14](../Befunde/LEKTOR-90.md#l-90.14)); die Notiz zu `v1.0.120` ohne
+Junk-Filter ([L-90.16](../Befunde/LEKTOR-90.md#l-90.16)); die
+Startwege-Schranke sah am 28.10. einen Start, `Audit.log` zeigt zwanzig
+([L-90.18](../Befunde/LEKTOR-90.md#l-90.18)). Prüfstandsbuch und Fälle
+deckungsgleich (41/41). Für Gregor: ob E-166 ins Release 7.2.1 kommt, ob
+die veröffentlichte Notiz zu `v1.0.120` geändert wird, Testumfang vor
+`v7.2.1.N`, Kriterium 0.
+
 ## Vierundneunzigster Durchgang — Prüfung vor dem Merge von PR #180 (`0.127_test_ergebnisse`): E-166 Junk-Frage, S-3c erweitert, Freigabe-Schranke, Stand-Köpfe 28.10.2026 (Bericht: `Befunde/LEKTOR-89.md`)
 
 Lauf über `2a8f5649..978a852a` und Bestand der 61 `.md` ohne `Arbeitsweise/`

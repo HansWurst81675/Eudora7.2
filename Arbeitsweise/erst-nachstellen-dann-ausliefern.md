@@ -160,3 +160,24 @@ Um 12:31:45 stand der Befehl zum Schnüren von 1.0.126 schon fest (*„Jetzt war
 - Ein Paket, dessen Abschnitt keinen roten alten Stand nennt, ist nicht fertig, egal wie die Tabellenzeile heißt.
 
 **Vorschlag für die Schranke (nicht gebaut):** `pruefe-nachgestellt.pl` erkennt den Paketabschnitt an der Überschrift `## 1.0.N`, nicht an „bereitgestellt“, und verlangt in **irgendeiner** Zeile des Abschnitts einen roten alten Stand (Muster wie bisher). Fehlt sie, meldet sie das. Gegenprobe: Abschnitt 1.0.125 (kein Fall) muss rot werden, 1.0.127 („rot an 1.0.125, grün an 1.0.126 und 1.0.127“ steht in BEFUNDE E-137, im Abschnitt nachzutragen) grün.
+
+## Nachtrag 28.10.2026 (CHRONIST): E-166, diesmal in der richtigen Reihenfolge, und was „nachgestellt“ hier heißt
+
+Zeiten MEZ, gemessen an Transkript `72be6093…`, `tools/TESTLAEUFE.md` und `Intern/pruefstand-buch.tsv` (Zweig `e166-junk_message_fix`).
+
+| Schritt | Zeit | Ergebnis |
+|---|---|---|
+| Fehlerbild am Prüfstand rot (Paket 1.0.127, Gregors DLLs) | 13:39:58 / 13:40:13 | Lauf 9: nach Junk-*No* und *Konto → Eigenschaften* mit OK fehlt `AskedAboutJunk` in der INI. Lauf 10: die Frage kommt wieder |
+| Bestand geprüft | 13:40:22 | `befund-suchen.pl persona.cpp` und `RemoveAllFromCache`: kein Befund zu dieser Stelle |
+| Gregors Ja zu Zweig und Behebung | 14:02:15 | *„ja, e166-junk_message_fix, beheben“* |
+| Bau, 314 Tests | 14:09:58 gemeldet | grün |
+| Lauf 9 und 10 am neuen Bau | 14:14:51 / 14:15:24 | grün |
+| Regressionsfall E-166a/b am neuen Bau | 14:17:32 | 2 von 2 |
+| Gegenprobe an der `Eudora.exe` aus 1.0.127 | 14:19:01 | E-166a grün (der Weg lief), E-166b rot (`fehlt in ini: AskedAboutJunk=6`) |
+| zurück auf den neuen Bau | 14:21:05 | 2 von 2, damit der letzte Eintrag im Ergebnisbuch stimmt |
+
+Gregors Frage vom 27.10. (*„gibt es jetzt auch einen neuen test …?“*) musste diesmal niemand stellen. Ein Paket gab es noch nicht. Die Behebung wartet auf das nächste ([[pakete-sammeln]]).
+
+**Was offen bleibt, und wie es im Chat stand.** Nachgestellt ist ein **Weg**, der Gregors Fehlerbild erzeugt. Ob Gregor ihn gegangen ist (*Konto → Eigenschaften* nach der web.de-Fehlermeldung), zeigt sein Protokoll nicht. `BEFUNDE.md` E-166 sagt das ausdrücklich: *„Vermutung, nicht gemessen“*. Auch die Chatnachrichten nennen den Vorbehalt, aber erst im Text. Ihre ersten Sätze sind stärker: 13:40:47 *„Ich habe die Ursache für E-166 gefunden“*, 14:23:04 *„Die Junk-Frage aus E-166 kommt nicht mehr wieder“*. Meine Rückfrage von 13:40:47 (*„Erinnerst du dich daran?“*) hat Gregor nicht beantwortet, er gab nur den Zweignamen. Bleibt sie offen, sagt „behoben“ etwas über **einen** Weg zum Fehlerbild. Ob es Gregors Weg war, misst erst sein Test im nächsten Paket.
+
+**How to apply, zusätzlich:** Der erste Satz nennt, was gemessen ist: *„Ich habe einen Weg zu deinem Fehlerbild gefunden und behoben; ob es dein Weg war, zeigt dein Protokoll nicht.“* Eine Rückfrage, die nach dem Zweignamen unbeantwortet bleibt, kommt in den Befund unter *Was noch fehlt*.

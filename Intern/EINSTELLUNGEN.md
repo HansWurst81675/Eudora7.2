@@ -181,7 +181,9 @@ Schon vollständig anderswo, deshalb hier nur der Zeiger:
 Verhalten, das belegt ist und trotzdem niemand erwartet. Keines davon meldet
 sich von selbst.
 
-**4.1 Die Junk-Punktzahl bleibt bei jeder eingehenden Nachricht `0`.** Die
+**4.1 Die Junk-Punktzahl bleibt bei jeder eingehenden Nachricht `0`** — sofern
+`MFC71.DLL` und `MSVCP71.dll` nicht schon auf dem Rechner liegen
+([FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)). Die
 Bewertung kommt nicht von Eudora, sondern von Zusatzmodulen; ist keines
 geladen, kehrt `CallJunkTranslators` sofort zurück
 (`Trnslate.cpp:4952-4957`), und ein fehlgeschlagenes Modul meldet sich nicht
