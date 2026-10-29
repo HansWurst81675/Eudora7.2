@@ -1805,6 +1805,36 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Sechsundneunzigster Durchgang — Bestand nach dem Einarbeiten von LEKTOR-90, E-168 und Gregors Entscheidung 15, 29.10.2026 (Bericht: `Befunde/LEKTOR-91.md`)
+
+Lauf über `116095f5..3b8ae53a` und Bestand der 61 `.md` ohne `Arbeitsweise/`
+und `Befunde/`. Nichts berichtigt (Auftrag: nur Bericht und Fahrtenbuch).
+Von den 18 Funden aus [LEKTOR-90](../Befunde/LEKTOR-90.md#lektor-90) 14 erledigt,
+L-90.6 und L-90.7 teilweise, L-90.16 im Repo erledigt, aber selbst falsch,
+L-90.18 als erledigt gemeldet und nicht wirksam; L-89.4 teilweise, L-88.10
+offen. **Schwerster Fund:** die Startwege-Schranke soll seit heute
+`Audit.log` zählen und so die zwanzig Starts vom 28.10. sehen — gemessen sieht
+sie weiter **einen**, weil sie jeden Start vor der Änderungszeit der
+`Eudora.exe` verwirft und die im Prüfstand am 28.10. getauscht wurde
+([L-91.1](../Befunde/LEKTOR-91.md#l-91.1)). **Eigener Fehler berichtigt:** die
+veröffentlichte Notiz zu `v1.0.120` zählt gar nicht auf, was ausfällt — die
+Frage an Gregor aus L-90.16 war falsch gestellt
+([L-91.2](../Befunde/LEKTOR-91.md#l-91.2)). Neu nach außen: sieben Links in den
+veröffentlichten Texten `v1.0.113`, `v1.0.117`, `v1.0.120` zeigen auf
+`blob/main/BEFUNDE.md`, das seit dem 22.10. unter `Intern/` liegt
+([L-91.3](../Befunde/LEKTOR-91.md#l-91.3)). Entscheidung 15 steht stimmig in
+README, TESTPLAN, BEFUNDE und CHANGELOG — fehlt in ZIEL, das laut README als
+einzige Stelle sagt, was zu 7.2.1 fehlt ([L-91.5](../Befunde/LEKTOR-91.md#l-91.5));
+der Prüfschritt am Release wird ohne `MFC71`/`MSVCP71` grün, ohne etwas zu
+prüfen ([L-91.4](../Befunde/LEKTOR-91.md#l-91.4)). Die Junk-Ausnahme steht an
+einer Stelle (`FILTER.md:501-509`) und wird verlinkt; PORTIERUNG dehnt sie
+ungemessen auf die Verzeichnisdienste aus, vier Stellen sagen weiter
+„Punktzahl 0“ ohne Bedingung ([L-91.6](../Befunde/LEKTOR-91.md#l-91.6),
+[L-91.7](../Befunde/LEKTOR-91.md#l-91.7)). Zusammen **11 Funde** (2 falsch,
+1 veraltet, 4 unvollständig, 2 ungenau, 2 Hinweise). Für Gregor: ob die
+veröffentlichten Release-Texte berichtigt werden; Testumfang vor `v7.2.1.N`,
+Kriterium 0.
+
 ## Fünfundneunzigster Durchgang — Bestand nach der Behebung von E-166 auf dem Zweig `e166-junk_message_fix`, dazu Prüf- und Testdokumente, 28.10.2026 (Bericht: `Befunde/LEKTOR-90.md`)
 
 Lauf über `7148ce09..473f570f` und Bestand der 61 `.md` ohne `Arbeitsweise/`
