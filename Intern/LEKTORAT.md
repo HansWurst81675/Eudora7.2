@@ -1805,6 +1805,29 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Achtundneunzigster Durchgang — Nachlauf unmittelbar vor dem PR `e166-junk_message_fix`: LEKTOR-92 eingearbeitet, E-170 bis E-172 neu, 29.10.2026 (Bericht: `Befunde/LEKTOR-93.md`)
+
+Lauf über `e54bb5d9..d72c86bd`, kein Vollbestand. Nichts berichtigt
+(Auftrag: nur Bericht und Fahrtenbuch). Von den 5 Funden aus
+[LEKTOR-92](../Befunde/LEKTOR-92.md#lektor-92) 3 erledigt (L-92.3, .4, .5),
+L-92.1 teilweise, L-92.2 offen (FILTER.md-Zeilen unverändert); von den
+LEKTOR-91-Resten L-91.1, .2, .5, .9 erledigt, .3, .4, .7 teilweise. Die
+Belege der neuen Befunde [E-170](BEFUNDE.md#e-170) (Label weg nach
+Verschieben im IMAP-Konto), [E-171](BEFUNDE.md#e-171) (*Search Mailfolder*
+ohne Auswahl meldet einen internen Fehler) und [E-172](BEFUNDE.md#e-172)
+(Mail als rohes Base64) stimmen am Quelltext, bis auf `SearchView.cpp:2591-2592`
+(richtig `:2590-2593`). **Wichtigster Fund:** E-170 begründet *wichtig* mit
+*„verschwindet still“*, die Legende führt still Verlorenes unter *kritisch*
+([L-93.2](../Befunde/LEKTOR-93.md#l-93.2)); ähnlich E-172, dessen
+*„nichts geht verloren“* ungeprüft ist ([L-93.3](../Befunde/LEKTOR-93.md#l-93.3)).
+E-169 nennt die widerlegte Vermutung weiter zuerst
+([L-93.1](../Befunde/LEKTOR-93.md#l-93.1)). Zusammen **6 Funde**
+(1 unvollständig, 3 ungenau, 2 Hinweise); keiner hindert den PR. Neu für
+Gregor: soll die FAQ, die *Make Label* mit *Transfer To* empfiehlt, E-170
+schon vor dem Release nennen ([L-93.5](../Befunde/LEKTOR-93.md#l-93.5))?
+Unverändert: die toten Links in drei veröffentlichten Release-Texten;
+Testumfang vor `v7.2.1.N`, Kriterium 0.
+
 ## Siebenundneunzigster Durchgang — Nachlauf vor dem PR `e166-junk_message_fix`: LEKTOR-91 eingearbeitet, FAQ neu, E-169 neu, 29.10.2026 (Bericht: `Befunde/LEKTOR-92.md`)
 
 Lauf über `5a235c55..01f583db` und Bestand der 62 `.md` ohne `Arbeitsweise/`
