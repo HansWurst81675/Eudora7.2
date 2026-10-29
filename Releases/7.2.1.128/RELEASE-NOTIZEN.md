@@ -50,7 +50,7 @@ dieselbe Nummer: `7.2.1.128`. Die letzte Zahl zählt über das bisherige
 ## Neu: häufige Fragen
 
 [Doku/FAQ.md](https://github.com/HansWurst81675/Eudora7.2/blob/main/Doku/FAQ.md)
-beantwortet 19 Fragen — Post je Konto trennen, Mails farbig markieren
+beantwortet 18 Fragen — Post je Konto trennen, Mails farbig markieren
 (auch automatisch per Filter), Anhänge beim Leeren des Papierkorbs löschen,
 Verschlüsselung und Ports, welche Einstellungen anders sind als im Original
 und warum.
@@ -58,7 +58,7 @@ und warum.
 ## Bekannte Fehler
 
 Was noch nicht geht, steht in der
-[README unter „Bekannte Fehler“](https://github.com/HansWurst81675/Eudora7.2/blob/main/README.md),
+[README unter „Bekannte Fehler“](https://github.com/HansWurst81675/Eudora7.2/blob/main/README.md#bekannte-fehler),
 darunter neu: die Druckvorschau mancher HTML-Mails zeigt keine Bilder, ein
 Label geht beim Verschieben innerhalb eines IMAP-Kontos verloren, und beim
 Anlegen eines Filters mit *Make Label* waren die Labels einmal ausgegraut.

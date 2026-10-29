@@ -2,10 +2,10 @@
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
-> Repo unter `Releases\Eudora72-7.2.1.128-release.zip`). Die Titelzeile muss
-> `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36` zeigen. Das Mailverzeichnis darin
-> ist leer bis auf `Eudora.ini`. **Neu gegenüber 1.0.127 ist im Programm nur
-> E-166**, sein Schritt steht [direkt hierunter](#e-166-am-release) und braucht
+> Repo unter `Releases\Eudora72-7.2.1.128-release.zip`). Die Titelzeile zeigte
+> `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36`. Das Mailverzeichnis darin
+> war leer bis auf `Eudora.ini`. **Neu gegenüber 1.0.127 ist im Programm nur
+> E-166**, sein Schritt steht [weiter unten](#e-166-am-release) und brauchte
 > das **leere** Mailverzeichnis dieses Pakets. [E-87/E-88](#e-87-am-release)
 > ist schon bestanden (29.10.2026 an 1.0.127), der Kurztest V1 bis V6 am
 > 27.10.2026 an 1.0.127 ([Ergebnis](#ergebnis-7-2-0-127)). Darüber hinaus
