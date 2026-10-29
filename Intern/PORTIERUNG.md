@@ -736,7 +736,7 @@ Alle Änderungen sind einzeln in den Commits dokumentiert — bis `22a6d77` auf
   Weiterleitungen). Die vorgebauten Fremd-DLLs von 2006 (Paige32, EuMemMgr und die
   übrigen) brauchen diese Laufzeit. `MFC71.DLL` und `MSVCP71.dll` sind dagegen
   **nicht** nachbaubar — 157 Importe nach Ordinal, kein einziger nach Namen
-  (Befund [**B-1**](BEFUNDE.md#b-1)); die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) und S/MIME fallen deshalb aus, sofern die beiden nicht schon auf dem Rechner liegen ([FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)) — das eigene Adressbuch nicht.
+  (Befund [**B-1**](BEFUNDE.md#b-1)); die Verzeichnisdienste (LDAP, Ph, `EudoraBk`), Junk-Filter und S/MIME fallen deshalb aus — das eigene Adressbuch nicht. Liegen die beiden schon auf dem Rechner, laden Junk-Filter und S/MIME doch (gemessen, [FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)); ob dann auch die Verzeichnisdienste arbeiten, ist nicht gemessen.
   Alle Messungen: [Eudora71/VC71Bruecke/BEFUND.md](../Eudora71/VC71Bruecke/BEFUND.md).
 
 ## Zwei Fehler in der Zeichentabelle - gefunden und behoben

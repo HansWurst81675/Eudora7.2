@@ -25,8 +25,12 @@
    *Properties*, das Fenster mit **OK** schließen (nichts ändern).
 3. Eudora mit *File → Exit* beenden und mit `Eudora starten.cmd` neu starten.
 
-**Bestanden:** beim zweiten Start kommt die Junk-Frage **nicht** wieder. Kommt
-sie, ist E-166 nicht behoben — dann bitte melden.
+**Bestanden:** in Schritt 1 kam die Junk-Frage, und beim zweiten Start kommt
+sie **nicht** wieder. Kommt sie wieder, ist E-166 nicht behoben — bitte
+melden. **Kam sie schon in Schritt 1 nicht**, ist der Schritt **nicht
+prüfbar** (die Junk-Zusätze laden nur, wenn `MFC71.DLL` und `MSVCP71.dll` auf
+dem Rechner liegen, [FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet))
+— dann bitte so melden, nicht als bestanden.
 
 ## Was jetzt zu testen ist — Testpaket 7.2.0.127 (Kurztest)
 

@@ -290,8 +290,8 @@ Der Text steht in `DirectoryServices/DirectoryServicesUI/inc/DSRightViewImpl.h`,
 angezeigt in `DSRightViewImpl.cpp` aus `DSRightView::OnActivateWazoo` — **nur**
 wenn `RegisterCOMObjects()` fehlschlägt. Es schlägt fehl, weil `DirServ.dll`,
 `ISock.dll`, `Ph.dll`, `Ldap.dll` und `EudoraBk.dll` **`MFC71.DLL` und
-`MSVCP71.dll`** brauchen, und die hat Microsoft nie als Redistributable
-veröffentlicht. Betrifft die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) und S/MIME — **nicht** den Start und **nicht** das eigene Adressbuch, das in `Eudora.exe` übersetzt ist.
+`MSVCP71.dll`** brauchen, und die hat Microsoft nicht zur Weitergabe
+freigegeben. Betrifft die Verzeichnisdienste (LDAP, Ph, `EudoraBk`) und S/MIME — **nicht** den Start und **nicht** das eigene Adressbuch, das in `Eudora.exe` übersetzt ist.
 
 `tools/paket-pruefen.ps1` führt beide DLLs seit dem 31.08.2026 als hingenommene
 Lücke; **dass dabei ein Fehlerdialog erscheint, stand dort nicht.**

@@ -39,6 +39,13 @@ Zwischenstände wie **7.2.0.123** sind Testpakete für Gregors lokalen Test,
 keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 `v7.2.1.<n>`.
 
+**Was an der Release-Fassung selbst noch geprüft wird:** die Behebung von
+[E-166](Intern/BEFUNDE.md#e-166) — Gregor prüft sie an 7.2.1.\<n\> statt an
+einem eigenen Testpaket (Entscheidung 15 in
+[WEITERMACHEN](Intern/WEITERMACHEN.md), Schritt in
+[TESTPLAN](Intern/TESTPLAN.md#e-166-am-release)). Erst danach wird
+veröffentlicht. Die Übersicht unten zählt das nicht mit.
+
 <!-- ziel-stand: Anfang -->
 
 **Stand: 27 von 27 erfüllt, 0 offen.** Diese Übersicht wird aus den

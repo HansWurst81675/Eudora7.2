@@ -24,6 +24,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt wird; die Stelle, die sie schreibt, ist noch nicht … |
 | **[E-165](Intern/BEFUNDE.md#e-165)** | Die Vervollständigungsbox im To:-Feld sieht mit einem einzigen Treffer verbaut aus — wi… | **nie gemessen** | am Prüfstand `C:\Temp\E135-box` mit **einem** passenden Kurznamen messen (Außen- und Innenmaß der Box und der Liste, Bildlaufleisten-Stil), danach … |
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
@@ -101,7 +102,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 **Zweig `e166-junk_message_fix`, Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
 
-* **Konto-Eigenschaften verlieren keine Einstellungen mehr** ([E-166](Intern/BEFUNDE.md#e-166)). Wer *Konto → Eigenschaften* mit OK schloss, verlor jede Einstellung, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — bei Gregor die Antwort auf die Junk-Frage, die deshalb beim nächsten Start wiederkam. `CPersonality::Modify` (`persona.cpp`) schreibt diese Einstellungen jetzt, bevor es die Kontodaten speichert. Am Prüfstand vorher rot, nachher grün; Regressionsfall E-166a/b. Gregors Test steht aus.
+* **Konto-Eigenschaften verlieren keine Einstellungen mehr** ([E-166](Intern/BEFUNDE.md#e-166)). Wer die Kontoeinstellungen (*Tools → Personalities*, Rechtsklick → *Properties*) mit OK schloss, verlor jede Einstellung, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — bei Gregor die Antwort auf die Junk-Frage, die deshalb beim nächsten Start wiederkam. `CPersonality::Modify` (`persona.cpp`) schreibt diese Einstellungen jetzt, bevor es die Kontodaten speichert. Am Prüfstand vorher rot, nachher grün; Regressionsfall E-166a/b. Gregors Test steht aus.
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
 

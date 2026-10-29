@@ -51,7 +51,9 @@ Eudora nicht.
 
 *Am Quelltext nachgesehen (29.10.2026):* Menüs `EudoraRes.rc:5745-5756`
 und `:5938-5948`, Vorgabe `:11232`; Zeichnen `tocview.cpp:622-641`. Die
-Einstellungsseite hat Gregor am 29.10.2026 am Programm gesehen.
+Einstellungsseite hat Gregor am 29.10.2026 am Programm gesehen. **Am Programm
+geprüft** von Gregor am 29.10.2026 an Paket 1.0.127: *„labels funktionieren.
+paßt.“*
 
 ## Werden Anhänge gelöscht, wenn ich die Mail lösche?
 
