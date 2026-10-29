@@ -427,7 +427,7 @@ function BauKennung([string] $verz) {
     $exe = Join-Path $verz 'Eudora.exe'
     if (-not (Test-Path -LiteralPath $exe)) { return '(keine Eudora.exe)' }
     $text = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($exe))
-    $m = [regex]::Match($text, 'Eudora \d+\.\d+\.\d+\.\d+ / Paket [0-9.]+\+[0-9a-f]+\*? \d{4}-\d\d-\d\d \d\d:\d\d')
+    $m = [regex]::Match($text, 'Eudora \d+\.\d+\.\d+\.\d+(?: / Paket [0-9.]+)?\+[0-9a-f]+\*? \d{4}-\d\d-\d\d \d\d:\d\d')
     if ($m.Success) { return $m.Value } else { return '(Baukennung nicht gefunden)' }
 }
 $buchdatei = Join-Path $wurzel 'Intern\pruefstand-buch.tsv'

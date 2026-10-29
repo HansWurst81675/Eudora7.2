@@ -1805,6 +1805,74 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Hundertundzweiter Durchgang — Nachlauf zu LEKTOR-96 nach `deef1493`, 29.10.2026 (Bericht: `Befunde/LEKTOR-97.md`)
+
+Kurzer Nachlauf auf `deef1493` (= `origin/release-7.2.1`), nichts berichtigt.
+Von den 9 Funden aus [LEKTOR-96](../Befunde/LEKTOR-96.md#lektor-96) sind 6
+erledigt, [L-96.1](../Befunde/LEKTOR-96.md#l-96.1) teilweise, L-96.3 und
+L-96.6 nach dem Release verschoben. Die sieben Tabellenzeilen, die GitHub
+abschnitt, kommen an GitHubs Markdown-Dienst jetzt ganz an (gemessen).
+**3 neue Funde:** die [E-166](BEFUNDE.md#e-166)-Zeile nennt Gregors Test
+zugleich bestätigt und fehlend
+([L-97.1](../Befunde/LEKTOR-97.md#l-97.1)); der TESTPLAN-Kopf sagt
+„Getestet“ und fordert darunter weiter zum Prüfen auf, WEITERMACHEN:7 nennt
+den Laptop nicht ([L-97.2](../Befunde/LEKTOR-97.md#l-97.2)); der neue
+Laptop-Abschnitt sagt „Verhalten des Originals“ ohne Zeile und ohne Art des
+Belegs — belegt am Quelltext, `eudora.cpp:1792`, seit dem Original
+unverändert ([L-97.3](../Befunde/LEKTOR-97.md#l-97.3)).
+
+## Hundertunderster Durchgang — Bestand nach Gregors Test an 7.2.1.128, Form von Tabellen und Ankündigungen, 29.10.2026 (Bericht: `Befunde/LEKTOR-96.md`)
+
+Lauf auf `159d3955` (= `origin/release-7.2.1`). Nichts berichtigt (Auftrag:
+nur Bericht und Fahrtenbuch). Gregors Test an 7.2.1.128 ist im TESTPLAN, in
+der E-166-Zeile und im WEITERMACHEN-Einstieg angekommen, an **12 Stellen in
+8 Dateien** heißt es weiter *„bei Gregor im Test“* oder *„ungetestet“*;
+WEITERMACHEN widerspricht sich zwischen Zeile 7 und 14
+([L-96.1](../Befunde/LEKTOR-96.md#l-96.1)). [E-173](BEFUNDE.md#e-173)
+(ausgegraute Labels bei *Make Label*) fehlt unter den bekannten Fehlern der
+README und im CHANGELOG-Abschnitt des Release
+([L-96.4](../Befunde/LEKTOR-96.md#l-96.4)). **Neue Brille, die Form:** 428
+Tabellen nach GFM gelesen, 42 Ankündigungen gegen ihr Ziel gehalten. Heute
+trifft jede Ankündigung ihre Form; am Stand vor `beb3fc98` fand dieselbe
+Messung genau Gregors Fall. Dafür schneidet GitHub **7 Tabellenzeilen** ab,
+weil ein `|` in einer Codespanne die Zelle trennt — an GitHubs
+Markdown-Dienst gemessen, darunter E-101, E-125 und die Beschreibung von
+`pruefe-tabellenzeilen.pl` selbst ([L-96.2](../Befunde/LEKTOR-96.md#l-96.2));
+die Schranke nimmt das Gegenteil an und ist dafür blind
+([L-96.3](../Befunde/LEKTOR-96.md#l-96.3)). Mechanisch prüfbar: ja,
+Vorschlag im Bericht. Selbstmeldung: `ausliefern.pl --pruefen` ohne Gregors
+Zustimmung gefahren, es liest seine Testverzeichnisse
+([L-96.9](../Befunde/LEKTOR-96.md#l-96.9)). Von den 15 Funden aus
+[LEKTOR-95](../Befunde/LEKTOR-95.md#lektor-95) 14 erledigt, 1 teilweise.
+Zusammen **9 Funde**. Für Gregor: ist sein Test das Ja zu `v7.2.1.128`?
+
+## Hundertster Durchgang — Nummernschema 7.2.0.N / 7.2.1.N und Release 7.2.1.128, 29.10.2026 (Bericht: `Befunde/LEKTOR-95.md`)
+
+Lauf auf `640e1a0e`, während des Laufs vorgespult auf `b74a1e81` (Paket
+7.2.1.128 geschnürt). Nichts berichtigt (Auftrag: nur Bericht und
+Fahrtenbuch). Das neue Schema steht richtig in PAKETE, MITARBEITEN,
+WERKZEUGE und den Standzeilen; **wo Anwender lesen, gilt noch das alte:**
+ANWENDER, STARTUMGEBUNG und BAUEN beschreiben die Titelzeile als
+`Eudora 7.2.0.<n> / Paket 1.0.<n>`
+([L-95.1](../Befunde/LEKTOR-95.md#l-95.1)), der CHANGELOG-Kopf erklärt
+`1.0.x` als Regel ([L-95.2](../Befunde/LEKTOR-95.md#l-95.2)). Der TESTPLAN
+sagt *„nur ein Schritt“* (E-166), ZIEL.md verlangt vor der Marke alle neun
+Kriterien ([L-95.11](../Befunde/LEKTOR-95.md#l-95.11)); README,
+WEITERMACHEN, AUFGABEN und der PAKETE-Kopf sagen seit dem Schnüren weiter
+*„noch nicht geschnürt“* ([L-95.15](../Befunde/LEKTOR-95.md#l-95.15)).
+`ausliefern.pl --pruefen`,
+von PAKETE empfohlen, bricht an `7.2.1.128` ab
+([L-95.4](../Befunde/LEKTOR-95.md#l-95.4)); PAKETE bestreitet an zwei
+Stellen die Dateiversion der `Eudora.exe`, die jetzt `7,2,1,128` trägt
+([L-95.6](../Befunde/LEKTOR-95.md#l-95.6)). Die EINSTELLUNGEN-Liste der
+Abweichungen widerspricht ihrem ersten Satz, ihre Zeilen in `EudoraRes.rc`
+stehen bis zu 22 daneben ([L-95.12](../Befunde/LEKTOR-95.md#l-95.12)).
+Keine Datei stellt 7.2.1.128 als getestet oder veröffentlicht dar. Von den
+18 Funden aus [LEKTOR-94](../Befunde/LEKTOR-94.md#lektor-94) 14 erledigt, 3
+teilweise, 1 bewusst unverändert. Zusammen **15 Funde**. Neu für Gregor:
+was er an 7.2.1.128 vor der Marke testet; wie ein Zweig heißt, der nur eine
+Fassung schnürt.
+
 ## Neunundneunzigster Durchgang — Datenschutz nach PR #184 und #185, Release-Vorbereitung 7.2.1, 29.10.2026 (Bericht: `Befunde/LEKTOR-94.md`)
 
 Lauf auf `1ba04dbc` (= `main` nach #185). Nichts berichtigt (Auftrag: nur
@@ -2826,3 +2894,12 @@ sich lohnt.
 an drei Stellen verschieden bewertet und ist im Release-Bau vermutlich
 gegenstandslos; **A-1** nennt dieselbe Funktion mit zwei verschiedenen
 Zeilennummern.
+
+## LEKTOR-98 (29.10.2026) — Nachlauf zu 1d51bdcf
+
+[LEKTOR-98](../Befunde/LEKTOR-98.md): Release-Text v7.2.1.128 inhaltlich
+richtig, drei Funde — „19 Fragen“ gilt erst nach dem Merge auf `main`
+([L-98.1](../Befunde/LEKTOR-98.md#l-98.1)), README-Link ohne Anker
+([L-98.2](../Befunde/LEKTOR-98.md#l-98.2)), TESTPLAN-Kopf teils noch im
+Präsens ([L-98.3](../Befunde/LEKTOR-98.md#l-98.3)).
+Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](../Befunde/LEKTOR-98.md#nachprüfung-nach-62251f42)).

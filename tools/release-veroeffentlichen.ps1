@@ -28,9 +28,9 @@
 # Aufruf:
 #   powershell -NoProfile -ExecutionPolicy Bypass `
 #     -File tools\release-veroeffentlichen.ps1 `
-#     -Fassung 1.0.28 `
+#     -Fassung 7.2.1.128 `
 #     -Freigabe "Gregor am 10.09.2026: 'passt, kannst releasen'" `
-#     -Titel "7.2.0.28 / Paket 1.0.28 - ..." -Notizen pfad\zur\datei.md
+#     -Titel "Eudora 7.2.1.128 - ..." -Notizen pfad\zur\datei.md
 #
 #   -NurPruefen   prueft alles und veroeffentlicht NICHT (fuer Gegentests)
 #
@@ -61,8 +61,11 @@ if ([string]::IsNullOrWhiteSpace($Freigabe) -or $Freigabe.Trim().Length -lt 10) 
 
 # --- 2. Fassung gegen Version.h und VERSION --------------------------------
 
-if ($Fassung -notmatch '^\d+\.\d+\.\d+$') {
-    Melde ('Fassung muss die Form 1.0.28 haben, war: ' + $Fassung)
+# Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) heisst
+# ein Release ueberall gleich: 7.2.1.N in VERSION, Version.h, ZIP und Marke
+# v7.2.1.N. Die alte Paketnummer 1.0.N gibt es nicht mehr.
+if ($Fassung -notmatch '^\d+\.\d+\.\d+\.\d+$') {
+    Melde ('Fassung muss die Form 7.2.1.128 haben, war: ' + $Fassung)
 } else {
     $paketDatei = Join-Path $wurzel 'VERSION'
     $paket = ''
@@ -72,14 +75,15 @@ if ($Fassung -notmatch '^\d+\.\d+\.\d+$') {
                '. Erst die Nummern hochsetzen, dann veroeffentlichen (Befund V-1).')
     }
 
-    $klein = $Fassung.Split('.')[-1]
+    $teil = $Fassung.Split('.')
     $vh = Join-Path $wurzel 'Eudora71\Version.h'
     if (Test-Path $vh) {
         $inhalt = Get-Content -Raw $vh
         foreach ($muster in @(
-            ('EUDORA_VERSION4 ' + $klein),
-            ('7,2,0,' + $klein),
-            ('"7.2.0.' + $klein + '"'))) {
+            ('EUDORA_VERSION3 ' + $teil[2]),
+            ('EUDORA_VERSION4 ' + $teil[3]),
+            ($teil -join ','),
+            ('"' + $Fassung + '"'))) {
             if ($inhalt -notlike ('*' + $muster + '*')) {
                 Melde ('Version.h enthaelt nicht "' + $muster +
                        '" - dort stehen DREI Makros, alle drei muessen passen.')
@@ -97,13 +101,12 @@ if (-not (Test-Path $cl)) {
     Melde ('CHANGELOG.md nicht gefunden: ' + $cl)
 } else {
     $zeilen = Get-Content -Encoding UTF8 $cl
-    $klein = $Fassung.Split('.')[-1]
     $anfang = -1
     for ($i = 0; $i -lt $zeilen.Count; $i++) {
-        if ($zeilen[$i] -match ('^## 7\.2\.0\.' + $klein + '\b')) { $anfang = $i; break }
+        if ($zeilen[$i] -match ('^## ' + [regex]::Escape($Fassung) + '\b')) { $anfang = $i; break }
     }
     if ($anfang -lt 0) {
-        Melde ('CHANGELOG.md hat keinen Abschnitt "## 7.2.0.' + $klein +
+        Melde ('CHANGELOG.md hat keinen Abschnitt "## ' + $Fassung +
                '" - ohne ihn weiss niemand, was in dieser Fassung steckt.')
     } else {
         $ende = $zeilen.Count
@@ -113,7 +116,7 @@ if (-not (Test-Path $cl)) {
         $text = ($zeilen[$anfang..($ende - 1)] -join "`n")
 
         if ($text -match 'noch nicht best') {
-            Melde ('Der CHANGELOG-Abschnitt zu 7.2.0.' + $klein +
+            Melde ('Der CHANGELOG-Abschnitt zu ' + $Fassung +
                    ' sagt selbst "noch nicht bestaetigt". Eine Fassung, deren ' +
                    'eigene Dokumentation sie fuer ungeprueft erklaert, wird ' +
                    'nicht veroeffentlicht.')
@@ -127,7 +130,7 @@ if (-not (Test-Path $cl)) {
         # Eine Schranke, die das Richtige abweist, wird umgangen statt
         # befolgt (Lehre schranke-gegentesten).
         if ($text -notmatch 'best(\u00e4|ae|a)tigt') {
-            Melde ('Im CHANGELOG-Abschnitt zu 7.2.0.' + $klein +
+            Melde ('Im CHANGELOG-Abschnitt zu ' + $Fassung +
                    ' steht keine Bestaetigung. Erst Gregors Rueckmeldung ' +
                    'eintragen, dann veroeffentlichen.')
         }
@@ -171,7 +174,7 @@ if ($NurPruefen) {
 # --- 5. Veroeffentlichen ---------------------------------------------------
 
 $marke = 'v' + $Fassung
-if ($Titel -eq '') { $Titel = ('7.2.0.' + $Fassung.Split('.')[-1] + ' / Paket ' + $Fassung) }
+if ($Titel -eq '') { $Titel = ('Eudora ' + $Fassung) }
 
 # --target ist PFLICHT, nicht Beiwerk.
 #
@@ -233,7 +236,7 @@ if ($ghRc -eq 0) {
     Write-Host ''
     Write-Host '  Ein veroeffentlichtes Paket wird nicht ersetzt - es bekommt die'
     Write-Host '  naechste Nummer. Sonst tragen zwei verschiedene ZIPs dieselbe'
-    Write-Host '  Fassung, und "ich habe 1.0.x getestet" sagt nicht mehr, welches.'
+    Write-Host '  Fassung, und "ich habe 7.2.1.x getestet" sagt nicht mehr, welches.'
     Write-Host '  Genau das ist am 31.08.2026 unter v1.0.3 passiert (Befund V-1).'
     Write-Host ''
     Write-Host '  Also: VERSION und Eudora71/Version.h hochzaehlen, neu bauen,'

@@ -69,7 +69,7 @@ sub urteil {
     return '' if $z =~ /\bGegenprobe\b/i;
     return '' if $z =~ /\bnachgestellt\b/i;
     return '' if $z =~ /\bvorher rot\b/i;
-    return '' if $z =~ /\b(?:an|mit)\s+(?:1\.0|7\.2\.0)\.\d+\b[^;|]*?\b(?:rot|Fehler|Meldung|zeigt)/i;
+    return '' if $z =~ /\b(?:an|mit)\s+(?:1\.0|7\.2\.[01])\.\d+\b[^;|]*?\b(?:rot|Fehler|Meldung|zeigt)/i;
     return 'kein roter alter Stand genannt';
 }
 

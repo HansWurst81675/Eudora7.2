@@ -1,20 +1,104 @@
-# Testplan für Gregor — Quellstand 7.2.0.127 / `VERSION` 1.0.127, Stand 29.10.2026 (Prüfschritt zu E-166 für das Release ergänzt)
+# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 29.10.2026 (getestet, E-166 bestanden)
 
-> **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter, **am 27.10.2026
-> bestanden** (V1 bis V6, [Ergebnis](#ergebnis-7-2-0-127)). Das
-> Paket 1.0.126 bitte **nicht** testen: es wurde geschnürt, dann fand der
-> PRÜFER eine Nebenwirkung (V6), und 1.0.127 ersetzt es. Das
-> Testpaket 7.2.0.125 ist überholt (U1 nein, U2 bis U4 gehen in V2, V3 und V5
-> auf), die Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen; alle
-> Ergebnisse stehen weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Ja
-> wird das Release **7.2.1.<n>** gebaut; an ihm prüfst du zusätzlich
-> [E-166](#e-166-am-release) — erst danach wird es veröffentlicht.
+> **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
+> `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
+> Repo unter `Releases\Eudora72-7.2.1.128-release.zip`). Die Titelzeile zeigte
+> `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36`. Das Mailverzeichnis darin
+> war leer bis auf `Eudora.ini`. **Neu gegenüber 1.0.127 ist im Programm nur
+> E-166**, sein Schritt steht [weiter unten](#e-166-am-release) und brauchte
+> das **leere** Mailverzeichnis dieses Pakets. [E-87/E-88](#e-87-am-release)
+> ist schon bestanden (29.10.2026 an 1.0.127), der Kurztest V1 bis V6 am
+> 27.10.2026 an 1.0.127 ([Ergebnis](#ergebnis-7-2-0-127)). Darüber hinaus
+> hat Gregor geprüft, was er selbst wählte (Gregor am 29.10.2026: *„ich werde es noch
+> testen … auch andere dinge, nicht nur e-166“*). Die neun Kriterien aus
+> [ZIEL.md](../ZIEL.md) ([Teil 1](#teil-1-kriterien)) bekommen **keinen eigenen
+> Durchgang** — Gregor am 29.10.2026: *„ja, das funktioniert alles. … das ist
+> inzwischen schon alles mehrfach getestet und geprüft, läuft stabil.“* Seine
+> Ergebnisse stehen direkt hierunter. Erst mit seinem Ja
+> wird es als `v7.2.1.128` veröffentlicht.
+> Veröffentlicht ist bis dahin `v1.0.120`. Am Bau vorher geprüft: 314
+> Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
+> ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
+
+### <a id="ergebnis-e-166-laptop"></a>Ergebnis 29.10.2026 an 7.2.1.128: E-166 auf Gregors Laptop, erstmals mit Junk-Werkzeugen — bestanden
+
+* **E-166: bestanden.** Die Junk-Frage kam einmal, als zum ersten Mal ein
+  Junk-Werkzeug geladen war, und danach nicht wieder. Grundlage sind
+  `Eudora.ini` und `eudora.log` aus `C:\Temp\Eudora72-7.2.1.128-release`, von
+  Gregor in drei Ständen gesichert (21:28, 21:35, 21:37), in jedem Kopf
+  `Version 7.2.1.128`.
+* Ausgangslage: dasselbe Mailverzeichnis lief vorher in fünf Sitzungen
+  **ohne** `MFC71.DLL` und `MSVCP71.dll`. Ohne diese laden die Junk-Zusätze
+  nicht ([FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)),
+  und Eudora fragt nur, wenn mindestens einer geladen ist
+  (`eudora.cpp`, `!pJunkList->IsEmpty() && (askedBits&introAsked)==0`).
+  Deshalb stand in der INI `AskedAboutJunk=4`: das Bit „Junk-Postfach
+  geklärt“ (4) war gesetzt, das Bit „Frage gestellt“ (2) nie.
+* Sechste Sitzung, erstmals mit den beiden DLLs: `Dialog: "At least one junk
+  mail identification tool is installed, and ready to filter junk."`. Gregor
+  sicherte die INI bei offener Frage: `AskedAboutJunk=4`. Er antwortete *No*
+  (`Dismissed with 2`). Danach in der INI `AskedAboutJunk=6` und
+  `UseJunkMailbox=0`, die Sitzung endet mit `Logging shutdown`.
+* Siebte Sitzung, 21:37:01, Start über `Eudora.exe` direkt, laut Protokoll
+  dasselbe Mailverzeichnis: **keine** Junk-Frage, `Logging shutdown`, in der
+  INI weiter `AskedAboutJunk=6`. Gregor: *„kam nicht, frage blieb weg.“*
+* Belegt am Quelltext, nicht am Original-Programm gemessen: Die Bedingung in
+  `eudora.cpp:1792` ist seit dem Original-Import `567a5d87` unverändert. Die
+  Frage gehört also zum ersten Start mit einem Junk-Werkzeug, nicht zum ersten
+  Start überhaupt. Wer die beiden DLLs
+  später nachrüstet, bekommt sie also genau einmal.
+
+### <a id="ergebnis-e-166-hauptrechner"></a>Ergebnis 29.10.2026 an 7.2.1.128: E-166 auf Gregors Hauptrechner — bestanden laut Protokoll
+
+* **E-166: bestanden** nach der Regel [unten](#e-166-am-release): die Junk-Frage
+  kam beim ersten Start und danach nicht wieder. Grundlage ist
+  `eudora_20261029.zip` (`eudora.log`; `eudora.log_v1` ist ein früherer Stand
+  derselben Datei und enthält nichts Zusätzliches), Release-Verzeichnis
+  `C:\Temp\Eudora72-7.2.1.128-release`, in jedem Kopf `Version 7.2.1.128`.
+* Erster Start 19:14:36 mit leerem Mailverzeichnis (`Search.xml does not exist`,
+  `In.mbx` mit Größe 0). Dort `Dialog: "At least one junk mail identification
+  tool is installed, and ready to filter junk."` (0.00) und
+  `Dismissed with 2` (0.06). Die Junk-Zusätze haben also geladen, anders als in
+  der VM. Ob mit *No* geantwortet wurde, zeigt das Protokoll nicht.
+* Danach 11 weitere Starts von 19:14:49 bis 19:21:18: in keinem eine Junk-Frage.
+  Insgesamt kommt sie **einmal** in 12 Sitzungen vor. Jede Sitzung endet mit
+  `Logging shutdown` (12 von 12), und es gibt keine Fehlerzeile.
+* **Nicht im Protokoll belegt:** Schritt 2 (*Tools → Personalities* →
+  `<Dominant>` → *Properties* → OK). Dieser Schritt schreibt keine Zeile. Der
+  Konto-Assistent ist ebenfalls nicht zu sehen (`YesNoDialog` schreibt keine
+  `Dismissed`-Zeile, siehe [E-166](BEFUNDE.md#e-166)). Ein Konto bestand
+  spätestens um 19:19:01 (Verbindungen zu `mx.freenet.de:110` und `:25`).
+  **Gregor bestätigte am 29.10.2026, dass er Schritt 2 gemacht hat.** Damit ist
+  der Fehlerweg (`CPersonality::Modify` ohne `FlushINIFile`) durchlaufen.
+* `Eudora.ini` nach dem Test, laut Gregor: `AskedAboutJunk=6`. Die Antwort ist
+  also auf der Platte angekommen. Das ist derselbe Wert wie am Prüfstand in
+  Lauf 1 und im nachgemessenen Lauf 9 ([E-166](BEFUNDE.md#e-166)). Ohne den
+  Ausfall hätte der Wert gefehlt. Belegt ist Schritt 2 damit nicht: Ohne ihn
+  käme ebenfalls 6 heraus.
+* Nebenbei im Protokoll: Strg+W um 19:21:13 (E-137-Zeile, `fokus=ListBox`). Kein
+  Auftrag, nur notiert.
+
+### <a id="ergebnis-7-2-1-128"></a>Ergebnis 29.10.2026 an 7.2.1.128 (Gregors VM)
+
+* **E-166: an der VM nicht prüfbar** — die Junk-Frage kam gar nicht, auch nicht
+  beim ersten Start mit leerem Mailverzeichnis. Gregor prüft E-166 **später auf
+  seinem Hauptrechner**; dort am selben Tag bestanden ([oben](#ergebnis-e-166-hauptrechner)).
+* Senden an sich selbst, Abruf und Weiterleiten über GMX gingen; im
+  `eudora.log` (13:59) keine Fehlerzeile, jede Sitzung endet sauber.
+* Passwortfrage beim Start trotz abgeschaltetem *Check Mail*: kein Abruf,
+  sondern das Nachladen der markierten Nachricht in einem offenen IMAP-Fenster
+  (zweimal *„1 message(s) left to download“* direkt nach dem Start im
+  Protokoll).
+* Labels im Filterfenster einmal ausgegraut → neuer Befund [E-173](BEFUNDE.md#e-173),
+  nach dem Release.
+* Die neun Kriterien bekommen keinen eigenen Durchgang (Gregors Entscheidung,
+  siehe oben).
 
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 
 > Kein eigenes Testpaket — du prüfst es an der Release-Fassung (Entscheidung
 > 15 in [WEITERMACHEN](WEITERMACHEN.md)), **zuerst**, in einem frisch
-> ausgepackten Release-Verzeichnis, vor dem übrigen Release-Test. Alles im **lokalen** Eudora, kein
+> ausgepackten Release-Verzeichnis. Alles im **lokalen** Eudora, kein
 > IMAP-Ordner. Voraussetzung: ein **leeres** Mailverzeichnis im Release-Verzeichnis,
 > sonst ist die Frage schon beantwortet und kommt gar nicht.
 
@@ -33,7 +117,35 @@ prüfbar** (die Junk-Zusätze laden nur, wenn `MFC71.DLL` und `MSVCP71.dll` auf
 dem Rechner liegen, [FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet))
 — dann bitte so melden, nicht als bestanden.
 
-## Was jetzt zu testen ist — Testpaket 7.2.0.127 (Kurztest)
+## <a id="e-87-am-release"></a>Weiterleiten behält die HTML-Formatierung ([E-87](BEFUNDE.md#e-87), [E-88](BEFUNDE.md#e-88)) — bestanden an 1.0.127, am Release nicht mehr nötig
+
+> Beide galten seit September als behoben; bestätigt hat es Gregor am
+> 29.10.2026 an 1.0.127 (Ergebnis unten). Geeignet ist jeder **Newsletter mit farbigen Kästen, Hintergründen und
+> Bildern** (etwa einer von waipu.tv) — keine reine Textmail.
+
+1. Den Newsletter in der Postfachliste markieren, *Message → Forward*.
+2. **Im Verfassenfenster:** stehen Kästen, Farben und Bilder da — oder nur
+   Fließtext mit blauen Verweisen?
+3. An dich selbst senden und abholen. **Beim Empfang:** sieht die Mail aus
+   wie das Original im Lesefenster?
+
+**Bestanden:** in Schritt 2 und 3 ist die Formatierung erhalten. Kleine
+Abweichungen im Verfassenfenster sind bekannt (der Editor kennt kein CSS);
+entscheidend ist, was **ankommt**.
+
+**Ergebnis 29.10.2026, an 1.0.127 (vor dem Release, auf Gregors Wunsch
+vorgezogen): bestanden.** Gregor leitete einen HTML-Newsletter zweimal
+weiter, an zwei eigene Konten; sein Bildschirmfoto der angekommenen Mail
+zeigt Bilder, Kästen und farbige Knöpfe wie das Original (Schritt 3); sein
+zweites Bildschirmfoto zeigt das Original im Lesefenster zum Vergleich —
+Hintergrund, Bilder, Überschriften, umrandete Kästen und Knöpfe stimmen
+überein.
+Protokoll: beim Verfassen `IsHTML=1`, beim Absenden `Fassung=ORIGINAL
+(unveraendert)` mit 159 350 Byte statt der 37 609 Byte der Editor-Fassung,
+auf der Leitung `IsHTML=1 SendPlainOnly=0`; Empfang einmal per POP, einmal
+per IMAP als `text/HTML`. Schritt 2 (Verfassenfenster) ist nicht im Bild.
+
+## Kurztest 7.2.0.127 — bestanden am 27.10.2026
 
 > Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.127-release`, neben dein
 > 1.0.125. Geprüft wird nur, was sich gegenüber 7.2.0.125 geändert hat, dazu
@@ -182,7 +294,7 @@ selbst `E-132`-Zeilen, die wie ein Nachweis aussehen; und, falls vorhanden,
 **C. Ab jetzt nur noch mit `Eudora starten.cmd`** im neuen Verzeichnis, dann
 Teil 1 und Teil 2 in beliebiger Reihenfolge.
 
-### Teil 1 — die neun Kriterien aus ZIEL.md, kurz
+### <a id="teil-1-kriterien"></a>Teil 1 — die neun Kriterien aus ZIEL.md, kurz
 
 | Nr. | Kriterium | Was zu tun ist | Was herauskommen muss |
 |---|---|---|---|
@@ -653,7 +765,7 @@ unbrauchbare gespeicherte Datei. Ausgerechnet die aus der Datenverlustklasse.
 | ✅ | [**E-85**](BEFUNDE.md#e-85) | eine Nachricht mit Umlauten **über IMAP** abrufen — Umlaute richtig? |
 | ✅ | [**E-83**](BEFUNDE.md#e-83) | Eudora normal beenden — es endet wirklich, kein Prozess bleibt |
 | ✅ | [**E-93**](BEFUNDE.md#e-93) | eine **bereits weitergeleitete** Nachricht noch einmal weiterleiten — Inhalt vollständig? |
-| ✅ | [**E-95**](BEFUNDE.md#e-95) | die **Werbemail-A**- und die **Werbemail-B**-Nachricht je beantworten und weiterleiten — kein Bild abgeschnitten oder gequetscht, Text frei ([L-33.4](../Befunde/LEKTOR-33.md#l-33.4)) — **bestätigt 14.10.2026 an 1.0.87** |
+| ✅ | [**E-95**](BEFUNDE.md#e-95) | die **Mail-A**- und die **Mail-B**-Nachricht je beantworten und weiterleiten — kein Bild abgeschnitten oder gequetscht, Text frei ([L-33.4](../Befunde/LEKTOR-33.md#l-33.4)) — **bestätigt 14.10.2026 an 1.0.87** |
 | ✅ | [**E-96**](BEFUNDE.md#e-96) | dasselbe mit mehreren Bildern hintereinander — **bestätigt 14.10.2026 an 1.0.87** |
 
 **[E-97](BEFUNDE.md#e-97) und [E-99](BEFUNDE.md#e-99) gehören nicht hierher** — die hast du am 17.09.2026 schon

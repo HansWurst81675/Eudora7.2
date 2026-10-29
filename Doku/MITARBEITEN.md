@@ -55,19 +55,22 @@ Eudora7.2/
 
 ### Fassungen und Pakete
 
-Zwei Nummern, und sie bedeuten Verschiedenes:
+Eine Nummer an zwei Orten; bis 1.0.127 waren es zwei verschiedene:
 
 | Nummer | steht in | bedeutet |
 |---|---|---|
-| **Quellstand**, z. B. `7.2.0.44` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `1.0.127` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Quellstand**, z. B. `7.2.1.128` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
+| **Paketnummer**, z. B. `7.2.1.128` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
-`cat VERSION` liefert also **nicht** die Quellversion. Beide Nummern gehen
-gemeinsam hoch, und zwar **bevor** gebaut wird — sonst tragen zwei
-verschiedene Bauten dieselbe Kennung, und ein Fehlerbericht ist keinem Stand
-mehr zuzuordnen (Befund [**V-1**](../Intern/BEFUNDE.md#v-1)).
+Ab der Endnummer 128 (erste Fassung: 7.2.1.128) sind beide Nummern **gleich**: `7.2.0.N` für ein Testpaket,
+`7.2.1.N` für ein Release. Bis 1.0.127 hieß die Paketnummer `1.0.N` und
+teilte mit dem Quellstand nur die letzte Stelle; die Endnummer zählt über
+beide Formen weiter. Beide Dateien gehen gemeinsam hoch, und zwar **bevor**
+gebaut wird — sonst tragen zwei verschiedene Bauten dieselbe Kennung, und ein
+Fehlerbericht ist keinem Stand mehr zuzuordnen (Befund
+[**V-1**](../Intern/BEFUNDE.md#v-1)).
 
-Die Titelzeile nennt beide Nummern plus den Commit; ein Bildschirmfoto ist
+Die Titelzeile nennt die Nummer plus den Commit; ein Bildschirmfoto ist
 damit eindeutig. Welches ZIP zu welcher Marke und welchem Commit gehört, führt
 [Releases/PAKETE.md](../Releases/PAKETE.md) mit Prüfsumme.
 

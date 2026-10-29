@@ -76,12 +76,20 @@ $paket =~ s/\s+//g;
 
 my ($p1,$p2,$p3,$p4) = $produkt =~ /^(\d+)\.(\d+)\.(\d+)\.(\d+)$/
     or die "Produktversion '$produkt' hat nicht die Form a.b.c.d\n";
-my ($k1,$k2,$k3) = $paket =~ /^(\d+)\.(\d+)\.(\d+)$/
-    or die "Paketversion '$paket' hat nicht die Form a.b.c\n";
+# Seit dem 29.10.2026 (Gregors Entscheidung 10, Releases/PAKETE.md) traegt
+# VERSION dieselbe vierteilige Nummer wie Version.h; bis 1.0.127 war es eine
+# eigene Zaehlung a.b.c mit derselben Endnummer. Beide Formen werden gelesen.
+my ($k1,$k2,$k3) = $paket =~ /^(\d+)\.(\d+)\.(\d+)(?:\.\d+)?$/
+    or die "Paketversion '$paket' hat nicht die Form a.b.c oder a.b.c.d\n";
+my $vierteilig = $paket =~ /^\d+\.\d+\.\d+\.\d+$/;
+die "VERSION sagt $paket, Version.h sagt $produkt - beide muessen gleich sein\n"
+    if $vierteilig and $paket ne $produkt;
+
+my $neu_produkt = "$p1.$p2.$p3." . ($p4+1);
+my $neu_paket   = $vierteilig ? $neu_produkt : "$k1.$k2." . ($k3+1);
 
 printf("\n  Jetzt:   Produkt %s   Paket %s\n", $produkt, $paket);
-printf("  Danach:  Produkt %d.%d.%d.%d   Paket %d.%d.%d\n\n",
-       $p1,$p2,$p3,$p4+1, $k1,$k2,$k3+1);
+printf("  Danach:  Produkt %s   Paket %s\n\n", $neu_produkt, $neu_paket);
 
 # --- Sind die vorhandenen Auslieferungen eindeutig? ---------------------------
 #
@@ -100,8 +108,8 @@ if (opendir(my $dh, $heim)) {
         next unless -f $exe;
         my $d = roh($exe);
         next unless defined $d;
-        my ($ver)     = $d =~ /(7\.2\.0\.\d+)/;
-        my ($kennung) = $d =~ /(\d+\.\d+\.\d+\+[0-9a-f]+\*?)/;
+        my ($ver)     = $d =~ /(7\.2\.[01]\.\d+)/;
+        my ($kennung) = $d =~ /(\d+\.\d+\.\d+(?:\.\d+)?\+[0-9a-f]+\*?)/;
         $ver     = '?' unless defined $ver;
         $kennung = '?' unless defined $kennung;
         printf("    %-30s %-9s %s\n", $n, $ver, $kennung);
@@ -126,9 +134,6 @@ elsif ($pruefen) {
 }
 
 # --- Was zu tun waere ---------------------------------------------------------
-
-my $neu_produkt = "$p1.$p2.$p3." . ($p4+1);
-my $neu_paket   = "$k1.$k2." . ($k3+1);
 
 unless ($machen) {
     print "\n  Was --machen tun wuerde:\n\n";

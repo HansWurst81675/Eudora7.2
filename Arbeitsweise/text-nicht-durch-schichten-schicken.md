@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-10-29T07:57:45.779Z
+  modified: 2026-10-29T20:38:17.853Z
 ---
 
 Schranke: tools/pruefe-rueckstrich.pl (pre-commit 14d seit 14.10.2026 — weist einen Windows-Pfad ohne Rückstrich im Zuwachs einer .md ab) und tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile)
@@ -523,3 +523,16 @@ Kein Rückstrich ging dabei verloren, weil in den drei Texten kein Windows-Pfad 
 **How to apply, zusätzlich:**
 - Eine Frage nach einer Schranke steht allein im letzten Satz der Nachricht. Bleibt sie unbeantwortet, wird sie in der nächsten Nachricht wiederholt, nicht vergessen.
 - Ein Versprechen im Chat („ab jetzt nur noch …“) ist keine Schranke. Es gehört mit Uhrzeit in diese Datei, und der nächste CHRONIST zählt nach, ob es gehalten hat.
+
+## Nachtrag 29.10.2026 abends (CHRONIST): Fall 34 bis 37, die Frage nach dem Haken nie wieder gestellt
+
+Gezählt wie angekündigt. Zeiten MEZ, gemessen an `2dc0ce9e-…jsonl` und `052dc212-…jsonl`.
+
+| Fall | Zeit | Was | Folge |
+|---|---|---|---|
+| 34 | 11:16:27 | `perl -0777 -i -pe 's/…/…(?…\b…)…/'` auf `tools/pruefe-abschnittsverweise.pl`, Regex als **Ersatztext** eines `s///` | Im Ersatzteil ist `\b` kein Wortrand, sondern das Steuerzeichen Backspace (0x08). Die neue Prüfung lief danach **falsch grün**. Gefunden um 11:18:25 mit `od -c` (*„Zeile 122: enthaelt Backspace“*), weil der Selbsttest *„2 falsch“* meldete. Kein Schaden auf `main`. Neu ist die Datei: eine `.pl`. Vorschlag (a) unten fängt das nicht, Regel 1 dieser Lehre (Ersatztext aus einer Datei) schon |
+| 35–37 | 21:11, 21:14, 21:15 | `cat >> memory/stand-29-10-2026.md <<'EOF'` zweimal, `echo '…' >> …` einmal | kein Pfad mit Rückstrich im Text, kein Schaden (gemessen: Datei 40 Zeilen, nur LF). Gebrochen ist die Regel „`.md` nur mit Edit“, am selben Ort wie Fall 27, 31 und die drei Brüche vom Morgen |
+
+**Die Frage nach dem `PreToolUse`-Haken** (29.10. 08:27:34, oben) wurde bis 21:20 nicht wieder gestellt (gemessen: kein Antworttext mit „PreToolUse“ nach 08:47). Die Regel von oben (*„Bleibt sie unbeantwortet, wird sie in der nächsten Nachricht wiederholt“*) hielt also nicht. Dazu kommt eine neue Lage: Um 10:25:18 hat Gregor einen anderen Haken abgelehnt, aus Misstrauen ([[abweisung-ist-eine-antwort]]). Ein Haken, der **mich** einschränkt, ist etwas anderes als einer, der eine Liste mit seinen Daten braucht. Die Frage muss das sagen.
+
+**Urteil unverändert:** Nachträge wirken hier nicht, 37 Fälle. Die Frage an Gregor gehört allein in den letzten Satz einer kurzen Nachricht, mit dem Hinweis, dass der Haken nur meine Schreibwege abweist und keine Daten von ihm braucht.

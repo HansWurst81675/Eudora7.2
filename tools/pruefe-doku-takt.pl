@@ -125,6 +125,14 @@ if ($quellstand) {
             push @mangel,
               "VERSION sagt Paket $version, Version.h sagt Quellstand "
             . "$quellstand - die letzte Stelle muss uebereinstimmen";
+        }
+        # Ab der Endnummer 128 traegt VERSION die ganze Nummer (Gregors Entscheidung
+        # 10, Intern/WEITERMACHEN.md): dann muss sie ganz stimmen, sonst geht
+        # ein 7.2.0.128-Bau als 7.2.1.128 durch.
+        elsif ($version =~ /^\d+\.\d+\.\d+\.\d+$/ and $version ne $quellstand) {
+            push @mangel,
+              "VERSION sagt $version, Version.h sagt Quellstand "
+            . "$quellstand - beide muessen dieselbe Nummer tragen";
         } else {
             push @gut, "VERSION ($version) passt zum Quellstand";
         }

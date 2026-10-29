@@ -193,7 +193,7 @@ Ins Mailverzeichnis gehört eine `Eudora.ini`. Vorlage:
 `InstallersForEudora/Eudora7.1/Data/INIfiles/eudora.ini`. Welche Dateien
 danebenliegen müssen, steht in [STARTUMGEBUNG.md](../Intern/STARTUMGEBUNG.md).
 
-Der Fenstertitel trägt die **Bau-Kennung** — Paketversion, Commit und
+Der Fenstertitel trägt die **Bau-Kennung** — Fassung, Commit und
 Herkunftsverzeichnis. Ein Sternchen hinter dem Commit heißt: beim Bau lagen
 ungesicherte Änderungen vor, der Bau ist nicht reproduzierbar. Damit ist ein
 Bildschirmfoto eindeutig einem Bau und einer Instanz zuzuordnen.

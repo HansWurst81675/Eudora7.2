@@ -157,18 +157,20 @@ sub lies {
 #
 # Sortiert wird numerisch nach allen drei Teilen, nicht als Text: als Text
 # steht "v1.0.9" hinter "v1.0.72".
+#
+# Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) heisst
+# ein Release v7.2.1.N; die Endnummer zaehlt ueber v1.0.N hinweg weiter
+# (v1.0.120, dann v7.2.1.128). Sortiert wird deshalb nach ihr allein.
 sub neueste_paketnummer {
     my (@tags) = @_;
     my @n;
     for my $t (@tags) {
-        next unless $t =~ /^v(\d+)\.(\d+)\.(\d+)$/;
-        push @n, [ $1, $2, $3, $t ];
+        next unless $t =~ /^v(?:1\.0|7\.2\.[01])\.(\d+)$/;
+        push @n, [ $1, $t ];
     }
     return (undef, undef) unless @n;
-    my ($hoechstes) = sort { $b->[0] <=> $a->[0]
-                          || $b->[1] <=> $a->[1]
-                          || $b->[2] <=> $a->[2] } @n;
-    return ($hoechstes->[2], $hoechstes->[3]);
+    my ($hoechstes) = sort { $b->[0] <=> $a->[0] } @n;
+    return ($hoechstes->[0], $hoechstes->[1]);
 }
 
 # Alle Paketnummern, die ein Stueck Text nennt.
@@ -183,7 +185,7 @@ sub nummern_im_text {
     my ($text) = @_;
     my %n;
     $n{$1} = 1 while $text =~ /\bv?1\.0\.(\d+)\b/g;
-    $n{$1} = 1 while $text =~ /\b7\.2\.0\.(\d+)\b/g;
+    $n{$1} = 1 while $text =~ /\bv?7\.2\.[01]\.(\d+)\b/g;
     return sort { $a <=> $b } keys %n;
 }
 
@@ -362,8 +364,8 @@ sub pruefe {
                 next if grep { $_ == $nr } @n;     # nennt die aktuelle: auf Stand
 
                 push @mangel, sprintf
-                    "%s:%d gibt %s als aktuellen Stand aus, veroeffentlicht ist 1.0.%d%s",
-                    $d, $b->{zeile}, join(', ', map { "1.0.$_" } @n), $nr, $woher;
+                    "%s:%d gibt Nummer %s als aktuellen Stand aus, veroeffentlicht ist Nummer %d%s",
+                    $d, $b->{zeile}, join(', ', @n), $nr, $woher;
             }
         }
     }
@@ -395,6 +397,14 @@ if (grep { $_ eq '--tests' } @ARGV) {
     my ($n2) = neueste_paketnummer(qw(v1.0.8 v1.0.9));
     $pruef->('numerisch, nicht als Text', $n2, '9');
 
+    # Neue Form ab der Endnummer 128 (Gregors Entscheidung 10): v7.2.1.128 folgt auf
+    # v1.0.120 - nach der Endnummer, nicht nach den vorderen Teilen.
+    my ($n3, $tag3) = neueste_paketnummer(qw(v1.0.120 v7.2.1.128 v1.0.101));
+    $pruef->('neues Tag nach altem', "$tag3/$n3", 'v7.2.1.128/128');
+    $pruef->('Release-Form im Text',
+             join(',', nummern_im_text('veroeffentlicht als v7.2.1.128, Testpaket 7.2.0.129')),
+             '128,129');
+
     # --- 2. Datumsangaben sind keine Fassungen ----------------------------
     $pruef->('Datum wird nicht fuer eine Fassung gehalten',
              join(',', nummern_im_text('veroeffentlicht am 17.09.2026 um 20:07 Uhr')),
@@ -417,18 +427,18 @@ if (grep { $_ eq '--tests' } @ARGV) {
     );
     my ($m_alt) = pruefe(\%main_alt, 72);
     $pruef->('Anlassfall: jede der drei Dateien wird beanstandet',
-             (grep { /^README\.md:/ } @$m_alt) && (grep { /^AUFGABEN\.md:/ } @$m_alt)
-                 && (grep { /^WEITERMACHEN\.md:/ } @$m_alt) ? 'ja'
+             (grep { /^README\.md:/ } @$m_alt) && (grep { /^Intern\/AUFGABEN\.md:/ } @$m_alt)
+                 && (grep { /^Intern\/WEITERMACHEN\.md:/ } @$m_alt) ? 'ja'
                  : 'nein (' . join(' | ', @$m_alt) . ')', 'ja');
     $pruef->('und zwar mit der richtigen Begruendung',
-             (grep { /^README\.md:1 gibt 1\.0\.64 als aktuellen Stand aus, veroeffentlicht ist 1\.0\.72/ } @$m_alt) ? 'ja' : 'nein',
+             (grep { /^README\.md:1 gibt Nummer 64 als aktuellen Stand aus, veroeffentlicht ist Nummer 72/ } @$m_alt) ? 'ja' : 'nein',
              'ja');
 
     # Der AUFGABEN-Absatz nennt 64, 65 und 70; beanstandet wird die 64, weil
     # sie im SATZ mit der Standaussage steht - die Aufzaehlung dahinter ist ein
     # eigener Satz und entlastet nicht.
     $pruef->('Aufzaehlung ohne die aktuelle Nummer entlastet nicht',
-             (grep { /^AUFGABEN\.md:1 gibt 1\.0\.64 als aktuellen Stand aus/ } @$m_alt) ? 'ja' : 'nein',
+             (grep { /^Intern\/AUFGABEN\.md:1 gibt Nummer 64 als aktuellen Stand aus/ } @$m_alt) ? 'ja' : 'nein',
              'ja');
 
     # DIE REGRESSION VOM 18.09.2026, gefunden vom Gegentest gegen 8da72c8:
@@ -447,7 +457,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     );
     my ($m_lang) = pruefe(\%langer_punkt, 72);
     $pruef->('ein Querverweis weiter unten im Absatz deckt die Luege NICHT',
-             (grep { /^README\.md:1 gibt 1\.0\.64 als aktuellen Stand aus/ } @$m_lang) ? 'ja'
+             (grep { /^README\.md:1 gibt Nummer 64 als aktuellen Stand aus/ } @$m_lang) ? 'ja'
              : 'nein (' . join(' | ', @$m_lang) . ')', 'ja');
 
     # --- 4. Der berichtigte Stand muss durchlaufen ------------------------
@@ -485,7 +495,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     );
     my ($m_um) = pruefe(\%umbruch, 72);
     $pruef->('der echte Absatz aus PAKETE.md wird beanstandet',
-             (grep { /Releases\/PAKETE\.md:\d+ gibt 1\.0\.28 als aktuellen Stand aus/ } @$m_um)
+             (grep { /Releases\/PAKETE\.md:\d+ gibt Nummer 28 als aktuellen Stand aus/ } @$m_um)
              ? 'ja' : 'nein (' . join(' | ', @$m_um) . ')', 'ja');
 
     # Derselbe Absatz OHNE jede eigene Nummer - jetzt muss die Ueberschrift
@@ -497,7 +507,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     );
     my ($m_erbe) = pruefe(\%erbe, 72);
     $pruef->('Absatz ohne eigene Nummer erbt die der Ueberschrift',
-             (grep { /Releases\/PAKETE\.md:3 gibt 1\.0\.29 als aktuellen Stand aus.*Ueberschrift/ } @$m_erbe)
+             (grep { /Releases\/PAKETE\.md:3 gibt Nummer 29 als aktuellen Stand aus.*Ueberschrift/ } @$m_erbe)
              ? 'ja' : 'nein (' . join(' | ', @$m_erbe) . ')', 'ja');
 
     # Und die Gegenrichtung: derselbe Satz unter der RICHTIGEN Ueberschrift
@@ -519,7 +529,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     );
     my ($m_zuvor) = pruefe(\%zuvor, 72);
     $pruef->('Luege mit dem Wort "zuvor" kommt NICHT mehr durch',
-             (grep { /README\.md:1 gibt 1\.0\.64 als aktuellen Stand aus/ } @$m_zuvor) ? 'ja' : 'nein',
+             (grep { /README\.md:1 gibt Nummer 64 als aktuellen Stand aus/ } @$m_zuvor) ? 'ja' : 'nein',
              'ja');
 
     # --- 8. Zitat und Protokollzeile duerfen nicht anschlagen -------------
@@ -544,7 +554,7 @@ if (grep { $_ eq '--tests' } @ARGV) {
     );
     my ($m_tod) = pruefe(\%tab_ohne_datum, 72);
     $pruef->('Tabellenzeile ohne Datum bleibt pruefbar',
-             (grep { /WEITERMACHEN\.md:1 gibt 1\.0\.64/ } @$m_tod) ? 'ja' : 'nein',
+             (grep { /WEITERMACHEN\.md:1 gibt Nummer 64/ } @$m_tod) ? 'ja' : 'nein',
              'ja');
 
     # --- 9. Eine Datei, die den Stand gar nicht kennt ---------------------

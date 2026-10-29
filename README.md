@@ -45,7 +45,8 @@ verschickt.
 | **es einfach ausprobieren** | [Neuestes Paket herunterladen](https://github.com/HansWurst81675/Eudora7.2/releases/latest) — auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren |
 | **wissen, was geht und was nicht** | [Auf einen Blick](#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind) gleich hier unten; ausführlich in [Doku/ANWENDER.md](Doku/ANWENDER.md) |
 | **es benutzen** (Filter, Defender, IMAP-Kennwort, Protokoll) | [Doku/ANWENDER.md](Doku/ANWENDER.md) |
-| **eine schnelle Antwort** (neue Fassung übernehmen, Verschlüsselung, IMAP, Konten, Kurznamen, Labels, Filter, Anhänge, Protokoll) | [Doku/FAQ.md](Doku/FAQ.md) — 18 häufige Fragen, nummeriert |
+| **eine schnelle Antwort** (neue Fassung übernehmen, Verschlüsselung, IMAP, Konten, Kurznamen, Labels, Filter, Anhänge, Protokoll) | [Doku/FAQ.md](Doku/FAQ.md) — 19 häufige Fragen, nummeriert |
+| **wissen, welche Einstellungen anders sind als im Original Eudora — und warum** | [Intern/EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen) — zwei Tabellen mit Wert hier, Wert im Original und Begründung |
 | **es selbst bauen** | [Doku/BAUEN.md](Doku/BAUEN.md) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl |
 | **einen Fehler melden** | [Einen Fehler melden](Doku/ANWENDER.md#einen-fehler-melden) |
 | **mitarbeiten** | [Doku/MITARBEITEN.md](Doku/MITARBEITEN.md) |
@@ -99,7 +100,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.0.127** / `VERSION` **1.0.127** — Testpaket mit dem fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (Strg+W nach einem Klick auf Titelzeile oder Rand der schwebenden Leiste) und [E-160](Intern/BEFUNDE.md#e-160) (Windows-Meldung beim Anlegen einer Persönlichkeit), von Gregor am 27.10.2026 im Kurztest bestätigt (V1 bis V6), vor dem Release 7.2.1; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.0.127 bis 7.2.0.123. Veröffentlicht ist `v1.0.120`.*
+*Stand **7.2.1.128** — erstes Release 7.2.1, am 29.10.2026 geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden), noch nicht veröffentlicht; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123. Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)). Veröffentlicht ist `v1.0.120`.*
 
 ### Was geht
 
@@ -163,7 +164,8 @@ Die zweite Spalte sagt, was dabei verlorengehen oder verfälscht werden kann;
 | Ein **Label** geht verloren, wenn die Mail zwischen zwei Ordnern **desselben IMAP-Kontos** verschoben wird — Eudora speichert Labels nur bei sich, nicht auf dem Server | das **Label** der Mail (die Mail selbst nicht) | Label nach dem Verschieben neu setzen | [E-170](Intern/BEFUNDE.md#e-170) |
 | Die **Druckvorschau** mancher HTML-Mails zeigt keine Bilder und keine farbigen Flächen; im Lesefenster ist die Mail vollständig | nichts | – | [E-169](Intern/BEFUNDE.md#e-169) |
 | Rechtsklick in einer Mail → *Search Mailfolder* (ebenso *Search Mailbox*, *Search Eudora*) **ohne markierten Text** meldet *„There has been an internal error during the search“* | nichts | vorher ein Wort markieren, oder *Edit → Find → Find Messages* benutzen | [E-171](Intern/BEFUNDE.md#e-171) |
-| Eine Mail kann im Lesefenster als **rohe Base64-Zeichenfolge** erscheinen statt als Text; Ursache noch nicht untersucht | offen, ob die Mail richtig gespeichert ist | Rechtsklick → *View Source* zeigt den Rohtext | [E-172](Intern/BEFUNDE.md#e-172) |
+| Eine Mail kann im Lesefenster als **rohe Base64-Zeichenfolge** erscheinen statt als Text; Ursache noch nicht untersucht | offen, ob die Mail richtig gespeichert ist | – (*View Source* im Rechtsklickmenü ist nicht geprüft und im Nur-Text-Fenster womöglich gesperrt) | [E-172](Intern/BEFUNDE.md#e-172) |
+| Beim Anlegen eines Filters mit der Aktion *Make Label* stehen die Labels **einmal ausgegraut** da und lassen sich nicht wählen; Ursache noch nicht untersucht | nichts | Filter löschen und neu anlegen, dann sind die Labels wählbar | [E-173](Intern/BEFUNDE.md#e-173) |
 | Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-126](Intern/BEFUNDE.md#e-126) |
 | Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab 7.2.0.104 (seit `v1.0.112` veröffentlicht) wartet Eudora beim Beenden selbst, bis das Hochladen fertig ist; ab 7.2.0.108 wird nach fünf Minuten **nicht** mehr erzwungen beendet, sondern das Beenden aufgegeben — das Fenster bleibt offen und der Grund steht in der Statuszeile. Nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](Intern/BEFUNDE.md#e-123) |
 | War der IMAP-Ordner seit dem Start **noch nie geöffnet**, konnten die eben dorthin verschobenen Mails in seiner Liste fehlen, bis man ihn noch einmal schloss und öffnete. **Am 23.10.2026 in zwei Läufen an 7.2.0.120 nicht mehr aufgetreten; die Ursache wurde nie gefunden** — wer es sieht, bitte melden | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](Intern/BEFUNDE.md#e-127) |

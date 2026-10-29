@@ -141,6 +141,14 @@ fi
 #     - eine .md sieht im Editor heil aus (Arbeitsweise/anzeige-ist-kein-zustand.md).
 schranke pruefe-tabellenzeilen.pl || exit $?
 
+# 1b2. Zeigt jeder Textverweis "DATEI.md, Abschnitt *X*" auf eine Ueberschrift,
+#      die es in DATEI gibt? Gregor am 29.10.2026 zu EINSTELLUNGEN 4.3:
+#      "README.md, Abschnitt Beim Start wird nach dem IMAP-Kennwort gefragt ->
+#      existiert nicht." 18 solche Verweise zeigten auf Abschnitte, die am
+#      22.10.2026 nach Doku/ANWENDER.md gewandert waren; kein Link-Pruefer sah
+#      sie, weil es Text war, keine Links.
+schranke pruefe-abschnittsverweise.pl || exit $?
+
 # 1c. Steht unter "Was es nicht kann" nur, was HEUTE fehlt?
 #
 #     Gregor am 22.10.2026: "das ist doch bullshit! hier steht unter der

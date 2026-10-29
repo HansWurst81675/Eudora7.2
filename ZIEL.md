@@ -39,12 +39,12 @@ Zwischenstände wie **7.2.0.123** sind Testpakete für Gregors lokalen Test,
 keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 `v7.2.1.<n>`.
 
-**Was an der Release-Fassung selbst noch geprüft wird:** die Behebung von
-[E-166](Intern/BEFUNDE.md#e-166) — Gregor prüft sie an 7.2.1.\<n\> statt an
+**An der Release-Fassung selbst geprüft:** die Behebung von
+[E-166](Intern/BEFUNDE.md#e-166) — Gregor prüfte sie an 7.2.1.128 statt an
 einem eigenen Testpaket (Entscheidung 15 in
-[WEITERMACHEN](Intern/WEITERMACHEN.md), Schritt in
-[TESTPLAN](Intern/TESTPLAN.md#e-166-am-release)). Erst danach wird
-veröffentlicht. Die Übersicht unten zählt das nicht mit.
+[WEITERMACHEN](Intern/WEITERMACHEN.md)) und bestätigte sie am 29.10.2026 auf
+Hauptrechner und Laptop ([TESTPLAN](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner)).
+Die Übersicht unten zählt das nicht mit.
 
 <!-- ziel-stand: Anfang -->
 
@@ -83,7 +83,7 @@ beschädigt, steht oben.
 | Kriterium 3 | [E-148](Intern/BEFUNDE.md#e-148) | Eudora vertraute vier kompromittierten eMudhra-Wurzeln (**behoben**, auf `main`, kommt mit 7.2.0.123 und 7.2.1.x; GMX und freenet mit OpenSSL gegen die neue Liste gemessen, mit Eudora selbst von Gregor am 26.10.2026 an Paket 1.0.123 bestätigt, TESTPLAN K3) |
 | Kriterium 2 | [E-146](Intern/BEFUNDE.md#e-146) | umbenannte IMAP-Ordner hießen in Eudora anders als am Server, auch nach einer Ablehnung (**behoben auf dem Zweig `vor-testpaket-7.2.0.123`**, kommt mit 7.2.0.123; am Prüfstand erst rot, dann grün) |
 | Bekannte Fehler in der README | **keine Voraussetzung, durch Entscheidung** — die Befunde selbst bleiben offen | Von Gregor am 25. und 26.10.2026 entschieden: sie stehen unter „Bekannte Fehler“ in der [README](README.md) und werden nach 7.2.1 angegangen. Darunter der Entwurf aus einem IMAP-Ordner nach `Out` ([E-142](Intern/BEFUNDE.md#e-142); vereinbart ist nur ein Hinweis, eingebaut am 26.10.2026), dazu [E-144](Intern/BEFUNDE.md#e-144), [E-143](Intern/BEFUNDE.md#e-143), [E-139](Intern/BEFUNDE.md#e-139), [E-136](Intern/BEFUNDE.md#e-136), [AN-1](Intern/BEFUNDE.md#an-1), die Nebenwirkung von [E-77](Intern/BEFUNDE.md#e-77) auf ältere Nachrichten mit Ablage, [E-140](Intern/BEFUNDE.md#e-140), [E-141](Intern/BEFUNDE.md#e-141), [E-145](Intern/BEFUNDE.md#e-145) |
-| Kriterium 2 | [E-95](Intern/BEFUNDE.md#e-95), [E-96](Intern/BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Werbemail-A- und Werbemail-B — **am 14.10.2026 an 1.0.87 bestätigt** |
+| Kriterium 2 | [E-95](Intern/BEFUNDE.md#e-95), [E-96](Intern/BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Mail-A- und Mail-B — **am 14.10.2026 an 1.0.87 bestätigt** |
 | Kriterium 4 | [E-111](Intern/BEFUNDE.md#e-111) | `resolve_URL` schreibt ein Byte hinter das Feld (**behoben in 7.2.0.121**, 246 Tests mit Gegenprobe; ausgelöst gesehen wurde es nie) |
 | Kriterium 4 | [E-14](Intern/BEFUNDE.md#e-14) | Zusicherung beim Start auf frischem Mailverzeichnis (**erledigt am 23.10.2026**: aus neun Mailverzeichnissen gemessen, 59 Sitzungen, 9 Erasing-Zeilen — je eine, immer in der ersten Sitzung. Kein Fehler, der normale erste Lauf) |
 | Post wird verfälscht | [E-125](Intern/BEFUNDE.md#e-125) | Ziehen einer empfangenen Nachricht nach `Out` legte eine neue Nachricht an und meldete im selben Zug, es sei nichts übertragen worden (**gebaut in 7.2.0.122** nach Gregors Entscheidung B: der Weg wird abgelehnt, mit Hinweis auf *Message → Send Again*; 277 Tests, zweimal gegengetestet. **behoben in 7.2.0.122, von Gregor am 23.10.2026 an 1.0.122 bestätigt** (Ablehnung); die Gegenprobe mit einem Entwurf am Prüfstand, [Testbericht](Intern/TESTBERICHT-E125.md)) |
@@ -93,7 +93,12 @@ zurückgestellte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/
 
 **Vor dem Release:** die Tabelle der Kriterien neu messen — geschehen: Gregor
 am 26.10.2026 an 7.2.0.123, [Ergebnistabelle](Intern/TESTPLAN.md#ergebnis-7-2-0-123) —, dann Gregors Test aller neun Kriterien an einem frischen
-Paket, erst danach die Marke. Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` und wird vorher umgestellt ([L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
+Paket, erst danach die Marke. **Für 7.2.1.128 von Gregor am 29.10.2026
+entschieden:** kein eigener Durchgang der neun Kriterien (*„das waren ja auch
+die ursprünglichen kriterien von ganz am anfang an, das ist inzwischen schon
+alles mehrfach getestet und geprüft, läuft stabil.“*); vor der Marke zählen
+sein Test von [E-166](Intern/BEFUNDE.md#e-166) und der weiteren Punkte, die er
+an 7.2.1.128 prüft, und sein Ja ([TESTPLAN](Intern/TESTPLAN.md)). Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` ist am 29.10.2026 darauf umgestellt (`a5febb70`, [L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
 
 
 ## Regressionstests — Anordnung vom 22.10.2026
@@ -178,7 +183,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 29.10.2026.** Quellstand **7.2.0.127** / `VERSION` **1.0.127** (Testpaket); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 29.10.2026.** Quellstand **7.2.1.128** (`VERSION` gleich; erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 

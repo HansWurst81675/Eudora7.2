@@ -76,17 +76,21 @@ unless (length $fassung) {
     $v =~ s/\s+//g;
     $fassung = $v;
 }
-unless ($fassung =~ /^\d+\.\d+\.\d+$/) {
+unless ($fassung =~ /^\d+\.\d+\.\d+(?:\.\d+)?$/) {
     print "\n  spuren-auswerten.pl: keine brauchbare Fassung gefunden";
     print " ('$fassung').\n";
     print "  Erwartet wird sie in VERSION oder ueber --fassung.\n\n";
     exit($nur_melden ? 0 : 1);
 }
 
+# Verglichen wird die Endnummer. Sie zaehlt seit dem 29.10.2026 ueber die alte
+# Form 1.0.N und die neue Form 7.2.0.N / 7.2.1.N hinweg weiter (Gregors
+# Entscheidung 10, Intern/WEITERMACHEN.md): 1.0.127 liegt vor 7.2.0.128.
 sub zahl {
     my ($v) = @_;
-    return -1 unless defined $v and $v =~ /^(\d+)\.(\d+)\.(\d+)$/;
-    return $1 * 1000000 + $2 * 1000 + $3;
+    return -1 unless defined $v and $v =~ /^\d+\.\d+\.\d+(?:\.\d+)?$/;
+    my ($letzte) = $v =~ /(\d+)$/;
+    return $letzte;
 }
 
 # --- Die Marken im Quelltext ------------------------------------------------
@@ -177,7 +181,7 @@ for my $id (sort { zahl_id($a) <=> zahl_id($b) } keys %marke) {
     my $ein = $zeile{$id}{eingebaut};
     my $aus = $zeile{$id}{ausgewertet};
 
-    unless (defined $ein and $ein =~ /^\d+\.\d+\.\d+$/) {
+    unless (defined $ein and $ein =~ /^\d+\.\d+\.\d+(?:\.\d+)?$/) {
         push @ohne_zeile, "$id: Spalte 'eingebaut' ist keine Fassung ('"
             . (defined $ein ? $ein : '') . "')";
         next;
@@ -193,7 +197,7 @@ for my $id (sort { zahl_id($a) <=> zahl_id($b) } keys %marke) {
         next;
     }
 
-    if (defined $aus and $aus =~ /^\d+\.\d+\.\d+$/) {
+    if (defined $aus and $aus =~ /^\d+\.\d+\.\d+(?:\.\d+)?$/) {
         push @in_ordnung, sprintf('%-6s eingebaut %-8s ausgewertet %s', $id, $ein, $aus);
         next;
     }

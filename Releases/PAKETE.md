@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 29.10.2026 (Nummern bis 1.0.127 verzeichnet, geschnürt ist bis 1.0.127; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../Intern/BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.120** als `v1.0.120` am 21.10.2026 um 19:07:37 UTC (Marke `30feeae2`, auf GitHub *Latest*) — es trägt 1.0.118, 1.0.119 und 1.0.120 —, davor **1.0.117** als `v1.0.117` am selben Tag um 07:56:56 UTC (Marke `f546b004`), davor **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 29.10.2026 (Nummern bis 7.2.1.128 verzeichnet, geschnürt ist bis 7.2.1.128 — das erste Release 7.2.1, am 29.10.2026 geschnürt, von Gregor am selben Tag getestet ([E-166](../Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden), noch nicht veröffentlicht; davor 1.0.127; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../Intern/BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; zuletzt veröffentlicht **1.0.120** als `v1.0.120` am 21.10.2026 um 19:07:37 UTC (Marke `30feeae2`, auf GitHub *Latest*) — es trägt 1.0.118, 1.0.119 und 1.0.120 —, davor **1.0.117** als `v1.0.117` am selben Tag um 07:56:56 UTC (Marke `f546b004`), davor **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -45,14 +45,29 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 
 ## Drei Zählungen, und wie sie zusammenhängen
 
+> **Seit dem 29.10.2026 gibt es keine eigene Paketnummer `1.0.x` mehr**
+> (Gregors Entscheidung 10 in [WEITERMACHEN.md](../Intern/WEITERMACHEN.md)).
+> `VERSION` trägt dieselbe vierteilige Nummer wie `Eudora71/Version.h`:
+> **`7.2.0.N` für ein Testpaket, `7.2.1.N` für ein Release**. ZIP
+> (`Eudora72-7.2.1.N-release.zip`), Marke (`v7.2.1.N`) und Titelzeile
+> (`Eudora 7.2.1.N+<commit> <Zeit>`) heißen genauso. Die **Endnummer zählt
+> über beide Formen weiter**, auch über die alte: auf 1.0.127 folgt 128. Zwei
+> Stände tragen also nie dieselbe Endnummer, und die Werkzeuge, die nur die
+> letzte Stelle vergleichen, bleiben eindeutig. Alles unterhalb dieses Kastens
+> beschreibt die Zählung bis 1.0.127; die Abschnitte bis dahin behalten ihre
+> Namen.
+
 | Zählung | wo sie steht | wo man sie sieht |
 |---|---|---|
-| **Produktversion** `7.2.0.x` | `Eudora71/Version.h` (`EUDORA_BUILD_DESC` → String `IDS_VERSION`) | *Hilfe → Über Eudora*, Startbildschirm, und der `X-Mailer`-Kopf jeder gesendeten Mail. **Nicht** in den Dateieigenschaften: `Eudora.exe` hat gar keinen `VS_VERSION_INFO`-Block (nachgesehen am 07.09.2026 in `Eudora71/Eudora/*.rc`) |
-| **Paketversion** `1.0.x` | Datei `VERSION` | Name des ZIP, Bau-Kennung in der Titelleiste |
+| **Produktversion** `7.2.0.x` | `Eudora71/Version.h` (`EUDORA_BUILD_DESC` → String `IDS_VERSION`) | *Hilfe → Über Eudora*, Startbildschirm, der `X-Mailer`-Kopf jeder gesendeten Mail **und die Dateieigenschaften** (Reiter *Details*): `EudoraExe.rc:99` → `EudoraExeVer.rc:19` → `VersionBeg.inc:4-6` (`VS_VERSION_INFO`, `FILEVERSION EUDORA_BUILD_NUMBER`). Gemessen am 29.10.2026: `Eudora.exe` 7.2.1.128 meldet `FileVersion` 7.2.1.128. Hier stand bis dahin, die EXE habe keinen solchen Block (07.09.2026) — das war falsch |
+| **Paketversion** `1.0.x` (bis 1.0.127) | Datei `VERSION` | Name des ZIP, Bau-Kennung in der Titelleiste |
 | **QCSSL-Version** `1.0.x` | `qcssl.rc` | Versionsressource der `QCSSL.dll` |
 
-**Verabredung: Produkt- und Paketversion haben dieselbe letzte Stelle.**
-Paket 1.0.3 trägt Produktversion 7.2.0.3. `tools/kennung-erzeugen.pl` warnt,
+**Verabredung bis 1.0.127: Produkt- und Paketversion haben dieselbe letzte
+Stelle.** Paket 1.0.3 trägt Produktversion 7.2.0.3. **Ab der Endnummer 128 (erste Fassung: 7.2.1.128) muss
+`VERSION` mit `EUDORA_BUILD_VERSION` ganz übereinstimmen** — sonst ginge ein
+Testbau 7.2.0.N als Release 7.2.1.N durch. `tools/kennung-erzeugen.pl` warnt,
+`tools/pruefe-fassungsnummer.pl` und `tools/pruefe-doku-takt.pl` weisen ab,
 wenn die beiden auseinanderlaufen — bei der `QCSSL.dll` sind genau so zwei
 verschiedene Binärdateien unter derselben Kennung ausgeliefert worden.
 
@@ -73,14 +88,21 @@ Für die nächste Nummer sind es **fünf Zeilen in zwei Dateien**. Beispiel: von
 | `Eudora71/Version.h` | `EUDORA_BUILD_DESC` | `"Version 7.2.0.18\0"` | `…7.2.0.19\0` |
 | `Eudora71/Version.h` | `EUDORA_BUILD_VERSION` | `"7.2.0.18"` | `"7.2.0.19"` |
 
+**Ab der Endnummer 128** steht in `VERSION` die ganze Nummer (etwa
+`7.2.1.128` statt `1.0.128`). Für ein Release ändert sich außerdem die dritte Stelle:
+`EUDORA_VERSION3` von `0` auf `1`, und in `EUDORA_BUILD_NUMBER`,
+`EUDORA_BUILD_DESC` und `EUDORA_BUILD_VERSION` entsprechend `7,2,1,N` bzw.
+`7.2.1.N` — **sechs Zeilen**.
+
 > **`EUDORA_BUILD_NUMBER` ist seit 7.2.0.13 nicht mitgezogen worden** und steht
 > am 07.09.2026 auf `7,2,0,12`, während die drei anderen Angaben auf `18`
 > stehen. Kein Werkzeug hat das gemeldet: `tools/ausliefern.pl --pruefen` und
 > `tools/kennung-erzeugen.pl` vergleichen nur `EUDORA_BUILD_VERSION` gegen
-> `VERSION`. Folgenlos ist es nur, weil das Makro derzeit **nirgends benutzt**
-> wird (`grep -rn EUDORA_BUILD_NUMBER Eudora71/` — ein Treffer, die Definition
-> selbst); wer es je in eine `VERSIONINFO`-Ressource einsetzt, bekommt eine
-> `Eudora.exe`, deren Dateiversion nicht zu ihrer Produktversion passt.
+> `VERSION`. **Hier stand bis zum 29.10.2026, das sei folgenlos, weil das
+> Makro nirgends benutzt werde — das war falsch** ([LEKTOR-95](../Befunde/LEKTOR-95.md#l-95.6)):
+> `Eudora71/VersionBeg.inc:5-6` setzt es als `FILEVERSION` und
+> `PRODUCTVERSION` der `Eudora.exe`. Bleibt es stehen, trägt die EXE in den
+> Dateieigenschaften eine andere Nummer als im Über-Dialog.
 > **`tools/doku-pruefen.pl` meldet den Fall seit dem 07.09.2026.**
 >
 > **Und er ist am 08.09.2026 gleich wieder aufgetreten:** beim Heben auf
@@ -95,7 +117,7 @@ Den aktuellen Ausgangswert liest man nicht ab, sondern misst ihn:
 ```sh
 cat VERSION                                          # Paketnummer
 grep EUDORA_BUILD_VERSION Eudora71/Version.h         # Produktversion
-perl tools/ausliefern.pl --pruefen                   # beides gegeneinander
+perl tools/ausliefern.pl --pruefen                   # beides gegeneinander - liest Gregors Testverzeichnisse, nur mit seiner Zustimmung (WERKZEUGE.md)
 ```
 
 **Die vier Angaben in `Version.h` sind NICHT voneinander abgeleitet** — jede
@@ -122,8 +144,8 @@ existierenden Eudora-Code und startet die Testfrist neu — Befund PR-2.8.
 | als Zahl | `eudora.cpp:551`, `:1069`, `QComApplication.cpp:610` (`EUDORA_VERSION4`) |
 
 Die Bau-Kennung in der Titelleiste ist davon unabhängig: sie kommt aus
-`tools/kennung-erzeugen.pl` und enthält **Produktversion, Paketversion und
-Commit**. Sie ist damit die einzige Angabe, die zwei Bauten derselben Version
+`tools/kennung-erzeugen.pl` und enthält **die Fassung und den Commit** (bis
+1.0.127 zusätzlich „/ Paket 1.0.N“). Sie ist damit die einzige Angabe, die zwei Bauten derselben Version
 unterscheidet — **und genau sie fehlt, solange kein Postfach offen ist**
 (Befund E-7). In dem Zustand, in dem der Absturz auftrat, sagt der Titel nur
 „Eudora".
@@ -155,6 +177,22 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 7.2.1.128 — erstes Release 7.2.1, Zweig `release-7.2.1`
+
+**Geschnürt am 29.10.2026 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Nummer am selben Tag vergeben (Gregor: „ja, direkt 7.2.1.128 bauen, ich teste dann das erste release“). Erste Fassung im neuen Nummernschema (Kasten oben). Von Gregor am 29.10.2026 getestet: VM ohne Fehlerzeile, E-166 auf Hauptrechner und Laptop bestanden ([TESTPLAN](../Intern/TESTPLAN.md#ergebnis-e-166-laptop)); erst mit seinem Ja wird sie als `v7.2.1.128` veröffentlicht. Der Text für GitHub steht in [7.2.1.128/RELEASE-NOTIZEN.md](7.2.1.128/RELEASE-NOTIZEN.md).
+
+| | |
+|---|---|
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-7.2.1.128-release`, neben seinem 1.0.127. Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` |
+| ZIP | `Releases/Eudora72-7.2.1.128-release.zip`, 9.126.491 Byte. SHA-256 `97d29f15928be71a93d495c50e5065096d6effe5a20b420a8336c9e14e209e6b` |
+| Gegen den Bau gemessen | `Eudora.exe`, `EudoraRes.dll`, `Imap.dll`, `QCSSL.dll`, `OLImport.eif`, `QCSocket.dll`, `QCUtils.dll` und `plstclnt.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36`, mit `cmp` gemessen) |
+| Geprüft vorher | 314 Unit-Tests, 19 Schranken, 41 Prüfstandsfälle in **einem** vollen Lauf, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md), Gesamturteil BESTANDEN) |
+| `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„JA“* |
+| Gegenüber 1.0.127 | im Programm nur [E-166](../Intern/BEFUNDE.md#e-166) (`persona.cpp`); acht weitere Quelldateien nur in Kommentarzeilen (Datenschutz), gemessen mit `git diff ea3ebcbd..640e1a0e` |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen` (PRÜFER nur wegen `Version.h` fällig, reiner Versionssprung) und `-AgentLaeuftAbsichtlich` (der LEKTOR lief beim Schnüren noch und prüft nur MD-Dateien; nichts davon geht ins Paket) |
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.1.128.
 
 ## 1.0.127 — Testpaket vor dem Release 7.2.1, Quellstand 7.2.0.127, Zweig `0.125_ergebnisse`
 

@@ -191,7 +191,7 @@ hat — und was waere wahr, wenn dieses Nichts das Ergebnis ist?*
 **Was geschah (E-94):** Um 13:03 habe ich mit Gregors Erlaubnis die
 Kopfzeilen der Werbe-Nachricht aus seiner 1.0.75-`INBOX.mbx` gelesen. Dort
 stand der Betreff **dekodiert**, mit Faltungen mitten im Wort:
-`Ware  bestellen & 1<CR><LF> 5 % sparen … Nur b<CR><LF> is`. Weil darin kein
+`Waren  bestellen & 1<CR><LF> 5 % sparen … Nur b<CR><LF> is`. Weil darin kein
 `=?UTF-8?…?=` vorkam, habe ich meine Vermutung für widerlegt erklärt. Die
 Vermutung war: Eudora lässt die Faltung zwischen zwei kodierten Wörtern
 stehen (`lex822.cpp:685`, `ImapLex822.cpp:719`). Um 13:04:13 habe ich das

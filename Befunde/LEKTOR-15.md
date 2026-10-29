@@ -147,7 +147,7 @@ Erklärung, warum drei Fassungen hintereinander danebengingen.
 | | |
 |---|---|
 | **Gemessen** | `README.md`, Abschnitt *Wo die Grenzen liegen*: **[E-98](../Intern/BEFUNDE.md#e-98)** und **[E-77](../Intern/BEFUNDE.md#e-77)** stehen da, **[E-94](../Intern/BEFUNDE.md#e-94)** und **[E-105](../Intern/BEFUNDE.md#e-105)** nicht (`grep -c 'E-94' README.md` → 0). Ebenso im CHANGELOG-Abschnitt *Noch offen*: **[E-105](../Intern/BEFUNDE.md#e-105)**, **[E-109](../Intern/BEFUNDE.md#e-109)** und die sieben LF-Weiterleitungen fehlten |
-| **Warum [E-94](../Intern/BEFUNDE.md#e-94) dorthin gehört** | Der Fehler trifft den **Empfänger**, nicht den Absender: `Ware bestel len`, `Wochenend e!` in der Betreffzeile jeder gesendeten Nachricht. Wer das Programm benutzt, sieht es selbst nie |
+| **Warum [E-94](../Intern/BEFUNDE.md#e-94) dorthin gehört** | Der Fehler trifft den **Empfänger**, nicht den Absender: `Waren bestel len`, `Wochenend e!` in der Betreffzeile jeder gesendeten Nachricht. Wer das Programm benutzt, sieht es selbst nie |
 | **Berichtigt** | **ja**: `README.md` um [E-94](../Intern/BEFUNDE.md#e-94) und [E-105](../Intern/BEFUNDE.md#e-105) ergänzt, `CHANGELOG.md` *Noch offen* um [E-109](../Intern/BEFUNDE.md#e-109), [E-105](../Intern/BEFUNDE.md#e-105) und die LF-Weiterleitungen (letztere ausdrücklich **ohne** Nummer, weil noch nicht entschieden ist, ob Eudora sie verursacht) |
 
 ---

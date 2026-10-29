@@ -590,8 +590,15 @@ for my $datei (@aktuell) {
 # wird jetzt ueber den ganzen Text gesucht und ein Fenster von 200 Zeichen
 # hinter dem Stichwort abgesucht; die Zeilennummer wird aus dem Zeichenversatz
 # zurueckgerechnet.
+#
+# Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) traegt
+# VERSION die vierteilige Nummer 7.2.0.N bzw. 7.2.1.N. Dann zaehlen nur
+# vierteilige Nummern derselben Familie; die alte Form 1.0.N ist Geschichte
+# und keine Behauptung ueber heute. Ohne die vierte Gruppe im Muster wuerde
+# aus "7.2.0.127" das Stueck "7.2.0" gelesen und als falscher Stand gemeldet.
 my ($paket_haupt) = $paket =~ /^([0-9]+\.[0-9]+)\./;
 $paket_haupt = '' unless defined $paket_haupt;
+my $paket_vierteilig = $paket =~ /^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$/ ? 1 : 0;
 if (length $paket_haupt) {
     for my $datei (@aktuell) {
         my $inhalt = lies($datei);
@@ -609,9 +616,13 @@ if (length $paket_haupt) {
             # Zeile 12 - und die steht dort zu Recht, als datierte
             # Rueckschau "Zuletzt von Gregor bestaetigt".
             $fenster =~ s/\r?\n\|.*\z//s;
-            while ($fenster =~ /\b([0-9]+\.[0-9]+\.[0-9]+)\b/g) {
+            while ($fenster =~ /\b([0-9]+\.[0-9]+\.[0-9]+(?:\.[0-9]+)?)\b/g) {
                 my $nr = $1;
-                next unless $nr =~ /^\Q$paket_haupt\E\./;
+                if ($paket_vierteilig) {
+                    next unless $nr =~ /^\Q$paket_haupt\E\.[0-9]+\.[0-9]+$/;
+                } else {
+                    next unless $nr =~ /^\Q$paket_haupt\E\.[0-9]+$/;
+                }
                 next if $nr eq $paket;
 
                 # L-9-Klasse, 08.09.2026: die Pruefung war kontextblind. In
@@ -632,7 +643,7 @@ if (length $paket_haupt) {
                     my ($klein) = $nr =~ /\.([0-9]+)$/;
                     next if index($ueberschrift, $nr) >= 0;
                     next if defined $klein
-                        and $ueberschrift =~ /\b7\.2\.0\.\Q$klein\E\b/;
+                        and $ueberschrift =~ /\b(?:7\.2\.[01]|1\.0)\.\Q$klein\E\b/;
                 }
 
                 my $zeile = 1 + (() = $davor =~ /\n/g);
@@ -664,14 +675,15 @@ for my $datei (@aktuell) {
     next if $kopf =~ /gemessen an [`']?[0-9a-f]{7}/i;
     next if $kopf =~ /Geprueft|Gepr(ü|ue)ft.*\bam\b/i;
     next if $kopf =~ /Vorarbeit vom \d{2}\.\d{2}\.20\d\d/i;
-    next unless $inhalt =~ /\b7\.2\.0\.\d+\b/ or $inhalt =~ /\b1\.0\.\d+\b/;
+    next unless $inhalt =~ /\b7\.2\.[01]\.\d+\b/ or $inhalt =~ /\b1\.0\.\d+\b/;
     next if index($inhalt, $quellstand) >= 0;
     next if index($inhalt, $paket)      >= 0;
-    my @gefunden = ($inhalt =~ /\b7\.2\.0\.(\d+)\b/g);
-    my ($hoechste) = sort { $b <=> $a } @gefunden;
+    my %gefunden;
+    $gefunden{$2} = $1 while $inhalt =~ /\b(7\.2\.[01]\.(\d+))\b/g;
+    my ($hoechste) = sort { $b <=> $a } keys %gefunden;
     push @hinweis, sprintf("%s nennt weder den Quellstand %s noch die Paketnummer %s%s",
                            $datei, $quellstand, $paket,
-                           defined $hoechste ? " (hoechste genannte Fassung: 7.2.0.$hoechste)" : "");
+                           defined $hoechste ? " (hoechste genannte Fassung: $gefunden{$hoechste})" : "");
 }
 
 # --- 7. Version.h gegen sich selbst und gegen VERSION ------------------------
@@ -712,6 +724,10 @@ for my $datei (@aktuell) {
     if (defined $paket_letzte && defined $quellstand_letzte
         && $paket_letzte ne $quellstand_letzte) {
         push @zutun, sprintf("VERSION sagt %s, Quellstand ist %s - die letzte Stelle soll gleich sein (Releases/PAKETE.md)",
+                             $paket, $quellstand);
+    }
+    elsif ($paket_vierteilig && $paket ne $quellstand) {
+        push @zutun, sprintf("VERSION sagt %s, Quellstand ist %s - beide muessen dieselbe Nummer tragen (Releases/PAKETE.md)",
                              $paket, $quellstand);
     }
 }
@@ -796,7 +812,7 @@ for my $datei (@alle_md) {
                 $zitiert .= $1 . ' ';
             }
         }
-        while ($fenster =~ /\b(7\.2\.0\.\d+)\b/g) {
+        while ($fenster =~ /\b(7\.2\.[01]\.\d+)\b/g) {
             next if $1 eq $quellstand or $schon{$1}++;
             next if index($zitiert, $1) >= 0;
             next if $stand_gemeldet{"$datei|$1"}++;

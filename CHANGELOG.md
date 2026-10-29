@@ -1,8 +1,10 @@
 # Was sich geändert hat
 
-Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **Quellstand
-`7.2.0.x`** steht in `Eudora71/Version.h`, **Paketnummer `1.0.x`** in `VERSION`.
-Die Bau-Kennung im Fenstertitel nennt beide plus den Commit.
+Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **`7.2.0.N`**
+(Testpaket) bzw. **`7.2.1.N`** (Release) steht gleich in `Eudora71/Version.h`
+und `VERSION`; die Bau-Kennung im Fenstertitel nennt sie plus den Commit.
+Bis 1.0.127 trug `VERSION` eine eigene Zählung `1.0.N` mit derselben
+Endnummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).
 
 > **Wer hier neu einsteigt:** [ZIEL.md](ZIEL.md) sagt, woran „fertig" gemessen
 > wird, [README.md](README.md) wie man baut und startet, [BEFUNDE.md](Intern/BEFUNDE.md)
@@ -24,12 +26,13 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-173](Intern/BEFUNDE.md#e-173)** | Im Filterfenster sind die Labels der Aktion *Make Label* einmal ausgegraut und nicht wähl… | **nie gemessen** | erst **nach dem Release 7.2.1** — nachstellen (unter welcher Bedingung ist die Liste grau: neuer Filter, bestimmte vorherige Aktion, Persönlichkeit… |
 | **[E-172](Intern/BEFUNDE.md#e-172)** | Eine Mail steht im Lesefenster als rohe Base64-Zeichenfolge statt als lesbarer Text | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — Quelltext der Mail ansehen (*View Source*), Kopfzeilen `Content-Type`/`Content-Transfer-Encodi… |
 | **[E-171](Intern/BEFUNDE.md#e-171)** | „Search Mailfolder“ im Rechtsklickmenü einer Mail bringt ohne markierten Text die Mel… | 29.10.2026 an 7.2.0.127 | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — ohne Auswahl das Suchfenster öffnen, aber nicht starten (oder den Menüpunkt sperren); vorher… |
 | **[E-170](Intern/BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026: *„die findigs können wir erst nach dem release beheben. das muß nur erstmal nur als befund dri… |
 | **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt… |
 | **[E-165](Intern/BEFUNDE.md#e-165)** | Die Vervollständigungsbox im To:-Feld sieht mit einem einzigen Treffer verbaut aus — wi… | **nie gemessen** | am Prüfstand `C:\Temp\E135-box` mit **einem** passenden Kurznamen messen (Außen- und Innenmaß der Box und der Liste, Bildlaufleisten-Stil), danach … |
-| **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
+| **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
 | **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
@@ -101,13 +104,13 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Im Quellstand, noch in keinem Paket
+## 7.2.1.128 — erstes Release 7.2.1: Konto-Eigenschaften verlieren nichts mehr ([E-166](Intern/BEFUNDE.md#e-166)), FAQ, neues Nummernschema
 
-**Auf `main` seit PR #182 (Zweig `e166-junk_message_fix`), weiter auf `release-7.2.1-vorbereiten`; Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)). Kommt mit dem Release 7.2.1.**
+**Auf `main` seit PR #182 (Zweig `e166-junk_message_fix`), weiter über `release-7.2.1-vorbereiten`, `datenschutz-bereinigen`, `datenschutz-bereinigen-die_zweite` und `faq-erweitern` (PR #183 bis #186), dann `release-7.2.1`.** Erste Fassung im neuen Nummernschema: Release `7.2.1.128`, die Endnummer zählt nach 1.0.127 weiter ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)). Von Gregor am 29.10.2026 getestet: an der VM ohne Fehlerzeile, [E-166](Intern/BEFUNDE.md#e-166) auf Hauptrechner und Laptop bestanden ([TESTPLAN](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner)).
 
 **Im Programm**
 
-* **Konto-Eigenschaften verlieren keine Einstellungen mehr** ([E-166](Intern/BEFUNDE.md#e-166)). Wer die Kontoeinstellungen (*Tools → Personalities*, Rechtsklick → *Properties*) mit OK schloss, verlor jede Einstellung, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — bei Gregor die Antwort auf die Junk-Frage, die deshalb beim nächsten Start wiederkam. `CPersonality::Modify` (`persona.cpp`) schreibt diese Einstellungen jetzt, bevor es die Kontodaten speichert. Am Prüfstand vorher rot, nachher grün; Regressionsfall E-166a/b. **Kommt mit dem Release 7.2.1**; Gregor prüft es an der Release-Fassung ([TESTPLAN](Intern/TESTPLAN.md#e-166-am-release)).
+* **Konto-Eigenschaften verlieren keine Einstellungen mehr** ([E-166](Intern/BEFUNDE.md#e-166)). Wer die Kontoeinstellungen (*Tools → Personalities*, Rechtsklick → *Properties*) mit OK schloss, verlor jede Einstellung, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — bei Gregor die Antwort auf die Junk-Frage, die deshalb beim nächsten Start wiederkam. `CPersonality::Modify` (`persona.cpp`) schreibt diese Einstellungen jetzt, bevor es die Kontodaten speichert. Am Prüfstand vorher rot, nachher grün; Regressionsfall E-166a/b. **Kommt mit dem Release 7.2.1**; von Gregor am 29.10.2026 an der Release-Fassung bestätigt ([TESTPLAN](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner)).
 
 **Neu bekannt, behandelt nach dem Release** (in der README unter „Bekannte Fehler“, Entscheidung 16 in [WEITERMACHEN](Intern/WEITERMACHEN.md))
 
@@ -115,23 +118,28 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 * [E-170](Intern/BEFUNDE.md#e-170) — ein Label geht verloren, wenn die Mail zwischen Ordnern desselben IMAP-Kontos verschoben wird.
 * [E-171](Intern/BEFUNDE.md#e-171) — *Search Mailfolder* (auch *Mailbox*, *Eudora*) im Rechtsklickmenü ohne markierten Text meldet „internal error“.
 * [E-172](Intern/BEFUNDE.md#e-172) — eine Mail erscheint im Lesefenster als rohes Base64; Ursache offen.
+* [E-173](Intern/BEFUNDE.md#e-173) — beim Anlegen eines Filters mit *Make Label* waren die Labels einmal ausgegraut; Filter löschen und neu anlegen hilft.
 * [E-168](Intern/BEFUNDE.md#e-168) — ein Absturz im Konto-Assistenten am Prüfstand am 28.10.2026 kam vom eigenen Messskript; für Anwender nicht erreichbar (gemessen), keine Änderung.
 
 **Dokumentation**
 
-* **Neu: [Doku/FAQ.md](Doku/FAQ.md)** — Post je Konto trennen (Filter auf «Personality»), Mails farbig markieren (Labels, auch automatisch per Filter *Make Label*), Anhänge beim Leeren des Papierkorbs löschen. Labels, *Make Label* und das Löschen der Anhänge hat Gregor am 29.10.2026 am Programm bestätigt. Aus der README verlinkt; Antwort auf Issue #181. **Erweitert auf 18 nummerierte Fragen**: neue Fassung übernehmen, Verschlüsselung und Port, *Last SSL Info*, Zertifikatsmeldungen, verschwundene IMAP-Mails, zweites Konto, Kurznamen, Filter aus einer Mail, Filter speichern, Strg+J, Junk-Warnung, Weiterleiten als Anhang, Kopfzeilen, `LogLevel`, dazu eine Verweisliste auf README und ANWENDER. Jede Antwort sagt, ob sie am Programm geprüft oder nur am Quelltext nachgesehen ist.
+* **Neu: [Doku/FAQ.md](Doku/FAQ.md)** — Post je Konto trennen (Filter auf «Personality»), Mails farbig markieren (Labels, auch automatisch per Filter *Make Label*), Anhänge beim Leeren des Papierkorbs löschen. Labels, *Make Label* und das Löschen der Anhänge hat Gregor am 29.10.2026 am Programm bestätigt. Aus der README verlinkt; Antwort auf Issue #181. **Erweitert auf 19 nummerierte Fragen** (Frage 19: welche Einstellungen anders sind als im Original, und warum): neue Fassung übernehmen, Verschlüsselung und Port, *Last SSL Info*, Zertifikatsmeldungen, verschwundene IMAP-Mails, zweites Konto, Kurznamen, Filter aus einer Mail, Filter speichern, Strg+J, Junk-Warnung, Weiterleiten als Anhang, Kopfzeilen, `LogLevel`, dazu eine Verweisliste auf README und ANWENDER. Jede Antwort sagt, ob sie am Programm geprüft oder nur am Quelltext nachgesehen ist.
+* **Die Tabelle der abweichenden Einstellungen ist zurück** — in [EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen), in zwei Tabellen (DEudora.ini im Paket / Programm selbst) mit Wert hier, Wert im Original 7.1 und Begründung. Sie stand bis zum 14.09.2026 in der README, ging beim Umzug verloren, und die Verweise darauf liefen im Kreis. Dazu 18 Textverweise auf Abschnitte, die am 22.10.2026 von der README nach `Doku/ANWENDER.md` gewandert waren, umgehängt (EINSTELLUNGEN, FILTER, CHANGELOG, `tools/DEudora.ini`); die Spaltenzahl der Strg+J-Tabelle in FILTER berichtigt. Die Abweichungen stehen seit dem 29.10.2026 abends als zwei echte Tabellen da (DEudora.ini im Paket / Programm selbst; Spalten Schlüssel, Abschnitt, hier, Original, warum) statt als Aufzählung — CHANGELOG und Verweise nannten sie schon eine Tabelle, es war keine; Inhalt unverändert.
 * **`ABRUF-PRUEFEN.md` berichtigt:** *Last SSL Info* ist ein Knopf unter *Tools → Options… → Checking Mail*, kein Menüpunkt; und `rootcerts.p7b` gehört **nicht** zusätzlich ins Mailverzeichnis — eine Kopie dort hätte Vorrang und würde mit einer neuen Fassung nicht ersetzt.
 * **Datenschutz:** Daten aus Gregors Postfach (Betreffzeilen, Absender, Adressen, Konto- und Ordnernamen, Message-IDs) sind aus Doku, Prüfberichten, Quelltextkommentaren, Tests und Werkzeugen entfernt und durch Platzhalter ersetzt (PR #184, #185 und dieser Zweig).
 * Junk-Filter und S/MIME laden doch, wenn `MFC71.DLL` und `MSVCP71.dll` schon auf dem Rechner liegen — beschrieben an einer Stelle ([FILTER.md](Intern/FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)), README, ANWENDER, PORTIERUNG, EINSTELLUNGEN und STARTUMGEBUNG verweisen dorthin.
 * Defender-Fehlalarm ([E-124](Intern/BEFUNDE.md#e-124)): am 28.10.2026 viermal die `EudoraRes.dll` aus Paket 1.0.127, auch im ZIP; der Fall vom 27.10. (`Eudora.exe` bei Gregor) nachgetragen; [DEFENDER-FEHLALARM](Releases/DEFENDER-FEHLALARM.md) und [PAKETE](Releases/PAKETE.md) ergänzt.
-* Die veröffentlichten Release-Texte `v1.0.113`, `v1.0.117` und `v1.0.120` auf GitHub zeigten mit sieben Links ins Leere (`BEFUNDE.md` liegt seit dem 22.10. unter `Intern/`) — am 29.10.2026 berichtigt.
-* Dokumentenprüfungen [LEKTOR-90](Befunde/LEKTOR-90.md) bis [LEKTOR-93](Befunde/LEKTOR-93.md) eingearbeitet (Stand-Köpfe, Menüpfade, Messangaben, Stufen).
+* Die veröffentlichten Release-Texte `v1.0.113`, `v1.0.117` und `v1.0.120` auf GitHub zeigten mit sieben Links ins Leere (`BEFUNDE.md` liegt seit dem 22.10. unter `Intern/`) — am 29.10.2026 berichtigt; dazu sechs ältere (`v1.0.2`, `v1.0.3`, `v1.0.10`, `v1.0.43`, `v1.0.72`, `v1.0.84`, Entscheidung 19 in [WEITERMACHEN](Intern/WEITERMACHEN.md)).
+* Dokumentenprüfungen [LEKTOR-90](Befunde/LEKTOR-90.md) bis [LEKTOR-95](Befunde/LEKTOR-95.md) eingearbeitet (Stand-Köpfe, Menüpfade, Messangaben, Stufen, Datenschutz, Nummernschema).
+* Neues Nummernschema in der Doku nachgezogen ([LEKTOR-95](Befunde/LEKTOR-95.md)): Titelzeile in ANWENDER, STARTUMGEBUNG und BAUEN, CHANGELOG-Kopf, Dateiversion der `Eudora.exe` in PAKETE; Zeilenangaben in der Abweichungsliste von EINSTELLUNGEN neu gemessen.
 
 **Werkzeuge**
 
 * `tools/pruefe-startwege.pl` zählt auch `Audit.log`; Grenze: nur Starts nach der letzten Kopie der `Eudora.exe` (in [WERKZEUGE](tools/WERKZEUGE.md) beschrieben).
 * `tools/pruefstand-lauf.ps1` kennzeichnet einen Teillauf im Ergebnis mit `nur=`.
 * Neues Messskript `tools/messen-assistent-wiedereintritt.ps1` (zu [E-168](Intern/BEFUNDE.md#e-168)).
+* **Neues Nummernschema** (Gregors Entscheidung 10, am 29.10.2026 bestätigt): `VERSION` trägt die ganze Nummer, `7.2.0.N` für ein Testpaket, `7.2.1.N` für ein Release; die Endnummer zählt über 1.0.127 hinweg weiter. Die Titelzeile heißt `Eudora 7.2.1.N+<commit> <Zeit>`, ohne „/ Paket“. Umgestellt sind `kennung-erzeugen.pl`, die drei Leser der Kennung (`pruefbericht.pl`, `pruefstand-lauf.ps1`, `pruefstaende-auffrischen.ps1`), `release-veroeffentlichen.ps1`, `pruefe-fassungsnummer.pl`, `doku-pruefen.pl`, `pruefe-doku-takt.pl`, `pruefe-stand-md.pl`, `offene-befunde.pl`, `spuren-auswerten.pl`, `pruefe-aussenstand.pl`, `pruefe-behoben-ausgeliefert.pl`, `pruefe-release-buchfuehrung.pl`, `pruefe-nachgestellt.pl` und `pruefe-original-belegt.pl`; nach [LEKTOR-95](Befunde/LEKTOR-95.md#l-95.4) auch `ausliefern.pl`, das an 7.2.1.128 abbrach. Alle lesen weiter auch die alte Form. Beschrieben in [PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen).
+* Zwei Selbsttests in `pruefe-release-buchfuehrung.pl` waren seit dem Umzug von AUFGABEN und WEITERMACHEN nach `Intern/` rot, ohne dass es jemand bemerkt hat; die Erwartungen sind nachgezogen.
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
 
@@ -1584,8 +1592,8 @@ ohne Fehlerzeile; **Testsuite 188/188**; Abruf der sieben Prüfnachrichten über
 
 | | 7.2.0.83 (`C:\Temp\E94-vorher`) | 7.2.0.84 (`C:\Temp\E94-nachher`) |
 |---|---|---|
-| Fall 06, `Subject:` in `In.mbx` | vier Zeilen, gefaltet bei `bestel` / `len und 1` / `5 Prozent …` / `e!` | **eine Zeile**: `Pruefung E-94: Ware bestellen und 15 Prozent sparen bis zum Wochenende!` |
-| Fall 06, Postfachliste (`In.toc`) | `Pruefung E-94: Ware bestel` | `Pruefung E-94: Ware bestellen und 15 Prozent sparen bis zum Wo` (die übliche Feldlänge) |
+| Fall 06, `Subject:` in `In.mbx` | vier Zeilen, gefaltet bei `bestel` / `len und 1` / `5 Prozent …` / `e!` | **eine Zeile**: `Pruefung E-94: Waren bestellen und 15 Prozent sparen bis zum Wochenende!` |
+| Fall 06, Postfachliste (`In.toc`) | `Pruefung E-94: Waren bestel` | `Pruefung E-94: Waren bestellen und 15 Prozent sparen bis zum Wo` (die übliche Feldlänge) |
 | Fälle 00–05, Anhänge | alle mit vollem Namen und `.pdf` | **unverändert** heil; Fall 03 hat 216 Zeichen (vorher 217), weil `C:\Temp\E94-nachher\…` einen Buchstaben länger ist als `E94-vorher`; mit Pfad je 259 |
 
 Keine `Exception.log`. **PRUEFER-21:** *kann ausgeliefert werden*; sein niedriger
@@ -1596,16 +1604,16 @@ fällt) ist in `05bbaba` behoben.
 1.0.84 neu abgerufen; ausgewertet von mir, mit seiner Erlaubnis nur gelesen
 (`Imap\Dominant\INBOX\INBOX.mbx`, nur die `Subject:`-Zeilen). Darunter ist
 **die Werbe-Nachricht selbst** (web.de-Webmailer). Ihr Betreff steht jetzt in
-**einer** Zeile: `Fw:  [Letzte Chance] Ware  bestellen & 15 % sparen … Nur bis
+**einer** Zeile: `Fw:  [Letzte Chance] Waren  bestellen & 15 % sparen … Nur bis
 zum Wochenende! ?` — in seiner 1.0.75-`INBOX.mbx` war dieselbe Nachricht bei
 `& 1|5` und `Nur b|is` gefaltet. Von zwei abgerufenen Nachrichten ist keine mehr
-gefaltet. Das doppelte Leerzeichen in `Ware  bestellen` stand schon in 1.0.75 so
+gefaltet. Das doppelte Leerzeichen in `Waren  bestellen` stand schon in 1.0.75 so
 da (Absender); das Emoji davor erscheint weiter als Fragezeichen bzw. Ersatzzeichen — das ist [**E-90**](Intern/BEFUNDE.md#e-90),
 nicht [E-94](Intern/BEFUNDE.md#e-94).
 
-**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw:  [Letzte Chance] Ware  bestellen & 15 % sparen  – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht [E-94](Intern/BEFUNDE.md#e-94):** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit [E-90](Intern/BEFUNDE.md#e-90), nicht untersucht.
+**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw:  [Letzte Chance] Waren  bestellen & 15 % sparen  – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht [E-94](Intern/BEFUNDE.md#e-94):** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit [E-90](Intern/BEFUNDE.md#e-90), nicht untersucht.
 
-**Gregors Fall:** *„Ware bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
+**Gregors Fall:** *„Waren bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
 — der web.de-Webmailer zerlegt einen langen Betreff in mehrere kodierte Wörter
 (`=?UTF-8?Q?…?=`) und faltet dazwischen, die Grenzen mitten im Wort. Das darf er.
 RFC 2047, 6.2: der Leerraum zwischen zwei benachbarten kodierten Wörtern wird
@@ -1618,7 +1626,7 @@ Leerzeichen.
 | | Ergebnis vor der Behebung |
 |---|---|
 | Testsuite, neu: `Test_GefalteteKodierteWoerter` (POP) und `…Imap` | **rot**: ist `bestel` 0D 0A 20 `len`, soll `bestellen` |
-| Prüfnachricht 06 (`tools/anhang-pruefdaten.pl --pop`), 7.2.0.83, `C:\Temp\E94-vorher` | `In.mbx`: `Subject: Pruefung E-94: Ware bestel` / ` len und 1` / ` 5 Prozent …` — **Postfachliste nur `Pruefung E-94: Ware bestel`**, weil `summary.cpp` nur die erste Zeile einer gefalteten Kopfzeile liest |
+| Prüfnachricht 06 (`tools/anhang-pruefdaten.pl --pop`), 7.2.0.83, `C:\Temp\E94-vorher` | `In.mbx`: `Subject: Pruefung E-94: Waren bestel` / ` len und 1` / ` 5 Prozent …` — **Postfachliste nur `Pruefung E-94: Waren bestel`**, weil `summary.cpp` nur die erste Zeile einer gefalteten Kopfzeile liest |
 
 **Behoben an zwei Stellen, je in POP und IMAP:**
 
@@ -2482,7 +2490,7 @@ dort nicht messbar. **Nur sein Lauf kann sie belegen.**
 
 ## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
 
-> **Zu prüfen:** die Werbemail-A (oder eine andere mit Logo)
+> **Zu prüfen:** die Mail-A (oder eine andere mit Logo)
 > **weiterleiten** und ins Verfassenfenster sehen. Liegt noch etwas über dem
 > Text? Falls ja: `eudora.log` schicken — die Antwort steht dann darin.
 
@@ -2494,7 +2502,7 @@ nachgestellt — 23.537 Byte, byte-genau aus dem Postfach gelöst, fünf Bilder.
 was im HTML steht:
 
 ```
-attr=0x0     embed=0x0     ascent=13     ← das Logo der Werbemail-A
+attr=0x0     embed=0x0     ascent=13     ← das Logo der Mail-A
 attr=80x80   embed=80x80   ascent=80
 attr=98x35   embed=98x35   ascent=35
 attr=117x35  embed=117x35  ascent=35
@@ -2545,7 +2553,7 @@ hoch genug gemacht; an Breite und Höhe des Bildes ändert sich nichts, es kann
 sich nichts verzerren.
 
 Die 48 sind begründet, nicht geraten: groß genug, dass die üblichen Kopfbilder
-einer Werbemail nicht mehr in den Text ragen — das Logo der Werbemail-A ist 60 hoch,
+einer Werbemail nicht mehr in den Text ragen — das Logo der Mail-A ist 60 hoch,
 die vier anderen Bilder derselben Nachricht 24 bis 80 — und klein genug, dass
 eine Zeile mit einem kleinen Symbol keine auffällige Lücke reißt.
 
@@ -2860,7 +2868,7 @@ in [BEFUNDE.md](Intern/BEFUNDE.md).
 
 ## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
 
-> **Zu prüfen:** Werbemail-A- und Werbemail-B weiterleiten **und**
+> **Zu prüfen:** Mail-A- und Mail-B weiterleiten **und**
 > beantworten. Die Bilder müssen in ihrer **wirklichen** Größe dastehen und der
 > Text **frei** bleiben.
 
@@ -2880,7 +2888,7 @@ attr=80x80   ascent=80
 ```
 
 In derselben Messung stand aber auch `attr=20x20` — und genau das war auf
-seinem Bild die Produktbild: **kein abgeschnittenes Bild, sondern eines, das
+seinem Bild das Produktbild: **kein abgeschnittenes Bild, sondern eines, das
 wir auf 20×20 gequetscht hatten.**
 
 Paige kennt die wirkliche Größe, sobald es die Datei geladen hat; die Spalte
@@ -2904,7 +2912,7 @@ mehr.
 
 ## 7.2.0.62 — jedes Bild bekam die Zeilenhöhe des ersten (E-96)
 
-> **Zu prüfen:** die Werbemail-A weiterleiten. Die Bilder müssen
+> **Zu prüfen:** die Mail-A weiterleiten. Die Bilder müssen
 > **vollständig** dastehen und der Text **frei** bleiben. Falls nicht: im
 > Protokoll steht bei `LogLevel=58527` je Bild eine Zeile
 > `E-95 Bild: attr=… embed=… ascent=… text-asc=…` — die sagt, wo es klemmt.
@@ -2933,7 +2941,7 @@ solange noch kein Bild eingefügt wurde.
 
 **Das erklärt, warum vier Fassungen lang jede Änderung an der Bildgröße mal
 half und mal nicht:** gedreht wurde am ersten Bild, alle folgenden übernahmen
-dessen Höhe blind. Bei der Werbemail-A steht der kleine Schriftzug vor
+dessen Höhe blind. Bei der Mail-A steht der kleine Schriftzug vor
 dem großen blauen Kreis — deshalb wurde dort abgeschnitten.
 
 **Kein Portierungsfehler:** die Stelle ist in allen vier Kopien im Repo
@@ -2950,16 +2958,16 @@ hier eine eigene Regel gibt: *das Paket gegen den Bau messen.*
 
 ## 7.2.0.61 — eingebettete und externe Bilder werden endlich unterschieden (E-95)
 
-> **Noch nicht bestätigt.** Zu prüfen: die Werbemail-A weiterleiten. Die
+> **Noch nicht bestätigt.** Zu prüfen: die Mail-A weiterleiten. Die
 > Bilder müssen **vollständig** dastehen und der Text **frei** bleiben — beides
 > zugleich, zum ersten Mal.
 
-**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Kreis im Logo der Werbemail-A war
+**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Kreis im Logo der Mail-A war
 **blau**, nicht grau. Paige hatte das Bild also **geladen** und kannte seine
 echte Größe genau — es ist in der Nachricht **eingebettet** (`cid:`). Unser
 `height="20"` überschrieb diese Größe und schnitt das Bild ab.
 
-Bei der Werbemail-B dagegen standen graue Kästen: dort sind die Bilder
+Bei der Mail-B dagegen standen graue Kästen: dort sind die Bilder
 **extern** (`http://…`), werden beim Verfassen nicht geholt, und Paige weiß
 nichts über ihre Größe. **Nur dort hilft eine Vorgabe.**
 
@@ -2995,7 +3003,7 @@ Die Spurmarke nennt jetzt `eingebettet=N`.
 
 ## 7.2.0.60 — ein kleines Vorgabemaß für Bilder ohne Höhe (E-89, dritter Anlauf)
 
-> **Noch nicht bestätigt.** Zu prüfen: die Werbemail-A weiterleiten. Der
+> **Noch nicht bestätigt.** Zu prüfen: die Mail-A weiterleiten. Der
 > blaue Kreis darf den Verifizierungscode nicht mehr zudecken.
 
 **Warum es einen dritten Anlauf braucht — wir haben uns selbst im Weg
@@ -3006,7 +3014,7 @@ aus der Bilddatei. Fehlt das Attribut, ist er null, der ganze Block wird
 zu.
 
 Die 200×90-Vorgabe, die in 7.2.0.58 **entfernt** wurde, war das, was diesen Wert
-bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Werbemail-A:
+bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Mail-A:
 
 ```
 E-89 Bilder im Editor: gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0
@@ -3024,7 +3032,7 @@ Drei Anläufe an einem Tag: 200×90 (zu groß), gar nichts (Text wird zugedeckt)
 20×20. Gregors Entscheidung: *„ok, option a"*.
 
 **Von Gregor an 1.0.60 gemessen — der Text ist frei, aber die Bilder werden
-zerschnitten ([E-95](Intern/BEFUNDE.md#e-95)).** Auf seinem Bild ist der blaue Kreis im Logo der Werbemail-A **blau**,
+zerschnitten ([E-95](Intern/BEFUNDE.md#e-95)).** Auf seinem Bild ist der blaue Kreis im Logo der Mail-A **blau**,
 nicht grau: Paige hat das Bild geladen und kennt seine echte Größe. Es ist
 **eingebettet** (`cid:`), und unser `height="20"` schneidet es ab. Bei externen
 Bildern (`http:`) ist die Vorgabe dagegen richtig — dort weiß Paige nichts. Die
@@ -3033,7 +3041,7 @@ Unterscheidung fehlt und kommt in 7.2.0.61.
 **Tests: 150 von 150.**
 
 **Neu aufgeschrieben, nicht behoben:** die Betreffzeile wird mitten im Wort
-umbrochen (`Ware bestel len`, `Wochenend e!`). Das sind **nicht** die Stellen, an
+umbrochen (`Waren bestel len`, `Wochenend e!`). Das sind **nicht** die Stellen, an
 denen Emoji entfernt wurden — `15 %` steht korrekt zusammen — die Messung dazu steht bei [**E-90**](Intern/BEFUNDE.md#e-90) (**offen**, als Grenze eingestuft und zurückgestellt, nicht behoben). Ursache
 noch ungemessen, siehe [BEFUNDE.md](Intern/BEFUNDE.md) unter [E-94](Intern/BEFUNDE.md#e-94).
 
@@ -3130,7 +3138,7 @@ festhielten; sie prüfen jetzt das Gegenteil.
 ## 7.2.0.57 — der Versuch, die Bilder im Verfassenfenster zu bändigen (E-89, **wirkt nicht**)
 
 > **Von Gregor am 14.09.2026 an 1.0.57 gemessen und abgelehnt:** *„findest du,
-> es ist leserlich? ich nicht!"* Auf seinem Bild liegt die Produktbild über
+> es ist leserlich? ich nicht!"* Auf seinem Bild liegt das Produktbild über
 > „Artikelnummer" und „Nachbestellung mit Order-No", darunter steht ein leerer
 > grauer Kasten. **Die Spurmarke aus seinem Lauf widerlegt die angenommene
 > Ursache:** `gesamt=25 unveraendert=22 aus-CSS=0 Vorgabe=3 gedeckelt=0` — kein
@@ -4084,7 +4092,7 @@ E-79 gesichert: ist=368 min=0 -> INI=368
 Damit ist in einem einzigen Start-und-Beenden zu sehen, an welcher Stelle der
 Wert sich ändert. Sie hängen wie alle anderen an `DEBUG_MASK_MISC` und
 schweigen in der Vorgabe — einschalten mit `LogLevel=58527`, siehe
-[README.md](README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+[ANWENDER.md](Doku/ANWENDER.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
 
 **Behoben ist damit noch nichts.** Erst die Messung, dann der Eingriff — an
 dieser Stelle sind in den vergangenen Tagen schon mehrere Vermutungen
@@ -4157,7 +4165,7 @@ LogLevel=58527   ; 25759 + 32768 — sie schreiben
 ```
 
 Damit dürfen die Marken im Code bleiben. Die vollständige Tabelle aller
-sechzehn Schalter steht in [README.md](README.md), Abschnitt *Mehr ins
+sechzehn Schalter steht in [ANWENDER.md](Doku/ANWENDER.md), Abschnitt *Mehr ins
 Protokoll schreiben lassen*.
 
 ### Neu: E-77, und was die Filterdoku jetzt sagt
@@ -4338,8 +4346,8 @@ Fortschrittsanzeige:
 
 ```
 6.26  E-64 FilterMsg: Liste=1 Filter=1 verlangt WhenToApply=4 … Masken=[5]
-7.38  E-64 Match=1 Filter="From:newsletter@freenet.invalid" … "Coole Comics | …"
-7.38  E-64 Match=0 Filter="From:newsletter@freenet.invalid" … "Fwd: Neue Anmeldung …"
+7.38  E-64 Match=1 Filter="From:newsletter@freenet.invalid" … "<Betreff>"
+7.38  E-64 Match=0 Filter="From:newsletter@freenet.invalid" … "<Betreff>"
 ```
 
 Das ist der echte Filterlauf, und er arbeitet **richtig**: eine Nachricht

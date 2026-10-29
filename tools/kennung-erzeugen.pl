@@ -116,7 +116,23 @@ if (open(my $vh, '<:raw', 'Eudora71/Version.h')) {
     $produkt = '' unless defined $produkt;
 }
 
-if (length $produkt and $version =~ /(\d+)$/) {
+#
+# Seit dem 29.10.2026 (Gregors Entscheidung 10 in Intern/WEITERMACHEN.md) gibt
+# es keine eigene Paketnummer 1.0.x mehr: VERSION enthaelt dieselbe vierteilige
+# Nummer wie Version.h, also 7.2.0.N fuer ein Testpaket und 7.2.1.N fuer ein
+# Release. Die Kennung heisst damit "Eudora 7.2.1.128+31810e2 2026-10-29 20:37";
+# das fruehere " / Paket 1.0.N" faellt weg. Die Leser der Kennung
+# (pruefbericht.pl, pruefstand-lauf.ps1, pruefstaende-auffrischen.ps1) nehmen
+# beide Formen an, damit alte Bauten weiter erkannt werden.
+
+if (length $produkt and $version =~ /^\d+\.\d+\.\d+\.\d+$/) {
+    if ($version ne $produkt) {
+        print "kennung-erzeugen: WARNUNG - VERSION sagt $version, "
+            . "Eudora71/Version.h sagt $produkt.\n";
+        print "  Beide muessen dieselbe Nummer tragen. Eine der beiden anpassen.\n";
+    }
+}
+elsif (length $produkt and $version =~ /(\d+)$/) {
     my $letzte_paket = $1;
     if ($produkt =~ /(\d+)$/ and $1 ne $letzte_paket) {
         print "kennung-erzeugen: WARNUNG - Produktversion $produkt und Paketversion "
@@ -127,7 +143,7 @@ if (length $produkt and $version =~ /(\d+)$/) {
 }
 
 my $kennung = length($produkt)
-            ? "Eudora $produkt / Paket $version+$commit$marke $zeit"
+            ? "Eudora $produkt+$commit$marke $zeit"
             : "$version+$commit$marke $zeit";
 
 # --- Schreiben ----------------------------------------------------------------
