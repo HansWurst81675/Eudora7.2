@@ -3099,7 +3099,7 @@ bool E88OriginalEinsetzen(
 // BEFUND E-89: im Verfassenfenster liegen die Bilder ueber dem Text.
 //
 // Gregor an 1.0.56: "1 und da ist alles durcheinander, man kann ja nichts
-// lesen." Auf seinem Bildschirmfoto liegt das Doctolib-Logo ueber der
+// lesen." Auf seinem Bildschirmfoto liegt das Logo der Werbemail-A ueber der
 // Ueberschrift, die App-Store-Kacheln liegen ueber einem Absatz. Als
 // Massstab hat er Thunderbird genannt: dessen Verfassenfenster ist auch
 // nicht huebsch - es zeichnet rote Hilfslinien um jede Tabellenzelle -,
@@ -3497,10 +3497,10 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		//
 		// Gregor am 14.09.2026 an 1.0.60, nachdem der Text endlich frei war:
 		// die Bilder wurden zerschnitten. Der Fund steckte in seinem Bild -
-		// der blaue Doctolib-Kreis war BLAU, nicht grau. Paige hatte ihn
+		// der blaue Kreis im Logo der Werbemail-A war BLAU, nicht grau. Paige hatte ihn
 		// geladen; unser height="20" schnitt ihn ab.
 		//
-		// Bei der FairToner-Nachricht dagegen standen graue Kaesten: dort
+		// Bei der Werbemail-B dagegen standen graue Kaesten: dort
 		// sind die Bilder EXTERN (http://), werden beim Verfassen nicht
 		// geholt, und Paige weiss nichts ueber ihre Groesse. Nur dort ist
 		// eine Vorgabe sinnvoll.
@@ -3582,7 +3582,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		//     ATTRIBUT (PGHTMIMP.CPP:2022), nicht aus der Bilddatei. Ohne
 		//     Attribut ist der Wert null, der ganze Block wird uebersprungen,
 		//     die Zeile bleibt textklein - und der Text wird zugedeckt.
-		//     Gemessen an Gregors Bild zu 1.0.59, Doctolib-Nachricht:
+		//     Gemessen an Gregors Bild zu 1.0.59, Werbemail-A:
 		//     "gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0", und der
 		//     blaue Kreis lag ueber dem Verifizierungscode.
 		//  3. Jetzt ein kleines Mass. Die Zeile wird so hoch, dass nichts
@@ -3611,7 +3611,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 		//   attr=80x80   ascent=80
 		//
 		// Damit ist der Notbehelf nicht nur ueberfluessig, sondern SCHAEDLICH:
-		// auf seinem Bild war die Tonerkartusche ein schmaler Streifen - kein
+		// auf seinem Bild war die Produktbild ein schmaler Streifen - kein
 		// abgeschnittenes Bild, sondern eines, das wir auf 20x20 gequetscht
 		// hatten. In derselben Messung steht dazu "attr=20x20".
 		//
@@ -3766,7 +3766,7 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 	//
 	// BEFUND E-103: der Anfang des Rumpfs gehoert in die Marke.
 	//
-	// Am 17.09.2026 meldete diese Marke fuer die Doctolib-Nachricht
+	// Am 17.09.2026 meldete diese Marke fuer die Werbemail-A
 	// gesamt=0 bei 9092 Byte - kein einziges <img>, obwohl das Original
 	// 23201 Byte und fuenf Bilder hat. Ohne zu sehen, WAS hier ankommt,
 	// laesst sich nicht entscheiden, ob QuoteText die Bilder verliert
@@ -3841,11 +3841,11 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 //
 // Gregor am 17.09.2026, nachdem er eine weitergeleitete Nachricht gesichert
 // hatte: "datei gespeichert, aber unbrauchbar". Gemessen an seiner Datei
-// (Fw Ihr Doctolib Verifizierungscode.eml, 5716 Byte):
+// (Fw Werbemail-A.eml, 5716 Byte):
 //
 //   From: konto-webde@gregor.invalid
 //   To: konto-gmx@gregor.invalid
-//   Subject: Fw: Ihr Doctolib Verifizierungscode
+//   Subject: Fw: Ihr Verifizierungscode
 //   Date: Mon, 14 Sep 2026 10:52:45 +0000
 //
 //   <x-html>

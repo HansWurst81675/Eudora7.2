@@ -452,7 +452,7 @@ Durchgang; **N2 nicht ohne N1**. **N6**, **N7** und **N8** sind entwarnt,
 ## Gregors Test an 1.0.111 — wenn N1 und N3 drin sind
 
 **Test 1 (der Anlassfall, [E-123](../Intern/BEFUNDE.md#e-123)/2b):** Mehrere Nachrichten **innerhalb**
-desselben IMAP-Kontos verschieben (INBOX → HW_Box), sofort *File → Exit*.
+desselben IMAP-Kontos verschieben (INBOX → <Ordner>), sofort *File → Exit*.
 Erwartet im Protokoll:
 
 ```

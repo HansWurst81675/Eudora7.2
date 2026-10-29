@@ -73,3 +73,6 @@ Releases/Eudora72-*-release.zip
 Releases/Eudora72-*-release/
 # Prüfstand von tools/kopfzeile-pruefen.pl (nur bei --behalten)
 tools/.kopfzeile/
+
+# Lokale Ausschlussliste mit persoenlichen Namen (tools/pruefe-testdaten-anonym.pl) - nie ins oeffentliche Repo
+tools/anonym-begriffe.lokal

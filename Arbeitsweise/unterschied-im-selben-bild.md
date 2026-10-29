@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-09-14T05:58:46.460Z
+  modified: 2026-10-29T09:02:57.412Z
 ---
 
 Schranke: keine - ob zwei Teile DESSELBEN Bildes verschieden bewertet wurden, entscheidet sich beim Lesen eines Bildschirmfotos, nicht am Baum
@@ -28,7 +28,7 @@ gleichzeitig:
 
 | Stelle im Bild | Was dort steht | Urteil |
 |---|---|---|
-| Betreffspalte der Nachrichtenliste | *„Fwd: Gregor Czempik, winzige Hörgeräte"*, *„WG: Einführung in das Drohnenrecht"* | **richtig** |
+| Betreffspalte der Nachrichtenliste | zwei Betreffzeilen mit Umlauten, beide richtig dargestellt (Wortlaut bewusst nicht wiedergegeben) | **richtig** |
 | Anzeigebereich darunter | jeder Umlaut als zwei Zeichen, jedes typografische Anfuehrungszeichen als drei - die UTF-8-Bytes (`C3 BC` fuer `u`-Umlaut, `E2 80 9E` fuer das oeffnende Zitatzeichen) roh als CP1252 gelesen | **falsch** |
 
 Beide Texte kommen aus **derselben** Nachricht, über **dieselbe**

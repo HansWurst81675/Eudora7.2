@@ -700,7 +700,7 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | Testverzeichnis | **bereitgestellt am 14.10.2026**, `C:\Users\Gregor\Eudora72-1.0.89-release`. Grundlage `Releases/Eudora72-1.0.84-release.zip`, darüber 33 EXE/DLL/OCX aus `Eudora71/Bin/Release` (`SPELL32.DLL` bleibt die aus dem ZIP); `Eudora.exe` byte-gleich mit dem Prüfstand `C:\Temp\E118`; `paket-pruefen.ps1`: keine Fehler; beide melden 7.2.0.89. Im Paket `TESTEN.txt` (Kopie `Releases/1.0.89/TESTEN.txt`); Prüfschritte in [TESTPLAN.md](../Intern/TESTPLAN.md#c5) |
 | Inhalt | wie 1.0.88, dazu [E-118](../Intern/BEFUNDE.md#e-118): HTML-Mail behält beim Hochladen in einen IMAP-Ordner `Content-Type: text/html` |
 | Gemessen | Testsuite 207/207 (`TestE118.cpp`); IMAP-Prüfserver: `text/html` mit Zeichensatz, ohne Hülle; Gegenprobe 1.0.88 ohne `Content-Type` |
-| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../Intern/BEFUNDE.md#e-118) an der waipu.tv-Mail (in den IMAP-Ordner verschoben, erscheint als HTML). **Nicht bestanden:** bei der SoftMaker-Mail fehlten danach die eingebetteten Bilder (*„hier fehlt der inhalt“*) – [E-118](../Intern/BEFUNDE.md#e-118) Teil 2, eingebaut in 1.0.90. [E-105](../Intern/BEFUNDE.md#e-105) an 1.0.89 noch nicht geprüft |
+| Gregors Test, 14.10.2026 | **bestätigt:** [E-118](../Intern/BEFUNDE.md#e-118) an der Newsletter-Mail (in den IMAP-Ordner verschoben, erscheint als HTML). **Nicht bestanden:** bei der SoftMaker-Mail fehlten danach die eingebetteten Bilder (*„hier fehlt der inhalt“*) – [E-118](../Intern/BEFUNDE.md#e-118) Teil 2, eingebaut in 1.0.90. [E-105](../Intern/BEFUNDE.md#e-105) an 1.0.89 noch nicht geprüft |
 
 ## 1.0.88 — **nicht ausgeliefert**, Quellstand 7.2.0.88, gemergt mit PR #97 (E-105); Gregor verzichtete auf einen eigenen Test
 

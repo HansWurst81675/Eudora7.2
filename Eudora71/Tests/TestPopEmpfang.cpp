@@ -294,8 +294,8 @@ static void Test_BetreffMitKlartextDrumherum(void)
 
 	// So sieht die Zeile aus, die HeaderDesc::Read an Fix2047 gibt.
 	PruefeKopfzeile("Betreff mit Klartext davor und dahinter",
-					"Re: =?utf-8?Q?Gr=C3=BC=C3=9Fe?= aus Bremen",
-					"Re: Gr\xFC\xDF" "e aus Bremen");
+					"Re: =?utf-8?Q?Gr=C3=BC=C3=9Fe?= aus Musterstadt",
+					"Re: Gr\xFC\xDF" "e aus Musterstadt");
 
 	// Eine Zeile ohne kodiertes Wort darf sich nicht veraendern.
 	PruefeKopfzeile("Betreff ohne kodiertes Wort",
@@ -324,25 +324,25 @@ static void Test_ZweiKodierteWoerter(void)
 // mitten in einem Wort. RFC 2047, 6.2: Leerraum zwischen zwei benachbarten
 // kodierten Woertern faellt weg - das gilt auch, wenn er eine Faltung ist.
 // Bleibt er stehen, wird aus "bestel" + "len" das "bestel len" aus Gregors
-// Toner-Nachricht.
+// Werbe-Nachricht.
 //
 // Die Eingabe ist die ganze Kopfzeile mit Faltung, so wie ImapFix2047 sie
 // ueber IMAP bekommt (ImapDownload.cpp:2276). Fix2047 im POP-Weg bekommt sie
 // zeilenweise (LexFill); dort pruefen diese Faelle die Funktion selbst, nicht
 // den Weg dorthin - den Weg prueft Pruefnachricht 06 im POP-Pruefstand.
-static const char* const kGefaltetZwei   = "=?utf-8?Q?Toner_bestel?=\r\n =?utf-8?Q?len?=";
+static const char* const kGefaltetZwei   = "=?utf-8?Q?Ware_bestel?=\r\n =?utf-8?Q?len?=";
 static const char* const kGefaltetTab    = "=?utf-8?Q?Nur_b?=\r\n\t=?utf-8?Q?is_zum_Wochenende!?=";
 static const char* const kGefaltetDrei   = "=?utf-8?Q?Wochenend?=\r\n =?utf-8?Q?e?=\r\n =?utf-8?Q?!?=";
 // Gegenprobe: eine Faltung zwischen einem kodierten Wort und KLARTEXT ist
 // echter Leerraum und bleibt - RFC 2047 nimmt nur Leerraum zwischen ZWEI
 // kodierten Woertern heraus.
-static const char* const kGefaltetKlar   = "=?utf-8?Q?Toner?=\r\n bestellen";
+static const char* const kGefaltetKlar   = "=?utf-8?Q?Ware?=\r\n bestellen";
 
 static void Test_GefalteteKodierteWoerter(void)
 {
 	TT_BeginTest("POP: kodierte Woerter ueber eine Faltung hinweg (E-94)");
 
-	PruefeKopfzeile("Faltung zwischen zwei kodierten Woertern", kGefaltetZwei, "Toner bestellen");
+	PruefeKopfzeile("Faltung zwischen zwei kodierten Woertern", kGefaltetZwei, "Ware bestellen");
 	PruefeKopfzeile("Faltung mit Tabulator", kGefaltetTab, "Nur bis zum Wochenende!");
 	PruefeKopfzeile("zwei Faltungen hintereinander", kGefaltetDrei, "Wochenende!");
 
@@ -353,7 +353,7 @@ static void Test_GefalteteKodierteWoerterImap(void)
 {
 	TT_BeginTest("IMAP: kodierte Woerter ueber eine Faltung hinweg (E-94)");
 
-	PruefeKopfzeileImap("Faltung zwischen zwei kodierten Woertern", kGefaltetZwei, "Toner bestellen");
+	PruefeKopfzeileImap("Faltung zwischen zwei kodierten Woertern", kGefaltetZwei, "Ware bestellen");
 	PruefeKopfzeileImap("Faltung mit Tabulator", kGefaltetTab, "Nur bis zum Wochenende!");
 	PruefeKopfzeileImap("zwei Faltungen hintereinander", kGefaltetDrei, "Wochenende!");
 
@@ -365,9 +365,9 @@ static void Test_FaltungVorKlartextBleibt(void)
 	TT_BeginTest("POP und IMAP: Faltung vor Klartext bleibt Leerraum (Gegenprobe zu E-94)");
 
 	// Was genau stehen bleibt, ist heute die Faltung selbst; entscheidend ist,
-	// dass zwischen "Toner" und "bestellen" weiter Leerraum steht.
-	PruefeKopfzeile("POP: Faltung vor Klartext", kGefaltetKlar, "Toner\r\n bestellen");
-	PruefeKopfzeileImap("IMAP: Faltung vor Klartext", kGefaltetKlar, "Toner\r\n bestellen");
+	// dass zwischen "Ware" und "bestellen" weiter Leerraum steht.
+	PruefeKopfzeile("POP: Faltung vor Klartext", kGefaltetKlar, "Ware\r\n bestellen");
+	PruefeKopfzeileImap("IMAP: Faltung vor Klartext", kGefaltetKlar, "Ware\r\n bestellen");
 
 	TT_EndTest();
 }
@@ -569,13 +569,13 @@ static void Test_VollstaendigePopAntwort(void)
 	static const char* aszRumpf[] = {
 		"Hallo Gregor,\r\n",
 		"\r\n",
-		"sch\xC3\xB6ne Gr\xC3\xBC\xC3\x9F" "e aus Bremen. Das kostet \xE2\x82\xAC 5,\xC2\xA0" "50.\r\n",
+		"sch\xC3\xB6ne Gr\xC3\xBC\xC3\x9F" "e aus Musterstadt. Das kostet \xE2\x82\xAC 5,\xC2\xA0" "50.\r\n",
 		"Stra\xC3\x9F" "e, H\xC3\xA4user, B\xC3\xA4ume.\r\n"
 	};
 	static const char* aszRumpfSoll[] = {
 		"Hallo Gregor,\r\n",
 		"\r\n",
-		"sch\xF6ne Gr\xFC\xDF" "e aus Bremen. Das kostet \x80 5,\xA0" "50.\r\n",
+		"sch\xF6ne Gr\xFC\xDF" "e aus Musterstadt. Das kostet \x80 5,\xA0" "50.\r\n",
 		"Stra\xDF" "e, H\xE4user, B\xE4ume.\r\n"
 	};
 	int i;

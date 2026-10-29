@@ -188,6 +188,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `e166-junk_message_fix` | 28.10.2026 | **Von Gregor vorgegeben** (*"ja, e166-junk_message_fix, beheben"*). [E-166](../Intern/BEFUNDE.md#e-166): `CPersonality::Modify` (`persona.cpp`) verwirft den INI-Zwischenspeicher ohne `FlushINIFile` - die Antwort auf die Junk-Frage geht verloren, wenn danach *Konto → Eigenschaften* mit OK geschlossen wird; Ursache am Pruefstand gemessen, Behebung, Messskript `tools/messen-e166-assistent.ps1` |
 | `release-7.2.1-vorbereiten` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, gemergt. zweig release-7.2.1-vorbereiten, chronist starten“*, auf meinen Vorschlag). CHANGELOG für alles seit 7.2.0.127 vervollständigen, FAQ-Bestätigungen (Anhänge, *Make Label*), Funde aus [LEKTOR-93](../Befunde/LEKTOR-93.md#lektor-93), dann das Release 7.2.1 schnüren |
 | `datenschutz-bereinigen` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, branch name ist ok“*). Daten aus Gregors Postfach (Betreffzeilen, Kontoname, Ordnername, Absenderadresse, Name einer Sicherung) aus dem aktuellen Stand entfernen; den älteren Bestand erst nach Gregors Entscheidung |
+| `datenschutz-bereinigen-die_zweite` | 29.10.2026 | **Name von Gregor vorgegeben** (*„datenschutz-bereinigen-die_zweite“*), auf seine Frage *„warum kann man das nicht alles zusammen machen?“*: alles aus Gregors Postfach (Betreffzeilen, Absender, Mailadressen, Konto- und Ordnernamen, Kopfzeilen, Anhangnamen) im aktuellen Stand durch neutrale Beschreibungen ersetzen, in einem PR |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 

@@ -398,7 +398,7 @@ GMX-IMAP-Konto im Postfachbaum, siehe
 |---|---|---|---|---|
 | G1 | **Ordnernamen ansehen:** im Postfachbaum unter **`<Dominant>`** (IMAP, nicht die lokalen Postfächer oben) und im Menü *Transfer* stehen „Entwürfe" und „Gelöscht", nicht `Entw&APw-rfe` | [E-77](../Intern/BEFUNDE.md#e-77), `BEFUNDE.md:324` | **ja**, kurz | am Prüfstand gemessen (`E-77a`–`c`), aber mit nachgebauter Ordnerliste. Gregors echtes GMX ist die Bestätigung |
 | G2 | **Ordner mit Umlaut anlegen und umbenennen:** unter **`<Dominant>`** einen Ordner `Prüfö` anlegen, im **GMX-Webmailer** nachsehen, wie er heißt (muss `Prüfö` sein). Dann in Eudora in `Prüfä` umbenennen, wieder im Webmailer nachsehen, danach löschen | [E-77](../Intern/BEFUNDE.md#e-77), `BEFUNDE.md:324`: *„Nicht am Programm gemessen: Anlegen und Umbenennen … der IMAP-Prüfserver kennt `CREATE` und `RENAME` nicht"* | **ja, nur bei ihm messbar** | schreibt auf seinen echten Server. Vorher PRÜFER über die Kodierung ([L-55.15](#l-55.15)) |
-| G3 | **Weiterleiten mit `data:`-Bild:** die Mail *„Einladung Polizeitag München"* weiterleiten. Im Verfassen-Fenster steht das Bild, kein grauer Kasten. **An sich selbst senden** und beim Empfang (Eudora **und** Webmailer) nachsehen, ob das Bild ankommt | [E-119](../Intern/BEFUNDE.md#e-119), `BEFUNDE.md:365`: *„Ebenfalls nicht gemessen: was beim **Senden** einer solchen Weiterleitung mit dem `file://`-Verweis geschieht"* | **ja**, Senden als echte Mail | das Anzeigen ist am Prüfstand gemessen, das Senden nicht. In welchem Postfach die Mail liegt (lokal `In` oder unter `<Dominant>`), muss der Plan nennen. Es steht in keiner Datei |
+| G3 | **Weiterleiten mit `data:`-Bild:** die Mail *„<Betreff einer Einladung>"* weiterleiten. Im Verfassen-Fenster steht das Bild, kein grauer Kasten. **An sich selbst senden** und beim Empfang (Eudora **und** Webmailer) nachsehen, ob das Bild ankommt | [E-119](../Intern/BEFUNDE.md#e-119), `BEFUNDE.md:365`: *„Ebenfalls nicht gemessen: was beim **Senden** einer solchen Weiterleitung mit dem `file://`-Verweis geschieht"* | **ja**, Senden als echte Mail | das Anzeigen ist am Prüfstand gemessen, das Senden nicht. In welchem Postfach die Mail liegt (lokal `In` oder unter `<Dominant>`), muss der Plan nennen. Es steht in keiner Datei |
 | G4 | **Breites Bild beim Antworten:** auf einen Newsletter mit breitem Banner antworten. Das Bild passt in den Textbereich, kein waagerechter Rollbalken. **Dann das Fenster schmaler ziehen: das Bild passt sich NICHT an. Das ist bekannt (Variante B), kein neuer Fehler** | [E-113](../Intern/BEFUNDE.md#e-113), `BEFUNDE.md:359` | **ja, zum Ansehen** (am Prüfstand gemessen: `E-113p`) | Darstellung ist Kriterium 2, und das Urteil darüber hat Gregors Auge. Ohne den Hinweis auf B meldet er B als neuen Fehler |
 | G5 | **Die neun Kriterien 0–8**, je ein Handgriff: Paket aus dem ZIP auspacken (vorher *Zulassen*, [E-138](../Intern/BEFUNDE.md#e-138)) und mit `Eudora starten.cmd` starten; POP und IMAP abrufen; HTML-Nachricht ansehen; neue Mail schreiben und senden; weiterleiten; Fensterliste und Registerkarten; *File → Exit* | `ZIEL.md:57-58`, `:164-175` | **ja** | verlangt vor der Marke. Schritte fehlen ganz ([L-55.12](#l-55.12)) |
 | G6 | **M1** Starttest (fremdes Mailverzeichnis) | [E-132](../Intern/BEFUNDE.md#e-132), `TESTPLAN.md:531-560` | **ja** | Teil M, *„vor dem Release 7.2.1"*. Schritte stehen |
@@ -467,7 +467,7 @@ Eudora einen Ordner auf Gregors **echtem** GMX-Server an. Bei [E-119](../Intern/
 Mail mit einem Bild aus `file://` an einen Empfänger. Am Prüfstand ist beides
 heute nicht messbar: Der IMAP-Prüfserver kennt kein `CREATE` und `RENAME`, und
 gesendet wurde nichts. Gregor **hat** solche Post. [E-119](../Intern/BEFUNDE.md#e-119) ist seine Meldung vom
-13.10.2026 (*„Einladung Polizeitag München"*).
+13.10.2026 (*„<Betreff einer Einladung>"*).
 
 **Gemessen:** `perl tools/rollen-faellig.pl` → *„PRUEFER ist faellig: seit
 seinem Bericht (561df9f) haben sich 14 Datei(en) … geaendert —
@@ -660,7 +660,7 @@ Frage 3, ob [E-142](../Intern/BEFUNDE.md#e-142) kritisch ist (`WEITERMACHEN.md:1
 
 * Ob Schritt 3 der Reihenfolge (*„Alle Bildfälle fahren"*) nach [E-113](../Intern/BEFUNDE.md#e-113) und [E-119](../Intern/BEFUNDE.md#e-119)
   gelaufen ist ([L-55.4](#l-55.4)). Die Commit-Nachrichten nennen die Einzelfälle.
-* Wo Gregors Mail *„Einladung Polizeitag München"* liegt (lokal oder unter
+* Wo Gregors Mail *„<Betreff einer Einladung>"* liegt (lokal oder unter
   `<Dominant>`). Das zu klären braucht sein `eudora.log` oder ihn; ich habe
   seine Verzeichnisse nicht angefasst.
 * Der Code von [E-77](../Intern/BEFUNDE.md#e-77), [E-113](../Intern/BEFUNDE.md#e-113) und [E-119](../Intern/BEFUNDE.md#e-119). Das ist Sache des PRÜFERS, der fällig ist

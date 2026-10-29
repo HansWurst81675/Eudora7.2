@@ -26,14 +26,14 @@
 
 //
 // Eine selbst verfasste Nachricht, so wie sie in Out.mbx liegt. Nachgebaut
-// nach Gregors Datei "Fw Ihr Doctolib Verifizierungscode.eml" (5716 Byte):
+// nach Gregors Datei "Fw Werbemail-A.eml" (5716 Byte):
 // vier Kopfzeilen, Leerzeile, <x-html>, HTML. Das \xFC ist das Byte, das
 // dort im Wort "gueltig" steht - gemessen, nicht angenommen.
 //
 static const char* const kSelbstVerfasst =
 	"From: konto-webde@gregor.invalid\r\n"
 	"To: konto-gmx@gregor.invalid\r\n"
-	"Subject: Fw: Ihr Doctolib Verifizierungscode\r\n"
+	"Subject: Fw: Ihr Verifizierungscode\r\n"
 	"Date: Mon, 14 Sep 2026 10:52:45 +0000\r\n"
 	"\r\n"
 	"<x-html>\r\n"
@@ -45,9 +45,9 @@ static const char* const kSelbstVerfasst =
 // Postfach mit. Daran darf nichts geaendert werden.
 //
 static const char* const kEmpfangen =
-	"From: no-reply@doctolib.de\r\n"
+	"From: no-reply@absender.invalid\r\n"
 	"To: konto-webde@gregor.invalid\r\n"
-	"Subject: Ihr Doctolib Verifizierungscode\r\n"
+	"Subject: Ihr Verifizierungscode\r\n"
 	"MIME-Version: 1.0\r\n"
 	"Content-Type: text/html; charset=UTF-8\r\n"
 	"\r\n"
@@ -71,7 +71,7 @@ static const char* const kNurText =
 //
 static const char* const kZitatImRumpf =
 	"From: gregor@example.invalid\r\n"
-	"To: markus@example.invalid\r\n"
+	"To: empfaenger@example.invalid\r\n"
 	"Subject: Fw: Rundbrief\r\n"
 	"\r\n"
 	"<x-html>\r\n"

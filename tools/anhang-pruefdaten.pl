@@ -176,13 +176,13 @@ my @faelle = (
   # Der Anhang ist absichtlich heil, damit dieser Fall nur E-94 misst.
   { nr     => '06-betreff-gefaltet',
     befund => 'E-94',
-    betr   => '=?utf-8?Q?Pruefung_E-94:_Toner_bestel?=' . $CRLF
+    betr   => '=?utf-8?Q?Pruefung_E-94:_Waren_bestel?=' . $CRLF
             . ' =?utf-8?Q?len_und_1?=' . $CRLF
             . ' =?utf-8?Q?5_Prozent_sparen_bis_zum_Wochenend?=' . $CRLF
             . ' =?utf-8?Q?e!?=',
     kopf   => 'Content-Type: application/pdf; name="Rechnung-E94.pdf"' . $CRLF
             . 'Content-Disposition: attachment; filename="Rechnung-E94.pdf"' . $CRLF,
-    soll   => 'Betreff "Pruefung E-94: Toner bestellen und 15 Prozent sparen bis zum Wochenende!", Anhang Rechnung-E94.pdf',
+    soll   => 'Betreff "Pruefung E-94: Waren bestellen und 15 Prozent sparen bis zum Wochenende!", Anhang Rechnung-E94.pdf',
     heute  => 'Betreff mit Luecken mitten im Wort ("bestel len", "1 5", "Wochenend e!")',
     wort   => 'E-94: kodierte Woerter ueber eine Faltung hinweg (lex822.cpp:685)' },
 );

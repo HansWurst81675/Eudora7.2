@@ -814,7 +814,7 @@ veraltet ist, hier der Abgleich:
   `else`-Zweig von `if (image_record.source_height)`, also nur bei Bildern
   **ohne** `height` im HTML. Ein Zählpixel mit `height="1"` ist nicht betroffen
   (es nimmt den `if`-Zweig). Betroffen ist ein Bild ganz ohne Maßangabe: es
-  bekommt 48 Punkte Zeile, bis es geladen ist. In Gregors Doctolib-Nachricht
+  bekommt 48 Punkte Zeile, bis es geladen ist. In Gregors Werbemail-A
   sind das zehn Bilder mit echten Höhen von 49 bis 683 — dort passt die Zahl.
   Bei einem 16-Punkt-Symbol ohne Maßangabe entsteht bis zum Laden eine Lücke.
   Das ist die Abwägung, die im Kommentar auch so steht; ich vermerke sie nur,

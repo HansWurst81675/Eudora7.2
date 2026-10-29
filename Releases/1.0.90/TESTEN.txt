@@ -11,11 +11,11 @@ Im Konto <Dominant> muss "IMAP Mailbox Location Prefix" leer sein.
 | Teil 2| IMAP-Ordner verloren (SoftMaker-Mail an 1.0.89)      | aus "In" in einen IMAP-Ordner verschieben, den Ordner oeffnen, Mail anklicken | (Logo, Glocke, Produktbild), Text vollstaendig         |
 | E-121 | Mail konnte beim Verschieben in einen IMAP-Ordner    | dabei beobachten: die Mail verschwindet aus "In" erst, wenn sie im           | keine Mail ist weder in "In" noch im IMAP-Ordner;      |
 |  NEU  | spurlos verschwinden                                 | IMAP-Ordner steht (kann einen Moment dauern)                                 | im Zweifel lieber doppelt als weg                      |
-| E-118 | Gegenprobe: HTML-Mail ohne eingebettete Bilder       | wie an 1.0.89 (waipu.tv-Mail): verschieben, oeffnen                          | normale HTML-Darstellung, kein Quelltext               |
+| E-118 | Gegenprobe: HTML-Mail ohne eingebettete Bilder       | wie an 1.0.89 (Newsletter-Mail): verschieben, oeffnen                          | normale HTML-Darstellung, kein Quelltext               |
 
 Bekannt und NICHT behoben (bitte nicht als neuen Fehler melden):
 
-| E-119 | Bilder, die als "data:" im HTML stecken -> grauer Kasten beim Antworten/Weiterleiten (z.B. FairToner-Logo).                      |
+| E-119 | Bilder, die als "data:" im HTML stecken -> grauer Kasten beim Antworten/Weiterleiten (z.B. Logo der Werbemail-B).                      |
 | E-77  | IMAP-Ordnernamen mit Umlauten roh (Entw&APw-rfe).                                                                                |
 | E-122 | Im IMAP-Ordner hochgeladene Mails tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung).                           |
 

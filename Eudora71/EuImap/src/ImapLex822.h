@@ -44,7 +44,7 @@ private:
 	//	E-94: wie in Lex822State (lex822.h) - eine Faltung zwischen zwei
 	//	kodierten Woertern muss wegfallen. Ueber IMAP schreibt DIESER Zerleger
 	//	die Kopfzeile zeilenweise in die Mailbox; ImapFix2047 sieht dabei je
-	//	Aufruf nur eine Zeile. Gemessen an Gregors INBOX.mbx (Toner-Nachricht).
+	//	Aufruf nur eine Zeile. Gemessen an Gregors INBOX.mbx (Werbe-Nachricht).
 	BOOL	m_ZeileEndetKodiert;
 	int		m_FaltungLeerraum;	// > 0: die naechste Faltung verschlucken
 
