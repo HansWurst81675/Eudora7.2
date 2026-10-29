@@ -38,10 +38,10 @@ void RunE112Tests(void)
 			"Das WhatsApp-Symbol ist als 35x35 ausgezeichnet und bleibt 35x35");
 
 		E112Zielrechteck(540, 240, 1294, 575, &b, &h);
-		TT_CHECK_MSG(b == 540 && h == 240, "Spendenbanner: angegeben 540x240");
+		TT_CHECK_MSG(b == 540 && h == 240, "Banner: angegeben 540x240");
 
 		E112Zielrechteck(600, 146, 1772, 433, &b, &h);
-		TT_CHECK_MSG(b == 600 && h == 146, "Totalitarismus-Watch: angegeben 600x146");
+		TT_CHECK_MSG(b == 600 && h == 146, "Bild C: angegeben 600x146");
 
 		// Die Gegenrichtung ausdruecklich: GENAU das stand vor der Behebung da.
 		E112Zielrechteck(35, 35, 330, 327, &b, &h);

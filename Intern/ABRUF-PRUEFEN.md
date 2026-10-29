@@ -53,7 +53,7 @@ verschlüsselt aufgebaut (`POPSession.cpp:602-605`), noch bevor irgendein Passwo
 ### Welcher Servername? — beantwortet
 
 > **Erledigt: `mx.freenet.de` spricht POP3.** Zuletzt gemessen am **06.09.2026**
-> im selbst gebauten Eudora 7.2.0.12: **Port 995**, *Tools → Last SSL Info*
+> im selbst gebauten Eudora 7.2.0.12: **Port 995**, *Tools → Options… → Checking Mail →* Knopf *Last SSL Info* (kein Menüpunkt, `EudoraRes.rc:1847`)
 > meldet `Negotiation Status: Succeeded`, **TLSv1.3**,
 > `TLS_AES_256_GCM_SHA384`. Die zugehörige Einstellung ist *Secure Sockets when
 > Receiving* → **„Required, Alternate Port"**, in der `Eudora.ini`
@@ -244,8 +244,12 @@ also nie — genau das ist es, was der zurückgestellte Patch ändern würde.
 Verzeichnissen: dem Eudora-Datenverzeichnis (wo `Eudora.ini` liegt) **und** dem
 Verzeichnis von `Eudora.exe` (`SSLSettings.cpp:88`:
 `m_InputCertsDir = EudoraDir + "\r\n" + ExecutableDir`). Der Dateiname ist fest
-verdrahtet: `rootcerts.p7b` (`QCSSLContext.cpp:53`). Sicherheitshalber in
-**beide** Verzeichnisse legen. Ein Fehlen wird **nicht** eigens gemeldet — es
+verdrahtet: `rootcerts.p7b` (`QCSSLContext.cpp:53`). **Nur die Datei aus dem
+Paket neben `Eudora.exe` benutzen, keine eigene Kopie ins Mailverzeichnis
+legen:** eine Kopie dort hat Vorrang und wird mit einer neuen Fassung nicht
+ersetzt — eine veraltete Liste bliebe in Kraft (berichtigt am 29.10.2026; bis
+dahin stand hier „sicherheitshalber in beide Verzeichnisse“, siehe
+[README](../README.md), *Kompromittierte Zertifikate von eMudhra*). Ein Fehlen wird **nicht** eigens gemeldet — es
 äußert sich genau als „Cert Chain not trusted".
 
 ## 6. Wenn es scheitert — was ich brauche

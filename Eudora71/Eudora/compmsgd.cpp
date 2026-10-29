@@ -3446,7 +3446,7 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 			// geoeffneten Fenster gespeichert. In der Datei stand:
 			//
 			//   From: "konto-gmx@gregor.invalid" <konto-gmx@gregor.invalid> Subject:
-			//   Re: Fwd: Deine Anzeige 'Zu verschenken: kleine Gefaesse' Cc:
+			//   Re: Fwd: Deine Anzeige 'Zu verschenken: Beispielartikel' Cc:
 			//
 			// Drei Kopfzeilen in einer. Im Postfach steht jede fuer sich -
 			// beide Fassungen nebeneinandergelegt und gemessen.

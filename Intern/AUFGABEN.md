@@ -69,8 +69,8 @@ mehr anzeigt.
 (siehe unten; bis zum 13.10.2026 stand er hier in der Überschrift, [LEKTOR-28](../Befunde/LEKTOR-28.md#lektor-28)). Beim **Antworten und Weiterleiten**
 kamen nicht alle Bilder ins Verfassenfenster, ein Teil stand als grauer Kasten
 da. **Ursache:** `resolve_URL` (`HTMLUtils.cpp`) warf jede Prozent-Sequenz weg,
-statt sie zu entschlüsseln — aus `en%20aktuellen%20Verlust.png` wurde
-`enaktuellenVerlust.png`, der Server antwortete **404**, Eudora legte die
+statt sie zu entschlüsseln — aus `ei%20Beispiel%20Bild.png` wurde
+`eiBeispielBild.png`, der Server antwortete **404**, Eudora legte die
 Fehlerseite ab und zeichnete einen grauen Kasten. Zehn von zwanzig Bildern.
 **Behoben in 7.2.0.75** mit einem `++output;`, **von Gregor bestätigt** (49 ×
 `datei=1 intern=1`, kein `intern=0` mehr).
