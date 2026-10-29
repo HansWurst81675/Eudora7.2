@@ -14,9 +14,9 @@
 > [ZIEL.md](../ZIEL.md) ([Teil 1](#teil-1-kriterien)) bekommen **keinen eigenen
 > Durchgang** — Gregor am 29.10.2026: *„ja, das funktioniert alles. … das ist
 > inzwischen schon alles mehrfach getestet und geprüft, läuft stabil.“* Seine
-> Ergebnisse stehen direkt hierunter. Erst mit seinem Ja
-> wird es als `v7.2.1.128` veröffentlicht.
-> Veröffentlicht ist bis dahin `v1.0.120`. Am Bau vorher geprüft: 314
+> Ergebnisse stehen direkt hierunter. Mit seinem Ja wurde es am 29.10.2026
+> als `v7.2.1.128` veröffentlicht.
+> Davor veröffentlicht war `v1.0.120`. Am Bau vorher geprüft: 314
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
 > ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
 
