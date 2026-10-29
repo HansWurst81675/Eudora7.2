@@ -40,7 +40,8 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
 2. Mail(s) in der Liste markieren, dann *Message → Change → Label →* das
    Label wählen — oder Rechtsklick auf die Mail → *Change Label*. *None*
    nimmt es wieder weg.
-3. Nach Label sortieren: im Sortierfeld über der Liste *Label*.
+3. Nach Label sortieren: auf den Spaltenkopf *Label* klicken, oder
+   *Edit → Sort → Sort by Label*.
 
 **Automatisch beim Abholen** — etwa alles vom Finanzamt rot als `Wichtig`:
 
@@ -57,13 +58,14 @@ nicht geprüft.
 
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund
-bleibt weiß und nimmt die Label-Farbe nur an, solange die Zeile ausgewählt ist.
+bleibt weiß und nimmt die Label-Farbe nur an, solange die Zeile ausgewählt ist
+und die Liste den Fokus hat (sonst ist die ausgewählte Zeile grau).
 Mit `WholeSummaryLabelColor=0` in der `Eudora.ini` ist nur die Spalte *Label*
 farbig. Einen farbigen **Hintergrund** für nicht ausgewählte Zeilen kennt
 Eudora nicht.
 
 *Am Quelltext nachgesehen (29.10.2026):* Menüs `EudoraRes.rc:5745-5756`
-und `:5938-5948`, Vorgabe `:11232`; Zeichnen `tocview.cpp:622-641`. Die
+und `:5943-5954`, Sortieren `:5633`, Vorgabe `:11232`; Zeichnen `tocview.cpp:622-641`. Die
 Einstellungsseite hat Gregor am 29.10.2026 am Programm gesehen. **Am Programm
 geprüft** von Gregor am 29.10.2026 an Paket 1.0.127: *„labels funktionieren.
 paßt.“*

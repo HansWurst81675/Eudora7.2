@@ -13,7 +13,8 @@
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 
 > Kein eigenes Testpaket — du prüfst es an der Release-Fassung (Entscheidung
-> 15 in [WEITERMACHEN](WEITERMACHEN.md)). Alles im **lokalen** Eudora, kein
+> 15 in [WEITERMACHEN](WEITERMACHEN.md)), **zuerst**, in einem frisch
+> ausgepackten Release-Verzeichnis, vor dem übrigen Release-Test. Alles im **lokalen** Eudora, kein
 > IMAP-Ordner. Voraussetzung: ein **leeres** Mailverzeichnis im Release-Verzeichnis,
 > sonst ist die Frage schon beantwortet und kommt gar nicht.
 

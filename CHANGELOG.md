@@ -105,7 +105,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 **Zweig `e166-junk_message_fix`, Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
 
-* **Konto-Eigenschaften verlieren keine Einstellungen mehr** ([E-166](Intern/BEFUNDE.md#e-166)). Wer die Kontoeinstellungen (*Tools → Personalities*, Rechtsklick → *Properties*) mit OK schloss, verlor jede Einstellung, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — bei Gregor die Antwort auf die Junk-Frage, die deshalb beim nächsten Start wiederkam. `CPersonality::Modify` (`persona.cpp`) schreibt diese Einstellungen jetzt, bevor es die Kontodaten speichert. Am Prüfstand vorher rot, nachher grün; Regressionsfall E-166a/b. Gregors Test steht aus.
+* **Konto-Eigenschaften verlieren keine Einstellungen mehr** ([E-166](Intern/BEFUNDE.md#e-166)). Wer die Kontoeinstellungen (*Tools → Personalities*, Rechtsklick → *Properties*) mit OK schloss, verlor jede Einstellung, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — bei Gregor die Antwort auf die Junk-Frage, die deshalb beim nächsten Start wiederkam. `CPersonality::Modify` (`persona.cpp`) schreibt diese Einstellungen jetzt, bevor es die Kontodaten speichert. Am Prüfstand vorher rot, nachher grün; Regressionsfall E-166a/b. **Kommt mit dem Release 7.2.1**; Gregor prüft es an der Release-Fassung ([TESTPLAN](Intern/TESTPLAN.md#e-166-am-release)).
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
 
