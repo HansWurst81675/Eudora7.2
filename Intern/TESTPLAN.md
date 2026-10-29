@@ -20,6 +20,36 @@
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
 > ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
 
+### <a id="ergebnis-e-166-hauptrechner"></a>Ergebnis 29.10.2026 an 7.2.1.128: E-166 auf Gregors Hauptrechner — bestanden laut Protokoll
+
+* **E-166: bestanden** nach der Regel [unten](#e-166-am-release): die Junk-Frage
+  kam beim ersten Start und danach nicht wieder. Grundlage ist
+  `eudora_20261029.zip` (`eudora.log`; `eudora.log_v1` ist ein früherer Stand
+  derselben Datei und enthält nichts Zusätzliches), Release-Verzeichnis
+  `C:\Temp\Eudora72-7.2.1.128-release`, in jedem Kopf `Version 7.2.1.128`.
+* Erster Start 19:14:36 mit leerem Mailverzeichnis (`Search.xml does not exist`,
+  `In.mbx` mit Größe 0). Dort `Dialog: "At least one junk mail identification
+  tool is installed, and ready to filter junk."` (0.00) und
+  `Dismissed with 2` (0.06). Die Junk-Zusätze haben also geladen, anders als in
+  der VM. Ob mit *No* geantwortet wurde, zeigt das Protokoll nicht.
+* Danach 11 weitere Starts von 19:14:49 bis 19:21:18: in keinem eine Junk-Frage.
+  Insgesamt kommt sie **einmal** in 12 Sitzungen vor. Jede Sitzung endet mit
+  `Logging shutdown` (12 von 12), und es gibt keine Fehlerzeile.
+* **Nicht im Protokoll belegt:** Schritt 2 (*Tools → Personalities* →
+  `<Dominant>` → *Properties* → OK). Dieser Schritt schreibt keine Zeile. Der
+  Konto-Assistent ist ebenfalls nicht zu sehen (`YesNoDialog` schreibt keine
+  `Dismissed`-Zeile, siehe [E-166](BEFUNDE.md#e-166)). Ein Konto bestand
+  spätestens um 19:19:01 (Verbindungen zu `mx.freenet.de:110` und `:25`).
+  **Gregor bestätigte am 29.10.2026, dass er Schritt 2 gemacht hat.** Damit ist
+  der Fehlerweg (`CPersonality::Modify` ohne `FlushINIFile`) durchlaufen.
+* `Eudora.ini` nach dem Test, laut Gregor: `AskedAboutJunk=6`. Die Antwort ist
+  also auf der Platte angekommen. Das ist derselbe Wert wie am Prüfstand in
+  Lauf 1 und im nachgemessenen Lauf 9 ([E-166](BEFUNDE.md#e-166)). Ohne den
+  Ausfall hätte der Wert gefehlt. Belegt ist Schritt 2 damit nicht: Ohne ihn
+  käme ebenfalls 6 heraus.
+* Nebenbei im Protokoll: Strg+W um 19:21:13 (E-137-Zeile, `fokus=ListBox`). Kein
+  Auftrag, nur notiert.
+
 ### <a id="ergebnis-7-2-1-128"></a>Ergebnis 29.10.2026 an 7.2.1.128 (Gregors VM, Zwischenstand)
 
 * **E-166: an der VM nicht prüfbar** — die Junk-Frage kam gar nicht, auch nicht
