@@ -1,374 +1,376 @@
-# Erzeugt von tools/pruefbericht.pl am 2026-10-27 14:23 fuer 7.2.0.127, Commit 46f4a5f5 - nicht von Hand aendern.
+# Erzeugt von tools/pruefbericht.pl am 2026-10-29 12:45 fuer 7.2.1.128, Commit 640e1a0e* - nicht von Hand aendern.
 # art	kennung	ergebnis	zeit	bau
-pruefstand	BILD-lauf	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-100	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-103p	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-105p	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-106p	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-108p	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-110p	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-112f2	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-112h	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-112n1	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-112p	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-113b	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-113b2	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-113p	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-118	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-119a	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-119b	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-119c	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-119d	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-119e	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-121	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-125a	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-125b	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-125c	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-131a	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-131b	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-131c	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-137a	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-137b	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-137c	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-146	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-67	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-77a	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-77b	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-77c	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-77d	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	E-97	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	ZIEL24	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-pruefstand	ZIEL24b	ok	2026-10-27 14:20:45	Eudora 7.2.0.127 / Paket 1.0.127+ea3ebcbd 2026-10-27 14:12
-schranke	E-16 (pruefe-fensterbau.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-34 (pruefe-fensterbau.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-35 (pruefe-fensterbau.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-35#2 (pruefe-fensterbau.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-35#3 (pruefe-fensterbau.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-35#4 (pruefe-fensterbau.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-36 (pruefe-fensterbau.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-40 (pruefe-beenden.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-41 (pruefe-beenden.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-42 (pruefe-beenden.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-43 (pruefe-waechter.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-45 (pruefe-beenden.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-51 (pruefe-nachrichtenschleife.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-61 (pruefe-nachrichtenschleife.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-62 (pruefe-nachrichtenschleife.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-62#2 (pruefe-nachrichtenschleife.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-68 (pruefe-filter-aktionsgrenze.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-73 (pruefe-filter-serverloeschung.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-schranke	E-74 (pruefe-filter-serverloeschung.pl)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F1: echte mehrteilige Nachricht bleibt unangetastet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F3 Gegenprobe: ein falsches UTF-8 wird weiter berichtigt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F3: koi8-r und iso-8859-2 ebenso	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F3: windows-1251 im Kopf bleibt stehen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F4: <meta charset=windows-1251> bleibt stehen, auch ohne Kopfzeilen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 Gegenprobe zum zweiten Teil: reiner ASCII-Text ohne Kopfzeilen bleibt unberuehrt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 Gegenprobe: vorhandener Content-Type bleibt unangetastet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-18: <x-html mitten im Text ist kein Marker	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-18: > im Attributwert laesst keinen Rest stehen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-19: zitiertes </x-html> ist nicht das Gegenstueck	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-20: fuehrende Leerzeile geht nicht verloren	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-21: gemischter Trenner laesst kein  im Kopf stehen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-22: ohne Leerzeile meldet die Spurmarke trenner=0	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-28: > im Attributwert beendet das Tag nicht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-28: Marker ohne Gegenstueck, Text auf derselben Zeile	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-28: Marker und Text auf derselben Zeile - Rumpf bleibt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 dritter Teil Gegenprobe: passender Kopf und passendes <meta> bleiben	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 dritter Teil: Klartext mit falschem Zeichensatz im Kopf	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 dritter Teil: multipart-Kopf ueber einteiligem Rumpf wird ersetzt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 dritter Teil: ohne Kopfzeilen wird das <meta> trotzdem berichtigt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 zweiter Teil: Hochbyte ohne Kopfzeilen bekommt seinen Zeichensatz	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 zweiter Teil: ohne Kopfzeilen bekommt HTML trotzdem seinen Content-Type	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: der interne Marker <x-html> verlaesst das Haus nicht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: leere Eingabe aendert nichts und stuerzt nicht ab	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: ohne Marker und ohne Hochbyte - text/plain, us-ascii	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: selbst verfasst - Content-Type wird ergaenzt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: zitiertes Content-Type im Rumpf taeuscht nicht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: 24-Bit-Leiste bekommt beim Laden die Knopffarbe	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: 8-Bit-Leiste geht weiter ueber comctl32	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: OTShimDibFarbeErsetzen kann auch 32 Bit	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: OTShimDibFarbeErsetzen trifft genau die gesuchte Farbe	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: OTShimDibFarbeErsetzen weist ab, was es nicht kann	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: passender Bildhintergrund ergibt ein gepraegtes Symbol	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: unpassender Bildhintergrund ergibt eine leere Flaeche	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: ForwardOriginalHTML=0 schaltet wirklich ab	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: ein reiner Textrumpf wird nicht angefasst	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: im Zitat geaendert - die Editor-Fassung bleibt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: kein Original gemerkt - Editor-Fassung bleibt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: mitten im Zitat geloescht - Editor-Fassung bleibt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: andere Umbrueche und Entitaeten kippen die Entscheidung nicht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: die Spurmarke wird in jedem Fall geschrieben	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: ein Satz davor - Original bleibt, Zusatz kommt mit	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: eine Signatur dahinter - Original bleibt, Signatur kommt mit	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: unveraendert weitergeleitet - das Original geht hinaus	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-93 Gegenprobe: MIT Tastendruck bleibt die Editorfassung	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-93: ohne Tastendruck geht das Original hinaus, auch ohne Fund	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe zu (10): ein Platzhalter WUERDE E-88 zerreissen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: Prozenthoehe wird NICHT zur Pixelzahl	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: eine Nachricht ohne Bild kommt Byte fuer Byte durch	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: em und auto werden nicht als Pixel gelesen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: max-width darf nicht als width durchgehen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: width und height schon als Attribut - nichts wird angefasst	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 mit E-88: die Umschrift ist fuer den Vergleich unsichtbar	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: Groesse nur im CSS - width und height werden ergaenzt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: Grossschreibung und Leerraum im style	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: Prozentbreite bleibt Prozent - Paige kann sie	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: breiter als der Deckel - wird gestutzt, die Hoehe geht proportional mit	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: das schliessende / einer XHTML-Markierung bleibt erhalten	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: ein '>' im alt-Text beendet die Markierung nicht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: gar keine Groessenangabe - das Bild bleibt unangetastet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: kaputtes HTML - kein Absturz, kein Lauf ueber das Ende	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: mehrere Bilder in einer Nachricht - jedes einzeln	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: width mitten im style zwischen anderen Eigenschaften	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: zu breit, Hoehe unbekannt - gestutzt wird nur die Breite, kein height="1"	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: zu hoch, Breite unbekannt - gestutzt wird nur die Hoehe, kein width="1"	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-95 Gegenprobe: eingebettetes Bild MIT CSS-Groesse wird umgeschrieben	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-95: eingebettetes Bild ohne Groesse bleibt unangetastet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-95: externes Bild ohne Groesse bleibt ebenfalls unangetastet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-105: versteckte Abschnitte (display:none) / E-105 Gegenrichtung: die Desktopfassung bleibt sichtbar	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-105: versteckte Abschnitte (display:none) / E-105 Schutz: ein nie geschlossenes Element verschluckt nicht den Rest	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-105: versteckte Abschnitte (display:none) / E-105 Schutz: implizite Enden von td, tr, li und Vorfahren-Ende	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-105: versteckte Abschnitte (display:none) / E-105: Schreibweisen von display:none	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-105: versteckte Abschnitte (display:none) / E-105: alles im versteckten Bereich, verschachtelt, danach wieder sichtbar	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-105: versteckte Abschnitte (display:none) / E-105: die Handyfassung aus Gregors freenet-Newsletter wird verschluckt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-105: versteckte Abschnitte (display:none) / E-105: leere Elemente oeffnen keinen Bereich	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-11: RegMailto wird mit Truncate gekuerzt, nicht mit ReleaseBuffer	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-11: Truncate kuerzt und laesst die geteilte Kopie heil	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-12: "C:Name" ist laufwerksrelativ, nicht absolut - GetLongPathName merkt das nicht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-12: GetDirs fragt das Dateisystem, bevor es den Namen deutet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-12: GetFileAttributes trennt Verzeichnis und Dateiname	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-12: ein Verzeichnis als Ini-Pfad liefert jede Einstellung als Vorgabe	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-17: die Startpruefung fragt alle Persoenlichkeiten, nicht nur [Settings]	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-17: in Gregors Ini ist [Settings] leer und das Konto benannt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: %20 wird zum Leerzeichen, nicht weggeworfen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: %C3%BC - der Fehler traf jede Sequenz, nicht nur %20	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: Prozentzeichen am Ende laeuft nicht ueber	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: eine Adresse ohne Prozentzeichen bleibt unveraendert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: mehrere %20 hintereinander, dazu Klammern	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: nMaxLength wird eingehalten, auch mit Sequenzen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: resolve_URL liefert dasselbe wie unescape_url	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-111: entartete Feldgroessen schreiben nicht hinaus	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-110: resolve_URL und die Prozent-Sequenzen / E-117: &amp; im src wird zu & - sonst liefert der Bilddienst 1x1	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: das Zielrechteck eines Bildes / E-103 bleibt: ohne Angabe gewinnt die Datei	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: das Zielrechteck eines Bildes / E-112: Datei groesser als angegeben - die ANGABE gewinnt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: das Zielrechteck eines Bildes / E-112: Nullzeiger stuerzt nicht ab	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: das Zielrechteck eines Bildes / E-112: die Angabe gewinnt auch bei kleinerer Datei	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: das Zielrechteck eines Bildes / E-112: halbe Angabe - die fehlende Seite folgt dem Seitenverhaeltnis	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: das Zielrechteck eines Bildes / E-112: negative Masse zaehlen nicht als Angabe	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: das Zielrechteck eines Bildes / E-112: nichts bekannt - 0x0, der Aufrufer laesst alles stehen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-103: ohne Groessenangabe wird die Datei in ihrer eigenen Groesse gemalt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-112: angegeben 250x96, Datei 985x378 - gemalt werden 250x96	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-112: angegeben 35x35, Datei 330x327 - gemalt werden 35x35	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-112: nur die Breite angegeben - gemalt wird, was die Regel sagt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-112: unbrauchbare Eingaben liefern keine Metadatei	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-113: Bilder auf die Breite des Textbereichs deckeln / E-113 Gegenrichtung: was passt, bleibt; ohne Grenze nichts	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-113: Bilder auf die Breite des Textbereichs deckeln / E-113: zu breites Bild wird seitenverhaeltnistreu verkleinert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-116: Bildbreite aus <img width=...> (decimal_value_percent) / E-116 Gegenrichtung: fuehrende Leerzeichen und Tabs werden uebersprungen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-116: Bildbreite aus <img width=...> (decimal_value_percent) / E-116 Gegenrichtung: was vorher stimmte, stimmt weiter	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-116: Bildbreite aus <img width=...> (decimal_value_percent) / E-116: Einheit und Nachkommastelle beenden die Zahl	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118 Gegenrichtung: Text ohne Huelle bleibt Text	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: Schreibweisen und Vorspann	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: Text hinter der Huelle geht nicht verloren	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: Zeichensatz noetig, sobald ein Byte ueber 0x7F steht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: das eingebettete Bild findet seinen Verweis im HTML	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: die Huelle einer empfangenen HTML-Mail wird erkannt und abgestreift	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-125: Ziehen nach Out wird abgelehnt statt eine neue Nachricht anzulegen / E-125: Ziehen einer empfangenen Nachricht nach Out wird abgelehnt (Stelle im Quelltext)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-125: Ziehen nach Out wird abgelehnt statt eine neue Nachricht anzulegen / E-125: der Hinweisdialog ist eine Ressource und keine Frage	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-130: Fremd-DLLs bleiben ungebunden / E-130: BindExe.bat bindet keine Fremd-DLL	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-130: Fremd-DLLs bleiben ungebunden / E-130: keine der zwoelf Fremd-DLLs in Bin\Release ist gebunden	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131 Gegenprobe: gewoehnliche Positionen bleiben unangetastet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: INT_MIN ist keine brauchbare Position	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: beliebiger Muellwert, nicht nur INT_MIN (Issue #102)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: die Grenze nach oben liegt bei -1194	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: ohne Bildschirmmass wird nichts verworfen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: teilweise ausserhalb ist erlaubt, ganz draussen nicht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: zweiter Bildschirm links - negatives x ist gueltig	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132 Gegenprobe: das eigene Verzeichnis gilt nicht als fremd	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132: Befehlszeile aus der Registry wird zerlegt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132: Kurzform und Langform, der Fall vom 21.10.2026	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132: Schreibweise des Pfades aendert nichts	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132: der Praefix allein genuegt nicht	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132: fremdes Verzeichnis mit eigener Einrichtung wird erkannt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132: ohne Angaben wird nicht gefragt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132: ohne Eudora.ini wird nicht gefragt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-132: fremdes Mailverzeichnis beim Start / E-132: zerlegt und entschieden - der gemeldete Fall	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-119: ein data:-Bild ueber 64 KB kommt mit seiner vollen Laenge an	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-146 K8: RenameMailbox gibt den Servernamen zurueck, UpdateAfterRename fuehrt ihn	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-146 K9: lehnt der Server ab, wird die Ordnerliste neu gelesen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-158: Weiterleiten einer Textmail haengt kein </x-html> an (E-88 nur bei HTML-Mails)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-160: ohne Outlook-Eintraege laedt der Kontoassistent kein MAPI	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-148: keine kompromittierten Wurzelzertifikate im Paket / E-148: Releases\1.0\rootcerts.p7b enthaelt keine eMudhra-Wurzel	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-148: keine kompromittierten Wurzelzertifikate im Paket / E-148: paket-bauen.ps1 legt rootcerts.p7b aus Releases\1.0 ueber die Grundlage	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-24: unter "Recent" stand "In" zweimal / E-24 Gegenprobe: ein fremdes Postfach laesst die Liste unberuehrt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-24: unter "Recent" stand "In" zweimal / E-24 Gegenprobe: verschiedene Postfaecher bleiben verschieden	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-24: unter "Recent" stand "In" zweimal / E-24: Nullzeiger werfen den Vergleich nicht um	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-24: unter "Recent" stand "In" zweimal / E-24: QCMailboxDirector.cpp benutzt die Vergleichsfunktionen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-24: unter "Recent" stand "In" zweimal / E-24: der Ersatzeintrag wird als derselbe erkannt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-24: unter "Recent" stand "In" zweimal / E-24: eine schon doppelte Liste wird vollstaendig geheilt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-24: unter "Recent" stand "In" zweimal / E-24: frisches Mailverzeichnis - "In" steht danach genau einmal	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-24: unter "Recent" stand "In" zweimal / E-24: gleicher Inhalt in verschiedenen Puffern gilt als gleich	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 A / R1: die Zahl im Sammeleintrag addiert sich nicht auf	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 A / R1: nach einem Lauf meldet dieselbe Sammlung weiter	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 A Gegenprobe: ohne Klammer bleibt es beim alten Verhalten	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 A: 500 uebersprungene ergeben 1 Eintrag + 1 Sammeleintrag	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 A: der zweite Lauf faengt wieder bei null an	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 A: ein Lauf ohne Zwischenfall meldet nichts	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 A: ein einziger Fall ergibt genau einen Eintrag	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 A: geschachtelte Laeufe - nur der aeusserste zaehlt ab	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 B: Fenstergrenze und Ueberlauf von GetTickCount	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 B: der erste Fehler ist immer laut	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-69: die Meldungsflut in Task Errors / E-69 B: im Fenster bleibt es still, danach wieder laut	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext) / E-77 K1: UpdateAfterRename fuehrt den Namen, der an den Server ging	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext) / E-77 K2: RenameMailbox kodiert an allen fuenf Stellen, INBOX eingeschlossen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-77: IMAP-Postfachnamen in modifiziertem UTF-7 / E-77 Gegenrichtung: ASCII und & bleiben, Unbekanntes bleibt roh	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	E-77: IMAP-Postfachnamen in modifiziertem UTF-7 / E-77: Gregors Ordner von GMX, hin und zurueck	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-8 Gegenprobe: us-ascii, Latin-1 und windows-* bleiben unberuehrt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-8: ImapDownload.cpp rechnet mit der Skala von FindMIMECharset	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-8: der alte IMAP-Weg uebersetzte KEINEN einzigen Zeichensatz	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-8: mit FindMIMECharset rechnet IMAP auf derselben Skala wie POP	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-9: ISOTranslate liefert die NEUE Laenge, und sie ist kuerzer	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-9: beide Aufrufstellen nehmen den Rueckgabewert entgegen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2 Gegenprobe: die Modusansage davor traegt keinen Zeichensatz	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2: die Ansage steht vor dem Stylesheet, fremde Ansagen fliegen raus	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2: die Zwischendatei sagt windows-1252 an, Byte fuer Byte	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2B Gegenprobe: ohne UTF-8 bleibt jedes Byte stehen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2B: Gregors Zeile kommt ueber die Stueckgrenze heil an	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2B: TextReader haelt das angefangene Zeichen zurueck	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2B: das Ergebnis haengt nicht davon ab, wo das Stueck endet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar: Vorgabewerte einer frisch angelegten Leiste	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar::CalcDynamicLayout: LM_HORZDOCK und LM_VERTDOCK	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar::CalcDynamicLayout: der Schwebe-Zweig zieht an einem Rand	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar::CalcFixedLayout faellt ohne Masse auf die MFC-Fassung zurueck	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar::CalcFixedLayout liefert die gespeicherten Masse	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Zeilenlogik von SECDockBar / SECDockBar: NextBarThisRow und PrevBarThisRow bleiben in ihrer Zeile	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Zeilenlogik von SECDockBar / SECDockBar: PredictInsertPosition und CalcDockingLayout sind als offen gekennzeichnet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Zeilenlogik von SECDockBar / SECDockBar::IsNewBar und BarIsNewToThisRow	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Zustand sichern und zuruecklesen / SECControlBar: Get/SetBarInfo mit NULL tun nichts und stuerzen nicht ab	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Zustand sichern und zuruecklesen / SECControlBar: GetBarInfo und SetBarInfo fuehren den Zustand verlustfrei hin und zurueck	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim - Zustand sichern und zuruecklesen / SECControlBar: der Ablauf aus WazooBarMgr.cpp - nur die Andockhoehe aendern	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / OTShimDibAnlegen mehrfach auf demselben Objekt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / OTShimDibAnlegen: Breite/Hoehe 0 und Ueberlaufschutz	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / OTShimDibAnlegen: Feldsatz und BITMAPINFOHEADER	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECDib 1x1: von Hand geschrieben, ueber GDI+ gelesen, byte-gleich	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECDib 4x3: von Hand geschrieben, ueber GDI+ gelesen, byte-gleich	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECDib 7x5: von Hand geschrieben, ueber GDI+ gelesen, byte-gleich	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECDib::LoadImage auf Nichtbild-Daten liefert FALSE	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECImage: FlipHorz/FlipVert/Rotate90/Crop/UnPadBits melden sich ohne Dialog	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECImage::CopyImage: Masse, Daten und Randfaelle	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECImage::SaveImage auf einem leeren Bild liefert FALSE	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - Rechenmethoden von SECImage / PADWIDTH stimmt mit CalcBytesPerLine ueberein (der QCPng-Weg)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::CalcBytesPerLine: Vielfaches von 4, kleinste passende Laenge	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::CalcBytesPerLine: nachgerechnete Werte	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::CalcPadding liefert dasselbe wie CalcBytesPerLine	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::LastByte: Zeilenlaenge OHNE Auffuellung	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::NumBytes/NumColors: leeres Bild und angelegter DIB	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl: Schnelleingabe, gesperrte Felder und Fuellzeichen gehen hin und zurueck	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl: Vorgabewerte eines frisch angelegten Feldes	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl: die fensterbezogenen Wege sind ohne Fenster folgenlos	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetDate und SetTime aendern nur ihre Haelfte	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetDateTime nimmt nur an, was Validate durchlaesst	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetFormat merkt die Zeichenkette auch ohne Fenster	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetFormat: die vier Formatarten und ihre Zeichenketten	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetMinMax und GetMinMax: Rundlauf	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetModified/IsModified: beide Haelften einzeln	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::Validate prueft nur, wenn eine Pruefart gesetzt ist	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECSetOleDateTime setzt den Wert und meldet Fehler	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Palette - SECDateTimeCtrl / SECTmFromOleDate rechnet in die Felder von struct tm um	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Befunde / BEFUND: ActivateTab und ClearSelection fassen GetParent an, bevor sie das Fenster pruefen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase: Beschriftung NULL beim Einfuegen und beim Umbenennen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase: Einfuegen vor dem aktiven Reiter verschiebt dessen Index	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase: der erste Reiter wird aktiv, ohne Wechselmeldung	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase: die Auswahlmarke folgt genau dem aktiven Reiter	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::ActivateTab ist untaetig, wenn der Reiter schon obenauf liegt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::ActivateTab meldet den Wechsel genau einmal	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::AddTab haengt hinten an, GetTabCount zaehlt mit	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::DeleteTab: Liste und aktiver Index	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::DeleteTab: der aktive Reiter mittendrin	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::FindTab und TabExists	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::GetTabInfo gibt alle fuenf Angaben zurueck	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::InsertTab: Index vorne, mittig, hinten und ausserhalb	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl: Zeichen- und Blaetterwege ohne Fenster sind folgenlos	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl::CreateNewTab legt SEC3DTab an, nicht SECTab	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl::EnableTab und IsTabEnabled	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl::GetTabRect und TabHit arbeiten auf m_rect	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl::SetTabIcon legt den Griff am Reiter ab	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	OTShim_Werkzeugleiste - Rechenhilfen / SECConvertDialogUnitsToPixels rechnet mit der Windows-Regel 4 und 8	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / IMAP: kodierte Woerter ueber eine Faltung hinweg (E-94)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP und IMAP: Faltung vor Klartext bleibt Leerraum (Gegenprobe zu E-94)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP und IMAP: der Index wird um eins verschoben - sonst greift die falsche Tabelle	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: Betreff in ISO-8859-1 wird dekodiert, aber nicht uebersetzt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: Betreff, Base64 ueber UTF-8 kodiert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: Betreff, Quoted-Printable ueber UTF-8 kodiert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: FindMIMECharset liefert die Indizes, die ISOTranslate erwartet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: Nachrichtentext in UTF-8 wird zeilenweise uebersetzt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: TextReader::ReadIt uebernimmt die neue Laenge von ISOTranslate	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: der Absendername wird wie der Betreff behandelt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: eine Nachricht ohne Betreff bringt den Kopfzeilenpfad nicht durcheinander	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: eine ganze RETR-Antwort mit UTF-8-Umlauten	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: eine sehr lange Kopfzeile wird vollstaendig dekodiert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: kodierte Woerter ueber eine Faltung hinweg (E-94)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: kodiertes Wort mitten in einer Kopfzeile	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: unbrauchbare kodierte Woerter bleiben stehen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: zwei aufeinanderfolgende kodierte Woerter	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-137: Strg-W in einer Wazoo-Leiste versteckt nur die Leiste, vor jeder Weitergabe	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-137: der letzte Klick in eine Wazoo-Leiste oder auf ihren schwebenden Rahmen wird gemerkt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-137: ein Klick auf Titelzeile oder Rand einer schwebenden Leiste gibt ihr den Tastaturfokus	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-137: ein Klick irgendwo in eine Wazoo-Leiste gibt ihr den Tastaturfokus	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-142: Hinweis beim Ziehen eines Entwurfs aus einem IMAP-Ordner nach Out	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-150: DeleteArr hinter dem Feldende laesst das Feld unberuehrt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-150: DeleteArr in der Mitte und am Ende loescht richtig	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-150: NotifyDeletedCol hinter dem Feldende (Task-Status-Weg)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-18: pFld wird vor dem Zugriff auf NULL geprueft	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-20: InsertArr hinter dem Ende (nIdx > nLen) bleibt im Feld	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-20: InsertArr in der Mitte und am Ende verschiebt richtig	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-20: NotifyInsertedCol hinter dem Feldende bleibt in allen vier Feldern	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-25: LocateNetscapePrefsFile gibt den Knoten des Aufrufers nicht frei	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-31 (Ursache von E-27): pg_time_t ist fest 32 Bit breit	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-99: der Merker 'Anwender hat getippt' rastet ein und wird uebergeben	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / ZIEL 2/4: Ausnahmen aus Fensterbotschaften landen im eudora.log	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / ZIEL 4 / E-154: Ausnahmen ausserhalb von Fensterbotschaften landen im eudora.log	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / rootcerts.p7b: eudora.log nennt das Verzeichnis, aus dem QCSSL die Liste geladen hat	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	Startfehler S-2 (Regressionstests) / S-2: die Werbeleiste wird in unserem Bau nicht angelegt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	hexbin.cpp - BinHex-4.0-Dekodiertabelle / HexBinTable: ':' beendet, CR und LF werden ueberlesen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	hexbin.cpp - BinHex-4.0-Dekodiertabelle / HexBinTable: die 64 Alphabetzeichen liefern ihren 6-Bit-Wert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	hexbin.cpp - BinHex-4.0-Dekodiertabelle / HexBinTable: jeder 6-Bit-Wert 0x00..0x3F kommt genau einmal vor	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	hexbin.cpp - BinHex-4.0-Dekodiertabelle / HexBinTable: jedes Byte ausserhalb des Alphabets ist FAIL	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / ISO-8859-15-Zeile: die acht Abweichungen zu Latin-1 sind korrekt und vollstaendig	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: Codepunkt der Quellfolge == Codepunkt des CP1252-Zielbytes	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: Latin-1 U+00A0..U+00FF vollstaendig und wertgleich abgebildet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: alle 123 Eintraege belegt (ISOTranslate bricht sonst ab)	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: alle 123 uebersetzbaren CP1252-Zeichen sind abgedeckt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: jede Quellfolge ist gueltiges, nullterminiertes UTF-8	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: keine doppelten Quellfolgen und keine doppelten Ziele	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / utils.cpp: MAX_CHARACTER_SETS passt zu den IDs in resource.h	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / utils.cpp: XLATE_CHARS / MAX_CHARS_TO_TRANS / MAX_CHARACTER_SETS	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Uebersetzungstabelle pcXlateTable / utils.cpp: die Zeichenliterale der Tabelle sind CP1252-Bytes >= 0x80	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOIncompleteUTF8Tail: angefangenes Zeichen wird gezaehlt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOIncompleteUTF8Tail: getrenntes Zeichen wird ueber die Stueckgrenze heil	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOIncompleteUTF8Tail: vollstaendiges Zeichen wird nicht zurueckgehalten	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOIsUTF8Charset: erkennt genau den UTF-8-Index	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: ISO-8859-15 (Index 3) wird nach CP1252 uebersetzt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: ISO-8859-15 laesst die Bytes 0x80..0x9F unveraendert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: Index 0/1/2 laesst den Text unveraendert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: Rueckgabewert ist die Laenge des Ergebnisses	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: U+00A0..U+00FF werden je auf ein Latin-1-Byte abgebildet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: Zeichen ohne CP1252-Entsprechung bekommen den nahen Verwandten	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: Zeichen werden unabhaengig von ihren Nachbarn uebersetzt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: bei abgeschnittenem Zeichen faellt die Tabelle ein	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: chinesisch, japanisch und koreanisch werden zu '?'	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: das Ergebnis ist nie laenger als die Eingabe	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: deutscher Beispieltext mit Umlauten, scharfem s und Euro	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: deutscher Newsletter mit Anfuehrung, Gedankenstrich, Euro und Emoji	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: die 27 CP1252-Sonderzeichen 0x80..0x9F werden uebersetzt	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: ein Emoji (vier Byte) faellt ersatzlos weg	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: eine Ersetzung darf das Ergebnis nicht erneut ersetzen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: jedes BMP-Zeichen wird zu genau einem Byte, nie zu Bytesalat	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: kyrillisch und hebraeisch werden zu '?'	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: reiner ASCII-Text bleibt unveraendert	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: ungueltiges UTF-8 wird nicht zu Fragezeichen zerredet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: Drei- und Vierbytezeichen ueber die Grenze	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: Grenze mitten im Zeichen	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: Nicht-UTF-8 bleibt unangetastet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: angefangenes Zeichen am Ende faellt weg	ok	2026-10-27 14:23	Quelltext 46f4a5f5
-unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: das Byte hinter dem Stueck bleibt unangetastet	ok	2026-10-27 14:23	Quelltext 46f4a5f5
+pruefstand	BILD-lauf	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-100	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-103p	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-105p	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-106p	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-108p	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-110p	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-112f2	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-112h	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-112n1	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-112p	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-113b	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-113b2	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-113p	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-118	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-119a	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-119b	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-119c	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-119d	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-119e	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-121	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-125a	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-125b	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-125c	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-131a	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-131b	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-131c	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-137a	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-137b	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-137c	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-146	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-166a	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-166b	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-67	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-77a	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-77b	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-77c	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-77d	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	E-97	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	ZIEL24	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+pruefstand	ZIEL24b	ok	2026-10-29 12:45:32	Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36
+schranke	E-16 (pruefe-fensterbau.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-34 (pruefe-fensterbau.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-35 (pruefe-fensterbau.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-35#2 (pruefe-fensterbau.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-35#3 (pruefe-fensterbau.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-35#4 (pruefe-fensterbau.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-36 (pruefe-fensterbau.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-40 (pruefe-beenden.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-41 (pruefe-beenden.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-42 (pruefe-beenden.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-43 (pruefe-waechter.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-45 (pruefe-beenden.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-51 (pruefe-nachrichtenschleife.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-61 (pruefe-nachrichtenschleife.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-62 (pruefe-nachrichtenschleife.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-62#2 (pruefe-nachrichtenschleife.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-68 (pruefe-filter-aktionsgrenze.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-73 (pruefe-filter-serverloeschung.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+schranke	E-74 (pruefe-filter-serverloeschung.pl)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F1: echte mehrteilige Nachricht bleibt unangetastet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F3 Gegenprobe: ein falsches UTF-8 wird weiter berichtigt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F3: koi8-r und iso-8859-2 ebenso	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F3: windows-1251 im Kopf bleibt stehen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 F4: <meta charset=windows-1251> bleibt stehen, auch ohne Kopfzeilen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 Gegenprobe zum zweiten Teil: reiner ASCII-Text ohne Kopfzeilen bleibt unberuehrt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 Gegenprobe: vorhandener Content-Type bleibt unangetastet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-18: <x-html mitten im Text ist kein Marker	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-18: > im Attributwert laesst keinen Rest stehen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-19: zitiertes </x-html> ist nicht das Gegenstueck	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-20: fuehrende Leerzeile geht nicht verloren	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-21: gemischter Trenner laesst kein  im Kopf stehen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-22: ohne Leerzeile meldet die Spurmarke trenner=0	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-28: > im Attributwert beendet das Tag nicht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-28: Marker ohne Gegenstueck, Text auf derselben Zeile	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 P-28: Marker und Text auf derselben Zeile - Rumpf bleibt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 dritter Teil Gegenprobe: passender Kopf und passendes <meta> bleiben	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 dritter Teil: Klartext mit falschem Zeichensatz im Kopf	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 dritter Teil: multipart-Kopf ueber einteiligem Rumpf wird ersetzt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 dritter Teil: ohne Kopfzeilen wird das <meta> trotzdem berichtigt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 zweiter Teil: Hochbyte ohne Kopfzeilen bekommt seinen Zeichensatz	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101 zweiter Teil: ohne Kopfzeilen bekommt HTML trotzdem seinen Content-Type	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: der interne Marker <x-html> verlaesst das Haus nicht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: leere Eingabe aendert nichts und stuerzt nicht ab	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: ohne Marker und ohne Hochbyte - text/plain, us-ascii	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: selbst verfasst - Content-Type wird ergaenzt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-101 - was Speichern unter in die Datei schreibt / E-101: zitiertes Content-Type im Rumpf taeuscht nicht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: 24-Bit-Leiste bekommt beim Laden die Knopffarbe	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: 8-Bit-Leiste geht weiter ueber comctl32	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: OTShimDibFarbeErsetzen kann auch 32 Bit	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: OTShimDibFarbeErsetzen trifft genau die gesuchte Farbe	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: OTShimDibFarbeErsetzen weist ab, was es nicht kann	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: passender Bildhintergrund ergibt ein gepraegtes Symbol	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-30 - Werkzeugleistensymbole und gesperrte Knoepfe / E-30: unpassender Bildhintergrund ergibt eine leere Flaeche	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: ForwardOriginalHTML=0 schaltet wirklich ab	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: ein reiner Textrumpf wird nicht angefasst	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: im Zitat geaendert - die Editor-Fassung bleibt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: kein Original gemerkt - Editor-Fassung bleibt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88 Gegenprobe: mitten im Zitat geloescht - Editor-Fassung bleibt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: andere Umbrueche und Entitaeten kippen die Entscheidung nicht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: die Spurmarke wird in jedem Fall geschrieben	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: ein Satz davor - Original bleibt, Zusatz kommt mit	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: eine Signatur dahinter - Original bleibt, Signatur kommt mit	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-88: unveraendert weitergeleitet - das Original geht hinaus	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-93 Gegenprobe: MIT Tastendruck bleibt die Editorfassung	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-88 - Original-HTML statt Editor-Fassung / E-93: ohne Tastendruck geht das Original hinaus, auch ohne Fund	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe zu (10): ein Platzhalter WUERDE E-88 zerreissen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: Prozenthoehe wird NICHT zur Pixelzahl	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: eine Nachricht ohne Bild kommt Byte fuer Byte durch	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: em und auto werden nicht als Pixel gelesen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: max-width darf nicht als width durchgehen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 Gegenprobe: width und height schon als Attribut - nichts wird angefasst	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89 mit E-88: die Umschrift ist fuer den Vergleich unsichtbar	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: Groesse nur im CSS - width und height werden ergaenzt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: Grossschreibung und Leerraum im style	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: Prozentbreite bleibt Prozent - Paige kann sie	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: breiter als der Deckel - wird gestutzt, die Hoehe geht proportional mit	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: das schliessende / einer XHTML-Markierung bleibt erhalten	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: ein '>' im alt-Text beendet die Markierung nicht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: gar keine Groessenangabe - das Bild bleibt unangetastet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: kaputtes HTML - kein Absturz, kein Lauf ueber das Ende	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: mehrere Bilder in einer Nachricht - jedes einzeln	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: width mitten im style zwischen anderen Eigenschaften	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: zu breit, Hoehe unbekannt - gestutzt wird nur die Breite, kein height="1"	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-89: zu hoch, Breite unbekannt - gestutzt wird nur die Hoehe, kein width="1"	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-95 Gegenprobe: eingebettetes Bild MIT CSS-Groesse wird umgeschrieben	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-95: eingebettetes Bild ohne Groesse bleibt unangetastet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Befund E-89 - lesbare Bilder im Verfassenfenster / E-95: externes Bild ohne Groesse bleibt ebenfalls unangetastet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-105: versteckte Abschnitte (display:none) / E-105 Gegenrichtung: die Desktopfassung bleibt sichtbar	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-105: versteckte Abschnitte (display:none) / E-105 Schutz: ein nie geschlossenes Element verschluckt nicht den Rest	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-105: versteckte Abschnitte (display:none) / E-105 Schutz: implizite Enden von td, tr, li und Vorfahren-Ende	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-105: versteckte Abschnitte (display:none) / E-105: Schreibweisen von display:none	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-105: versteckte Abschnitte (display:none) / E-105: alles im versteckten Bereich, verschachtelt, danach wieder sichtbar	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-105: versteckte Abschnitte (display:none) / E-105: die Handyfassung aus Gregors freenet-Newsletter wird verschluckt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-105: versteckte Abschnitte (display:none) / E-105: leere Elemente oeffnen keinen Bereich	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-11: RegMailto wird mit Truncate gekuerzt, nicht mit ReleaseBuffer	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-11: Truncate kuerzt und laesst die geteilte Kopie heil	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-12: "C:Name" ist laufwerksrelativ, nicht absolut - GetLongPathName merkt das nicht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-12: GetDirs fragt das Dateisystem, bevor es den Namen deutet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-12: GetFileAttributes trennt Verzeichnis und Dateiname	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-12: ein Verzeichnis als Ini-Pfad liefert jede Einstellung als Vorgabe	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-17: die Startpruefung fragt alle Persoenlichkeiten, nicht nur [Settings]	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-11, E-12 und E-17: drei Befunde aus dem Programmstart / E-17: in Gregors Ini ist [Settings] leer und das Konto benannt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: %20 wird zum Leerzeichen, nicht weggeworfen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: %C3%BC - der Fehler traf jede Sequenz, nicht nur %20	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: Prozentzeichen am Ende laeuft nicht ueber	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: eine Adresse ohne Prozentzeichen bleibt unveraendert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: mehrere %20 hintereinander, dazu Klammern	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: nMaxLength wird eingehalten, auch mit Sequenzen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-110: resolve_URL liefert dasselbe wie unescape_url	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-111: entartete Feldgroessen schreiben nicht hinaus	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-110: resolve_URL und die Prozent-Sequenzen / E-117: &amp; im src wird zu & - sonst liefert der Bilddienst 1x1	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: das Zielrechteck eines Bildes / E-103 bleibt: ohne Angabe gewinnt die Datei	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: das Zielrechteck eines Bildes / E-112: Datei groesser als angegeben - die ANGABE gewinnt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: das Zielrechteck eines Bildes / E-112: Nullzeiger stuerzt nicht ab	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: das Zielrechteck eines Bildes / E-112: die Angabe gewinnt auch bei kleinerer Datei	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: das Zielrechteck eines Bildes / E-112: halbe Angabe - die fehlende Seite folgt dem Seitenverhaeltnis	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: das Zielrechteck eines Bildes / E-112: negative Masse zaehlen nicht als Angabe	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: das Zielrechteck eines Bildes / E-112: nichts bekannt - 0x0, der Aufrufer laesst alles stehen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-103: ohne Groessenangabe wird die Datei in ihrer eigenen Groesse gemalt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-112: angegeben 250x96, Datei 985x378 - gemalt werden 250x96	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-112: angegeben 35x35, Datei 330x327 - gemalt werden 35x35	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-112: nur die Breite angegeben - gemalt wird, was die Regel sagt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-112: die Metadatei hat die Groesse, in der das Bild erscheinen soll / E-112: unbrauchbare Eingaben liefern keine Metadatei	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-113: Bilder auf die Breite des Textbereichs deckeln / E-113 Gegenrichtung: was passt, bleibt; ohne Grenze nichts	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-113: Bilder auf die Breite des Textbereichs deckeln / E-113: zu breites Bild wird seitenverhaeltnistreu verkleinert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-116: Bildbreite aus <img width=...> (decimal_value_percent) / E-116 Gegenrichtung: fuehrende Leerzeichen und Tabs werden uebersprungen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-116: Bildbreite aus <img width=...> (decimal_value_percent) / E-116 Gegenrichtung: was vorher stimmte, stimmt weiter	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-116: Bildbreite aus <img width=...> (decimal_value_percent) / E-116: Einheit und Nachkommastelle beenden die Zahl	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118 Gegenrichtung: Text ohne Huelle bleibt Text	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: Schreibweisen und Vorspann	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: Text hinter der Huelle geht nicht verloren	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: Zeichensatz noetig, sobald ein Byte ueber 0x7F steht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: das eingebettete Bild findet seinen Verweis im HTML	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-118: HTML-Huelle beim Hochladen in einen IMAP-Ordner / E-118: die Huelle einer empfangenen HTML-Mail wird erkannt und abgestreift	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-125: Ziehen nach Out wird abgelehnt statt eine neue Nachricht anzulegen / E-125: Ziehen einer empfangenen Nachricht nach Out wird abgelehnt (Stelle im Quelltext)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-125: Ziehen nach Out wird abgelehnt statt eine neue Nachricht anzulegen / E-125: der Hinweisdialog ist eine Ressource und keine Frage	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-130: Fremd-DLLs bleiben ungebunden / E-130: BindExe.bat bindet keine Fremd-DLL	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-130: Fremd-DLLs bleiben ungebunden / E-130: keine der zwoelf Fremd-DLLs in Bin\Release ist gebunden	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131 Gegenprobe: gewoehnliche Positionen bleiben unangetastet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: INT_MIN ist keine brauchbare Position	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: beliebiger Muellwert, nicht nur INT_MIN (Issue #102)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: die Grenze nach oben liegt bei -1194	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: ohne Bildschirmmass wird nichts verworfen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: teilweise ausserhalb ist erlaubt, ganz draussen nicht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-131: ungueltige Schwebeposition in der Eudora.ini / E-131: zweiter Bildschirm links - negatives x ist gueltig	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132 Gegenprobe: das eigene Verzeichnis gilt nicht als fremd	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132: Befehlszeile aus der Registry wird zerlegt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132: Kurzform und Langform, der Fall vom 21.10.2026	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132: Schreibweise des Pfades aendert nichts	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132: der Praefix allein genuegt nicht	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132: fremdes Verzeichnis mit eigener Einrichtung wird erkannt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132: ohne Angaben wird nicht gefragt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132: ohne Eudora.ini wird nicht gefragt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-132: fremdes Mailverzeichnis beim Start / E-132: zerlegt und entschieden - der gemeldete Fall	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-119: ein data:-Bild ueber 64 KB kommt mit seiner vollen Laenge an	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-146 K8: RenameMailbox gibt den Servernamen zurueck, UpdateAfterRename fuehrt ihn	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-146 K9: lehnt der Server ab, wird die Ordnerliste neu gelesen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-158: Weiterleiten einer Textmail haengt kein </x-html> an (E-88 nur bei HTML-Mails)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-146 Umbenennen: ein Name fuer Server und Eudora, Rueckweg bei Ablehnung / E-160: ohne Outlook-Eintraege laedt der Kontoassistent kein MAPI	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-148: keine kompromittierten Wurzelzertifikate im Paket / E-148: Releases\1.0\rootcerts.p7b enthaelt keine eMudhra-Wurzel	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-148: keine kompromittierten Wurzelzertifikate im Paket / E-148: paket-bauen.ps1 legt rootcerts.p7b aus Releases\1.0 ueber die Grundlage	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-24: unter "Recent" stand "In" zweimal / E-24 Gegenprobe: ein fremdes Postfach laesst die Liste unberuehrt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-24: unter "Recent" stand "In" zweimal / E-24 Gegenprobe: verschiedene Postfaecher bleiben verschieden	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-24: unter "Recent" stand "In" zweimal / E-24: Nullzeiger werfen den Vergleich nicht um	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-24: unter "Recent" stand "In" zweimal / E-24: QCMailboxDirector.cpp benutzt die Vergleichsfunktionen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-24: unter "Recent" stand "In" zweimal / E-24: der Ersatzeintrag wird als derselbe erkannt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-24: unter "Recent" stand "In" zweimal / E-24: eine schon doppelte Liste wird vollstaendig geheilt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-24: unter "Recent" stand "In" zweimal / E-24: frisches Mailverzeichnis - "In" steht danach genau einmal	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-24: unter "Recent" stand "In" zweimal / E-24: gleicher Inhalt in verschiedenen Puffern gilt als gleich	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 A / R1: die Zahl im Sammeleintrag addiert sich nicht auf	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 A / R1: nach einem Lauf meldet dieselbe Sammlung weiter	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 A Gegenprobe: ohne Klammer bleibt es beim alten Verhalten	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 A: 500 uebersprungene ergeben 1 Eintrag + 1 Sammeleintrag	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 A: der zweite Lauf faengt wieder bei null an	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 A: ein Lauf ohne Zwischenfall meldet nichts	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 A: ein einziger Fall ergibt genau einen Eintrag	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 A: geschachtelte Laeufe - nur der aeusserste zaehlt ab	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 B: Fenstergrenze und Ueberlauf von GetTickCount	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 B: der erste Fehler ist immer laut	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-69: die Meldungsflut in Task Errors / E-69 B: im Fenster bleibt es still, danach wieder laut	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext) / E-77 K1: UpdateAfterRename fuehrt den Namen, der an den Server ging	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-77 Umbenennen: gefuehrter Name gleich Servername (Quelltext) / E-77 K2: RenameMailbox kodiert an allen fuenf Stellen, INBOX eingeschlossen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-77: IMAP-Postfachnamen in modifiziertem UTF-7 / E-77 Gegenrichtung: ASCII und & bleiben, Unbekanntes bleibt roh	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	E-77: IMAP-Postfachnamen in modifiziertem UTF-7 / E-77: Gregors Ordner von GMX, hin und zurueck	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-8 Gegenprobe: us-ascii, Latin-1 und windows-* bleiben unberuehrt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-8: ImapDownload.cpp rechnet mit der Skala von FindMIMECharset	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-8: der alte IMAP-Weg uebersetzte KEINEN einzigen Zeichensatz	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-8: mit FindMIMECharset rechnet IMAP auf derselben Skala wie POP	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-9: ISOTranslate liefert die NEUE Laenge, und sie ist kuerzer	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / NP3-9: beide Aufrufstellen nehmen den Rueckgabewert entgegen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2 Gegenprobe: die Modusansage davor traegt keinen Zeichensatz	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2: die Ansage steht vor dem Stylesheet, fremde Ansagen fliegen raus	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2: die Zwischendatei sagt windows-1252 an, Byte fuer Byte	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2B Gegenprobe: ohne UTF-8 bleibt jedes Byte stehen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2B: Gregors Zeile kommt ueber die Stueckgrenze heil an	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2B: TextReader haelt das angefangene Zeichen zurueck	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	NP3-8, NP3-9, Z-2 und Z-2B: die vier Wege, auf denen Umlaute starben / Z-2B: das Ergebnis haengt nicht davon ab, wo das Stueck endet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar: Vorgabewerte einer frisch angelegten Leiste	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar::CalcDynamicLayout: LM_HORZDOCK und LM_VERTDOCK	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar::CalcDynamicLayout: der Schwebe-Zweig zieht an einem Rand	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar::CalcFixedLayout faellt ohne Masse auf die MFC-Fassung zurueck	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Anordnungsrechnung von SECControlBar / SECControlBar::CalcFixedLayout liefert die gespeicherten Masse	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Zeilenlogik von SECDockBar / SECDockBar: NextBarThisRow und PrevBarThisRow bleiben in ihrer Zeile	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Zeilenlogik von SECDockBar / SECDockBar: PredictInsertPosition und CalcDockingLayout sind als offen gekennzeichnet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Zeilenlogik von SECDockBar / SECDockBar::IsNewBar und BarIsNewToThisRow	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Zustand sichern und zuruecklesen / SECControlBar: Get/SetBarInfo mit NULL tun nichts und stuerzen nicht ab	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Zustand sichern und zuruecklesen / SECControlBar: GetBarInfo und SetBarInfo fuehren den Zustand verlustfrei hin und zurueck	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim - Zustand sichern und zuruecklesen / SECControlBar: der Ablauf aus WazooBarMgr.cpp - nur die Andockhoehe aendern	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / OTShimDibAnlegen mehrfach auf demselben Objekt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / OTShimDibAnlegen: Breite/Hoehe 0 und Ueberlaufschutz	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / OTShimDibAnlegen: Feldsatz und BITMAPINFOHEADER	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECDib 1x1: von Hand geschrieben, ueber GDI+ gelesen, byte-gleich	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECDib 4x3: von Hand geschrieben, ueber GDI+ gelesen, byte-gleich	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECDib 7x5: von Hand geschrieben, ueber GDI+ gelesen, byte-gleich	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECDib::LoadImage auf Nichtbild-Daten liefert FALSE	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECImage: FlipHorz/FlipVert/Rotate90/Crop/UnPadBits melden sich ohne Dialog	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECImage::CopyImage: Masse, Daten und Randfaelle	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - DIB anlegen, kopieren, speichern, laden / SECImage::SaveImage auf einem leeren Bild liefert FALSE	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - Rechenmethoden von SECImage / PADWIDTH stimmt mit CalcBytesPerLine ueberein (der QCPng-Weg)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::CalcBytesPerLine: Vielfaches von 4, kleinste passende Laenge	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::CalcBytesPerLine: nachgerechnete Werte	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::CalcPadding liefert dasselbe wie CalcBytesPerLine	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::LastByte: Zeilenlaenge OHNE Auffuellung	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Bild - Rechenmethoden von SECImage / SECImage::NumBytes/NumColors: leeres Bild und angelegter DIB	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl: Schnelleingabe, gesperrte Felder und Fuellzeichen gehen hin und zurueck	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl: Vorgabewerte eines frisch angelegten Feldes	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl: die fensterbezogenen Wege sind ohne Fenster folgenlos	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetDate und SetTime aendern nur ihre Haelfte	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetDateTime nimmt nur an, was Validate durchlaesst	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetFormat merkt die Zeichenkette auch ohne Fenster	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetFormat: die vier Formatarten und ihre Zeichenketten	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetMinMax und GetMinMax: Rundlauf	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::SetModified/IsModified: beide Haelften einzeln	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECDateTimeCtrl::Validate prueft nur, wenn eine Pruefart gesetzt ist	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECSetOleDateTime setzt den Wert und meldet Fehler	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Palette - SECDateTimeCtrl / SECTmFromOleDate rechnet in die Felder von struct tm um	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Befunde / BEFUND: ActivateTab und ClearSelection fassen GetParent an, bevor sie das Fenster pruefen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase: Beschriftung NULL beim Einfuegen und beim Umbenennen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase: Einfuegen vor dem aktiven Reiter verschiebt dessen Index	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase: der erste Reiter wird aktiv, ohne Wechselmeldung	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase: die Auswahlmarke folgt genau dem aktiven Reiter	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::ActivateTab ist untaetig, wenn der Reiter schon obenauf liegt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::ActivateTab meldet den Wechsel genau einmal	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::AddTab haengt hinten an, GetTabCount zaehlt mit	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::DeleteTab: Liste und aktiver Index	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::DeleteTab: der aktive Reiter mittendrin	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::FindTab und TabExists	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::GetTabInfo gibt alle fuenf Angaben zurueck	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - Listenpflege von SECTabControlBase / SECTabControlBase::InsertTab: Index vorne, mittig, hinten und ausserhalb	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl: Zeichen- und Blaetterwege ohne Fenster sind folgenlos	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl::CreateNewTab legt SEC3DTab an, nicht SECTab	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl::EnableTab und IsTabEnabled	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl::GetTabRect und TabHit arbeiten auf m_rect	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Reiter - SEC3DTabControl / SEC3DTabControl::SetTabIcon legt den Griff am Reiter ab	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	OTShim_Werkzeugleiste - Rechenhilfen / SECConvertDialogUnitsToPixels rechnet mit der Windows-Regel 4 und 8	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / IMAP: kodierte Woerter ueber eine Faltung hinweg (E-94)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP und IMAP: Faltung vor Klartext bleibt Leerraum (Gegenprobe zu E-94)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP und IMAP: der Index wird um eins verschoben - sonst greift die falsche Tabelle	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: Betreff in ISO-8859-1 wird dekodiert, aber nicht uebersetzt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: Betreff, Base64 ueber UTF-8 kodiert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: Betreff, Quoted-Printable ueber UTF-8 kodiert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: FindMIMECharset liefert die Indizes, die ISOTranslate erwartet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: Nachrichtentext in UTF-8 wird zeilenweise uebersetzt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: TextReader::ReadIt uebernimmt die neue Laenge von ISOTranslate	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: der Absendername wird wie der Betreff behandelt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: eine Nachricht ohne Betreff bringt den Kopfzeilenpfad nicht durcheinander	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: eine ganze RETR-Antwort mit UTF-8-Umlauten	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: eine sehr lange Kopfzeile wird vollstaendig dekodiert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: kodierte Woerter ueber eine Faltung hinweg (E-94)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: kodiertes Wort mitten in einer Kopfzeile	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: unbrauchbare kodierte Woerter bleiben stehen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	POP-Empfang - Zeichensatz, Kopfzeilen, Nachrichtentext / POP: zwei aufeinanderfolgende kodierte Woerter	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-137: Strg-W in einer Wazoo-Leiste versteckt nur die Leiste, vor jeder Weitergabe	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-137: der letzte Klick in eine Wazoo-Leiste oder auf ihren schwebenden Rahmen wird gemerkt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-137: ein Klick auf Titelzeile oder Rand einer schwebenden Leiste gibt ihr den Tastaturfokus	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-137: ein Klick irgendwo in eine Wazoo-Leiste gibt ihr den Tastaturfokus	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-142: Hinweis beim Ziehen eines Entwurfs aus einem IMAP-Ordner nach Out	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-150: DeleteArr hinter dem Feldende laesst das Feld unberuehrt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-150: DeleteArr in der Mitte und am Ende loescht richtig	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-150: NotifyDeletedCol hinter dem Feldende (Task-Status-Weg)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-18: pFld wird vor dem Zugriff auf NULL geprueft	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-20: InsertArr hinter dem Ende (nIdx > nLen) bleibt im Feld	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-20: InsertArr in der Mitte und am Ende verschiebt richtig	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-20: NotifyInsertedCol hinter dem Feldende bleibt in allen vier Feldern	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-25: LocateNetscapePrefsFile gibt den Knoten des Aufrufers nicht frei	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-31 (Ursache von E-27): pg_time_t ist fest 32 Bit breit	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / E-99: der Merker 'Anwender hat getippt' rastet ein und wird uebergeben	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / ZIEL 2/4: Ausnahmen aus Fensterbotschaften landen im eudora.log	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / ZIEL 4 / E-154: Ausnahmen ausserhalb von Fensterbotschaften landen im eudora.log	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Speicherfehler E-18, E-20, E-25, E-31 (Regressionstests) / rootcerts.p7b: eudora.log nennt das Verzeichnis, aus dem QCSSL die Liste geladen hat	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	Startfehler S-2 (Regressionstests) / S-2: die Werbeleiste wird in unserem Bau nicht angelegt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	hexbin.cpp - BinHex-4.0-Dekodiertabelle / HexBinTable: ':' beendet, CR und LF werden ueberlesen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	hexbin.cpp - BinHex-4.0-Dekodiertabelle / HexBinTable: die 64 Alphabetzeichen liefern ihren 6-Bit-Wert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	hexbin.cpp - BinHex-4.0-Dekodiertabelle / HexBinTable: jeder 6-Bit-Wert 0x00..0x3F kommt genau einmal vor	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	hexbin.cpp - BinHex-4.0-Dekodiertabelle / HexBinTable: jedes Byte ausserhalb des Alphabets ist FAIL	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / ISO-8859-15-Zeile: die acht Abweichungen zu Latin-1 sind korrekt und vollstaendig	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: Codepunkt der Quellfolge == Codepunkt des CP1252-Zielbytes	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: Latin-1 U+00A0..U+00FF vollstaendig und wertgleich abgebildet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: alle 123 Eintraege belegt (ISOTranslate bricht sonst ab)	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: alle 123 uebersetzbaren CP1252-Zeichen sind abgedeckt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: jede Quellfolge ist gueltiges, nullterminiertes UTF-8	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / UTF-8-Zeile: keine doppelten Quellfolgen und keine doppelten Ziele	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / utils.cpp: MAX_CHARACTER_SETS passt zu den IDs in resource.h	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / utils.cpp: XLATE_CHARS / MAX_CHARS_TO_TRANS / MAX_CHARACTER_SETS	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Uebersetzungstabelle pcXlateTable / utils.cpp: die Zeichenliterale der Tabelle sind CP1252-Bytes >= 0x80	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOIncompleteUTF8Tail: angefangenes Zeichen wird gezaehlt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOIncompleteUTF8Tail: getrenntes Zeichen wird ueber die Stueckgrenze heil	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOIncompleteUTF8Tail: vollstaendiges Zeichen wird nicht zurueckgehalten	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOIsUTF8Charset: erkennt genau den UTF-8-Index	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: ISO-8859-15 (Index 3) wird nach CP1252 uebersetzt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: ISO-8859-15 laesst die Bytes 0x80..0x9F unveraendert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: Index 0/1/2 laesst den Text unveraendert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: Rueckgabewert ist die Laenge des Ergebnisses	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: U+00A0..U+00FF werden je auf ein Latin-1-Byte abgebildet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: Zeichen ohne CP1252-Entsprechung bekommen den nahen Verwandten	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: Zeichen werden unabhaengig von ihren Nachbarn uebersetzt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: bei abgeschnittenem Zeichen faellt die Tabelle ein	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: chinesisch, japanisch und koreanisch werden zu '?'	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: das Ergebnis ist nie laenger als die Eingabe	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: deutscher Beispieltext mit Umlauten, scharfem s und Euro	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: deutscher Newsletter mit Anfuehrung, Gedankenstrich, Euro und Emoji	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: die 27 CP1252-Sonderzeichen 0x80..0x9F werden uebersetzt	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: ein Emoji (vier Byte) faellt ersatzlos weg	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: eine Ersetzung darf das Ergebnis nicht erneut ersetzen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: jedes BMP-Zeichen wird zu genau einem Byte, nie zu Bytesalat	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: kyrillisch und hebraeisch werden zu '?'	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: reiner ASCII-Text bleibt unveraendert	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslate: ungueltiges UTF-8 wird nicht zu Fragezeichen zerredet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: Drei- und Vierbytezeichen ueber die Grenze	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: Grenze mitten im Zeichen	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: Nicht-UTF-8 bleibt unangetastet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: angefangenes Zeichen am Ende faellt weg	ok	2026-10-29 12:45	Quelltext 640e1a0e*
+unit	utils.cpp - Verhalten von ISOTranslate() / ISOTranslateChunk: das Byte hinter dem Stueck bleibt unangetastet	ok	2026-10-29 12:45	Quelltext 640e1a0e*
