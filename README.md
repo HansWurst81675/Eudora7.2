@@ -100,7 +100,7 @@ Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.1.128** — erstes Release 7.2.1, am 29.10.2026 geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden), noch nicht veröffentlicht; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123. Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)). Veröffentlicht ist `v1.0.120`.*
+*Stand **7.2.1.128** — erstes Release 7.2.1, am 29.10.2026 geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026; was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123. Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).*
 
 ### Was geht
 
@@ -137,7 +137,7 @@ mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)); und es wird ke
 ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrieben
 ([E-131](Intern/BEFUNDE.md#e-131)).
 
-**Neu in den Testpaketen 7.2.0.123 bis 7.2.0.127** (noch nicht veröffentlicht, kommt mit dem Release 7.2.1):
+**Neu in den Testpaketen 7.2.0.123 bis 7.2.0.127** (nicht einzeln veröffentlicht, enthalten im Release `v7.2.1.128`):
 steht an einer Stelle, im [CHANGELOG](CHANGELOG.md) unter diesen fünf Fassungen — darunter
 [E-156](Intern/BEFUNDE.md#e-156), [E-158](Intern/BEFUNDE.md#e-158), [E-160](Intern/BEFUNDE.md#e-160),
 [E-137](Intern/BEFUNDE.md#e-137), [E-146](Intern/BEFUNDE.md#e-146), [E-77](Intern/BEFUNDE.md#e-77), [E-113](Intern/BEFUNDE.md#e-113), [E-119](Intern/BEFUNDE.md#e-119), [E-148](Intern/BEFUNDE.md#e-148), [E-150](Intern/BEFUNDE.md#e-150), [E-130](Intern/BEFUNDE.md#e-130), [E-154](Intern/BEFUNDE.md#e-154).
