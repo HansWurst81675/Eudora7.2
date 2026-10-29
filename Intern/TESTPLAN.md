@@ -33,6 +33,34 @@ prüfbar** (die Junk-Zusätze laden nur, wenn `MFC71.DLL` und `MSVCP71.dll` auf
 dem Rechner liegen, [FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet))
 — dann bitte so melden, nicht als bestanden.
 
+## <a id="e-87-am-release"></a>Am Release 7.2.1 außerdem: Weiterleiten behält die HTML-Formatierung ([E-87](BEFUNDE.md#e-87), [E-88](BEFUNDE.md#e-88))
+
+> Beide gelten seit September als behoben, bestätigt hat es noch niemand.
+> Geeignet ist jeder **Newsletter mit farbigen Kästen, Hintergründen und
+> Bildern** (etwa einer von waipu.tv) — keine reine Textmail.
+
+1. Den Newsletter in der Postfachliste markieren, *Message → Forward*.
+2. **Im Verfassenfenster:** stehen Kästen, Farben und Bilder da — oder nur
+   Fließtext mit blauen Verweisen?
+3. An dich selbst senden und abholen. **Beim Empfang:** sieht die Mail aus
+   wie das Original im Lesefenster?
+
+**Bestanden:** in Schritt 2 und 3 ist die Formatierung erhalten. Kleine
+Abweichungen im Verfassenfenster sind bekannt (der Editor kennt kein CSS);
+entscheidend ist, was **ankommt**.
+
+**Ergebnis 29.10.2026, an 1.0.127 (vor dem Release, auf Gregors Wunsch
+vorgezogen): bestanden.** Gregor leitete einen HTML-Newsletter zweimal
+weiter, an zwei eigene Konten; sein Bildschirmfoto der angekommenen Mail
+zeigt Bilder, Kästen und farbige Knöpfe wie das Original (Schritt 3); sein
+zweites Bildschirmfoto zeigt das Original im Lesefenster zum Vergleich —
+Hintergrund, Bilder, Überschriften, umrandete Kästen und Knöpfe stimmen
+überein.
+Protokoll: beim Verfassen `IsHTML=1`, beim Absenden `Fassung=ORIGINAL
+(unveraendert)` mit 159 350 Byte statt der 37 609 Byte der Editor-Fassung,
+auf der Leitung `IsHTML=1 SendPlainOnly=0`; Empfang einmal per POP, einmal
+per IMAP als `text/HTML`. Schritt 2 (Verfassenfenster) ist nicht im Bild.
+
 ## Was jetzt zu testen ist — Testpaket 7.2.0.127 (Kurztest)
 
 > Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.127-release`, neben dein

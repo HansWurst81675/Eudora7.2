@@ -359,7 +359,7 @@ laufen verschlüsselt (Port 995 und 465), und Strg+J filtert, statt Post nach
 gibt (etwa: kein Filter darf ohne ausdrückliche Erlaubnis Post auf dem Server
 löschen).
 
-Die vollständige Tabelle — Schlüssel, Wert hier, Wert im Original, woher die
+Die vollständige Liste — Schlüssel, Wert hier, Wert im Original, woher die
 Abweichung kommt und **warum** — steht an einer Stelle:
 [EINSTELLUNGEN.md, *Was hier anders eingestellt ist als im Original*](../Intern/EINSTELLUNGEN.md#abweichungen).
 Jede Zeile lässt sich zurückdrehen, indem man den Original-Wert in die eigene

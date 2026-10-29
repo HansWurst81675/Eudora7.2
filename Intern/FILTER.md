@@ -23,7 +23,7 @@ Die Zeilennummern beziehen sich auf den Stand dieses Zweigs; die Dateien
 liegen unter `Eudora71/Eudora/`.
 
 Verwandte Dokumente: [EINSTELLUNGEN.md](EINSTELLUNGEN.md#abweichungen) — dort die
-Tabelle *Was hier anders eingestellt ist als im Original* mit den Abweichungen
+Liste *Was hier anders eingestellt ist als im Original* mit den Abweichungen
 dieser Portierung; [BEFUNDE.md](BEFUNDE.md) — die vollständigen Befunde;
 [CHANGELOG.md](../CHANGELOG.md) — was wann behoben wurde.
 

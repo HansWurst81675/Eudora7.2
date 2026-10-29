@@ -96,6 +96,7 @@ exit 0;
 sub pruefe_text {
     my ($datei, $zeilen) = @_;
     my (@funde, $im_code, $in_tabelle, $letzte_zeile, $letzte_nr);
+    my ($spalten, $trennzeile) = (0, 0);
 
     for my $i (0 .. $#$zeilen) {
         my $z = $zeilen->[$i];
@@ -158,7 +159,31 @@ sub pruefe_text {
             # Kopfzeile wird erst durch die Trennzeile darunter zur Tabelle.
             if (!$in_tabelle) {
                 my $next = $i + 1 <= $#$zeilen ? $zeilen->[$i + 1] : '';
-                $in_tabelle = 1 if $next =~ /^\s*\|[\s:|-]+\|?\s*$/;
+                if ($next =~ /^\s*\|[\s:|-]+\|?\s*$/) {
+                    $in_tabelle = 1;
+                    # SPALTENZAHL (29.10.2026). Gregor zu Intern/FILTER.md auf
+                    # GitHub: "ist hier die tabelle defekt?" - die Kopfzeile der
+                    # Strg+J-Tabelle hatte fuenf Spalten, Trennzeile und Daten
+                    # vier. GFM erkennt eine Tabelle nur, wenn Kopf- und
+                    # Trennzeile gleich viele Spalten haben; sonst steht alles
+                    # als Fliesstext da. Und eine Datenzeile mit MEHR Zellen als
+                    # der Kopf verliert die ueberzaehligen still.
+                    (my $t = $next) =~ s/\r?\n\z//;
+                    $spalten = zellen($z);
+                    my $trenn = zellen($t);
+                    $trennzeile = $nr + 1;
+                    if ($trenn != $spalten) {
+                        push @funde, {
+                            datei => $datei, zeile => $nr, text => $t, davor => $z,
+                            grund => "Kopfzeile hat $spalten Spalten, Trennzeile $trenn - GFM zeigt die Tabelle nicht an",
+                        };
+                    }
+                }
+            } elsif ($nr != $trennzeile and zellen($z) > $spalten) {
+                push @funde, {
+                    datei => $datei, zeile => $nr, text => $z, davor => $letzte_zeile,
+                    grund => 'Zeile hat ' . zellen($z) . " Zellen, der Kopf $spalten - die ueberzaehligen zeigt GFM nicht an",
+                };
             }
             $letzte_zeile = $z;
             $letzte_nr    = $nr;
@@ -193,8 +218,27 @@ sub pruefe_text {
     return @funde;
 }
 
+# Zahl der Zellen einer Tabellenzeile nach GFM: ein Pipe in einer Codespanne
+# oder mit Rueckstrich davor trennt keine Zellen; Pipe am Anfang und am Ende
+# zaehlen nicht mit.
+sub zellen {
+    my ($z) = @_;
+    $z =~ s/\r?\n\z//;
+    $z =~ s/(`+).*?\1/X/g;
+    $z =~ s/\\\|/X/g;
+    $z =~ s/^\s*\|//;
+    $z =~ s/\|\s*$//;
+    my @t = split /\|/, $z, -1;
+    return scalar @t;
+}
+
 sub selbsttest {
     my @faelle = (
+        [ 'DER ECHTE FEHLER 3 (FILTER Strg+J)', "| a | b | c | d | e |\n|---|---|---|---|\n| 1 | 2 | 3 | 4 |\n", 1 ],
+        [ 'Datenzeile mit zu vielen Zellen',     "| a | b |\n|---|---|\n| 1 | 2 | 3 |\n", 1 ],
+        [ 'Datenzeile mit weniger Zellen (GFM ok)', "| a | b | c |\n|---|---|---|\n| 1 | 2 |\n", 0 ],
+        [ 'Pipe in Codespanne zaehlt nicht',     "| a | b |\n|---|---|\n| `x|y` | 2 |\n", 0 ],
+        [ 'Pipe mit Rueckstrich zaehlt nicht',   "| a | b |\n|---|---|\n| x\\|y | 2 |\n", 0 ],
         # [ Name, Text, erwartete Zahl der Funde ]
         [ 'heile Tabelle',                "| a | b |\n|---|---|\n| 1 | 2 |\n", 0 ],
         [ 'heile Tabelle, dann Absatz',   "| a | b |\n|---|---|\n| 1 | 2 |\n\nFliesstext.\n", 0 ],

@@ -46,7 +46,7 @@ verschickt.
 | **wissen, was geht und was nicht** | [Auf einen Blick](#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind) gleich hier unten; ausführlich in [Doku/ANWENDER.md](Doku/ANWENDER.md) |
 | **es benutzen** (Filter, Defender, IMAP-Kennwort, Protokoll) | [Doku/ANWENDER.md](Doku/ANWENDER.md) |
 | **eine schnelle Antwort** (neue Fassung übernehmen, Verschlüsselung, IMAP, Konten, Kurznamen, Labels, Filter, Anhänge, Protokoll) | [Doku/FAQ.md](Doku/FAQ.md) — 19 häufige Fragen, nummeriert |
-| **wissen, welche Einstellungen anders sind als im Original Eudora — und warum** | [Intern/EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen) — Tabelle mit Wert hier, Wert im Original und Begründung |
+| **wissen, welche Einstellungen anders sind als im Original Eudora — und warum** | [Intern/EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen) — Liste mit Wert hier, Wert im Original und Begründung |
 | **es selbst bauen** | [Doku/BAUEN.md](Doku/BAUEN.md) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl |
 | **einen Fehler melden** | [Einen Fehler melden](Doku/ANWENDER.md#einen-fehler-melden) |
 | **mitarbeiten** | [Doku/MITARBEITEN.md](Doku/MITARBEITEN.md) |
