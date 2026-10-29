@@ -1805,6 +1805,22 @@ Nebenbei gefunden: zwei Speicherwege, die den E-101-Kern nie rufen
 ([E-140](BEFUNDE.md#e-140)), und eine Prüflücke — `TestE101.cpp` hat keinen
 einzigen Fall mit taboo-geschnittenem Kopf.
 
+## Hundertundzweiter Durchgang — Nachlauf zu LEKTOR-96 nach `deef1493`, 29.10.2026 (Bericht: `Befunde/LEKTOR-97.md`)
+
+Kurzer Nachlauf auf `deef1493` (= `origin/release-7.2.1`), nichts berichtigt.
+Von den 9 Funden aus [LEKTOR-96](../Befunde/LEKTOR-96.md#lektor-96) sind 6
+erledigt, [L-96.1](../Befunde/LEKTOR-96.md#l-96.1) teilweise, L-96.3 und
+L-96.6 nach dem Release verschoben. Die sieben Tabellenzeilen, die GitHub
+abschnitt, kommen an GitHubs Markdown-Dienst jetzt ganz an (gemessen).
+**3 neue Funde:** die [E-166](BEFUNDE.md#e-166)-Zeile nennt Gregors Test
+zugleich bestätigt und fehlend
+([L-97.1](../Befunde/LEKTOR-97.md#l-97.1)); der TESTPLAN-Kopf sagt
+„Getestet“ und fordert darunter weiter zum Prüfen auf, WEITERMACHEN:7 nennt
+den Laptop nicht ([L-97.2](../Befunde/LEKTOR-97.md#l-97.2)); der neue
+Laptop-Abschnitt sagt „Verhalten des Originals“ ohne Zeile und ohne Art des
+Belegs — belegt am Quelltext, `eudora.cpp:1792`, seit dem Original
+unverändert ([L-97.3](../Befunde/LEKTOR-97.md#l-97.3)).
+
 ## Hundertunderster Durchgang — Bestand nach Gregors Test an 7.2.1.128, Form von Tabellen und Ankündigungen, 29.10.2026 (Bericht: `Befunde/LEKTOR-96.md`)
 
 Lauf auf `159d3955` (= `origin/release-7.2.1`). Nichts berichtigt (Auftrag:
