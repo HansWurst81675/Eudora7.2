@@ -180,7 +180,7 @@ haben.
 
 ## 7.2.1.128 — erstes Release 7.2.1, Zweig `release-7.2.1`
 
-**Geschnürt am 29.10.2026 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Nummer am selben Tag vergeben (Gregor: „ja, direkt 7.2.1.128 bauen, ich teste dann das erste release“). Erste Fassung im neuen Nummernschema (Kasten oben). Von Gregor am 29.10.2026 getestet: VM ohne Fehlerzeile, E-166 auf Hauptrechner und Laptop bestanden ([TESTPLAN](../Intern/TESTPLAN.md#ergebnis-e-166-laptop)); erst mit seinem Ja wird sie als `v7.2.1.128` veröffentlicht.
+**Geschnürt am 29.10.2026 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Nummer am selben Tag vergeben (Gregor: „ja, direkt 7.2.1.128 bauen, ich teste dann das erste release“). Erste Fassung im neuen Nummernschema (Kasten oben). Von Gregor am 29.10.2026 getestet: VM ohne Fehlerzeile, E-166 auf Hauptrechner und Laptop bestanden ([TESTPLAN](../Intern/TESTPLAN.md#ergebnis-e-166-laptop)); erst mit seinem Ja wird sie als `v7.2.1.128` veröffentlicht. Der Text für GitHub steht in [7.2.1.128/RELEASE-NOTIZEN.md](7.2.1.128/RELEASE-NOTIZEN.md).
 
 | | |
 |---|---|

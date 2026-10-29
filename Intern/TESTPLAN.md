@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 29.10.2026 (Prüfschritt zu E-166 zuerst)
+# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 29.10.2026 (getestet, E-166 bestanden)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -8,13 +8,13 @@
 > E-166**, sein Schritt steht [direkt hierunter](#e-166-am-release) und braucht
 > das **leere** Mailverzeichnis dieses Pakets. [E-87/E-88](#e-87-am-release)
 > ist schon bestanden (29.10.2026 an 1.0.127), der Kurztest V1 bis V6 am
-> 27.10.2026 an 1.0.127 ([Ergebnis](#ergebnis-7-2-0-127)). **Was du darüber
-> hinaus prüfst, entscheidest du** (Gregor am 29.10.2026: *„ich werde es noch
+> 27.10.2026 an 1.0.127 ([Ergebnis](#ergebnis-7-2-0-127)). Darüber hinaus
+> hat Gregor geprüft, was er selbst wählte (Gregor am 29.10.2026: *„ich werde es noch
 > testen … auch andere dinge, nicht nur e-166“*). Die neun Kriterien aus
 > [ZIEL.md](../ZIEL.md) ([Teil 1](#teil-1-kriterien)) bekommen **keinen eigenen
 > Durchgang** — Gregor am 29.10.2026: *„ja, das funktioniert alles. … das ist
-> inzwischen schon alles mehrfach getestet und geprüft, läuft stabil.“* Deine
-> Ergebnisse kommen hierher. Erst mit deinem Ja
+> inzwischen schon alles mehrfach getestet und geprüft, läuft stabil.“* Seine
+> Ergebnisse stehen direkt hierunter. Erst mit seinem Ja
 > wird es als `v7.2.1.128` veröffentlicht.
 > Veröffentlicht ist bis dahin `v1.0.120`. Am Bau vorher geprüft: 314
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
@@ -42,8 +42,10 @@
 * Siebte Sitzung, 21:37:01, Start über `Eudora.exe` direkt, laut Protokoll
   dasselbe Mailverzeichnis: **keine** Junk-Frage, `Logging shutdown`, in der
   INI weiter `AskedAboutJunk=6`. Gregor: *„kam nicht, frage blieb weg.“*
-* Das ist das Verhalten des Originals: Die Frage gehört zum ersten Start mit
-  einem Junk-Werkzeug, nicht zum ersten Start überhaupt. Wer die beiden DLLs
+* Belegt am Quelltext, nicht am Original-Programm gemessen: Die Bedingung in
+  `eudora.cpp:1792` ist seit dem Original-Import `567a5d87` unverändert. Die
+  Frage gehört also zum ersten Start mit einem Junk-Werkzeug, nicht zum ersten
+  Start überhaupt. Wer die beiden DLLs
   später nachrüstet, bekommt sie also genau einmal.
 
 ### <a id="ergebnis-e-166-hauptrechner"></a>Ergebnis 29.10.2026 an 7.2.1.128: E-166 auf Gregors Hauptrechner — bestanden laut Protokoll
