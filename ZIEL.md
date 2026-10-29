@@ -39,12 +39,12 @@ Zwischenstände wie **7.2.0.123** sind Testpakete für Gregors lokalen Test,
 keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
 `v7.2.1.<n>`.
 
-**Was an der Release-Fassung selbst noch geprüft wird:** die Behebung von
-[E-166](Intern/BEFUNDE.md#e-166) — Gregor prüft sie an 7.2.1.\<n\> statt an
+**An der Release-Fassung selbst geprüft:** die Behebung von
+[E-166](Intern/BEFUNDE.md#e-166) — Gregor prüfte sie an 7.2.1.128 statt an
 einem eigenen Testpaket (Entscheidung 15 in
-[WEITERMACHEN](Intern/WEITERMACHEN.md), Schritt in
-[TESTPLAN](Intern/TESTPLAN.md#e-166-am-release)). Erst danach wird
-veröffentlicht. Die Übersicht unten zählt das nicht mit.
+[WEITERMACHEN](Intern/WEITERMACHEN.md)) und bestätigte sie am 29.10.2026 auf
+Hauptrechner und Laptop ([TESTPLAN](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner)).
+Die Übersicht unten zählt das nicht mit.
 
 <!-- ziel-stand: Anfang -->
 
@@ -98,7 +98,7 @@ entschieden:** kein eigener Durchgang der neun Kriterien (*„das waren ja auch
 die ursprünglichen kriterien von ganz am anfang an, das ist inzwischen schon
 alles mehrfach getestet und geprüft, läuft stabil.“*); vor der Marke zählen
 sein Test von [E-166](Intern/BEFUNDE.md#e-166) und der weiteren Punkte, die er
-an 7.2.1.128 prüft, und sein Ja ([TESTPLAN](Intern/TESTPLAN.md)). Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` kennt bisher nur `v1.0.<n>` und wird vorher umgestellt ([L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
+an 7.2.1.128 prüft, und sein Ja ([TESTPLAN](Intern/TESTPLAN.md)). Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` ist am 29.10.2026 darauf umgestellt (`a5febb70`, [L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
 
 
 ## Regressionstests — Anordnung vom 22.10.2026
@@ -183,7 +183,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 29.10.2026.** Quellstand **7.2.1.128** (`VERSION` gleich; erstes Release 7.2.1, geschnürt, bei Gregor im Test); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 29.10.2026.** Quellstand **7.2.1.128** (`VERSION` gleich; erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)); veröffentlicht ist [`v1.0.120`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.120). **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 

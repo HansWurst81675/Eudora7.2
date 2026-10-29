@@ -1,6 +1,6 @@
 # Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 29.10.2026 (Prüfschritt zu E-166 zuerst)
 
-> **Jetzt zu testen: das Release 7.2.1.128**, abgelegt am 29.10.2026 als
+> **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
 > Repo unter `Releases\Eudora72-7.2.1.128-release.zip`). Die Titelzeile muss
 > `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36` zeigen. Das Mailverzeichnis darin
@@ -19,6 +19,32 @@
 > Veröffentlicht ist bis dahin `v1.0.120`. Am Bau vorher geprüft: 314
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
 > ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
+
+### <a id="ergebnis-e-166-laptop"></a>Ergebnis 29.10.2026 an 7.2.1.128: E-166 auf Gregors Laptop, erstmals mit Junk-Werkzeugen — bestanden
+
+* **E-166: bestanden.** Die Junk-Frage kam einmal, als zum ersten Mal ein
+  Junk-Werkzeug geladen war, und danach nicht wieder. Grundlage sind
+  `Eudora.ini` und `eudora.log` aus `C:\Temp\Eudora72-7.2.1.128-release`, von
+  Gregor in drei Ständen gesichert (21:28, 21:35, 21:37), in jedem Kopf
+  `Version 7.2.1.128`.
+* Ausgangslage: dasselbe Mailverzeichnis lief vorher in fünf Sitzungen
+  **ohne** `MFC71.DLL` und `MSVCP71.dll`. Ohne diese laden die Junk-Zusätze
+  nicht ([FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)),
+  und Eudora fragt nur, wenn mindestens einer geladen ist
+  (`eudora.cpp`, `!pJunkList->IsEmpty() && (askedBits&introAsked)==0`).
+  Deshalb stand in der INI `AskedAboutJunk=4`: das Bit „Junk-Postfach
+  geklärt“ (4) war gesetzt, das Bit „Frage gestellt“ (2) nie.
+* Sechste Sitzung, erstmals mit den beiden DLLs: `Dialog: "At least one junk
+  mail identification tool is installed, and ready to filter junk."`. Gregor
+  sicherte die INI bei offener Frage: `AskedAboutJunk=4`. Er antwortete *No*
+  (`Dismissed with 2`). Danach in der INI `AskedAboutJunk=6` und
+  `UseJunkMailbox=0`, die Sitzung endet mit `Logging shutdown`.
+* Siebte Sitzung, 21:37:01, Start über `Eudora.exe` direkt, laut Protokoll
+  dasselbe Mailverzeichnis: **keine** Junk-Frage, `Logging shutdown`, in der
+  INI weiter `AskedAboutJunk=6`. Gregor: *„kam nicht, frage blieb weg.“*
+* Das ist das Verhalten des Originals: Die Frage gehört zum ersten Start mit
+  einem Junk-Werkzeug, nicht zum ersten Start überhaupt. Wer die beiden DLLs
+  später nachrüstet, bekommt sie also genau einmal.
 
 ### <a id="ergebnis-e-166-hauptrechner"></a>Ergebnis 29.10.2026 an 7.2.1.128: E-166 auf Gregors Hauptrechner — bestanden laut Protokoll
 
@@ -50,11 +76,11 @@
 * Nebenbei im Protokoll: Strg+W um 19:21:13 (E-137-Zeile, `fokus=ListBox`). Kein
   Auftrag, nur notiert.
 
-### <a id="ergebnis-7-2-1-128"></a>Ergebnis 29.10.2026 an 7.2.1.128 (Gregors VM, Zwischenstand)
+### <a id="ergebnis-7-2-1-128"></a>Ergebnis 29.10.2026 an 7.2.1.128 (Gregors VM)
 
 * **E-166: an der VM nicht prüfbar** — die Junk-Frage kam gar nicht, auch nicht
   beim ersten Start mit leerem Mailverzeichnis. Gregor prüft E-166 **später auf
-  seinem Hauptrechner**; bis dahin keine Marke.
+  seinem Hauptrechner**; dort am selben Tag bestanden ([oben](#ergebnis-e-166-hauptrechner)).
 * Senden an sich selbst, Abruf und Weiterleiten über GMX gingen; im
   `eudora.log` (13:59) keine Fehlerzeile, jede Sitzung endet sauber.
 * Passwortfrage beim Start trotz abgeschaltetem *Check Mail*: kein Abruf,

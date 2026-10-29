@@ -143,7 +143,7 @@ unzip -l <paket>.zip | awk '{print $4}' | cut -d/ -f1 | sort -u | head
 neben der `Eudora.exe` und wird in `GetDefaultIniSetting` (`rs.cpp:357-385`)
 gelesen — an einem bestehenden Konto ändert sie nichts mehr, weil dessen Wert
 schon in der `Eudora.ini` steht. Was diese Portierung dort vorgibt und warum,
-steht kommentiert in `tools/DEudora.ini` und in der Liste
+steht kommentiert in `tools/DEudora.ini` und in den Tabellen
 [*Was hier anders eingestellt ist als im Original*](#abweichungen) weiter unten.
 
 ---
@@ -210,7 +210,7 @@ schreiben (Abschnitt beachten, siehe Abschnitt 1).
 
 | Schlüssel | Abschnitt | hier | Original | warum |
 |---|---|---|---|---|
-| `CtrlJMapping` | `[Settings]` | eingebaut 0; beim ersten Start **ohne** Filter **2** (*Filter Messages*) | eingebaut 0; in derselben Lage 1 (*Junk*) | Strg+J soll filtern, nicht Post nach *Junk* verschieben (`mainfrm.cpp:7937-7949`, [E-75](BEFUNDE.md#e-75), [FILTER.md](FILTER.md#das-tastenkürzel-ist-nicht-fest)) |
+| `CtrlJMapping` | `[Settings]` | eingebaut 0; beim ersten Start **ohne** Filter **2** (*Filter Messages*) | eingebaut 0; in derselben Lage 1 (*Junk*) | Strg+J soll filtern, nicht Post nach *Junk* verschieben (`CMainFrame::InitJunkMenus` in `mainfrm.cpp`, [E-75](BEFUNDE.md#e-75), [FILTER.md](FILTER.md#das-tastenkürzel-ist-nicht-fest)) |
 | `FilterMayDeleteFromServer` | `[Settings]` | **0** | *gibt es nicht* | Eine Filteraktion durfte Post auf dem Server löschen; jetzt erst mit 1 (`filtersd.cpp:1133`, [E-73](BEFUNDE.md#e-73)) |
 | `KeepHTMLInResponses` | `[Settings]` | **1** | *gibt es nicht* | Antworten und Weiterleiten behalten die HTML-Auszeichnung der Ursprungsnachricht (`EudoraRes.rc:7685`, [E-87](BEFUNDE.md#e-87)) |
 | `ForwardOriginalHTML` | `[Settings]` | **1** | *gibt es nicht* | Beim Antworten und Weiterleiten wird das Original-HTML übernommen (`EudoraRes.rc:7686`, [E-88](BEFUNDE.md#e-88)) |

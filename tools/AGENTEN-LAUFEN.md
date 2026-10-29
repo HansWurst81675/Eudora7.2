@@ -9,5 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-10-29 21:07 | LEKTOR-96.md: alle MDs gegen den Bestand, seit 33c5bd34 |
-| CHRONIST | 2026-10-29 21:19 | CHRONIST-2026-10-29b: Verlauf 29.10. ab 08:47 bis jetzt, Lehren anlegen/ergaenzen |

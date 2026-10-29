@@ -198,6 +198,10 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
 4. *Action:* **Make Label** → `Wichtig`. Weitere Aktionen (etwa *Transfer To*)
    lassen sich darunter anhängen.
 
+   Sind die Labels in der Auswahl **ausgegraut**, den Filter löschen und neu
+   anlegen — dann lassen sie sich wählen ([E-173](../Intern/BEFUNDE.md#e-173); Ursache
+   noch nicht untersucht).
+
 **Bekannte Einschränkung:** wird eine Mail mit Label später zwischen zwei
 Ordnern **desselben IMAP-Kontos** verschoben, ist das Label danach weg — Eudora
 speichert Labels nur bei sich, nicht auf dem Server
@@ -359,8 +363,8 @@ laufen verschlüsselt (Port 995 und 465), und Strg+J filtert, statt Post nach
 gibt (etwa: kein Filter darf ohne ausdrückliche Erlaubnis Post auf dem Server
 löschen).
 
-Die vollständige Liste — Schlüssel, Wert hier, Wert im Original, woher die
-Abweichung kommt und **warum** — steht an einer Stelle:
+Die vollständigen Tabellen — Schlüssel, Wert hier, Wert im Original, woher die
+Abweichung kommt und **warum** — stehen an einer Stelle:
 [EINSTELLUNGEN.md, *Was hier anders eingestellt ist als im Original*](../Intern/EINSTELLUNGEN.md#abweichungen).
 Jede Zeile lässt sich zurückdrehen, indem man den Original-Wert in die eigene
 `Eudora.ini` schreibt.

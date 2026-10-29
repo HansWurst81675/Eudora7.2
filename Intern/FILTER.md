@@ -154,17 +154,17 @@ umschaltbar. `CMainFrame::OnCtrlJ` fragt den Wert `CtrlJMapping`
 | `2` (*Filter*) | *Filter Messages* | — | — |
 
 Eingebaute Vorgabe ist `0` — „noch nicht entschieden"
-(`EudoraRes.rc:8734`, `CTRL_J_UNKNOWN` in `JunkMail.h:61`). Den echten Wert
+(`EudoraRes.rc:8756`, `CTRL_J_UNKNOWN` in `JunkMail.h:61`). Den echten Wert
 setzt Eudora **beim ersten Start selbst**, in
-`CMainFrame::InitJunkMenus` (`mainfrm.cpp:7911-7952`): sind schon manuelle
-Filter da, fragt es nach (`IDD_CTRL_J_FOR_JUNK`, `EudoraRes.rc:4717-4726`);
+`CMainFrame::InitJunkMenus` (`mainfrm.cpp:8398-8490`): sind schon manuelle
+Filter da, fragt es nach (`IDD_CTRL_J_FOR_JUNK`, `EudoraRes.rc:4735-4746`);
 sind keine da, entscheidet es stillschweigend. **Diese Portierung entscheidet
 in diesem Fall für *Filter Messages*, das Original für *Junk*** (Befund
-[**E-75**](BEFUNDE.md#e-75), `mainfrm.cpp:7937-7949`).
+[**E-75**](BEFUNDE.md#e-75), `mainfrm.cpp:8427-8449`).
 
 Welche Belegung gerade gilt, sehen Sie im Menü: `InitJunkMenus` schreibt das
 Kürzel neben *Filter Messages* und neben *Junk*
-(`mainfrm.cpp:7976-7994`).
+(`mainfrm.cpp:8456-8487`).
 
 In einem **bestehenden** Mailverzeichnis wirkt die Änderung nicht — dort
 steht der Wert schon in der `Eudora.ini`. Bei geschlossenem Eudora von Hand:
@@ -596,7 +596,7 @@ Wo diese Portierung abweicht, steht das dabei — die Begründungen stehen in
 | `FilterReportWindowPosition` | `10,10,500,300` | **`[Window Position]`** | `EudoraRes.rc:7572` | Lage des Berichtsfensters |
 | `ImapFilterIncoming` | `1` | `[Settings]` | `EudoraRes.rc:8182` | Eingangsfilter für IMAP-Konten (in dieser Portierung ungetestet) |
 | `ImapFiltersWindowPosition` | `1,2,580,480` | **`[Window Position]`** | `EudoraRes.rc:7587` | Lage des IMAP-Filterfensters |
-| `CtrlJMapping` | `0` | `[Settings]` | `EudoraRes.rc:8734` | Belegung von Strg+J: `0` unentschieden, `1` *Junk*, `2` *Filter Messages* (`JunkMail.h:61-63`) |
+| `CtrlJMapping` | `0` | `[Settings]` | `EudoraRes.rc:8756` | Belegung von Strg+J: `0` unentschieden, `1` *Junk*, `2` *Filter Messages* (`JunkMail.h:61-63`) |
 
 ### Junk
 
