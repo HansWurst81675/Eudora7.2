@@ -40,3 +40,14 @@ richtig umgesetzt (gelesen).
 nicht“ ist wahr; dass bei *Yes* eine leere Nachricht in `Out` entsteht, sagt
 der Text nicht — *No* ist seit 7.2.0.124 vorgewählt (`Intern/BEFUNDE.md:378`).
 Ob das in den Text gehört, entscheidet Gregor.
+
+## Nachprüfung nach 62251f42
+
+Gelesen am `git show 62251f42`, nicht im Browser gemessen. **[L-98.1](#l-98.1)**: Dort steht jetzt
+„18 Fragen“ (`Releases/7.2.1.128/RELEASE-NOTIZEN.md:53`). Das ist auf beiden Ständen wahr, weil
+Abschnitt 18 keine Frage ist. **[L-98.2](#l-98.2)**: Der Link endet jetzt auf
+`#bekannte-fehler` (`RELEASE-NOTIZEN.md:61`). **[L-98.3](#l-98.3)**: Der TESTPLAN-Kopf steht jetzt in der
+Vergangenheit („zeigte“, „war“, „brauchte“; `Intern/TESTPLAN.md:5-8`). Alle
+drei sind behoben, kaputtgegangen ist nichts. Am Rand: Die neue Zeile in
+`tools/AGENTEN-LAUFEN.md` beschreibt diesen Lauf als „alle MDs gegen den
+Bestand“. Geprüft wurde aber nur ein Commit.

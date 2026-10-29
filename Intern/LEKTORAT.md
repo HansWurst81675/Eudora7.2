@@ -2902,3 +2902,4 @@ richtig, drei Funde — „19 Fragen“ gilt erst nach dem Merge auf `main`
 ([L-98.1](../Befunde/LEKTOR-98.md#l-98.1)), README-Link ohne Anker
 ([L-98.2](../Befunde/LEKTOR-98.md#l-98.2)), TESTPLAN-Kopf teils noch im
 Präsens ([L-98.3](../Befunde/LEKTOR-98.md#l-98.3)).
+Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](../Befunde/LEKTOR-98.md#nachprüfung-nach-62251f42)).
