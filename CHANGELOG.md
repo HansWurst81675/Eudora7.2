@@ -2599,7 +2599,7 @@ Datei stand:
 
 ```
 From: "konto-gmx@gregor.invalid" <konto-gmx@gregor.invalid> Subject: Re: Fwd: Deine
-Anzeige 'Zu verschenken: kleine Gefäße' Cc:
+Anzeige 'Zu verschenken: Beispielartikel' Cc:
 ```
 
 Drei Kopfzeilen in einer. Im Postfach steht jede für sich — beide Fassungen

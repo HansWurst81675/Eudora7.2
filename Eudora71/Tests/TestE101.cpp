@@ -591,7 +591,7 @@ void RunE101Tests(void)
 	// E-101, dritter Teil (17.10.2026): die empfangene Nachricht, wie sie
 	// im Postfach liegt. Nachgebaut nach den sechs Nachrichten in
 	// C:/Temp/E80b/Mailverzeichnis/In.mbx und Gregors Datei vom 13.10.2026
-	// ("Fwd Deine Anzeige 'Zu verschenken kleine Gefe'.txt"): der Kopf sagt
+	// ("Fwd Deine Anzeige 'Zu verschenken Beispielartikel'.txt"): der Kopf sagt
 	// multipart mit Grenze, der Rumpf ist schon einteilig; das HTML sagt
 	// UTF-8, die Bytes sind Windows-1252 (E4 = ae, DF = ss, 80 = Euro).
 	{
