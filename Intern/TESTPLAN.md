@@ -20,6 +20,22 @@
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
 > ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
 
+### <a id="ergebnis-7-2-1-128"></a>Ergebnis 29.10.2026 an 7.2.1.128 (Gregors VM, Zwischenstand)
+
+* **E-166: an der VM nicht prüfbar** — die Junk-Frage kam gar nicht, auch nicht
+  beim ersten Start mit leerem Mailverzeichnis. Gregor prüft E-166 **später auf
+  seinem Hauptrechner**; bis dahin keine Marke.
+* Senden an sich selbst, Abruf und Weiterleiten über GMX gingen; im
+  `eudora.log` (13:59) keine Fehlerzeile, jede Sitzung endet sauber.
+* Passwortfrage beim Start trotz abgeschaltetem *Check Mail*: kein Abruf,
+  sondern das Nachladen der markierten Nachricht in einem offenen IMAP-Fenster
+  (zweimal *„1 message(s) left to download“* direkt nach dem Start im
+  Protokoll).
+* Labels im Filterfenster einmal ausgegraut → neuer Befund [E-173](BEFUNDE.md#e-173),
+  nach dem Release.
+* Die neun Kriterien bekommen keinen eigenen Durchgang (Gregors Entscheidung,
+  siehe oben).
+
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 
 > Kein eigenes Testpaket — du prüfst es an der Release-Fassung (Entscheidung
