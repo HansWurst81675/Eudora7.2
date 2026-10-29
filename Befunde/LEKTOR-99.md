@@ -44,3 +44,11 @@ Das Werkzeug prüft nur fünf Standabsätze; die Funde unten liegen außerhalb.
 ## Urteil
 
 Die neuen Angaben stimmen mit GitHub überein. Drei Standaussagen außerhalb der vom Commit berührten Zeilen sind veraltet; [L-99.1](#l-99.1) wirkt nach außen.
+
+## Nachprüfung nach 4fff285f
+
+- [L-99.1](#l-99.1) behoben (gemessen): `Doku/ANWENDER.md` sagt jetzt „veröffentlicht erstmals mit `v7.2.1.128` (in `v1.0.120` war er noch nicht enthalten)“ — die Gegenwart ist richtig, v1.0.120 steht nur noch als Geschichte da.
+- [L-99.2](#l-99.2) behoben (gemessen): `Intern/AUFGABEN.md:118` „seit dem 29.10.2026 ist `v7.2.1.128` draußen“.
+- [L-99.3](#l-99.3) behoben (gemessen): `Intern/WEITERMACHEN.md:48` nennt 7.2.1.128 am 29.10.2026, davor 1.0.127 am 27.10.2026 mit V1 bis V6. Das deckt sich mit `Intern/TESTPLAN.md:179-184` (Abschnitt `ergebnis-7-2-0-127`, V1/V2 am 27.10.2026). Beide Anker, `ergebnis-7-2-0-127` und `ergebnis-e-166-laptop`, sind im TESTPLAN vorhanden.
+
+Nichts Neues kaputt. Nur am Rand: die Zeile in `tools/AGENTEN-LAUFEN.md` beschreibt den Lauf als „alle MDs gegen den Bestand, seit c8b0893f“. Geprüft war `321b3599` samt einer grep-Suche über die MDs. Das ist ungenau, aber kein Fund.

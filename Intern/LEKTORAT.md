@@ -2906,4 +2906,4 @@ Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](..
 
 ## LEKTOR-99 (29.10.2026) — Buchführung nach v7.2.1.128 (321b3599)
 
-[LEKTOR-99](../Befunde/LEKTOR-99.md): Zeit, Marke, *Latest* und ZIP-Größe stimmen mit GitHub überein; `pruefe-release-buchfuehrung.pl` ohne Mangel. Drei veraltete Standaussagen außerhalb des Commits: Anwenderhandbuch nennt `v1.0.120` als aktuell ([L-99.1](../Befunde/LEKTOR-99.md#l-99.1)), AUFGABEN ebenso ([L-99.2](../Befunde/LEKTOR-99.md#l-99.2)), WEITERMACHEN „zuletzt bestätigt 1.0.101“ ([L-99.3](../Befunde/LEKTOR-99.md#l-99.3)).
+[LEKTOR-99](../Befunde/LEKTOR-99.md): Zeit, Marke, *Latest* und ZIP-Größe stimmen mit GitHub überein; `pruefe-release-buchfuehrung.pl` ohne Mangel. Drei veraltete Standaussagen außerhalb des Commits: Anwenderhandbuch nennt `v1.0.120` als aktuell ([L-99.1](../Befunde/LEKTOR-99.md#l-99.1)), AUFGABEN ebenso ([L-99.2](../Befunde/LEKTOR-99.md#l-99.2)), WEITERMACHEN „zuletzt bestätigt 1.0.101“ ([L-99.3](../Befunde/LEKTOR-99.md#l-99.3)). Nach 4fff285f sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](../Befunde/LEKTOR-99.md#nachprüfung-nach-4fff285f)).
