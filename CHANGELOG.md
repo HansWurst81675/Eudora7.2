@@ -25,7 +25,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
 | **[E-172](Intern/BEFUNDE.md#e-172)** | Eine Mail steht im Lesefenster als rohe Base64-Zeichenfolge statt als lesbarer Text | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — Quelltext der Mail ansehen (*View Source*), Kopfzeilen `Content-Type`/`Content-Transfer-Encodi… |
-| **[E-171](Intern/BEFUNDE.md#e-171)** | „Search Mailfolder“ im Rechtsklickmenü einer Mail bringt ohne markierten Text die Mel… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — ohne Auswahl das Suchfenster öffnen, aber nicht starten (oder den Menüpunkt sperren); vorher… |
+| **[E-171](Intern/BEFUNDE.md#e-171)** | „Search Mailfolder“ im Rechtsklickmenü einer Mail bringt ohne markierten Text die Mel… | 29.10.2026 an 7.2.0.127 | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — ohne Auswahl das Suchfenster öffnen, aber nicht starten (oder den Menüpunkt sperren); vorher… |
 | **[E-170](Intern/BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026: *„die findigs können wir erst nach dem release beheben. das muß nur erstmal nur als befund dri… |
 | **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt… |
 | **[E-165](Intern/BEFUNDE.md#e-165)** | Die Vervollständigungsbox im To:-Feld sieht mit einem einzigen Treffer verbaut aus — wi… | **nie gemessen** | am Prüfstand `C:\Temp\E135-box` mit **einem** passenden Kurznamen messen (Außen- und Innenmaß der Box und der Liste, Bildlaufleisten-Stil), danach … |
@@ -103,9 +103,33 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## Im Quellstand, noch in keinem Paket
 
-**Zweig `e166-junk_message_fix`, Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
+**Auf `main` seit PR #182 (Zweig `e166-junk_message_fix`), weiter auf `release-7.2.1-vorbereiten`; Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)). Kommt mit dem Release 7.2.1.**
+
+**Im Programm**
 
 * **Konto-Eigenschaften verlieren keine Einstellungen mehr** ([E-166](Intern/BEFUNDE.md#e-166)). Wer die Kontoeinstellungen (*Tools → Personalities*, Rechtsklick → *Properties*) mit OK schloss, verlor jede Einstellung, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — bei Gregor die Antwort auf die Junk-Frage, die deshalb beim nächsten Start wiederkam. `CPersonality::Modify` (`persona.cpp`) schreibt diese Einstellungen jetzt, bevor es die Kontodaten speichert. Am Prüfstand vorher rot, nachher grün; Regressionsfall E-166a/b. **Kommt mit dem Release 7.2.1**; Gregor prüft es an der Release-Fassung ([TESTPLAN](Intern/TESTPLAN.md#e-166-am-release)).
+
+**Neu bekannt, behandelt nach dem Release** (in der README unter „Bekannte Fehler“, Entscheidung 16 in [WEITERMACHEN](Intern/WEITERMACHEN.md))
+
+* [E-169](Intern/BEFUNDE.md#e-169) — die Druckvorschau mancher HTML-Mails zeigt keine Bilder und keine farbigen Flächen.
+* [E-170](Intern/BEFUNDE.md#e-170) — ein Label geht verloren, wenn die Mail zwischen Ordnern desselben IMAP-Kontos verschoben wird.
+* [E-171](Intern/BEFUNDE.md#e-171) — *Search Mailfolder* (auch *Mailbox*, *Eudora*) im Rechtsklickmenü ohne markierten Text meldet „internal error“.
+* [E-172](Intern/BEFUNDE.md#e-172) — eine Mail erscheint im Lesefenster als rohes Base64; Ursache offen.
+* [E-168](Intern/BEFUNDE.md#e-168) — ein Absturz im Konto-Assistenten am Prüfstand am 28.10.2026 kam vom eigenen Messskript; für Anwender nicht erreichbar (gemessen), keine Änderung.
+
+**Dokumentation**
+
+* **Neu: [Doku/FAQ.md](Doku/FAQ.md)** — Post je Konto trennen (Filter auf «Personality»), Mails farbig markieren (Labels, auch automatisch per Filter *Make Label*), Anhänge beim Leeren des Papierkorbs löschen. Labels, *Make Label* und das Löschen der Anhänge hat Gregor am 29.10.2026 am Programm bestätigt. Aus der README verlinkt; Antwort auf Issue #181.
+* Junk-Filter und S/MIME laden doch, wenn `MFC71.DLL` und `MSVCP71.dll` schon auf dem Rechner liegen — beschrieben an einer Stelle ([FILTER.md](Intern/FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)), README, ANWENDER, PORTIERUNG, EINSTELLUNGEN und STARTUMGEBUNG verweisen dorthin.
+* Defender-Fehlalarm ([E-124](Intern/BEFUNDE.md#e-124)): am 28.10.2026 viermal die `EudoraRes.dll` aus Paket 1.0.127, auch im ZIP; der Fall vom 27.10. (`Eudora.exe` bei Gregor) nachgetragen; [DEFENDER-FEHLALARM](Releases/DEFENDER-FEHLALARM.md) und [PAKETE](Releases/PAKETE.md) ergänzt.
+* Die veröffentlichten Release-Texte `v1.0.113`, `v1.0.117` und `v1.0.120` auf GitHub zeigten mit sieben Links ins Leere (`BEFUNDE.md` liegt seit dem 22.10. unter `Intern/`) — am 29.10.2026 berichtigt.
+* Dokumentenprüfungen [LEKTOR-90](Befunde/LEKTOR-90.md) bis [LEKTOR-93](Befunde/LEKTOR-93.md) eingearbeitet (Stand-Köpfe, Menüpfade, Messangaben, Stufen).
+
+**Werkzeuge**
+
+* `tools/pruefe-startwege.pl` zählt auch `Audit.log`; Grenze: nur Starts nach der letzten Kopie der `Eudora.exe` (in [WERKZEUGE](tools/WERKZEUGE.md) beschrieben).
+* `tools/pruefstand-lauf.ps1` kennzeichnet einen Teillauf im Ergebnis mit `nur=`.
+* Neues Messskript `tools/messen-assistent-wiedereintritt.ps1` (zu [E-168](Intern/BEFUNDE.md#e-168)).
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
 

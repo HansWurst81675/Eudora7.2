@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| CHRONIST | 2026-10-29 08:47 | Lehren aus 28.10. 15:28 bis 29.10. (Sitzungen 72be6093 Rest, 2dc0ce9e) |
