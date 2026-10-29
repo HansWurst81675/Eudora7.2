@@ -461,7 +461,7 @@ void RunE89Tests(void)
 	//
 	// Paige laedt es und kennt seine echte Groesse. Jede Vorgabe von uns
 	// ueberschreibt sie und schneidet das Bild ab - auf Gregors Bild zu
-	// 1.0.60 stand vom Schriftzug der Werbemail-A nur ein Fragment.
+	// 1.0.60 stand vom Schriftzug der Mail-A nur ein Fragment.
 	//
 	TT_BeginTest("E-95: eingebettetes Bild ohne Groesse bleibt unangetastet");
 	{

@@ -190,6 +190,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `datenschutz-bereinigen` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, branch name ist ok“*). Daten aus Gregors Postfach (Betreffzeilen, Kontoname, Ordnername, Absenderadresse, Name einer Sicherung) aus dem aktuellen Stand entfernen; den älteren Bestand erst nach Gregors Entscheidung |
 | `datenschutz-bereinigen-die_zweite` | 29.10.2026 | **Name von Gregor vorgegeben** (*„datenschutz-bereinigen-die_zweite“*), auf seine Frage *„warum kann man das nicht alles zusammen machen?“*: alles aus Gregors Postfach (Betreffzeilen, Absender, Mailadressen, Konto- und Ordnernamen, Kopfzeilen, Anhangnamen) im aktuellen Stand durch neutrale Beschreibungen ersetzen, in einem PR |
 | `faq-erweitern` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, zweig faq-erweitern ist ok“*). `Doku/FAQ.md` um 14 Fragen erweitern (13 aus der Durchsicht der MDs, dazu `LogLevel`), durchnummerieren, Verweisliste auf README/ANWENDER; Fehler in `ABRUF-PRUEFEN.md` (Last SSL Info, `rootcerts.p7b`) und ein toter Verweis in ANWENDER |
+| `release-7.2.1` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, zweig release-7.2.1 ist ok“*). Entscheidungen vom 29.10. in WEITERMACHEN, Restfunde aus [LEKTOR-94](../Befunde/LEKTOR-94.md#lektor-94), Abweichungstabelle in EINSTELLUNGEN zurück (Gregor: *„ja, tabelle zurück“*), verwaiste Abschnittsverweise; danach Versionsnummer 7.2.1.N, Paket, Prüfbericht |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 

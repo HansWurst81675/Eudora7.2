@@ -321,9 +321,8 @@ besteht. Gesunder Text wird nicht angefasst.
 Diese Portierung weicht an einigen Stellen **bewusst** vom Original ab — und
 jede Abweichung lässt sich zurückdrehen.
 
-**Die vollständige Liste steht in [EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md)**, mit
-Schlüssel, Abschnitt, Vorgabe hier, Vorgabe im Original und Fundstelle im
-Quelltext. Dort und nur dort — bis zum 14.09.2026 standen dieselben Schlüssel
+**Die vollständige Liste steht in [EINSTELLUNGEN.md, *Was hier anders eingestellt ist als im Original*](../Intern/EINSTELLUNGEN.md#abweichungen)**, mit
+Schlüssel, Abschnitt, Vorgabe hier, Vorgabe im Original, Herkunft und Begründung. Dort und nur dort — bis zum 14.09.2026 standen dieselben Schlüssel
 in **zwei** Tabellen, hier und dort, und zwölf davon in beiden. Zwei Listen
 mit denselben Werten laufen zwangsläufig auseinander; Gregor hat es bemerkt
 und entschieden: *„nur in einstellungen, nicht in readme"*.

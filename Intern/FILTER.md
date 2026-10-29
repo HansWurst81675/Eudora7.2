@@ -22,9 +22,9 @@ Zeilennummer. Wo etwas nicht belegbar war, steht das ausdrücklich dabei.
 Die Zeilennummern beziehen sich auf den Stand dieses Zweigs; die Dateien
 liegen unter `Eudora71/Eudora/`.
 
-Verwandte Dokumente: [README.md](../README.md) — dort der Abschnitt
-*Einstellungen, die es nur hier gibt* mit den Abweichungen dieser
-Portierung; [BEFUNDE.md](BEFUNDE.md) — die vollständigen Befunde;
+Verwandte Dokumente: [EINSTELLUNGEN.md](EINSTELLUNGEN.md#abweichungen) — dort die
+Tabelle *Was hier anders eingestellt ist als im Original* mit den Abweichungen
+dieser Portierung; [BEFUNDE.md](BEFUNDE.md) — die vollständigen Befunde;
 [CHANGELOG.md](../CHANGELOG.md) — was wann behoben wurde.
 
 ---
@@ -148,7 +148,7 @@ Im Menü steht `Ctrl+J` (`EudoraRes.rc:5768`) — aber die Taste ist
 umschaltbar. `CMainFrame::OnCtrlJ` fragt den Wert `CtrlJMapping`
 (`mainfrm.cpp:3942-3948`):
 
-| `CtrlJMapping` | Strg+J | `[Settings]` | Strg+Umschalt+J | Strg+Umschalt+L |
+| `CtrlJMapping` (in `[Settings]`) | Strg+J | Strg+Umschalt+J | Strg+Umschalt+L |
 |---|---|---|---|
 | `1` (*Junk*) | *Junk* | *Not Junk* | *Filter Messages* |
 | `2` (*Filter*) | *Filter Messages* | — | — |
@@ -576,7 +576,7 @@ in `Eudora71/Eudora/EudoraRes.rc` im Format
 > schlägt beides — wer dort etwas stehen hat, ändert es dort.
 
 Wo diese Portierung abweicht, steht das dabei — die Begründungen stehen in
-[README.md](../README.md), Abschnitt *Einstellungen, die es nur hier gibt*.
+[EINSTELLUNGEN.md](EINSTELLUNGEN.md#abweichungen), Abschnitt *Was hier anders eingestellt ist als im Original*.
 
 ### Filter
 
@@ -676,7 +676,7 @@ arbeitet rein lokal und fragt nichts.
 **Nicht zu verwechseln** mit der Kennwortfrage **beim Start**: die kommt
 nicht vom Filtern, sondern davon, dass Eudora ein beim Beenden offenes
 IMAP-Postfachfenster wieder herstellt. Dagegen hilft, das Fenster vorher zu
-schließen — [README.md](../README.md), Abschnitt *Beim Start wird nach dem
+schließen — [ANWENDER.md](../Doku/ANWENDER.md), Abschnitt *Beim Start wird nach dem
 IMAP-Kennwort gefragt*.
 
 **Ein leeres Suchfeld trifft alles.** *„enthält nichts"* ist für jede

@@ -17,7 +17,7 @@ das Mailverzeichnis in diesem Paket ist leer. Eudora dabei geschlossen halten.
 Bekannt und NICHT behoben (bitte nicht als neuen Fehler melden):
 
 | E-118 | HTML-Mail in einen IMAP-Ordner verschoben -> dort als HTML-Quelltext. Bis zur Behebung keine HTML-Mails in IMAP-Ordner verschieben. |
-| E-119 | Bilder, die als "data:" im HTML stecken -> grauer Kasten (z.B. Logo der Werbemail-B, Einladungs-Mail).                            |
+| E-119 | Bilder, die als "data:" im HTML stecken -> grauer Kasten (z.B. Logo der Mail-B, Einladungs-Mail).                            |
 | E-105 | doppelte Bilder bei Newslettern mit Desktop- und Handy-Fassung (display:none).                                                   |
 | E-113 | Bilder breiter als das Fenster laufen rechts hinaus.                                                                             |
 | E-116 | width="35px" (mit Einheit) wird falsch gelesen, Bild kann riesig breit werden.                                                   |

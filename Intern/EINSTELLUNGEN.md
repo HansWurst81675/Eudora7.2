@@ -29,7 +29,8 @@ immer auseinander.
 
 | Wozu | wohin |
 |---|---|
-| Abschnittsregel, Suchreihenfolge, `LogLevel`, die Abweichungen dieser Portierung | [README.md](../README.md), Abschnitte *Einstellungen, die es nur hier gibt* bis *Mehr ins Protokoll schreiben lassen* |
+| die Abweichungen dieser Portierung vom Original | hier, [Abschnitt 3, *Was hier anders eingestellt ist als im Original*](#abweichungen) |
+| Suchreihenfolge des Mailverzeichnisses, `LogLevel` | [ANWENDER.md](../Doku/ANWENDER.md), Abschnitte *Einstellungen, die es nur hier gibt* bis *Mehr ins Protokoll schreiben lassen* |
 | alle Schlüssel zu Filtern und Junk, mit Vorgabe und Fundstelle | [FILTER.md](FILTER.md), Abschnitt *Die Einstellungen in der `Eudora.ini`* |
 | Konto einrichten, TLS, Ports, Fehlermeldungen beim Abruf | [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md) |
 | was neben der `Eudora.exe` liegen muss | [STARTUMGEBUNG.md](STARTUMGEBUNG.md) |
@@ -47,7 +48,7 @@ bis 10800 `[Settings]`, 10801–10900 `[Debug]`, 10901–11100
 `[Window Position]`, ab 11101 wieder `[Settings]`. **Ein Eintrag im falschen
 Abschnitt wirkt nicht — ohne jede Meldung.** Das ausgearbeitete Beispiel —
 der Protokollschalter mit der Nummer 10802 — steht in
-[README.md](../README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+[ANWENDER.md](../Doku/ANWENDER.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
 Der früher hier genannte Abschnitt *Wo ein Schlüssel stehen muss* ist am
 14.09.2026 aus `README.md` entfernt worden (`beecdb55`); die Bereiche stehen
 seither nur hier. Wohin ein einzelner Schlüssel gehört, sagt:
@@ -121,7 +122,7 @@ Konten, Persönlichkeiten und offenen Fenster durch diese Vorlage.
 
 > **Die sichere Richtung ist die andere:** Paket in ein **neues, leeres**
 > Verzeichnis auspacken und das alte `Mailverzeichnis` dorthin kopieren — so
-> steht es auch in [README.md](../README.md) unter *Herunterladen und starten*.
+> steht es auch in [ANWENDER.md](../Doku/ANWENDER.md) unter *Herunterladen und starten*.
 
 **2.4 Erst ab Paket 1.0.46 bringt das ZIP eine eigene Wurzelebene mit.**
 Gemessen an den abgelegten Paketen: **1.0.40** und **1.0.44** legen
@@ -140,8 +141,8 @@ unzip -l <paket>.zip | awk '{print $4}' | cut -d/ -f1 | sort -u | head
 neben der `Eudora.exe` und wird in `GetDefaultIniSetting` (`rs.cpp:357-385`)
 gelesen — an einem bestehenden Konto ändert sie nichts mehr, weil dessen Wert
 schon in der `Eudora.ini` steht. Was diese Portierung dort vorgibt und warum,
-steht kommentiert in `tools/DEudora.ini` und in [README.md](../README.md) unter
-*Vorgaben für neu angelegte Konten*.
+steht kommentiert in `tools/DEudora.ini` und in der Tabelle
+[*Was hier anders eingestellt ist als im Original*](#abweichungen) weiter unten.
 
 ---
 
@@ -153,7 +154,7 @@ ist der eingebaute Wert aus `Eudora71/Eudora/EudoraRes.rc`.
 | Schlüssel | Abschnitt | Vorgabe | Fundstelle | wozu |
 |---|---|---|---|---|
 | `LogFileName` | `[Debug]` | `eudora.log` | `EudoraRes.rc:8440` | Name der Protokolldatei im Mailverzeichnis |
-| `LogLevel` | `[Debug]` | `25759` | `EudoraRes.rc:8441` | **keine Stufe, sondern eine Summe von Schaltern.** Die einzelnen Bits und der Wert `58527` für die Spurmarken stehen in [README.md](../README.md), Abschnitt *Mehr ins Protokoll schreiben lassen* |
+| `LogLevel` | `[Debug]` | `25759` | `EudoraRes.rc:8441` | **keine Stufe, sondern eine Summe von Schaltern.** Die einzelnen Bits und der Wert `58527` für die Spurmarken stehen in [ANWENDER.md](../Doku/ANWENDER.md), Abschnitt *Mehr ins Protokoll schreiben lassen* |
 | `LogFileSize` | `[Debug]` | `10000` | `EudoraRes.rc:8442` | ab welcher Größe das Protokoll umgebrochen wird |
 | `ShowAllHeaders` | `[Settings]` | `0` | `EudoraRes.rc:8667` | Anfangszustand des Knopfes *Blah Blah Blah* beim Öffnen einer Nachricht (`ReadMessageFrame.cpp:497-498`) |
 | `MaxConcurrentTasks` | `[Settings]` | `10` | `EudoraRes.rc:8634` | wie viele Aufgaben gleichzeitig laufen dürfen (`QCTaskManager.cpp:93`). Sind so viele aktiv, wartet die nächste in der Warteschlange (`:376`); `0` heißt *ohne Grenze* |
@@ -171,8 +172,45 @@ Schon vollständig anderswo, deshalb hier nur der Zeiger:
   `DeleteFetchedJunk` und `MinScoreToJunk`: [FILTER.md](FILTER.md).
 * **`SSLSendUse` / `SSLReceiveUse`**, die Bedeutung der Werte 0–3 und die
   zugehörigen Ports: [ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md).
-* **Die Abweichungen dieser Portierung vom Original** — eine Tabelle mit
-  *hier* und *Original* nebeneinander: [README.md](../README.md).
+* **Die Abweichungen dieser Portierung vom Original** — die Tabelle direkt
+  hierunter.
+
+### <a id="abweichungen"></a>Was hier anders eingestellt ist als im Original — und warum
+
+Die **eingebauten** Vorgaben in `EudoraRes.rc` sind dieselben wie im
+Original 7.1 (verglichen am 29.10.2026 mit dem ersten Commit des Repos,
+`567a5d87`). Abweichungen entstehen an zwei Stellen:
+
+* **`DEudora.ini` im Paket** (Vorlage `tools/DEudora.ini`): gilt für jedes
+  **neu angelegte** Mailverzeichnis. Ein schon bestehendes behält seine
+  Werte — wer umsteigt, sieht diese Vorgaben nur, wo seine `Eudora.ini`
+  nichts einträgt.
+* **Neue Schlüssel und geändertes Verhalten im Programm selbst.**
+
+Jede Zeile lässt sich zurückdrehen: den Wert in die eigene `Eudora.ini`
+schreiben (Abschnitt beachten, siehe Abschnitt 1).
+
+| Schlüssel | Abschnitt | hier | Original 7.1 | woher | warum |
+|---|---|---|---|---|---|
+| `LeaveMailOnServer` | `[Settings]` | **1** | 0 | `DEudora.ini` | Abgeholte Post bleibt auf dem Server. Mit 0 löscht Eudora jede Nachricht auf dem Server, sobald sie abgeholt ist — Gregor verlangte, dass neue Konten das nicht tun ([A-1](BEFUNDE.md#a-1)) |
+| `DeleteFetchedJunk` | `[Settings]` | **0** | 1 | `DEudora.ini` | Als Junk Eingestuftes wurde auf dem **Server** gelöscht; Gregors Postfach war danach leer ([E-74](BEFUNDE.md#e-74), Gregor am 10.09.2026: *„DeleteFetchedJunk=0“*) |
+| `SSLReceiveUse` | `[Settings]` | **2** | 1 | `DEudora.ini` | TLS ab der ersten Sekunde auf eigenem Port (POP3 995). Mit 1 fällt Eudora auf Klartext zurück, wenn der Server kein STARTTLS anbietet; heutige Server verlangen TLS. Gemessen am 06.09.2026 ([ABRUF-PRUEFEN.md](ABRUF-PRUEFEN.md)) |
+| `SSLSendUse` | `[Settings]` | **2** | 1 | `DEudora.ini` | dasselbe für den Versand (SMTP 465) |
+| `UseMyFilterWindowPosition` | `[Window Position]` | **1** | 0 | `DEudora.ini` | Mit 0 zog Eudora die linke Spalte des Filterfensters nach jedem Neustart wieder breiter; Gregor am 11.09.2026: *„die breite der linken spalte beim filter wird nicht über den neustart gespeichert“* |
+| `LogLevel` | `[Debug]` | **58527** | 25759 | `DEudora.ini` | = 25759 plus 32768: schaltet die **Spurmarken dieser Portierung** ein, damit ein Protokoll die Messpunkte enthält ([ANWENDER.md](../Doku/ANWENDER.md#mehr-ins-protokoll-schreiben-lassen)). Der Schalter 32 (Kennwort im Klartext) bleibt aus |
+| `CtrlJMapping` | `[Settings]` | eingebaut 0; beim ersten Start **ohne** Filter **2** (*Filter Messages*) | in derselben Lage 1 (*Junk*) | Programm (`mainfrm.cpp:7937-7949`) | Strg+J soll filtern, nicht Post nach *Junk* verschieben ([E-75](BEFUNDE.md#e-75), [FILTER.md](FILTER.md#das-tastenkürzel-ist-nicht-fest)) |
+| `FilterMayDeleteFromServer` | `[Settings]` | **0** | *gibt es nicht* | Programm (`filtersd.cpp:1133`) | Eine Filteraktion durfte Post auf dem Server löschen; jetzt erst mit 1 ([E-73](BEFUNDE.md#e-73)) |
+| `KeepHTMLInResponses` | `[Settings]` | **1** | *gibt es nicht* | `EudoraRes.rc:7667` | Antworten und Weiterleiten behalten die HTML-Auszeichnung der Ursprungsnachricht ([E-87](BEFUNDE.md#e-87)) |
+| `ForwardOriginalHTML` | `[Settings]` | **1** | *gibt es nicht* | `EudoraRes.rc:7668` | beim Antworten und Weiterleiten wird das Original-HTML übernommen ([E-88](BEFUNDE.md#e-88)) |
+| `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | gespeichert | *gibt es nicht* | Programm (`OTShim_Werkzeugleiste.cpp:4449`) | die Größe eines losgerissenen Fensters überlebt den Neustart ([E-84](BEFUNDE.md#e-84)) |
+| `TabooHeaders` | `[Settings]` | **44** Einträge | 28 Einträge | `EudoraRes.rc` | *Blah Blah Blah* versteckt auch heutige Kopfzeilen (`X-`, `DKIM-`, `ARC-`, `Authentication-Results`, `List-`, `Autocrypt` u. a., 16 neue) — sonst stünden sie bei jeder Mail sichtbar über dem Text ([E-80](BEFUNDE.md#e-80)) |
+| `MessageStyleSheet` | `[Settings]` | plus eine Regel für die Kopfzeilen (`SPAN.EUDORAHEADER`) | ohne diese Regel | `EudoraRes.rc:8152` | Bei Mails mit dunklem Hintergrund standen die Kopfzeilen schwarz auf schwarz ([E-81](BEFUNDE.md#e-81)) |
+
+*Nachgesehen am 29.10.2026:* Werte „hier“ in `tools/DEudora.ini` und
+`Eudora71/Eudora/EudoraRes.rc`, Werte „Original“ im ersten Commit
+`567a5d87`. Diese Tabelle stand bis zum 14.09.2026 in der README und ging
+beim Umzug verloren (Gregor: *„nur in einstellungen, nicht in readme“*);
+seit dem 29.10.2026 steht sie hier und **nur** hier.
 
 ---
 
@@ -202,7 +240,7 @@ verwandelt sich in *„matches regexp N"* (Befund [**E-67**](BEFUNDE.md#e-67), o
 IMAP-Postfachfenster offen stand — auch dann, wenn *Check mail* abgewählt ist.
 Eudora stellt die Fenster aus dem Abschnitt `[Open Windows]` wieder her, und
 ein IMAP-Postfach zu öffnen heißt, sich anzumelden. Was hilft und warum
-*Check mail* nichts daran ändert: [README.md](../README.md), Abschnitt *Beim
+*Check mail* nichts daran ändert: [ANWENDER.md](../Doku/ANWENDER.md), Abschnitt *Beim
 Start wird nach dem IMAP-Kennwort gefragt*.
 
 **4.4 Auch ein Filterlauf auf einem IMAP-Postfach fragt nach dem Kennwort**,
@@ -268,30 +306,15 @@ auf und setzt ihn an dieser Stelle wieder ein (Befund [**E-88**](BEFUNDE.md#e-88
   Auszeichnung. Fett Geschriebenes im Kommentar über einem
   weitergeleiteten Newsletter kommt also unformatiert an.
 
-**Was sich mit 7.2.0.57 im Verfassenfenster ändert: die Bilder liegen
-nicht mehr übereinander (Befund [E-89](BEFUNDE.md#e-89)).** Gemeldet hat es Gregor an
-1.0.56 — *„1 und da ist alles durcheinander, man kann ja nichts lesen."*
-Auf seinem Bildschirmfoto lag das Logo über der Überschrift. Der Grund:
-Paiges HTML-Leser holt die Bildgröße **nur** aus den Attributen `width`
-und `height` (`PGHTMIMP.CPP:2019-2022`). Steht sie im CSS
-(`style="width:16px"`), bleibt sie unbekannt, und `PgEmbeddedImage.cpp`
-trägt sie erst beim Laden nach — da war der Absatz längst umbrochen.
-Seit 7.2.0.57 bekommt deshalb **jedes `<img>` in der Fassung, die in den
-Editor geht**, eine auswertbare Größe: aus `style="width:16px"` wird
-`width="16"`, aus `style="width:100%"` wird `width="100%"`, und wo gar
-nichts steht, greift ein festes, bescheidenes Maß. Zusätzlich wird kein
-Bild breiter oder höher als **600 Bildpunkte** dargestellt; das jeweils
-andere Maß geht im selben Verhältnis mit, damit nichts verzerrt.
-
-**Das gilt ausdrücklich nur für die Anzeige.** Die aufgehobene
-Originalfassung, die beim Senden hinausgeht, wird nicht angefasst — die
-Trennung sitzt an einer einzigen Stelle (`summary.cpp`, `EditorBody`
-gegen `Body`) und hängt an derselben Bedingung wie das Aufheben selbst.
-Steht `ForwardOriginalHTML` auf `0`, geht die Editor-Fassung selbst
-hinaus; dann unterbleibt auch die Umschrift, damit der Empfänger nichts
-zu sehen bekommt, was Eudora sich ausgedacht hat. **Einen eigenen
-Schalter gibt es dafür nicht.** Das Verfassenfenster gleicht dem
-Original weiterhin nicht — der Maßstab ist Lesbarkeit, nicht Aussehen.
+**Bilder im Verfassenfenster** ([E-89](BEFUNDE.md#e-89)) — das ist **keine
+Einstellung**, sondern eine Programmänderung; was sich wann geändert hat,
+steht im [CHANGELOG](../CHANGELOG.md) (7.2.0.57 war ein Versuch, der nicht
+wirkte; behoben in 7.2.0.58). Hier ist nur eines wichtig: die Bildgrößen
+werden nur in der Fassung angepasst, die im Editor angezeigt wird; die
+Originalfassung geht unverändert hinaus. **Steht `ForwardOriginalHTML` auf
+`0`, geht die Editor-Fassung selbst hinaus** — dann unterbleibt die
+Anpassung, damit der Empfänger nichts bekommt, was Eudora sich ausgedacht
+hat.
 
 Einen Befehl `Weiterleiten als Anhang` gibt es in Eudora nicht — gesucht
 wurde danach in `resource.h` und `EudoraRes.rc`, gefunden nur

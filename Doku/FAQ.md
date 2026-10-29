@@ -19,6 +19,7 @@ niemand angeklickt). Auf eine Frage verweist man mit ihrer Nummer, etwa
 | Markieren und Filtern | [9](#9-wie-markiere-ich-wichtige-mails-farbig), [10](#10-wie-baue-ich-schnell-einen-filter-aus-einer-mail), [11](#11-wie-speichere-ich-einen-filter), [12](#12-filter-messages-strgj-tut-nichts), [13](#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte) |
 | Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus) |
 | Fehlersuche | [17](#17-wie-schreibt-eudora-mehr-ins-protokoll-loglevel), [18](#18-steht-schon-woanders) |
+| Einstellungen | [19](#19-welche-einstellungen-sind-anders-als-im-original-eudora--und-warum) |
 
 ---
 
@@ -347,3 +348,22 @@ den Kennwort-Hinweis zum Schalter `32` nennt auch
 | Alte Mails zeigen `Ã¼` statt `ü` | [ANWENDER.md](ANWENDER.md) |
 | Wie melde ich einen Fehler, was gehört hinein? | [ANWENDER.md](ANWENDER.md#einen-fehler-melden) |
 | Was ist bekannt kaputt, und was hilft? | [README](../README.md#bekannte-fehler), Tabelle *Bekannte Fehler* |
+
+## 19. Welche Einstellungen sind anders als im Original Eudora — und warum?
+
+Ein paar Vorgaben weichen bewusst vom Original 7.1 ab, vor allem für
+**neu angelegte** Mailverzeichnisse: abgeholte Post bleibt auf dem Server,
+als Junk Eingestuftes wird nicht auf dem Server gelöscht, Abruf und Versand
+laufen verschlüsselt (Port 995 und 465), und Strg+J filtert, statt Post nach
+*Junk* zu schieben. Dazu kommen ein paar Schalter, die es im Original nicht
+gibt (etwa: kein Filter darf ohne ausdrückliche Erlaubnis Post auf dem Server
+löschen).
+
+Die vollständige Tabelle — Schlüssel, Wert hier, Wert im Original, woher die
+Abweichung kommt und **warum** — steht an einer Stelle:
+[EINSTELLUNGEN.md, *Was hier anders eingestellt ist als im Original*](../Intern/EINSTELLUNGEN.md#abweichungen).
+Jede Zeile lässt sich zurückdrehen, indem man den Original-Wert in die eigene
+`Eudora.ini` schreibt.
+
+*Belegt:* Werte am 29.10.2026 in `tools/DEudora.ini` und `EudoraRes.rc` gegen
+das Original (erster Commit des Repos) nachgesehen.

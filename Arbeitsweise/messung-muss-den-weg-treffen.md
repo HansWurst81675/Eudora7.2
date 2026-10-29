@@ -256,7 +256,7 @@ geprüft.
 **Gefunden hat es das laufende Programm.** Prüfnachricht 06 lief um 13:41 an
 7.2.0.83, also **vor** der Behebung. Ergebnis: In `In.mbx` stand der Betreff
 mit Faltungen mitten im Wort, und die Postfachliste zeigte nur *„Pruefung
-E-94: Ware bestel“*. Die Liste liest nur die erste Zeile einer gefalteten
+E-94: Waren bestel“*. Die Liste liest nur die erste Zeile einer gefalteten
 Kopfzeile (`summary.cpp`). Die Commit-Nachricht des Kerns sagt bereits:
 *„dort greift dieser Kern allein NICHT“*. `f1793e1` (13:55) hält dann fest:
 *„LexFill holt die Kopfzeile zeilenweise, Fix2047 sieht also nie beide Wörter

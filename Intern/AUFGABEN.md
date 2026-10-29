@@ -45,7 +45,7 @@ einschließen* fehlte der `Content-Type` ganz), am laufenden Programm geprüft,
 HTML-Datei sagt im `<meta>` UTF-8 und enthält Windows-1252), [**E-103**](BEFUNDE.md#e-103) (Bilder ohne
 Größenangabe lagen über dem Text. **Das Fehlerbild** hat Gregor am 17.09.2026
 an 1.0.64 belegt — auf seinem Bild liegt das *kleinanzeigen*-Logo über dem
-Text. **Gemessen und behoben** wurde an seiner Werbemail-A: der Import
+Text. **Gemessen und behoben** wurde an seiner Mail-A: der Import
 reserviert jetzt eine Mindestzeilenhöhe, die echte Höhe aus der geladenen Datei
 gewinnt danach. **Von Gregor am laufenden Programm noch nicht bestätigt**,
 7.2.0.67) und [**E-104**](BEFUNDE.md#e-104) (die Kopfzeilen der
@@ -791,14 +791,14 @@ mit [**E-105**](BEFUNDE.md#e-105) (versteckter Vorschautext, weil Paige `display
 
 ### <a id="b7"></a>B7 · Betreff mitten im Wort umbrochen (**E-94**) — **behoben in 7.2.0.84, über POP und IMAP am laufenden Programm gemessen, von Gregor bestätigt**
 
-Gregors Fall: *„Ware bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*.
+Gregors Fall: *„Waren bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*.
 Auf seine Anordnung *„zu diesem fall brauchen wir einen weiteren test"* und
 **„Jetzt, vor [E-112](BEFUNDE.md#e-112)"** gilt: erst die Tests rot, dann die Behebung.
 
 | Schritt | Stand |
 |---|---|
 | Tests `Fix2047` und `ImapFix2047` mit gefalteten kodierten Wörtern (`Eudora71/Tests/TestPopEmpfang.cpp`, `UnderTestImap2047.cpp`) | **rot** an 7.2.0.83 (`bestel` 0D 0A 20 `len`), **grün** nach der Behebung — 188/188 |
-| Prüfnachricht **06** im POP-Prüfstand (`tools/anhang-pruefdaten.pl --pop`) | an 7.2.0.83 gemessen: Faltungen in `In.mbx`, Postfachliste nur `Pruefung E-94: Ware bestel` |
+| Prüfnachricht **06** im POP-Prüfstand (`tools/anhang-pruefdaten.pl --pop`) | an 7.2.0.83 gemessen: Faltungen in `In.mbx`, Postfachliste nur `Pruefung E-94: Waren bestel` |
 | Behebung `Fix2047`/`ImapFix2047` und beide Zerleger (`LexFill`, Faltungsregel) | im Quelltext, 7.2.0.84 |
 | Bau, Prüfnachrichten 00–06 am laufenden Programm, PRÜFER | **erledigt**: 06 heil, 00–05 unverändert, PRUEFER-21 „kann ausgeliefert werden" |
 | Gregors Test an 1.0.84 über IMAP | **bestätigt** am 12.10.2026, Bildschirmfoto: Werbe-Betreff und „Rabatt aktivieren“ in einem Stück |

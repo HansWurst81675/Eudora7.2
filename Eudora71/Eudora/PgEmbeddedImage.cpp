@@ -685,7 +685,7 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 				//
 				// Ein Bild ohne height-Attribut bekommt beim Import die
 				// Textzeilenhoehe 13 - gemessen an einer eigenen Testnachricht
-				// und in Gregors Protokoll der Werbemail-A:
+				// und in Gregors Protokoll der Mail-A:
 				//
 				//   E-95 Bild: attr=0x0    embed=0x0 ascent=13
 				//   E-95 Bild: attr=175x0  embed=0x0 ascent=13
@@ -722,7 +722,7 @@ bool PgLoadUrlImage( paige_rec_ptr pg, pg_url_image_ptr pUrlImage, pg_embed_ptr 
 				// BEFUND E-103, Messung vom 17.09.2026.
 				//
 				// Bis hierher ist alles gut: Eudora hat das Bild geladen und
-				// kennt seine echte Groesse. Gemessen an Gregors Werbemail-A-
+				// kennt seine echte Groesse. Gemessen an Gregors Mail-A-
 				// Nachricht steht hier "quelle=202x60 embed=202x60".
 				//
 				// Beim IMPORT wusste niemand davon - PGHTMIMP.CPP:2186 meldet

@@ -26,7 +26,7 @@
 
 //
 // Eine selbst verfasste Nachricht, so wie sie in Out.mbx liegt. Nachgebaut
-// nach Gregors Datei "Fw Werbemail-A.eml" (5716 Byte):
+// nach Gregors Datei "Fw Mail-A.eml" (5716 Byte):
 // vier Kopfzeilen, Leerzeile, <x-html>, HTML. Das \xFC ist das Byte, das
 // dort im Wort "gueltig" steht - gemessen, nicht angenommen.
 //

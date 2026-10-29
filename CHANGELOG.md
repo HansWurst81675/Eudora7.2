@@ -103,7 +103,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## Im Quellstand, noch in keinem Paket
 
-**Auf `main` seit PR #182 (Zweig `e166-junk_message_fix`), weiter auf `release-7.2.1-vorbereiten`; Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)). Kommt mit dem Release 7.2.1.**
+**Auf `main` seit PR #182 (Zweig `e166-junk_message_fix`), weiter über `release-7.2.1-vorbereiten`, `datenschutz-bereinigen`, `datenschutz-bereinigen-die_zweite` und `faq-erweitern` (PR #183 bis #186), jetzt `release-7.2.1`; Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)). Kommt mit dem Release 7.2.1.**
 
 **Im Programm**
 
@@ -119,7 +119,8 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 **Dokumentation**
 
-* **Neu: [Doku/FAQ.md](Doku/FAQ.md)** — Post je Konto trennen (Filter auf «Personality»), Mails farbig markieren (Labels, auch automatisch per Filter *Make Label*), Anhänge beim Leeren des Papierkorbs löschen. Labels, *Make Label* und das Löschen der Anhänge hat Gregor am 29.10.2026 am Programm bestätigt. Aus der README verlinkt; Antwort auf Issue #181. **Erweitert auf 18 nummerierte Fragen**: neue Fassung übernehmen, Verschlüsselung und Port, *Last SSL Info*, Zertifikatsmeldungen, verschwundene IMAP-Mails, zweites Konto, Kurznamen, Filter aus einer Mail, Filter speichern, Strg+J, Junk-Warnung, Weiterleiten als Anhang, Kopfzeilen, `LogLevel`, dazu eine Verweisliste auf README und ANWENDER. Jede Antwort sagt, ob sie am Programm geprüft oder nur am Quelltext nachgesehen ist.
+* **Neu: [Doku/FAQ.md](Doku/FAQ.md)** — Post je Konto trennen (Filter auf «Personality»), Mails farbig markieren (Labels, auch automatisch per Filter *Make Label*), Anhänge beim Leeren des Papierkorbs löschen. Labels, *Make Label* und das Löschen der Anhänge hat Gregor am 29.10.2026 am Programm bestätigt. Aus der README verlinkt; Antwort auf Issue #181. **Erweitert auf 19 nummerierte Fragen** (Frage 19: welche Einstellungen anders sind als im Original, und warum): neue Fassung übernehmen, Verschlüsselung und Port, *Last SSL Info*, Zertifikatsmeldungen, verschwundene IMAP-Mails, zweites Konto, Kurznamen, Filter aus einer Mail, Filter speichern, Strg+J, Junk-Warnung, Weiterleiten als Anhang, Kopfzeilen, `LogLevel`, dazu eine Verweisliste auf README und ANWENDER. Jede Antwort sagt, ob sie am Programm geprüft oder nur am Quelltext nachgesehen ist.
+* **Die Tabelle der abweichenden Einstellungen ist zurück** — in [EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen), mit Wert hier, Wert im Original 7.1, Herkunft und Begründung. Sie stand bis zum 14.09.2026 in der README, ging beim Umzug verloren, und die Verweise darauf liefen im Kreis. Dazu 18 Textverweise auf Abschnitte, die am 22.10.2026 von der README nach `Doku/ANWENDER.md` gewandert waren, umgehängt (EINSTELLUNGEN, FILTER, CHANGELOG, `tools/DEudora.ini`); die Spaltenzahl der Strg+J-Tabelle in FILTER berichtigt.
 * **`ABRUF-PRUEFEN.md` berichtigt:** *Last SSL Info* ist ein Knopf unter *Tools → Options… → Checking Mail*, kein Menüpunkt; und `rootcerts.p7b` gehört **nicht** zusätzlich ins Mailverzeichnis — eine Kopie dort hätte Vorrang und würde mit einer neuen Fassung nicht ersetzt.
 * **Datenschutz:** Daten aus Gregors Postfach (Betreffzeilen, Absender, Adressen, Konto- und Ordnernamen, Message-IDs) sind aus Doku, Prüfberichten, Quelltextkommentaren, Tests und Werkzeugen entfernt und durch Platzhalter ersetzt (PR #184, #185 und dieser Zweig).
 * Junk-Filter und S/MIME laden doch, wenn `MFC71.DLL` und `MSVCP71.dll` schon auf dem Rechner liegen — beschrieben an einer Stelle ([FILTER.md](Intern/FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)), README, ANWENDER, PORTIERUNG, EINSTELLUNGEN und STARTUMGEBUNG verweisen dorthin.
@@ -1584,8 +1585,8 @@ ohne Fehlerzeile; **Testsuite 188/188**; Abruf der sieben Prüfnachrichten über
 
 | | 7.2.0.83 (`C:\Temp\E94-vorher`) | 7.2.0.84 (`C:\Temp\E94-nachher`) |
 |---|---|---|
-| Fall 06, `Subject:` in `In.mbx` | vier Zeilen, gefaltet bei `bestel` / `len und 1` / `5 Prozent …` / `e!` | **eine Zeile**: `Pruefung E-94: Ware bestellen und 15 Prozent sparen bis zum Wochenende!` |
-| Fall 06, Postfachliste (`In.toc`) | `Pruefung E-94: Ware bestel` | `Pruefung E-94: Ware bestellen und 15 Prozent sparen bis zum Wo` (die übliche Feldlänge) |
+| Fall 06, `Subject:` in `In.mbx` | vier Zeilen, gefaltet bei `bestel` / `len und 1` / `5 Prozent …` / `e!` | **eine Zeile**: `Pruefung E-94: Waren bestellen und 15 Prozent sparen bis zum Wochenende!` |
+| Fall 06, Postfachliste (`In.toc`) | `Pruefung E-94: Waren bestel` | `Pruefung E-94: Waren bestellen und 15 Prozent sparen bis zum Wo` (die übliche Feldlänge) |
 | Fälle 00–05, Anhänge | alle mit vollem Namen und `.pdf` | **unverändert** heil; Fall 03 hat 216 Zeichen (vorher 217), weil `C:\Temp\E94-nachher\…` einen Buchstaben länger ist als `E94-vorher`; mit Pfad je 259 |
 
 Keine `Exception.log`. **PRUEFER-21:** *kann ausgeliefert werden*; sein niedriger
@@ -1596,16 +1597,16 @@ fällt) ist in `05bbaba` behoben.
 1.0.84 neu abgerufen; ausgewertet von mir, mit seiner Erlaubnis nur gelesen
 (`Imap\Dominant\INBOX\INBOX.mbx`, nur die `Subject:`-Zeilen). Darunter ist
 **die Werbe-Nachricht selbst** (web.de-Webmailer). Ihr Betreff steht jetzt in
-**einer** Zeile: `Fw:  [Letzte Chance] Ware  bestellen & 15 % sparen … Nur bis
+**einer** Zeile: `Fw:  [Letzte Chance] Waren  bestellen & 15 % sparen … Nur bis
 zum Wochenende! ?` — in seiner 1.0.75-`INBOX.mbx` war dieselbe Nachricht bei
 `& 1|5` und `Nur b|is` gefaltet. Von zwei abgerufenen Nachrichten ist keine mehr
-gefaltet. Das doppelte Leerzeichen in `Ware  bestellen` stand schon in 1.0.75 so
+gefaltet. Das doppelte Leerzeichen in `Waren  bestellen` stand schon in 1.0.75 so
 da (Absender); das Emoji davor erscheint weiter als Fragezeichen bzw. Ersatzzeichen — das ist [**E-90**](Intern/BEFUNDE.md#e-90),
 nicht [E-94](Intern/BEFUNDE.md#e-94).
 
-**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw:  [Letzte Chance] Ware  bestellen & 15 % sparen  – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht [E-94](Intern/BEFUNDE.md#e-94):** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit [E-90](Intern/BEFUNDE.md#e-90), nicht untersucht.
+**Von Gregor bestätigt am 12.10.2026**, belegt durch sein Bildschirmfoto von 1.0.84 (Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`): in der Liste `Fw:  [Letzte Chance] Waren  bestellen & 15 % sparen  – Nur bis` (bis zum Spaltenende), im Kopf der geöffneten Nachricht der Betreff in einer Zeile; ebenso `Fw: Jetzt bestellen: 10 % Rabatt aktivieren und Preisvorteil si…`, das vorher als `Rabatt akti` endete. **Beobachtung, nicht [E-94](Intern/BEFUNDE.md#e-94):** der Gedankenstrich vor `Nur bis` steht in der Liste, im Nachrichtenkopf fehlt er (zwei Leerzeichen) — Zeichenumsetzung, verwandt mit [E-90](Intern/BEFUNDE.md#e-90), nicht untersucht.
 
-**Gregors Fall:** *„Ware bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
+**Gregors Fall:** *„Waren bestel len & 1 5 % sparen … Nur b is zum Wochenende!"*
 — der web.de-Webmailer zerlegt einen langen Betreff in mehrere kodierte Wörter
 (`=?UTF-8?Q?…?=`) und faltet dazwischen, die Grenzen mitten im Wort. Das darf er.
 RFC 2047, 6.2: der Leerraum zwischen zwei benachbarten kodierten Wörtern wird
@@ -1618,7 +1619,7 @@ Leerzeichen.
 | | Ergebnis vor der Behebung |
 |---|---|
 | Testsuite, neu: `Test_GefalteteKodierteWoerter` (POP) und `…Imap` | **rot**: ist `bestel` 0D 0A 20 `len`, soll `bestellen` |
-| Prüfnachricht 06 (`tools/anhang-pruefdaten.pl --pop`), 7.2.0.83, `C:\Temp\E94-vorher` | `In.mbx`: `Subject: Pruefung E-94: Ware bestel` / ` len und 1` / ` 5 Prozent …` — **Postfachliste nur `Pruefung E-94: Ware bestel`**, weil `summary.cpp` nur die erste Zeile einer gefalteten Kopfzeile liest |
+| Prüfnachricht 06 (`tools/anhang-pruefdaten.pl --pop`), 7.2.0.83, `C:\Temp\E94-vorher` | `In.mbx`: `Subject: Pruefung E-94: Waren bestel` / ` len und 1` / ` 5 Prozent …` — **Postfachliste nur `Pruefung E-94: Waren bestel`**, weil `summary.cpp` nur die erste Zeile einer gefalteten Kopfzeile liest |
 
 **Behoben an zwei Stellen, je in POP und IMAP:**
 
@@ -2482,7 +2483,7 @@ dort nicht messbar. **Nur sein Lauf kann sie belegen.**
 
 ## 7.2.0.67 — Bilder liegen nicht mehr über dem Text (E-103)
 
-> **Zu prüfen:** die Werbemail-A (oder eine andere mit Logo)
+> **Zu prüfen:** die Mail-A (oder eine andere mit Logo)
 > **weiterleiten** und ins Verfassenfenster sehen. Liegt noch etwas über dem
 > Text? Falls ja: `eudora.log` schicken — die Antwort steht dann darin.
 
@@ -2494,7 +2495,7 @@ nachgestellt — 23.537 Byte, byte-genau aus dem Postfach gelöst, fünf Bilder.
 was im HTML steht:
 
 ```
-attr=0x0     embed=0x0     ascent=13     ← das Logo der Werbemail-A
+attr=0x0     embed=0x0     ascent=13     ← das Logo der Mail-A
 attr=80x80   embed=80x80   ascent=80
 attr=98x35   embed=98x35   ascent=35
 attr=117x35  embed=117x35  ascent=35
@@ -2545,7 +2546,7 @@ hoch genug gemacht; an Breite und Höhe des Bildes ändert sich nichts, es kann
 sich nichts verzerren.
 
 Die 48 sind begründet, nicht geraten: groß genug, dass die üblichen Kopfbilder
-einer Werbemail nicht mehr in den Text ragen — das Logo der Werbemail-A ist 60 hoch,
+einer Werbemail nicht mehr in den Text ragen — das Logo der Mail-A ist 60 hoch,
 die vier anderen Bilder derselben Nachricht 24 bis 80 — und klein genug, dass
 eine Zeile mit einem kleinen Symbol keine auffällige Lücke reißt.
 
@@ -2860,7 +2861,7 @@ in [BEFUNDE.md](Intern/BEFUNDE.md).
 
 ## 7.2.0.63 — der Notbehelf ist weg, die Bilder behalten ihre Größe (E-95/E-96)
 
-> **Zu prüfen:** Werbemail-A- und Werbemail-B weiterleiten **und**
+> **Zu prüfen:** Mail-A- und Mail-B weiterleiten **und**
 > beantworten. Die Bilder müssen in ihrer **wirklichen** Größe dastehen und der
 > Text **frei** bleiben.
 
@@ -2880,7 +2881,7 @@ attr=80x80   ascent=80
 ```
 
 In derselben Messung stand aber auch `attr=20x20` — und genau das war auf
-seinem Bild die Produktbild: **kein abgeschnittenes Bild, sondern eines, das
+seinem Bild das Produktbild: **kein abgeschnittenes Bild, sondern eines, das
 wir auf 20×20 gequetscht hatten.**
 
 Paige kennt die wirkliche Größe, sobald es die Datei geladen hat; die Spalte
@@ -2904,7 +2905,7 @@ mehr.
 
 ## 7.2.0.62 — jedes Bild bekam die Zeilenhöhe des ersten (E-96)
 
-> **Zu prüfen:** die Werbemail-A weiterleiten. Die Bilder müssen
+> **Zu prüfen:** die Mail-A weiterleiten. Die Bilder müssen
 > **vollständig** dastehen und der Text **frei** bleiben. Falls nicht: im
 > Protokoll steht bei `LogLevel=58527` je Bild eine Zeile
 > `E-95 Bild: attr=… embed=… ascent=… text-asc=…` — die sagt, wo es klemmt.
@@ -2933,7 +2934,7 @@ solange noch kein Bild eingefügt wurde.
 
 **Das erklärt, warum vier Fassungen lang jede Änderung an der Bildgröße mal
 half und mal nicht:** gedreht wurde am ersten Bild, alle folgenden übernahmen
-dessen Höhe blind. Bei der Werbemail-A steht der kleine Schriftzug vor
+dessen Höhe blind. Bei der Mail-A steht der kleine Schriftzug vor
 dem großen blauen Kreis — deshalb wurde dort abgeschnitten.
 
 **Kein Portierungsfehler:** die Stelle ist in allen vier Kopien im Repo
@@ -2950,16 +2951,16 @@ hier eine eigene Regel gibt: *das Paket gegen den Bau messen.*
 
 ## 7.2.0.61 — eingebettete und externe Bilder werden endlich unterschieden (E-95)
 
-> **Noch nicht bestätigt.** Zu prüfen: die Werbemail-A weiterleiten. Die
+> **Noch nicht bestätigt.** Zu prüfen: die Mail-A weiterleiten. Die
 > Bilder müssen **vollständig** dastehen und der Text **frei** bleiben — beides
 > zugleich, zum ersten Mal.
 
-**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Kreis im Logo der Werbemail-A war
+**Der Fund steckte in Gregors Bild zu 1.0.60:** der blaue Kreis im Logo der Mail-A war
 **blau**, nicht grau. Paige hatte das Bild also **geladen** und kannte seine
 echte Größe genau — es ist in der Nachricht **eingebettet** (`cid:`). Unser
 `height="20"` überschrieb diese Größe und schnitt das Bild ab.
 
-Bei der Werbemail-B dagegen standen graue Kästen: dort sind die Bilder
+Bei der Mail-B dagegen standen graue Kästen: dort sind die Bilder
 **extern** (`http://…`), werden beim Verfassen nicht geholt, und Paige weiß
 nichts über ihre Größe. **Nur dort hilft eine Vorgabe.**
 
@@ -2995,7 +2996,7 @@ Die Spurmarke nennt jetzt `eingebettet=N`.
 
 ## 7.2.0.60 — ein kleines Vorgabemaß für Bilder ohne Höhe (E-89, dritter Anlauf)
 
-> **Noch nicht bestätigt.** Zu prüfen: die Werbemail-A weiterleiten. Der
+> **Noch nicht bestätigt.** Zu prüfen: die Mail-A weiterleiten. Der
 > blaue Kreis darf den Verifizierungscode nicht mehr zudecken.
 
 **Warum es einen dritten Anlauf braucht — wir haben uns selbst im Weg
@@ -3006,7 +3007,7 @@ aus der Bilddatei. Fehlt das Attribut, ist er null, der ganze Block wird
 zu.
 
 Die 200×90-Vorgabe, die in 7.2.0.58 **entfernt** wurde, war das, was diesen Wert
-bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Werbemail-A:
+bisher gesetzt hat. Gemessen an Gregors Bild zu 1.0.59, Mail-A:
 
 ```
 E-89 Bilder im Editor: gesamt=5 unveraendert=4 ohne-Mass=1 geaendert=0
@@ -3024,7 +3025,7 @@ Drei Anläufe an einem Tag: 200×90 (zu groß), gar nichts (Text wird zugedeckt)
 20×20. Gregors Entscheidung: *„ok, option a"*.
 
 **Von Gregor an 1.0.60 gemessen — der Text ist frei, aber die Bilder werden
-zerschnitten ([E-95](Intern/BEFUNDE.md#e-95)).** Auf seinem Bild ist der blaue Kreis im Logo der Werbemail-A **blau**,
+zerschnitten ([E-95](Intern/BEFUNDE.md#e-95)).** Auf seinem Bild ist der blaue Kreis im Logo der Mail-A **blau**,
 nicht grau: Paige hat das Bild geladen und kennt seine echte Größe. Es ist
 **eingebettet** (`cid:`), und unser `height="20"` schneidet es ab. Bei externen
 Bildern (`http:`) ist die Vorgabe dagegen richtig — dort weiß Paige nichts. Die
@@ -3033,7 +3034,7 @@ Unterscheidung fehlt und kommt in 7.2.0.61.
 **Tests: 150 von 150.**
 
 **Neu aufgeschrieben, nicht behoben:** die Betreffzeile wird mitten im Wort
-umbrochen (`Ware bestel len`, `Wochenend e!`). Das sind **nicht** die Stellen, an
+umbrochen (`Waren bestel len`, `Wochenend e!`). Das sind **nicht** die Stellen, an
 denen Emoji entfernt wurden — `15 %` steht korrekt zusammen — die Messung dazu steht bei [**E-90**](Intern/BEFUNDE.md#e-90) (**offen**, als Grenze eingestuft und zurückgestellt, nicht behoben). Ursache
 noch ungemessen, siehe [BEFUNDE.md](Intern/BEFUNDE.md) unter [E-94](Intern/BEFUNDE.md#e-94).
 
@@ -3130,7 +3131,7 @@ festhielten; sie prüfen jetzt das Gegenteil.
 ## 7.2.0.57 — der Versuch, die Bilder im Verfassenfenster zu bändigen (E-89, **wirkt nicht**)
 
 > **Von Gregor am 14.09.2026 an 1.0.57 gemessen und abgelehnt:** *„findest du,
-> es ist leserlich? ich nicht!"* Auf seinem Bild liegt die Produktbild über
+> es ist leserlich? ich nicht!"* Auf seinem Bild liegt das Produktbild über
 > „Artikelnummer" und „Nachbestellung mit Order-No", darunter steht ein leerer
 > grauer Kasten. **Die Spurmarke aus seinem Lauf widerlegt die angenommene
 > Ursache:** `gesamt=25 unveraendert=22 aus-CSS=0 Vorgabe=3 gedeckelt=0` — kein
@@ -4084,7 +4085,7 @@ E-79 gesichert: ist=368 min=0 -> INI=368
 Damit ist in einem einzigen Start-und-Beenden zu sehen, an welcher Stelle der
 Wert sich ändert. Sie hängen wie alle anderen an `DEBUG_MASK_MISC` und
 schweigen in der Vorgabe — einschalten mit `LogLevel=58527`, siehe
-[README.md](README.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
+[ANWENDER.md](Doku/ANWENDER.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
 
 **Behoben ist damit noch nichts.** Erst die Messung, dann der Eingriff — an
 dieser Stelle sind in den vergangenen Tagen schon mehrere Vermutungen
@@ -4157,7 +4158,7 @@ LogLevel=58527   ; 25759 + 32768 — sie schreiben
 ```
 
 Damit dürfen die Marken im Code bleiben. Die vollständige Tabelle aller
-sechzehn Schalter steht in [README.md](README.md), Abschnitt *Mehr ins
+sechzehn Schalter steht in [ANWENDER.md](Doku/ANWENDER.md), Abschnitt *Mehr ins
 Protokoll schreiben lassen*.
 
 ### Neu: E-77, und was die Filterdoku jetzt sagt
