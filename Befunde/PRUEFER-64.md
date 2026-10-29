@@ -330,7 +330,7 @@ nein.**
 ## Neue Kennungen
 
 E-167 als Vorschlag für [K5](#k5), aufzunehmen erst nach einer Messung.
-E-168 nicht vergeben. K4 schreibt [E-166](../Intern/BEFUNDE.md#e-166) fort. In `Intern/BEFUNDE.md` habe
+[E-168](../Intern/BEFUNDE.md#e-168) nicht vergeben. K4 schreibt [E-166](../Intern/BEFUNDE.md#e-166) fort. In `Intern/BEFUNDE.md` habe
 ich nichts eingetragen.
 
 ## Übersicht

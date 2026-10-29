@@ -18,7 +18,10 @@ Alltag am ehesten merkt.
 * **LDAP, Ph, S/MIME, der Junk-Filter und die Suche über den Verzeichnisdienst fallen aus —
   das eigene Adressbuch nicht.** Diese Teile brauchen
   `MFC71.DLL` und `MSVCP71.dll` von 2003, und Microsoft hat sie nie zur
-  Weitergabe freigegeben. Der Start ist davon nicht betroffen (Befund
+  Weitergabe freigegeben. Liegen die beiden schon auf Ihrem Rechner, etwa von
+  anderer Software, laden Junk-Filter und S/MIME doch
+  ([FILTER.md](../Intern/FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)).
+  Der Start ist davon nicht betroffen (Befund
   [**E-47**](../Intern/BEFUNDE.md#e-47)). **Nicht gemeint ist das eigene Adressbuch**
   (*Tools → Address Book*, die Kurznamen-Leiste): es ist in `Eudora.exe`
   übersetzt — `nickdoc.cpp`, `nicktree.cpp`, `nickpage.cpp` und
@@ -123,8 +126,8 @@ und behält damit Mails, Konten und Filter.
 
 Wie ein Filter entsteht, wann er läuft, was seine fünf Aktionen tun, wo die
 Regeln gespeichert werden und was es mit der Junk-Punktzahl auf sich hat:
-[FILTER.md](../Intern/FILTER.md). Dort steht auch, warum diese Punktzahl hier bei
-jeder eingehenden Nachricht **0** bleibt.
+[FILTER.md](../Intern/FILTER.md). Dort steht auch, warum diese Punktzahl hier meist bei
+jeder eingehenden Nachricht **0** bleibt — und wann nicht.
 
 ### Eine Adresse ins Adressbuch aufnehmen
 

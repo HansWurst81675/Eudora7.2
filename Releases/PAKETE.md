@@ -165,11 +165,12 @@ Anlaufs zu E-137; Gregor: „A“ — erst beheben, dann testen. Für Gregors Ku
 
 | | |
 |---|---|
-| Testverzeichnis | `C:\Users\Gregor\Eudora72-1.0.127-release`, neben seinem 1.0.125 und dem nie getesteten 1.0.126. Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` mit `LogLevel=58527`; Gregor kopiert seine Daten aus 1.0.125 hinein |
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-1.0.127-release`, neben seinem 1.0.125 und dem nie getesteten 1.0.126. Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` mit `LogLevel=58527`. Getestet hat Gregor außerhalb der VM mit leerem Stand ([TESTPLAN](../Intern/TESTPLAN.md#ergebnis-7-2-0-127)) |
 | ZIP | `Releases/Eudora72-1.0.127-release.zip`, 9.126.347 Byte. SHA-256 `fe72349f19b2503b9266d752e2e20407024bb892ab972eaad1430d3f870f2a2f` |
 | Gegen den Bau gemessen | `Eudora.exe`, `EudoraRes.dll`, `OLImport.eif`, `Imap.dll` und `QCSSL.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `7.2.0.127 / Paket 1.0.127+ea3ebcbd`, mit `cmp` gemessen); die Spurmarke `mdi-gewechselt` steht in der `Eudora.exe` |
 | Geprüft vorher | 314 Unit-Tests, 19 Schranken, 39 Prüfstandsfälle in **einem** vollen Lauf, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md), Gesamturteil BESTANDEN) |
 | `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„JA“*; 39 ausführbare Dateien, keine enthält eine Debug-Laufzeit |
+| Defender | **27.10.2026 16:47** bei Gregor: `Eudora.exe` in Quarantäne ([TESTPLAN](../Intern/TESTPLAN.md) V5). **28.10.2026** am Prüfstand: `EudoraRes.dll` viermal beim Lesen, um 14:11:33 auch **im ZIP** `C:\Users\Gregor\Eudora72-1.0.127-release.zip` — dort fehlt sie seitdem (gemessen 29.10.2026). `Trojan:Win32/Bearfoos.A!ml`, [E-124](../Intern/BEFUNDE.md#e-124) |
 | Rollenschranke | gebaut mit `-RollenSindGelaufen`: [PRÜFER-62](../Befunde/PRUEFER-62.md) und [LEKTOR-85](../Befunde/LEKTOR-85.md) waren gelaufen und eingearbeitet; danach nur die Behebung von PRÜFER-62 K1/K2 und der Versionssprung. **Fällig waren beim Schnüren PRÜFER und CHRONIST:** die K1-Behebung hatte noch niemand gegengelesen — das hat [PRÜFER-63](../Befunde/PRUEFER-63.md) nach dem Schnüren nachgeholt (hält, kein Fund entwertet den Kurztest); der CHRONIST betrifft nur Lehren |
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.0.127.

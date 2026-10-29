@@ -498,11 +498,21 @@ liegen nicht im Paket. `MSVCR71.dll` ersetzt der eigene Nachbau
 laden die drei Zusätze nicht ([E-166](BEFUNDE.md#e-166)). Das ist
 Befund [**E-47**](BEFUNDE.md#e-47).
 
+**Ausnahme: die beiden Dateien liegen schon auf dem Rechner.** Andere Software
+bringt `MFC71.DLL` und `MSVCP71.dll` manchmal mit und legt sie nach
+`C:\Windows\SysWOW64`. Dann findet Windows sie dort, die Zusätze laden wie im
+Original, und die Junk-Bewertung arbeitet — alles unter *Praktisch heißt das*
+gilt dann **nicht**. Gemessen am 28.10.2026 am Prüfstand mit den beiden Dateien
+aus Gregors `SysWOW64` neben `Eudora.exe` ([E-166](BEFUNDE.md#e-166)); auf
+Gregors Rechner kam die Junk-Frage, die nur mit geladenem Zusatz erscheint
+(`eudora.cpp:1792`). Ob Ihr Rechner sie hat: im Explorer
+`C:\Windows\SysWOW64\mfc71.dll` suchen.
+
 `LoadLibrary` schlägt in diesem Fall fehl, und `Trnslate.cpp:3150-3157`
 überspringt das Modul **ohne sichtbare Meldung** — die einzige Ausgabe ist
 ein `TRACE`, das es im Freigabebau nicht gibt.
 
-**Praktisch heißt das:**
+**Praktisch heißt das — ohne die beiden Dateien:**
 
 * Jede eingehende Nachricht behält die Punktzahl **0**.
 * `MinScoreToJunk` greift damit bei keinem Wert ab 1 — und bei **0** greift

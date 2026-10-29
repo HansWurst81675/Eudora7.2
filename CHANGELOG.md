@@ -52,7 +52,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-90](Intern/BEFUNDE.md#e-90)** | Emoji in Betreffzeilen fallen ersatzlos weg (bis 7.2.0.58: sie erschienen als ?) — Grego… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | nichts, was für sich zu beheben wäre — `?` ist die bessere von zwei Möglichkeiten, solange Eudora durchgehend ANSI/MBCS gebaut ist (Begründung i… |
 | **[E-78](Intern/BEFUNDE.md#e-78)** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… | 22.10.2026 an 7.2.0.121 — **veraltet** | die Auswertung der vorhandenen Spurmarken und danach die Behebung — `E-78 nach SetDockState` und `E-78 vor/nach LoadWazooBarConfig` (`mainfrm.cpp`, … |
 | **[E-71](Intern/BEFUNDE.md#e-71)** | der Filterbericht ist nach einem Filterlauf leer | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | nicht die Behebung, sondern Gregors Freigabe — er hat ihn ausdrücklich auf die nächste Fassung geschoben. Die Messung steht fertig da: in `CFilter… |
-| **[E-47](Intern/BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | eine Entscheidung, keine Behebung — `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nie als Redistributable veröffentlicht, `RegisterCOMObjects()` sche… |
+| **[E-47](Intern/BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | eine Entscheidung, keine Behebung — `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nicht zur Weitergabe freigegeben, `RegisterCOMObjects()` scheitert d… |
 | **[E-39](Intern/BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Bestätigung am laufenden Programm — belegt ist nur der Quelltext (`persona.cpp:565-566` und `:179-198`, `rs.cpp:1237-1250`). Zu fahren wäre: d… |
 | **[S-6](Intern/BEFUNDE.md#s-6)** | Bereiche überlagern sich | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | das Nachstellen — ob sich die Bereiche heute überhaupt noch überlagern, ist seit dem 30.08.2026 **nie geprüft** worden. Die beiden damals genannt… |
 | **[NP2-3](Intern/BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Behebung selbst — `CPaletteDC::BitBltTransparent` (`OTShim_Werkzeugleiste.cpp:239`) meldet unverändert Erfolg, ohne gezeichnet zu haben. Seit d… |
@@ -96,6 +96,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## Im Quellstand, noch in keinem Paket
+
+**Zweig `e166-junk_message_fix`, Quellstand weiter 7.2.0.127 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
+
+* **Konto-Eigenschaften verlieren keine Einstellungen mehr** ([E-166](Intern/BEFUNDE.md#e-166)). Wer *Konto → Eigenschaften* mit OK schloss, verlor jede Einstellung, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — bei Gregor die Antwort auf die Junk-Frage, die deshalb beim nächsten Start wiederkam. `CPersonality::Modify` (`persona.cpp`) schreibt diese Einstellungen jetzt, bevor es die Kontodaten speichert. Am Prüfstand vorher rot, nachher grün; Regressionsfall E-166a/b. Gregors Test steht aus.
 
 ## 7.2.0.127 — Testpaket: Korrektur am fünften Anlauf zu [E-137](Intern/BEFUNDE.md#e-137) (PRÜFER-62 K1)
 

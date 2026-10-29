@@ -80,5 +80,7 @@ fehlen weiterhin."* **Sie ist falsch und wird hier nicht fortgeschrieben.**
 Das eigene Adressbuch ist in `Eudora.exe` übersetzt und arbeitet — in genau
 diesem Release sind zwei Fehler darin behoben ([E-134](../../Intern/BEFUNDE.md#e-134),
 [E-135](../../Intern/BEFUNDE.md#e-135)). Was aus [E-47](../../Intern/BEFUNDE.md#e-47) tatsächlich ausfällt, sind die
-**Verzeichnisdienste**: LDAP, Ph, `EudoraBk` und S/MIME. Siehe
+**Verzeichnisdienste**: LDAP, Ph, `EudoraBk` und S/MIME, dazu der **Junk-Filter**
+(nachgetragen am 29.10.2026 im Repo, gemessen am 28.10.2026,
+[E-166](../../Intern/BEFUNDE.md#e-166); der Text auf GitHub ist unverändert). Siehe
 [L-49.4](../../Befunde/LEKTOR-49.md#l-49.4).

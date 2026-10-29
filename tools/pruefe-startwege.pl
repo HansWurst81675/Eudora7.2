@@ -140,6 +140,46 @@ sub starts_aus_log {
 }
 
 # ---------------------------------------------------------------------------
+# Kern 1b: die Starts aus Audit.log (LEKTOR-90 L-90.18, 29.10.2026)
+# ---------------------------------------------------------------------------
+#
+# tools/pruefstand-lauf.ps1 loescht die eudora.log vor jedem Lauf. Am
+# 28.10.2026 sah diese Schranke deshalb in C:\Temp\E166 einen Start, waehrend
+# Audit.log im selben Mailverzeichnis zwanzig verzeichnete. Audit.log
+# ueberlebt das Loeschen: jede Zeile "JJMMTThhmm 32 15 ..." ist ein Start,
+# auf die Minute genau (gemessen an C:\Temp\E166 am 29.10.2026: vier
+# testlauf.ps1-Starts, vier solche Zeilen; "32 1" ist das Beenden).
+#
+# Dieselbe Regel wie oben: nur was nach der Eudora.exe liegt. Weil die Zeile
+# die Sekunden abschneidet, bekommt die exe-Zeit 65 s Luft statt 5.
+sub starts_aus_audit {
+    my ($zeilen, $exezeit) = @_;
+    my @start;
+    for my $z (@$zeilen) {
+        next unless $z =~ /^(\d\d)(\d\d)(\d\d)(\d\d)(\d\d) 32 15\b/;
+        my ($jahr, $mon, $tag, $std, $min) = (2000 + $1, $2, $3, $4, $5);
+        my $ep = eval { Time::Local::timelocal(0, $min, $std, $tag, $mon - 1, $jahr) };
+        next unless defined $ep;
+        next if defined($exezeit) && $ep < $exezeit - 65;
+        push @start, [$ep, sprintf('%04d-%02d-%02d %02d:%02d:00',
+                                   $jahr, $mon, $tag, $std, $min)];
+    }
+    return @start;
+}
+
+# Beide Quellen zusammen: ein Audit-Start, der hoechstens 60 s neben einem
+# Start aus der eudora.log liegt, ist derselbe Start und zaehlt nur einmal.
+sub vereinigen {
+    my ($aus_log, $aus_audit) = @_;
+    my @alle = @$aus_log;
+    for my $a (@$aus_audit) {
+        next if grep { abs($_->[0] - $a->[0]) <= 60 } @$aus_log;
+        push @alle, $a;
+    }
+    return sort { $a->[0] <=> $b->[0] } @alle;
+}
+
+# ---------------------------------------------------------------------------
 # Kern 2: die Zeiten aus tools/TESTLAEUFE.md
 # ---------------------------------------------------------------------------
 sub zeiten_aus_protokoll {
@@ -232,6 +272,28 @@ sub selbsttest {
     $melde->(scalar(starts_aus_log(\@log_leer, undef)) == 0,
              'leere Log liefert nichts', '0 Starts', '0 Starts');
 
+    # --- starts_aus_audit und vereinigen (L-90.18) -------------------------
+    my @audit = (
+        "2610281059 32 15 1 720 127\r\n",   # vor der exe: mitkopiert
+        "2610281330 32 15 1 720 127\r\n",
+        "2610281331 32 1 0 0 0 40\r\n",      # Beenden, kein Start
+        "2610281334 32 15 1 720 127\r\n",
+    );
+    my $exe2 = Time::Local::timelocal(0, 0, 13, 28, 9, 2026);
+    my @au = starts_aus_audit(\@audit, $exe2);
+    $melde->(scalar(@au) == 2 && $au[0][1] eq '2026-10-28 13:30:00',
+             'Audit.log: Starts nach der exe, ohne Beenden-Zeile',
+             '2 Starts ab 13:30:00', scalar(@au) . ' Start(s)');
+    $melde->(scalar(starts_aus_audit(\@audit, undef)) == 3,
+             'Audit.log ohne exe-Zeit: auch der mitkopierte Start zaehlt (Gegenprobe)',
+             '3 Starts', scalar(starts_aus_audit(\@audit, undef)) . ' Start(s)');
+    # Der Fall vom 28.10.2026: die eudora.log kennt nur den letzten Start.
+    my @nurletzter = ([Time::Local::timelocal(41, 34, 13, 28, 9, 2026), 'log']);
+    my @ver = vereinigen(\@nurletzter, \@au);
+    $melde->(scalar(@ver) == 2,
+             'vereinigen: derselbe Start aus beiden Quellen zaehlt einmal, der fehlende kommt dazu',
+             '2 Starts', scalar(@ver) . ' Start(s)');
+
     # --- zeiten_aus_protokoll ---------------------------------------------
     my @prot = zeiten_aus_protokoll([
         "# Testlaeufe\n",
@@ -299,18 +361,24 @@ unless (defined $tag) {
 # --- alle Starts einsammeln ------------------------------------------------
 my (@starts, %woher);
 my $verzeichnisse = 0;
+my $starts_audit_extra = 0;   # Starts, die nur Audit.log kennt
 if (-d $SUCHORT) {
     for my $d (sort glob("$SUCHORT/*")) {
         next unless -d $d;
         my $log = "$d/Mailverzeichnis/eudora.log";
+        my $audit = "$d/Mailverzeichnis/Audit.log";
         my $exe = "$d/Eudora.exe";
-        next unless -f $log;
+        next unless -f $log || -f $audit;
         $verzeichnisse++;
         my $exezeit = (-f $exe) ? (stat($exe))[9] : undef;
-        open my $F, '<:raw', $log or next;
-        my @z = <$F>;
-        close $F;
-        for my $s (starts_aus_log(\@z, $exezeit)) {
+        my (@z, @a);
+        if (open my $F, '<:raw', $log)   { @z = <$F>; close $F; }
+        if (open my $F, '<:raw', $audit) { @a = <$F>; close $F; }
+        my @aus_log = starts_aus_log(\@z, $exezeit);
+        my @aus_audit = starts_aus_audit(\@a, $exezeit);
+        my @beide = vereinigen(\@aus_log, \@aus_audit);
+        $starts_audit_extra += @beide - @aus_log;
+        for my $s (@beide) {
             push @starts, $s;
             $woher{ $s->[1] } = $d;
         }
@@ -333,7 +401,8 @@ if (-f $PROTOKOLL) {
 printf "\n  %s\n  Startwege: jeder eigene Eudora-Start im Protokoll?\n  %s\n",
        '-' x 60, '-' x 60;
 printf "    durchsuchtes Verzeichnis       %s\n", $SUCHORT;
-printf "    Pruefstaende mit eudora.log    %d\n", $verzeichnisse;
+printf "    Pruefstaende mit Protokoll     %d\n", $verzeichnisse;
+printf "    davon Starts nur in Audit.log  %d\n", $starts_audit_extra;
 printf "    Zeilen in TESTLAEUFE.md        %d\n", scalar @zeiten;
 
 # UMFANG 0 IST KEIN GRUENES ERGEBNIS. Findet die Schranke gar keinen Start,
