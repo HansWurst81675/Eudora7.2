@@ -179,7 +179,17 @@ haben.
 
 ## 7.2.1.128 — erstes Release 7.2.1, Zweig `release-7.2.1`
 
-**Noch nicht geschnürt.** Nummer am 29.10.2026 vergeben (Gregor: „ja, direkt 7.2.1.128 bauen, ich teste dann das erste release“). Erste Fassung im neuen Nummernschema (Kasten oben). Wird geschnürt, sobald der Prüfbericht am Bau BESTANDEN meldet; danach testet Gregor sie, den E-166-Schritt zuerst ([TESTPLAN](../Intern/TESTPLAN.md#e-166-am-release)), und erst mit seinem Ja wird sie als `v7.2.1.128` veröffentlicht.
+**Geschnürt am 29.10.2026 und als Testverzeichnis abgelegt; nicht veröffentlicht.** Nummer am selben Tag vergeben (Gregor: „ja, direkt 7.2.1.128 bauen, ich teste dann das erste release“). Erste Fassung im neuen Nummernschema (Kasten oben). Gregor testet sie, den E-166-Schritt zuerst ([TESTPLAN](../Intern/TESTPLAN.md#e-166-am-release)); erst mit seinem Ja wird sie als `v7.2.1.128` veröffentlicht.
+
+| | |
+|---|---|
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-7.2.1.128-release`, neben seinem 1.0.127. Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` |
+| ZIP | `Releases/Eudora72-7.2.1.128-release.zip`, 9.126.491 Byte. SHA-256 `97d29f15928be71a93d495c50e5065096d6effe5a20b420a8336c9e14e209e6b` |
+| Gegen den Bau gemessen | `Eudora.exe`, `EudoraRes.dll`, `Imap.dll`, `QCSSL.dll`, `OLImport.eif`, `QCSocket.dll`, `QCUtils.dll` und `plstclnt.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36`, mit `cmp` gemessen) |
+| Geprüft vorher | 314 Unit-Tests, 19 Schranken, 41 Prüfstandsfälle in **einem** vollen Lauf, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md), Gesamturteil BESTANDEN) |
+| `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„JA“* |
+| Gegenüber 1.0.127 | im Programm nur [E-166](../Intern/BEFUNDE.md#e-166) (`persona.cpp`); acht weitere Quelldateien nur in Kommentarzeilen (Datenschutz), gemessen mit `git diff ea3ebcbd..640e1a0e` |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen` (PRÜFER nur wegen `Version.h` fällig, reiner Versionssprung) und `-AgentLaeuftAbsichtlich` (der LEKTOR lief beim Schnüren noch und prüft nur MD-Dateien; nichts davon geht ins Paket) |
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.1.128.
 

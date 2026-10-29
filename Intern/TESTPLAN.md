@@ -1,14 +1,18 @@
 # Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 29.10.2026 (Prüfschritt zu E-166 zuerst)
 
-> **Testpaket 7.2.0.127** (Paket 1.0.127) — Kurztest direkt hierunter, **am 27.10.2026
-> bestanden** (V1 bis V6, [Ergebnis](#ergebnis-7-2-0-127)). Das
-> Paket 1.0.126 bitte **nicht** testen: es wurde geschnürt, dann fand der
-> PRÜFER eine Nebenwirkung (V6), und 1.0.127 ersetzt es. Das
-> Testpaket 7.2.0.125 ist überholt (U1 nein, U2 bis U4 gehen in V2, V3 und V5
-> auf), die Testpakete 7.2.0.124 und 7.2.0.123 sind abgeschlossen; alle
-> Ergebnisse stehen weiter unten. Veröffentlicht ist `v1.0.120`. Nach deinem Ja
-> wird das Release **7.2.1.<n>** gebaut; an ihm prüfst du zusätzlich
-> [E-166](#e-166-am-release) — erst danach wird es veröffentlicht.
+> **Jetzt zu testen: das Release 7.2.1.128**, abgelegt am 29.10.2026 als
+> `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
+> Repo unter `Releases\Eudora72-7.2.1.128-release.zip`). Die Titelzeile muss
+> `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36` zeigen. Das Mailverzeichnis darin
+> ist leer bis auf `Eudora.ini`. **Zu prüfen ist nur ein Schritt:**
+> [E-166](#e-166-am-release) direkt hierunter, im **lokalen** Eudora dieses
+> Verzeichnisses. [E-87/E-88](#e-87-am-release) ist schon bestanden (29.10.2026
+> an 1.0.127), der Kurztest V1 bis V6 am 27.10.2026 an 1.0.127
+> ([Ergebnis](#ergebnis-7-2-0-127)); seitdem ist im Programm nur E-166
+> dazugekommen. Erst mit deinem Ja wird es als `v7.2.1.128` veröffentlicht.
+> Veröffentlicht ist bis dahin `v1.0.120`. Am Bau vorher geprüft: 314
+> Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
+> ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
 
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 
