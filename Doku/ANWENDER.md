@@ -328,8 +328,10 @@ in **zwei** Tabellen, hier und dort, und zwölf davon in beiden. Zwei Listen
 mit denselben Werten laufen zwangsläufig auseinander; Gregor hat es bemerkt
 und entschieden: *„nur in einstellungen, nicht in readme"*.
 
-Was ein Anwender beim **ersten Start** wissen muss, steht weiter unten unter
-*Ein Mailverzeichnis übernehmen* und *Mehr ins Protokoll schreiben lassen*.
+Was ein Anwender beim **ersten Start** wissen muss, steht in der
+[FAQ, Frage 1](FAQ.md#1-wie-nehme-ich-bei-einer-neuen-fassung-post-konten-und-filter-mit)
+(ein Mailverzeichnis übernehmen) und weiter unten unter *Mehr ins Protokoll
+schreiben lassen*.
 
 ## Wie Eudora gestartet werden kann — und warum das zählt
 
