@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: f193092b-2e64-587f-a070-7e656c44c557
-  modified: 2026-10-12T19:10:00.000Z
+  modified: 2026-10-29T20:37:25.854Z
 ---
 
 Schranke: keine - sie waere selbst eine. Pruefbar ist nur das Muster: findet GREGOR den Fehler, den meine frische Schranke uebersehen hat, dann teilten beide eine Annahme.
@@ -66,3 +66,26 @@ Wenn **Gregor** einen Fehler findet, den eine frisch gebaute Schranke hätte
 fangen sollen, dann ist die erste Frage nicht *„welcher Fall fehlt?"*, sondern:
 **welche Annahme teilen Werkzeug und Schranke?** Der fehlende Fall ist immer
 nur ein Symptom davon.
+
+## Nachtrag 29.10.2026 (CHRONIST): vier Funde Gregors an einem Tag, alle hinter grünen Prüfungen
+
+Gregor am 29.10.2026 um 10:59:45 MEZ:
+
+> *„warum hat es der lektor nicht gefunden? muß ich hier echt alles selbst machen? kann man sich euch deine truppe nicht mehr verlassen, daß irgendwas richtig funktioniert? überall, wo ich reinschaue, entdecke ich fehler. und ich prüfe es nur punktuell, nicht vollständig.“*
+
+Gemessen an `2dc0ce9e-…jsonl`, `052dc212-…jsonl` und den Commits (MEZ). Jede Zeile ist die Probe oben, und jedes Mal teilte die Prüfung die Annahme:
+
+| Zeit | Gregor fand | Die Prüfung, die grün war | Die geteilte Annahme |
+|---|---|---|---|
+| 09:39–10:42 | Daten aus seinem Postfach, in sechs Runden ([[gedaechtnis-ist-oeffentlich]]) | Suchläufe mit einer Begriffsliste | Die Liste kam aus demselben Kopf, der die Daten für unbedenklich gehalten hatte |
+| 10:56:06 | *„ist hier die tabelle defekt?“* (`Intern/FILTER.md`, Strg+J-Tabelle) | `pruefe-tabellenzeilen.pl` | „Kaputt“ heißt abgebrochene Zeile. Dass Kopf und Daten verschieden viele Spalten haben, kam nicht vor |
+| 10:54:59 | fragte nach den Abweichungen vom Original. Ergebnis 10:57:17: die Tabelle stand seit dem 14.09. nirgends, die Verweise darauf liefen im Kreis | LEKTOR-Läufe | Ein Verweis wird geprüft, wenn er ein Link ist. Textverweise („siehe README, Abschnitt X“) folgte niemand |
+| 21:01:50, 21:04:25 | *„wir haben auch eine kaputte tabelle gefixt!“*, *„hätte dem lektor auffallen müssen, vielleicht spendierst du ihm bei gelegenheit eine neue brille?“* | LEKTOR-95 (13:28) | Der LEKTOR prüft, ob eine Aussage zum Bestand passt. Ob am Ziel steht, was der Text **ankündigt** (eine Tabelle), prüfte er nicht: Von 11:29 (`0a4d2390`) bis 19:41 (`beb3fc98`) stand dort eine Aufzählung. Der CHANGELOG sagte die ganze Zeit *„Die Tabelle … ist zurück“*, und ab 13:47 (`cf6c3fee`, LEKTOR-95 eingearbeitet) sieben Zeilen tiefer *„Abweichungsliste“* |
+
+Die Hauptsitzung hat das um 10:59:58 selbst richtig benannt: *„Ich habe mich darauf verlassen, dass grüne Schranken und ein Lektor-Lauf ‚richtig‘ bedeuten. Sie bedeuten nur ‚nichts von dem gefunden, wonach sie suchen‘.“* Darauf folgten zwei neue Prüfungen mit Selbsttest und Gegenprobe am echten Fall (`pruefe-tabellenzeilen.pl` mit Spaltenzahl, `pruefe-abschnittsverweise.pl`, Commit `0a4d2390`). Die Spaltenprüfung fand im ersten Lauf einen Nachtrag zu E-87, der in einer Tabellenzelle verschwunden war. Beim Bau der Verweisprüfung lief sie einmal falsch grün, weil die Suchregel über die Befehlszeile beschädigt worden war ([[text-nicht-durch-schichten-schicken]], Fall 34). Der Selbsttest hat es gefunden.
+
+**Was die vierte Zeile lehrt:** Eine neue Prüfung beantwortet die Frage des letzten Fundes. Die Spaltenprüfung aus demselben Commit `0a4d2390` konnte die Aufzählung nicht sehen, denn eine Aufzählung hat keine Spalten. Der Auftrag an LEKTOR-96 (21:07) prüft deshalb die Ankündigung gegen die Form am Ziel. Das ist die Richtung „aus der Datei statt aus dem Modell“ von oben.
+
+**How to apply, zusätzlich:**
+- Nach jedem Fund Gregors nicht nur den Fall in die Schranke nehmen, sondern einen Satz aufschreiben: *Welche Annahme hatte die grüne Prüfung?* Steht er nicht da, kommt derselbe Fund in anderer Form wieder.
+- Eine Meldung „grün“ an Gregor nennt, wonach gesucht wurde. *„43 Schranken grün“* sagt ihm nichts darüber, was er beim nächsten Hinsehen findet.

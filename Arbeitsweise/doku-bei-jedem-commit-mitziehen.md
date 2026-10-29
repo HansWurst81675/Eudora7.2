@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 2dc0ce9e-d597-4bea-8a46-cb21a63838b0
-  modified: 2026-10-29T08:00:27.862Z
+  modified: 2026-10-29T20:37:54.108Z
 ---
 
 Schranke: tools/doku-pruefen.pl (pre-commit, pre-push)
@@ -70,3 +70,9 @@ Nachgetragen wurde alles um 08:51 auf dem nächsten Zweig (`f7ca0753`), 20 Minut
 **How to apply, zusätzlich:**
 - Ein Commit mit neuer Anwenderdatei (`Doku/*`), einer Behebung oder einer geänderten Schranke bringt seine Zeile unter *„Im Quellstand, noch in keinem Paket“* mit. Ein LEKTOR-Fund „fehlt im CHANGELOG“ ist ein Zeichen, dass das zu spät kam.
 - Vorschlag für die Schranke (nicht gebaut): `pruefe-changelog-zuwachs.pl` im `pre-commit` weist ab, wenn der Commit unter `Eudora71/` eine Quelldatei oder unter `Doku/` eine Datei ändert und `CHANGELOG.md` im selben Commit außerhalb der erzeugten Tabelle keine Zeile gewinnt. Gegenprobe: `98fb9822` (FAQ neu, kein CHANGELOG) muss abgewiesen werden, `1e54773d` muss durchgehen.
+
+## Nachtrag 29.10.2026 abends (CHRONIST): zwölf Stunden später, dieselbe Lücke
+
+Gregor am 29.10.2026 um 21:01:50 MEZ, als Einwurf: *„wir haben auch eine kaputte tabelle gefixt!“*
+
+Gemessen: `beb3fc98` (19:41) machte aus der Aufzählung in `Intern/EINSTELLUNGEN.md` zwei Tabellen und änderte nur diese Datei. `6dc43e4d` (19:34, E-166 bestanden) änderte nur den TESTPLAN. Den CHANGELOG zogen erst `26383220` (21:03) und `159d3955` (21:05) nach, nach Gregors Satz. Der Vorschlag `pruefe-changelog-zuwachs.pl` vom Morgen (oben) ist nicht gebaut. Das ist das zweite Auftreten an einem Tag, und nach [[fehlerklassen-abstellen]] heißt das: Werkzeug bauen, nicht noch einmal nachtragen. Die Gegenprobe oben bekommt einen Fall dazu: `beb3fc98` (Anwender-sichtbare Doku geändert, kein CHANGELOG) muss abgewiesen werden. Dazu gehört `Intern/EINSTELLUNGEN.md` in den Umfang, nicht nur `Doku/`.

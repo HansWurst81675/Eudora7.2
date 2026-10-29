@@ -136,3 +136,5 @@
 - [Stand 29.10.2026](stand-29-10-2026.md) — nach PR e166-junk_message_fix: FAQ TidyAttach bestaetigt nachtragen, LEKTOR-93-Funde, #181 FAQ-Link
 - [Gedächtnis ist öffentlich](gedaechtnis-ist-oeffentlich.md) — memory/ wird nach Arbeitsweise/ gespiegelt und steht auf dem öffentlichen main; aus Gregors Mailverzeichnis nur Zahlen, nie Namen; „im log“ heißt eudora.log
 - [CHRONIST 29.10.2026](CHRONIST-2026-10-29.md) — Lauf über 28.10. 15:28 bis 29.10. 08:47: eine neue Lehre, acht Nachträge; Anhangnamen auf main, Rückstrich Fall 31–33 und „nur noch Edit“ hielt 56 Minuten, Absturz als Ausreißer übersehen
+- [Abweisung ist eine Antwort](abweisung-ist-eine-antwort.md) — weist Rechteprüfung oder GitHub-Regel ab, kein `!`-Befehl für Gregor und keine Bitte, den Schutz abzuschalten; 29.10.: „ich traue dir nicht“
+- [CHRONIST 29.10.2026 abends](CHRONIST-2026-10-29b.md) — Lauf 08:47 bis 21:20: eine neue Lehre, sechs Nachträge; Datenschutz-Lehre trug selbst einen Dateinamen, sechs Bereinigungsrunden, vier Funde Gregors hinter grünen Prüfungen, E-166 nur im TESTPLAN

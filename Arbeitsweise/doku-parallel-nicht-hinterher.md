@@ -1,8 +1,11 @@
 ---
 name: doku-parallel-nicht-hinterher
-description: Ein Wert, der in mehreren MDs steht, wird im selben Arbeitsschritt ueberall berichtigt; doku-pruefen.pl haelt sie gegeneinander
+description: "Ein Wert, der in mehreren MDs steht, wird im selben Arbeitsschritt ueberall berichtigt; doku-pruefen.pl haelt sie gegeneinander"
 metadata:
+  node_type: memory
   type: feedback
+  originSessionId: 052dc212-9ba1-48b1-a2c2-5e444dee95dd
+  modified: 2026-10-29T20:37:38.536Z
 ---
 
 Schranke: tools/doku-pruefen.pl (pre-commit, pre-push)
@@ -246,3 +249,23 @@ Der fünfte (L-64.2, die Lizenz „dieselbe wie unser Repo“) war neu geschrieb
 **Berichtigung zum Vorschlag vom 25.10. abends** („erst Zustand herstellen, dann beschreiben“, [[einschraenkung-im-pr-ist-kein-ja]]): Er trifft nur L-63.1. Bei L-64.1, L-65.1 und L-66.1 stand die Beschreibung schon vorher und war richtig. Falsch wurde sie erst **durch** meinen Commit. Hier hilft keine Reihenfolge, nur Punkt 1 dieser Lehre, angewandt auf Code: **Wer einen Bezeichner, eine Spurmarke oder einen Ort ändert, sucht den alten Wortlaut in allen `.md` im selben Commit.**
 
 **Vorschlag für die Schranke (nicht gebaut):** Ein `pre-commit`-Schritt nimmt aus dem gestagten Diff unter `Eudora71/` jede **entfernte** Zeichenkette in `PutDebugLog(…)` und jeden Funktionsnamen, aus dessen Rumpf eine `BEFUND`-Markierung verschwindet, und sucht sie in `git ls-files '*.md'`. Ausgenommen sind `Befunde/` und Geschichtsabschnitte. Bei Treffern meldet er „N Stellen nennen den alten Wortlaut“. Gegenprobe: Der Commit `424966f6` muss `Intern/BEFUNDE.md` E-137 melden (L-65.1), der Commit `78f2ad2a` muss `OnCmdMsg` in E-137 melden (L-66.1).
+
+## Nachtrag 29.10.2026 abends (CHRONIST): ein Testergebnis an einer Stelle, zwei alte Aussagen an zwei anderen
+
+Gregor am 29.10.2026 um 21:00:36 MEZ, erste Frage nach *„weiter“*: *„die ergebnisse von e-166 (?) sind bereits eingearbeitet, ja?“*
+
+Gemessen an den Commits:
+
+| Zeit | Commit | Was |
+|---|---|---|
+| 19:34 | `6dc43e4d` | *„E-166 an 7.2.1.128 auf Gregors Hauptrechner: bestanden“*. Geändert: nur `Intern/TESTPLAN.md` (+30 Zeilen) |
+| 19:34–21:01 | — | `Intern/BEFUNDE.md` E-166: *„Gregors Test steht aus“*. `Intern/WEITERMACHEN.md`: *„Als Nächstes: Gregors Test“* |
+| 21:01 | `3da667da` | beide nachgezogen, nach Gregors Frage |
+
+Dieselbe Form am selben Tag, kleiner: Um 11:29 (`0a4d2390`) wurde die Abweichungstabelle in `Intern/EINSTELLUNGEN.md` zur Aufzählung. Der CHANGELOG sagte bis zur Rückkehr der Tabelle um 19:41 weiter *„Die Tabelle … ist zurück“* ([[schranke-teilt-nicht-die-annahme]], Nachtrag 29.10.).
+
+Neu gegenüber den Fällen oben ist die Richtung. Bisher blieb Text stehen, wenn sich **Code** änderte. Hier blieb er stehen, als ein **Ergebnis** dazukam, und zwar am Ort, den [[eine-stelle-dann-verlinken]] für Gregors Ergebnisse vorsieht (TESTPLAN). Das Urteil eines Befunds gehört nach derselben Liste aber nach BEFUNDE, und WEITERMACHEN nennt den nächsten Schritt. Ein Ergebnis ändert also immer drei Dateien. Keine Schranke prüfte das. `doku-pruefen.pl` vergleicht Fassungsnummern, `pruefe-behoben-belegt.pl` springt nur an, wenn eine Zeile „behoben“ sagt.
+
+**How to apply, zusätzlich:** Ein Commit, der in `Intern/TESTPLAN.md` ein Ergebnis zu E-nnn einträgt, ändert im selben Commit die Zeile E-nnn in `Intern/BEFUNDE.md` und, falls dort E-nnn als nächster Schritt steht, `Intern/WEITERMACHEN.md`.
+
+**Vorschlag für die Schranke (nicht gebaut):** `pre-commit` prüft: Gewinnt `Intern/TESTPLAN.md` eine Zeile mit E-nnn und „bestanden“/„nicht bestanden“, und enthält die E-nnn-Zeile in `Intern/BEFUNDE.md` danach noch „Test steht aus“ oder „wartet auf Gregor“, wird abgewiesen. **Gegenprobe:** `6dc43e4d` muss abgewiesen werden, `6dc43e4d` zusammen mit `3da667da` muss durchgehen.
