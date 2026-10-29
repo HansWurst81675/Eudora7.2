@@ -9,3 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
+| LEKTOR | 2026-10-29 07:38 | LEKTOR-91.md: alle MDs gegen den Bestand, seit 116095f5 |
