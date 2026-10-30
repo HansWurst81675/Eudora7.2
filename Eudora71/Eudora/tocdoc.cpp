@@ -3163,8 +3163,12 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 
 #ifdef IMAP4
 	// If one of the mailboxes is an IMAP mailbox, handle it specially.
+	// BEFUND E-141: die Anzahlpruefung gilt fuer BEIDE Seiten. Vorher band das
+	// && staerker als das ||, und eine IMAP-Quelle lief mit leerer Liste in
+	// ImapXfer (Uebertragung nach Out fuellt sumlist nie) - Fehlmeldung,
+	// Offline-Dialog, Serververbindung und EXPUNGE ohne bewegte Nachricht.
 	if ( !E125Abgelehnt && !E142Abgebrochen &&
-		 ( IsImapToc() || (TargetToc && TargetToc->IsImapToc()) && sumlist.GetCount() > 0 ) )
+		 ( (IsImapToc() || (TargetToc && TargetToc->IsImapToc())) && sumlist.GetCount() > 0 ) )
 	{
 		if (this == TargetToc)
 			{
@@ -3174,6 +3178,7 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 		CSummary	*pCopySum = ImapXfer(TargetToc, &sumlist, CloseWindow, Copy, RedisplayTOCs);
 		if (pCopySum)
 		{
+			bXferActive = FALSE;	// E-141: sonst bleibt Xfer fuer die Sitzung gesperrt
 			return pCopySum;
 		}
 	}

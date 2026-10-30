@@ -110,6 +110,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 **Zweig `fortsetzen_status_nie_gemessen`** (nach dem Merge von #189).
 
 * **Base64 mit Bytes über 127** ([E-145](Intern/BEFUNDE.md#e-145)): Steht in einem Base64-Text ein Byte über 127, zählt es jetzt als ungültig und wird übersprungen; vorher las der Dekodierer vor seiner Tabelle und schrieb ein falsches Byte in die Nachricht. Regressionstest `TestE145.cpp`, ohne Behebung rot (128 von 128 Hochbytes falsch), mit ihr grün; 338 Tests, 338 bestanden.
+* **IMAP nach Out** ([E-141](Intern/BEFUNDE.md#e-141)): Eine Übertragung aus einem IMAP-Ordner nach `Out` stößt die IMAP-Nachbearbeitung nicht mehr an — keine Fehlmeldung, kein Offline-Dialog, kein `EXPUNGE` ohne bewegte Nachricht. Regressionstest `TestE141.cpp` (am Quelltext, gegen den alten Stand rot); am Programm noch nicht gemessen.
 
 **Zweig `weitermachen-aufraeumen`** (nach dem Release `v7.2.1.128`, gemergt als #189).
 
