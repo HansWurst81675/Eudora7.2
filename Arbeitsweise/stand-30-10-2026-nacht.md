@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f6188ad4-4df8-4a5e-bb99-a9fb32d6557a
-  modified: 2026-10-30T21:48:57.391Z
+  modified: 2026-10-30T22:02:49.767Z
 ---
 
 Schranke: keine - ein Stand-Vermerk; der Ausloeser ist der SessionStart-Haken, der MEMORY.md laedt.
@@ -24,3 +24,5 @@ Gregor gab um ~22:40 eine halbe Stunde und fuhr dann herunter (Testlauf: "egal, 
 **Freigaben** siehe [[freigaben-settings-local]]. Ohne Abfrage liefen: Read/Grep/Glob/Edit/Write im Projekt, in `.wt/lektor` und im memory-/projects-Ordner; `git status/log/add/commit`, `git push`, `perl tools/...`. MIT Abfrage: `git fetch`, `git merge`, `gh`, Shell-Argumente mit Pfaden unter `C:\Users\Gregor\.claude`. Primaeres Arbeitsverzeichnis der Sitzung war zuletzt `.wt/lektor` (durch ein cd) - immer absolute Pfade.
 
 `tools/messen-e140.ps1` liegt weiter ungetrackt im Hauptbaum, nie gelaufen.
+
+**Nachtrag ~23:30:** PRUEFER-66 K3 und PRUEFER-67 K4 behoben, Commit `8cdfc21b` gepusht (341/341 gruen). Gegenprobe einmal gefahren: fuenf Fehlstellen eingesetzt (ASSERT ( in TaskStatusView, UnwrapText( CopyText ) in compmsgd, if vor dem Write in TridentView, #if 0 um m_pGeladen in filtersv, <# #> um die Arch-Pruefung in paket-pruefen.ps1) -> genau E-15, E-104, E-86, E-72, S-8 rot (336/341); danach `git checkout --` (laeuft ohne Abfrage), Baum sauber. Noch nicht in Doku vermerkt (BEFUNDE/WEITERMACHEN: K3/K4 erledigt). Restlicher Rueckstand: 50 behobene ohne Testfall laut pruefe-regressionstest.pl. Befehle OHNE `cd` davor schreiben - dann laufen git add/commit/push/checkout und perl tools/ ohne Abfrage.
