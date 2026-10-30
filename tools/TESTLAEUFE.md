@@ -587,3 +587,25 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-10-30 13:15:58 | `C:\Temp\E131L` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 197658 - Eudora   [Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 - E131L]  Schliesszeit 2.1 s. |
 | 2026-10-30 13:16:25 | `C:\Temp\E137` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 394282 - Eudora  Schliesszeit 1 s. |
 | 2026-10-30 13:17:23 | `C:\Temp\E13` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 328820 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 14:09:30 | `C:\Temp\E131L` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 2032826 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E131L]  Schliesszeit 2.1 s. |
+| 2026-10-30 14:10:03 | `C:\Temp\E118` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' - [E-118](../Intern/BEFUNDE.md#e-118) regression Lauf 1 | Hauptfenster 6357482 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E118]  Schliesszeit 2 s. |
+| 2026-10-30 14:10:36 | `C:\Temp\E118` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' - [E-118](../Intern/BEFUNDE.md#e-118) regression Lauf 1 | Hauptfenster 525260 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E118]  Schliesszeit 2 s. |
+| 2026-10-30 14:11:35 | `C:\Temp\E125` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 787572 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E125]  ABER: musste abgeschossen werden.  Schliesszeit 30.4 s. |
+| 2026-10-30 14:13:45 | `C:\Temp\EBILD` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 394246 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - EBILD]  Schliesszeit 1 s. |
+| 2026-10-30 14:14:53 | `C:\Temp\E119K` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 1245978 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 14:15:01 | `C:\Temp\E77` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 591100 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E77]  Schliesszeit 2 s. |
+| 2026-10-30 14:15:27 | `C:\Temp\E77U` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 852990 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E77U]  Schliesszeit 2 s. |
+| 2026-10-30 14:15:56 | `C:\Temp\E146` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 1115068 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 14:16:27 | `C:\Temp\E67` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 787478 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 14:16:51 | `C:\Temp\E137` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 4981212 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E137]  Schliesszeit 1 s. |
+| 2026-10-30 14:17:39 | `C:\Temp\E166` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 198026 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 14:18:01 | `C:\Temp\E13` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 263526 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 14:21:16 | `C:\Temp\E125` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 525662 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E125]  Schliesszeit 1 s. |
+| 2026-10-30 14:22:18 | `C:\Temp\E97` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 918688 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E97] |
+| 2026-10-30 14:22:41 | `C:\Temp\E97` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 1377328 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E97] |
+| 2026-10-30 14:24:39 | `C:\Temp\E144` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 1049738 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E144]  Schliesszeit 1 s. |
+| 2026-10-30 14:25:16 | `C:\Temp\E144` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 3605450 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E144]  Schliesszeit 1 s. |
+| 2026-10-30 14:25:53 | `C:\Temp\E144` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 1246356 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 14:26:21 | `C:\Temp\E144` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 2491160 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E144]  Schliesszeit 1 s. |
+| 2026-10-30 14:27:12 | `C:\Temp\E144` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 2491350 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E144]  Schliesszeit 1 s. |
+| 2026-10-30 14:28:22 | `C:\Temp\E144-alt` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 1704736 - Eudora  Schliesszeit 1 s. |
