@@ -59,6 +59,12 @@ void RunPaketTests(const char* szEudoraDir);
 void RunE3Tests(const char* szEudoraDir);
 void RunE32Tests(const char* szEudoraDir);
 void RunE23Tests(const char* szEudoraDir);
+void RunZusicherungenTests(const char* szEudoraDir);
+void RunE28Tests(const char* szEudoraDir);
+void RunE57E58E75Tests(const char* szEudoraDir);
+void RunE86Tests(const char* szEudoraDir);
+void RunE104E115Tests(const char* szEudoraDir);
+void RunM1Tests(void);
 
 //
 // Ermittelt Eudora71\Eudora aus dem Ablageort des Testprogramms.
@@ -182,6 +188,12 @@ int main(int argc, char* argv[])
 	RunE3Tests(szEudoraDir);
 	RunE32Tests(szEudoraDir);
 	RunE23Tests(szEudoraDir);
+	RunZusicherungenTests(szEudoraDir);
+	RunE28Tests(szEudoraDir);
+	RunE57E58E75Tests(szEudoraDir);
+	RunE86Tests(szEudoraDir);
+	RunE104E115Tests(szEudoraDir);
+	RunM1Tests();
 
 	iFailed = TT_Summary();
 	return iFailed;

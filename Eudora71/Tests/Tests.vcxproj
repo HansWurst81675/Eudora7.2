@@ -137,6 +137,12 @@
     <ClCompile Include="TestE3.cpp" />
     <ClCompile Include="TestE32.cpp" />
     <ClCompile Include="TestE23.cpp" />
+    <ClCompile Include="TestZusicherungen.cpp" />
+    <ClCompile Include="TestE28.cpp" />
+    <ClCompile Include="TestE57E58E75.cpp" />
+    <ClCompile Include="TestE86.cpp" />
+    <ClCompile Include="TestE104E115.cpp" />
+    <ClCompile Include="TestM1.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />
     <ClCompile Include="TestE118.cpp" />
     <ClCompile Include="Quelltext.cpp" />
