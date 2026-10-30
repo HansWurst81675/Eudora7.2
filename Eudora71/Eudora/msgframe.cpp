@@ -30,16 +30,47 @@ extern QCMailboxDirector	g_theMailboxDirector;
 
 IMPLEMENT_DYNAMIC(CMessageFrame, CMDIChild)
 
+CMessageFrame* CMessageFrame::s_pE176Erster = NULL;
+
 CMessageFrame::CMessageFrame()
 	: m_pSumBackPtr(NULL)
 {
 #ifdef OLDSTUFF
 	m_bWasIconic = FALSE;
 #endif
+	// BEFUND E-176: in die Kette der lebenden Rahmen
+	m_pE176Naechster = s_pE176Erster;
+	s_pE176Erster = this;
 }
 
 CMessageFrame::~CMessageFrame()
 {
+	// BEFUND E-176: aus der Kette der lebenden Rahmen
+	for (CMessageFrame** pp = &s_pE176Erster; *pp; pp = &(*pp)->m_pE176Naechster)
+	{
+		if (*pp == this)
+		{
+			*pp = m_pE176Naechster;
+			break;
+		}
+	}
+}
+
+// BEFUND E-176 (PRUEFER-67 K1): die Behebung von E-28 merkt sich die
+// Zusammenfassung in m_pSumBackPtr. Wird die Zusammenfassung vor dem Rahmen
+// geloescht - eine neue Nachricht, die ohne Speichern geschlossen wird
+// (CCompMessageFrame::OnDestroy -> RemoveSum -> delete), oder eine Nachricht,
+// die ein Filter verschiebt, waehrend sie offen ist -, las OnDestroy danach
+// aus freigegebenem Speicher. Jetzt meldet ~CSummary sich hier ab.
+void CMessageFrame::E176ZusammenfassungStirbt(CSummary* pSum)
+{
+	if (!pSum)
+		return;
+	for (CMessageFrame* p = s_pE176Erster; p; p = p->m_pE176Naechster)
+	{
+		if (p->m_pSumBackPtr == pSum)
+			p->m_pSumBackPtr = NULL;
+	}
 }
 
 void CMessageFrame::ActivateFrame(int nCmdShow /*= -1*/)

@@ -111,6 +111,9 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 * **Base64 mit Bytes über 127** ([E-145](Intern/BEFUNDE.md#e-145)): Steht in einem Base64-Text ein Byte über 127, zählt es jetzt als ungültig und wird übersprungen; vorher las der Dekodierer vor seiner Tabelle und schrieb ein falsches Byte in die Nachricht. Regressionstest `TestE145.cpp`, ohne Behebung rot (128 von 128 Hochbytes falsch), mit ihr grün; 338 Tests, 338 bestanden.
 * **IMAP nach Out** ([E-141](Intern/BEFUNDE.md#e-141)): Eine Übertragung aus einem IMAP-Ordner nach `Out` stößt die IMAP-Nachbearbeitung nicht mehr an — keine Fehlmeldung, kein Offline-Dialog, kein `EXPUNGE` ohne bewegte Nachricht. Regressionstest `TestE141.cpp` (am Quelltext, gegen den alten Stand rot); am Programm noch nicht gemessen.
+* **Antwortentwurf zurück nach Out** ([E-144](Intern/BEFUNDE.md#e-144)): behält jetzt `In-Reply-To` und `References`, die Antwort bleibt beim Empfänger im Gesprächsfaden. *Send Again* aus dem Menü bleibt wie im Original. Regressionstest `TestE144.cpp`.
+* **Neue Nachricht ohne Speichern schließen** ([E-176](Intern/BEFUNDE.md#e-176)): Eudora liest dabei nicht mehr aus schon freigegebenem Speicher (Folge der E-28-Behebung seit 7.2.0.12). Regressionstest `TestE176.cpp`.
+* **`tools/bauen.ps1`** findet `perl` jetzt auch aus PowerShell heraus; vorher brach der Testschritt nach jedem Bau mit „Die Benennung perl wurde nicht … erkannt“ ab. 341 Tests, 341 bestanden; Release-Bau 0 Fehler.
 
 **Zweig `weitermachen-aufraeumen`** (nach dem Release `v7.2.1.128`, gemergt als #189).
 

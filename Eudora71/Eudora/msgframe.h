@@ -27,6 +27,12 @@ protected:
 	// die Zusammenfassung dann nicht mehr zu finden waere.
 	CSummary*		m_pSumBackPtr;
 
+	// BEFUND E-176: alle lebenden Rahmen in einer Kette, damit ~CSummary
+	// jeden Rueckzeiger auf sich selbst loeschen kann - auch wenn
+	// CSummary::m_FrameWnd schon auf einen anderen Rahmen oder NULL zeigt.
+	static CMessageFrame*	s_pE176Erster;
+	CMessageFrame*			m_pE176Naechster;
+
 	CMessageFrame();			// protected constructor used by dynamic creation
 
 // Attributes
@@ -43,6 +49,10 @@ public:
 	virtual void EnableTooltips(BOOL bEnable) = 0;
 
 	QCProtocol * GetProtocol(QCPROTOCOLID in_protocolID);
+
+	// BEFUND E-176: aus ~CSummary gerufen. Loescht in jedem Rahmen einen
+	// Rueckzeiger, der auf die sterbende Zusammenfassung zeigt.
+	static void E176ZusammenfassungStirbt(CSummary* pSum);
 	
 // Implementation
 protected:
