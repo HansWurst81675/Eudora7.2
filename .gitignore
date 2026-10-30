@@ -78,5 +78,8 @@ tools/.kopfzeile/
 # Sie liegen im Projektordner, weil jeder Zugriff daneben eine Freigabe-Abfrage ausloest.
 .wt/
 
+# Gregors lokale Freigaben fuer Claude Code (/permissions, "Project settings (local)")
+.claude/settings.local.json
+
 # Lokale Ausschlussliste mit persoenlichen Namen (tools/pruefe-testdaten-anonym.pl) - nie ins oeffentliche Repo
 tools/anonym-begriffe.lokal
