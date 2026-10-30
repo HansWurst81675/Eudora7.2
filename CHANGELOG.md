@@ -1,7 +1,8 @@
 # Was sich geändert hat
 
-Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **`7.2.0.N`**
-(Testpaket) bzw. **`7.2.1.N`** (Release) steht gleich in `Eudora71/Version.h`
+Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **`7.2.1.N`**
+(seit dem Release 7.2.1.128 für Testpaket wie Release, davor `7.2.0.N` für
+ein Testpaket) steht gleich in `Eudora71/Version.h`
 und `VERSION`; die Bau-Kennung im Fenstertitel nennt sie plus den Commit.
 Bis 1.0.127 trug `VERSION` eine eigene Zählung `1.0.N` mit derselben
 Endnummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).
@@ -112,7 +113,8 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 **Werkzeuge und Doku**
 
 * **`Intern/WEITERMACHEN.md` aufgeräumt:** von 548 auf 224 Zeilen. Oben der Stand, darunter **eine** Liste „Nach dem Release 7.2.1“ (Aufgaben ohne Befundnummer, von Hand; offene Befunde, erzeugt), die geltenden Entscheidungen 1 bis 19 und die bleibenden Abschnitte zum Messen und Bauen. Alle Stand-Blöcke und die Paketgeschichte bis 7.2.1.128 stehen unverändert im Archiv [Intern/WEITERMACHEN-bis-7.2.0.md](Intern/WEITERMACHEN-bis-7.2.0.md).
-* **Neue Schranke `tools/pruefe-nach-dem-release.pl`** im `pre-commit` (Schritt 19b2): eine Aufgabe „nach dem Release“ außerhalb der Liste wird abgewiesen, ein Verweis auf die Liste und Zitate sind erlaubt. Selbsttest 18 Fälle; Gegenprobe an der alten Datei: abgewiesen (Liste fehlt, Aufgaben an mehreren Stellen). Nach [LEKTOR-100](Befunde/LEKTOR-100.md#lektor-100) auch „nach 7.2.1“ und `Intern/AUFGABEN.md`, das seither nur zum Nachschlagen dient; dazu elf Funde eingearbeitet (Regressionstests oben in der Liste, fehlende Aufgaben ergänzt, [E-13](Intern/BEFUNDE.md#e-13) wieder offen: Behebung seit September im Stand, nie gemessen).
+* **Neue Schranke `tools/pruefe-nach-dem-release.pl`** im `pre-commit` (Schritt 19b2): eine Aufgabe „nach dem Release“ außerhalb der Liste wird abgewiesen, ein Verweis auf die Liste und Zitate sind erlaubt. Selbsttest 19 Fälle; Gegenprobe an der alten Datei: abgewiesen (Liste fehlt, Aufgaben an mehreren Stellen). Nach [LEKTOR-100](Befunde/LEKTOR-100.md#lektor-100) auch „nach 7.2.1“ und `Intern/AUFGABEN.md`, das seither nur zum Nachschlagen dient; dazu elf Funde eingearbeitet (Regressionstests oben in der Liste, fehlende Aufgaben ergänzt, [E-13](Intern/BEFUNDE.md#e-13) wieder offen: Behebung seit September im Stand, nie gemessen). Nach [LEKTOR-101](Befunde/LEKTOR-101.md#lektor-101) auch „nach Release 7.2.1“ ohne „dem“.
+* **Nummernschema, Gregors Entscheidung 20 (30.10.2026):** ab dem Release 7.2.1.128 heißt jede neue Fassung 7.2.1.N, Testpaket wie Release; das nächste Paket ist 7.2.1.129. Nachgezogen in WEITERMACHEN (Entscheidung 10 mit Verweis), PAKETE, MITARBEITEN, dem Kopf dieses CHANGELOG und drei Werkzeugkommentaren.
 
 ---
 

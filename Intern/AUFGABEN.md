@@ -1,6 +1,6 @@
 # Aufgaben — zum Nachschlagen
 
-> **Seit dem 30.10.2026 nur noch zum Nachschlagen.** Was zu tun ist, steht an
+> **Stand 30.10.2026: nur noch zum Nachschlagen.** Was zu tun ist, steht an
 > einer Stelle: in der Liste [Nach dem Release 7.2.1](WEITERMACHEN.md#nach-dem-release).
 > Die offenen Punkte dieser Datei werden dort geprüft und übernommen oder
 > gestrichen ([L-100.2](../Befunde/LEKTOR-100.md#l-100.2)); bis dahin gilt der Text unten als Stand
@@ -416,7 +416,7 @@ widerlegt. Einzelheiten in [CHANGELOG.md](../CHANGELOG.md).
 | [**E-39**](BEFUNDE.md#e-39) — der INI-Abschnitt der gelöschten Persönlichkeit entsteht wieder | oben, 4. | Bau + Start |
 | [**E-47**](BEFUNDE.md#e-47) — Fehlerdialog des Verzeichnisdienstes, `MFC71.DLL` und `MSVCP71.dll` fehlen | oben, 5. | keine Behebung in Sicht |
 | [**E-14**](BEFUNDE.md#e-14) — **am 23.10.2026 erledigt**, aus neun Mailverzeichnissen gemessen: 59 Sitzungen, 9 Erasing-Zeilen, je eine und immer in der ersten Sitzung. Der normale erste Lauf, kein Fehler | `BEFUNDE.md` | echter Befund erst, wenn die Meldung auch beim **zweiten** Start kommt |
-| [**E-13**](BEFUNDE.md#e-13) — kein Fortschritt beim Mailabruf; die Behebung liegt auf `wt/fortschritt-arbeit`, nicht in diesem Zweig | `BEFUNDE.md` | Merge-Entscheidung |
+| [**E-13**](BEFUNDE.md#e-13) — kein Fortschritt beim Mailabruf; die Behebung steckt seit dem 05.09.2026 im Stand (`bd3959c2`), der Zweig `wt/fortschritt-arbeit` existiert nicht mehr ([L-101.2](../Befunde/LEKTOR-101.md#l-101.2)) | `BEFUNDE.md` | am laufenden Programm messen |
 | **`ReleaseBuffer` ohne `GetBuffer`** — Fehlerklasse [R-1](BEFUNDE.md#r-1), **16** Stellen bleiben (gemessen 07.09.2026) | [A2](#a2), [R-1](BEFUNDE.md#r-1) | Bau |
 | **Neun Zeigerstellen** aus [X-3](BEFUNDE.md#x-3) | D3a | Bau |
 | **`EuMemMgr.dll` ist kein Projekt der Projektmappe** — vorgebaut, 2005, Version 7.0.0.9. Ausgerechnet sie löst den Aufrufstapel im Absturzbericht auf | — | — |

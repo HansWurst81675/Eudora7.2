@@ -34,6 +34,8 @@ Daraus folgt für jedes 7.2.1.x:
    dokumentierte Ergebnisse gibt es nicht.
 4. **Fehlende automatische Tests** dürfen nachgeliefert werden; die
    Release-Notizen nennen den Rückstand (siehe *Regressionstests* unten).
+   Bei 7.2.1.128 fehlt dieser Satz in den Notizen
+   ([L-101.1](Befunde/LEKTOR-101.md#l-101.1)).
 
 Zwischenstände wie **7.2.0.123** sind Testpakete für Gregors lokalen Test,
 keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke

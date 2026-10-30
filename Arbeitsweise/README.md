@@ -129,6 +129,7 @@ eine Datei liest, liest diese.
 | [jeder-start-ins-protokoll](jeder-start-ins-protokoll.md) | Eine Schranke, die im Werkzeug sitzt, prüft nur die, die das Werkzeug benutzen - am 21.10.2026 liefen 15 Eudora-Starts an testlauf.ps1 vorbei, 0 Zeilen in TESTLAEUFE.md |
 | [kein-paket-mit-offenem-datenverlust](kein-paket-mit-offenem-datenverlust.md) | Kein Paket ausliefern, solange ein bekannter Weg offen ist, auf dem der Anwender Daten verliert |
 | [keine-tastendruecke-verschicken](keine-tastendruecke-verschicken.md) | SendKeys geht an das Fenster im Vordergrund, nicht an mein Zielfenster - am 08.09.2026 habe ich damit Gregors Explorer-Fenster geschlossen |
+| [keine-unverstaendlichen-abfragen](keine-unverstaendlichen-abfragen.md) | Gregor 30.10.2026 - keine Freigabe-Abfragen fuer Skripte oder Befehle, die er nicht nachvollziehen kann; er lehnt sie ab. Lesen/Suchen/Aendern mit Read, Grep, Edit statt Perl-Einzeilern |
 | [kuerzel-im-chat-uebersetzen](kuerzel-im-chat-uebersetzen.md) | Fundkürzel der Prüfer (F1, N1, L-38.4 …) nie allein im Chat – immer was passiert, wann, mit welcher Folge |
 | [lauffaehiges-ergebnis-liefern](lauffaehiges-ergebnis-liefern.md) | Ziel ist eine einsetzbare Eudora-Version, nicht ein Zwischenstand — pragmatisch priorisieren, mit Prüfanleitung übergeben |
 | [lehren-anwenden-nicht-nur-schreiben](lehren-anwenden-nicht-nur-schreiben.md) | Eine aufgeschriebene Lehre ohne Ausloeser und Werkzeug wirkt nicht - jede Lehre braucht einen Moment, in dem sie geprueft wird |

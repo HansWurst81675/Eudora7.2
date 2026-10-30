@@ -93,7 +93,8 @@ sub pruefe_text {
         my $ohne = $text;
         $ohne =~ s/\x{201E}[^\x{201C}]*\x{201C}//g;
         $ohne =~ s/`[^`]*`//g;
-        return unless $ohne =~ /nach\s+(?:dem\s+Release|v?7\.2\.1(?![.\d]\d))/i;
+        # "nach Release 7.2.1" ohne "dem" seit LEKTOR-101 (L-101.3).
+        return unless $ohne =~ /nach\s+(?:(?:dem\s+)?Release|v?7\.2\.1(?![.\d]\d))/i;
         return if $text =~ /#\Q$ANKER\E\)/;
         (my $kurz = $text) =~ s/\s+/ /g;
         push @maengel, sprintf "%d: %s", $start, substr($kurz, 0, 90);
@@ -140,6 +141,7 @@ sub selbsttest {
         ['Liste fehlt, Aufgabe da',            "# T\n\nnach dem Release X\n",                    2],
         # Seit LEKTOR-100 (L-100.9): die zweite Wendung und Verweise aus AUFGABEN.md
         ['nach 7.2.1 ausserhalb',              $kopf . $liste . "## Mehr\n\nDas machen wir erst nach 7.2.1.\n", 1],
+        ['nach Release 7.2.1 ohne dem',        $kopf . $liste . "## Mehr\n\nDas machen wir nach Release 7.2.1.\n", 1],
         ['nach 7.2.1.128 ist eine Fassung',    $kopf . $liste . "## Mehr\n\nGeaendert nach 7.2.1.128.\n", 0],
         ['AUFGABEN: ohne Liste, mit Verweis',  "# A\n\nX nach 7.2.1, siehe [L](WEITERMACHEN.md#nach-dem-release).\n", 0, 0],
         ['AUFGABEN: ohne Liste, ohne Verweis', "# A\n\nX machen wir nach dem Release.\n",   1, 0],

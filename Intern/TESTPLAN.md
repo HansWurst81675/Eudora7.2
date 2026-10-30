@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 29.10.2026 (getestet, E-166 bestanden)
+# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 30.10.2026 (getestet am 29.10.2026, E-166 bestanden; seither kein neues Testpaket)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
