@@ -86,7 +86,7 @@ da, nicht zum Lesen.
 | `Intern/` — nachschlagen, nicht lesen | |
 |---|---|
 | [BEFUNDE.md](Intern/BEFUNDE.md) | jeder Befund mit Messung, Urteil und **was noch fehlt**. 8700 Zeilen; über die Kennung anspringen. Die Legende der 16 Kürzel steht ganz oben |
-| [WEITERMACHEN.md](Intern/WEITERMACHEN.md) | der nächste Schritt |
+| [WEITERMACHEN.md](Intern/WEITERMACHEN.md) | was zu tun ist: die eine Liste „Nach dem Release 7.2.1“ |
 | [AUFGABEN.md](Intern/AUFGABEN.md), [TESTPLAN.md](Intern/TESTPLAN.md) | Arbeitspakete und Prüfpunkte |
 | [PORTIERUNG.md](Intern/PORTIERUNG.md) | Portierungstagebuch |
 | [LEKTORAT.md](Intern/LEKTORAT.md), [PRUEFBERICHT.md](Intern/PRUEFBERICHT.md) | Berichte der Rollen LEKTOR und PRÜFER (Archiv bis 30.08.2026 — nicht zu verwechseln mit dem Testbericht `Releases/PRUEFBERICHT.md`) |

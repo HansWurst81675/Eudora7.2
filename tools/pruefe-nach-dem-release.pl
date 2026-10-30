@@ -26,10 +26,20 @@ use warnings;
 # DIE REGEL
 #
 # Ausserhalb des Abschnitts mit dem Anker nach-dem-release darf ein Absatz
-# (oder eine Tabellenzeile) "nach dem Release" nur nennen, wenn er auf die
-# Liste verweist: "(#nach-dem-release)". Zitate in deutschen Anfuehrungszeichen und Codespannen zaehlen
-# nicht - ein Zitat Gregors ist Geschichte, keine Aufgabe. Fehlt der
-# Abschnitt ganz, ist das ebenfalls ein Mangel.
+# (oder eine Tabellenzeile) "nach dem Release" oder "nach 7.2.1" nur nennen,
+# wenn er auf die Liste verweist: "#nach-dem-release)" am Ende eines Links.
+# Zitate in deutschen Anfuehrungszeichen und Codespannen zaehlen nicht - ein
+# Zitat Gregors ist Geschichte, keine Aufgabe. "nach 7.2.1.128" (eine
+# Fassung) zaehlt ebenfalls nicht. In Intern/WEITERMACHEN.md muss der
+# Abschnitt selbst stehen; Intern/AUFGABEN.md (seit dem 30.10.2026 nur zum
+# Nachschlagen) darf nur verweisen.
+#
+# BEKANNTE GRENZEN (LEKTOR-100, L-100.9)
+#
+# * Ein Absatz mit Link auf die Liste geht durch, auch wenn die Aufgabe dort
+#   gar nicht steht. Ob sie dort steht, prueft das Werkzeug nicht.
+# * Andere Wendungen ("spaeter", "beim naechsten Mal") faengt es nicht.
+# * Geprueft werden nur WEITERMACHEN.md und AUFGABEN.md.
 
 my $ANKER = 'nach-dem-release';
 
@@ -41,7 +51,7 @@ for my $a (@ARGV) {
 }
 unless (@dateien) {
     my $wurzel = -f 'VERSION' ? '.' : '..';
-    @dateien = ("$wurzel/Intern/WEITERMACHEN.md");
+    @dateien = ("$wurzel/Intern/WEITERMACHEN.md", "$wurzel/Intern/AUFGABEN.md");
 }
 
 my @mangel;
@@ -49,7 +59,9 @@ for my $d (@dateien) {
     open my $h, '<:encoding(UTF-8)', $d or do { print "  pruefe-nach-dem-release: $d nicht lesbar\n"; exit 2 };
     my $t = do { local $/; <$h> };
     close $h;
-    push @mangel, map { "$d:$_" } pruefe_text($t);
+    # Nur WEITERMACHEN.md muss die Liste selbst tragen.
+    my $pflicht = $d =~ m{(?:^|[\\/])WEITERMACHEN\.md\z} ? 1 : 0;
+    push @mangel, map { "$d:$_" } pruefe_text($t, $pflicht);
 }
 
 if (@mangel) {
@@ -67,7 +79,8 @@ exit 0;
 
 # Gibt die Maengel als "Zeile: Anfang des Absatzes" zurueck.
 sub pruefe_text {
-    my ($t) = @_;
+    my ($t, $pflicht) = @_;
+    $pflicht = 1 unless defined $pflicht;
     my @z = split /\n/, $t, -1;
     my (@maengel, @einheit);
     my ($innen, $gesehen, $code, $start) = (0, 0, 0, 0);
@@ -80,8 +93,8 @@ sub pruefe_text {
         my $ohne = $text;
         $ohne =~ s/\x{201E}[^\x{201C}]*\x{201C}//g;
         $ohne =~ s/`[^`]*`//g;
-        return unless $ohne =~ /nach\s+dem\s+Release/i;
-        return if $text =~ /\(#\Q$ANKER\E\)/;
+        return unless $ohne =~ /nach\s+(?:dem\s+Release|v?7\.2\.1(?![.\d]\d))/i;
+        return if $text =~ /#\Q$ANKER\E\)/;
         (my $kurz = $text) =~ s/\s+/ /g;
         push @maengel, sprintf "%d: %s", $start, substr($kurz, 0, 90);
     };
@@ -103,7 +116,7 @@ sub pruefe_text {
         push @einheit, $l;
     }
     $abschliessen->();
-    unshift @maengel, "0: der Abschnitt mit dem Anker $ANKER fehlt" unless $gesehen;
+    unshift @maengel, "0: der Abschnitt mit dem Anker $ANKER fehlt" if $pflicht and !$gesehen;
     return @maengel;
 }
 
@@ -125,11 +138,17 @@ sub selbsttest {
         ['Unterabschnitt bleibt innen',        $kopf . $liste,                                   0],
         ['Liste fehlt',                        "# T\n\nnichts\n",                                1],
         ['Liste fehlt, Aufgabe da',            "# T\n\nnach dem Release X\n",                    2],
+        # Seit LEKTOR-100 (L-100.9): die zweite Wendung und Verweise aus AUFGABEN.md
+        ['nach 7.2.1 ausserhalb',              $kopf . $liste . "## Mehr\n\nDas machen wir erst nach 7.2.1.\n", 1],
+        ['nach 7.2.1.128 ist eine Fassung',    $kopf . $liste . "## Mehr\n\nGeaendert nach 7.2.1.128.\n", 0],
+        ['AUFGABEN: ohne Liste, mit Verweis',  "# A\n\nX nach 7.2.1, siehe [L](WEITERMACHEN.md#nach-dem-release).\n", 0, 0],
+        ['AUFGABEN: ohne Liste, ohne Verweis', "# A\n\nX machen wir nach dem Release.\n",   1, 0],
+        ['AUFGABEN: ohne Liste, nichts dazu',  "# A\n\nnichts\n",                           0, 0],
     );
     my $fehler = 0;
     binmode STDOUT, ':encoding(UTF-8)';
     for my $f (@faelle) {
-        my $n = () = pruefe_text($f->[1]);
+        my $n = () = pruefe_text($f->[1], $f->[3]);
         my $ok = $n == $f->[2];
         $fehler++ unless $ok;
         printf "  %-4s %-32s %d Maengel (erwartet %d)\n", $ok ? 'ok' : 'FEHL', $f->[0], $n, $f->[2];
