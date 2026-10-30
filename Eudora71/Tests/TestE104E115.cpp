@@ -33,10 +33,18 @@ static void Test_E104(const char* szEudoraDir)
 			TT_Fail("%s nicht lesbar - ungeprueft ist nicht gruen", aDateien[i]);
 			continue;
 		}
-		const int iGanz  = QT_Zaehle(pText, "::UnwrapText( CopyText )") + QT_Zaehle(pText, "::UnwrapText(CopyText)");
+		// PRUEFER-67 K4: gesucht wurde nur "::UnwrapText( CopyText )". Ohne
+		// "::" oder mit einem anderen Argument (msg.GetBuffer()) blieb der
+		// Test gruen. Jetzt zaehlt JEDER Aufruf, und erlaubt sind nur die
+		// bekannten: ueber den Rumpf, und compmsgd.cpp beim Senden als Text
+		// (Put( UnwrapText( CopyText )) - dort ist CopyText nur der Rumpf).
+		const int iAlle  = QT_Zaehle(pText, "UnwrapText(") + QT_Zaehle(pText, "UnwrapText (");
+		const int iErlaubt = QT_Zaehle(pText, "::UnwrapText( pszRumpf );")
+						   + QT_Zaehle(pText, "::UnwrapText( pszRumpf2 );")
+						   + QT_Zaehle(pText, "pFile->Put( UnwrapText( CopyText ))");
 		const int iRumpf = QT_Zaehle(pText, "? (char*) ::FindBody( CopyText ) : CopyText;");
-		if (iGanz)
-			TT_Fail("%s: UnwrapText laeuft %d-mal ueber den ganzen Text samt Kopfzeilen (E-104)", aDateien[i], iGanz);
+		if (iAlle != iErlaubt)
+			TT_Fail("%s: %d Aufrufe von UnwrapText, davon nur %d ueber den Rumpf - einer laeuft ueber den ganzen Text samt Kopfzeilen (E-104)", aDateien[i], iAlle, iErlaubt);
 		if (iRumpf != aErwartet[i])
 			TT_Fail("%s: %d statt %d Stellen suchen den Rumpf mit FindBody, bevor UnwrapText laeuft", aDateien[i], iRumpf, aErwartet[i]);
 		free(pText);

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: f6188ad4-4df8-4a5e-bb99-a9fb32d6557a
-  modified: 2026-10-30T21:32:29.708Z
+  modified: 2026-10-30T21:49:09.715Z
 ---
 
 Schranke: keine - ob eine Abfrage kommt, entscheidet die Rechtepruefung; die Regeln stehen in `.claude/settings.local.json` (ignoriert, nicht im Repo).
@@ -20,3 +20,11 @@ Gregor: *„mach so weiter, wie du vor dem release gemacht hast - ohne mich zu f
 - Nur im Projektordner arbeiten. Rollen- und Agentenbaeume legen `tools/auftrag-rolle.pl` und `tools/arbeitsbaum-frei.pl` jetzt unter `.wt/<name>` an (Commit f0493d14). Die alten `../Eudora7.2-wt-*` nicht mehr anfassen.
 - Befehle so schreiben, dass sie unter eine Regel fallen: `git push` allein, `perl tools/<name>.pl ...` allein, ohne `perl -e`, moeglichst ohne Pipes und Verkettungen um den freigegebenen Befehl herum.
 - Faellt etwas Noetiges unter keine Regel: Gregor die genaue Regel und den Ort (`/permissions` -> Allow -> Project settings (local)) nennen, nicht den Befehl trotzdem abschicken.
+
+## Nachtrag 30.10.2026 (CHRONIST): die Regel stand um 22:32, der Auftrag um 22:40 brach sie
+
+Zeiten MEZ, Transkript `f6188ad4`, gemessen.
+
+- **Der eigene Auftrag hielt die Regel nicht ein.** Diese Lehre sagt seit 22:32:29: *„ohne Verkettungen um den freigegebenen Befehl herum“*. Der CHRONIST-Auftrag um 22:40 schrieb als einzig erlaubte Shell-Form vor: `cd /c/Users/Gregor/Documents/github/Eudora7.2 && perl tools/verlauf-messen.pl <argumente>`. Der CHRONIST hielt sich wörtlich daran, und es kamen drei Abfragen (22:41:04, 22:41:32, 22:41:40). Gregor um 22:42:56: *„ich habe ja wt für chronisten freitgegeben, ja? warum hält er sich nicht dran?“* Er hielt sich daran. Falsch war die Vorgabe. Ein Auftrag mit Befehlsform wird vor dem Start gegen diese Lehre gelesen ([[auftrag-darf-nicht-loeschen]], gleiche Klasse: der Auftrag trägt den Fehler).
+- **Die Freigaben kamen in fünf Runden.** Gregor meldete *„ist gesetzt, prüfe“* um 22:28:21, 22:30:21, 22:35:37, 22:36:04 und 22:38:45. Zuerst wurde ihm nur `git push` genannt. Die Perl-Regel kam erst, nachdem er selbst gefragt hatte: *„was ist mit perl?“* (22:28:41), *„z.b. für  perl tools/lehren-uebersicht.pl“* (22:29:20). Danach folgten das Verzeichnis für den LEKTOR, ein fehlendes Komma und um 22:37:58 *„wo ist die andere freigabe für chronisten?“*. Alles, was die Rollen des Abends brauchten, stand schon um 22:24 fest: `tools/auftraege/LEKTOR.txt`, die CHRONIST-Vorgabe und die Pfade der Protokolle.
+- **How to apply, zusätzlich:** Wer Gregor um eine Freigabe bittet, nennt **alle** Einträge für alle Rollen des Abends in einem Block. Vorher wird für jede Rolle gezählt, welche Befehle und Verzeichnisse ihr Auftrag nennt ([[liste-aus-einer-quelle]]). Eine Rolle, deren Befehle unter keine Regel fallen, startet erst, wenn die Regel steht.

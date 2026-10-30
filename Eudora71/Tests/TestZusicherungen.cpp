@@ -37,8 +37,13 @@ static void PruefeOhneZusicherung(const char* szEudoraDir, const char* szTest, c
 		TT_Fail("%s: Abschnitt '%s' ... '%s' nicht gefunden - der Test passt nicht mehr zur Stelle", szDatei, szVon, szBis);
 	else
 	{
-		if (QT_Enthaelt(pAb, "ASSERT("))
-			TT_Fail("%s: im Abschnitt steht wieder eine Zusicherung - sie feuert auf dem normalen Weg", szDatei);
+		// PRUEFER-67 K4: "ASSERT (" mit Leerzeichen und "_ASSERTE(" blieben
+		// gruen. "ASSERT(" deckt _ASSERT( mit ab, "ASSERTE" ist ein eigenes
+		// Wort. VERIFY( bleibt aussen vor: es wertet im Release-Bau aus.
+		static const char* aZusicherung[] = { "ASSERT(", "ASSERT (", "ASSERTE(", "ASSERTE (" };
+		for (int i = 0; i < 4; i++)
+			if (QT_Enthaelt(pAb, aZusicherung[i]))
+				TT_Fail("%s: im Abschnitt steht wieder eine Zusicherung ('%s') - sie feuert auf dem normalen Weg", szDatei, aZusicherung[i]);
 		if (szWeg && !QT_Enthaelt(pAb, szWeg))
 			TT_Fail("%s: '%s' fehlt im Abschnitt - der Weg selbst hat sich veraendert", szDatei, szWeg);
 		free(pAb);
