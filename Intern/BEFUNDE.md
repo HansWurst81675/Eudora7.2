@@ -261,7 +261,7 @@ zuerst [**E-11**](#e-11), [**R-1**](#r-1) und [**E-1**](#e-1).
 | Kennung | Worum es geht | Status |
 |---|---|---|
 | <a id="e-1"></a>E-1 | der erste erfolgreiche Mailabruf, 159 Nachrichten | **Beleg** (Kriterium 1 und 3) **Stufe: unkritisch** (erster erfolgreicher Abruf, kein Mangel)|
-| <a id="e-2"></a>E-2 | Werkzeugleiste vollständig, HTML-Umlaute zerstört | **Beleg**; Ursache in Z-2 **Stufe: kritisch** (Zeichensatz: HTML-Umlaute zerstoert)|
+| <a id="e-2"></a>E-2 | Werkzeugleiste vollständig, HTML-Umlaute zerstört | **überholt** durch Z-2 — E-2 ist die Beobachtung am Bildschirm, die Ursache steht in Z-2 und ist dort behoben und getestet (`TestZeichenWege.cpp`, Fälle „Z-2“) **Stufe: kritisch** (Zeichensatz: HTML-Umlaute zerstoert)|
 | <a id="e-3"></a>E-3 | TLS 1.3 mit der ausgelieferten QCSSL 1.0.1, `mx.freenet.de:110` | **Beleg** **Stufe: kritisch** (Verbindung: TLS-Aushandlung bricht ab)|
 | <a id="e-4"></a>E-4 | Debug-Zusicherung beim Beenden: Index außerhalb `m_arrBars` | **behoben, ungeprüft** in **7.2.0.3** (05.09., `1188e87`: die Ursache liegt beim **Start**, ein ungeprüfter Cast in `WazooBarMgr.cpp`) **Stufe: unkritisch** (Zusicherung beim Beenden, nur im Fehlersuchbau)|
 | <a id="e-5"></a>E-5 | „Release startet auf Win11 gar nicht" | **überholt** durch E-6/E-8 **Stufe: kritisch** (Start: Release startet nicht)|
