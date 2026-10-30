@@ -22,7 +22,8 @@
 #      Fassung, deren eigene Dokumentation sie fuer ungeprueft erklaert, wird
 #      nicht veroeffentlicht.
 #   3. Quellstand und Paketnummer muessen zur verlangten Fassung passen
-#      (Version.h mit seinen DREI Makros, und VERSION).
+#      (Version.h mit vier Mustern, und VERSION); ein Release traegt
+#      die Nummer 7.2.1.N, eine 7.2.0.N wird abgewiesen (Entscheidung 20).
 #   4. Das ZIP muss vorhanden sein; Groesse und Pruefsumme werden ausgegeben.
 #
 # Aufruf:
@@ -64,8 +65,17 @@ if ([string]::IsNullOrWhiteSpace($Freigabe) -or $Freigabe.Trim().Length -lt 10) 
 # Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) heisst
 # ein Release ueberall gleich: 7.2.1.N in VERSION, Version.h, ZIP und Marke
 # v7.2.1.N. Die alte Paketnummer 1.0.N gibt es nicht mehr.
+#
+# Seit dem Release 7.2.1.128 heisst jede Fassung 7.2.1.N, Testpaket wie
+# Release (Entscheidung 20); eine 7.2.0.N gibt es nicht mehr. Bis zum
+# 30.10.2026 wurde nur die Form a.b.c.d verlangt; ein Baum auf 7.2.0.129
+# waere als Release v7.2.0.129 durchgegangen (PRUEFER-65 K2).
 if ($Fassung -notmatch '^\d+\.\d+\.\d+\.\d+$') {
     Melde ('Fassung muss die Form 7.2.1.128 haben, war: ' + $Fassung)
+} elseif ($Fassung.Split('.')[2] -ne '1') {
+    Melde ('Fassung ' + $Fassung + ' ist keine 7.2.1.N: seit dem Release ' +
+           '7.2.1.128 heisst jede Fassung 7.2.1.N (Entscheidung 20, ' +
+           'Intern/WEITERMACHEN.md). VERSION und Version.h darauf setzen.')
 } else {
     $paketDatei = Join-Path $wurzel 'VERSION'
     $paket = ''
@@ -86,7 +96,7 @@ if ($Fassung -notmatch '^\d+\.\d+\.\d+\.\d+$') {
             ('"' + $Fassung + '"'))) {
             if ($inhalt -notlike ('*' + $muster + '*')) {
                 Melde ('Version.h enthaelt nicht "' + $muster +
-                       '" - dort stehen DREI Makros, alle drei muessen passen.')
+                       '" - alle vier Muster muessen passen.')
             }
         }
     } else {
