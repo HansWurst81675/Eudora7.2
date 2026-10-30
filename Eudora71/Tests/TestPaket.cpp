@@ -25,6 +25,29 @@
 #include "TinyTest.h"
 #include "Quelltext.h"
 
+// PRUEFER-66 K3: eine auskommentierte Pruefung darf nicht als vorhanden
+// gelten. Jede Zeile, deren erstes sichtbares Zeichen '#' ist, wird geleert
+// (Arbeitsweise/schranke-liest-nur-code.md). Ein '#' mitten in der Zeile
+// bleibt stehen - in diesen Skripten steht es auch in Zeichenketten.
+static char* LiesSkript(const char* szEudoraDir, const char* szRelPfad)
+{
+	char* pText = QT_Lesen(szEudoraDir, szRelPfad);
+	if (!pText) return NULL;
+	char* pZeile = pText;
+	while (*pZeile)
+	{
+		char* p = pZeile;
+		while (*p == ' ' || *p == '\t') p++;
+		char* pEnde = strchr(pZeile, '\n');
+		if (!pEnde) pEnde = pZeile + strlen(pZeile);
+		if (*p == '#')
+			for (char* q = p; q < pEnde; q++)
+				if (*q != '\r') *q = ' ';
+		pZeile = *pEnde ? pEnde + 1 : pEnde;
+	}
+	return pText;
+}
+
 // Holt das Muster aus "$debugMuster = '(?i)...'" und baut daraus eine
 // std::regex. Rueckgabe false, wenn es nicht zu finden oder nicht zu
 // uebersetzen ist.
@@ -82,8 +105,8 @@ static void PruefeMuster(const char* szSkript, const char* pSkript)
 static void Test_DebugImPaket(const char* szEudoraDir)
 {
 	TT_BeginTest("E-156/S-1: das Debug-Muster aus paket-pruefen.ps1 und paket-bauen.ps1 erkennt die echten Faelle (ausgefuehrt)");
-	char* pPruefen = QT_Lesen(szEudoraDir, "..\\..\\tools\\paket-pruefen.ps1");
-	char* pBauen   = QT_Lesen(szEudoraDir, "..\\..\\tools\\paket-bauen.ps1");
+	char* pPruefen = LiesSkript(szEudoraDir, "..\\..\\tools\\paket-pruefen.ps1");
+	char* pBauen   = LiesSkript(szEudoraDir, "..\\..\\tools\\paket-bauen.ps1");
 	if (!pPruefen || !pBauen)
 	{
 		TT_Fail("paket-pruefen.ps1 oder paket-bauen.ps1 nicht lesbar - ungeprueft ist nicht gruen");
@@ -128,7 +151,7 @@ static void Test_DebugImPaket(const char* szEudoraDir)
 static void Test_FehlendeLaufzeit(const char* szEudoraDir)
 {
 	TT_BeginTest("S-1 (Quelltext): eine DLL, die weder im Paket liegt noch zu Windows gehoert, ist ein FEHLER");
-	char* pText = QT_Lesen(szEudoraDir, "..\\..\\tools\\paket-pruefen.ps1");
+	char* pText = LiesSkript(szEudoraDir, "..\\..\\tools\\paket-pruefen.ps1");
 	if (!pText) { TT_Fail("paket-pruefen.ps1 nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
 	QT_LeerraumZusammen(pText);
 
@@ -157,7 +180,7 @@ static void Test_FehlendeLaufzeit(const char* szEudoraDir)
 static void Test_Architektur(const char* szEudoraDir)
 {
 	TT_BeginTest("S-8 (Quelltext): eine Paketdatei, die nicht x86 ist, ist ein FEHLER (sonst 0xc000007b)");
-	char* pText = QT_Lesen(szEudoraDir, "..\\..\\tools\\paket-pruefen.ps1");
+	char* pText = LiesSkript(szEudoraDir, "..\\..\\tools\\paket-pruefen.ps1");
 	if (!pText) { TT_Fail("paket-pruefen.ps1 nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
 	QT_LeerraumZusammen(pText);
 
@@ -169,9 +192,34 @@ static void Test_Architektur(const char* szEudoraDir)
 	TT_EndTest();
 }
 
+// V-1: am 31.08.2026 hingen unter v1.0.3 nacheinander zwei verschiedene
+// ZIPs. Seit dem 14.09.2026 weist release-veroeffentlichen.ps1 eine Marke
+// ab, die es auf GitHub schon gibt, BEVOR "gh release create" laeuft.
+static void Test_Marke(const char* szEudoraDir)
+{
+	TT_BeginTest("V-1 (Quelltext): eine schon vorhandene Release-Marke wird abgewiesen, nicht ueberschrieben");
+	char* pText = LiesSkript(szEudoraDir, "..\\..\\tools\\release-veroeffentlichen.ps1");
+	if (!pText) { TT_Fail("release-veroeffentlichen.ps1 nicht lesbar - ungeprueft ist nicht gruen"); TT_EndTest(); return; }
+	QT_LeerraumZusammen(pText);
+
+	const long lFrage   = QT_Stelle(pText, "& gh release view $marke --json tagName");
+	const long lAbweis  = QT_Stelle(pText, "if ($ghRc -eq 0) {");
+	const long lEnde    = QT_Stelle(pText, "exit 1 } $argumente = @('release', 'create', $marke,");
+	TT_CHECK_MSG(lFrage >= 0, "release-veroeffentlichen.ps1 fragt GitHub nicht mehr, ob die Marke schon existiert");
+	TT_CHECK_MSG(lAbweis > lFrage, "die Abweisung bei vorhandener Marke fehlt oder steht vor der Frage");
+	TT_CHECK_MSG(lEnde > lAbweis, "die Abweisung endet nicht mit 'exit 1' unmittelbar vor 'gh release create'");
+	TT_CHECK_MSG(!QT_Enthaelt(pText, "--clobber"), "release-veroeffentlichen.ps1 benutzt --clobber - das ersetzt ein veroeffentlichtes ZIP");
+	TT_CHECK_MSG(!QT_Enthaelt(pText, "'release', 'upload'") && !QT_Enthaelt(pText, "release upload"),
+				 "release-veroeffentlichen.ps1 laedt in ein bestehendes Release hoch - genau so kam das zweite ZIP unter v1.0.3");
+
+	free(pText);
+	TT_EndTest();
+}
+
 void RunPaketTests(const char* szEudoraDir)
 {
 	Test_DebugImPaket(szEudoraDir);
 	Test_FehlendeLaufzeit(szEudoraDir);
 	Test_Architektur(szEudoraDir);
+	Test_Marke(szEudoraDir);
 }
