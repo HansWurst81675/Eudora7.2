@@ -37,6 +37,9 @@ int UT_ImapFix2047(char* pChars, int* piLen);
 void UT_PseudoQP(char* pText);		// Q-Kodierung, an Ort und Stelle
 int  UT_DecodeB64String(char* pText);	// B-Kodierung, an Ort und Stelle; 0 = fehlerfrei
 
+// --- Base64Decoder (E-145) -----------------------------------------------
+int UT_Base64Dekodiere(const char* pIn, long lInLen, char* pOut, long& lOutLen);
+
 // --- Ressourcenkennungen -------------------------------------------------
 int UT_IdsMimeIsoLatin1(void);
 int UT_IdsMimeIsoLatin9(void);

@@ -139,5 +139,17 @@ int UT_DecodeB64String(char* pText)
 	return DecodeB64String(pText);
 }
 
+// E-145: ein frischer Base64Decoder in einem Zug. Rueckgabe wie Decode: die
+// Zahl der ungueltigen Zeichen.
+int UT_Base64Dekodiere(const char* pIn, long lInLen, char* pOut, long& lOutLen)
+{
+	Base64Decoder d;
+	d.Init();
+	LONG lAus = 0;
+	int iUngueltig = d.Decode(pIn, lInLen, pOut, lAus);
+	lOutLen = lAus;
+	return iUngueltig;
+}
+
 int UT_IdsMimeIsoLatin1(void)	{ return IDS_MIME_ISO_LATIN1; }
 int UT_IdsMimeIsoLatin9(void)	{ return IDS_MIME_ISO_LATIN9; }
