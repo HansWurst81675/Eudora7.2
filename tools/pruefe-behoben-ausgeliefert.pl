@@ -126,8 +126,9 @@ sub fassungen_der_exe {
     my ($inhalt) = @_;
     return () unless defined $inhalt;
     my %v;
-    # 7.2.0.NN (Testpaket) und seit dem 29.10.2026 7.2.1.NN (Release, Gregors
-    # Entscheidung 10 in Intern/WEITERMACHEN.md).
+    # 7.2.0.NN (Testpaket bis zum Release 7.2.1.128) und 7.2.1.NN (Release,
+    # seit dem 30.10.2026 auch Testpaket; Gregors Entscheidungen 10 und 20 in
+    # Intern/WEITERMACHEN.md).
     while ($inhalt =~ /(7\x00\.\x002\x00\.\x00[01]\x00\.\x00(?:\d\x00)+)/g) {
         my $s = $1;
         $s =~ s/\x00//g;

@@ -78,8 +78,9 @@ sub lies {
 #     kann -------------------------------------------------------------------
 
 # Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) traegt
-# VERSION dieselbe vierteilige Nummer wie Version.h - 7.2.1.N, bis zum Release
-# 7.2.1.128 fuer ein Testpaket 7.2.0.N (Entscheidung 20) -, und die Endnummer zaehlt ueber beide
+# VERSION dieselbe vierteilige Nummer wie Version.h - bis zum Release
+# 7.2.1.128 hiess ein Testpaket 7.2.0.N, seither heisst jede Fassung 7.2.1.N
+# (Entscheidung 20) -, und die Endnummer zaehlt ueber beide
 # weiter. Verglichen wird deshalb weiter die LETZTE Stelle; die alte Form
 # 1.0.N bleibt lesbar, weil PAKETE.md und die Tags bis 1.0.127 sie tragen.
 sub nr_aus_version {
