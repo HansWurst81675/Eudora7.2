@@ -104,6 +104,17 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
+## Im Quellstand, noch in keinem Paket
+
+**Zweig `weitermachen-aufraeumen`** (nach dem Release `v7.2.1.128`). Nichts am Programm.
+
+**Werkzeuge und Doku**
+
+* **`Intern/WEITERMACHEN.md` aufgeräumt:** von 548 auf 224 Zeilen. Oben der Stand, darunter **eine** Liste „Nach dem Release 7.2.1“ (Aufgaben ohne Befundnummer, von Hand; offene Befunde, erzeugt), die geltenden Entscheidungen 1 bis 19 und die bleibenden Abschnitte zum Messen und Bauen. Alle Stand-Blöcke und die Paketgeschichte bis 7.2.1.128 stehen unverändert im Archiv [Intern/WEITERMACHEN-bis-7.2.0.md](Intern/WEITERMACHEN-bis-7.2.0.md).
+* **Neue Schranke `tools/pruefe-nach-dem-release.pl`** im `pre-commit` (Schritt 19b2): eine Aufgabe „nach dem Release“ außerhalb der Liste wird abgewiesen, ein Verweis auf die Liste und Zitate sind erlaubt. Selbsttest 13 Fälle; Gegenprobe an der alten Datei: abgewiesen (Liste fehlt, Aufgaben an mehreren Stellen).
+
+---
+
 ## 7.2.1.128 — erstes Release 7.2.1: Konto-Eigenschaften verlieren nichts mehr ([E-166](Intern/BEFUNDE.md#e-166)), FAQ, neues Nummernschema
 
 **Auf `main` seit PR #182 (Zweig `e166-junk_message_fix`), weiter über `release-7.2.1-vorbereiten`, `datenschutz-bereinigen`, `datenschutz-bereinigen-die_zweite` und `faq-erweitern` (PR #183 bis #186), dann `release-7.2.1`.** Erste Fassung im neuen Nummernschema: Release `7.2.1.128`, die Endnummer zählt nach 1.0.127 weiter ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)). Von Gregor am 29.10.2026 getestet: an der VM ohne Fehlerzeile, [E-166](Intern/BEFUNDE.md#e-166) auf Hauptrechner und Laptop bestanden ([TESTPLAN](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner)). **Veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026** (PR #187).
