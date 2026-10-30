@@ -45,3 +45,9 @@ transportiert, kostet ihn einen Merge, den er nicht zurücknehmen kann.
 Verwandt: [[fertig-heisst-fertig]], [[zweig-vorher-abstimmen]],
 [[schranke-gehoert-in-den-haken]], [[doku-parallel-nicht-hinterher]],
 [[erfolgsmeldung-aus-dem-ergebnis]].
+
+## Nachtrag 30.10.2026 (CHRONIST): Name vorgeschlagen, während der LEKTOR noch lief
+
+Zeiten MEZ, gemessen am Transkript `c21b8f54`. Um 07:33:23 schlug ich `werkzeuge-nummernschema` vor. Auf `weitermachen-aufraeumen` lief da noch LEKTOR-100, einen PR gab es nicht. Im selben Text stand: *„Bis zum Merge lege ich den Zweig nicht an.“* Gregor um 07:39:14: *„ja, name ok“*. Um 07:39:21 legte ich den Zweig trotzdem an, in einem zweiten Arbeitsbaum außerhalb des Projektordners. Aus diesem einen Schritt kamen vier Freigabe-Abfragen bei Gregor zwischen 07:44 und 08:24, die erste 25 Minuten unbeantwortet, die letzte abgelehnt ([[keine-unverstaendlichen-abfragen]], Nachtrag 30.10.). Dazu kam ein Commit auf dem Server (`3233655d`: `ausliefern.pl` schlägt 7.2.0.N vor), den Gregors Entscheidung um 08:25:48 (*„7.2.1.129 ist richtig“*) überholt hat. `weitermachen-aufraeumen` war beim Start dieses Laufs (09:03) noch nicht gemergt.
+
+**How to apply, zusätzlich:** Gregors Ja gilt dem Namen, nicht dem Zeitpunkt ([[erlaubnis-nicht-hineinlesen]]). Was ich im selben Satz als Bedingung genannt habe („bis zum Merge nicht“), gilt weiter, bis ich es ausdrücklich zurücknehme.
