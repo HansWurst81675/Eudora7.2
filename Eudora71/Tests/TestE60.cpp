@@ -71,4 +71,26 @@ void RunE60Tests(void)
 					(int) andockleiste.m_arrSplitters.GetSize());
 	}
 	TT_EndTest();
+
+	// PRUEFER-66 K2: der Weg, den das Programm wirklich geht, ist OnSize ->
+	// TrennbalkenNeuAnlegen -> DeleteAllSplitters. Auch der darf einen
+	// ziehenden Balken nicht loeschen.
+	TT_BeginTest("E-60: TrennbalkenNeuAnlegen (der Weg aus OnSize) loescht keinen Balken, der gerade gezogen wird");
+	{
+		struct Leiste : public SECDockBar { void Anordnen() { TrennbalkenNeuAnlegen(); } } andockleiste;
+		andockleiste.AddSplitter(SECDockBar::Splitter::RowSplitter, SECDockBar::Splitter::Horizontal, 0, 0, 100, 4, 1);
+		SECDockBar::Splitter* pZieht = andockleiste.GetSplitter(0);
+		pZieht->m_bTracking = TRUE;
+		andockleiste.Anordnen();
+		if (andockleiste.m_arrSplitters.GetSize() != 1 || andockleiste.GetSplitter(0) != pZieht)
+			TT_Fail("TrennbalkenNeuAnlegen hat den ziehenden Balken geloescht (%d Balken uebrig) - Track liefe auf freigegebenem Speicher",
+					(int) andockleiste.m_arrSplitters.GetSize());
+
+		pZieht->m_bTracking = FALSE;
+		andockleiste.Anordnen();
+		if (andockleiste.m_arrSplitters.GetSize() != 0)
+			TT_Fail("Gegenprobe: ohne Ziehen raeumt TrennbalkenNeuAnlegen nicht mehr auf (%d Balken uebrig)",
+					(int) andockleiste.m_arrSplitters.GetSize());
+	}
+	TT_EndTest();
 }

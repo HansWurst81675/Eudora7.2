@@ -20,6 +20,26 @@
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
 > ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
 
+## <a id="e-72-verneint"></a>Im nächsten Paket: Filter mit „doesn't appear“ trifft nur die richtigen Nachrichten ([E-72](BEFUNDE.md#e-72))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+7.2.1.128 traf eine Filterbedingung *„… doesn't appear“* **jede**
+Nachricht. Geprüft wird nur mit **Make Label**, nichts wird verschoben.
+Alles im **lokalen** Postfach *In* (nicht IMAP).
+
+1. *Tools → Filters*, neuer Filter, *Manual* ankreuzen, sonst nichts.
+2. Bedingung: Kopfzeile **`Reply-To:`**, Verb **doesn't appear**, Wert leer.
+3. Aktion: **Make Label** mit einem Label, das in *In* noch keine Nachricht trägt.
+4. Im lokalen *In* alle Nachrichten markieren, *Special → Filter Messages* (Strg+J).
+5. **Bestanden:** das Label steht **nur** an Nachrichten ohne `Reply-To:`;
+   eine Nachricht **mit** `Reply-To:` (z. B. von einem Newsletter, im
+   Quelltext der Nachricht zu sehen) bleibt ohne Label. **Nicht bestanden:**
+   alle Nachrichten tragen das Label.
+6. Danach den Filter löschen und das Label wieder entfernen.
+
+Am Quelltext und im Regressionstest `TestE72.cpp` gesichert; am Programm
+habe ich es nicht gefahren.
+
 ### <a id="ergebnis-e-166-laptop"></a>Ergebnis 29.10.2026 an 7.2.1.128: E-166 auf Gregors Laptop, erstmals mit Junk-Werkzeugen — bestanden
 
 * **E-166: bestanden.** Die Junk-Frage kam einmal, als zum ersten Mal ein

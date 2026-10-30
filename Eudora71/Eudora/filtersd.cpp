@@ -710,7 +710,14 @@ BOOL CFilter::MatchValue(int NumCondition, const char* Contents, CSummary *pSum)
 	//
 	// Die Junk-Score-Verben stehen oben und sind hier durch: sie
 	// vergleichen Zahlen, kein leerer Text.
-	if (value.IsEmpty())
+	//
+	// BERICHTIGT 30.10.2026 (PRUEFER-66 K1): "appears" und "doesn't appear"
+	// lesen den Wert gar nicht (unten: return TRUE) - ihr Wert ist
+	// gewoehnlich leer. Die Sperre machte "appears" zu "trifft nie" und,
+	// weil MatchCondition danach verneint, "doesn't appear" zu "trifft
+	// JEDE Nachricht" - derselbe Schaden wie E-64. Die beiden Verben sind
+	// ausgenommen; die Verneinung der uebrigen faengt MatchCondition ab.
+	if (value.IsEmpty() && verb != IDS_APPEARS && verb != IDS_DOESNT_APPEAR)
 	{
 		return FALSE;
 	}
@@ -840,6 +847,19 @@ BOOL CFilter::MatchCondition(int NumCondition, const char* text, CSummary *pSum)
 	if (CompareRStringI(IDS_FHEADER_JUNK_SCORE, m_Header[NumCondition]) == 0)
 	{
 		return MatchValue(NumCondition, text, pSum);
+	}
+
+	// BEFUND E-72, ZWEITE LINIE, berichtigt 30.10.2026 (PRUEFER-66 K1).
+	// Ein leerer Suchwert trifft NICHTS - auch nicht verneint. Bisher sagte
+	// MatchValue FALSE, und der switch am Ende drehte das bei "doesn't
+	// contain" und "is not" zu TRUE: ein Filter mit leerem Wert und einem
+	// dieser Verben traf jede Nachricht und schob mit "transfer" den ganzen
+	// Posteingang. Die Entscheidung steht deshalb hier, VOR der Verneinung.
+	// "appears" und "doesn't appear" brauchen keinen Wert.
+	{
+		const int verb = VERB_FIRST + m_Verb[NumCondition];
+		if (m_Value[NumCondition].IsEmpty() && verb != IDS_APPEARS && verb != IDS_DOESNT_APPEAR)
+			return FALSE;
 	}
 
 	// Shoud we search the body?
