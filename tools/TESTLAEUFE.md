@@ -583,3 +583,7 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-10-29 12:44:23 | `C:\Temp\E67` | Gregor am 29.10.2026: 'ja, freigabe fuer heute, leg los' | Hauptfenster 1770380 - Eudora   [Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 - E67]  Schliesszeit 1 s. |
 | 2026-10-29 12:44:44 | `C:\Temp\E137` | Gregor am 29.10.2026: 'ja, freigabe fuer heute, leg los' | Hauptfenster 1115912 - Eudora   [Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 - E137]  Schliesszeit 1 s. |
 | 2026-10-29 12:45:30 | `C:\Temp\E166` | Gregor am 29.10.2026: 'ja, freigabe fuer heute, leg los' | Hauptfenster 7865616 - Eudora   [Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 - E166]  Schliesszeit 1 s. |
+| 2026-10-30 13:12:48 | `C:\Temp\E13` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 524898 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 13:15:58 | `C:\Temp\E131L` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 197658 - Eudora   [Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 - E131L]  Schliesszeit 2.1 s. |
+| 2026-10-30 13:16:25 | `C:\Temp\E137` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 394282 - Eudora  Schliesszeit 1 s. |
+| 2026-10-30 13:17:23 | `C:\Temp\E13` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 328820 - Eudora  Schliesszeit 1 s. |

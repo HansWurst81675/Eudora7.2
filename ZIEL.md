@@ -158,7 +158,7 @@ sie wieder kaputtzumachen.
 **Die Schranke verlangt den Rückstand nicht auf einmal** — eine Prüfung, die
 vom ersten Tag an jeden Commit abweist, wird am zweiten Tag ausgebaut. Sie
 weist ab, sobald ein Befund **neu** auf *behoben* geht, ohne geprüft zu sein;
-die 97 werden gezählt und können dadurch nur sinken.
+die Altlasten zählt `perl tools/pruefe-regressionstest.pl` und können dadurch nur sinken.
 
 **Dritte Regel, angeordnet am selben Tag:**
 
@@ -178,7 +178,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 | | |
 |---|---|
 | **zuerst** | die Befunde, die **gerade** behoben werden — jede neue Behebung bringt ihren Test im selben Commit mit, das erzwingt `pruefe-regressionstest.pl` |
-| **danach** | die Altlasten: 97 Befunde stehen als *behoben* ohne jede Prüfung. Davon sind viele **Werkzeug**-Befunde ([NP3-4](Intern/BEFUNDE.md#np3-4)…7, [W-1](Intern/BEFUNDE.md#w-1), [X-1](Intern/BEFUNDE.md#x-1)…8), die nicht in die C++-Sammlung gehören, sondern eigene `--selbsttest` haben — die werden getrennt gezählt, damit die Rückstandszahl ehrlich bleibt |
+| **danach** | die Altlasten: Befunde, die als *behoben* ohne jede Prüfung stehen (wie viele, zählt `perl tools/pruefe-regressionstest.pl`). Davon sind viele **Werkzeug**-Befunde ([NP3-4](Intern/BEFUNDE.md#np3-4)…7, [W-1](Intern/BEFUNDE.md#w-1), [X-1](Intern/BEFUNDE.md#x-1)…8), die nicht in die C++-Sammlung gehören, sondern eigene `--selbsttest` haben — die werden getrennt gezählt, damit die Rückstandszahl ehrlich bleibt |
 | **nicht automatisierbar** | bekommt die Marke `Prüfung: manuell` **und** einen Eintrag mit Schritten und erwartetem Ergebnis in [Intern/TESTPLAN.md](Intern/TESTPLAN.md) |
 
 ## Die Kriterien

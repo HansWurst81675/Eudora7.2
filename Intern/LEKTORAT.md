@@ -2923,3 +2923,8 @@ Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](..
 ## LEKTOR-103 (30.10.2026) — Bestätigung nach 9e7e1d0c
 
 [LEKTOR-103](../Befunde/LEKTOR-103.md): Beide Funde aus [LEKTOR-102](../Befunde/LEKTOR-102.md) sind erledigt; ZIEL.md, Entscheidung 1 und die drei Werkzeugkommentare sagen jetzt, dass Testpakete bis zum Release 7.2.1.128 7.2.0.N hießen und seither 7.2.1.N heißen (Entscheidung 20). Der neue Link auf `#entscheidungen` trifft. Keine neuen Funde. Offen bleibt Gregors Frage zum Satz über fehlende Regressionstests in den Notizen zu v7.2.1.128.
+
+## LEKTOR-104 (30.10.2026) — Bestand nach de8cdefd
+
+[LEKTOR-104](../Befunde/LEKTOR-104.md): Aus [LEKTOR-103](../Befunde/LEKTOR-103.md) war kein Fund offen; Gregors Frage zum Satz über fehlende Regressionstests in den Notizen zu v7.2.1.128 bleibt offen. Fünf neue Funde. In 7.2.1.128 verschiebt ein Filter mit „doesn't appear“ und *transfer* jede Nachricht; behoben nur im Quelltext, die README nennt es nicht unter „Bekannte Fehler“ ([L-104.1](../Befunde/LEKTOR-104.md#l-104.1)). Der neue TESTPLAN-Schritt zu [E-72](BEFUNDE.md#e-72) lässt alle manuellen Filter mitlaufen, obwohl er „nichts wird verschoben“ verspricht ([L-104.2](../Befunde/LEKTOR-104.md#l-104.2)). Elf neue Regressionstests (337 statt 326 Tests) stehen weder in CHANGELOG noch in WEITERMACHEN noch in BEFUNDE ([L-104.3](../Befunde/LEKTOR-104.md#l-104.3)). ZIEL.md nennt im Präsens 97 behobene Befunde ohne Prüfung, gemessen sind 50 ([L-104.4](../Befunde/LEKTOR-104.md#l-104.4)); BEFUNDE.md sagt, die Release-Notizen nennen den Rückstand, sie tun es nicht ([L-104.5](../Befunde/LEKTOR-104.md#l-104.5)).
+
