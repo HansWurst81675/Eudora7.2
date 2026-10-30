@@ -37,6 +37,12 @@ char* QT_LiesNurCode(const char* szEudoraDir, const char* szRelPfad);
 // "http://..." als Kommentaranfang gelesen.
 void QT_KommentareRaus(char* pText);
 
+// Leert jeden Block "#if 0" bis zum passenden #else, #elif oder #endif, an
+// Ort und Stelle. PRUEFER-66 K3: stand die Behebung in "#if 0 ... #endif",
+// blieben TestE72 und TestE82 gruen - in den Eudora-Quellen die uebliche Art,
+// Code abzuschalten. QT_LiesNurCode ruft es nach QT_KommentareRaus auf.
+void QT_IfNullRaus(char* pText);
+
 // Zieht jeden Leerraum auf ein Leerzeichen zusammen, an Ort und Stelle.
 void QT_LeerraumZusammen(char* pText);
 

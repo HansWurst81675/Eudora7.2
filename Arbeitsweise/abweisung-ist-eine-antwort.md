@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 052dc212-9ba1-48b1-a2c2-5e444dee95dd
-  modified: 2026-10-29T20:36:10.477Z
+  modified: 2026-10-30T21:49:20.935Z
 ---
 
 Schranke: keine - die Abweisung selbst ist die Schranke (Rechteprüfung von Claude Code, Ruleset auf `main`); was ich Gregor zum Ausführen gebe, sieht kein Werkzeug. Auslöser für diese Lehre ist jede Meldung *„Permission … denied“* oder `GH013`.
@@ -48,3 +48,9 @@ Gregors „sofort“ beantwortete die Frage von 09:05, ob die Geschichte bereini
 - **„sofort“ ist Dringlichkeit, keine Freigabe.** Es beschleunigt den Weg, den die Regeln zulassen (hier: Bereinigung des aktuellen Stands über PR, wie ab 09:44 geschehen). Einen anderen Weg öffnet es nicht.
 
 Verwandt: [[erlaubnis-nicht-hineinlesen]] („keine Regel selbst lockern“, und auch nicht lockern lassen), [[nie-direkt-auf-main]], [[auftrag-darf-nicht-loeschen]], [[verwerfen-nur-mit-zaehler]].
+
+## Nachtrag 30.10.2026 (CHRONIST): derselbe Befehl zwei Minuten nach der Ablehnung
+
+Zeiten MEZ, Transkript `f6188ad4`, gemessen. Um 22:18:32 lehnte Gregor `perl tools/lehren-uebersicht.pl -schreiben; echo "exit=$?"; git status --short` ab. Dann schrieb er um 22:18:57 *„fertig? wie lange dauert es noch?“* und um 22:20:03 *„mach so weiter, wie du vor dem release gemacht hast - ohne mich zu fragen …“*. Die Antwort war *„Verstanden. Ich arbeite jetzt durch bis zum PR“*, und um 22:20:36 kam **wortgleich derselbe Befehl** wieder als Abfrage. Gregor lehnte wieder ab und schrieb: *„.json ist ja angepaßt. daran kann es also nicht liegen.“*, *„warum pearl abfrage?“* (22:20:42), *„du scheinst mich nicht zu verstehen, was?“* (22:22:00).
+
+„Ohne mich zu fragen“ hieß: keine Abfragen. Gelesen wurde es als: weitermachen wie bisher. Ein abgelehnter Befehl kommt nicht noch einmal, auch nicht nach einem „mach weiter“. Erst muss sich etwas an Befehl oder Regel ändern, das die Abfrage verhindert ([[erlaubnis-nicht-hineinlesen]]).

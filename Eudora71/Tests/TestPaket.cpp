@@ -33,6 +33,16 @@ static char* LiesSkript(const char* szEudoraDir, const char* szRelPfad)
 {
 	char* pText = QT_Lesen(szEudoraDir, szRelPfad);
 	if (!pText) return NULL;
+	// PRUEFER-67 K4: auch ein Blockkommentar "<# ... #>" schaltet ab. Er wird
+	// zuerst geleert, damit sein Inneres nicht als Code gelesen wird.
+	for (char* pAuf = strstr(pText, "<#"); pAuf; pAuf = strstr(pAuf, "<#"))
+	{
+		char* pZu = strstr(pAuf + 2, "#>");
+		char* pBis = pZu ? pZu + 2 : pAuf + strlen(pAuf);
+		for (char* q = pAuf; q < pBis; q++)
+			if (*q != '\n' && *q != '\r') *q = ' ';
+		pAuf = pBis;
+	}
 	char* pZeile = pText;
 	while (*pZeile)
 	{

@@ -32,6 +32,11 @@ void RunE86Tests(const char* szEudoraDir)
 	const long lCharset = QT_Stelle(pText, "theFile.Write( szCharsetMeta, sizeof(szCharsetMeta) - 1 );");
 	const long lStil    = QT_Stelle(pText, "theFile.Write( szStyleSheet, szStyleSheet.GetLength() );");
 	TT_CHECK_MSG(lKompat >= 0, "die Zeile X-UA-Compatible wird nicht mehr geschrieben (E-86)");
+	// PRUEFER-67 K4: ein "if (...)" vor dem Write liess den Test gruen, die
+	// Zeile fehlte aber bei fast jeder Nachricht. Verlangt wird deshalb, dass
+	// sie unbedingt als erste Anweisung im try-Block steht.
+	TT_CHECK_MSG(QT_Enthaelt(pText, "try { theFile.Write( szKompatibilitaet, sizeof(szKompatibilitaet) - 1 );"),
+				 "X-UA-Compatible ist nicht mehr die erste, unbedingte Anweisung im try-Block - sie kann wegfallen (E-86)");
 	TT_CHECK_MSG(lKompat >= 0 && lCharset > lKompat && lStil > lKompat,
 				 "X-UA-Compatible steht nicht mehr VOR Zeichensatz und Stilvorlage - MSHTML beachtet es dann nicht");
 	free(pText);

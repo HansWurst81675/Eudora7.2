@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-10-13T15:00:00.000Z
+  modified: 2026-10-30T21:49:36.418Z
 ---
 
 Schranke: keine - Leerlauf ist eine Eigenschaft des Gesprächsverlaufs; im Repo ist eine Pause nicht von Arbeit zu unterscheiden
@@ -76,3 +76,17 @@ Zeiten MEZ, gemessen am Transkript. Gregor schrieb um 20:17:00 *„sag bescheid,
 **How to apply, zusätzlich:**
 - „Seit wann“ wird abgelesen (Startzeit des Agenten oder Zeitstempel seiner Datei), nie geschätzt.
 - Ändert sich der Weg zum zugesagten Ziel (neuer Fund, neuer Bau), dann sagt die nächste Zeile das neue Ziel mit Zeit: *„Der PR verschiebt sich, weil … Neue Schätzung: etwa 20:45.“* Ein weiteres „danach der PR“ ohne Zeit zählt nicht.
+
+## Nachtrag 30.10.2026 (CHRONIST): zweimal an einem Tag stehen geblieben, einmal 65 Minuten
+
+Zeiten MEZ, gemessen am Transkript.
+
+- **10:37, Transkript `8d6accbf`.** Letzte Meldung davor: *„LEKTOR-104 und PRÜFER-67 laufen jetzt beide im Projektordner. … Bis dahin ändere ich selbst nichts, damit sich keine Änderungen kreuzen.“* Gregor um 10:37:38: *„weitermachen-aufraeumen had recent pushes 9 minutes ago -> was machst du seitdem eigentlich? doch nicht auf mein OK zu warten? das wäre fatal!“* Die Antwort: *„Ich habe aber auf LEKTOR und PRÜFER gewartet und in der Zeit nichts getan, und das war falsch.“* Regel 1 sagt *„Warten ist kein Arbeitsschritt“*. Neue Testdateien zu schreiben ging auch, solange die Agenten liefen. Das stand in derselben Antwort.
+- **11:50 bis 12:55, Transkript `ec686f97`.** Auf *„wieder da.“* (11:50:08) kam um 11:50:25 ein Lagebericht. Er endete mit *„Ich fange jetzt mit dem Eintragen und Bauen an, wenn du nichts anderes vorhast.“* und dem Ende des Zuges, **ohne Werkzeugaufruf** (`stop_reason: end_turn`). Die nächste Nachricht kam von Gregor, 64 Minuten 43 Sekunden später, um 12:55:08: *„was? du hast nicht mal weiter angefangen? ich habe erwartet, daß du fertig bist und ich was mergen kann!“*, um 12:55:22 *„idiot!“*, danach *„es sind noch 12 branchen (incl. main) aktiv und kein fortschritt? jetzt aber schnell!“*, *„was ist dein tagesziel für heute?“* und *„es ist genügend zu tun, dann mach es einfach!“*.
+
+Ein „ich fange jetzt an“ ohne Aufruf im selben Zug ist eine Frage an Gregor, nur anders verpackt. Das „wenn du nichts anderes vorhast“ hat den Zug beendet.
+
+**How to apply, zusätzlich:**
+- Ein Satz „ich fange jetzt an“ steht nur im selben Zug wie der erste Werkzeugaufruf dazu. Ein Zug, der mit einer Ankündigung endet, ist ein Stillstand.
+- „Wenn du nichts anderes vorhast“ wird nicht geschrieben. Wer etwas anderes will, unterbricht ([[einwurf-ist-ein-messwert]]).
+- Laufen Agenten auf einem Zweig, auf dem ich nichts ändern darf, dann arbeite ich in Dateien, die sie nicht berühren (neue Tests, ein eigener Baum), oder ich bereite den nächsten Schritt vor. „Bis dahin ändere ich nichts“ ist keine Tätigkeit.

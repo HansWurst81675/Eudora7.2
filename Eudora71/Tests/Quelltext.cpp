@@ -144,6 +144,95 @@ void QT_LeerraumZusammen(char* pText)
 	*pSchreiben = 0;
 }
 
+// Liefert den Namen einer Praeprozessor-Anweisung am Zeilenanfang ("if",
+// "ifdef", "endif" ...) in szName, oder 0, wenn die Zeile keine ist.
+// *ppNachName zeigt hinter den Namen.
+static int Direktive(const char* pZeile, char* szName, int nName, const char** ppNachName)
+{
+	const char*	p = pZeile;
+	int			n = 0;
+
+	while (*p == ' ' || *p == '\t')
+		++p;
+	if (*p != '#')
+		return 0;
+	++p;
+	while (*p == ' ' || *p == '\t')
+		++p;
+	while (n < nName - 1 && *p >= 'a' && *p <= 'z')
+		szName[n++] = *p++;
+	szName[n] = 0;
+	if (ppNachName)
+		*ppNachName = p;
+	return n > 0;
+}
+
+static char* NaechsteZeile(char* pZeile)
+{
+	char*	pEnde = strchr(pZeile, '\n');
+	return pEnde ? pEnde + 1 : pZeile + strlen(pZeile);
+}
+
+static void ZeileLeeren(char* pZeile)
+{
+	for (char* q = pZeile; *q && *q != '\n'; ++q)
+		*q = ' ';
+}
+
+void QT_IfNullRaus(char* pText)
+{
+	char*	pZeile = pText;
+	char	szName[16];
+
+	if (!pText)
+		return;
+
+	while (*pZeile)
+	{
+		const char*	pRest = 0;
+
+		if (Direktive(pZeile, szName, sizeof(szName), &pRest) && strcmp(szName, "if") == 0)
+		{
+			while (*pRest == ' ' || *pRest == '\t')
+				++pRest;
+			const char	chNach = pRest[1];
+			if (pRest[0] == '0' && !(chNach == '_' || chNach == 'x' || chNach == 'X' ||
+									 (chNach >= '0' && chNach <= '9') ||
+									 (chNach >= 'A' && chNach <= 'Z') ||
+									 (chNach >= 'a' && chNach <= 'z')))
+			{
+				// Bis zum passenden #else, #elif oder #endif leeren. Ein
+				// verschachteltes #if/#ifdef/#ifndef zaehlt mit. Hinter #else
+				// oder #elif beginnt wieder lebender Code - das alleinstehende
+				// #endif dahinter stoert keine Suche.
+				int	iTiefe = 0;
+
+				for (;;)
+				{
+					char*	pNaechste = NaechsteZeile(pZeile);
+					int		bEnde = 0;
+
+					if (Direktive(pZeile, szName, sizeof(szName), 0))
+					{
+						if (strncmp(szName, "if", 2) == 0)
+							++iTiefe;
+						else if (strcmp(szName, "endif") == 0)
+							bEnde = (--iTiefe == 0);
+						else if (iTiefe == 1 && (strcmp(szName, "else") == 0 || strcmp(szName, "elif") == 0))
+							bEnde = 1;
+					}
+					ZeileLeeren(pZeile);
+					pZeile = pNaechste;
+					if (bEnde || !*pZeile)
+						break;
+				}
+				continue;
+			}
+		}
+		pZeile = NaechsteZeile(pZeile);
+	}
+}
+
 char* QT_LiesNurCode(const char* szEudoraDir, const char* szRelPfad)
 {
 	char*	pText;
@@ -154,6 +243,7 @@ char* QT_LiesNurCode(const char* szEudoraDir, const char* szRelPfad)
 		return 0;
 
 	QT_KommentareRaus(pText);
+	QT_IfNullRaus(pText);
 	QT_LeerraumZusammen(pText);
 	return pText;
 }

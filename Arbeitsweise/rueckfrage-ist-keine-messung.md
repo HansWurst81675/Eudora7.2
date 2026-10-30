@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 3f65ec35-9408-4b65-b617-033776baffe9
-  modified: 2026-10-22T12:20:00.000Z
+  modified: 2026-10-30T21:49:47.826Z
 ---
 
 Schranke: keine - eine Rueckfrage laesst sich nicht maschinell abweisen; sie geht als Text in den Chat und an keinem Haken vorbei. Was gebaut wurde, ist die **Antwort**: die Legende aller 16 Nummernkreise in `Intern/BEFUNDE.md`, jede Zeile mit ihrer Fundstelle. Die Probe steht unten unter *How to apply* Punkt 2 und ist der Befehl, der sie erzeugt hat.
@@ -105,3 +105,11 @@ In Gregors Protokoll `eudora_20261027.zip` steht in Zeile 54349 ein neuer Kopf, 
 Die Antwort stand in der Datei, die schon offen war: Vor Zeile 54349 gibt es kein `Logging shutdown` (gemessen 17:31:43: das erste steht in Zeile 57806), und nach dem Kopf folgt kein Startablauf, keine Zeile `Search data file …`, kein `Building mailbox 'Out'` (gemessen 17:47:08). Gregor musste eine Frage beantworten, die das Protokoll beantwortete, und danach eine Messung abbrechen, die erst nach seiner Antwort begann.
 
 **How to apply, zusätzlich:** Ein Protokollkopf ist erst dann eine neue Sitzung, wenn davor ein `Logging shutdown` oder ein Abbruch steht und danach der Startablauf (`Search data file …`, `Mode`, das erste `Building mailbox`). Das wird gezählt, bevor Gregor eine Frage zum Verlauf bekommt. Dass die beantwortete Frage danach noch einen Tag im Stand-Vermerk stand, steht bei [[nur-offene-entscheidungen-auf-gregors-liste]], Nachtrag 28.10.
+
+## Nachtrag 30.10.2026 (CHRONIST): „Kannst du sie einfügen wie vorhin?“
+
+Zeiten MEZ, Transkript `f6188ad4`, gemessen. Gregor um 22:36:30: *„eine weitere abfrage kam immer noch!“*. Die Antwort: *„Welche das war, sehe ich von hier aus nicht. Der LEKTOR meldet sich erst am Ende bei mir. Kannst du sie einfügen wie vorhin?“* Gregor um 22:37:27: *„ich schreibe mir ja nicht jeden mist auf, den du mir hier schreibst.“*
+
+Der Befehl stand schon im Transkript des Agenten, `f6188ad4-…/subagents/agent-aeab87a7f2fc280c8.jsonl`, mit Zeit und Wortlaut, und er ist mit Grep ohne Abfrage lesbar. Diesen Ort hatte der CHRONIST-Bericht vom Vormittag genannt ([[CHRONIST-2026-10-30b]], Werkzeugmängel Punkt 2: *„Die Ausgabedateien unter `tasks/` sind für Grep blind“*, die sehende Quelle ist `subagents/agent-*.jsonl`). Gefunden habe ich dort alle acht Ablehnungen des ersten LEKTOR, jede mit Befehl.
+
+**How to apply, zusätzlich:** Was ein laufender Agent getan hat, steht in `<sitzung>/subagents/agent-<id>.jsonl`. Gesucht wird dort mit Grep nach `"toolUseResult":"Error: Permission` oder nach `"name":"Bash"`, bevor Gregor gefragt wird, was er gesehen hat.
