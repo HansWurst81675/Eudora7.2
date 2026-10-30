@@ -245,7 +245,8 @@ if (defined $neu and length $neu) {
     (my $name = $neu) =~ s/[^A-Za-z0-9_-]//g;
     die "Unbrauchbarer Name.\n" unless length $name;
 
-    my $ziel   = "$wurzel/../Eudora7.2-wt-\L$name";
+    # im Projektordner, nicht daneben - siehe tools/auftrag-rolle.pl, Punkt 1
+    my $ziel   = "$wurzel/.wt/\L$name";
     my $branch = "wt/\L$name";
     my $basis  = git('rev-parse', '--abbrev-ref', 'HEAD');
 

@@ -143,3 +143,4 @@
 - [CHRONIST 30.10.2026](CHRONIST-2026-10-30.md) — Lauf 29.10. 21:20 bis 30.10. 07:10: keine neue Lehre, zehn Nachträge; endloser Ersetzungshelfer als „Testbau läuft“ gemeldet und nie gestoppt, zwei Einwürfe ohne Antwort, main 13 Min. „noch nicht veröffentlicht“, VM-Pfad aus Lehre entfernt
 - [CHRONIST 30.10.2026 vormittags](CHRONIST-2026-10-30b.md) — Lauf 07:10 bis 09:03: keine neue Lehre, fünf Nachträge; zweiter Arbeitsbaum gegen die eigene Ansage, sechs Abfragen bei Gregor, Ursache der Lesesperre stand in der eigenen Werkzeugantwort
 - [Prüfstand mit Fenster 30.10.](entscheidung-pruefstand-fenster-30-10.md) — Gregor 30.10. ~13:10: Läufe mit Fenster ab sofort erlaubt, nur dieser Tag; er testet 7.2.1.128 separat
+- [Stand 30.10.2026 abends](stand-30-10-2026-abend.md) — Zweig fortsetzen_status_nie_gemessen gepusht, morgen zuerst LEKTOR, dann PR; messen-e140.ps1 ungelaufen; 13 „nie gemessen“ offen

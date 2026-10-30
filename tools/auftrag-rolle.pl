@@ -14,7 +14,11 @@
 # Jeder Auftrag wurde von Hand neu getippt; jeder Tippfehler darin war neu.
 # Jetzt stehen die Auftraege einmal in tools/auftraege/<ROLLE>.txt, und
 # dieses Werkzeug erledigt, was sonst von Hand geschah:
-#   1. Arbeitsbaum ../Eudora7.2-wt-<rolle> pruefen (sauber, keine Eudora offen)
+#   1. Arbeitsbaum .wt/<rolle> im Projektordner pruefen (sauber) oder anlegen
+#      - NICHT mehr ../Eudora7.2-wt-<rolle>: jeder Zugriff ausserhalb des
+#      Projektordners legt Gregor eine Freigabe-Abfrage vor (30.10.2026, sechs
+#      Abfragen an einem Vormittag; Arbeitsweise/keine-unverstaendlichen-abfragen.md).
+#      .wt/ steht in .gitignore.
 #   2. frischen Zweig wt/<rolle>-<datum>[b..] von origin/<basis>, mit eigenem
 #      Gegenstueck auf dem Server (Arbeitsweise/arbeitsbaum-braucht-eigenes-gegenstueck.md)
 #   3. Berichtsnummer und - fuer PRUEFER - zwei freie E-Kennungen vergeben
@@ -45,7 +49,7 @@ unless ($rolle =~ /^(LEKTOR|PRUEFER)$/ and $basis and $seit) {
 my $repo = abs_path('.');
 (my $repo_win = $repo) =~ s{/}{\\}g;
 $repo_win =~ s{^\\([a-z])\\}{\U$1\E:\\};
-my $baum = abs_path('..') . '/Eudora7.2-wt-' . lc $rolle;
+my $baum = "$repo/.wt/" . lc $rolle;
 (my $baum_win = $baum) =~ s{/}{\\}g;
 $baum_win =~ s{^\\([a-z])\\}{\U$1\E:\\};
 
@@ -124,11 +128,15 @@ $vorlage =~ s/\{(\w+)\}/exists $w{$1} ? $w{$1} : "{$1}"/ge;
 if ($vorlage =~ /\{\w+\}/) { print STDERR "Platzhalter ohne Wert: $&\n"; exit 2 }
 
 unless ($nur_zeigen) {
-    -d $baum or do { print STDERR "Arbeitsbaum $baum fehlt\n"; exit 1 };
-    my ($st) = git('-C', $baum, 'status', '--porcelain');
-    length $st and do { print STDERR "Arbeitsbaum $baum ist nicht sauber:\n$st\n"; exit 1 };
-    my ($sw, $rc1) = git('-C', $baum, 'switch', '-q', '--no-track', '-c', $zweig, "origin/$basis");
-    $rc1 == 0 or do { print STDERR "Zweig anlegen gescheitert: $sw\n"; exit 1 };
+    if (-d $baum) {
+        my ($st) = git('-C', $baum, 'status', '--porcelain');
+        length $st and do { print STDERR "Arbeitsbaum $baum ist nicht sauber:\n$st\n"; exit 1 };
+        my ($sw, $rc1) = git('-C', $baum, 'switch', '-q', '--no-track', '-c', $zweig, "origin/$basis");
+        $rc1 == 0 or do { print STDERR "Zweig anlegen gescheitert: $sw\n"; exit 1 };
+    } else {
+        my ($wa, $rc0) = git('worktree', 'add', '-q', '--no-track', '-b', $zweig, $baum, "origin/$basis");
+        $rc0 == 0 or do { print STDERR "Arbeitsbaum $baum anlegen gescheitert: $wa\n"; exit 1 };
+    }
     my ($pu, $rc2) = git('-C', $baum, 'push', '-q', '-u', 'origin', $zweig);
     $rc2 == 0 or do { print STDERR "Push gescheitert: $pu\n"; exit 1 };
     my $kurz = ($rolle eq 'PRUEFER' ? "$bericht: Aenderungen seit $seit gegen die Quelle, Kennungen $kennungen" : "$bericht: alle MDs gegen den Bestand, seit $seit");

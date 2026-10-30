@@ -74,5 +74,9 @@ Releases/Eudora72-*-release/
 # Prüfstand von tools/kopfzeile-pruefen.pl (nur bei --behalten)
 tools/.kopfzeile/
 
+# Arbeitsbaeume der Rollen und Agenten (tools/auftrag-rolle.pl, tools/arbeitsbaum-frei.pl).
+# Sie liegen im Projektordner, weil jeder Zugriff daneben eine Freigabe-Abfrage ausloest.
+.wt/
+
 # Lokale Ausschlussliste mit persoenlichen Namen (tools/pruefe-testdaten-anonym.pl) - nie ins oeffentliche Repo
 tools/anonym-begriffe.lokal
