@@ -2915,3 +2915,7 @@ Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](..
 ## LEKTOR-101 (30.10.2026) — Nachprüfung zu 2b3ff3a7
 
 [LEKTOR-101](../Befunde/LEKTOR-101.md): Von den elf Funden aus [LEKTOR-100](../Befunde/LEKTOR-100.md) sind neun erledigt, zwei teilweise. Alle neuen Links und Anker treffen, die Release-Buchführung zählt wieder 5 Standaussagen, 47 offene Befunde in beiden Listen gleich. Drei kleine neue Funde: ZIEL.md sagt oben noch, die Release-Notizen nennen den Rückstand an Regressionstests, weiter unten das Gegenteil ([L-101.1](../Befunde/LEKTOR-101.md#l-101.1)); AUFGABEN.md nennt zu [E-13](BEFUNDE.md#e-13) weiter den verschwundenen Zweig ([L-101.2](../Befunde/LEKTOR-101.md#l-101.2)); die Schranke lässt „nach Release 7.2.1“ durch ([L-101.3](../Befunde/LEKTOR-101.md#l-101.3)).
+
+## LEKTOR-102 (30.10.2026) — Nachprüfung nach 4fd851fd
+
+[LEKTOR-102](../Befunde/LEKTOR-102.md): Die drei Funde aus [LEKTOR-101](../Befunde/LEKTOR-101.md) sind erledigt; die Schranke besteht 19 von 19 Fällen, die fünf neuen Stand-Köpfe stimmen mit dem Text darunter. Entscheidung 20 (ab dem Release heißt jede Fassung 7.2.1.N) ist fast überall nachgezogen. Zwei kleine Funde: ZIEL.md sagt im Präsens, Testpakete hießen 7.2.0.N ([L-102.1](../Befunde/LEKTOR-102.md#l-102.1)); drei Werkzeugkommentare beschreiben das alte Schema, einer schreibt es Entscheidung 20 zu ([L-102.2](../Befunde/LEKTOR-102.md#l-102.2)).
