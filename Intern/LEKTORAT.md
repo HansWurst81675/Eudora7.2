@@ -2919,3 +2919,7 @@ Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](..
 ## LEKTOR-102 (30.10.2026) — Nachprüfung nach 4fd851fd
 
 [LEKTOR-102](../Befunde/LEKTOR-102.md): Die drei Funde aus [LEKTOR-101](../Befunde/LEKTOR-101.md) sind erledigt; die Schranke besteht 19 von 19 Fällen, die fünf neuen Stand-Köpfe stimmen mit dem Text darunter. Entscheidung 20 (ab dem Release heißt jede Fassung 7.2.1.N) ist fast überall nachgezogen. Zwei kleine Funde: ZIEL.md sagt im Präsens, Testpakete hießen 7.2.0.N ([L-102.1](../Befunde/LEKTOR-102.md#l-102.1)); drei Werkzeugkommentare beschreiben das alte Schema, einer schreibt es Entscheidung 20 zu ([L-102.2](../Befunde/LEKTOR-102.md#l-102.2)).
+
+## LEKTOR-103 (30.10.2026) — Bestätigung nach 9e7e1d0c
+
+[LEKTOR-103](../Befunde/LEKTOR-103.md): Beide Funde aus [LEKTOR-102](../Befunde/LEKTOR-102.md) sind erledigt; ZIEL.md, Entscheidung 1 und die drei Werkzeugkommentare sagen jetzt, dass Testpakete bis zum Release 7.2.1.128 7.2.0.N hießen und seither 7.2.1.N heißen (Entscheidung 20). Der neue Link auf `#entscheidungen` trifft. Keine neuen Funde. Offen bleibt Gregors Frage zum Satz über fehlende Regressionstests in den Notizen zu v7.2.1.128.
