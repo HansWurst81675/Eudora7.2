@@ -194,3 +194,14 @@ Drei Muster darin:
    Verlauf nicht zu entscheiden; gemessen ist nur die Lücke. Ein `git push`
    gehört nicht in denselben Vordergrundaufruf wie die Arbeit, auf die Gregor
    wartet ([[haengende-kommandos-abbrechen]]).
+
+## Nachtrag 30.10.2026 (CHRONIST): zwei Einwürfe ohne Antwort, 44 %
+
+Gemessen mit `verlauf-messen.pl … 2026-10-29T20:20`: 29.10. 21:20 bis 22:31 MEZ, 36 Nachrichten, 16 davon Einwürfe (44 %). Ein großer Block ist nicht die Ursache, der größte hat 17 Aufrufe.
+
+1. **21:56:19** *„was hat lektor noch gefunden?“* Vorher stand dort nur *„drei kleine Funde, keiner hält das Release auf“* (21:54:50). Danach kamen *„Der Commit hängt noch im Haken“* (21:58:14), *„keinen Rückstrich“* (21:58:28), *„ich warte“* (Gregor, 22:03:10) und *„Entschuldige die Wartezeit“* mit *„die drei LEKTOR-97-Korrekturen“* (22:07:54). Was die drei Funde waren, hat Gregor nie gelesen (gemessen: kein Antworttext nennt L-97.1 bis L-97.3 inhaltlich). Dazu [[kuerzel-im-chat-uebersetzen]]: *„LEKTOR-97-Korrekturen“* ist ein Kürzel ohne Inhalt.
+2. **22:10:16** *„zu e-142 haben wir doch einen hinweis, das wird später gefixt.“* Ohne Echo, die nächste Nachricht (22:11:42) behandelte nur LEKTOR-98. Inhaltlich war nichts zu tun, die Release-Notizen nennen den Hinweis. Gregor weiß das aber erst, wenn es jemand sagt.
+
+Die Regel *„Jeder Einwurf Gregors bekommt eine Antwort, auch wenn ein zweiter dringlicher ist“* steht seit dem 28.10. in [[nur-offene-entscheidungen-auf-gregors-liste]]. Mit dem 15.10. (oben) und dem 28.10. ist das das dritte gemessene Auftreten ([[fehlerklassen-abstellen]]).
+
+**Vorschlag (nicht gebaut):** `verlauf-messen.pl --offen` listet jede Nachricht Gregors, auf die bis zu seiner nächsten Nachricht kein Antworttext ein Inhaltswort aus ihr aufgreift. Gegenprobe: 21:56:19 erscheint, 22:18:07 (*„wo finde ich archiv?“*, beantwortet 22:18:10) nicht.

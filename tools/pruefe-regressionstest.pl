@@ -228,9 +228,16 @@ for my $zeile (split /\n/, $befunde) {
     # gedeckt ist - sonst steht er in einer eigenen Liste mit der Ursache,
     # deren Test fehlt. Doppelte Tests fuer dieselbe Ursache gibt es nicht
     # ("doppelte tests machen keinen sinn").
+    #
+    # JEDER NUMMERNKREIS (30.10.2026). Bis hierher nur E-NN: E-2 ("Beleg",
+    # Ursache in Z-2) blieb mit "**ueberholt** durch Z-2" in der Liste OHNE
+    # jede Pruefung, obwohl Z-2 in TestZeichenWege.cpp getestet ist. Die
+    # Kennung folgt der Legende in BEFUNDE.md: Buchstaben, ggf. Ziffer, Strich,
+    # Nummer (Z-2, NP3-8, S-1).
     my @ursachen;
-    if ($urteil =~ /\*\*\s*(?:\xc3\xbc|ue)berholt\s*\*\*\s*durch\s+((?:E-\d+)(?:\s*\/\s*E-\d+)*)/i) {
-        @ursachen = map { uc } ($1 =~ /(E-\d+)/gi);
+    my $KENNUNG = qr/[A-Z]+\d*-\d+/i;
+    if ($urteil =~ /\*\*\s*(?:\xc3\xbc|ue)berholt\s*\*\*\s*durch\s+($KENNUNG(?:\s*\/\s*$KENNUNG)*)/i) {
+        @ursachen = map { uc } ($1 =~ /($KENNUNG)/g);
     }
     my $ueber_gedeckt = grep { hat_test($_) } @ursachen;
 

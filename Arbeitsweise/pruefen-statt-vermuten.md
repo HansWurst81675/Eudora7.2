@@ -249,7 +249,7 @@ Zeiten MEZ, Uhr des Transkripts (die VM-Uhr sprang danach um etwa 25 Minuten zur
 
 | Zeit | Was |
 |---|---|
-| 16:58:50 | Gregor: *„\\vmware-host\Shared Folders\Win10_VM\test_0.127 schau mal hier rein. … ich kann mit ctrl-k keine adresse ins adressbuch aufnehmen“* |
+| 16:58:50 | Gregor: *„[Pfad seines Freigabeordners] schau mal hier rein. … ich kann mit ctrl-k keine adresse ins adressbuch aufnehmen“* |
 | 16:58:59–16:59:01 | ich: **fünf** Bildschirmfotos auf einmal lesen. 16:59:07 von Gregor abgelehnt |
 | 17:06:46 | Gregor: *„schon was gefunden?“* |
 | 17:08:08 | ich: *„Gefunden ist noch nichts Belastbares. Ich habe nur eine **Vermutung**“* (IMAP-Text nicht geladen), dazu **drei Fragen** an Gregor |
@@ -283,3 +283,11 @@ Zwischen dem `grep` und der Tabelle lagen 16 Sekunden. Die erste falsche Zeile k
 **How to apply, zusätzlich:**
 - „Am Quelltext nachgesehen“ steht nur über einer Zeile, deren Datei und Zeilennummer ich in derselben Nachricht nennen kann. Eine Zeile ohne Fundstelle ist eine Vermutung und wird so genannt ([[ursache-nur-gemessen-behaupten]]).
 - Eine Vorgabe (Default) liest man am Schlüssel, nicht am Knopf: `IDS_INI_…` am Steuerelement suchen, dann dessen Eintrag in der Zeichenkettentabelle (`"Name\nWert"`). Zwei Treffer nebeneinander in einer `grep`-Ausgabe gehören nicht zusammen, nur weil sie nebeneinander stehen.
+
+## Nachtrag 30.10.2026 (CHRONIST): ein Abschnitt, den es nicht gibt
+
+29.10., Zeiten MEZ. Gregor 21:49:14: *„die findings von oben stehen dann wo?“*. Gemeint waren die zwei Punkte, die ich um 21:48:09 *„auf nach dem Release“* verschoben hatte. Die erste Antwort (21:49:34) beantwortete eine andere Frage, nämlich wo alle Funde aller Berichte stehen. Gregor 21:50:09: *„ich meinte die hier …“*. Die zweite Antwort (21:50:13): *„Diese beiden stehen im Bericht des CHRONIST, `Arbeitsweise/CHRONIST-2026-10-29b.md`, unter ‚Schranken, die es noch nicht gibt‘“*. Diesen Abschnitt gibt es nicht. Er heißt *„Werkzeugmängel (Vorschläge, nicht gebaut)“* (gemessen: `grep -rn "Schranken, die es noch nicht gibt" Arbeitsweise Intern` findet nichts). Gregor wollte wissen, *„wo ich sie nach dem mergen finde“*. Mit dieser Antwort hätte er den Abschnitt gesucht und nicht gefunden.
+
+Die Datei war richtig, die Überschrift kam aus dem Gedächtnis, vier Sekunden nach der Frage und ohne einen Werkzeugaufruf dazwischen.
+
+**How to apply, zusätzlich:** Eine Ortsangabe an Gregor (Datei, Abschnitt, Zeile) stammt aus einer Ausgabe derselben Antwort, etwa `grep -n "^## " <datei>`. Sonst nenne ich die Datei ohne Abschnitt.

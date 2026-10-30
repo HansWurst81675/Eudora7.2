@@ -89,3 +89,11 @@ Die Hauptsitzung hat das um 10:59:58 selbst richtig benannt: *„Ich habe mich d
 **How to apply, zusätzlich:**
 - Nach jedem Fund Gregors nicht nur den Fall in die Schranke nehmen, sondern einen Satz aufschreiben: *Welche Annahme hatte die grüne Prüfung?* Steht er nicht da, kommt derselbe Fund in anderer Form wieder.
 - Eine Meldung „grün“ an Gregor nennt, wonach gesucht wurde. *„43 Schranken grün“* sagt ihm nichts darüber, was er beim nächsten Hinsehen findet.
+
+## Nachtrag 30.10.2026 (CHRONIST): die Release-Buchführung prüfte fünf Absätze
+
+29.10., 22:22 MEZ. Nach der Veröffentlichung von `v7.2.1.128` meldete `tools/pruefe-release-buchfuehrung.pl` vorher 3 Mängel, nach `321b3599` keinen mehr: *„Geprueft 5 Datei(en), 5 Standaussage(n). Jedes fuehrende Dokument kennt v7.2.1.128 …“* (wörtlich im Bericht LEKTOR-99). LEKTOR-99 fand trotzdem drei Sätze in der Gegenwart, die `v1.0.120` als aktuell ausgaben: `Doku/ANWENDER.md:274-275` (geht nach außen), `Intern/AUFGABEN.md:118`, `Intern/WEITERMACHEN.md:48`. Der LEKTOR schrieb selbst dazu: *„Das Werkzeug prüft nur diese fünf Absätze. Die drei Funde liegen außerhalb davon.“*
+
+**Die Annahme der grünen Prüfung:** Der Stand eines Release steht in den Standaussagen der führenden Dokumente. Das Anwenderhandbuch ist kein führendes Dokument, sagt aber in der Gegenwart, was enthalten ist und was nicht. Am selben Abend fand PRUEFER-65 (K3), dass die neue Spaltenzählung von `pruefe-tabellenzeilen.pl` einen `|` in einer Codespanne anders zählt als GitHub. Dort ist die Annahme, wie GitHub zählt, aus dem Gedächtnis und nicht aus der Spezifikation.
+
+**Vorschlag (nicht gebaut):** `pruefe-release-buchfuehrung.pl` sucht zusätzlich in **allen** `.md` außerhalb von Zitaten und Protokollzeilen nach einer älteren Fassung neben einem Gegenwartswort (*„ist“, „noch nicht“, „draußen“, „seit“*). Gegenprobe: `321b3599` wird wegen `Doku/ANWENDER.md:274` abgewiesen, `4fff285f` geht durch.

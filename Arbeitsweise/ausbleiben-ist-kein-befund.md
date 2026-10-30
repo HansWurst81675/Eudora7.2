@@ -125,3 +125,9 @@ Zeiten MEZ, Befund E-166 (die Junk-Frage kam bei Gregor zweimal), gemessen an de
 **How to apply, zusätzlich:**
 - Bevor ich eine Protokollzeile einem Ereignis zuordne oder ihr Fehlen deute, steht für **jede** beteiligte Funktion fest, ob und was sie schreibt (Datei:Zeile). Bei Dialogen: `AlertDialog` schreibt Text und Taste, `YesNoDialog` nichts davon.
 - Widerspricht Gregor mit einem Zitat, nehme ich die eigene Aussage im selben Satz ausdrücklich zurück, im Chat und im Befund. „Genau diese Zeile meine ich“ ist keine Berichtigung.
+
+## Nachtrag 30.10.2026 (CHRONIST): Positivprobe richtig, Quelle falsch
+
+Von 08:29:22 bis 08:29:36 MEZ suchte ich in den Ausgabedateien der Agenten (`…/tasks/<id>.output`) nach der Einstellungsdatei und fand 0 Treffer. Danach machte ich die Positivprobe: *„LEKTOR-101“* muss in der Ausgabe des LEKTOR-101-Laufs stehen. Auch das ergab 0 Treffer. Der Schluss an Gregor (08:30:00) war richtig: *„die Suche ist also blind“*. Eine Quelle, die sieht, gibt es aber: Jeder Agent der Sitzung hat ein eigenes Transkript unter `C:\Users\<Nutzer>\.claude\projects\<Projekt>\<sitzung>\subagents\agent-<id>.jsonl`. Dort war die Frage in einem Lauf beantwortet: 0 von 218 Werkzeugaufrufen nennen `settings` ([[ursache-nur-gemessen-behaupten]], Nachtrag 30.10. vormittags).
+
+**How to apply, zusätzlich:** Meldet die Positivprobe „blind“, suche ich als Nächstes die Quelle, die sieht. Erst wenn es keine gibt, sage ich „kann ich nicht feststellen“.

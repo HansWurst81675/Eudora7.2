@@ -285,3 +285,4 @@ E-137c | C:\Temp\E137 | 90 | log | E-137 Strg-W angekommen: leiste-mit-fokus=nei
 # tools/messen-e166-konto.ps1; -Vorbereiten bricht sonst ab.
 E-166a | C:\Temp\E166 | 20 | messung | reihenfolge=junk-no,konto-ok | | | messen=tools\messen-e166-konto.ps1
 E-166b | C:\Temp\E166 | 20 | ini | AskedAboutJunk=6 | | | messen=tools\messen-e166-konto.ps1
+E-13p | C:\Temp\E13 | 30 | messung | E13 FORTSCHRITT sichtbar=1 | vollstaendig=0 | | messen=tools\messen-e13.ps1

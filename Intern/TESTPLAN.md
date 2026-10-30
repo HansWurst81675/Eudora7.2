@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 29.10.2026 (getestet, E-166 bestanden)
+# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 30.10.2026 (getestet am 29.10.2026, E-166 bestanden; seither kein neues Testpaket)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -19,6 +19,36 @@
 > Davor veröffentlicht war `v1.0.120`. Am Bau vorher geprüft: 314
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
 > ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
+
+## <a id="e-72-verneint"></a>Im nächsten Paket: Filter mit „doesn't appear“ trifft nur die richtigen Nachrichten ([E-72](BEFUNDE.md#e-72))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+7.2.1.128 traf eine Filterbedingung *„… doesn't appear“* **jede**
+Nachricht. Geprüft wird nur mit **Make Label**. Verschoben wird nichts —
+**aber nur, wenn kein anderer Filter *Manual* angekreuzt hat**: *Filter
+Messages* lässt jeden manuellen Filter laufen, auch einen mit *transfer*
+([LEKTOR-104 L-104.2](../Befunde/LEKTOR-104.md#l-104.2)). Alles im **lokalen**
+Postfach *In* (nicht IMAP).
+
+0. *Tools → Filters*: bei **allen** vorhandenen Filtern nachsehen, ob
+   *Manual* angekreuzt ist, und es für die Dauer des Tests abhaken (danach
+   wieder setzen). Wer das nicht will, nimmt ein eigenes, leeres
+   Testverzeichnis mit ein paar Nachrichten.
+1. *Tools → Filters*, neuer Filter, *Manual* ankreuzen, sonst nichts.
+2. Bedingung: Kopfzeile **`Reply-To:`**, Verb **doesn't appear**, Wert leer.
+3. Aktion: **Make Label** mit einem Label, das in *In* noch keine Nachricht trägt.
+4. Im lokalen *In* alle Nachrichten markieren, *Special → Filter Messages*
+   über das Menü (nicht Strg+J — die Taste kann auf *Junk* umgelegt sein und
+   verschiebt dann alles nach `Junk`, [E-75](BEFUNDE.md#e-75)).
+5. **Bestanden:** das Label steht **nur** an Nachrichten ohne `Reply-To:`;
+   eine Nachricht **mit** `Reply-To:` (z. B. von einem Newsletter, im
+   Quelltext der Nachricht zu sehen) bleibt ohne Label. **Nicht bestanden:**
+   alle Nachrichten tragen das Label.
+6. Danach den Filter löschen und das Label wieder entfernen.
+7. Die in Schritt 0 abgehakten Filter wieder auf *Manual* setzen.
+
+Am Quelltext und im Regressionstest `TestE72.cpp` gesichert; am Programm
+habe ich es nicht gefahren.
 
 ### <a id="ergebnis-e-166-laptop"></a>Ergebnis 29.10.2026 an 7.2.1.128: E-166 auf Gregors Laptop, erstmals mit Junk-Werkzeugen — bestanden
 

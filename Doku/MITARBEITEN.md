@@ -62,8 +62,8 @@ Eine Nummer an zwei Orten; bis 1.0.127 waren es zwei verschiedene:
 | **Quellstand**, z. B. `7.2.1.128` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
 | **Paketnummer**, z. B. `7.2.1.128` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
-Ab der Endnummer 128 (erste Fassung: 7.2.1.128) sind beide Nummern **gleich**: `7.2.0.N` für ein Testpaket,
-`7.2.1.N` für ein Release. Bis 1.0.127 hieß die Paketnummer `1.0.N` und
+Ab der Endnummer 128 (erste Fassung: 7.2.1.128) sind beide Nummern **gleich**: seit dem Release 7.2.1.128
+`7.2.1.N` für Testpaket wie Release (Gregors Entscheidung 20), davor `7.2.0.N` für ein Testpaket. Bis 1.0.127 hieß die Paketnummer `1.0.N` und
 teilte mit dem Quellstand nur die letzte Stelle; die Endnummer zählt über
 beide Formen weiter. Beide Dateien gehen gemeinsam hoch, und zwar **bevor**
 gebaut wird — sonst tragen zwei verschiedene Bauten dieselbe Kennung, und ein

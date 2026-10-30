@@ -119,8 +119,8 @@ if (open(my $vh, '<:raw', 'Eudora71/Version.h')) {
 #
 # Seit dem 29.10.2026 (Gregors Entscheidung 10 in Intern/WEITERMACHEN.md) gibt
 # es keine eigene Paketnummer 1.0.x mehr: VERSION enthaelt dieselbe vierteilige
-# Nummer wie Version.h, also 7.2.0.N fuer ein Testpaket und 7.2.1.N fuer ein
-# Release. Die Kennung heisst damit "Eudora 7.2.1.128+31810e2 2026-10-29 20:37";
+# Nummer wie Version.h, also 7.2.1.N (seit dem Release 7.2.1.128 auch fuer
+# Testpakete, Entscheidung 20; davor 7.2.0.N fuer ein Testpaket). Die Kennung heisst damit "Eudora 7.2.1.128+31810e2 2026-10-29 20:37";
 # das fruehere " / Paket 1.0.N" faellt weg. Die Leser der Kennung
 # (pruefbericht.pl, pruefstand-lauf.ps1, pruefstaende-auffrischen.ps1) nehmen
 # beide Formen an, damit alte Bauten weiter erkannt werden.

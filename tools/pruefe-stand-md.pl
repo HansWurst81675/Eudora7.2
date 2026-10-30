@@ -118,6 +118,9 @@ my $geprueft = 0;
 for my $f (@dateien) {
     # Verzeichnisse, in denen Vergangenes steht - die duerfen alt sein.
     next if $f =~ m{^(Befunde|Arbeitsweise|Eudora71)/};
+    # Abgeschlossene Archive wie Intern/WEITERMACHEN-bis-7.2.0.md (seit dem
+    # 30.10.2026): sie halten fest, was bis zu einer Fassung galt.
+    next if $f =~ m{-bis-[\d.]+\.md\z};
 
     my $t = lies("$wurzel/$f") or next;
     my @kopf = (split /\n/, $t)[0 .. 19];

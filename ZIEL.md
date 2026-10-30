@@ -34,10 +34,14 @@ Daraus folgt für jedes 7.2.1.x:
    dokumentierte Ergebnisse gibt es nicht.
 4. **Fehlende automatische Tests** dürfen nachgeliefert werden; die
    Release-Notizen nennen den Rückstand (siehe *Regressionstests* unten).
+   Bei 7.2.1.128 fehlt dieser Satz in den Notizen
+   ([L-101.1](Befunde/LEKTOR-101.md#l-101.1)).
 
-Zwischenstände wie **7.2.0.123** sind Testpakete für Gregors lokalen Test,
-keine Releases; veröffentlicht wird erst 7.2.1.\<n\> mit der Marke
-`v7.2.1.<n>`.
+Testpakete sind für Gregors lokalen Test, keine Releases; veröffentlicht
+wird ein Stand erst nach seinem Test, mit der Marke `v7.2.1.<n>`. Bis zum
+Release 7.2.1.128 hießen Testpakete 7.2.0.\<n\> (z. B. **7.2.0.123**), seither
+heißen sie wie das Release 7.2.1.\<n\> (Gregors Entscheidung 20 in
+[WEITERMACHEN.md](Intern/WEITERMACHEN.md#entscheidungen)).
 
 **An der Release-Fassung selbst geprüft:** die Behebung von
 [E-166](Intern/BEFUNDE.md#e-166) — Gregor prüfte sie an 7.2.1.128 statt an
@@ -107,10 +111,11 @@ an 7.2.1.128 prüft, und sein Ja ([TESTPLAN](Intern/TESTPLAN.md)). Das Release h
 > dokumentieren wir, daß die fehlenden regression tests nachgeholt werden -
 > das ist deine aufgabe fürs nächste mal, aufschreiben und commiten und
 > befolgen."* Das Release wird also **nicht** aufgehalten, bis jeder Befund
-> einen Test hat. Die Release-Notizen nennen den Rückstand ausdrücklich (am
-> 23.10.2026: 50 von 67 kritischen Befunden ohne Test), und er wird ab der
-> nächsten Sitzung **vor jedem neuen Thema** abgearbeitet — Liste und
-> Reihenfolge stehen oben in [WEITERMACHEN.md](Intern/WEITERMACHEN.md).
+> einen Test hat. Die Release-Notizen zu 7.2.1.128 nennen den Rückstand
+> **nicht** (gemessen am 30.10.2026, [L-100.1](Befunde/LEKTOR-100.md#l-100.1)); am 23.10.2026
+> waren es 50 von 67 kritischen Befunden ohne Test. Er wird **vor jedem
+> neuen Thema** abgearbeitet — Umfang und Reihenfolge stehen in der Liste
+> [Nach dem Release 7.2.1](Intern/WEITERMACHEN.md#nach-dem-release).
 > Unverändert gilt Punkt 1 unten: die **vorhandenen** Tests müssen alle
 > bestehen.
 
@@ -153,7 +158,7 @@ sie wieder kaputtzumachen.
 **Die Schranke verlangt den Rückstand nicht auf einmal** — eine Prüfung, die
 vom ersten Tag an jeden Commit abweist, wird am zweiten Tag ausgebaut. Sie
 weist ab, sobald ein Befund **neu** auf *behoben* geht, ohne geprüft zu sein;
-die 97 werden gezählt und können dadurch nur sinken.
+die Altlasten zählt `perl tools/pruefe-regressionstest.pl` und können dadurch nur sinken.
 
 **Dritte Regel, angeordnet am selben Tag:**
 
@@ -173,7 +178,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 | | |
 |---|---|
 | **zuerst** | die Befunde, die **gerade** behoben werden — jede neue Behebung bringt ihren Test im selben Commit mit, das erzwingt `pruefe-regressionstest.pl` |
-| **danach** | die Altlasten: 97 Befunde stehen als *behoben* ohne jede Prüfung. Davon sind viele **Werkzeug**-Befunde ([NP3-4](Intern/BEFUNDE.md#np3-4)…7, [W-1](Intern/BEFUNDE.md#w-1), [X-1](Intern/BEFUNDE.md#x-1)…8), die nicht in die C++-Sammlung gehören, sondern eigene `--selbsttest` haben — die werden getrennt gezählt, damit die Rückstandszahl ehrlich bleibt |
+| **danach** | die Altlasten: Befunde, die als *behoben* ohne jede Prüfung stehen (wie viele, zählt `perl tools/pruefe-regressionstest.pl`). Davon sind viele **Werkzeug**-Befunde ([NP3-4](Intern/BEFUNDE.md#np3-4)…7, [W-1](Intern/BEFUNDE.md#w-1), [X-1](Intern/BEFUNDE.md#x-1)…8), die nicht in die C++-Sammlung gehören, sondern eigene `--selbsttest` haben — die werden getrennt gezählt, damit die Rückstandszahl ehrlich bleibt |
 | **nicht automatisierbar** | bekommt die Marke `Prüfung: manuell` **und** einen Eintrag mit Schritten und erwartetem Ergebnis in [Intern/TESTPLAN.md](Intern/TESTPLAN.md) |
 
 ## Die Kriterien

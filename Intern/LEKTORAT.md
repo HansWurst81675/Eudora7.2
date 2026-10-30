@@ -2907,3 +2907,24 @@ Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](..
 ## LEKTOR-99 (29.10.2026) — Buchführung nach v7.2.1.128 (321b3599)
 
 [LEKTOR-99](../Befunde/LEKTOR-99.md): Zeit, Marke, *Latest* und ZIP-Größe stimmen mit GitHub überein; `pruefe-release-buchfuehrung.pl` ohne Mangel. Drei veraltete Standaussagen außerhalb des Commits: Anwenderhandbuch nennt `v1.0.120` als aktuell ([L-99.1](../Befunde/LEKTOR-99.md#l-99.1)), AUFGABEN ebenso ([L-99.2](../Befunde/LEKTOR-99.md#l-99.2)), WEITERMACHEN „zuletzt bestätigt 1.0.101“ ([L-99.3](../Befunde/LEKTOR-99.md#l-99.3)). Nach 4fff285f sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](../Befunde/LEKTOR-99.md#nachprüfung-nach-4fff285f)).
+
+## LEKTOR-100 (30.10.2026) — WEITERMACHEN nach dem Umbau (9369fb63)
+
+[LEKTOR-100](../Befunde/LEKTOR-100.md): Die drei Funde aus [LEKTOR-99](../Befunde/LEKTOR-99.md) sind erledigt. Der Umbau hat keine Zeile verloren, alle Anker stimmen. Die Liste „Nach dem Release 7.2.1“ hat aber Lücken: Der Rückstand an Regressionstests steht nur noch im Archiv, und ZIEL verweist ins Leere ([L-100.1](../Befunde/LEKTOR-100.md#l-100.1)). AUFGABEN bleibt eine zweite Aufgabenliste ([L-100.2](../Befunde/LEKTOR-100.md#l-100.2)). Vorschläge von CHRONIST, PRÜFER und LEKTOR fehlen ([L-100.3](../Befunde/LEKTOR-100.md#l-100.3) bis [L-100.5](../Befunde/LEKTOR-100.md#l-100.5)). Zwei Zeilen geben ihre Quelle falsch wieder ([L-100.6](../Befunde/LEKTOR-100.md#l-100.6), [L-100.7](../Befunde/LEKTOR-100.md#l-100.7)). Die Release-Buchführung prüft WEITERMACHEN nicht mehr ([L-100.8](../Befunde/LEKTOR-100.md#l-100.8)), und die neue Schranke lässt „nach 7.2.1“ durch ([L-100.9](../Befunde/LEKTOR-100.md#l-100.9)). [E-13](BEFUNDE.md#e-13) fällt durch beide Listen, sein Urteil nennt einen Zweig, den es nicht mehr gibt ([L-100.10](../Befunde/LEKTOR-100.md#l-100.10)). 11 Funde.
+
+## LEKTOR-101 (30.10.2026) — Nachprüfung zu 2b3ff3a7
+
+[LEKTOR-101](../Befunde/LEKTOR-101.md): Von den elf Funden aus [LEKTOR-100](../Befunde/LEKTOR-100.md) sind neun erledigt, zwei teilweise. Alle neuen Links und Anker treffen, die Release-Buchführung zählt wieder 5 Standaussagen, 47 offene Befunde in beiden Listen gleich. Drei kleine neue Funde: ZIEL.md sagt oben noch, die Release-Notizen nennen den Rückstand an Regressionstests, weiter unten das Gegenteil ([L-101.1](../Befunde/LEKTOR-101.md#l-101.1)); AUFGABEN.md nennt zu [E-13](BEFUNDE.md#e-13) weiter den verschwundenen Zweig ([L-101.2](../Befunde/LEKTOR-101.md#l-101.2)); die Schranke lässt „nach Release 7.2.1“ durch ([L-101.3](../Befunde/LEKTOR-101.md#l-101.3)).
+
+## LEKTOR-102 (30.10.2026) — Nachprüfung nach 4fd851fd
+
+[LEKTOR-102](../Befunde/LEKTOR-102.md): Die drei Funde aus [LEKTOR-101](../Befunde/LEKTOR-101.md) sind erledigt; die Schranke besteht 19 von 19 Fällen, die fünf neuen Stand-Köpfe stimmen mit dem Text darunter. Entscheidung 20 (ab dem Release heißt jede Fassung 7.2.1.N) ist fast überall nachgezogen. Zwei kleine Funde: ZIEL.md sagt im Präsens, Testpakete hießen 7.2.0.N ([L-102.1](../Befunde/LEKTOR-102.md#l-102.1)); drei Werkzeugkommentare beschreiben das alte Schema, einer schreibt es Entscheidung 20 zu ([L-102.2](../Befunde/LEKTOR-102.md#l-102.2)).
+
+## LEKTOR-103 (30.10.2026) — Bestätigung nach 9e7e1d0c
+
+[LEKTOR-103](../Befunde/LEKTOR-103.md): Beide Funde aus [LEKTOR-102](../Befunde/LEKTOR-102.md) sind erledigt; ZIEL.md, Entscheidung 1 und die drei Werkzeugkommentare sagen jetzt, dass Testpakete bis zum Release 7.2.1.128 7.2.0.N hießen und seither 7.2.1.N heißen (Entscheidung 20). Der neue Link auf `#entscheidungen` trifft. Keine neuen Funde. Offen bleibt Gregors Frage zum Satz über fehlende Regressionstests in den Notizen zu v7.2.1.128.
+
+## LEKTOR-104 (30.10.2026) — Bestand nach de8cdefd
+
+[LEKTOR-104](../Befunde/LEKTOR-104.md): Aus [LEKTOR-103](../Befunde/LEKTOR-103.md) war kein Fund offen; Gregors Frage zum Satz über fehlende Regressionstests in den Notizen zu v7.2.1.128 bleibt offen. Fünf neue Funde. In 7.2.1.128 verschiebt ein Filter mit „doesn't appear“ und *transfer* jede Nachricht; behoben nur im Quelltext, die README nennt es nicht unter „Bekannte Fehler“ ([L-104.1](../Befunde/LEKTOR-104.md#l-104.1)). Der neue TESTPLAN-Schritt zu [E-72](BEFUNDE.md#e-72) lässt alle manuellen Filter mitlaufen, obwohl er „nichts wird verschoben“ verspricht ([L-104.2](../Befunde/LEKTOR-104.md#l-104.2)). Elf neue Regressionstests (337 statt 326 Tests) stehen weder in CHANGELOG noch in WEITERMACHEN noch in BEFUNDE ([L-104.3](../Befunde/LEKTOR-104.md#l-104.3)). ZIEL.md nennt im Präsens 97 behobene Befunde ohne Prüfung, gemessen sind 50 ([L-104.4](../Befunde/LEKTOR-104.md#l-104.4)); BEFUNDE.md sagt, die Release-Notizen nennen den Rückstand, sie tun es nicht ([L-104.5](../Befunde/LEKTOR-104.md#l-104.5)).
+

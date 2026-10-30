@@ -1,7 +1,8 @@
 # Was sich geändert hat
 
-Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **`7.2.0.N`**
-(Testpaket) bzw. **`7.2.1.N`** (Release) steht gleich in `Eudora71/Version.h`
+Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **`7.2.1.N`**
+(seit dem Release 7.2.1.128 für Testpaket wie Release, davor `7.2.0.N` für
+ein Testpaket) steht gleich in `Eudora71/Version.h`
 und `VERSION`; die Bau-Kennung im Fenstertitel nennt sie plus den Commit.
 Bis 1.0.127 trug `VERSION` eine eigene Zählung `1.0.N` mit derselben
 Endnummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).
@@ -26,6 +27,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-176](Intern/BEFUNDE.md#e-176)** | Die Behebung von E-28 liest beim Schließen einer verworfenen neuen Nachricht aus einer sc… | **nie gemessen** | der Rückzeiger muss mit der Zusammenfassung sterben — `~CSummary` löscht `m_pSumBackPtr` im Rahmen, oder `OnDestroy` prüft vor dem Zugriff, ob di… |
 | **[E-173](Intern/BEFUNDE.md#e-173)** | Im Filterfenster sind die Labels der Aktion *Make Label* einmal ausgegraut und nicht wähl… | **nie gemessen** | erst **nach dem Release 7.2.1** — nachstellen (unter welcher Bedingung ist die Liste grau: neuer Filter, bestimmte vorherige Aktion, Persönlichkeit… |
 | **[E-172](Intern/BEFUNDE.md#e-172)** | Eine Mail steht im Lesefenster als rohe Base64-Zeichenfolge statt als lesbarer Text | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — Quelltext der Mail ansehen (*View Source*), Kopfzeilen `Content-Type`/`Content-Transfer-Encodi… |
 | **[E-171](Intern/BEFUNDE.md#e-171)** | „Search Mailfolder“ im Rechtsklickmenü einer Mail bringt ohne markierten Text die Mel… | 29.10.2026 an 7.2.0.127 | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — ohne Auswahl das Suchfenster öffnen, aber nicht starten (oder den Menüpunkt sperren); vorher… |
@@ -101,6 +103,27 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht.
 > nichts statt crash ist auch keine verbesserung!"* — kein Absturz ist kein
 > Fortschritt, solange der Anwender nichts damit tun kann.
+
+---
+
+## Im Quellstand, noch in keinem Paket
+
+**Zweig `weitermachen-aufraeumen`** (nach dem Release `v7.2.1.128`).
+
+**Am Programm** (übersetzt und mit Regressionstest, am laufenden Programm noch nicht gemessen; kommt mit dem nächsten Paket)
+
+* **Filter mit „doesn't appear“, „appears“ oder verneintem leerem Wert** ([E-72](Intern/BEFUNDE.md#e-72), gefunden von [PRÜFER-66 K1](Befunde/PRUEFER-66.md#k1)): Seit 7.2.0.36 traf eine Bedingung *„Kopfzeile doesn't appear“* **jede** Nachricht, *„appears“* keine; *„doesn't contain“* oder *„is not“* mit leerem Wert ebenfalls jede. Mit der Aktion *transfer* verschiebt so ein Filter den ganzen Posteingang. Ursache war die Sperre gegen leere Werte aus [E-72](Intern/BEFUNDE.md#e-72): sie stand vor der Verneinung und galt auch für die beiden Verben, die gar keinen Wert lesen. Jetzt trifft ein leerer Wert nichts, auch verneint nicht, und *appears*/*doesn't appear* sind ausgenommen (`filtersd.cpp`, `MatchValue` und `MatchCondition`).
+* **Trennbalken** ([E-60](Intern/BEFUNDE.md#e-60), [PRÜFER-66 K2](Befunde/PRUEFER-66.md#k2)): `TrennbalkenNeuAnlegen` löscht keinen Balken mehr, der gerade gezogen wird. Heute ohne sichtbare Wirkung (es werden keine Balken im Feld angelegt); es sichert die Zusage aus [E-60](Intern/BEFUNDE.md#e-60) für den Fall, dass sie zurückkommen.
+
+**Regressionstests** (Gregors Anordnung vom 22./23.10.2026): neue Tests für [E-60](Intern/BEFUNDE.md#e-60), [E-64](Intern/BEFUNDE.md#e-64)/[E-72](Intern/BEFUNDE.md#e-72), [E-82](Intern/BEFUNDE.md#e-82), [S-1](Intern/BEFUNDE.md#s-1), [S-8](Intern/BEFUNDE.md#s-8), [E-156](Intern/BEFUNDE.md#e-156), [E-3](Intern/BEFUNDE.md#e-3), [E-23](Intern/BEFUNDE.md#e-23), [E-32](Intern/BEFUNDE.md#e-32) und [V-1](Intern/BEFUNDE.md#v-1), dazu [E-15](Intern/BEFUNDE.md#e-15), [E-19](Intern/BEFUNDE.md#e-19), [E-21](Intern/BEFUNDE.md#e-21), [E-28](Intern/BEFUNDE.md#e-28), [E-57](Intern/BEFUNDE.md#e-57), [E-58](Intern/BEFUNDE.md#e-58), [E-75](Intern/BEFUNDE.md#e-75), [E-86](Intern/BEFUNDE.md#e-86), [E-104](Intern/BEFUNDE.md#e-104), [E-115](Intern/BEFUNDE.md#e-115) und [M-1](Intern/BEFUNDE.md#m-1), jeder einmal ohne Behebung rot; 337 Tests, 337 bestanden. Über die Oberfläche neu: Prüfstandsfall `E-13p` — beim Abruf von 40 Nachrichten zählt die Aufgabenanzeige sichtbar mit ([E-13](Intern/BEFUNDE.md#e-13) damit erstmals gemessen und behoben). [E-2](Intern/BEFUNDE.md#e-2) zählt über seine Ursache [Z-2](Intern/BEFUNDE.md#z-2). Kritische Befunde ohne jede Prüfung: 24 → 11 (davon [E-120](Intern/BEFUNDE.md#e-120) auf Gregors Ja herabgestuft, kein Programmfehler).
+
+**`release-veroeffentlichen.ps1`** weist eine Fassung 7.2.0.N ab; seit dem Release heißt jede Fassung 7.2.1.N (Entscheidung 20, [PRÜFER-65 K2](Befunde/PRUEFER-65.md#k2)). Übernommen vom Zweig `werkzeuge-nummernschema`, der danach auf Gregors Ja gelöscht wurde; sein zweiter Commit (`ausliefern.pl` schlägt 7.2.0.N vor) war durch Entscheidung 20 überholt. Die Tests auf PowerShell-Skripte werfen auskommentierte Zeilen weg, bevor sie suchen ([PRÜFER-66 K3](Befunde/PRUEFER-66.md#k3), C++-Seite mit `#if 0` noch offen).
+
+**Werkzeuge und Doku**
+
+* **`Intern/WEITERMACHEN.md` aufgeräumt:** von 548 auf 224 Zeilen. Oben der Stand, darunter **eine** Liste „Nach dem Release 7.2.1“ (Aufgaben ohne Befundnummer, von Hand; offene Befunde, erzeugt), die geltenden Entscheidungen 1 bis 19 und die bleibenden Abschnitte zum Messen und Bauen. Alle Stand-Blöcke und die Paketgeschichte bis 7.2.1.128 stehen unverändert im Archiv [Intern/WEITERMACHEN-bis-7.2.0.md](Intern/WEITERMACHEN-bis-7.2.0.md).
+* **Neue Schranke `tools/pruefe-nach-dem-release.pl`** im `pre-commit` (Schritt 19b2): eine Aufgabe „nach dem Release“ außerhalb der Liste wird abgewiesen, ein Verweis auf die Liste und Zitate sind erlaubt. Selbsttest 19 Fälle; Gegenprobe an der alten Datei: abgewiesen (Liste fehlt, Aufgaben an mehreren Stellen). Nach [LEKTOR-100](Befunde/LEKTOR-100.md#lektor-100) auch „nach 7.2.1“ und `Intern/AUFGABEN.md`, das seither nur zum Nachschlagen dient; dazu elf Funde eingearbeitet (Regressionstests oben in der Liste, fehlende Aufgaben ergänzt, [E-13](Intern/BEFUNDE.md#e-13) wieder offen: Behebung seit September im Stand, nie gemessen). Nach [LEKTOR-101](Befunde/LEKTOR-101.md#lektor-101) auch „nach Release 7.2.1“ ohne „dem“.
+* **Nummernschema, Gregors Entscheidung 20 (30.10.2026):** ab dem Release 7.2.1.128 heißt jede neue Fassung 7.2.1.N, Testpaket wie Release; das nächste Paket ist 7.2.1.129. Nachgezogen in WEITERMACHEN (Entscheidung 10 mit Verweis), PAKETE, MITARBEITEN, dem Kopf dieses CHANGELOG und drei Werkzeugkommentaren.
 
 ---
 

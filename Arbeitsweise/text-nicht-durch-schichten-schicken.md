@@ -536,3 +536,18 @@ Gezählt wie angekündigt. Zeiten MEZ, gemessen an `2dc0ce9e-…jsonl` und `052d
 **Die Frage nach dem `PreToolUse`-Haken** (29.10. 08:27:34, oben) wurde bis 21:20 nicht wieder gestellt (gemessen: kein Antworttext mit „PreToolUse“ nach 08:47). Die Regel von oben (*„Bleibt sie unbeantwortet, wird sie in der nächsten Nachricht wiederholt“*) hielt also nicht. Dazu kommt eine neue Lage: Um 10:25:18 hat Gregor einen anderen Haken abgelehnt, aus Misstrauen ([[abweisung-ist-eine-antwort]]). Ein Haken, der **mich** einschränkt, ist etwas anderes als einer, der eine Liste mit seinen Daten braucht. Die Frage muss das sagen.
 
 **Urteil unverändert:** Nachträge wirken hier nicht, 37 Fälle. Die Frage an Gregor gehört allein in den letzten Satz einer kurzen Nachricht, mit dem Hinweis, dass der Haken nur meine Schreibwege abweist und keine Daten von ihm braucht.
+
+## Nachtrag 30.10.2026 (CHRONIST): Fall 38 und 39, der Ersatztext kam aus einer Datei und hing trotzdem
+
+Zeiten MEZ, Transkript `052dc212…`.
+
+| Fall | Zeit | Was | Ergebnis |
+|---|---|---|---|
+| 38 | 21:55:39 | Regel 1 dieser Lehre war befolgt: Paare `alt`/`neu` aus einer Datei, ein Helfer im Scratchpad ersetzt mit `while(($i=index($t,$a))>=0){substr($t,$i,length $a)=$b}`. Das Paar für `PAKETE.md` hängte einen Satz an, **der neue Text enthielt den alten**. Die Suche beginnt nach jeder Ersetzung wieder bei 0, also ohne Ende | Endlosschleife, in den Hintergrund geschoben und nie gestoppt ([[haengende-kommandos-abbrechen]], Nachtrag 30.10.). Nachgestellt in diesem Lauf: dasselbe Programm, Ziel `x A y`, Paar `A` → `A B`, `timeout 5` → Rückgabe 124, keine Ausgabe, Datei unverändert; Paar `A` → `C` → *„1“*, Rückgabe 0. Kein Schaden, weil der Helfer erst am Ende schreibt |
+| 39 | 21:58:18 | `grep -c '\\' datei` zum Zählen der Rückstriche in den Release-Notizen | *„grep: Trailing backslash“*, die Zählung blieb leer (*„Rueckstriche: “*). Um 21:58:24 bemerkt und mit `perl -ne '$n++ if /\x5c/'` neu gezählt: 0. So soll es sein ([[ausbleiben-ist-kein-befund]]) |
+
+**Was Fall 38 Neues zeigt:** Regel 1 schützt den **Text** vor den Schichten, aber nicht vor dem Werkzeug, das ihn einsetzt. Der Helfer war ein Wegwerfskript ohne Selbsttest, und im Repo gibt es `tools/ersetze-bereich.pl`, allerdings nur für Zeilenbereiche ([[werkzeug-vor-eigenbau]]).
+
+**How to apply, zusätzlich:**
+- Ein Ersetzer sucht nach jeder Ersetzung **hinter** der Einfügung weiter (`index($t,$a,$i+length $b)`), oder er ersetzt genau einmal und meldet die Trefferzahl vorher.
+- Ein Ersetzungshelfer, der zum zweiten Mal gebaut wird, gehört als Werkzeug mit Selbsttest nach `tools/`. Erster Testfall: Der neue Text enthält den alten.

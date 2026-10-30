@@ -76,3 +76,11 @@ Gut war, wie die Meldungen ab Runde 4 formuliert waren: *„soweit ich es mit Su
 - **Eine Suche, die nach bekannten Begriffen fragt, endet nicht mit „sauber“.** Sie endet mit „nach diesen Begriffen sauber“ und einer zweiten Prüfung aus anderer Richtung: Muster (Adressen, `Fw:`/`Re:`/`Subject:`) oder ein LEKTOR mit freiem Blick.
 
 Verwandt: [[erlaubnis-nicht-hineinlesen]], [[aussenwirkung-ist-der-massstab]], [[wissen-gehoert-in-dateien]].
+
+## Nachtrag 30.10.2026 (CHRONIST): ein Pfad, der sechs Runden überstand
+
+Beim Lesen für diesen Lauf gefunden (gemessen mit `git grep -i` nach dem Namen des Freigabeordners): **`pruefen-statt-vermuten.md`, Zeile 252**, zitierte Gregor wörtlich mit dem vollständigen Pfad des Freigabeordners seiner VM. Der Pfad kam am 27.10. mit dem CHRONIST-Lauf (`14de951a`) auf den Zweig und stand am 29.10. auf `main`. Er hat die sechs Bereinigungsrunden des 29.10. überstanden, weil keine Begriffsliste nach Pfaden suchte. In diesem Lauf ist er durch *„[Pfad seines Freigabeordners]“* ersetzt. Die Geschichte bleibt, wie Gregor am 29.10. entschieden hat.
+
+Eine zweite Fundstelle mit demselben Ordner steht in `Intern/BEFUNDE.md` (Befundzeile E-148). Die Datei liegt außerhalb des CHRONIST-Bereichs und ist der Hauptsitzung gemeldet ([[CHRONIST-2026-10-30]]).
+
+**How to apply, zusätzlich:** Zur Musterprüfung von oben (*„Adressen, `Fw:`/`Re:`/`Subject:`“*) gehören Pfade: `\\<rechner>\`, `C:\Users\<name>\` außer den in `CLAUDE.md` genannten, Laufwerksbuchstaben außer `C:\Temp`. Ein Pfad aus Gregors Rechner ist ein Name aus Gregors Rechner.

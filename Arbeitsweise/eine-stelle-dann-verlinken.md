@@ -33,4 +33,4 @@ Vereinbart (21:14:17, 21:14:53, 21:15:54): ein eigener PR nach dem Merge von `re
 
 **How to apply, zusätzlich:** Eine Aufgabe für später kommt in die eine Liste oder gar nicht ins Repo. Eine Vereinbarung, die „nur im Gedächtnis“ steht, wird beim nächsten Commit dort eingetragen, nicht erst nach dem Merge.
 
-**Schranke (vereinbart, nicht gebaut):** Der Commit-Haken weist eine „nach dem Release“-Aufgabe außerhalb der Liste ab (Vorschlag 21:12:19, von Gregor mit dem Plan angenommen). Gegenprobe beim Bau: eine Zeile „nach dem Release“ in der alten Tabelle „Offene Arbeiten ohne Befundnummer“ muss abgewiesen werden, dieselbe Zeile in der neuen Liste muss durchgehen.
+**Schranke (vereinbart, gebaut am 30.10.2026 als `tools/pruefe-nach-dem-release.pl`, Commit `9369fb63`):** Der Commit-Haken weist eine „nach dem Release“-Aufgabe außerhalb der Liste ab (Vorschlag 21:12:19, von Gregor mit dem Plan angenommen). Gegenprobe beim Bau: eine Zeile „nach dem Release“ in der alten Tabelle „Offene Arbeiten ohne Befundnummer“ muss abgewiesen werden, dieselbe Zeile in der neuen Liste muss durchgehen.

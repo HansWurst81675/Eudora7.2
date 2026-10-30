@@ -552,6 +552,13 @@ schranke pruefe-behoben-ausgeliefert.pl || exit $?
 #      (Arbeitsweise/schranke-gehoert-in-den-haken.md).
 schranke offene-befunde.pl || exit $?
 
+# 19b2. Aufgaben "nach dem Release" stehen nur in der EINEN Liste von
+#      Intern/WEITERMACHEN.md (#nach-dem-release), anderswo nur als Verweis.
+#      Seit dem 30.10.2026: am 29.10.2026 standen sie an drei Stellen der
+#      Datei und eine nur im Gedaechtnis. Gregor: "wichtig ist, dass es
+#      nicht wieder ueberall etwas verstreut ist."
+schranke pruefe-nach-dem-release.pl || exit $?
+
 # 19c. Jede neu geschriebene Befundzeile beginnt mit ihrem Urteil. Seit dem
 #      24.10.2026: am 23.10.2026 begannen E-142 und E-144 mit "**Kurz: ...**",
 #      und offene-befunde.pl (19b) sah sie nicht mehr - es liest das erste
@@ -814,6 +821,7 @@ echo "  tools/pruefe-fassungsnummer.pl        ist eine Nummer zweimal vergeben?"
 echo "  tools/pruefe-behoben-ausgeliefert.pl  sagt die AUSGELIEFERTE Eudora.exe dasselbe?"
 echo "  tools/pruefe-testdaten-anonym.pl      keine persoenlichen Daten unter Testdaten/"
 echo "  tools/offene-befunde.pl               deckt Intern/WEITERMACHEN.md die offenen Befunde?"
+echo "  tools/pruefe-nach-dem-release.pl      steht jede Aufgabe nach dem Release in der Liste?"
 echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"
 echo "                               ohne dass es jemand gemerkt hat. Weist nur beim"
 echo "                               Baufehler ab, nicht bei roten Tests."

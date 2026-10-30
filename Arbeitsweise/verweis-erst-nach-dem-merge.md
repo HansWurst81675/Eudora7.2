@@ -82,3 +82,16 @@ Für Gregor ist eine Datei im Repo das, was er auf GitHub unter `main` sieht. Je
 **How to apply, zusätzlich:**
 - Eine Ortsangabe an Gregor ist ein **Link mit Zweig**, nie „Datei, Zeile N“. Steht es noch nicht auf `main`, steht das im selben Satz: *„noch nur auf `0.123_ergebnisse`: <Link>“*.
 - Ein Abschnitt, auf den ein Anker zielt, nennt seine Vorbedingung selbst („vorher Teil 0“), denn der Anker überspringt alles davor.
+
+## Nachtrag 30.10.2026 (CHRONIST): beide Richtungen am Release-Abend
+
+Zeiten MEZ, 29.10., gemessen am Transkript `052dc212…` und an den LEKTOR-Berichten.
+
+1. **Vor der Veröffentlichung, richtig gefangen.** Die Release-Notizen sagten *„beantwortet 19 Fragen“*, verlinkt auf die FAQ unter `blob/main`. Auf `main` hatte die FAQ 18 Abschnitte, nur der Release-Zweig hatte 19 (LEKTOR-98, L-98.1, 22:10). Der Satz wäre erst nach dem Merge wahr geworden, und einer der 19 Abschnitte war keine Frage. Berichtigt um 22:10:34, also bevor etwas hinausging. So wirkt diese Lehre, wenn der Auftrag an den LEKTOR sie enthält (*„Links zeigen auf existierende Anker auf main-Pfaden“*).
+2. **Nach der Veröffentlichung, umgekehrt.** `v7.2.1.128` ging um 22:17:31 hinaus. Von da an sagten README, ZIEL, CHANGELOG, PAKETE und weitere Dateien auf `main` *„noch nicht veröffentlicht, veröffentlicht ist `v1.0.120`“*, bis PR #188 um 22:30:17 gemergt war: 13 Minuten. Erkannt und gemeldet wurde das ungefragt in derselben Nachricht wie die Veröffentlichung (22:18:03). Der Zweig dafür brauchte aber erst noch Gregors Ja zum Namen, und dann einen LEKTOR-Lauf mit drei weiteren Funden.
+
+**Was Punkt 2 lehrt:** Ein Satz über den Zustand draußen (*„noch nicht veröffentlicht“*) wird durch die Handlung falsch, die er ankündigt. Der Merge kann ihn nicht rechtzeitig berichtigen, weil die Handlung **nach** dem Merge kommt.
+
+**How to apply, zusätzlich:**
+- Der Release-PR schreibt den Stand so, dass er vor und nach der Veröffentlichung wahr ist (*„veröffentlicht als `v7.2.1.128`, sobald Gregor zustimmt; davor `v1.0.120`“*), oder der Folgezweig mit den Sätzen in der Vergangenheit liegt **vor** der Veröffentlichung fertig, mit abgestimmtem Namen.
+- Den Namen des Folgezweigs zusammen mit der Bitte um das Ja zur Veröffentlichung erfragen, nicht danach.

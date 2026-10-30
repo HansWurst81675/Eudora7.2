@@ -4691,6 +4691,18 @@ void SECDockBar::TrennbalkenNeuAnlegen()
 	// Balkenmechanik darunter - AddSplitter, HitTest, Recycle - bleibt
 	// ebenfalls, weil ZiehenAmRand Splitter, Track und OnSplitterMoved
 	// weiterbenutzt.
+	//
+	// E-60 / PRUEFER-66 K2 (30.10.2026): solange ein Balken aus dem Feld
+	// gezogen wird, wird nichts geloescht - sonst arbeitete Splitter::Track
+	// auf freigegebenem Speicher. Heute folgenlos (das Feld bleibt leer,
+	// ZiehenAmRand zieht einen Balken auf dem Stapel), aber genau diese
+	// Zusage steht in BEFUNDE.md.
+	for (int i = 0; i < m_arrSplitters.GetSize(); i++)
+	{
+		Splitter* pSplitter = (Splitter*) m_arrSplitters[i];
+		if (pSplitter != NULL && pSplitter->m_bTracking)
+			return;
+	}
 	DeleteAllSplitters();
 }
 

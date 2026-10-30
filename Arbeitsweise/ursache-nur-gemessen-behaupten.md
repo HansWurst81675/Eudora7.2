@@ -67,3 +67,21 @@ Zeiten MEZ. Um 19:20:27 bat ich Gregor, das Filterfenster einzuordnen: *„(a) a
 Belegt an `BEFUNDE.md` E-137 (Stand `ed0d53a2` bis `78f2ad2a`) und LEKTOR-66 L-66.1. Der Eintrag sagte: *„Weiter nicht gemessen: wer Eudora vorher beendete — die Behebung fängt den Befehl ab, bevor er dorthin kommt.“* Der erste Halbsatz ist ehrlich. Der zweite ist eine Behauptung über genau den Weg, der unbekannt war, und er war falsch. Wer Eudora beendete, war die Ursache. Ohne sie lässt sich nicht sagen, ob eine Abfangung „davor“ liegt. Die Antwort stand im Quelltext (`CDoc::OnFileClose`, `doc.cpp:144-149`) und war in einem Lauf zu lesen (PRUEFER-56, rund neun Minuten).
 
 **How to apply, zusätzlich:** Steht in einem Befund „nicht gemessen: wer X auslöst“, dann darf derselbe Befund keine Behebung tragen, die sich auf den Weg zu X stützt. Erst wird die Ursache am Quelltext belegt, mit Datei und Zeile vom Eingang bis zum Ausgang. Danach kommt die Behebung. Geht das nicht, heißt die Behebung „Vermutung“, und genau so steht es auch im Commit ([[extrakt-ist-nicht-das-programm]], Nachtrag 25.10. spät).
+
+## Nachtrag 30.10.2026 (CHRONIST): „Testbau läuft“
+
+29.10., 21:58:14 MEZ, an Gregor: *„Der Commit hängt noch im Haken (Testbau läuft). Ich warte darauf, bevor ich die Notizen anfasse.“* Gelesen war bis dahin die leere Ausgabedatei des Hintergrundauftrags und `git log -1` (alter Stand). Beides sagt nur, dass nichts fertig ist, nicht wo es hängt. Der Haken war nie gestartet, es hing ein Ersetzungshelfer davor ([[haengende-kommandos-abbrechen]], Nachtrag 30.10.). Das ist dieselbe Form wie *„bevor er dorthin kommt“* vom 25.10. (oben): Eine Behauptung über den **Weg**, die aus der Erwartung kam, wo es meistens hängt. Gregor wartete darauf von 21:55 bis 22:07.
+
+**How to apply, zusätzlich:** Bei einem hängenden Aufruf ist der Ort *„unbekannt“*, solange keine Ausgabe ihn nennt. Ein Satz wie *„hängt noch, Ausgabe leer, ich sehe nach, woran“* ist wahr und kostet nichts.
+
+## Nachtrag 30.10.2026 vormittags (CHRONIST): „Deshalb kamen die Abfragen“, und die Antwort stand in der eigenen Werkzeugausgabe
+
+Zeiten MEZ, Transkript `c21b8f54`. Gregor fragte um 08:34:56: *„bevor wir weiter machen, möchte ich wissen, wodurch es geändert wurde?“* Gemeint war die globale Einstellungsdatei von Claude Code. Laut `ls` um 08:29:15 wurde sie um 08:23 geändert und enthält seither `blockReadsOutsideWorkingDirectories: true`. Gesagt habe ich:
+
+- 08:29:17: *„Um diese Zeit lief meine LEKTOR-Nachprüfung.“* In diesem Lauf nachgemessen: In den fünf Agententranskripten der Sitzung (`<sitzung>/subagents/agent-*.jsonl`) nennt **kein einziger** Werkzeugaufruf `settings` (0 von 218).
+- 08:32:25: *„Seit der Änderung an deiner settings.json um 08:23 gilt jeder Zugriff dort als ‚außerhalb‘. Deshalb kamen die Abfragen.“* Zwei Abfragen kamen aber schon vorher, um 07:44 und um 08:18 ([[keine-unverstaendlichen-abfragen]], Nachtrag 30.10.).
+- 08:35:30: *„Am wahrscheinlichsten ist Claude Code selbst. … Eine neue Fassung kann diese Einstellung beim Start oder Aktualisieren gesetzt haben.“*
+
+Um 08:23:14 lautete die eigene Werkzeugantwort, vier Sekunden nach einem Lesezugriff im zweiten Arbeitsbaum: *„The user chose to block reads outside the working directories (permissions.blockReadsOutsideWorkingDirectories).“* Minute und Einstellungsname passen auf die geänderte Datei. Belegt am Wortlaut ist damit: Die Einstellung entstand als Antwort auf eine Freigabe-Abfrage. Nicht gemessen ist, welche Auswahl Gregor dort getroffen hat und ob die Abfrage sagte, dass dabei eine Datei geschrieben wird. Gregors *„ich habe nichts geändert. keine json.“* (08:33:27) widerspricht dem nicht, denn eine Auswahl in einer Abfrage ist keine bewusste Änderung an einer JSON-Datei.
+
+**How to apply, zusätzlich:** Hat eine Änderung einen gemessenen Zeitpunkt, lese ich zuerst die Werkzeugantworten der eigenen Sitzung aus dieser Minute. Erst danach suche ich die Ursache woanders. Wenn eine Vermutung „am wahrscheinlichsten“ heißt, sage ich im selben Absatz, was ich nicht gelesen habe.

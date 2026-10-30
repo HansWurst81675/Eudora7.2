@@ -190,7 +190,8 @@ for my $zeile (split /\n/, $befunde) {
     #
     # zaehlt. Ein Datum irgendwo im Fliesstext zaehlt NICHT - genau solche
     # Daten haben die Liste jahrelang glaubwuerdig aussehen lassen.
-    # 7.2.0.N (Testpaket) und seit dem 29.10.2026 auch 7.2.1.N (Release);
+    # 7.2.0.N (Testpaket bis zum Release 7.2.1.128) und 7.2.1.N (Release,
+    # seit dem 30.10.2026 auch Testpaket, Entscheidung 20);
     # die Endnummer zaehlt ueber beide weiter.
     if ($urteil =~ /\*\*Zuletzt gemessen:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.[01]\.\d+)\*\*/) {
         $gemessen{$k} = "$1 an $2";
