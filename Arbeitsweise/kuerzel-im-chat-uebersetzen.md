@@ -51,3 +51,9 @@ Zeiten MEZ, 26.10., gemessen am Transkript.
 **How to apply, zusätzlich:**
 - Ein Pfad, den Gregor kopieren oder eintippen soll, steht **vollständig** und in einem Stück da, nie mit `…`.
 - Interne Namen (Prüfstandsfälle, Schrittkennungen eines anderen Pakets) gehen nur mit Klartext an Gregor: *„der Prüfstandsfall E-119e (großes Bild in einer Mail; kein Befund, für Sie nichts zu tun)“*.
+
+## Nachtrag 30.10.2026 (CHRONIST): „Entscheidung 20“
+
+Um 08:27:40 MEZ schrieb ich: *„Als Nächstes würde ich deine Entscheidung ‚ab dem Release geht es mit 7.2.1 weiter‘ als Entscheidung 20 eintragen.“* Gregor um 08:36:24: *„lassen, dann mach weiter mit entscheidung 20: was ist 20?“* Der Inhalt stand im selben Satz. Gregor kannte aber die nummerierte Liste nicht, in die die Nummer gehört (`Intern/WEITERMACHEN.md`, „Geltende Entscheidungen“, seit dem Umbau am 30.10. die Nummern 1–20). Die Antwort um 08:36:31 hat das erklärt.
+
+**How to apply, zusätzlich:** Eine Entscheidungsnummer nenne ich Gregor nur zusammen mit dem Inhalt, dem Datum und dem Ort der Liste. Beispiel: *„deine Entscheidung vom 30.10. (Nr. 20 in der Liste in WEITERMACHEN): auch Testpakete heißen 7.2.1.N“*.

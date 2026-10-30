@@ -58,17 +58,17 @@ void RunE60Tests(void)
 			if (andockleiste.GetSplitter(i) == pZieht)
 				bNochDa = TRUE;
 		TT_CHECK_MSG(bNochDa, "EndRecycleSplitters hat den ziehenden Balken geloescht - Track liefe auf freigegebenem Speicher (E-60)");
-		TT_CHECK_MSG(andockleiste.m_arrSplitters.GetSize() == 2,
-					 "nach dem Durchlauf stehen %d Balken da, erwartet 2 (der ziehende und der umgewidmete ruhende)",
-					 (int) andockleiste.m_arrSplitters.GetSize());
+		if (andockleiste.m_arrSplitters.GetSize() != 2)
+			TT_Fail("nach dem Durchlauf stehen %d Balken da, erwartet 2 (der ziehende und der umgewidmete ruhende)",
+					(int) andockleiste.m_arrSplitters.GetSize());
 
 		// Ende des Ziehens: jetzt darf er wieder aufgeraeumt werden.
 		pZieht->m_bTracking = FALSE;
 		andockleiste.BeginRecycleSplitters();
 		andockleiste.EndRecycleSplitters();
-		TT_CHECK_MSG(andockleiste.m_arrSplitters.GetSize() == 0,
-					 "Gegenprobe: nach dem Ziehen raeumt der Durchlauf nicht mehr auf (%d Balken uebrig)",
-					 (int) andockleiste.m_arrSplitters.GetSize());
+		if (andockleiste.m_arrSplitters.GetSize() != 0)
+			TT_Fail("Gegenprobe: nach dem Ziehen raeumt der Durchlauf nicht mehr auf (%d Balken uebrig)",
+					(int) andockleiste.m_arrSplitters.GetSize());
 	}
 	TT_EndTest();
 }

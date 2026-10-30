@@ -141,3 +141,4 @@
 - [Keine unverständlichen Abfragen](keine-unverstaendlichen-abfragen.md) — Gregor 30.10.: Abfragen für Skripte/Befehle, die er nicht nachvollziehen kann, lehnt er ab; Read/Grep/Edit statt Perl-Einzeiler, nur im Projektverzeichnis
 - [Jede Neuerung lokal prüfbar](jede-neuerung-lokal-pruefbar.md) — Gregor 29.10.: alle möglichen Tests baue ich selbst, damit Neues lokal prüfbar ist; seine Liste der Testsysteme führt er selbst
 - [CHRONIST 30.10.2026](CHRONIST-2026-10-30.md) — Lauf 29.10. 21:20 bis 30.10. 07:10: keine neue Lehre, zehn Nachträge; endloser Ersetzungshelfer als „Testbau läuft“ gemeldet und nie gestoppt, zwei Einwürfe ohne Antwort, main 13 Min. „noch nicht veröffentlicht“, VM-Pfad aus Lehre entfernt
+- [CHRONIST 30.10.2026 vormittags](CHRONIST-2026-10-30b.md) — Lauf 07:10 bis 09:03: keine neue Lehre, fünf Nachträge; zweiter Arbeitsbaum gegen die eigene Ansage, sechs Abfragen bei Gregor, Ursache der Lesesperre stand in der eigenen Werkzeugantwort
