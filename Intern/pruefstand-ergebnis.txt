@@ -1,8 +1,12 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-30 13:17:25
+zeit=2026-10-30 14:24:41
 freigabe=Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück'
-nur=E-13p   (Teillauf, nicht der Gesamtstand)
+nur=E-144p   (Teillauf, nicht der Gesamtstand)
 faelle=1
-bestanden=1
-fehlgeschlagen=0
-fall=[ ok ] E-13p    E13 FORTSCHRITT sichtbar=1
+bestanden=0
+fehlgeschlagen=1
+fall=[FEHL] E-144p   fehlt in messung: E144 ERGEBNIS probe=ok gleich=1 references=1
+             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
+                         Zeit vom WM_CLOSE bis zum Ende: 1 s
+                         Beendet: True
+                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\tools\TESTLAEUFE.md

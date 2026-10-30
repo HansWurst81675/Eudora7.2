@@ -117,6 +117,7 @@ eine Datei liest, liest diese.
 | [fehlerklassen-abstellen](fehlerklassen-abstellen.md) | Wiederholte Fehler mit Werkzeug und Schranke abstellen, nicht einzeln nachbessern — Vorsatz allein hält nicht |
 | [fertig-heisst-fertig](fertig-heisst-fertig.md) | Wenn ich 'fertig' sage, muss Gregor mergen, loeschen und ein Release haben koennen - ohne dass etwas nachkommt |
 | [fertige-fassung-bereitstellen](fertige-fassung-bereitstellen.md) | Ist eine neue Fassung fertig, erst eigene Tests, dann als Verzeichnis neben Gregors letztem Release-Verzeichnis bereitstellen |
+| [freigaben-settings-local](freigaben-settings-local.md) | Gregor 30.10.2026 abends - Freigaben stehen in .claude/settings.local.json (git push, perl tools/); Befehle so schreiben, dass sie genau darunter fallen; alles im Projektordner, Rollenbaeume unter .wt/ |
 | [fund-ganz-abhaken](fund-ganz-abhaken.md) | Vor der Behebung eines Fundes seine Punkte als Liste abhaken (tools/fund-punkte.pl): N1 wurde nur in einer Richtung behoben, obwohl PRÜFER-23 die Gegenrichtung im selben Abschnitt nannte |
 | [funktion-bringt-ihre-vorbedingung-mit](funktion-bringt-ihre-vorbedingung-mit.md) | Wer eine bewaehrte Funktion in einen neuen Weg einbaut, uebernimmt ihre Vorbedingungen und Nebenwirkungen - ISOTranslate nullt ein Byte hinter dem Bereich |
 | [funktionsbug-vor-buchfuehrung](funktionsbug-vor-buchfuehrung.md) | Wartet Gregor auf eine Behebung, läuft sie im Vordergrund zuerst; Buchführung (Doku, Aufräumen, Merges der Rollen) geht in den Hintergrund oder danach |
@@ -176,6 +177,7 @@ eine Datei liest, liest diese.
 | [stand-27-10-2026](stand-27-10-2026.md) | 27.10. nachmittags — PR #179 gemergt (7.2.0.127/1.0.127 auf main); Gregor testet V1–V6 an 1.0.127; nächster Zweig braucht sein Ja zum Namen |
 | [stand-28-10-2026](stand-28-10-2026.md) | Stand 28.10.2026 abends - E-166 behoben auf Zweig e166-junk_message_fix; LEKTOR-90 und CHRONIST liefen beim Schluss noch; morgen pruefen, einarbeiten, PR |
 | [stand-29-10-2026](stand-29-10-2026.md) | Stand 29.10.2026 - nach dem PR e166-junk_message_fix in die FAQ nachtragen: TidyAttach von Gregor am Programm bestaetigt; LEKTOR-93-Funde; Issue #181 FAQ-Link |
+| [stand-30-10-2026-abend](stand-30-10-2026-abend.md) | Stand 30.10.2026 abends - Zweig fortsetzen_status_nie_gemessen gepusht, PR fehlt (LEKTOR zuerst); messen-e140.ps1 ungeprueft und uncommittet; Reihenfolge der restlichen „nie gemessen“ |
 | [teilweise-ersetzte-header](teilweise-ersetzte-header.md) | Include-Wächter wirken pro Datei — wer nur einen Teil eines Headers ersetzt, darf den Wächter nicht setzen |
 | [test-prueft-den-ausstieg](test-prueft-den-ausstieg.md) | Ein Regressionstest, der nur die neue Meldung sucht und nicht den Ausstieg, laesst den ganzen Fehler zurueck - 277 von 277 gruen mit vollstaendig wiederhergestelltem Befund |
 | [testdaten-muessen-durchkommen](testdaten-muessen-durchkommen.md) | Ein Testdatum muss nicht nur den Fehler treffen, sondern jede Schranke auf dem Weg zur Messstelle ueberleben - 550 Spam message rejected |

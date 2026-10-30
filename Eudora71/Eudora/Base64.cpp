@@ -163,7 +163,9 @@ int Base64Decoder::Decode(const char* In, LONG InLen, char* Out, LONG& OutLen)
 	
 	for (; InLen; In++, InLen--)
 	{
-		switch(decode = g_Decode[*In])
+		// BEFUND E-145: char ist vorzeichenbehaftet - ein Byte ueber 127 gab einen
+		// negativen Index und las vor der Tabelle. Als BYTE trifft es FAIL.
+		switch(decode = g_Decode[(BYTE)*In])
 		{
 		case SKIP: break;				// skip whitespace
 		case FAIL: invalCount++; break;	// count invalid characters

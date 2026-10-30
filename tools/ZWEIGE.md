@@ -195,6 +195,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `release-7.2.1` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, zweig release-7.2.1 ist ok“*). Entscheidungen vom 29.10. in WEITERMACHEN, Restfunde aus [LEKTOR-94](../Befunde/LEKTOR-94.md#lektor-94), Abweichungstabelle in EINSTELLUNGEN zurück (Gregor: *„ja, tabelle zurück“*), verwaiste Abschnittsverweise; danach Versionsnummer 7.2.1.N, Paket, Prüfbericht |
 | `release-7.2.1-veroeffentlicht` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, beide namen ok“*, auf meinen Vorschlag). Buchführung nach der Veröffentlichung von `v7.2.1.128`: Standzeilen von „noch nicht veröffentlicht“ auf veröffentlicht, `tools/RELEASES.md`. |
 | `weitermachen-aufraeumen` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, beide namen ok“*). WEITERMACHEN: Archiv bis 7.2.0.x, eine Liste „Nach dem Release 7.2.1“, Schranke dazu. |
+| `fortsetzen_status_nie_gemessen` | 30.10.2026 | **Von Gregor vorgegeben** (*„branch: fortsetzen_status_nie_gemessen“*, nach dem Merge von #189). Die offenen Befunde mit „nie gemessen“ messen und beheben; [E-176](../Intern/BEFUNDE.md#e-176), [E-145](../Intern/BEFUNDE.md#e-145), [E-141](../Intern/BEFUNDE.md#e-141), [E-144](../Intern/BEFUNDE.md#e-144). |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 

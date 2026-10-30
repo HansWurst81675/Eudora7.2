@@ -1258,8 +1258,23 @@ if (-not $OhneTests) {
     Write-Host ' Regressionstests'
     Write-Host '====================================================================='
     $pt = Join-Path $PSScriptRoot 'pruefe-tests-gruen.pl'
-    if (Test-Path -LiteralPath $pt) {
-        & perl $pt --ohne-bau --hinweis 2>&1 | ForEach-Object { Write-Host $_ }
+    # perl steht aus PowerShell heraus nicht im Suchpfad (gemessen 30.10.2026:
+    # "Die Benennung perl wurde nicht ... erkannt") - gesucht wie in
+    # paket-bauen.ps1.
+    $perl = (Get-Command perl -ErrorAction Ignore).Source
+    if (-not $perl) {
+        foreach ($k in @(
+            'C:\Program Files\Git\usr\bin\perl.exe',
+            'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+            'C:\Strawberry\perl\bin\perl.exe')) {
+            if (Test-Path -LiteralPath $k) { $perl = $k; break }
+        }
+    }
+    if (-not $perl) {
+        Write-Host '   perl nicht gefunden - Regressionstests NICHT gefahren.' -ForegroundColor Yellow
+    }
+    elseif (Test-Path -LiteralPath $pt) {
+        & $perl $pt --ohne-bau --hinweis 2>&1 | ForEach-Object { Write-Host $_ }
     }
     else {
         Write-Host '   pruefe-tests-gruen.pl fehlt - nicht gefahren.' -ForegroundColor Yellow

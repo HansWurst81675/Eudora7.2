@@ -555,6 +555,11 @@ CSummary::CSummary() : CObject(),
 
 CSummary::~CSummary()
 {
+	// BEFUND E-176: kein Nachrichtenrahmen behaelt einen Rueckzeiger auf
+	// diese Zusammenfassung (sonst liest CMessageFrame::OnDestroy aus
+	// freigegebenem Speicher).
+	CMessageFrame::E176ZusammenfassungStirbt(this);
+
 	// Clean up pointers used to undo state changes when a comp is cancelled
 	if (m_ResponseSum)
 		m_ResponseSum->m_RespondingToSum = NULL;
@@ -1930,6 +1935,16 @@ CCompMessageDoc* CSummary::SendAgain
 			NewDoc->m_Sum->SetPriority(m_Priority);
 			NewDoc->m_Sum->SetTranslators(GetTranslators(), TRUE);  
 			NewDoc->m_Sum->m_SigSelected = m_SigSelected;
+			// BEFUND E-144: wird ein Entwurf aus einem anderen Postfach nach Out
+			// zurueckgeschoben (CTocDoc::Xfer ruft SendAgain(FALSE)), legt Eudora ihn
+			// neu an - und verlor dabei In-Reply-To und References; beim Empfaenger
+			// fiel die Antwort aus dem Gespraechsfaden. Nur auf diesem Weg: "Send
+			// Again" aus dem Menue (DisplayIt TRUE) bleibt wie im Original.
+			if (!DisplayIt)
+			{
+				NewDoc->SetHeaderLine(HEADER_IN_REPLY_TO, CompDoc->GetHeaderLine(HEADER_IN_REPLY_TO));
+				NewDoc->SetHeaderLine(HEADER_REFERENCES, CompDoc->GetHeaderLine(HEADER_REFERENCES));
+			}
 			CString csExtra = CompDoc->m_ExtraHeaders;
 			int nFind2, nFind1 = csExtra.Find(CRString(IDS_PLUGIN_INFO_HEADER));
 			if (nFind1 < 0)
