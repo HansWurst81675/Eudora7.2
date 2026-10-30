@@ -62,3 +62,11 @@ Zeiten MEZ, gemessen an Transkript `72be6093…` und an Commits.
 - Wer eine Antwort Gregors einträgt, sucht im selben Commit **jede** Stelle, an der die Frage noch offen steht, auch die Stand-Vermerke: `grep -rn "<Kennung>" memory/ Arbeitsweise/ Intern/`, ohne `head` ([[doku-parallel-nicht-hinterher]]).
 - Jeder Einwurf Gregors bekommt eine Antwort, auch wenn ein zweiter dringlicher ist. Zwei Fragen bekommen zwei Antworten, in einer Nachricht.
 - Eine Entscheidung aus `entscheidung-*.md` steht auch in der Befundzeile, mit Datum und Gregors Wortlaut.
+
+## Nachtrag 30.10.2026 (CHRONIST): „brauchst mich nicht dazu?“
+
+Zeiten MEZ, Transkript `c21b8f54…`. Am 29.10. um 22:18:29 hatte Gregor beide Zweignamen bestätigt (*„ja, beide namen ok“*). Der Plan für `weitermachen-aufraeumen` stand seit 21:12 am 29.10. fest ([[eine-stelle-dann-verlinken]]) und um 22:28:56 noch einmal als *„Für morgen“*. Am 30.10. um 07:05:24 endete die Antwort auf *„was steht als nächstes auf dem programm?“* trotzdem mit *„Soll ich mit Punkt 1 anfangen? Den CHRONIST würde ich parallel … laufen lassen.“* Gregor 07:06:08: *„ich denke, du kannst jetzt deine ganzen hausaufgaben machen und brauchst mich nicht dazu?“*, 07:06:25: *„ja, mit 1 anfangen.“*
+
+Am Vorabend gingen zwei Einwürfe ohne Antwort durch ([[einwurf-ist-ein-messwert]], Nachtrag 30.10.). Bei Gregor kommen also beide Fehler an: Fragen, die er nicht braucht, und keine Antwort auf seine eigenen.
+
+**How to apply, zusätzlich:** Hat Gregor Name und Plan schon bestätigt, wird nicht gefragt, sondern gemeldet: *„Ich fange mit 1 an, Zweig wie gestern bestätigt.“* Gefragt wird nur, was in der Antwort neu ist.

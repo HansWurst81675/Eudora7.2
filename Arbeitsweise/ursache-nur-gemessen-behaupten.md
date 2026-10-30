@@ -67,3 +67,9 @@ Zeiten MEZ. Um 19:20:27 bat ich Gregor, das Filterfenster einzuordnen: *„(a) a
 Belegt an `BEFUNDE.md` E-137 (Stand `ed0d53a2` bis `78f2ad2a`) und LEKTOR-66 L-66.1. Der Eintrag sagte: *„Weiter nicht gemessen: wer Eudora vorher beendete — die Behebung fängt den Befehl ab, bevor er dorthin kommt.“* Der erste Halbsatz ist ehrlich. Der zweite ist eine Behauptung über genau den Weg, der unbekannt war, und er war falsch. Wer Eudora beendete, war die Ursache. Ohne sie lässt sich nicht sagen, ob eine Abfangung „davor“ liegt. Die Antwort stand im Quelltext (`CDoc::OnFileClose`, `doc.cpp:144-149`) und war in einem Lauf zu lesen (PRUEFER-56, rund neun Minuten).
 
 **How to apply, zusätzlich:** Steht in einem Befund „nicht gemessen: wer X auslöst“, dann darf derselbe Befund keine Behebung tragen, die sich auf den Weg zu X stützt. Erst wird die Ursache am Quelltext belegt, mit Datei und Zeile vom Eingang bis zum Ausgang. Danach kommt die Behebung. Geht das nicht, heißt die Behebung „Vermutung“, und genau so steht es auch im Commit ([[extrakt-ist-nicht-das-programm]], Nachtrag 25.10. spät).
+
+## Nachtrag 30.10.2026 (CHRONIST): „Testbau läuft“
+
+29.10., 21:58:14 MEZ, an Gregor: *„Der Commit hängt noch im Haken (Testbau läuft). Ich warte darauf, bevor ich die Notizen anfasse.“* Gelesen war bis dahin die leere Ausgabedatei des Hintergrundauftrags und `git log -1` (alter Stand). Beides sagt nur, dass nichts fertig ist, nicht wo es hängt. Der Haken war nie gestartet, es hing ein Ersetzungshelfer davor ([[haengende-kommandos-abbrechen]], Nachtrag 30.10.). Das ist dieselbe Form wie *„bevor er dorthin kommt“* vom 25.10. (oben): Eine Behauptung über den **Weg**, die aus der Erwartung kam, wo es meistens hängt. Gregor wartete darauf von 21:55 bis 22:07.
+
+**How to apply, zusätzlich:** Bei einem hängenden Aufruf ist der Ort *„unbekannt“*, solange keine Ausgabe ihn nennt. Ein Satz wie *„hängt noch, Ausgabe leer, ich sehe nach, woran“* ist wahr und kostet nichts.

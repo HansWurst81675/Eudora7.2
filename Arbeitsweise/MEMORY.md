@@ -139,3 +139,4 @@
 - [Abweisung ist eine Antwort](abweisung-ist-eine-antwort.md) — weist Rechteprüfung oder GitHub-Regel ab, kein `!`-Befehl für Gregor und keine Bitte, den Schutz abzuschalten; 29.10.: „ich traue dir nicht“
 - [CHRONIST 29.10.2026 abends](CHRONIST-2026-10-29b.md) — Lauf 08:47 bis 21:20: eine neue Lehre, sechs Nachträge; Datenschutz-Lehre trug selbst einen Dateinamen, sechs Bereinigungsrunden, vier Funde Gregors hinter grünen Prüfungen, E-166 nur im TESTPLAN
 - [Jede Neuerung lokal prüfbar](jede-neuerung-lokal-pruefbar.md) — Gregor 29.10.: alle möglichen Tests baue ich selbst, damit Neues lokal prüfbar ist; seine Liste der Testsysteme führt er selbst
+- [CHRONIST 30.10.2026](CHRONIST-2026-10-30.md) — Lauf 29.10. 21:20 bis 30.10. 07:10: keine neue Lehre, zehn Nachträge; endloser Ersetzungshelfer als „Testbau läuft“ gemeldet und nie gestoppt, zwei Einwürfe ohne Antwort, main 13 Min. „noch nicht veröffentlicht“, VM-Pfad aus Lehre entfernt
