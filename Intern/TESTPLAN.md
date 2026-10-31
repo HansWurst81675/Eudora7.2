@@ -124,6 +124,45 @@ habe ich es nicht gefahren.
 * Die neun Kriterien bekommen keinen eigenen Durchgang (Gregors Entscheidung,
   siehe oben).
 
+## <a id="e-139-naechstes"></a>Im nächsten Paket: der Rechtschreibhinweis lässt sich abschalten ([E-139](BEFUNDE.md#e-139))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+7.2.1.128 kam die Meldung *„Die Rechtschreibpruefung ist in dieser Fassung
+nicht verfuegbar …“* nach jedem Programmstart wieder. Geprüft wird am
+**lokalen** Postfach *In* (nicht IMAP).
+
+1. Eudora starten, im lokalen *In* eine Nachricht öffnen, *Reply*.
+2. Die Meldung kommt jetzt mit dem Titel **Note** und dem Kästchen
+   **„Don't show this again“**. Ankreuzen, *OK*. Die Antwort ohne Speichern
+   schließen.
+3. Eudora beenden und neu starten, wieder eine Nachricht öffnen, *Reply*:
+   **die Meldung darf nicht mehr kommen.**
+4. Zurücknehmen, falls gewünscht: in der `Eudora.ini` (Abschnitt
+   `[Settings]`) die Zeile `WarnSpellUnavailable=0` löschen — beim nächsten
+   Start kommt die Meldung wieder einmal.
+
+Am Prüfstand am 31.10.2026 so gefahren (Fall `E-139p`, Befund
+[E-139](BEFUNDE.md#e-139)): neuer Bau Lauf 1 mit Kästchen, Lauf 2 ohne
+Meldung; 7.2.1.128 in beiden Läufen mit Meldung, ohne Kästchen.
+
+## <a id="e-140-naechstes"></a>Im nächsten Paket: „Speichern unter“ aus dem Nachrichten- und Verfassen-Fenster nennt den Zeichensatz ([E-140](BEFUNDE.md#e-140))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+7.2.1.128 schrieb *File → Save As* nur aus der **Postfachliste** eine
+Zeichensatzangabe in die Datei, aus dem geöffneten Nachrichtenfenster und
+aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
+
+1. Eine Nachricht mit Umlauten (und möglichst einem €-Zeichen) im lokalen
+   *In* **öffnen**, *File → Save As*, als `.txt` speichern.
+2. Auf dieselbe Nachricht *Reply*, im Verfassen-Fenster *File → Save As*,
+   als `.txt` speichern; die Antwort danach ohne Speichern schließen.
+3. Beide Dateien im Editor öffnen: oben stehen jetzt
+   `MIME-Version: 1.0`, `Content-Type: text/plain; charset="windows-1252"`
+   (oder `ISO-8859-1`) und `Content-Transfer-Encoding: 8bit`, darunter eine
+   Leerzeile und der Text mit richtigen Umlauten.
+
+Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
+
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 
 > Kein eigenes Testpaket — du prüfst es an der Release-Fassung (Entscheidung
