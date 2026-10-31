@@ -66,6 +66,7 @@ void RunE86Tests(const char* szEudoraDir);
 void RunE104E115Tests(const char* szEudoraDir);
 void RunE140Tests(const char* szEudoraDir);
 void RunE139Tests(const char* szEudoraDir);
+void RunE165Tests(const char* szEudoraDir);
 void RunM1Tests(void);
 void RunE145Tests(void);
 void RunE141Tests(const char* szEudoraDir);
@@ -201,6 +202,7 @@ int main(int argc, char* argv[])
 	RunE104E115Tests(szEudoraDir);
 	RunE140Tests(szEudoraDir);
 	RunE139Tests(szEudoraDir);
+	RunE165Tests(szEudoraDir);
 	RunM1Tests();
 	RunE145Tests();
 	RunE141Tests(szEudoraDir);

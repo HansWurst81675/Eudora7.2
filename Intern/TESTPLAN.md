@@ -163,6 +163,22 @@ aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
 
 Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
 
+## <a id="e-165-naechstes"></a>Im nächsten Paket: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Auf
+deinem Bildschirm sah die Box am 27.10.2026 mit einem Treffer verbaut aus
+(grauer Balken unten, Box höher als der Eintrag). In der VM war die Box mit
+**zwei** Treffern zu niedrig und hatte eine Bildlaufleiste; das ist
+behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
+
+1. Neue Nachricht, im `To:`-Feld die ersten Buchstaben eines Kurznamens
+   tippen, zu dem es **einen** Treffer gibt — dann einen mit **zwei oder
+   mehr** Treffern.
+2. Die Box soll jeden Eintrag ganz zeigen, **ohne** grauen Balken
+   (waagrechte Bildlaufleiste) und ohne leere Fläche darunter.
+3. Wenn nicht: ein Bildschirmfoto genügt; die Maße stehen dann in der
+   `eudora.log` als Zeile `E-165 Box: …`.
+
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 
 > Kein eigenes Testpaket — du prüfst es an der Release-Fassung (Entscheidung
