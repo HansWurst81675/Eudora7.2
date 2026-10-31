@@ -25,6 +25,7 @@ static void Test_E139_Stelle(const char* szEudoraDir)
 	if (!pText)
 	{
 		TT_Fail("spell.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
 		return;
 	}
 	char* pFn = QT_Abschnitt(pText, "static void ZeigeHinweisEinmal()", "NoteDialog(IDS_INI_WARN_SPELL_UNAVAILABLE, IDS_SPELL_NICHT_VORHANDEN); }");
@@ -39,6 +40,7 @@ static void Test_E139_Stelle(const char* szEudoraDir)
 	}
 	TT_CHECK_MSG(!QT_Enthaelt(pText, "AfxMessageBox("), "spell.cpp zeigt wieder eine AfxMessageBox ohne Kaestchen (E-139)");
 	free(pText);
+	TT_EndTest();
 }
 
 static void Test_E139_Ressource(const char* szEudoraDir)
@@ -51,13 +53,15 @@ static void Test_E139_Ressource(const char* szEudoraDir)
 		TT_Fail("EudoraRes.rc oder resource.h nicht lesbar - ungeprueft ist nicht gruen");
 		if (pRc) free(pRc);
 		if (pH) free(pH);
+		TT_EndTest();
 		return;
 	}
-	TT_CHECK_MSG(QT_Enthaelt(pRc, "IDS_INI_WARN_SPELL_UNAVAILABLE \"WarnSpellUnavailable\n1\""), "WarnSpellUnavailable fehlt oder hat nicht die Vorgabe 1 - dann kaeme die Meldung nie (E-139)");
+	TT_CHECK_MSG(QT_Enthaelt(pRc, "IDS_INI_WARN_SPELL_UNAVAILABLE \"WarnSpellUnavailable\\n1\""), "WarnSpellUnavailable fehlt oder hat nicht die Vorgabe 1 - dann kaeme die Meldung nie (E-139)");
 	TT_CHECK_MSG(QT_Enthaelt(pRc, "IDS_SPELL_NICHT_VORHANDEN \""), "der Meldungstext IDS_SPELL_NICHT_VORHANDEN fehlt (E-139)");
 	TT_CHECK_MSG(QT_Enthaelt(pH, "#define IDS_INI_WARN_SPELL_UNAVAILABLE 11152"), "IDS_INI_WARN_SPELL_UNAVAILABLE ist nicht 11152 (Bereich 11100-11999, [Settings]) (E-139)");
 	free(pRc);
 	free(pH);
+	TT_EndTest();
 }
 
 void RunE139Tests(const char* szEudoraDir)

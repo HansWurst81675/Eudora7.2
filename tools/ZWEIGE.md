@@ -197,6 +197,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `weitermachen-aufraeumen` | 29.10.2026 | **Von Gregor bestätigt** (*„ja, beide namen ok“*). WEITERMACHEN: Archiv bis 7.2.0.x, eine Liste „Nach dem Release 7.2.1“, Schranke dazu. |
 | `fortsetzen_status_nie_gemessen` | 30.10.2026 | **Von Gregor vorgegeben** (*„branch: fortsetzen_status_nie_gemessen“*, nach dem Merge von #189). Die offenen Befunde mit „nie gemessen“ messen und beheben; [E-176](../Intern/BEFUNDE.md#e-176), [E-145](../Intern/BEFUNDE.md#e-145), [E-141](../Intern/BEFUNDE.md#e-141), [E-144](../Intern/BEFUNDE.md#e-144). |
 | `e140-speichern-zeichensatz` | 31.10.2026 | **Von Gregor gewählt** (Auswahl im Dialog, auf meinen Vorschlag). [E-140](../Intern/BEFUNDE.md#e-140): *Speichern unter* aus Nachrichten- und Verfassen-Fenster mit Zeichensatzangabe; danach weitere Behebungen dieses Abends. |
+| `e136_messweg` | 31.10.2026 | **Von Gregor bestätigt** (*„e136_messweg als branch name ok“*, auf meinen Vorschlag). Messweg für [E-136](../Intern/BEFUNDE.md#e-136) am Programm; Funde aus [LEKTOR-108](../Befunde/LEKTOR-108.md#lektor-108). |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 

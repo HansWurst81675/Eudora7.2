@@ -26,6 +26,7 @@ static void Test_E140_Lesen(const char* szEudoraDir)
 	if (!pText)
 	{
 		TT_Fail("ReadMessageDoc.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
 		return;
 	}
 	char* pFn = QT_Abschnitt(pText, "BOOL CReadMessageDoc::SaveAsFile(", "void CReadMessageDoc::OnUpdateMessageServer(");
@@ -40,6 +41,7 @@ static void Test_E140_Lesen(const char* szEudoraDir)
 		free(pFn);
 	}
 	free(pText);
+	TT_EndTest();
 }
 
 static void Test_E140_Verfassen(const char* szEudoraDir)
@@ -49,6 +51,7 @@ static void Test_E140_Verfassen(const char* szEudoraDir)
 	if (!pText)
 	{
 		TT_Fail("compmsgd.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
 		return;
 	}
 	char* pFn = QT_Abschnitt(pText, "BOOL CCompMessageDoc::SaveAsFile(", "void CCompMessageDoc::OnUpdateFileSaveAs(");
@@ -69,6 +72,7 @@ static void Test_E140_Verfassen(const char* szEudoraDir)
 		free(pFn);
 	}
 	free(pText);
+	TT_EndTest();
 }
 
 static void Test_E140_Kern(const char* szEudoraDir)
@@ -78,6 +82,7 @@ static void Test_E140_Kern(const char* szEudoraDir)
 	if (!pText)
 	{
 		TT_Fail("msgutils.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
 		return;
 	}
 	char* pFn = QT_Abschnitt(pText, "CString E140TextFuerDatei(", "return CString( pszText ? pszText : \"\" ); }");
@@ -90,6 +95,7 @@ static void Test_E140_Kern(const char* szEudoraDir)
 		free(pFn);
 	}
 	free(pText);
+	TT_EndTest();
 }
 
 void RunE140Tests(const char* szEudoraDir)

@@ -22,6 +22,7 @@ static void Test_E171(const char* szEudoraDir)
 	if (!pText)
 	{
 		TT_Fail("guiutils.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
 		return;
 	}
 	char* pFn = QT_Abschnitt(pText, "void OpenFindMessagesWindow(", "LPARAM(pSearchView->m_BeginBtn.GetSafeHwnd()) ); } }");
@@ -35,6 +36,7 @@ static void Test_E171(const char* szEudoraDir)
 		free(pFn);
 	}
 	free(pText);
+	TT_EndTest();
 }
 
 void RunE171Tests(const char* szEudoraDir)

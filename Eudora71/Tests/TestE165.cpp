@@ -23,6 +23,7 @@ static void Test_E165(const char* szEudoraDir)
 	if (!pText)
 	{
 		TT_Fail("AutoCompleteSearcher.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
 		return;
 	}
 
@@ -49,6 +50,7 @@ static void Test_E165(const char* szEudoraDir)
 		free(pMw);
 	}
 	free(pText);
+	TT_EndTest();
 }
 
 void RunE165Tests(const char* szEudoraDir)

@@ -59,8 +59,8 @@ Eine Nummer an zwei Orten; bis 1.0.127 waren es zwei verschiedene:
 
 | Nummer | steht in | bedeutet |
 |---|---|---|
-| **Quellstand**, z. B. `7.2.1.128` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
-| **Paketnummer**, z. B. `7.2.1.128` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
+| **Quellstand**, z. B. `7.2.1.129` | `Eudora71/Version.h` | die Produktversion, die ein Bau in die `Eudora.exe` schreibt. Sie steht in der Dateiinfo und in der Titelzeile |
+| **Paketnummer**, z. B. `7.2.1.129` | die Datei `VERSION` | benennt das ausgelieferte ZIP |
 
 Ab der Endnummer 128 (erste Fassung: 7.2.1.128) sind beide Nummern **gleich**: seit dem Release 7.2.1.128
 `7.2.1.N` für Testpaket wie Release (Gregors Entscheidung 20), davor `7.2.0.N` für ein Testpaket. Bis 1.0.127 hieß die Paketnummer `1.0.N` und

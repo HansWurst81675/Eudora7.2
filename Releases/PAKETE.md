@@ -179,6 +179,22 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.1.129 — Testpaket nach dem Release 7.2.1, Zweig `e136_messweg`
+
+**Geschnürt am 31.10.2026 um 21:31, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`; nicht veröffentlicht** (Gregor: *„stell es nicht auf github, sondern hier zum testen bereit“*). Nummer am selben Tag vergeben (Gregor: *„bau mir dann ein 7.2.1.129“*). Gregor testet damit die Schritte aus dem [TESTPLAN](../Intern/TESTPLAN.md) zu [E-139](../Intern/BEFUNDE.md#e-139), [E-140](../Intern/BEFUNDE.md#e-140), [E-171](../Intern/BEFUNDE.md#e-171), [E-165](../Intern/BEFUNDE.md#e-165) und [E-136](../Intern/BEFUNDE.md#e-136). Kein Release — veröffentlicht wird nur mit Gregors Ja.
+
+| | |
+|---|---|
+| Testverzeichnis | `C:\Users\Gregor\Eudora72-7.2.1.129-release`, neben seinem 7.2.1.128. Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` |
+| ZIP | `Releases/Eudora72-7.2.1.129-release.zip`, 9.119.561 Byte, SHA-256 `990d0c1b867e6c2113912452e8fea2eeb97d4e4c6945de692007486b9dea6c08`; nicht im Repo (`.gitignore`), nicht auf GitHub |
+| Gegen den Bau gemessen | `Eudora.exe` und `EudoraRes.dll` im Paket **byte-gleich** mit `Eudora71/Bin/Release` (SHA-256), Dateiversion 7.2.1.129, Bau `Eudora 7.2.1.129+11643ee1 2026-10-31 21:28`; `paket-bauen.ps1` Schritt 8: *„0 ersetzt, 39 schon gleich, keine Debug-Laufzeit“* |
+| `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„JA“*; vier Warnungen zu alten Fremddateien wie bei 7.2.1.128 |
+| Geprüft | voller Prüfstandslauf 46 Fälle, 46 bestanden, 18 Eudora-Starts (21:33–21:42); [PRUEFBERICHT](PRUEFBERICHT.md) **BESTANDEN** (350 Unit-Tests, 19 Schranken, 46 Prüfstandsfälle). Beim Schnüren selbst schrieb `paket-bauen.ps1` einen Bericht *FEHLGESCHLAGEN* (Testbau im selben Lauf gescheitert) und wurde mit `-OhnePruefbericht` gefahren; der volle Bericht danach deckte auf, dass neun neue Tests ohne `TT_EndTest` nicht zählten — berichtigt in `c458c74d`, nur Testdateien |
+| Rollenschranke | gebaut mit `-AgentLaeuftAbsichtlich` und `-RollenSindGelaufen`: LEKTOR-109 und PRÜFER-68 liefen auf Gregors Anweisung (*„gut, lektor und prüfer starten“*), beide ändern nichts, was ins Paket geht |
+| Von Gregor getestet | **E-139 bestanden** (31.10.2026: *„bestätige neue meldung. nach checkbox aktivieren kommt sie nach dem neustarte nicht mehr, wird nicht mehr angezeigt. PASSED“*); Antworten und Weiterleiten mit Original-HTML ([E-88](../Intern/BEFUNDE.md#e-88)) kamen richtig an (*„antwort mail kam korrekt an, wird korrekt angezeigt“*); [E-165](../Intern/BEFUNDE.md#e-165) mit zwei und drei Treffern *„sieht besser aus e-165“*, bei einem Treffer keine Box, sondern Ergänzung im Feld. Übrige Schritte stehen aus |
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.1.129.
+
 ## 7.2.1.128 — erstes Release 7.2.1, Zweig `release-7.2.1`
 
 **Geschnürt am 29.10.2026; veröffentlicht als `v7.2.1.128` am 29.10.2026 um 21:17:31 UTC** (Marke auf `c8b0893f`, *Latest*, ZIP von GitHub nachgemessen: SHA-256 gleich). Nummer am selben Tag vergeben (Gregor: „ja, direkt 7.2.1.128 bauen, ich teste dann das erste release“). Erste Fassung im neuen Nummernschema (Kasten oben). Von Gregor am 29.10.2026 getestet: VM ohne Fehlerzeile, E-166 auf Hauptrechner und Laptop bestanden ([TESTPLAN](../Intern/TESTPLAN.md#ergebnis-e-166-laptop)); mit seinem Ja (*„gemergt. ja, release veröffentlichen“*) als `v7.2.1.128` veröffentlicht. Der Text für GitHub steht in [7.2.1.128/RELEASE-NOTIZEN.md](7.2.1.128/RELEASE-NOTIZEN.md).

@@ -311,12 +311,27 @@ eine Nachricht mit allen Kopfzeilen aufgeht, legt `ShowAllHeaders` in der
 `TabooHeaders` — **Vorsicht:** ein eigener Eintrag dort **ersetzt** die
 eingebaute Liste vollständig, er ergänzt sie nicht.
 
-Innerhalb einer geöffneten Mail etwas suchen (auch in den Kopfzeilen, wenn sie
-eingeblendet sind): *Edit → Find → Find Text* (Strg+Umschalt+F).
+**Ein Wort in einer Mail suchen, auch in den Kopfzeilen** (etwa `X-Persona`):
+
+1. Die Mail per Doppelklick öffnen.
+2. **„Blah Blah Blah“** drücken — sonst stehen die versteckten Kopfzeilen
+   nicht im Fenster, und die Suche findet sie nicht.
+3. *Edit → Find → Find Text* (**Strg+Umschalt+F**), Begriff eingeben;
+   **F3** springt zum nächsten Treffer.
+
+Über **viele** Mails: *Edit → Find → Find Messages* (**Strg+F**), Kriterium
+**Headers** *contains* `x-persona` (oder **Anywhere** für überall), links die
+Postfächer wählen, *Search*. Schnellweg: ein Wort in der Mail markieren,
+Rechtsklick → *Search Mailfolder* / *Search Mailbox* / *Search Eudora*.
 
 *Am Programm geprüft:* den Knopf hat Gregor am 11.09.2026 an 1.0.46 bestätigt
-([E-80](../Intern/BEFUNDE.md#e-80)); die Schlüssel am Quelltext
-([EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md)).
+([E-80](../Intern/BEFUNDE.md#e-80)); die Suche nach `x-persona` mit
+Blah Blah Blah und Strg+Umschalt+F am 31.10.2026 an 7.2.1.128 (*„ja,
+funktioniert mit ctrl-shift-F“*). *Find Messages* mit *Headers* ist am
+Quelltext nachgesehen (`EudoraRes.rc`, Kategorien der Suche). Der Rechtsklick
+**ohne** markiertes Wort meldet bis 7.2.1.128 einen *internal error*
+([E-171](../Intern/BEFUNDE.md#e-171), behoben ab 7.2.1.129). Die Schlüssel am
+Quelltext ([EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md)).
 
 ## 17. Wie schreibt Eudora mehr ins Protokoll (`LogLevel`)?
 

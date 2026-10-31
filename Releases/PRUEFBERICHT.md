@@ -2,27 +2,27 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.1.128` (Paketnummer `7.2.1.128`) |
-| **Commit** | `efc9cfd4` (Arbeitsbaum sauber) |
-| **Erstellt** | 2026-10-29 12:47 |
+| **Quellstand** | `7.2.1.129` (Paketnummer `7.2.1.129`) |
+| **Commit** | `c458c74d` — **Arbeitsbaum nicht sauber** (1 Dateien) |
+| **Erstellt** | 2026-10-31 21:54 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 09 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 09 s | dieser Lauf |
-| Pruefstand, 41 Faelle, 13 Eudora-Starts | 7 min 24 s | voller Lauf, Ende 2026-10-29 12:45:33 |
-| **zusammen** | **7 min 42 s** | |
+| Unit-Tests bauen und fahren | 0 min 07 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
+| Pruefstand, 46 Faelle, 18 Eudora-Starts | 8 min 56 s | voller Lauf, Ende 2026-10-31 21:42:38 |
+| **zusammen** | **9 min 11 s** | |
 
-Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
+Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.1.129+11643ee1 2026-10-31 21:28`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
-| Unit-Tests (`EudoraTests.exe`) | 314 | 314 | 0 |  |
+| Unit-Tests (`EudoraTests.exe`) | 350 | 350 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 41 | 41 | 0 | 0 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 46 | 46 | 0 | 0 an anderem Bau, 0 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
@@ -51,9 +51,9 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-10-29 12:47** gegen den Quelltext von Commit `efc9cfd4`.
+Gelaufen am **2026-10-31 21:54** gegen den Quelltext von Commit `c458c74d*`.
 
-<details><summary>Alle 314 Unit-Tests einzeln</summary>
+<details><summary>Alle 350 Unit-Tests einzeln</summary>
 
 | Bereich | Test | Ergebnis |
 |---|---|---|
@@ -371,6 +371,42 @@ Gelaufen am **2026-10-29 12:47** gegen den Quelltext von Commit `efc9cfd4`.
 | Startfehler S-2 (Regressionstests) | S-2: die Werbeleiste wird in unserem Bau nicht angelegt | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-148: Releases\1.0\rootcerts.p7b enthaelt keine eMudhra-Wurzel | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-148: paket-bauen.ps1 legt rootcerts.p7b aus Releases\1.0 ueber die Grundlage | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-82 (Quelltext): unpruefbare Zertifikatskette (Fehler 21, 27) wird abgelehnt, nicht angenommen | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-72 (Quelltext): das Filterfenster schreibt nur einen Filter zurueck, den es geladen hat | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-72/E-64 (Quelltext): ein Filter mit leerem Suchwert trifft keine Nachricht - auch verneint nicht | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-60: ein Trennbalken, der gerade gezogen wird, ueberlebt einen Anordnungsdurchlauf | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-60: TrennbalkenNeuAnlegen (der Weg aus OnSize) loescht keinen Balken, der gerade gezogen wird | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-156/S-1: das Debug-Muster aus paket-pruefen.ps1 und paket-bauen.ps1 erkennt die echten Faelle (ausgefuehrt) | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | S-1 (Quelltext): eine DLL, die weder im Paket liegt noch zu Windows gehoert, ist ein FEHLER | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | S-8 (Quelltext): eine Paketdatei, die nicht x86 ist, ist ein FEHLER (sonst 0xc000007b) | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | V-1 (Quelltext): eine schon vorhandene Release-Marke wird abgewiesen, nicht ueberschrieben | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-3 (Quelltext): QCSSL handelt bis TLS 1.3 aus, Untergrenze TLS 1.2 fuer jede Einstellung | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-32 (Quelltext): OnKillFocusRecipient greift ohne Kopfzeilenfeld nicht auf pField zu | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-23 (Quelltext): verschluesselter Abruf und Versand fallen nicht still auf 110 bzw. 25 zurueck | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-15 (Quelltext): QCGetTaskStatusView sichert nicht zu, dass die Ansicht existiert | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-19 (Quelltext): der Reparaturzweig fuer den Namen des In-Postfachs sichert nichts zu | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-21 (Quelltext): MessageWait sichert bei WSAEWOULDBLOCK nichts zu, sondern wartet weiter | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-28 (Quelltext): ein geschlossenes Nachrichtenfenster bleibt nicht als offen in der Zusammenfassung stehen | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-57 (Quelltext): IsTabLabelTruncated misst mit CClientDC, nicht mit CPaintDC | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-58 (Quelltext): ein Klick in den Registerkartenstreifen trifft nie das (ungezeichnete) Logo | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-75 (Quelltext): ohne Rueckfrage bekommt Strg+J das Filtern, nicht Junk | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-86 (Quelltext): die Anzeigedatei verlangt den modernsten MSHTML-Modus, und zwar als erste Zeile | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-104 (Quelltext): UnwrapText laeuft beim Speichern nur ueber den Rumpf, nie ueber die Kopfzeilen | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-115 (Quelltext): FindCheck springt ueber den Ordner Recent, ohne auf NULL zuzugreifen | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-140 (Quelltext): Speichern unter aus dem Nachrichtenfenster schreibt Text nur ueber E140TextFuerDatei | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-140 (Quelltext): Speichern unter aus dem Verfassen-Fenster schreibt Text nur ueber E140TextFuerDatei | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-140 (Quelltext): E140TextFuerDatei ruft den Kern aus E-101 und gibt dessen Ergebnis zurueck | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-139 (Quelltext): der Rechtschreibhinweis ist dauerhaft abschaltbar (NoteDialog, WarnSpellUnavailable) | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-139 (Ressource): WarnSpellUnavailable hat die Vorgabe 1 und liegt im Bereich der INI-Schalter | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-165 (Quelltext): die Vervollstaendigungsbox misst Zeile und Rahmen, die Spalte die Systembreite der Bildlaufleiste | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-171 (Quelltext): OpenFindMessagesWindow startet ohne Suchtext keine Suche | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-136: Zeichen ausserhalb der Codepage werden zur Entitaet, nicht zu '?' | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-136 (Quelltext): Strg-S und GetAllHTML wandeln ueber E136HtmlAusBstr | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | M-1: der Werkzeugleisten-Verwalter beginnt NICHT im Anpassen-Zustand und kehrt dorthin zurueck | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-145: ein Byte ueber 127 im Base64-Text zaehlt als ungueltig und veraendert die Ausgabe nicht | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-141 (Quelltext): ImapXfer laeuft nur mit gefuellter Liste, und Xfer gibt seine Sperre immer frei | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-144 (Quelltext): ein nach Out zurueckgeschobener Antwortentwurf behaelt In-Reply-To und References | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-176 (Quelltext): eine geloeschte Zusammenfassung hinterlaesst keinen Rueckzeiger in einem Nachrichtenrahmen | ok |
 
 </details>
 
@@ -380,7 +416,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-10-29 12:47** gegen Commit `efc9cfd4`.
+Gelaufen am **2026-10-31 21:54** gegen Commit `c458c74d*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -408,56 +444,61 @@ Gelaufen am **2026-10-29 12:47** gegen Commit `efc9cfd4`.
 
 Je Fall der **letzte** Lauf. *Bau* ist die Kennung aus der `Eudora.exe` des
 Pruefstands (Fassung, Paket, Commit; ein `*` heisst: mit uncommitteten
-Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.1.128`
+Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.1.129`
 lief, zaehlt fuer diesen Stand nicht als gruen.
 
 | Fall | Ergebnis | gelaufen am | Pruefstand | Bau | erwartet |
 |---|---|---|---|---|---|
-| E-131a | ok | 2026-10-29 12:45:32 | `C:\Temp\E131L` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `ohne MRUFloatXPos=-2147483648` |
-| E-131b | ok | 2026-10-29 12:45:32 | `C:\Temp\E131L` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `ohne MRUFloatYPos=-2147483648` |
-| E-131c | ok | 2026-10-29 12:45:32 | `C:\Temp\E131L` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-131 Leistenposition:` |
-| E-121 | ok | 2026-10-29 12:45:32 | `C:\Temp\E118` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `ablage-dateien=1` |
-| E-118 | ok | 2026-10-29 12:45:32 | `C:\Temp\E118` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-118 Bild:` |
-| E-125a | ok | 2026-10-29 12:45:32 | `C:\Temp\E125` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0` |
-| E-125b | ok | 2026-10-29 12:45:32 | `C:\Temp\E125` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1` |
-| E-125c | ok | 2026-10-29 12:45:32 | `C:\Temp\E125` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out` |
-| E-103p | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64` |
-| E-112p | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-112 Metadatei: angegeben=35x35 Datei=330x327 gemalt=35x35` |
-| E-112f2 | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-112 Metadatei: angegeben=150x0 Datei=985x378 gemalt=150x58` |
-| E-112n1 | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-112 Metadatei: angegeben=600x0 Datei=985x378 gemalt=600x230` |
-| E-112h | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-112 Metadatei: angegeben=0x600 Datei=330x327 gemalt=606x600` |
-| E-106p | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-106 groesser als angegeben: attr=35x35 quelle=330x327` |
-| E-110p | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1` |
-| E-105p | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet` |
-| E-108p | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `Logging shutdown` |
-| BILD-lauf | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8` |
-| E-113p | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `Datei=985x378 gemalt=718x276` |
-| E-113b | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `BILD E113B` |
-| E-113b2 | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `neu=0 lebt=1 probe=ok` |
-| E-119d | ok | 2026-10-29 12:45:32 | `C:\Temp\E119K` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `vollstaendig=1 probe=ok` |
-| E-119a | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `data-db1b9f48.png faden=1 ok=1` |
-| E-119b | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-119 data-Bild als Datei:` |
-| E-119c | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `data-2eaa4a58.png laenge=1574` |
-| E-119e | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `laenge=78519` |
-| E-77a | ok | 2026-10-29 12:45:32 | `C:\Temp\E77` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E77 ERGEBNIS roh=0 dekodiert=2` |
-| E-77b | ok | 2026-10-29 12:45:32 | `C:\Temp\E77` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-77 Ordnername: server="Entw&APw-rfe"` |
-| E-77c | ok | 2026-10-29 12:45:32 | `C:\Temp\E77` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-77 Ordnername: server="Gel&APY-scht"` |
-| E-77d | ok | 2026-10-29 12:45:32 | `C:\Temp\E77U` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0` |
-| E-146 | ok | 2026-10-29 12:45:32 | `C:\Temp\E146` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)` |
-| E-97 | ok | 2026-10-29 12:45:32 | `C:\Temp\E97` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
-| E-100 | ok | 2026-10-29 12:45:32 | `C:\Temp\E97` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
-| E-67 | ok | 2026-10-29 12:45:32 | `C:\Temp\E67` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `verb-gespeichert=14 verb-auswahl=0` |
-| ZIEL24 | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `Logging shutdown` |
-| ZIEL24b | ok | 2026-10-29 12:45:32 | `C:\Temp\EBILD` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `Logging shutdown` |
-| E-137a | ok | 2026-10-29 12:45:32 | `C:\Temp\E137` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1` |
-| E-137b | ok | 2026-10-29 12:45:32 | `C:\Temp\E137` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1` |
-| E-137c | ok | 2026-10-29 12:45:32 | `C:\Temp\E137` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja` |
-| E-166a | ok | 2026-10-29 12:45:32 | `C:\Temp\E166` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `reihenfolge=junk-no,konto-ok` |
-| E-166b | ok | 2026-10-29 12:45:32 | `C:\Temp\E166` | Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36 | `AskedAboutJunk=6` |
+| E-131a | ok | 2026-10-31 21:42:38 | `C:\Temp\E131L` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `ohne MRUFloatXPos=-2147483648` |
+| E-131b | ok | 2026-10-31 21:42:38 | `C:\Temp\E131L` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `ohne MRUFloatYPos=-2147483648` |
+| E-131c | ok | 2026-10-31 21:42:38 | `C:\Temp\E131L` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-131 Leistenposition:` |
+| E-121 | ok | 2026-10-31 21:42:38 | `C:\Temp\E118` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `ablage-dateien=1` |
+| E-118 | ok | 2026-10-31 21:42:38 | `C:\Temp\E118` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-118 Bild:` |
+| E-125a | ok | 2026-10-31 21:42:38 | `C:\Temp\E125` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0` |
+| E-125b | ok | 2026-10-31 21:42:38 | `C:\Temp\E125` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1` |
+| E-125c | ok | 2026-10-31 21:42:38 | `C:\Temp\E125` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out` |
+| E-103p | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64` |
+| E-112p | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-112 Metadatei: angegeben=35x35 Datei=330x327 gemalt=35x35` |
+| E-112f2 | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-112 Metadatei: angegeben=150x0 Datei=985x378 gemalt=150x58` |
+| E-112n1 | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-112 Metadatei: angegeben=600x0 Datei=985x378 gemalt=600x230` |
+| E-112h | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-112 Metadatei: angegeben=0x600 Datei=330x327 gemalt=606x600` |
+| E-106p | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-106 groesser als angegeben: attr=35x35 quelle=330x327` |
+| E-110p | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1` |
+| E-105p | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet` |
+| E-108p | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `Logging shutdown` |
+| BILD-lauf | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8` |
+| E-113p | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `Datei=985x378 gemalt=718x276` |
+| E-113b | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `BILD E113B` |
+| E-113b2 | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `neu=0 lebt=1 probe=ok` |
+| E-119d | ok | 2026-10-31 21:42:38 | `C:\Temp\E119K` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `vollstaendig=1 probe=ok` |
+| E-119a | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `data-db1b9f48.png faden=1 ok=1` |
+| E-119b | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-119 data-Bild als Datei:` |
+| E-119c | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `data-2eaa4a58.png laenge=1574` |
+| E-119e | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `laenge=78519` |
+| E-77a | ok | 2026-10-31 21:42:38 | `C:\Temp\E77` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E77 ERGEBNIS roh=0 dekodiert=2` |
+| E-77b | ok | 2026-10-31 21:42:38 | `C:\Temp\E77` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-77 Ordnername: server="Entw&APw-rfe"` |
+| E-77c | ok | 2026-10-31 21:42:38 | `C:\Temp\E77` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-77 Ordnername: server="Gel&APY-scht"` |
+| E-77d | ok | 2026-10-31 21:42:38 | `C:\Temp\E77U` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0` |
+| E-146 | ok | 2026-10-31 21:42:38 | `C:\Temp\E146` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)` |
+| E-97 | ok | 2026-10-31 21:42:38 | `C:\Temp\E97` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
+| E-100 | ok | 2026-10-31 21:42:38 | `C:\Temp\E97` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
+| E-67 | ok | 2026-10-31 21:42:38 | `C:\Temp\E67` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `verb-gespeichert=14 verb-auswahl=0` |
+| ZIEL24 | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `Logging shutdown` |
+| ZIEL24b | ok | 2026-10-31 21:42:38 | `C:\Temp\EBILD` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `Logging shutdown` |
+| E-137a | ok | 2026-10-31 21:42:38 | `C:\Temp\E137` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1` |
+| E-137b | ok | 2026-10-31 21:42:38 | `C:\Temp\E137` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1` |
+| E-137c | ok | 2026-10-31 21:42:38 | `C:\Temp\E137` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja` |
+| E-166a | ok | 2026-10-31 21:42:38 | `C:\Temp\E166` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `reihenfolge=junk-no,konto-ok` |
+| E-166b | ok | 2026-10-31 21:42:38 | `C:\Temp\E166` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `AskedAboutJunk=6` |
+| E-13p | ok | 2026-10-31 21:42:38 | `C:\Temp\E13` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E13 FORTSCHRITT sichtbar=1` |
+| E-144p | ok | 2026-10-31 21:42:38 | `C:\Temp\E144` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E144 ERGEBNIS probe=ok gleich=1 references=1` |
+| E-140p | ok | 2026-10-31 21:42:38 | `C:\Temp\E140` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3` |
+| E-139p | ok | 2026-10-31 21:42:38 | `C:\Temp\E139` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1` |
+| E-171p | ok | 2026-10-31 21:42:38 | `C:\Temp\E171` | Eudora 7.2.1.129+11643ee1 2026-10-31 21:28 | `E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1` |
 
 ## 4. Deckung der kritischen Befunde
 
-Von **73** kritischen Befunden haben **47** einen Test, **24** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: S-1 S-8 V-1 AN-1 E-2 E-3 E-23 E-32 E-60 E-64 E-72 E-82 E-120 E-122 E-123 E-124 E-126 E-129 E-172 E-170 E-156 E-136 E-133 E-39.
+Von **72** kritischen Befunden haben **60** einen Test, **10** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: AN-1 E-122 E-123 E-124 E-126 E-129 E-172 E-170 E-133 E-39.
 
 Solange diese Zahl nicht null ist, sagt ein gruener Bericht nicht, dass
 nichts kaputt ist — er sagt, dass nichts von dem kaputt ist, was geprueft
