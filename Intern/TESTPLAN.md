@@ -182,7 +182,7 @@ behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
 3. Wenn nicht: ein Bildschirmfoto genügt; die Maße stehen dann in der
    `eudora.log` als Zeile `E-165 Box: …`.
 
-**Ergebnis 31.10.2026, Gregor an 7.2.1.129, mit zwei und drei Treffern: besser** — *„sieht besser aus e-165“* (Bildschirmfotos: kein grauer Balken, keine Bildlaufleiste). Offen: der Fall mit **einem** Treffer.
+**Ergebnis 31.10.2026, Gregor an 7.2.1.129, mit zwei und drei Treffern: besser** — *„sieht besser aus e-165“* (Bildschirmfotos: kein grauer Balken, keine Bildlaufleiste). Mit **einem** Treffer zeigt Eudora keine Box, sondern ergänzt im Feld (Gregor, Bildschirmfoto). Gregor: *„ja, e-165 behoben“*.
 
 ## <a id="e-136-naechstes"></a>In 7.2.1.129: gehen Emoji beim Speichern noch verloren? ([E-136](BEFUNDE.md#e-136))
 

@@ -101,6 +101,13 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
+## Im Quellstand, noch in keinem Paket
+
+**Zweig `e165_schliessen_e136_speichern_unter`** (nach dem Merge von #193).
+
+* **Emoji beim *Speichern unter* als `.htm`** ([E-136](Intern/BEFUNDE.md#e-136), zweiter Weg, [PRÜFER-68](Befunde/PRUEFER-68.md) K1): auch dieser Weg schreibt Zeichen außerhalb von windows-1252 jetzt als HTML-Entität statt `??`. Als `.txt` bleibt das Ersatzzeichen — eine windows-1252-Textdatei kann kein Emoji tragen. Regressionstest `TestE136` um die Stelle erweitert, Gegenprobe gegen den Rückgabewert. [E-136](Intern/BEFUNDE.md#e-136) bleibt offen bis zur Messung am Programm.
+* **[E-165](Intern/BEFUNDE.md#e-165) geschlossen** auf Gregors Bestätigung an 7.2.1.129.
+
 ## 7.2.1.129 — Testpaket: E-139, E-140, E-171 behoben; E-136 und E-165 zum Nachmessen
 
 Nummer am 31.10.2026 vergeben (Gregor: *„bau mir dann ein 7.2.1.129“* — *„mit 7.2.1.129 kann ich die anderen fixes aus Intern/TESTPLAN.md testen“*). **Geschnürt am 31.10.2026, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md)). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e140-speichern-zeichensatz` (#192) und `e136_messweg`.
@@ -114,7 +121,7 @@ Nummer am 31.10.2026 vergeben (Gregor: *„bau mir dann ein 7.2.1.129“* — *�
 * **Rechtschreibhinweis abschaltbar** ([E-139](Intern/BEFUNDE.md#e-139)): die Meldung, dass die Rechtschreibprüfung fehlt, hat jetzt das Kästchen *„Don't show this again"*; angekreuzt bleibt sie in allen folgenden Läufen aus (`WarnSpellUnavailable=0` in der `Eudora.ini`). Regressionstest `TestE139.cpp`; **am Programm gemessen** (zwei Läufe mit `tools/messen-e139.ps1`; der Prüfstandsfall `E-139p` prüft Lauf 1 und lief am 31.10.2026 grün): der neue Bau zeigt sie nach dem Ankreuzen nicht wieder, die veröffentlichte 7.2.1.128 nach jedem Start. 346 Tests, 346 bestanden.
 * **Emoji und andere Zeichen außerhalb von windows-1252 beim Speichern einer HTML-Nachricht — Behebung im Quellstand, am Programm noch nicht nachgemessen** ([E-136](Intern/BEFUNDE.md#e-136), bleibt offen bis zur Messung am Programm): sie werden als HTML-Entität (`&#128293;`) gespeichert statt als `??`. Ursache war die Umwandlung `CString = BSTR` im Speicherweg (*Strg-S*) und in `GetAllHTML`. Regressionstest `TestE136.cpp` mit der echten Funktion; die Gegenprobe ergibt genau das alte `??`. **Am Programm noch nicht nachgestellt** — der Prüfstand erreicht den Speicherweg nicht. 350 Tests, 350 bestanden.
 * **Suche aus dem Rechtsklickmenü ohne markierten Text** ([E-171](Intern/BEFUNDE.md#e-171)): *Search Mailfolder*, *Search Mailbox* und *Search Eudora* öffnen das Suchfenster ohne Fehlermeldung; gesucht wird erst, wenn ein Begriff eingetragen ist. Vorher kam *„There has been an internal error during the search“*. Regressionstest `TestE171.cpp`; **am Programm gemessen** mit `tools/messen-e171.ps1`: 7.2.1.128 mit Meldung (`C:\Temp\E171-alt`), der neue Bau ohne; der Prüfstandsfall `E-171p` prüft den neuen Bau. 348 Tests, 348 bestanden.
-* **Vervollständigungsbox im To:-Feld** ([E-165](Intern/BEFUNDE.md#e-165), noch offen bis zu Gregors Blick): die Höhe kommt jetzt aus der echten Zeilenhöhe der Liste und den echten Rahmen, die Spaltenbreite aus der Systembreite der Bildlaufleiste. Gemessen mit zwei Treffern: vorher passte eine Zeile hinein und eine Bildlaufleiste erschien, jetzt beide ohne Leiste. Regressionstest `TestE165.cpp`; 347 Tests, 347 bestanden.
+* **Vervollständigungsbox im To:-Feld** ([E-165](Intern/BEFUNDE.md#e-165), von Gregor am 31.10.2026 an 7.2.1.129 bestätigt): die Höhe kommt jetzt aus der echten Zeilenhöhe der Liste und den echten Rahmen, die Spaltenbreite aus der Systembreite der Bildlaufleiste. Gemessen mit zwei Treffern: vorher passte eine Zeile hinein und eine Bildlaufleiste erschien, jetzt beide ohne Leiste. Regressionstest `TestE165.cpp`; 347 Tests, 347 bestanden.
 
 **Zweig `fortsetzen_status_nie_gemessen`** (nach dem Merge von #189).
 

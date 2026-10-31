@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 31.10.2026.** Testpaket **7.2.1.129** geschnürt und bei Gregor im Test ([E-139](BEFUNDE.md#e-139), [E-140](BEFUNDE.md#e-140), [E-171](BEFUNDE.md#e-171) behoben; [E-136](BEFUNDE.md#e-136), [E-165](BEFUNDE.md#e-165) zum Nachmessen). Zuletzt veröffentlicht: **`v7.2.1.128`** (29.10.2026,
+**Stand 31.10.2026.** Testpaket **7.2.1.129** geschnürt und bei Gregor im Test ([E-139](BEFUNDE.md#e-139), [E-140](BEFUNDE.md#e-140), [E-171](BEFUNDE.md#e-171) behoben, [E-165](BEFUNDE.md#e-165) von Gregor bestätigt; [E-136](BEFUNDE.md#e-136) zum Nachmessen). Zuletzt veröffentlicht: **`v7.2.1.128`** (29.10.2026,
 nach Gregors Test: [E-166](BEFUNDE.md#e-166) auf Hauptrechner und Laptop
 bestanden). `main` ist gesperrt und wird nur von Gregor per Merge bewegt;
 jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig (siehe
@@ -35,6 +35,7 @@ Geschichte steht im Commit.
 | Übersicht „Was Eudora kann“: Menüs, *Tools → Options*, Filteraktionen und die relevanten `Eudora.ini`-Schlüssel (`IDS_INI_*` in `EudoraRes.rc`); nur am Programm Bestätigtes in die FAQ | Gregor 29.10.2026: *„ja, mach das nach dem release. zusätzich die tools -> options einstellungen. und auch aus relevantes der eudora.ini“* | [Doku/FAQ.md](../Doku/FAQ.md) |
 | Formprüfung: eine angekündigte Tabelle, Liste oder Spalte muss am Ziel des Verweises auch so dastehen | LEKTOR-96 fand Ankündigungen ohne passende Form; das Werkzeug ist vorgeschlagen, nicht gebaut | [LEKTOR-96, Vorschlag](../Befunde/LEKTOR-96.md#werkzeug), [L-96.6](../Befunde/LEKTOR-96.md#l-96.6), [CHRONIST 29.10. abends](../Arbeitsweise/CHRONIST-2026-10-29b.md), Vorschlag 3 |
 | `pruefe-tabellenzeilen.pl` sieht einen senkrechten Strich in einer Codespanne nicht als Zellgrenze | GitHub trennt dort die Zelle und schneidet die Zeile ab; die Schranke ist dafür blind | [L-96.3](../Befunde/LEKTOR-96.md#l-96.3), [PRUEFER-65 K3](../Befunde/PRUEFER-65.md#k3) |
+| Schranke: jede `Test_`-Funktion unter `Eudora71/Tests` endet mit `TT_EndTest()`, auch vor jedem frühen `return` | am 31.10.2026 waren neun neue Tests ohne ihn blind — `++s_iFailedTests` steht nur in `TT_EndTest`, ein Rückfall druckte `[FEHL]`, Summe und Rückgabe blieben grün; gefunden hat es der Prüfbericht (350 gemeldet, 342 Zeilen) | Commit `c458c74d`, [PRÜFER-68](../Befunde/PRUEFER-68.md) K6 |
 | Alte Nummernform in Meldungstexten und in `Releases/PAKETE.md` | Texte nennen noch das Schema vor dem 29.10.2026 | [PRUEFER-65 K4](../Befunde/PRUEFER-65.md#k4) |
 | `Intern/FILTER.md` nennt verrutschte Zeilenangaben | die Verweise zeigen auf andere Stellen als beschrieben | [L-92.2](../Befunde/LEKTOR-92.md#l-92.2) |
 | Schranke `pruefe-changelog-zuwachs.pl` bauen: ein Commit mit Code ohne CHANGELOG-Zuwachs wird abgewiesen | am 29.10.2026 zweimal an einem Tag ein Commit ohne CHANGELOG | [CHRONIST 29.10. abends](../Arbeitsweise/CHRONIST-2026-10-29b.md), Vorschlag 1 |
