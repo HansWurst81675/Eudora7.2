@@ -180,6 +180,22 @@ behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
 3. Wenn nicht: ein Bildschirmfoto genügt; die Maße stehen dann in der
    `eudora.log` als Zeile `E-165 Box: …`.
 
+## <a id="e-136-naechstes"></a>Im nächsten Paket: Emoji gehen beim Speichern nicht mehr verloren ([E-136](BEFUNDE.md#e-136))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist. Vorher das
+Postfach sichern** (bis 7.2.1.128 ging das Zeichen dabei unwiderruflich
+verloren). Lokales Postfach, nicht IMAP. Mein Prüfstand erreicht diesen Weg
+nicht — dieser Schritt ist die einzige Messung am Programm.
+
+1. Eine HTML-Nachricht mit einem Emoji, die richtig angezeigt wird — so wie
+   am 22.10.2026 mit dem Plug-in EudoraUnicodeFix, oder die Prüfnachricht
+   `Testdaten/e136-zeichen-als-entitaet.eml` (🔥 und Ж).
+2. Öffnen, ändern, wie du es damals getan hast, *Strg+S*, schließen.
+3. Wieder öffnen: 🔥 und Ж stehen da, **keine** Fragezeichen. In der
+   `.mbx` steht `&#128293;` bzw. `&#1046;`.
+4. Falls doch `??`: bitte sagen, welche Schritte zwischen Öffnen und
+   *Strg+S* lagen — genau die fehlen meinem Prüfstand.
+
 ## <a id="e-171-naechstes"></a>Im nächsten Paket: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Lokales
