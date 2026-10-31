@@ -330,7 +330,7 @@ Blah Blah Blah und Strg+Umschalt+F am 31.10.2026 an 7.2.1.128 (*„ja,
 funktioniert mit ctrl-shift-F“*). *Find Messages* mit *Headers* ist am
 Quelltext nachgesehen (`EudoraRes.rc`, Kategorien der Suche). Der Rechtsklick
 **ohne** markiertes Wort meldet bis 7.2.1.128 einen *internal error*
-([E-171](../Intern/BEFUNDE.md#e-171), im Quellstand behoben, kommt mit dem nächsten Paket). Die Schlüssel am
+([E-171](../Intern/BEFUNDE.md#e-171), behoben ab 7.2.1.129). Die Schlüssel am
 Quelltext ([EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md)).
 
 ## 17. Wie schreibt Eudora mehr ins Protokoll (`LogLevel`)?

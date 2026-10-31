@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.129 (Testpaket, `VERSION` gleich; nur übersetzt, Schnüren folgt), Stand 31.10.2026 (zuletzt getestet am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+# Testplan für Gregor — Quellstand 7.2.1.129 (Testpaket, `VERSION` gleich; geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`), Stand 31.10.2026 (zuletzt getestet am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -20,9 +20,9 @@
 > Unit-Tests, 19 Schranken, 41 Prüfstandsfälle, alle grün
 > ([PRUEFBERICHT](../Releases/PRUEFBERICHT.md)).
 
-## <a id="e-72-verneint"></a>Im nächsten Paket: Filter mit „doesn't appear“ trifft nur die richtigen Nachrichten ([E-72](BEFUNDE.md#e-72))
+## <a id="e-72-verneint"></a>In 7.2.1.129: Filter mit „doesn't appear“ trifft nur die richtigen Nachrichten ([E-72](BEFUNDE.md#e-72))
 
-**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+**Mit dem Paket 7.2.1.129 auszuführen.** Bis
 7.2.1.128 traf eine Filterbedingung *„… doesn't appear“* **jede**
 Nachricht. Geprüft wird nur mit **Make Label**. Verschoben wird nichts —
 **aber nur, wenn kein anderer Filter *Manual* angekreuzt hat**: *Filter
@@ -124,9 +124,9 @@ habe ich es nicht gefahren.
 * Die neun Kriterien bekommen keinen eigenen Durchgang (Gregors Entscheidung,
   siehe oben).
 
-## <a id="e-139-naechstes"></a>Im nächsten Paket: der Rechtschreibhinweis lässt sich abschalten ([E-139](BEFUNDE.md#e-139))
+## <a id="e-139-naechstes"></a>In 7.2.1.129: der Rechtschreibhinweis lässt sich abschalten ([E-139](BEFUNDE.md#e-139))
 
-**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+**Mit dem Paket 7.2.1.129 auszuführen.** Bis
 7.2.1.128 kam die Meldung *„Die Rechtschreibpruefung ist in dieser Fassung
 nicht verfuegbar …“* nach jedem Programmstart wieder. Geprüft wird am
 **lokalen** Postfach *In* (nicht IMAP).
@@ -146,9 +146,11 @@ Am Prüfstand am 31.10.2026 so gefahren (zwei Läufe mit
 mit Kästchen, Lauf 2 ohne Meldung; 7.2.1.128 in beiden Läufen mit Meldung,
 ohne Kästchen. Der Prüfstandsfall `E-139p` prüft Lauf 1.
 
-## <a id="e-140-naechstes"></a>Im nächsten Paket: „Speichern unter“ aus dem Nachrichten- und Verfassen-Fenster nennt den Zeichensatz ([E-140](BEFUNDE.md#e-140))
+**Ergebnis 31.10.2026, Gregor an 7.2.1.129: bestanden** — *„bestätige neue meldung. nach checkbox aktivieren kommt sie nach dem neustarte nicht mehr, wird nicht mehr angezeigt. PASSED“*; in seinem Protokoll `E-139 Rechtschreibhinweis: abgeschaltet (WarnSpellUnavailable=0)`.
 
-**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+## <a id="e-140-naechstes"></a>In 7.2.1.129: „Speichern unter“ aus dem Nachrichten- und Verfassen-Fenster nennt den Zeichensatz ([E-140](BEFUNDE.md#e-140))
+
+**Mit dem Paket 7.2.1.129 auszuführen.** Bis
 7.2.1.128 schrieb *File → Save As* nur aus der **Postfachliste** eine
 Zeichensatzangabe in die Datei, aus dem geöffneten Nachrichtenfenster und
 aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
@@ -164,9 +166,9 @@ aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
 
 Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
 
-## <a id="e-165-naechstes"></a>Im nächsten Paket: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
+## <a id="e-165-naechstes"></a>In 7.2.1.129: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
 
-**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Auf
+**Mit dem Paket 7.2.1.129 auszuführen.** Auf
 deinem Bildschirm sah die Box am 27.10.2026 mit einem Treffer verbaut aus
 (grauer Balken unten, Box höher als der Eintrag). In der VM war die Box mit
 **zwei** Treffern zu niedrig und hatte eine Bildlaufleiste; das ist
@@ -180,9 +182,11 @@ behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
 3. Wenn nicht: ein Bildschirmfoto genügt; die Maße stehen dann in der
    `eudora.log` als Zeile `E-165 Box: …`.
 
-## <a id="e-136-naechstes"></a>Im nächsten Paket: gehen Emoji beim Speichern noch verloren? ([E-136](BEFUNDE.md#e-136))
+**Stand 31.10.2026:** an 7.2.1.129 noch nicht angesehen (Gregor: *„e-165: habe ich nicht drauf geschaut, muß separat testen.“*).
 
-**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist. Vorher das
+## <a id="e-136-naechstes"></a>In 7.2.1.129: gehen Emoji beim Speichern noch verloren? ([E-136](BEFUNDE.md#e-136))
+
+**Mit dem Paket 7.2.1.129 auszuführen. Vorher das
 Postfach sichern** (bis 7.2.1.128 ging das Zeichen dabei unwiderruflich
 verloren). Lokales Postfach, nicht IMAP. Mein Prüfstand erreicht diesen Weg
 nicht — dieser Schritt ist die einzige Messung am Programm.
@@ -196,9 +200,14 @@ nicht — dieser Schritt ist die einzige Messung am Programm.
 4. Falls doch `??`: bitte sagen, welche Schritte zwischen Öffnen und
    *Strg+S* lagen — genau die fehlen meinem Prüfstand.
 
-## <a id="e-171-naechstes"></a>Im nächsten Paket: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
+**Nur mit Strg+S prüfen, nicht mit *Speichern unter*:** *File → Save As* aus
+dem Nachrichtenfenster (`.txt`, `.htm` ohne Kopfzeilen) macht aus Emoji in
+7.2.1.129 weiter `??` — ein zweiter Weg, noch nicht behoben
+([PRÜFER-68](../Befunde/PRUEFER-68.md) K1, im Befund nachgetragen).
 
-**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Lokales
+## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
+
+**Mit dem Paket 7.2.1.129 auszuführen.** Lokales
 Postfach *In* (nicht IMAP).
 
 1. Eine Mail per Doppelklick öffnen, **nichts** markieren.

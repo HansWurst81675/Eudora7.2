@@ -35,14 +35,14 @@ Jede Aussage trägt ihre Herkunft: **gemessen**, **am Quelltext belegt**
   (`TridentReadMessageView.cpp:2679, 3338, 3411, 3621, 4058`). Danach
   speichert Strg-S getreu die Fragezeichen. Ebenso verliert eine Antwort auf
   markierten Text das Emoji (`TridentView.cpp:3944`). Vorschlag: neue Kennung
-  E-178.
+  [E-178](../Intern/BEFUNDE.md#e-178).
 * **Die neuen Entitäten werden an anderer Stelle falsch zurückgelesen**
   ([K3](#k3)). Eudoras HTML-zu-Text-Wandler nimmt von `&#128293;` nur das
   unterste Byte: `( char )( atoi(...) & 0xFF )` (`html2text.cpp:1184`). Aus
   dem Emoji wird `%`, aus einem kyrillischen `Ж` ein Steuerzeichen 0x16.
   Vorher stand an dieser Stelle `??`, jetzt steht dort **ein falsches Zeichen
   ohne Warnung**. Das betrifft etwa den Textteil einer gesendeten
-  HTML-Nachricht. Vorschlag: neue Kennung E-179.
+  HTML-Nachricht. Vorschlag: neue Kennung [E-179](../Intern/BEFUNDE.md#e-179).
 * **[E-165](../Intern/BEFUNDE.md#e-165), [E-171](../Intern/BEFUNDE.md#e-171), [E-139](../Intern/BEFUNDE.md#e-139) und [E-140](../Intern/BEFUNDE.md#e-140) halten.** Geblieben sind Kleinigkeiten:
   Die Spalte der Vervollständigungsbox ist um eine Bildlaufleistenbreite zu
   schmal ([K4](#k4)). Wer im Suchfenster mit leerem Feld selbst *Search*
@@ -114,7 +114,7 @@ auf ein markiertes Emoji antwortet, zitiert `??`.
 
 **Schwere:** mittel. Es ist derselbe Verlust wie [E-136](../Intern/BEFUNDE.md#e-136), nur an der Quelle.
 Die Abhilfe ist dieselbe Funktion, an sieben Stellen statt an zwei.
-**Vorschlag: neue Kennung E-178.** `tools/befund-suchen.pl` findet zu
+**Vorschlag: neue Kennung [E-178](../Intern/BEFUNDE.md#e-178).** `tools/befund-suchen.pl` findet zu
 `GetSelectedHTML`, `GetMessageBody` und `WrapTag` keinen Befund.
 
 ## <a id="k3"></a>K3 — `Html2Text` liest `&#128293;` als `%`
@@ -143,7 +143,7 @@ gefunden; die HTML-Einleselogik liegt nicht als Quelltext unter `PaigeDLL`.
 Entität unverändert stehen lassen, oder ein Zeichen, das die Codepage nicht
 hat, als `?` schreiben, wie bisher. Beide Stellen in einem Zug ändern.
 **Schwere:** mittel (falsches Zeichen ohne Warnung, kein Verlust der
-Postfachdatei). **Vorschlag: neue Kennung E-179.** `befund-suchen.pl
+Postfachdatei). **Vorschlag: neue Kennung [E-179](../Intern/BEFUNDE.md#e-179).** `befund-suchen.pl
 Html2Text` findet nur [E-117](../Intern/BEFUNDE.md#e-117), und das betrifft
 `&amp;` in Bildadressen, eine andere Sache.
 
@@ -303,8 +303,8 @@ gehört zu [E-101](../Intern/BEFUNDE.md#e-101).
 
 ## Neue Kennungen
 
-Vorgeschlagen: **E-178** für [K2](#k2) (Bearbeiten-Modus und Antwort auf
-Markiertes wandeln mit `CString = BSTR`), **E-179** für [K3](#k3)
+Vorgeschlagen: **[E-178](../Intern/BEFUNDE.md#e-178)** für [K2](#k2) (Bearbeiten-Modus und Antwort auf
+Markiertes wandeln mit `CString = BSTR`), **[E-179](../Intern/BEFUNDE.md#e-179)** für [K3](#k3)
 (`Html2Text` schneidet numerische Entitäten auf ein Byte). K1 ist eine
 Fortschreibung von [E-136](../Intern/BEFUNDE.md#e-136), K4 von
 [E-165](../Intern/BEFUNDE.md#e-165), K5 von [E-171](../Intern/BEFUNDE.md#e-171).
@@ -316,8 +316,8 @@ K6 betrifft nur die Tests. In `Intern/BEFUNDE.md` habe ich nichts eingetragen.
 |---|---|---|---|
 | — | 350/350 Tests im Grundlauf. `E136HtmlAusBstr` verliert nichts: Länge, Puffer, Ersatzpaare, Doppelbyte, UTF-8-Codepage (gemessen) in Ordnung. [E-139](../Intern/BEFUNDE.md#e-139), [E-140](../Intern/BEFUNDE.md#e-140) und die Höhe in [E-165](../Intern/BEFUNDE.md#e-165) ohne Fund. | keine | nein |
 | [K1](#k1) | *Speichern unter* aus dem Nachrichtenfenster: `.htm` ohne Kopfzeilen und jede `.txt` gehen über `GetMessageBody` (`TridentReadMessageView.cpp:2915`, `szMsg = cbstr`). Emoji wird `??` wie vor [E-136](../Intern/BEFUNDE.md#e-136). Fortschreibung [E-136](../Intern/BEFUNDE.md#e-136). | mittel (Verlust wie [E-136](../Intern/BEFUNDE.md#e-136), auf dem Normalfall von *Speichern unter*) | nein, aber [E-136](../Intern/BEFUNDE.md#e-136) nicht „behoben“ nennen, solange das offen ist; Gregor entscheidet |
-| [K2](#k2) | Fett, Link usw. im Bearbeiten-Modus (`:2679/3207/3217/3338/3408/3411/3621/4058`) und Antwort auf Markiertes (`TridentView.cpp:3944`) machen das Emoji schon in der Anzeige zu `??`. Vorschlag E-178. | mittel | nein |
-| [K3](#k3) | `Html2Text` und `EmoticonManager` nehmen von `&#128293;` nur das unterste Byte: `%` statt Emoji, 0x16 statt `Ж`. [E-136](../Intern/BEFUNDE.md#e-136) schreibt solche Entitäten jetzt selbst. Vorschlag E-179. | mittel (falsches Zeichen ohne Warnung) | nein |
+| [K2](#k2) | Fett, Link usw. im Bearbeiten-Modus (`:2679/3207/3217/3338/3408/3411/3621/4058`) und Antwort auf Markiertes (`TridentView.cpp:3944`) machen das Emoji schon in der Anzeige zu `??`. Vorschlag [E-178](../Intern/BEFUNDE.md#e-178). | mittel | nein |
+| [K3](#k3) | `Html2Text` und `EmoticonManager` nehmen von `&#128293;` nur das unterste Byte: `%` statt Emoji, 0x16 statt `Ж`. [E-136](../Intern/BEFUNDE.md#e-136) schreibt solche Entitäten jetzt selbst. Vorschlag [E-179](../Intern/BEFUNDE.md#e-179). | mittel (falsches Zeichen ohne Warnung) | nein |
 | [K4](#k4) | [E-165](../Intern/BEFUNDE.md#e-165): Spaltenbreite zieht die Bildlaufleiste doppelt ab, wenn sie sichtbar ist. | niedrig (Aussehen) | nein |
 | [K5](#k5) | [E-171](../Intern/BEFUNDE.md#e-171): *Search* von Hand mit leerem Feld zeigt weiter „internal error“; leerer Suchtext überschreibt das gespeicherte Kriterium in der INI. | niedrig | nein |
 | [K6](#k6) | Tests: `TestE136` deckt 2 von 11 Umwandlungsstellen, eine zweite Zuweisung hinter dem neuen Aufruf bleibt grün (Gegenprobe); [E-139](../Intern/BEFUNDE.md#e-139)/[E-140](../Intern/BEFUNDE.md#e-140)/[E-165](../Intern/BEFUNDE.md#e-165)/[E-171](../Intern/BEFUNDE.md#e-171) sind reine Quelltextmuster. | niedrig (nur Tests) | nein |

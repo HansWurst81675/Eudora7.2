@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 31.10.2026.** Testpaket **7.2.1.129** in Arbeit ([E-139](BEFUNDE.md#e-139), [E-140](BEFUNDE.md#e-140), [E-171](BEFUNDE.md#e-171) behoben; [E-136](BEFUNDE.md#e-136), [E-165](BEFUNDE.md#e-165) zum Nachmessen). Zuletzt veröffentlicht: **`v7.2.1.128`** (29.10.2026,
+**Stand 31.10.2026.** Testpaket **7.2.1.129** geschnürt und bei Gregor im Test ([E-139](BEFUNDE.md#e-139), [E-140](BEFUNDE.md#e-140), [E-171](BEFUNDE.md#e-171) behoben; [E-136](BEFUNDE.md#e-136), [E-165](BEFUNDE.md#e-165) zum Nachmessen). Zuletzt veröffentlicht: **`v7.2.1.128`** (29.10.2026,
 nach Gregors Test: [E-166](BEFUNDE.md#e-166) auf Hauptrechner und Laptop
 bestanden). `main` ist gesperrt und wird nur von Gregor per Merge bewegt;
 jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig (siehe
@@ -74,6 +74,8 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-179](BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | nachstellen (eine gespeicherte Nachricht mit `&#128293;` als Text senden oder durchsuchen), dann Codepunkte über 255 als Entität stehen lassen oder … |
+| **[E-178](BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Fett, Link einfügen und ähnliche Befehle Emoj… | **nie gemessen** | jede Stelle auf `E136HtmlAusBstr` umstellen, wo HTML herauskommt; für reinen Text eine eigene Lösung; Test, der jede Stelle zählt. **Stufe: wichtig… |
 | **[E-177](BEFUNDE.md#e-177)** | Die Filteraktion *„an Programm übergeben"* schreibt ihre Zwischendatei ohne Zeichensatz… | **nie gemessen** | messen (Filter mit dieser Aktion, Prüfnachricht mit Euro und Umlauten, Zwischendatei ansehen), danach entscheiden, ob die Angabe dort überhaupt erw… |
 | **[E-176](BEFUNDE.md#e-176)** | Die Behebung von E-28 liest beim Schließen einer verworfenen neuen Nachricht aus einer sc… | **nie gemessen** | ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest bisher nur den Quelltext), und die Messung am Programm, am besten unter… |
 | **[E-173](BEFUNDE.md#e-173)** | Im Filterfenster sind die Labels der Aktion *Make Label* einmal ausgegraut und nicht wähl… | **nie gemessen** | erst **nach dem Release 7.2.1** — nachstellen (unter welcher Bedingung ist die Liste grau: neuer Filter, bestimmte vorherige Aktion, Persönlichkeit… |
@@ -88,7 +90,6 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 | **[E-143](BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
 | **[E-142](BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 | vor 7.2.1 nichts — Gregors Entscheidung 13 (26.10.2026): *Send Again* aus IMAP ergibt eine leere Mail (T6), das kommt erst nach 7.2.1 dran; Entwürf… |
 | **[E-141](BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Messung am IMAP-Prüfserver — am alten Bau stößt eine Übertragung IMAP → `Out` die Nachbearbeitung an, am neuen nicht mehr. Die Berichtigun… |
-| **[E-136](BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 — **veraltet** | Gregors Weg am nächsten Paket ([TESTPLAN](TESTPLAN.md#e-136-naechstes)), oder ein Messweg, der die Nachricht wirklich verändert. **Warum der Prüfst… |
 | **[E-133](BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
 | **[E-129](BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
 | **[E-128](BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | 23.10.2026 an 7.2.0.120 — **veraltet** | die Entscheidung über den eigenen Vorschlag und dann sein Einbau — die Vorgabeendung aus dem Inhalt ableiten (`.html`, `.eml`, `.txt`) und den Date… |
