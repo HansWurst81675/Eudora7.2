@@ -2939,4 +2939,5 @@ Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](..
 
 ## LEKTOR-107 (31.10.2026) — Bestätigung nach 21a629f6
 
-[LEKTOR-107](../Befunde/LEKTOR-107.md): in Arbeit.
+[LEKTOR-107](../Befunde/LEKTOR-107.md): Von den sechs Funden aus [LEKTOR-106](../Befunde/LEKTOR-106.md) sind fünf erledigt, einer teilweise (ein Absatz zu [E-139](BEFUNDE.md#e-139) beschreibt den alten Weg der Meldung weiter im Präsens). [E-171](BEFUNDE.md#e-171) (Suche ohne markierten Text, behoben), [E-138](BEFUNDE.md#e-138) (Startsperre nach dem Herunterladen, erledigt durch Doku) und [E-177](BEFUNDE.md#e-177) (Filteraktion „an Programm übergeben“ ohne Zeichensatz, neu) kommen in BEFUNDE, README, CHANGELOG, WEITERMACHEN, TESTPLAN und WERKZEUGE einheitlich an. Zwei neue Funde: die erzeugte Liste führt [E-165](BEFUNDE.md#e-165) (Vervollständigungsbox) als „nie gemessen“, obwohl das Urteil eine Messung nennt — es fehlt die Marke „Zuletzt gemessen“ ([L-107.1](../Befunde/LEKTOR-107.md#l-107.1)); im Urteil zu E-171 steht ein überholtes „nicht nachgesehen“, und das CHANGELOG schreibt dem Prüfstandsfall `E-171p` auch die Messung an 7.2.1.128 zu ([L-107.2](../Befunde/LEKTOR-107.md#l-107.2)).
+
