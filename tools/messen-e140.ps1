@@ -22,6 +22,9 @@
 #
 # Ausgabe je Datei:
 #   E140 DATEI <weg> bytes=<n> ct=<0|1> charset=<wert|-> euro=<cp1252|utf8|fragezeichen|fehlt> umlaute=<n>
+#   E140 ERGEBNIS liste=<0|1> lesen=<0|1> verfassen=<0|1> lebt=<0|1> zeichensatz=<0..3>
+#   zeichensatz = Zahl der Dateien mit Content-Type, charset und Euro als 0x80;
+#   vor der Behebung 1 (nur die Liste), danach 3.
 # Die Pruefnachricht ist Testdaten\e118-euro-in-imap-ordner.eml (windows-1252,
 # "Preis 5 EUR", Anfuehrungszeichen, Gedankenstrich, Umlaute).
 param(
@@ -195,6 +198,8 @@ function Auswerten([string] $weg) {
     elseif ($t -match 'Preis 5 \?') { $euro = 'fragezeichen' }
     elseif ($t -match 'Preis 5 &euro;|Preis 5 &#8364;') { $euro = 'html-entitaet' }
     $uml = ([regex]::Matches($t, '[\xE4\xF6\xFC\xDF\xC4\xD6\xDC]')).Count
+    # Gezaehlt fuer das Urteil: Content-Type UND charset UND das Euro-Zeichen als 0x80.
+    if ($ct -eq 1 -and $cs -ne '-' -and $euro -eq 'cp1252') { $script:zeichensatz++ }
     Write-Host ("E140 DATEI {0} bytes={1} ct={2} charset={3} euro={4} umlaute={5}" -f $weg, $b.Length, $ct, $cs, $euro, $uml)
     $erste = ($t -split "`r?`n" | Select-Object -First 6) -join ' | '
     Write-Host ("E140 KOPF {0}: {1}" -f $weg, $erste)
@@ -251,5 +256,6 @@ if ($lesen -ne $in) {
 } else { $ok3 = 0 }
 
 # --- 4. Auswertung -------------------------------------------------------------
+$script:zeichensatz = 0
 foreach ($w in $WEGE) { Auswerten $w }
-Write-Host ("E140 ERGEBNIS liste={0} lesen={1} verfassen={2} lebt={3}" -f $ok1, $ok2, $ok3, [int](Lebt $pp))
+Write-Host ("E140 ERGEBNIS liste={0} lesen={1} verfassen={2} lebt={3} zeichensatz={4}" -f $ok1, $ok2, $ok3, [int](Lebt $pp), $script:zeichensatz)

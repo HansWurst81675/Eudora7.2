@@ -610,3 +610,5 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-10-30 14:27:12 | `C:\Temp\E144` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 2491350 - Eudora   [Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05 - E144]  Schliesszeit 1 s. |
 | 2026-10-30 14:28:22 | `C:\Temp\E144-alt` | Gregor am 30.10.2026: 'ja, ab sofort, ich halte mich zurück' | Hauptfenster 1704736 - Eudora  Schliesszeit 1 s. |
 | 2026-10-31 19:20:51 | `C:\Temp\E140` | Gregor am 31.10.2026: 'ja, starte auf deinem lokalen prüfstand deine testes' | Hauptfenster 197016 - Eudora  Schliesszeit 1 s. |
+| 2026-10-31 19:54:20 | `C:\Temp\E140` | Gregor am 31.10.2026: 'ja, starte auf deinem lokalen prüfstand deine testes' | Hauptfenster 590450 - Eudora   [Eudora 7.2.1.128+9459edaa 2026-10-31 19:53 - E140]  Schliesszeit 1 s. |
+| 2026-10-31 19:57:56 | `C:\Temp\E140` | Gregor am 31.10.2026: 'ja, starte auf deinem lokalen prüfstand deine testes' | Hauptfenster 394166 - Eudora   [Eudora 7.2.1.128+9459edaa 2026-10-31 19:53 - E140]  Schliesszeit 1 s. |

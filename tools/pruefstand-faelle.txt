@@ -287,3 +287,4 @@ E-166a | C:\Temp\E166 | 20 | messung | reihenfolge=junk-no,konto-ok | | | messen
 E-166b | C:\Temp\E166 | 20 | ini | AskedAboutJunk=6 | | | messen=tools\messen-e166-konto.ps1
 E-13p | C:\Temp\E13 | 30 | messung | E13 FORTSCHRITT sichtbar=1 | vollstaendig=0 | | messen=tools\messen-e13.ps1
 E-144p | C:\Temp\E144 | 60 | messung | E144 ERGEBNIS probe=ok gleich=1 references=1 | | | messen=tools\messen-e144.ps1
+E-140p | C:\Temp\E140 | 90 | messung | E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3 | | | messen=tools\messen-e140.ps1
