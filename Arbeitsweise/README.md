@@ -106,6 +106,7 @@ eine Datei liest, liest diese.
 | [entscheidung-marke-v7-2-1](entscheidung-marke-v7-2-1.md) | Die GitHub-Marke fuer Releases heisst v7.2.1.<n> (z. B. v7.2.1.123), nicht v1.0.<n> - entschieden, nicht wieder fragen |
 | [entscheidung-message-id-kein-befund](entscheidung-message-id-kein-befund.md) | Gregor 25.10.2026 - die Message-ID-Frage (HermesMail-Faden, RFC 5322) bekommt keinen Befund; zwei Randfälle in AssignMessageId stehen nur hier, dazu ein ungeprüfter Puffer-Hinweis |
 | [entscheidung-pruefstand-fenster-30-10](entscheidung-pruefstand-fenster-30-10.md) | Gregor 30.10.2026 ~13:10: Prüfstandsläufe mit Fenster ab sofort erlaubt; er hält sich zurück und testet das Release 7.2.1.128 separat |
+| [entscheidung-pruefstand-fenster-31-10](entscheidung-pruefstand-fenster-31-10.md) | Gregor 31.10.2026 ~19:15 - Prüfstandsläufe mit Fenster heute erlaubt: 'ja, starte auf deinem lokalen prüfstand deine testes, ich halte mich zurück'; VM-Uhr ging ~20 h nach |
 | [entscheidung-rootcerts-logzeile](entscheidung-rootcerts-logzeile.md) | Gregor 25.10.2026 - Eudora schreibt eine Zeile in eudora.log, aus welchem Verzeichnis rootcerts.p7b geladen wurde (Mailverzeichnis vor Programmverzeichnis) |
 | [entscheidung-vor-7-2-1-beheben](entscheidung-vor-7-2-1-beheben.md) | Gregor 25.10.2026 - vor 7.2.1 beheben E-137, E-142 (Hinweis), E-146; in die README als bekannte Fehler E-144, E-143, E-139, E-136, AN-1 (IMAP-Endung) |
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |

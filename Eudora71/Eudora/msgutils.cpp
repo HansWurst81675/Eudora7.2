@@ -4617,6 +4617,57 @@ bool E101SpeicherfassungAufbereiten(
 	return bGeaendert;
 }
 
+//
+// ---------------------------------------------------------------------------
+// E140TextFuerDatei
+// ---------------------------------------------------------------------------
+//
+// BEFUND E-140: "Speichern unter" aus dem NACHRICHTENFENSTER
+// (ReadMessageDoc.cpp, CReadMessageDoc::SaveAsFile) und aus dem
+// VERFASSEN-FENSTER (compmsgd.cpp, CCompMessageDoc::SaveAsFile) schrieb ohne
+// MIME-Version, ohne Content-Type und ohne Zeichensatz. Nur der Weg aus der
+// Postfachliste (tocview.cpp) lief ueber E101SpeicherfassungAufbereiten.
+//
+// Gemessen am 31.10.2026 an 7.2.1.128 (tools/messen-e140.ps1, Pruefstand
+// C:\Temp\E140, Pruefnachricht windows-1252 mit Euro und Umlauten):
+//
+//   liste      ct=1 charset=windows-1252   (Gegenprobe, E-101)
+//   lesen      ct=0 charset=-
+//   verfassen  ct=0 charset=-
+//
+// Die Bytes standen richtig da (0x80 fuer das Euro-Zeichen) - aber ohne
+// Angabe, wie sie zu lesen sind. Ein anderes Programm raet dann.
+//
+// Diese Funktion ist der eine Eingang fuer beide Wege: sie ruft den Kern
+// aus E-101 und schreibt dessen Spur mit dem Namen des Weges ins Protokoll
+// (DEBUG_MASK_DIALOG, in der Vorgabe an - siehe tocview.cpp zu E-101).
+// Liefert der Kern nichts, geht der Text unveraendert hinaus.
+//
+// NUR fuer Textdateien. Eine .htm-Datei bekommt keine Kopfzeilen vorne
+// angesetzt - das waere kein HTML mehr.
+//
+CString E140TextFuerDatei(
+		const char *		pszText,
+		bool				bHatKopfzeilen,
+		const char *		pszWeg )
+{
+	CString		szDatei;
+	CString		szSpur;
+
+	const bool	bOk = E101SpeicherfassungAufbereiten( pszText,
+							bHatKopfzeilen, szDatei, szSpur );
+
+	CString		szZeile;
+	szZeile.Format( "E-140 speichern aus %s: %s",
+					pszWeg ? pszWeg : "?", (LPCTSTR) szSpur );
+	PutDebugLog( DEBUG_MASK_DIALOG, szZeile );
+
+	if ( bOk )
+		return szDatei;
+
+	return CString( pszText ? pszText : "" );
+}
+
 
 //
 // ---------------------------------------------------------------------------

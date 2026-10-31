@@ -55,6 +55,17 @@ bool E88OriginalEinsetzen(
 				CString &			out_szSpur);
 
 //
+// BEFUND E-140: derselbe Kern fuer "Speichern unter" aus dem Nachrichten-
+// und aus dem Verfassen-Fenster. Gibt den Text fuer die Datei zurueck -
+// mit Zeichensatzangabe, wenn der Kern sie ergaenzen konnte, sonst
+// unveraendert. pszWeg nennt den Weg im Protokoll. Nur fuer Textdateien.
+//
+CString E140TextFuerDatei(
+				const char *		pszText,
+				bool				bHatKopfzeilen,
+				const char *		pszWeg );
+
+//
 // BEFUND E-89: die Bilder im Verfassenfenster lesbar machen. Ergaenzt in
 // der Fassung, die in den Editor geht, jedem <img> ohne auswertbare
 // Groesse ein width- und ein height-Attribut. Erlaeuterung am Rumpf in

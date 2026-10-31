@@ -143,8 +143,9 @@
 - [CHRONIST 30.10.2026](CHRONIST-2026-10-30.md) — Laufbericht
 - [CHRONIST 30.10.2026 vormittags](CHRONIST-2026-10-30b.md) — Laufbericht; Werkzeugmangel 3 erledigt
 - [Prüfstand mit Fenster 30.10.](entscheidung-pruefstand-fenster-30-10.md) — nur dieser Tag
+- [Prüfstand mit Fenster 31.10.](entscheidung-pruefstand-fenster-31-10.md) — erlaubt; E-140-Stand und nächste Befehle; VM-Uhr prüfen
 - [Freigaben in settings.local.json](freigaben-settings-local.md) — `git push`, `perl tools/` frei; Bäume unter `.wt/`
 - [Stand 30.10.2026 abends](stand-30-10-2026-abend.md) — überholt durch den Nacht-Stand
-- [Stand 30.10.2026 nachts](stand-30-10-2026-nacht.md) — LEKTOR-105 übernehmen, sechs Funde, dann PR; merge/fetch/gh fragen
+- [Stand 30.10.2026 nachts](stand-30-10-2026-nacht.md) — #191 gemergt; morgen zuerst CHRONIST, dann Behebungen vor Buchführung (E-140 …)
 - [Hauptsitzung bleibt im Projektordner](hauptsitzung-bleibt-im-projektordner.md) — kein `cd` in `.wt/<name>`; `git -C` statt cd
 - [CHRONIST 30.10.2026 abends](CHRONIST-2026-10-30c.md) — Laufbericht; 20 Ablehnungen gezählt

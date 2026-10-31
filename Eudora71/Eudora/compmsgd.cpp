@@ -3470,7 +3470,7 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 			if ( pszRumpf && *pszRumpf )
 				::UnwrapText( pszRumpf );
 
-			if (FAILED(pFile->Put( CopyText )))
+			if (FAILED(pFile->Put( (LPCTSTR) E140TextFuerDatei( CopyText, bKopfzeilen ? true : false, "Verfassen-Fenster" ) )))
 			{
 				delete [] CopyText;
 				return (FALSE);
@@ -3481,6 +3481,9 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 				return (TRUE);
 			}
 		}
+
+		// BEFUND E-140: auch ohne "Absaetze raten" mit Zeichensatzangabe.
+		msg = E140TextFuerDatei( msg, bKopfzeilen ? true : false, "Verfassen-Fenster" );
 	}
 	
 	if ( FAILED( pFile->Put( msg ) ) )
