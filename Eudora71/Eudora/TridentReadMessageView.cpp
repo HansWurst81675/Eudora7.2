@@ -2912,7 +2912,18 @@ BOOL		bAsHTML )
 
 	if( ( hr == S_OK ) && ! cbstr.IsNull() )
 	{
-		szMsg = cbstr;
+		//
+		// BEFUND E-136, PRUEFER-68 K1: der zweite Speicherweg. *Speichern unter*
+		// aus dem Nachrichtenfenster als .htm ohne Kopfzeilen kommt hierher
+		// (GetMessageAsHTML), und "szMsg = cbstr" machte aus jedem Emoji "??".
+		// HTML bekommt Entitaeten wie beim Strg-S-Weg. Reiner Text (.txt) kann
+		// ein Zeichen ausserhalb der Codepage nicht tragen - dort bleibt es bei
+		// der bisherigen Umwandlung (im Befund als Grenze vermerkt).
+		//
+		if( bAsHTML )
+			szMsg = E136HtmlAusBstr( (BSTR) cbstr );
+		else
+			szMsg = cbstr;
 		return TRUE;
 	}
 

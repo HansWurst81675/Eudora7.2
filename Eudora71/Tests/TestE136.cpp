@@ -60,6 +60,9 @@ static void Test_E136_Stelle(const char* szEudoraDir)
 	TT_CHECK_MSG(QT_Enthaelt(pR, "szBody = E136HtmlAusBstr( (BSTR) cbstr );"), "SaveInfo (Strg-S) wandelt wieder mit 'CString = BSTR' - Emoji werden zu '??' (E-136)");
 	TT_CHECK_MSG(!QT_Enthaelt(pR, "szBody = cbstr;"), "SaveInfo hat wieder eine verlustbehaftete Zuweisung (E-136)");
 	TT_CHECK_MSG(QT_Enthaelt(pV, "szHTML = E136HtmlAusBstr( (BSTR) cbstrText );"), "GetAllHTML wandelt wieder mit 'CString = BSTR' (E-136)");
+	// PRUEFER-68 K1: der zweite Speicherweg - Speichern unter als .htm ohne
+	// Kopfzeilen laeuft ueber GetMessageBody(..., TRUE).
+	TT_CHECK_MSG(QT_Enthaelt(pR, "if( bAsHTML ) szMsg = E136HtmlAusBstr( (BSTR) cbstr ); else szMsg = cbstr;"), "GetMessageBody wandelt HTML wieder mit 'CString = BSTR' - Speichern unter (.htm) macht Emoji zu '??' (E-136, PRUEFER-68 K1)");
 	free(pR);
 	free(pV);
 	TT_EndTest();
