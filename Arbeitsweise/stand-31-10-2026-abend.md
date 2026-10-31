@@ -1,6 +1,6 @@
 ---
 name: stand-31-10-2026-abend
-description: "Stand 31.10.2026 21:05 - #192 gemergt (E-140, E-139, E-171 behoben; E-165, E-136 im Quellstand offen); Zweig e136_messweg (Gregor ok) gepusht bei 3d4df61a, kein PR; naechstes Mal: E-136-Messweg ueber Stingray-Leiste, PRUEFER und CHRONIST faellig"
+description: "Stand 31.10.2026 21:22 - #192 gemergt; Zweig e136_messweg (c5e8db39, kein PR) mit FAQ 16 und E-136-Messweg; MORGEN ZUERST: Paket 7.2.1.129 fuer Gregor (er testet damit den TESTPLAN), vorher LEKTOR; PRUEFER, CHRONIST faellig"
 metadata:
   node_type: memory
   type: project
@@ -21,3 +21,5 @@ Gregor am 31.10.2026: heutige Behebungen sind Schoenheitsfehler, kommen mit dem 
 **Faellig:** PRUEFER (Code seit ae3efe3, viel neu: AutoCompleteSearcher, TridentView, spell, guiutils, msgutils...) und CHRONIST. Ungetrackt im Hauptbaum: `.claude/settings - Kopie.json` (nicht meine; bauen.ps1 deshalb mit -Ungesichert).
 
 **Offene Frage an Gregor:** Suche in einer geoeffneten Mail (Blah Blah Blah + Find Text nach x-persona) am Pruefstand nachmessen? - beantwortet aus Menue/Ressource, nicht gemessen.
+
+**Nachtrag 21:22 - Auftrag fuer die naechste Sitzung, ZUERST:** Gregor: *„bau mir dann ein 7.2.1.129“* und *„mit 7.2.1.129 kann ich die anderen fixes aus Intern/TESTPLAN.md testen“*; er merged, *„wenn alles fertig ist“*. Um 21:21 nicht mehr geschafft (Abschalten 22:00). Reihenfolge: (1) LEKTOR-Lauf auf `e136_messweg` (einzige Abweisung von `perl tools/paket-bereit.pl`), (2) Nummer 7.2.1.129 in `VERSION` und `Eudora71/Version.h` ([[nummer-erst-beim-schnueren]], [[version-eindeutig-machen]]), (3) `tools/bauen.ps1`, (4) `tools/paket-bauen.ps1`, (5) `tools/paket-pruefen.ps1`, (6) bereitstellen in neuem `C:\Users\Gregor\Eudora72-7.2.1.129-release` ([[fertige-fassung-bereitstellen]]), (7) PR, Gregor merged. FAQ 16 sagt zu E-171 "kommt mit dem naechsten Paket" - nach dem Schnueren auf 7.2.1.129 setzen. E-136 ist offener Datenverlust (kritisch), Behebung im Paket aber ungemessen - Gregor vor dem Test auf TESTPLAN e-136-naechstes hinweisen (Postfach sichern).
