@@ -149,3 +149,4 @@
 - [Stand 30.10.2026 nachts](stand-30-10-2026-nacht.md) — #191 gemergt; morgen zuerst CHRONIST, dann Behebungen vor Buchführung (E-140 …)
 - [Hauptsitzung bleibt im Projektordner](hauptsitzung-bleibt-im-projektordner.md) — kein `cd` in `.wt/<name>`; `git -C` statt cd
 - [CHRONIST 30.10.2026 abends](CHRONIST-2026-10-30c.md) — Laufbericht; 20 Ablehnungen gezählt
+- [Stand 31.10.2026 abends](stand-31-10-2026-abend.md) — E-140/E-139 behoben, LEKTOR-106 läuft, dann PR; Ende 21:40
