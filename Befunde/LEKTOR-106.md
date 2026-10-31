@@ -35,7 +35,7 @@ BEFUNDE.md richtig sagt, dass `E-144p` nur rot aufgezeichnet ist
 | [L-105.1](LEKTOR-105.md#l-105.1) | „Was noch fehlt“ verlangte bei [E-141](../Intern/BEFUNDE.md#e-141) (IMAP → `Out` löst Expunge aus) und [E-176](../Intern/BEFUNDE.md#e-176) (Lesen aus freigegebenem Speicher) eine schon erfolgte Quelltextberichtigung | **erledigt** | `Intern/BEFUNDE.md:377` *„**Was noch fehlt:** die Messung am IMAP-Prüfserver … Die Berichtigung selbst steht seit dem 30.10.2026 im Quellstand (`tocdoc.cpp:3170` …)“*; `:383` *„**Was noch fehlt:** ein Test, der `CSummary` und `CMessageFrame` echt anlegt …“*; der erzeugte Block in `CHANGELOG.md` übernimmt beides (gemessen). Rest am Rand: die „Kette“ in `:377` nennt weiter *„Die Bedingung in `tocdoc.cpp:3134` lautet …“* — als Beschreibung des alten Stands lesbar, kein Fund |
 | [L-105.2](LEKTOR-105.md#l-105.2) | Urteil [E-144](../Intern/BEFUNDE.md#e-144): „Kurz“ sagte „Die Behebung fehlt noch“, „Was noch fehlt“ beschrieb einen nicht umgesetzten Vorschlag | **teilweise** | „Kurz“ jetzt *„Behoben im Quellstand und am Programm gemessen; kommt mit dem nächsten Paket.“*; der PRÜFER-48-Vorschlag ist als *„Dieser Vorschlag hätte auch *Message → Send Again* die Bezüge behalten lassen“* gekennzeichnet; „Was noch fehlt“ ist *„der Prüfstandsfall `E-144p` grün im Ergebnisbuch“* (alles `Intern/BEFUNDE.md:401`, gemessen). **Offen:** dieselbe Zelle nennt weiter *„340 Tests, 340 bestanden“*, die Commit-Nachricht von `45aa451c` 341 ([L-106.6](#l-106.6)) |
 | [L-105.3](LEKTOR-105.md#l-105.3) | `E-144p` nur rot aufgezeichnet, `E-125c` rot im Ergebnisbuch, keine Doku sagt es | **teilweise** | BEFUNDE sagt es jetzt: `Intern/BEFUNDE.md:401` *„Prüfstandsfall `E-144p` … **bisher nur einmal aufgezeichnet, und zwar rot**“* (gemessen). **Unverändert:** `E-144p` hat keine Zeile in `Intern/pruefstand-buch.tsv`; `:26` führt weiter *„E-125c FEHL 2026-10-30 14:18:03“* (gemessen). `tools/WERKZEUGE.md:131` sagt weiter *„ein Teillauf mit `-Nur` ersetzt nur seine eigenen Zeilen“*; heute hat derselbe Weg (`-Nur E-140p`, 19:57:58) eine neue Zeile angelegt (`pruefstand-buch.tsv:34`, gemessen) — warum `E-144p` am 30.10. keine bekam, bleibt ungeklärt. Neu dazu: das CHANGELOG widerspricht ([L-106.2](#l-106.2)) |
-| [L-105.4](LEKTOR-105.md#l-105.4) | ZIEL.md führte [E-144](../Intern/BEFUNDE.md#e-144) und [E-145](../Intern/BEFUNDE.md#e-145) als „bleiben offen“ | **erledigt** | `ZIEL.md:89` *„die Befunde selbst blieben zum Release offen“*, *„[[E-144](../Intern/BEFUNDE.md#e-144)] (seit 30.10.2026 im Quellstand behoben)“*, *„[[E-141](../Intern/BEFUNDE.md#e-141)] (im Quellstand berichtigt, nicht gemessen), [[E-145](../Intern/BEFUNDE.md#e-145)] (seit 30.10.2026 im Quellstand behoben)“* (gemessen). Dieselbe Zeile ist für [E-139](../Intern/BEFUNDE.md#e-139) und [E-140](../Intern/BEFUNDE.md#e-140) jetzt nicht nachgezogen ([L-106.5](#l-106.5)) |
+| [L-105.4](LEKTOR-105.md#l-105.4) | ZIEL.md führte [E-144](../Intern/BEFUNDE.md#e-144) und [E-145](../Intern/BEFUNDE.md#e-145) als „bleiben offen“ | **erledigt** | `ZIEL.md:89` *„die Befunde selbst blieben zum Release offen“*, *„[E-144](../Intern/BEFUNDE.md#e-144) (seit 30.10.2026 im Quellstand behoben)“*, *„[E-141](../Intern/BEFUNDE.md#e-141) (im Quellstand berichtigt, nicht gemessen), [E-145](../Intern/BEFUNDE.md#e-145) (seit 30.10.2026 im Quellstand behoben)“* (gemessen). Dieselbe Zeile ist für [E-139](../Intern/BEFUNDE.md#e-139) und [E-140](../Intern/BEFUNDE.md#e-140) jetzt nicht nachgezogen ([L-106.5](#l-106.5)) |
 | [L-105.5](LEKTOR-105.md#l-105.5) | README ohne „im Quelltext behoben“ bei [E-141](../Intern/BEFUNDE.md#e-141), [E-144](../Intern/BEFUNDE.md#e-144), [E-145](../Intern/BEFUNDE.md#e-145); [E-176](../Intern/BEFUNDE.md#e-176) fehlt | **erledigt** (soweit Lektorat) | `README.md:184` ([E-144](../Intern/BEFUNDE.md#e-144)) *„im Quelltext behoben, kommt mit dem nächsten Paket“*; `:189` ([E-141](../Intern/BEFUNDE.md#e-141)) *„im Quelltext berichtigt, noch nicht gemessen“*; `:191` ([E-145](../Intern/BEFUNDE.md#e-145)) *„(am Original-Dekodierer gemessen)“* und *„im Quelltext behoben, kommt mit dem nächsten Paket“* (gemessen). [E-176](../Intern/BEFUNDE.md#e-176) steht weiter nicht in der README (`git grep E-176 README.md` ohne Treffer) — das war als Formfrage dem Hauptagenten zugewiesen und ist hier kein Rest |
 | [L-105.6](LEKTOR-105.md#l-105.6) | `messen-e144.ps1` und `messen-e13.ps1` fehlten in WERKZEUGE.md | **erledigt** | `tools/WERKZEUGE.md:140` (`messen-e13.ps1`), `:141` (`messen-e144.ps1`) (gemessen). Die neuen `messen-e140.ps1` und `messen-e139.ps1` stehen in `:142` und `:143` |
 
@@ -53,7 +53,7 @@ Mal über `pruefstand-lauf.ps1` gelaufen. Zwei Dokumente sagen das Gegenteil.
 > zwei Läufe): der neue Bau zeigt sie nach dem Ankreuzen nicht wieder …“*
 >
 > `Intern/TESTPLAN.md:144-146`: *„Am Prüfstand am 31.10.2026 so gefahren
-> (Fall `E-139p`, Befund [[E-139](../Intern/BEFUNDE.md#e-139)]): neuer Bau Lauf 1 mit Kästchen, Lauf 2 ohne
+> (Fall `E-139p`, Befund [E-139](../Intern/BEFUNDE.md#e-139)): neuer Bau Lauf 1 mit Kästchen, Lauf 2 ohne
 > Meldung; 7.2.1.128 in beiden Läufen mit Meldung, ohne Kästchen.“*
 
 Dagegen, **gemessen**:
@@ -143,7 +143,7 @@ Ergänzung der Kopfzeile ist am 23.10.2026 an 7.2.0.120 belegt“*
 (`Intern/BEFUNDE.md`, Zeile mit `id="e-101"`), und die Messung zu [E-140](../Intern/BEFUNDE.md#e-140) an
 7.2.1.128 bestätigt den Weg aus der Postfachliste (`BEFUNDE.md:402`
 *„aus der **Postfachliste** `ct=1 charset=windows-1252` (Gegenprobe,
-[[E-101](../Intern/BEFUNDE.md#e-101)])“*). Die Zeile `:161` beschreibt also einen Stand, der für den Weg
+[E-101](../Intern/BEFUNDE.md#e-101))“*). Die Zeile `:161` beschreibt also einen Stand, der für den Weg
 aus der Postfachliste seit 7.2.0.120 nicht mehr gilt; für Nachrichten- und
 Verfassen-Fenster deckt ihn jetzt `:190` ab. **Belegt.** Was von [E-101](../Intern/BEFUNDE.md#e-101)
 noch offen ist (F2, F5 bis F9, *„Wirkung ohne Schaden“*), steht in der
@@ -190,9 +190,9 @@ Worum es geht: Der Maßstab zählt die Fehler auf, die zum Release in der
 README blieben. Bei zwei schon behobenen steht „(seit 30.10.2026 im
 Quellstand behoben)“, bei den zwei heute behobenen nichts.
 
-> `ZIEL.md:89`: *„dazu [[E-144](../Intern/BEFUNDE.md#e-144)] (seit 30.10.2026 im Quellstand behoben),
-> [[E-143](../Intern/BEFUNDE.md#e-143)], [[E-139](../Intern/BEFUNDE.md#e-139)], [[E-136](../Intern/BEFUNDE.md#e-136)], [[AN-1](../Intern/BEFUNDE.md#an-1)], … [[E-140](../Intern/BEFUNDE.md#e-140)], [[E-141](../Intern/BEFUNDE.md#e-141)] (im Quellstand
-> berichtigt, nicht gemessen), [[E-145](../Intern/BEFUNDE.md#e-145)] (seit 30.10.2026 im Quellstand
+> `ZIEL.md:89`: *„dazu [E-144](../Intern/BEFUNDE.md#e-144) (seit 30.10.2026 im Quellstand behoben),
+> [E-143](../Intern/BEFUNDE.md#e-143), [E-139](../Intern/BEFUNDE.md#e-139), [E-136](../Intern/BEFUNDE.md#e-136), [AN-1](../Intern/BEFUNDE.md#an-1), … [E-140](../Intern/BEFUNDE.md#e-140), [E-141](../Intern/BEFUNDE.md#e-141) (im Quellstand
+> berichtigt, nicht gemessen), [E-145](../Intern/BEFUNDE.md#e-145) (seit 30.10.2026 im Quellstand
 > behoben)“*
 
 `Intern/BEFUNDE.md:402` und `:403` sagen bei beiden *„**behoben im
@@ -200,7 +200,7 @@ Quellstand, am 31.10.2026 am laufenden Programm gemessen; in keinem
 Paket.**“*. `ziel-stand.pl` meldet *„27 von 27 erfüllt“*; diesen Satz liest
 es nicht. **Gemessen.**
 
-**Vorschlag:** hinter [[E-139](../Intern/BEFUNDE.md#e-139)] und [[E-140](../Intern/BEFUNDE.md#e-140)] je „(seit 31.10.2026 im
+**Vorschlag:** hinter [E-139](../Intern/BEFUNDE.md#e-139) und [E-140](../Intern/BEFUNDE.md#e-140) je „(seit 31.10.2026 im
 Quellstand behoben)“.
 
 ### <a id="l-106.6"></a>L-106.6 — Drei kleine Reste: Testzahl bei E-144, ein entfernter Kommentar im Präsens, ein Verweis „wo es jetzt steht“
@@ -218,7 +218,7 @@ Quellstand behoben)“.
   aber im Präsens; ebenso *„`ZeigeHinweisEinmal()` (`:58`)“* und
   *„`AfxMessageBox`“* als heutiger Weg im Abschnitt „Die Stelle“.
 * `Intern/WEITERMACHEN.md:137` (Entscheidung 7): *„die offenen Befunde
-  [[E-140](../Intern/BEFUNDE.md#e-140)], [[E-141](../Intern/BEFUNDE.md#e-141)], [[E-145](../Intern/BEFUNDE.md#e-145)] … Wo es jetzt steht: [Nach dem Release
+  [E-140](../Intern/BEFUNDE.md#e-140), [E-141](../Intern/BEFUNDE.md#e-141), [E-145](../Intern/BEFUNDE.md#e-145) … Wo es jetzt steht: [Nach dem Release
   7.2.1]“* — [E-140](../Intern/BEFUNDE.md#e-140) und [E-145](../Intern/BEFUNDE.md#e-145) sind behoben und stehen dort nicht mehr
   (gemessen). Die Entscheidung selbst bleibt Geschichte; nur der Verweis
   „wo es jetzt steht“ führt für zwei der drei ins Leere.
