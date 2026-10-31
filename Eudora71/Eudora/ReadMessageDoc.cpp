@@ -651,7 +651,7 @@ BOOL CReadMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 			if ( pszRumpf2 && *pszRumpf2 )
 				::UnwrapText( pszRumpf2 );
 
-			if ( pFile->Put( CopyText ) != S_OK )
+			if ( pFile->Put( (LPCTSTR) E140TextFuerDatei( CopyText, bKopf2 ? true : false, "Nachrichtenfenster" ) ) != S_OK )
 			{
 				delete CopyText;
 				return (FALSE);
@@ -664,7 +664,7 @@ BOOL CReadMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 		}
 		else
 		{
-			if ( pFile->Put(msg) != S_OK )
+			if ( pFile->Put( (LPCTSTR) E140TextFuerDatei( msg, bKopf2 ? true : false, "Nachrichtenfenster" ) ) != S_OK )
 				return ( FALSE );
 		}
 	}

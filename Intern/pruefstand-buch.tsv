@@ -30,10 +30,13 @@ E-131c	ok	2026-10-30 14:18:03	C:\Temp\E131L	Eudora 7.2.1.128+ca1b455b* 2026-10-3
 E-137a	ok	2026-10-30 14:18:03	C:\Temp\E137	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1
 E-137b	ok	2026-10-30 14:18:03	C:\Temp\E137	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1
 E-137c	ok	2026-10-30 14:18:03	C:\Temp\E137	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja
+E-139p	ok	2026-10-31 20:27:13	C:\Temp\E139	Eudora 7.2.1.128+7c13c368 2026-10-31 20:03	E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1
 E-13p	ok	2026-10-30 14:18:03	C:\Temp\E13	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	E13 FORTSCHRITT sichtbar=1
+E-140p	ok	2026-10-31 20:27:39	C:\Temp\E140	Eudora 7.2.1.128+9459edaa 2026-10-31 19:53	E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
 E-146	ok	2026-10-30 14:18:03	C:\Temp\E146	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)
 E-166a	ok	2026-10-30 14:18:03	C:\Temp\E166	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	reihenfolge=junk-no,konto-ok
 E-166b	ok	2026-10-30 14:18:03	C:\Temp\E166	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	AskedAboutJunk=6
+E-171p	ok	2026-10-31 20:27:59	C:\Temp\E171	Eudora 7.2.1.128+e327d7ec 2026-10-31 20:25	E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1
 E-67	ok	2026-10-30 14:18:03	C:\Temp\E67	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	verb-gespeichert=14 verb-auswahl=0
 E-77a	ok	2026-10-30 14:18:03	C:\Temp\E77	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	E77 ERGEBNIS roh=0 dekodiert=2
 E-77b	ok	2026-10-30 14:18:03	C:\Temp\E77	Eudora 7.2.1.128+ca1b455b* 2026-10-30 14:05	E-77 Ordnername: server="Entw&APw-rfe"

@@ -263,7 +263,7 @@ Quelltext belegt):
 ## Neue Kennungen
 
 Vorgeschlagen: **[E-176](../Intern/BEFUNDE.md#e-176)** für [K1](#k1) (Lesen aus der gelöschten Zusammenfassung
-über `m_pSumBackPtr`). E-177 habe ich nicht vergeben. K2 ist eine
+über `m_pSumBackPtr`). [E-177](../Intern/BEFUNDE.md#e-177) habe ich nicht vergeben. K2 ist eine
 Fortschreibung von [E-19](../Intern/BEFUNDE.md#e-19), K3 eine von
 [E-15](../Intern/BEFUNDE.md#e-15), K4 betrifft nur die Tests. In
 `Intern/BEFUNDE.md` habe ich nichts eingetragen.

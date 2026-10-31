@@ -93,6 +93,7 @@
     <ClCompile Include="UnderTestE89.cpp" />
     <ClCompile Include="TestE89.cpp" />
     <ClCompile Include="UnderTestE101.cpp" />
+    <ClCompile Include="UnderTestE136.cpp" />
     <ClCompile Include="TestE101.cpp" />
     <ClCompile Include="UnderTestResolveURL.cpp" />
     <ClCompile Include="TestResolveURL.cpp" />
@@ -142,6 +143,11 @@
     <ClCompile Include="TestE57E58E75.cpp" />
     <ClCompile Include="TestE86.cpp" />
     <ClCompile Include="TestE104E115.cpp" />
+    <ClCompile Include="TestE140.cpp" />
+    <ClCompile Include="TestE139.cpp" />
+    <ClCompile Include="TestE165.cpp" />
+    <ClCompile Include="TestE171.cpp" />
+    <ClCompile Include="TestE136.cpp" />
     <ClCompile Include="TestM1.cpp" />
     <ClCompile Include="TestE145.cpp" />
     <ClCompile Include="TestE141.cpp" />

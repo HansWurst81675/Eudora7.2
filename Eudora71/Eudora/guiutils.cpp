@@ -3356,6 +3356,25 @@ void OpenFindMessagesWindow(
 	bool				bSelectAll,
 	bool				bStartSearch)
 {
+	//
+	// BEFUND E-171: "Search Mailfolder" / "Search Mailbox" / "Search Eudora"
+	// aus dem Rechtsklickmenue einer Mail ohne markierten Text brachte
+	// "There has been an internal error during the search". Die Aufrufer
+	// (TridentView.cpp, PaigeEdtView.cpp, OnSearchInEudoraForSelection)
+	// geben den Menuepunkt auch ohne Auswahl frei und verlangen den
+	// sofortigen Start; CSearchView::DoSearch findet dann kein gueltiges
+	// Kriterium, und OnOk zeigt IDS_SEARCH_INTERNAL_ERROR. Gregors
+	// eudora.log vom 29.10.2026 zeigt es dreimal.
+	//
+	// Ohne Suchtext gibt es nichts zu suchen: das Fenster geht auf, die
+	// Suche startet nicht - der Anwender traegt den Begriff selbst ein.
+	//
+	if ( bStartSearch && ( !szSearchPhrase || !*szSearchPhrase ) )
+	{
+		bStartSearch = false;
+		PutDebugLog( DEBUG_MASK_DIALOG, "E-171 Suche: kein Suchtext, Fenster ohne Start" );
+	}
+
 	if (szSearchPhrase)
 	{
 		//	"Anywhere;Contains;TheSearchPhrase"

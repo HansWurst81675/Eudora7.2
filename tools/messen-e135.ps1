@@ -44,6 +44,7 @@ public class E135 {
   [DllImport("user32.dll")] public static extern bool PostMessageA(IntPtr h, uint m, IntPtr w, IntPtr l);
   public delegate bool EP(IntPtr h, IntPtr p);
   [DllImport("user32.dll")] public static extern IntPtr GetParent(IntPtr h);
+  [DllImport("user32.dll")] public static extern int GetWindowLongA(IntPtr h, int i);
   [DllImport("user32.dll")] public static extern bool ClientToScreen(IntPtr h, ref P p);
   [StructLayout(LayoutKind.Sequential)] public struct R { public int L, T, Ri, B; }
   [StructLayout(LayoutKind.Sequential)] public struct P { public int X, Y; }
@@ -131,6 +132,16 @@ Write-Host ("E135 Box {0}  Liste {1}" -f $box.H, $boxliste)
 # fehlende ScreenToClient in InitList() wirkt; die Zahl der Eintraege
 # beantwortet, ob die Box nach dem Entfernen eines Eintrags zu gross bleibt.
 function Anzahl($h) { return [int][E135]::SendMessageA($h, 0x1004, [IntPtr]::Zero, [IntPtr]::Zero) }
+# E-165: dazu die LISTE selbst - Aussen-/Innenmass, wie viele Zeilen ganz
+# hineinpassen (LVM_GETCOUNTPERPAGE; 0 heisst: nicht einmal eine) und ob sie
+# Bildlaufleisten traegt (WS_HSCROLL 0x00100000, WS_VSCROLL 0x00200000).
+function ListenZeile($nr, $lh) {
+    $a = Rechteck $lh; $k = Innen $lh
+    $st = [E135]::GetWindowLongA($lh, -16)
+    $pro = [int][E135]::SendMessageA($lh, 0x1028, [IntPtr]::Zero, [IntPtr]::Zero)
+    Write-Host ("E135 {0,-10} Liste aussen {1}x{2} innen {3}x{4} proSeite {5} hscroll {6} vscroll {7}" -f `
+        $nr, ($a.Ri-$a.L), ($a.B-$a.T), ($k.Ri-$k.L), ($k.B-$k.T), $pro, [int](($st -band 0x00100000) -ne 0), [int](($st -band 0x00200000) -ne 0))
+}
 function Zeile($nr, $h, $lh) {
     $a = Rechteck $h
     $k = Innen    $h
@@ -140,6 +151,7 @@ function Zeile($nr, $h, $lh) {
 
 for ($i = 0; $i -le $Schritte; $i++) {
     Zeile "Schritt $i" $box.H $boxliste
+    ListenZeile "Schritt $i" $boxliste
     if ($i -lt $Schritte) {
         [void][E135]::PostMessageA($to.H, 0x0100, [IntPtr]0x28, [IntPtr]1)    # WM_KEYDOWN VK_DOWN
         [void][E135]::PostMessageA($to.H, 0x0101, [IntPtr]0x28, [IntPtr]1)    # WM_KEYUP

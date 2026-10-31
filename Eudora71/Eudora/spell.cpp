@@ -44,6 +44,9 @@
 
 #include "stdafx.h"
 #include "spell.h"
+#include "resource.h"
+#include "rs.h"
+#include "guiutils.h"
 
 #include "DebugNewHelpers.h"
 
@@ -62,12 +65,27 @@ static void ZeigeHinweisEinmal()
 
 	s_bHinweisGezeigt = TRUE;
 
-	// Kein CRString/IDS_..., weil dafuer eine neue Ressource noetig waere und
-	// EudoraRes.rc hier bewusst unangetastet bleibt.
-	AfxMessageBox(
-		_T("Die Rechtschreibpruefung ist in dieser Fassung nicht verfuegbar. ")
-		_T("Die Pruefengine (SSCE) fehlt in der Quelltextfreigabe."),
-		MB_OK | MB_ICONINFORMATION);
+	//
+	// BEFUND E-139: die Meldung kam nach JEDEM Programmstart wieder - der
+	// Merker oben ist statisch und lebt nur einen Lauf. Gregor am
+	// 23.10.2026: "bei der messagebox mit rechtschreibpruefung nicht
+	// vorhanden waere eine checkbox notwendig, um nicht bei jeder
+	// gelegenheit daran erinnert zu werden."
+	//
+	// Jetzt ueber NoteDialog mit dem Kaestchen "Don't show this again"
+	// (IDS_NOTE_CHECKBOX). Wer es ankreuzt, setzt WarnSpellUnavailable=0
+	// in der Eudora.ini (CWarnDialog::DoDataExchange, guiutils.cpp) - und
+	// die Meldung bleibt in diesem und in jedem folgenden Lauf aus.
+	// NoteDialog prueft den Schalter NICHT selbst (nur ein ASSERT), daher
+	// die Abfrage hier.
+	//
+	if (!GetIniShort(IDS_INI_WARN_SPELL_UNAVAILABLE))
+	{
+		PutDebugLog(DEBUG_MASK_DIALOG, "E-139 Rechtschreibhinweis: abgeschaltet (WarnSpellUnavailable=0)");
+		return;
+	}
+
+	NoteDialog(IDS_INI_WARN_SPELL_UNAVAILABLE, IDS_SPELL_NICHT_VORHANDEN);
 }
 
 

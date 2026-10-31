@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: f6188ad4-4df8-4a5e-bb99-a9fb32d6557a
-  modified: 2026-10-30T22:02:49.767Z
+  modified: 2026-10-30T22:21:44.458Z
 ---
 
 Schranke: keine - ein Stand-Vermerk; der Ausloeser ist der SessionStart-Haken, der MEMORY.md laedt.
@@ -24,5 +24,9 @@ Gregor gab um ~22:40 eine halbe Stunde und fuhr dann herunter (Testlauf: "egal, 
 **Freigaben** siehe [[freigaben-settings-local]]. Ohne Abfrage liefen: Read/Grep/Glob/Edit/Write im Projekt, in `.wt/lektor` und im memory-/projects-Ordner; `git status/log/add/commit`, `git push`, `perl tools/...`. MIT Abfrage: `git fetch`, `git merge`, `gh`, Shell-Argumente mit Pfaden unter `C:\Users\Gregor\.claude`. Primaeres Arbeitsverzeichnis der Sitzung war zuletzt `.wt/lektor` (durch ein cd) - immer absolute Pfade.
 
 `tools/messen-e140.ps1` liegt weiter ungetrackt im Hauptbaum, nie gelaufen.
+
+**Gregor nach dem Merge (#191, main 26afe681):** *„wir arbeiten jetzt an fehlenden tests … und das seit 1 ganzen tag? nichts produktives, keine neuen bugfixes? nur bürokratie?“* — Antwort: tagsueber E-144/E-145 behoben, E-141/E-176 berichtigt, E-13 gemessen; abends gut 3 h ohne eine Behebung. **Vereinbart (Gregor: „ja“):** ab 31.10. haben Behebungen und Messungen Vorrang — E-140, E-165, E-139, E-141 messen, E-138; LEKTOR/CHRONIST nur im Hintergrund und wenn der PR-Haken es verlangt; Testrueckstand nur zusammen mit dem Befund, an dem gerade gearbeitet wird. **Morgen zuerst den CHRONIST** ueber den 30.10. ab 22:47 bis Schluss laufen lassen, ausdruecklich mit dieser Frage Gregors (Gregor: „der chronist soll sich das noch anschauen - morgen“). Fuer E-140 fehlen Freigaben: PowerShell-Skripte unter tools/ und C:\Temp\E140. `git fetch` lief zuletzt ohne Abfrage. Zweige fortsetzen_status_nie_gemessen und wt/lektor-20261030 sind gemergt bzw. ueberfluessig; Loeschen ist Gregors Sache. LEKTOR-Bestaetigung jetzt ueber main.
+
+**Nachtrag Schluss:** LEKTOR-105 uebernommen und eingearbeitet, Zweig bei `e44685bf` gepusht, 341/341. PR abgewiesen vom Haken: LEKTOR faellig, weil die Einarbeitung seine Dateien aenderte -> morgen ZUERST kurzer LEKTOR-Bestaetigungslauf (Baum `.wt/lektor`, Befehle mit `git -C`, kein `cd`), dann `gh pr create` (Regel `Bash(gh pr create:*)` steht jetzt, ebenso `Bash(perl tools/*)` - die alte Form `perl tools/:*` griff vermutlich nie). Offen aus L-105.3: E-144p und E-125c am Pruefstand gruen fahren. Danach E-140 (PowerShell + C:\Temp\E140 brauchen noch Regeln).
 
 **Nachtrag ~23:30:** PRUEFER-66 K3 und PRUEFER-67 K4 behoben, Commit `8cdfc21b` gepusht (341/341 gruen). Gegenprobe einmal gefahren: fuenf Fehlstellen eingesetzt (ASSERT ( in TaskStatusView, UnwrapText( CopyText ) in compmsgd, if vor dem Write in TridentView, #if 0 um m_pGeladen in filtersv, <# #> um die Arch-Pruefung in paket-pruefen.ps1) -> genau E-15, E-104, E-86, E-72, S-8 rot (336/341); danach `git checkout --` (laeuft ohne Abfrage), Baum sauber. Noch nicht in Doku vermerkt (BEFUNDE/WEITERMACHEN: K3/K4 erledigt). Restlicher Rueckstand: 50 behobene ohne Testfall laut pruefe-regressionstest.pl. Befehle OHNE `cd` davor schreiben - dann laufen git add/commit/push/checkout und perl tools/ ohne Abfrage.

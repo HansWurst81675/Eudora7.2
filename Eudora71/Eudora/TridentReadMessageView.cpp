@@ -1889,7 +1889,9 @@ HRESULT CTridentReadMessageView::SaveInfo()
 	if( pRange )
 	{
 		hr = pRange->get_htmlText( BSTRARG( cbstr ) );
-		szBody = cbstr;
+		// BEFUND E-136: der Speicherweg (Strg-S). "szBody = cbstr" machte aus
+		// jedem Zeichen ausserhalb der Codepage ein "?", aus einem Emoji "??".
+		szBody = E136HtmlAusBstr( (BSTR) cbstr );
 		pRange->Release();
 	}
 

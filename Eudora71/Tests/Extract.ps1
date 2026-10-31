@@ -456,3 +456,15 @@ $lchPath = Join-Path $SrcDir "ListCtrlEx.h"
 $lch = Read-Lines $lchPath
 $v5Start = Find-Line $lch '^#define\s+LVEX_DISPLAY_NORMAL\b' 0
 Write-Region $lch $v5Start $v5Start (Join-Path $OutDir "listctrlex_konst.inc") $lchPath
+
+
+# ---------------------------------------------------------------- TridentView.cpp (E-136)
+# Region W: E136HtmlAusBstr (Befund E-136). Wandelt das HTML aus der Anzeige
+# (UTF-16) in die Codepage, ohne Zeichen zu verlieren: was die Codepage nicht
+# kennt, wird zur numerischen Entitaet. Vorher machte "CString = BSTR" aus
+# einem Emoji "??" - beim Speichern, ohne Warnung (Gregor, 22.10.2026).
+$tvPath = Join-Path $SrcDir "TridentView.cpp"
+$tv = Read-Lines $tvPath
+$wStart = Find-Line $tv '^CString E136HtmlAusBstr\s*\(' 0
+$wEnd = Find-Line $tv '^\}\s*$' $wStart
+Write-Region $tv $wStart $wEnd (Join-Path $OutDir "tridentview_e136.inc") $tvPath

@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: f6188ad4-4df8-4a5e-bb99-a9fb32d6557a
-  modified: 2026-10-30T21:49:09.715Z
+  modified: 2026-10-30T22:26:24.192Z
 ---
 
 Schranke: keine - ob eine Abfrage kommt, entscheidet die Rechtepruefung; die Regeln stehen in `.claude/settings.local.json` (ignoriert, nicht im Repo).
@@ -20,6 +20,10 @@ Gregor: *„mach so weiter, wie du vor dem release gemacht hast - ohne mich zu f
 - Nur im Projektordner arbeiten. Rollen- und Agentenbaeume legen `tools/auftrag-rolle.pl` und `tools/arbeitsbaum-frei.pl` jetzt unter `.wt/<name>` an (Commit f0493d14). Die alten `../Eudora7.2-wt-*` nicht mehr anfassen.
 - Befehle so schreiben, dass sie unter eine Regel fallen: `git push` allein, `perl tools/<name>.pl ...` allein, ohne `perl -e`, moeglichst ohne Pipes und Verkettungen um den freigegebenen Befehl herum.
 - Faellt etwas Noetiges unter keine Regel: Gregor die genaue Regel und den Ort (`/permissions` -> Allow -> Project settings (local)) nennen, nicht den Befehl trotzdem abschicken.
+
+## Stand 30.10.2026 Schluss: die vollstaendige Liste
+
+Gregor hat nach *„du verplämperst meine zeit damit, irgendwelche freigaben zu erfragen“* alles in einem Block in `.claude/settings.local.json` gesetzt: allow `git push:*`, `git fetch:*`, `git merge:*`, `perl tools/*` (Stern direkt hinter dem Schraegstrich - `perl tools/:*` griff vermutlich nie), `gh pr create:*`, `powershell -NoProfile -ExecutionPolicy Bypass -File tools/*`; additionalDirectories `.wt\lektor`, `.wt\chronist`, der projects-Ordner und `C:\Temp`. **Nicht wieder nach Freigaben fragen.** Faellt etwas darunter nicht, arbeite ich ohne es weiter und schreibe es in die Uebergabe. PowerShell-Skripte genau in dieser Form aufrufen (Pfad relativ `tools/...`, aus dem Projektordner, ohne `cd`).
 
 ## Nachtrag 30.10.2026 (CHRONIST): die Regel stand um 22:32, der Auftrag um 22:40 brach sie
 

@@ -615,6 +615,80 @@ void AutoCompleterListBox::RemoveLastItem()
 	m_AutoCompList->MoveWindow( rct);	
 }
 
+//
+// BEFUND E-165: die Hoehe der Vervollstaendigungsbox.
+//
+// InitList rechnete "Eintraege x (Zeichenhoehe - 1) + 10" und mass die
+// Zeichenhoehe an einem CClientDC der Liste, OHNE deren Schrift
+// auszuwaehlen - also an der Systemschrift, nicht an der Zeile, die die
+// eigengezeichnete Liste wirklich hat. Der Rahmen der Box (WS_THICKFRAME)
+// und der Rand der Liste kamen in den "10" nur pauschal vor.
+//
+// Gemessen am 31.10.2026 (tools/messen-e135.ps1, Pruefstand C:\Temp\E165,
+// zwei Treffer): Box 100x40 aussen, 86x26 innen, Liste 85x25 - es passt
+// genau EINE Zeile hinein (LVM_GETCOUNTPERPAGE 1), und die Liste traegt
+// eine senkrechte Bildlaufleiste. Gregor sah am 27.10.2026 an 1.0.127 mit
+// seiner Bildschirmskalierung das Gegenstueck: "sieht nicht nett aus".
+//
+// Jetzt: die Zeilenhoehe kommt aus der Liste selbst (GetItemRect der
+// ersten Zeile), der Rahmen aus Aussen- minus Innenmass von Box und Liste.
+// Eine waagrechte Bildlaufleiste, die gerade sichtbar ist, zaehlt dabei
+// nicht zum Rand. Gibt es noch keine Zeile, bleibt es bei der alten
+// Rechnung - dann aber mit der Schrift der Liste.
+//
+static int E165BoxHoehe(DropDownListBox* pBox)
+{
+	CListCtrl*	pListe     = pBox->GetListBox();
+	const int	nEintraege = pBox->GetItemCount();
+
+	CRect		rZeile;
+	int			cyZeile = 0;
+
+	if ( nEintraege > 0 && pListe->GetItemRect( 0, rZeile, LVIR_BOUNDS ) )
+		cyZeile = rZeile.Height();
+
+	if ( cyZeile <= 0 )
+	{
+		CClientDC	dc( pListe );
+		CFont*		pAlt = dc.SelectObject( pListe->GetFont() );
+		TEXTMETRIC	tm;
+		dc.GetTextMetrics( &tm );
+		if ( pAlt )
+			dc.SelectObject( pAlt );
+		cyZeile = tm.tmHeight + tm.tmExternalLeading;
+	}
+
+	CRect	rBoxAussen, rBoxInnen, rListeAussen, rListeInnen;
+	pBox->GetWindowRect( rBoxAussen );
+	pBox->GetClientRect( rBoxInnen );
+	pListe->GetWindowRect( rListeAussen );
+	pListe->GetClientRect( rListeInnen );
+
+	int		nListenRand = rListeAussen.Height() - rListeInnen.Height();
+	if ( pListe->GetStyle() & WS_HSCROLL )
+		nListenRand -= ::GetSystemMetrics( SM_CYHSCROLL );
+	if ( nListenRand < 0 )
+		nListenRand = 0;
+
+	// + 1: DropDownListBox::MoveWindow gibt der Liste ein Pixel weniger.
+	const int	nRahmen = ( rBoxAussen.Height() - rBoxInnen.Height() ) + 1 + nListenRand;
+
+	int		nHoehe = nEintraege * cyZeile + nRahmen;
+
+	const int	nIni  = (int) GetIniLong( IDS_INI_COMPLETER_LIST_HEIGHT );
+	const int	nVier = 4 * cyZeile + nRahmen;
+
+	if ( nHoehe > nIni )
+		nHoehe = ( nIni > nVier ) ? nIni : nVier;
+
+	CString	szSpur;
+	szSpur.Format( "E-165 Box: eintraege=%d zeile=%d rahmen=%d hoehe=%d ini=%d",
+				   nEintraege, cyZeile, nRahmen, nHoehe, nIni );
+	PutDebugLog( DEBUG_MASK_DIALOG, szSpur );
+
+	return nHoehe;
+}
+
 void AutoCompleterListBox::InitList(bool Showlist)// =true
 {
 	m_AutoCompList->SetCheck(-1, FALSE);
@@ -622,21 +696,8 @@ void AutoCompleterListBox::InitList(bool Showlist)// =true
 	CRect rct;
 	m_AutoCompList->GetWindowRect(rct);
 
-	CClientDC dc(m_AutoCompList->GetListBox());
-
-	TEXTMETRIC tm;
-	dc.GetTextMetrics(&tm);
-	UINT cyChar  = tm.tmHeight + tm.tmExternalLeading;
-
-	rct.bottom = rct.top + m_AutoCompList->GetItemCount() * (cyChar - 1) + 10;
-	if (rct.bottom - rct.top > GetIniLong(IDS_INI_COMPLETER_LIST_HEIGHT) )
-	{
-		unsigned int iniheight = (unsigned int)GetIniLong(IDS_INI_COMPLETER_LIST_HEIGHT);
-		if (iniheight > (((cyChar - 1) * 4) + 10))
-			rct.bottom = rct.top + iniheight;
-		else
-			rct.bottom = rct.top + ((cyChar -1) * 4) + 10;
-	}
+	// BEFUND E-165: Hoehe aus Zeile und Rahmen, siehe E165BoxHoehe.
+	rct.bottom = rct.top + E165BoxHoehe(m_AutoCompList);
 
 	m_AutoCompList->MoveWindow(rct);
 //	m_AutoCompList->SetCheck(0, TRUE);
@@ -661,21 +722,8 @@ void AutoCompleterListBox::InitListDSDropDown(bool Showlist)// =true
 	CRect rct;
 	m_AutoCompList->GetWindowRect(rct);
 
-	CClientDC dc(m_AutoCompList->GetListBox());
-
-	TEXTMETRIC tm;
-	dc.GetTextMetrics(&tm);
-	UINT cyChar  = tm.tmHeight + tm.tmExternalLeading;
-
-	rct.bottom = rct.top + m_AutoCompList->GetItemCount() * (cyChar - 1) + 10;
-	if (rct.bottom - rct.top > GetIniLong(IDS_INI_COMPLETER_LIST_HEIGHT) )
-	{
-		unsigned int iniheight = (unsigned int)GetIniLong(IDS_INI_COMPLETER_LIST_HEIGHT);
-		if (iniheight > (((cyChar - 1) * 4) + 10))
-			rct.bottom = rct.top + iniheight;
-		else
-			rct.bottom = rct.top + ((cyChar - 1) * 4) + 10;
-	}
+	// BEFUND E-165: Hoehe aus Zeile und Rahmen, siehe E165BoxHoehe.
+	rct.bottom = rct.top + E165BoxHoehe(m_AutoCompList);
 
 	m_AutoCompList->MoveWindow(rct);
 //	m_AutoCompList->SetCheck(0, TRUE);
@@ -1400,7 +1448,17 @@ void DropDownListBox::MoveWindow(CRect rect)
 	LVCOLUMN Column;
 
 	Column.mask = LVCF_WIDTH; 
-	Column.cx = (ClientRct.right-ClientRct.left) - 18;//Scrollbar width+1;
+	//
+	// BEFUND E-165: die Spalte war Innenbreite minus 18 - eine feste
+	// Bildlaufleiste von 17 Pixeln. Bei hoeherer Skalierung ist sie breiter,
+	// die Spalte ragt hinaus, und unten erscheint eine waagrechte
+	// Bildlaufleiste. Jetzt: Innenbreite der LISTE minus die Systembreite.
+	//
+	CRect ListeInnen;
+	m_ListCtrl->GetClientRect(ListeInnen);
+	Column.cx = ListeInnen.Width() - ::GetSystemMetrics(SM_CXVSCROLL);
+	if (Column.cx < 1)
+		Column.cx = 1;
 
 	m_ListCtrl->SetColumn(0, &Column);
 }

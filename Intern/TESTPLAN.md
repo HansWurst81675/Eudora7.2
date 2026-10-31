@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 30.10.2026 (getestet am 29.10.2026, E-166 bestanden; seither kein neues Testpaket)
+# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 31.10.2026 (getestet am 29.10.2026, E-166 bestanden; seither kein neues Testpaket)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -123,6 +123,93 @@ habe ich es nicht gefahren.
   nach dem Release.
 * Die neun Kriterien bekommen keinen eigenen Durchgang (Gregors Entscheidung,
   siehe oben).
+
+## <a id="e-139-naechstes"></a>Im nächsten Paket: der Rechtschreibhinweis lässt sich abschalten ([E-139](BEFUNDE.md#e-139))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+7.2.1.128 kam die Meldung *„Die Rechtschreibpruefung ist in dieser Fassung
+nicht verfuegbar …“* nach jedem Programmstart wieder. Geprüft wird am
+**lokalen** Postfach *In* (nicht IMAP).
+
+1. Eudora starten, im lokalen *In* eine Nachricht öffnen, *Reply*.
+2. Die Meldung kommt jetzt mit dem Titel **Note** und dem Kästchen
+   **„Don't show this again“**. Ankreuzen, *OK*. Die Antwort ohne Speichern
+   schließen.
+3. Eudora beenden und neu starten, wieder eine Nachricht öffnen, *Reply*:
+   **die Meldung darf nicht mehr kommen.**
+4. Zurücknehmen, falls gewünscht: in der `Eudora.ini` (Abschnitt
+   `[Settings]`) die Zeile `WarnSpellUnavailable=0` löschen — beim nächsten
+   Start kommt die Meldung wieder einmal.
+
+Am Prüfstand am 31.10.2026 so gefahren (zwei Läufe mit
+`tools/messen-e139.ps1`, Befund [E-139](BEFUNDE.md#e-139)): neuer Bau Lauf 1
+mit Kästchen, Lauf 2 ohne Meldung; 7.2.1.128 in beiden Läufen mit Meldung,
+ohne Kästchen. Der Prüfstandsfall `E-139p` prüft Lauf 1.
+
+## <a id="e-140-naechstes"></a>Im nächsten Paket: „Speichern unter“ aus dem Nachrichten- und Verfassen-Fenster nennt den Zeichensatz ([E-140](BEFUNDE.md#e-140))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Bis
+7.2.1.128 schrieb *File → Save As* nur aus der **Postfachliste** eine
+Zeichensatzangabe in die Datei, aus dem geöffneten Nachrichtenfenster und
+aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
+
+1. Eine Nachricht mit Umlauten (und möglichst einem €-Zeichen) im lokalen
+   *In* **öffnen**, *File → Save As*, als `.txt` speichern.
+2. Auf dieselbe Nachricht *Reply*, im Verfassen-Fenster *File → Save As*,
+   als `.txt` speichern; die Antwort danach ohne Speichern schließen.
+3. Beide Dateien im Editor öffnen: oben stehen jetzt
+   `MIME-Version: 1.0`, `Content-Type: text/plain; charset="windows-1252"`
+   (oder `ISO-8859-1`) und `Content-Transfer-Encoding: 8bit`, darunter eine
+   Leerzeile und der Text mit richtigen Umlauten.
+
+Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
+
+## <a id="e-165-naechstes"></a>Im nächsten Paket: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Auf
+deinem Bildschirm sah die Box am 27.10.2026 mit einem Treffer verbaut aus
+(grauer Balken unten, Box höher als der Eintrag). In der VM war die Box mit
+**zwei** Treffern zu niedrig und hatte eine Bildlaufleiste; das ist
+behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
+
+1. Neue Nachricht, im `To:`-Feld die ersten Buchstaben eines Kurznamens
+   tippen, zu dem es **einen** Treffer gibt — dann einen mit **zwei oder
+   mehr** Treffern.
+2. Die Box soll jeden Eintrag ganz zeigen, **ohne** grauen Balken
+   (waagrechte Bildlaufleiste) und ohne leere Fläche darunter.
+3. Wenn nicht: ein Bildschirmfoto genügt; die Maße stehen dann in der
+   `eudora.log` als Zeile `E-165 Box: …`.
+
+## <a id="e-136-naechstes"></a>Im nächsten Paket: Emoji gehen beim Speichern nicht mehr verloren ([E-136](BEFUNDE.md#e-136))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist. Vorher das
+Postfach sichern** (bis 7.2.1.128 ging das Zeichen dabei unwiderruflich
+verloren). Lokales Postfach, nicht IMAP. Mein Prüfstand erreicht diesen Weg
+nicht — dieser Schritt ist die einzige Messung am Programm.
+
+1. Eine HTML-Nachricht mit einem Emoji, die richtig angezeigt wird — so wie
+   am 22.10.2026 mit dem Plug-in EudoraUnicodeFix, oder die Prüfnachricht
+   `Testdaten/e136-zeichen-als-entitaet.eml` (🔥 und Ж).
+2. Öffnen, ändern, wie du es damals getan hast, *Strg+S*, schließen.
+3. Wieder öffnen: 🔥 und Ж stehen da, **keine** Fragezeichen. In der
+   `.mbx` steht `&#128293;` bzw. `&#1046;`.
+4. Falls doch `??`: bitte sagen, welche Schritte zwischen Öffnen und
+   *Strg+S* lagen — genau die fehlen meinem Prüfstand.
+
+## <a id="e-171-naechstes"></a>Im nächsten Paket: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Lokales
+Postfach *In* (nicht IMAP).
+
+1. Eine Mail per Doppelklick öffnen, **nichts** markieren.
+2. Rechtsklick in den Text → *Search Mailfolder*.
+3. Das Fenster *Find Messages* geht auf, **ohne** die Meldung *„There has
+   been an internal error during the search“*. Begriff eintragen,
+   *Search* — dann wird gesucht.
+4. Gegenprobe: ein Wort markieren, Rechtsklick → *Search Mailfolder* —
+   die Suche startet sofort mit diesem Wort.
+
+Am Prüfstand am 31.10.2026 Schritt 1–3 so gefahren (Fall `E-171p`).
 
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 
