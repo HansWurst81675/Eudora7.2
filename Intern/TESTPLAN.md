@@ -180,7 +180,7 @@ behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
 3. Wenn nicht: ein Bildschirmfoto genügt; die Maße stehen dann in der
    `eudora.log` als Zeile `E-165 Box: …`.
 
-## <a id="e-136-naechstes"></a>Im nächsten Paket: Emoji gehen beim Speichern nicht mehr verloren ([E-136](BEFUNDE.md#e-136))
+## <a id="e-136-naechstes"></a>Im nächsten Paket: gehen Emoji beim Speichern noch verloren? ([E-136](BEFUNDE.md#e-136))
 
 **Noch kein Paket — erst ausführen, wenn das nächste Paket da ist. Vorher das
 Postfach sichern** (bis 7.2.1.128 ging das Zeichen dabei unwiderruflich

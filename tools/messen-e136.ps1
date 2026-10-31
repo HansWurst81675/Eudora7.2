@@ -8,7 +8,7 @@
 # Pruefnachricht Testdaten\e136-zeichen-als-entitaet.eml: HTML, windows-1252,
 # mit &#128293; (Emoji, ausserhalb der BMP), &#1046; (kyrillisch) und dem
 # Euro-Zeichen als Byte 0x80. Ablauf: Nachricht aus In oeffnen, ID_FILE_SAVE
-# (57603) ans Hauptfenster - nach einem Zeichen im Bearbeiten-Modus; ReadMessageDoc.cpp:349
+# (57603) ans Hauptfenster - nach Bearbeiten-Knopf und Kursiv; ReadMessageDoc.cpp:349
 # ruft dann SaveInfo -, Fenster schliessen, In.mbx lesen.
 #
 # Ausgabe:
@@ -52,6 +52,7 @@ public class E136 {
   [DllImport("user32.dll", CharSet=CharSet.Ansi)] public static extern int GetWindowTextA(IntPtr h, StringBuilder s, int n);
   [DllImport("user32.dll")] public static extern uint GetWindowThreadProcessId(IntPtr h, out uint pid);
   [DllImport("user32.dll")] public static extern bool IsWindowVisible(IntPtr h);
+  [DllImport("user32.dll")] public static extern int GetDlgCtrlID(IntPtr h);
   [DllImport("user32.dll")] public static extern bool GetWindowRect(IntPtr h, out R r);
   [DllImport("user32.dll")] public static extern IntPtr SendMessageA(IntPtr h, uint m, IntPtr w, IntPtr l);
   [DllImport("user32.dll", CharSet=CharSet.Ansi, EntryPoint="SendMessageA")] public static extern IntPtr SendText(IntPtr h, uint m, IntPtr w, string l);
@@ -169,16 +170,20 @@ if ($lesen -eq $in) { Write-Host 'E136 FEHLER: die Nachricht liess sich nicht oe
 Write-Host ("E136 Nachrichtenfenster {0} [{1}]" -f $lesen, (Tx $lesen))
 $mbx = Join-Path $md 'In.mbx'
 $vorher = (Get-Item -LiteralPath $mbx).LastWriteTimeUtc
-# Strg-S auf einer UNVERAENDERTEN Nachricht schreibt nichts (am 31.10.2026
-# gemessen: 7.2.1.128 und neuer Bau gleich, keine SaveInfo-Spur). Gregors Fall
-# war eine geaenderte: Bearbeiten-Modus ein (ID_EDIT_MESSAGE), ein Zeichen an
-# die Anzeige (WM_CHAR an das gemessene Handle), dann speichern.
-Befehl $haupt 32996                               # ID_EDIT_MESSAGE
-$ie = Kinder $lesen | Where-Object { (Kl $_) -eq 'Internet Explorer_Server' } | Select-Object -First 1
-if ($ie) {
-    [void][E136]::PostMessageA($ie, 0x0102, [IntPtr][int][char]'x', [IntPtr]1)   # WM_CHAR
-    Start-Sleep -Milliseconds 800
-} else { Write-Host 'E136 kein Internet Explorer_Server im Nachrichtenfenster' }
+# Strg-S auf einer UNVERAENDERTEN Nachricht tut nichts: CMessageDoc::
+# OnUpdateFileSave gibt ID_FILE_SAVE nur mit IsModified() frei, und MFC
+# fuehrt einen gesperrten Befehl auch als Botschaft nicht aus (gemessen
+# 31.10.2026: keine Schreibspur im Protokoll). Der Bearbeiten-Modus haengt am
+# KNOPF ID_EDIT_MESSAGE (OnEditMode liest GetCheck) - also den Knopf druecken
+# (BM_CLICK), nicht den Befehl schicken. Dann ID_EDIT_TEXT_ITALIC: setzt
+# SetModifiedFlag (TridentReadMessageView.cpp, OnEditItalic).
+$knopf = Kinder $lesen | Where-Object { [E136]::GetDlgCtrlID($_) -eq 32996 } | Select-Object -First 1
+if ($knopf) {
+    Write-Host ("E136 Bearbeiten-Knopf {0} [{1}]" -f $knopf, (Kl $knopf))
+    [void][E136]::PostMessageA($knopf, 0x00F5, [IntPtr]::Zero, [IntPtr]::Zero)   # BM_CLICK
+    Start-Sleep -Milliseconds 1500
+} else { Write-Host 'E136 kein Bearbeiten-Knopf (32996) im Nachrichtenfenster' }
+Befehl $haupt 32884                               # ID_EDIT_TEXT_ITALIC
 Befehl $haupt 57603                               # ID_FILE_SAVE
 Start-Sleep -Seconds 2
 [void](Dialoge $pp)
