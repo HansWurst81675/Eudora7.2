@@ -177,6 +177,18 @@ $vorher = (Get-Item -LiteralPath $mbx).LastWriteTimeUtc
 # KNOPF ID_EDIT_MESSAGE (OnEditMode liest GetCheck) - also den Knopf druecken
 # (BM_CLICK), nicht den Befehl schicken. Dann ID_EDIT_TEXT_ITALIC: setzt
 # SetModifiedFlag (TridentReadMessageView.cpp, OnEditItalic).
+# Vermessung der Leiste (Diagnose): jedes Kind des Nachrichtenfensters mit
+# Klasse, Kennung, Titel und Lage; fuer die Leiste "Read Message" zusaetzlich
+# TB_BUTTONCOUNT und TB_COMMANDTOINDEX(32996).
+foreach ($c in (Kinder $lesen)) {
+    $k = Kl $c
+    if ($k -match 'Toolbar|ToolBar|ControlBar|Afx') {
+        $r = New-Object E136+R; [void][E136]::GetWindowRect($c, [ref]$r)
+        $n = [int][E136]::SendMessageA($c, 0x0418, [IntPtr]::Zero, [IntPtr]::Zero)          # TB_BUTTONCOUNT
+        $ix = [int][E136]::SendMessageA($c, 0x0419, [IntPtr]32996, [IntPtr]::Zero)           # TB_COMMANDTOINDEX
+        Write-Host ("E136 LEISTE {0} [{1}] id={2} titel=[{3}] {4},{5}-{6},{7} knoepfe={8} index32996={9}" -f $c, $k, [E136]::GetDlgCtrlID($c), (Tx $c), $r.L, $r.T, $r.Ri, $r.B, $n, $ix)
+    }
+}
 $knopf = Kinder $lesen | Where-Object { [E136]::GetDlgCtrlID($_) -eq 32996 } | Select-Object -First 1
 if ($knopf) {
     Write-Host ("E136 Bearbeiten-Knopf {0} [{1}]" -f $knopf, (Kl $knopf))
