@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 31.10.2026.** Zuletzt veröffentlicht: **`v7.2.1.128`** (29.10.2026,
+**Stand 31.10.2026.** Testpaket **7.2.1.129** in Arbeit ([E-139](BEFUNDE.md#e-139), [E-140](BEFUNDE.md#e-140), [E-171](BEFUNDE.md#e-171) behoben; [E-136](BEFUNDE.md#e-136), [E-165](BEFUNDE.md#e-165) zum Nachmessen). Zuletzt veröffentlicht: **`v7.2.1.128`** (29.10.2026,
 nach Gregors Test: [E-166](BEFUNDE.md#e-166) auf Hauptrechner und Laptop
 bestanden). `main` ist gesperrt und wird nur von Gregor per Merge bewegt;
 jeder Agent arbeitet in seinem eigenen Arbeitsbaum und Zweig (siehe

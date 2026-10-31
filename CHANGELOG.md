@@ -101,7 +101,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Im Quellstand, noch in keinem Paket
+## 7.2.1.129 — Testpaket: E-139, E-140, E-171 behoben; E-136 und E-165 zum Nachmessen
+
+Nummer am 31.10.2026 vergeben (Gregor: *„bau mir dann ein 7.2.1.129“* — *„mit 7.2.1.129 kann ich die anderen fixes aus Intern/TESTPLAN.md testen“*). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e140-speichern-zeichensatz` (#192) und `e136_messweg`.
+
+* **FAQ 16** ([Doku/FAQ.md](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)): ein Wort in einer Mail suchen, auch in den Kopfzeilen — *Blah Blah Blah*, dann *Strg+Umschalt+F*; von Gregor am 31.10.2026 an 7.2.1.128 bestätigt.
+* **[E-136](Intern/BEFUNDE.md#e-136), Messweg:** warum der Prüfstand den Speicherweg nicht erreicht (Speichern nur bei geänderter Nachricht, Bearbeiten-Modus am Leistenknopf) — im Befund.
 
 **Zweig `e140-speichern-zeichensatz`** (nach dem Merge von #191).
 

@@ -179,6 +179,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.1.129 — Testpaket nach dem Release 7.2.1, Zweig `e136_messweg`
+
+**Nur übersetzt am 31.10.2026, noch nicht geschnürt.** Nummer am selben Tag vergeben (Gregor: *„bau mir dann ein 7.2.1.129“*). Gregor testet damit die Schritte aus dem [TESTPLAN](../Intern/TESTPLAN.md) zu [E-139](../Intern/BEFUNDE.md#e-139), [E-140](../Intern/BEFUNDE.md#e-140), [E-171](../Intern/BEFUNDE.md#e-171), [E-165](../Intern/BEFUNDE.md#e-165) und [E-136](../Intern/BEFUNDE.md#e-136). Kein Release — veröffentlicht wird nur mit Gregors Ja.
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.1.129.
+
 ## 7.2.1.128 — erstes Release 7.2.1, Zweig `release-7.2.1`
 
 **Geschnürt am 29.10.2026; veröffentlicht als `v7.2.1.128` am 29.10.2026 um 21:17:31 UTC** (Marke auf `c8b0893f`, *Latest*, ZIP von GitHub nachgemessen: SHA-256 gleich). Nummer am selben Tag vergeben (Gregor: „ja, direkt 7.2.1.128 bauen, ich teste dann das erste release“). Erste Fassung im neuen Nummernschema (Kasten oben). Von Gregor am 29.10.2026 getestet: VM ohne Fehlerzeile, E-166 auf Hauptrechner und Laptop bestanden ([TESTPLAN](../Intern/TESTPLAN.md#ergebnis-e-166-laptop)); mit seinem Ja (*„gemergt. ja, release veröffentlichen“*) als `v7.2.1.128` veröffentlicht. Der Text für GitHub steht in [7.2.1.128/RELEASE-NOTIZEN.md](7.2.1.128/RELEASE-NOTIZEN.md).

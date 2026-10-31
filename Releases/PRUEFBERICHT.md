@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.1.128` (Paketnummer `7.2.1.128`) |
+| **Quellstand** | `7.2.1.128` (Paket `7.2.1.128`; dieser Bericht gilt dem Release, nicht 7.2.1.129) |
 | **Commit** | `efc9cfd4` (Arbeitsbaum sauber) |
 | **Erstellt** | 2026-10-29 12:47 |
 | **Gesamturteil** | **BESTANDEN** |
