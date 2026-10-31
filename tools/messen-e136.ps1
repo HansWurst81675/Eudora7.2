@@ -8,11 +8,11 @@
 # Pruefnachricht Testdaten\e136-zeichen-als-entitaet.eml: HTML, windows-1252,
 # mit &#128293; (Emoji, ausserhalb der BMP), &#1046; (kyrillisch) und dem
 # Euro-Zeichen als Byte 0x80. Ablauf: Nachricht aus In oeffnen, ID_FILE_SAVE
-# (57603) ans Hauptfenster - ReadMessageDoc.cpp:349 ruft dabei SaveInfo, auch
-# wenn nichts geaendert wurde -, Fenster schliessen, In.mbx lesen.
+# (57603) ans Hauptfenster - nach einem Zeichen im Bearbeiten-Modus; ReadMessageDoc.cpp:349
+# ruft dann SaveInfo -, Fenster schliessen, In.mbx lesen.
 #
 # Ausgabe:
-#   E136 ERGEBNIS fragezeichen=<n> vierbyte=<0|1> kyrillisch=<0|1> euro=<0|1> lebt=<0|1>
+#   E136 ERGEBNIS gespeichert=<0|1> fragezeichen=<n> vierbyte=<0|1> kyrillisch=<0|1> euro=<0|1> lebt=<0|1>
 # fragezeichen = Zahl der "?" in der Zeile mit "Vierbyte-Zeichen" und
 # "Kyrillisch"; vierbyte/kyrillisch = die Entitaet (oder das Zeichen) steht
 # noch da. Erwartet nach der Behebung: fragezeichen=0 vierbyte=1
@@ -167,6 +167,18 @@ Start-Sleep -Seconds 3
 $lesen = Aktiv $mdi
 if ($lesen -eq $in) { Write-Host 'E136 FEHLER: die Nachricht liess sich nicht oeffnen'; exit 1 }
 Write-Host ("E136 Nachrichtenfenster {0} [{1}]" -f $lesen, (Tx $lesen))
+$mbx = Join-Path $md 'In.mbx'
+$vorher = (Get-Item -LiteralPath $mbx).LastWriteTimeUtc
+# Strg-S auf einer UNVERAENDERTEN Nachricht schreibt nichts (am 31.10.2026
+# gemessen: 7.2.1.128 und neuer Bau gleich, keine SaveInfo-Spur). Gregors Fall
+# war eine geaenderte: Bearbeiten-Modus ein (ID_EDIT_MESSAGE), ein Zeichen an
+# die Anzeige (WM_CHAR an das gemessene Handle), dann speichern.
+Befehl $haupt 32996                               # ID_EDIT_MESSAGE
+$ie = Kinder $lesen | Where-Object { (Kl $_) -eq 'Internet Explorer_Server' } | Select-Object -First 1
+if ($ie) {
+    [void][E136]::PostMessageA($ie, 0x0102, [IntPtr][int][char]'x', [IntPtr]1)   # WM_CHAR
+    Start-Sleep -Milliseconds 800
+} else { Write-Host 'E136 kein Internet Explorer_Server im Nachrichtenfenster' }
 Befehl $haupt 57603                               # ID_FILE_SAVE
 Start-Sleep -Seconds 2
 [void](Dialoge $pp)
@@ -176,7 +188,7 @@ for ($r = 0; $r -lt 3; $r++) { if ((Dialoge $pp '^(No|Nein|Don.t Save|OK)$') -eq
 Start-Sleep -Seconds 1
 
 # --- Auswertung -----------------------------------------------------------------
-$mbx = Join-Path $md 'In.mbx'
+$gespeichert = [int]((Get-Item -LiteralPath $mbx).LastWriteTimeUtc -ne $vorher)
 $t = [Text.Encoding]::GetEncoding(28591).GetString([IO.File]::ReadAllBytes($mbx))
 $zeilen = $t -split "`r?`n" | Where-Object { $_ -match 'Vierbyte-Zeichen|Kyrillisch|Euro:' }
 foreach ($z in $zeilen) { Write-Host ("E136 ZEILE {0}" -f $z) }
@@ -185,4 +197,4 @@ foreach ($z in ($zeilen | Where-Object { $_ -match 'Vierbyte-Zeichen|Kyrillisch'
 $vier = [int]($t.Contains('&#128293;') -or $t.Contains(([string][char]0xF0) + [char]0x9F + [char]0x94 + [char]0xA5))
 $kyr  = [int]($t.Contains('&#1046;'))
 $euro = [int](($zeilen | Where-Object { $_ -match 'Euro:' } | Select-Object -First 1) -match ([string][char]0x80 + '|&euro;|&#8364;'))
-Write-Host ("E136 ERGEBNIS fragezeichen={0} vierbyte={1} kyrillisch={2} euro={3} lebt={4}" -f $frage, $vier, $kyr, $euro, [int](Lebt $pp))
+Write-Host ("E136 ERGEBNIS gespeichert={5} fragezeichen={0} vierbyte={1} kyrillisch={2} euro={3} lebt={4}" -f $frage, $vier, $kyr, $euro, [int](Lebt $pp), $gespeichert)
