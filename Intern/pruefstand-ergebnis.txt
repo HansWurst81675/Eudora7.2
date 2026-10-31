@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-31 19:57:58
+zeit=2026-10-31 20:27:59
 freigabe=Gregor am 31.10.2026: 'ja, starte auf deinem lokalen prüfstand deine testes'
-nur=E-140p   (Teillauf, nicht der Gesamtstand)
+nur=E-171p   (Teillauf, nicht der Gesamtstand)
 faelle=1
 bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] E-140p   E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
+fall=[ ok ] E-171p   E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1

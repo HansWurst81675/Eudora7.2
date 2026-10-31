@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 30.10.2026 (getestet am 29.10.2026, E-166 bestanden; seither kein neues Testpaket)
+# Testplan für Gregor — Quellstand 7.2.1.128 (erstes Release 7.2.1, `VERSION` gleich), Stand 31.10.2026 (getestet am 29.10.2026, E-166 bestanden; seither kein neues Testpaket)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -141,9 +141,10 @@ nicht verfuegbar …“* nach jedem Programmstart wieder. Geprüft wird am
    `[Settings]`) die Zeile `WarnSpellUnavailable=0` löschen — beim nächsten
    Start kommt die Meldung wieder einmal.
 
-Am Prüfstand am 31.10.2026 so gefahren (Fall `E-139p`, Befund
-[E-139](BEFUNDE.md#e-139)): neuer Bau Lauf 1 mit Kästchen, Lauf 2 ohne
-Meldung; 7.2.1.128 in beiden Läufen mit Meldung, ohne Kästchen.
+Am Prüfstand am 31.10.2026 so gefahren (zwei Läufe mit
+`tools/messen-e139.ps1`, Befund [E-139](BEFUNDE.md#e-139)): neuer Bau Lauf 1
+mit Kästchen, Lauf 2 ohne Meldung; 7.2.1.128 in beiden Läufen mit Meldung,
+ohne Kästchen. Der Prüfstandsfall `E-139p` prüft Lauf 1.
 
 ## <a id="e-140-naechstes"></a>Im nächsten Paket: „Speichern unter“ aus dem Nachrichten- und Verfassen-Fenster nennt den Zeichensatz ([E-140](BEFUNDE.md#e-140))
 
@@ -178,6 +179,21 @@ behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
    (waagrechte Bildlaufleiste) und ohne leere Fläche darunter.
 3. Wenn nicht: ein Bildschirmfoto genügt; die Maße stehen dann in der
    `eudora.log` als Zeile `E-165 Box: …`.
+
+## <a id="e-171-naechstes"></a>Im nächsten Paket: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
+
+**Noch kein Paket — erst ausführen, wenn das nächste Paket da ist.** Lokales
+Postfach *In* (nicht IMAP).
+
+1. Eine Mail per Doppelklick öffnen, **nichts** markieren.
+2. Rechtsklick in den Text → *Search Mailfolder*.
+3. Das Fenster *Find Messages* geht auf, **ohne** die Meldung *„There has
+   been an internal error during the search“*. Begriff eintragen,
+   *Search* — dann wird gesucht.
+4. Gegenprobe: ein Wort markieren, Rechtsklick → *Search Mailfolder* —
+   die Suche startet sofort mit diesem Wort.
+
+Am Prüfstand am 31.10.2026 Schritt 1–3 so gefahren (Fall `E-171p`).
 
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 

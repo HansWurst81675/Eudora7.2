@@ -145,6 +145,7 @@
     <ClCompile Include="TestE140.cpp" />
     <ClCompile Include="TestE139.cpp" />
     <ClCompile Include="TestE165.cpp" />
+    <ClCompile Include="TestE171.cpp" />
     <ClCompile Include="TestM1.cpp" />
     <ClCompile Include="TestE145.cpp" />
     <ClCompile Include="TestE141.cpp" />

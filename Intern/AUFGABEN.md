@@ -1,6 +1,6 @@
 # Aufgaben — zum Nachschlagen
 
-> **Stand 30.10.2026: nur noch zum Nachschlagen.** Was zu tun ist, steht an
+> **Stand 31.10.2026: nur noch zum Nachschlagen.** Was zu tun ist, steht an
 > einer Stelle: in der Liste [Nach dem Release 7.2.1](WEITERMACHEN.md#nach-dem-release).
 > Die offenen Punkte dieser Datei werden dort geprüft und übernommen oder
 > gestrichen ([L-100.2](../Befunde/LEKTOR-100.md#l-100.2)); bis dahin gilt der Text unten als Stand
