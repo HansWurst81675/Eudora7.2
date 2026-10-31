@@ -49,6 +49,12 @@ class CSummary;
 class CTocDoc;
 
 
+// BEFUND E-136: HTML aus der Anzeige (BSTR, UTF-16) in Eudoras Codepage, ohne
+// Zeichen zu verlieren - was die Codepage nicht kennt, wird zur numerischen
+// HTML-Entitaet (&#128293;) statt zu '?'. Nur fuer HTML, nicht fuer reinen Text.
+CString E136HtmlAusBstr(const wchar_t* pwText);
+
+
 class CTridentView : public CView, public IOleInPlaceFrame, public IOleCommandTarget, public QCProtocol
 {
 public:

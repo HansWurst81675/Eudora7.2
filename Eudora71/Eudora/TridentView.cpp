@@ -3996,6 +3996,96 @@ BOOL CTridentView::GetAllText( CString& szText )
     return bReturn;
 }
 
+
+//
+// ---------------------------------------------------------------------------
+// E136HtmlAusBstr
+// ---------------------------------------------------------------------------
+//
+// BEFUND E-136: ein Zeichen, das richtig auf dem Bildschirm stand, wurde beim
+// Speichern zerstoert - aus einem Emoji wurden zwei Fragezeichen. Gemessen am
+// 22.10.2026 an 7.2.0.120: in der Postfachdatei "<LI>Vierbyte-Zeichen: ??</LI>".
+//
+// Die Ursache: das HTML kommt aus der Anzeige (IHTMLTxtRange::get_htmlText)
+// als BSTR, also UTF-16, und wurde mit "CString = BSTR" in die Codepage
+// umgewandelt. Das ist WideCharToMultiByte(CP_ACP) mit Ersatzzeichen '?'.
+// Ein Emoji ist in UTF-16 ein Ersatzpaar aus zwei Einheiten - daher "??".
+// Die Anzeige hatte es richtig, weil das Plug-in EudoraUnicodeFix es als
+// &#128293; geschrieben hatte und der Browser die Entitaet aufloest.
+//
+// Jetzt: was die Codepage darstellen kann, wird umgewandelt wie bisher; was
+// nicht, wird zur numerischen Entitaet mit dem echten Codepunkt (ein
+// Ersatzpaar ergibt EINE Entitaet). WC_NO_BEST_FIT_CHARS verhindert, dass
+// Windows still ein "aehnliches" Zeichen einsetzt.
+//
+// Schnellweg: geht die Umwandlung des ganzen Textes ohne Ersatzzeichen auf,
+// bleibt es bei einem einzigen Aufruf.
+//
+CString E136HtmlAusBstr(const wchar_t* pwText)
+{
+	CString		szErgebnis;
+
+	if ( !pwText || !*pwText )
+		return szErgebnis;
+
+	const int	nLaenge = (int) wcslen( pwText );
+	BOOL		bErsatz = FALSE;
+	const int	nBytes  = ::WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, pwText, nLaenge,
+											 NULL, 0, NULL, &bErsatz );
+
+	if ( nBytes > 0 && !bErsatz )
+	{
+		char*	pPuffer = szErgebnis.GetBuffer( nBytes + 1 );
+		::WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, pwText, nLaenge, pPuffer, nBytes, NULL, NULL );
+		szErgebnis.ReleaseBuffer( nBytes );
+		return szErgebnis;
+	}
+
+	int		nEntitaeten = 0;
+
+	for ( int i = 0; i < nLaenge; )
+	{
+		const wchar_t	w = pwText[i];
+
+		if ( w >= 0xD800 && w <= 0xDBFF && i + 1 < nLaenge &&
+			 pwText[i + 1] >= 0xDC00 && pwText[i + 1] <= 0xDFFF )
+		{
+			const unsigned long	ulPunkt = 0x10000UL + ( ( (unsigned long) w - 0xD800 ) << 10 )
+											+ ( (unsigned long) pwText[i + 1] - 0xDC00 );
+			CString		szEnt;
+			szEnt.Format( "&#%lu;", ulPunkt );
+			szErgebnis += szEnt;
+			nEntitaeten++;
+			i += 2;
+			continue;
+		}
+
+		char	aZeichen[8];
+		BOOL	bEinzelErsatz = FALSE;
+		const int	n = ::WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, &pwText[i], 1,
+											   aZeichen, sizeof(aZeichen), NULL, &bEinzelErsatz );
+
+		if ( n > 0 && !bEinzelErsatz )
+		{
+			szErgebnis.Append( aZeichen, n );
+		}
+		else
+		{
+			CString		szEnt;
+			szEnt.Format( "&#%u;", (unsigned int) w );
+			szErgebnis += szEnt;
+			nEntitaeten++;
+		}
+		i++;
+	}
+
+	CString		szSpur;
+	szSpur.Format( "E-136 HTML aus der Anzeige: %d Zeichen ausserhalb der Codepage als Entitaet erhalten", nEntitaeten );
+	PutDebugLog( DEBUG_MASK_DIALOG, szSpur );
+
+	return szErgebnis;
+}
+
 BOOL CTridentView::GetAllHTML( CString& szHTML )
 {
     HRESULT              hr;
@@ -4018,7 +4108,8 @@ BOOL CTridentView::GetAllHTML( CString& szHTML )
         hr = pRange->get_htmlText( BSTRARG( cbstrText ) );
 
         if ( S_OK == hr && ( ( ( BSTR ) cbstrText ) != NULL ) ) {
-            szHTML = cbstrText;
+            // BEFUND E-136: nicht "CString = BSTR" - das macht aus Emoji "??".
+            szHTML = E136HtmlAusBstr( (BSTR) cbstrText );
 
 			// Convert emoticon image tags back to the original triggers
 			ConvertEmoticonImageTagsToTriggers(szHTML);
