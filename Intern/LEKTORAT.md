@@ -2932,3 +2932,7 @@ Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](..
 
 [LEKTOR-105](../Befunde/LEKTOR-105.md): Alle fünf Funde aus [LEKTOR-104](../Befunde/LEKTOR-104.md) sind erledigt. Die Verlegung der Rollenbäume nach `.wt/<name>` ist sauber nachgezogen; den alten Ort nennt keine Anleitung mehr als gültig. Sechs neue Funde. Die erzeugte Liste „was noch fehlt“ verlangt bei [E-141](BEFUNDE.md#e-141) und [E-176](BEFUNDE.md#e-176) eine Quelltextberichtigung, die schon da ist; die fehlende Messung am Programm steht dort nicht ([L-105.1](../Befunde/LEKTOR-105.md#l-105.1)). Das Urteil zu [E-144](BEFUNDE.md#e-144) sagt im Klartext „Die Behebung fehlt noch“ und nennt eine Nebenwirkung auf *Send Again*, die die Behebung gerade vermeidet ([L-105.2](../Befunde/LEKTOR-105.md#l-105.2)). Der neue Prüfstandsfall E-144p ist nur rot aufgezeichnet, E-125c steht rot im Ergebnisbuch, keine Doku sagt es ([L-105.3](../Befunde/LEKTOR-105.md#l-105.3)). ZIEL.md führt E-144 und E-145 als offen ([L-105.4](../Befunde/LEKTOR-105.md#l-105.4)); die README vermerkt bei E-141, E-144 und E-145 nicht, dass sie im Quelltext behoben sind, und E-176 fehlt dort ([L-105.5](../Befunde/LEKTOR-105.md#l-105.5)); `messen-e144.ps1` und `messen-e13.ps1` fehlen in WERKZEUGE.md ([L-105.6](../Befunde/LEKTOR-105.md#l-105.6)).
 
+
+## LEKTOR-106 (31.10.2026) — Bestand nach a5e2f173
+
+[LEKTOR-106](../Befunde/LEKTOR-106.md): in Arbeit.
