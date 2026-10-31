@@ -41,6 +41,7 @@ static void Test_E136_Funktion()
 		Pruefe(L"\x00FC\xD83D\xDD25\x00E4", "\xFC&#128293;\xE4", "gemischt: Bytes und Entitaet nebeneinander");
 		Pruefe(L"\x0100", "&#256;", "kein 'aehnliches' Ersatzzeichen (WC_NO_BEST_FIT_CHARS)");
 	}
+	TT_EndTest();
 }
 
 static void Test_E136_Stelle(const char* szEudoraDir)
@@ -53,6 +54,7 @@ static void Test_E136_Stelle(const char* szEudoraDir)
 		TT_Fail("TridentReadMessageView.cpp oder TridentView.cpp nicht lesbar - ungeprueft ist nicht gruen");
 		if (pR) free(pR);
 		if (pV) free(pV);
+		TT_EndTest();
 		return;
 	}
 	TT_CHECK_MSG(QT_Enthaelt(pR, "szBody = E136HtmlAusBstr( (BSTR) cbstr );"), "SaveInfo (Strg-S) wandelt wieder mit 'CString = BSTR' - Emoji werden zu '??' (E-136)");
@@ -60,6 +62,7 @@ static void Test_E136_Stelle(const char* szEudoraDir)
 	TT_CHECK_MSG(QT_Enthaelt(pV, "szHTML = E136HtmlAusBstr( (BSTR) cbstrText );"), "GetAllHTML wandelt wieder mit 'CString = BSTR' (E-136)");
 	free(pR);
 	free(pV);
+	TT_EndTest();
 }
 
 void RunE136Tests(const char* szEudoraDir)
