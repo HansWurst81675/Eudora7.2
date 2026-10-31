@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| PRUEFER | 2026-10-31 21:29 | PRUEFER-68.md: Aenderungen seit ae3efe3 gegen die Quelle, Kennungen E-178 und E-179 |
