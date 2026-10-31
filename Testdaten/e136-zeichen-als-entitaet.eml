@@ -1,0 +1,18 @@
+From: Pruefung <absender@e136.invalid>
+To: empfaenger@e136.invalid
+Subject: Pruefung E-136: Zeichen ausserhalb windows-1252
+Date: Sat, 31 Oct 2026 20:00:00 +0100
+Message-ID: <e136-entitaet@e136.invalid>
+MIME-Version: 1.0
+Content-Type: text/html; charset=windows-1252
+Content-Transfer-Encoding: 8bit
+
+<html><body>
+<p>E-136 Pruefnachricht.</p>
+<ul>
+<li>Vierbyte-Zeichen: &#128293;</li>
+<li>Kyrillisch: &#1046;</li>
+<li>Euro: €</li>
+</ul>
+<p>Erwartet nach Strg-S: in der Postfachdatei stehen die Entitaeten, kein Fragezeichen.</p>
+</body></html>
