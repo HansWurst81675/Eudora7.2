@@ -245,3 +245,5 @@ Um 15:47 lag der letzte Commit (`d2a85c89`, Prüfstand 46/46) auf dem Server. Me
 **Warum:** Eine Ankündigung im Schlusstext hat keinen Auslöser. Den Zug zu beenden heißt: bis Gregor schreibt, passiert nichts. Sein Test außerhalb der VM und die beiden Rollen hätten parallel laufen sollen, wie es der Nachtrag vom 16.10. verlangt.
 
 **How to apply:** Was ich als nächsten Schritt ankündige und ohne Gregor tun darf, starte ich **vor** der Schlussmeldung im selben Zug. Die Meldung sagt dann „läuft“, nicht „lasse ich laufen“. Steht in meinem Schlusstext ein Futur über eine fällige Rolle, ist das der Fehler.
+
+**Zweiter Fall am selben Abend, 17:20:** die Frage nach dem nächsten Zweignamen habe ich als Abfragedialog gestellt, während LEKTOR-117 lief. Der Dialog hält den Zug an, bis Gregor antwortet. Gregor: *„und du wolltest mit dieser frage wieder 73 min. untätig warten? oder wie?“* **Regel:** eine Frage, die nur einen späteren Schritt betrifft, steht als Text am Ende einer Meldung; die Arbeit, die ohne die Antwort geht, läuft weiter. Den Abfragedialog nur, wenn wirklich nichts anderes zu tun ist.
