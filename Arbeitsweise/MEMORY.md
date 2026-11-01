@@ -153,3 +153,4 @@
 - [E-138 erledigt durch Doku](entscheidung-e138-erledigt-durch-doku.md) — Gregor 31.10.; nicht wieder vorschlagen
 - [Stand 01.11.2026](stand-01-11-2026.md) — Abschlussrunde PRUEFER-70/LEKTOR-112, dann PR; AN-1-Frage offen
 - [CHRONIST 01.11.2026](CHRONIST-2026-11-01.md) — Laufbericht; sieben Nachträge, dreimal blind grün, 1 Ablehnung in zwei Tagen
+- [E-170/E-143 entschieden](entscheidung-e170-e143-01-11.md) — Gregor 01.11.: Label mitnehmen; Out im Filterfenster nicht anbieten

@@ -230,6 +230,21 @@ Bis 7.2.1.129 wurde aus dem Emoji schon in Schritt 3 `??` auf dem Bildschirm
 (am Quelltext belegt, nie am Programm gesehen — dieser Schritt ist die erste
 Messung).
 
+## <a id="e-170-naechstes"></a>Im nächsten Testpaket: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
+
+**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129.** **IMAP-Konto**,
+zwei Ordner **desselben** Kontos.
+
+1. Eine Mail in einem IMAP-Ordner mit einem Label versehen (z. B. grün), wie
+   am 29.10.2026.
+2. Die Mail in einen anderen Ordner desselben IMAP-Kontos verschieben.
+3. Den Zielordner öffnen und warten, bis Eudora ihn abgeglichen hat: die Mail
+   trägt ihr Label.
+4. In der `eudora.log` steht eine Zeile
+   `E-170 Labels beim Verschieben im Konto: mit-label=1 … gesetzt=…  grund=…`.
+   Steht dort `grund=keine-neuen-uids`, meldet dein Server keine neuen UIDs —
+   dann bleibt das Label weiter aus; bitte die Zeile schicken.
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales
