@@ -142,12 +142,26 @@ gäbe es zwei Wahrheiten, die auseinanderlaufen. Gelesen wird sie von
 `tools/pruefe-regressionstest.pl`; diese Schranke weist jeden Befund **ohne**
 Stufe ab.
 
-| Stufe | Was dazugehört | Zahl am 22.10.2026 |
-|---|---|---|
-| **kritisch** | Post oder Einstellungen gehen verloren oder werden still beschädigt; eine **fremde** Installation nimmt Schaden; das Programm stürzt ab, startet nicht oder hängt; eine Nachricht geht falsch hinaus oder kommt falsch an; Sicherheit. **Diese müssen vor jedem Release laufen.** | 64 |
-| **wichtig** | Eine Funktion ist unbrauchbar, aber nichts geht verloren und der Anwender merkt es sofort — Suche geht nicht auf, Filter nicht bearbeitbar, Bild falsch dargestellt | 46 |
-| **unkritisch** | Aussehen, Reste, Bequemlichkeit. Gregors eigenes Beispiel ist [E-53](#e-53): ein Strich, der nach dem Schließen einer Registerkarte stehen bleibt | 38 |
-| **werkzeug** | Betrifft Bau, Schranken oder unsere Werkzeuge, **nicht** das Programm — gehört in keinen Release-Testplan | 43 |
+| Stufe | Was dazugehört |
+|---|---|
+| **kritisch** | Post oder Einstellungen gehen verloren oder werden still beschädigt; eine **fremde** Installation nimmt Schaden; das Programm stürzt ab, startet nicht oder hängt; eine Nachricht geht falsch hinaus oder kommt falsch an; Sicherheit. **Ihre Prüfungen müssen vor jedem Release laufen** — behoben sein müssen sie dafür nicht (Gregor am 23.10.2026, [Kritische sind kein Release-Blocker](../Arbeitsweise/entscheidung-kritische-nicht-release-blocker.md)). |
+| **wichtig** | Eine Funktion ist unbrauchbar, aber nichts geht verloren und der Anwender merkt es sofort — Suche geht nicht auf, Filter nicht bearbeitbar, Bild falsch dargestellt |
+| **unkritisch** | Aussehen, Reste, Bequemlichkeit. Gregors eigenes Beispiel ist [E-53](#e-53): ein Strich, der nach dem Schließen einer Registerkarte stehen bleibt |
+| **werkzeug** | Betrifft Bau, Schranken oder unsere Werkzeuge, **nicht** das Programm — gehört in keinen Release-Testplan |
+
+Wie viele Befunde jede Stufe hat, und wie viele davon noch offen sind — erzeugt von `tools/offene-befunde.pl`, nicht von Hand (bis zum 31.10.2026 stand hier eine Spalte „Zahl am 22.10.2026“ mit 64 kritischen; Gregor fragte *„ist es noch aktuell?“*, und gelesen wurde sie als 64 zu behebende, obwohl die meisten längst behoben waren):
+
+<!-- stufen: Anfang (erzeugt von tools/offene-befunde.pl) -->
+
+| Stufe | offen | erledigt | ohne Urteilswort | zusammen |
+|---|---:|---:|---:|---:|
+| **kritisch** | 10 | 58 | 3 | 71 |
+| **wichtig** | 19 | 44 | 4 | 67 |
+| **unkritisch** | 6 | 32 | 2 | 40 |
+| **werkzeug** | 8 | 30 | 7 | 45 |
+| zusammen | 43 | 164 | 16 | 223 |
+
+<!-- stufen: Ende -->
 
 **Die Einstufung ist ein Urteil, kein Messwert.** Sie ist am 22.10.2026 in
 einem Zug für alle 191 Befunde gefällt worden, nach der Regel oben. Wer sie
