@@ -204,7 +204,7 @@ nicht — dieser Schritt ist die einzige Messung am Programm.
 dem Nachrichtenfenster (`.txt`, `.htm` ohne Kopfzeilen) macht aus Emoji in
 7.2.1.129 weiter `??` — ein zweiter Weg, in 7.2.1.129 noch nicht behoben
 ([PRÜFER-68](../Befunde/PRUEFER-68.md) K1, im Befund nachgetragen). Für `.htm` ist er im Quellstand seit
-dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129 um 21:29) und kommt mit
+dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129: Bau `11643ee1` um 21:28, ZIP um 21:31) und kommt mit
 dem nächsten Paket; als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
 kann kein Emoji tragen).
 
