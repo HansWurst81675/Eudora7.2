@@ -46,3 +46,9 @@ zerlegt. Was noch fehlt, gehört genauso in den Bericht wie das Erreichte —
 einschliesslich der Zeit, die durch meine eigenen Fehler verlorenging.
 
 Siehe auch [[nie-stillstehen]] und [[doku-bei-jedem-commit-mitziehen]].
+
+## Nachtrag 01.11.2026 (CHRONIST): die Prüfanleitung kam auf Nachfrage
+
+Transkript `473878d1…`, Zeiten MEZ, gemessen. Gregor um 21:19:47: *„bau mir dann ein 7.2.1.129“*. Die Antwort um 21:20:26 nannte Schranken und Fassungsnummer, keine Prüfanleitung. Gregor um 21:22:30: *„schreib mir auch zu den jeweiligen E-xxx behebungen eine kurze test anleitung, wie ich es lokal überprüfen kann.“* Um 21:32 kam das Paket mit Anleitungen je Befund, jeweils mit dem Ort (*„Alles im lokalen Postfach `In`, nicht IMAP“*, [[testschritt-nennt-den-ort]]). Inhaltlich trug die Anleitung: Gregor bestätigte damit noch am selben Abend E-139 (abschaltbarer Rechtschreibhinweis), E-88 (Antwort als Original-HTML) und E-165 (Vervollständigungsbox). Gefragt hat er trotzdem, weil die Anleitung in der Ankündigung fehlte.
+
+**How to apply, zusätzlich:** Die Prüfanleitung je Befund gehört zum Paket wie die Fassungsnummer. Sie wird mit angekündigt und nicht erst auf Nachfrage geschrieben ([[jede-neuerung-lokal-pruefbar]]).

@@ -90,3 +90,13 @@ Ein „ich fange jetzt an“ ohne Aufruf im selben Zug ist eine Frage an Gregor,
 - Ein Satz „ich fange jetzt an“ steht nur im selben Zug wie der erste Werkzeugaufruf dazu. Ein Zug, der mit einer Ankündigung endet, ist ein Stillstand.
 - „Wenn du nichts anderes vorhast“ wird nicht geschrieben. Wer etwas anderes will, unterbricht ([[einwurf-ist-ein-messwert]]).
 - Laufen Agenten auf einem Zweig, auf dem ich nichts ändern darf, dann arbeite ich in Dateien, die sie nicht berühren (neue Tests, ein eigener Baum), oder ich bereite den nächsten Schritt vor. „Bis dahin ändere ich nichts“ ist keine Tätigkeit.
+
+## Nachtrag 01.11.2026 (CHRONIST): „Danach ist der CHRONIST fällig“, dann 25 Minuten nichts
+
+Transkript `6f848773…`, Zeiten MEZ, gemessen.
+
+Die Meldung zu PR #194 um 11:44:19 endete mit *„Danach ist der CHRONIST fällig, das Protokoll der Arbeitsläufe.“* Das war das Ende des Zuges. Zwischen 11:44:19 und Gregors *„merged und confirmed. weiter“* um 12:09:57 steht im Transkript kein einziger Eintrag. Seit 11:42 lief kein Agent mehr (LEKTOR-113 war fertig). Den CHRONIST braucht kein Merge und kein Zweig, er arbeitet in seinem eigenen Baum. Gestartet wurde er um 12:21, 37 Minuten nach der Ankündigung.
+
+Das ist das Muster vom 30.10. (*„Ich fange jetzt … an“* ohne Aufruf), nur mit einer Rolle statt einer eigenen Arbeit.
+
+**How to apply, zusätzlich:** Nennt eine Meldung eine fällige Rolle, die von nichts Offenem abhängt, dann wird sie im selben Zug gestartet ([[daueraufgaben-brauchen-einen-takt]]). Ein PR, der auf Gregors Merge wartet, ist kein Grund zu warten.

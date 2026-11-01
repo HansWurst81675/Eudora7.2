@@ -425,3 +425,18 @@ Zeiten MEZ, E-166 am Prüfstand `C:\Temp\E166`, gemessen an Transkript `72be6093
 - Jedes Messskript gibt eine Zeile aus, die jeden **ausgeführten** Schritt nennt, und der Fall prüft diese Zeile vor dem Ergebnis. Ein Schritt, der sein Fenster nicht findet, bricht den Lauf mit einer `FEHL`-Zeile ab, statt still weiterzulaufen.
 - Eine Fensterbotschaft wird aus dem SDK-Kopf beziffert (`grep -rn "define PSM_PRESSBUTTON" "…/Windows Kits/10/Include"`), nie aus dem Gedächtnis. Wirkt eine Botschaft nicht, wird zuerst ihr Wert gegen den Kopf geprüft, bevor sie für unwirksam erklärt wird.
 - Knopfbefehle als `WM_COMMAND` tragen das gemessene Knopf-Handle im `lParam` ([[keine-tastendruecke-verschicken]]).
+
+## Nachtrag 01.11.2026 (CHRONIST), Fall 13: die Gegenprobe im Zweig, den kein Test nimmt
+
+Transkript `6f848773…`, Zeiten MEZ, gemessen.
+
+Die neue Schranke in `TinyTest.cpp` (ein Test ohne `TT_EndTest` wird rot) sollte gegengeprobt werden. Um 10:26:54 entfernte die Hauptsitzung einen `TT_EndTest` aus `TestE171.cpp`, und der Lauf blieb grün. Zwei Deutungen folgten in 54 Sekunden:
+
+1. **10:27:16** *„Gegenprobe ist **blind**: `EudoraTests.exe` stammt von 10:26, also vor meiner Änderung — `pruefe-tests-gruen.pl` hat nicht neu gebaut.“* Das war falsch. **10:27:48** *„Die Uhr steht erst bei 10:27 — die Exe war also doch frisch.“* Die Dateizeit war mit einer geschätzten Uhrzeit verglichen worden, nicht mit einer abgelesenen ([[zwei-werte-in-eine-ausgabe]]).
+2. **10:27:52** *„der entfernte Aufruf lag im nicht genommenen Fehlerzweig.“* Das stimmte. Der Test lief am Hauptweg mit seinem zweiten `TT_EndTest` sauber zu Ende. Die Gegenprobe am Hauptweg (Zeile 39) ergab 349/1, Rückgabe 1.
+
+Dieselbe Falle hatte der Vorabend in größerem Maßstab: Von den 17 `TT_EndTest`, die `c458c74d` ergänzte, liegen acht in Fehlerzweigen, die ein grüner Lauf nie betritt ([[pruefstand-kann-blind-sein]], Nachtrag 01.11.).
+
+**How to apply, zusätzlich:**
+- Den Fehler für eine Gegenprobe an der Stelle einsetzen, die der Lauf **nachweislich** durchläuft. Im Zweifel vorher eine Spurzeile an der Stelle ausgeben lassen.
+- Vergleicht man eine Dateizeit mit „jetzt“, dann gehören `date` und `ls -l` in dieselbe Ausgabe. Eine Uhrzeit aus dem Kopf ist keine Messung, und die Uhr dieser VM ging am 31.10. rund 20 Stunden nach ([[entscheidung-pruefstand-fenster-31-10]]).
