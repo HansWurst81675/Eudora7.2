@@ -2999,6 +2999,13 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 				CopySum = DEBUG_NEW CSummary;
 				CopySum->Copy(Sum);
 #ifdef IMAP4
+				// E-184: auch von IMAP nach IMAP entsteht hier eine Vorab-Kopie mit der
+				// ALTEN UID. ImapTransferSummaryData sucht sie danach unter dieser UID - und
+				// traf bis 7.2.1.130 zuerst eine fremde Mail im Ziel, die zufaellig dieselbe
+				// Nummer traegt (UIDs gelten je Ordner), und ueberschrieb deren
+				// Zusammenfassung. Das Merkzeichen macht die Kopie eindeutig.
+				if (IsImapToc() && TargetToc->IsImapToc())
+					CopySum->SetE184Vorab(TRUE);
 				// E-121: die lokale Vorab-Kopie im IMAP-Zielordner teilt sich die
 				// eingebetteten Bilddateien mit der Nachricht in der Quelle. Verwirft
 				// ein Abgleich die Kopie, bevor sie hochgeladen ist, darf er diese

@@ -1577,7 +1577,13 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 
 		if (bFindNew)
 		{
-			pSumNew = pTargetToc->GetSummaryFromUID(lOldUID);
+			// E-184: nur die eigene Vorab-Kopie (CTocDoc::Xfer, markiert) - nicht
+			// irgendeine Zusammenfassung mit dieser UID. UIDs gelten je Ordner; eine
+			// fremde Mail im Ziel mit derselben Nummer wurde bis 7.2.1.130 hier
+			// gefunden und ueberschrieben (gemessen: tools/messen-e184.ps1).
+			pSumNew = E184FindeVorabKopie(pTargetToc, lOldUID);
+			if (pSumNew)
+				pSumNew->SetE184Vorab(FALSE);
 		}
 		if (!pSumNew)
 		{
@@ -1719,6 +1725,73 @@ CSummary* E121FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
 			return pKandidat;
 	}
 	return NULL;
+}
+
+// E-184: siehe tocdoc.h.
+CSummary* E184FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
+{
+	if (!pToc)
+		return NULL;
+
+	POSITION pos = pToc->GetSumList().GetHeadPosition();
+	while (pos)
+	{
+		CSummary *pKandidat = pToc->GetSumList().GetNext(pos);
+		if (pKandidat && pKandidat->IstE184Vorab() && pKandidat->GetHash() == ulHash)
+			return pKandidat;
+	}
+	return NULL;
+}
+
+// E-189: siehe tocdoc.h. Nach dem Vorbild der E-121-Entfernung (Hochladen
+// gescheitert): Spurzeile, offenes Fenster schliessen, Zusammenfassung heraus.
+// Die Bilddateien gehoeren der Quelle und bleiben.
+void E189VorabKopienEntfernen(CTocDoc* pZiel, const char* szAlteUIDs)
+{
+	if (!pZiel || !szAlteUIDs || !*szAlteUIDs)
+		return;
+
+	CString strListe(szAlteUIDs);
+	int iStart = 0;
+	while (iStart >= 0 && iStart < strListe.GetLength())
+	{
+		int iKomma = strListe.Find(',', iStart);
+		CString strUid = (iKomma >= 0) ? strListe.Mid(iStart, iKomma - iStart) : strListe.Mid(iStart);
+		iStart = (iKomma >= 0) ? iKomma + 1 : -1;
+		unsigned long ulUid = strtoul(strUid, NULL, 10);
+
+		CSummary *pSum = NULL;
+		while ((pSum = E184FindeVorabKopie(pZiel, ulUid)) != NULL)
+		{
+			// Merkzeichen zuerst loeschen: E184FindeVorabKopie liefert sie sonst in
+			// der naechsten Runde wieder (Endlosschleife, PRUEFER-76 K1).
+			pSum->SetE184Vorab(FALSE);
+			CString szSpur;
+
+			// PRUEFER-76 K1: ein offenes Fenster mit ungesicherten Aenderungen erst
+			// fragen (wie CTocDoc::Xfer). Lehnt es ab, bleibt die Kopie stehen - lieber
+			// ein Doppel als ein Zugriff auf eine geloeschte Zusammenfassung.
+			CFrameWnd* pFenster = pSum->m_FrameWnd;
+			if (pFenster)
+			{
+				CDocument* pFensterDoc = pFenster->GetActiveDocument();
+				if (pFensterDoc && !pFensterDoc->CanCloseFrame(pFenster))
+				{
+					szSpur.Format("E-189 Vorab-Kopie bleibt, Fenster nicht geschlossen: alte-uid=%lu ziel=\"%s\"", ulUid, (LPCTSTR) pZiel->Name());
+					PutDebugLog(DEBUG_MASK_MISC, szSpur);
+					continue;
+				}
+			}
+
+			szSpur.Format("E-189 Vorab-Kopie ohne neue UID entfernt: alte-uid=%lu ziel=\"%s\"", ulUid, (LPCTSTR) pZiel->Name());
+			PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			pSum->SetDeleteEmbedded(FALSE);
+			pZiel->InvalidateCachedPreviewSummary(pSum, true);
+			if (pFenster)
+				pFenster->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+			pZiel->RemoveSum(pSum);
+		}
+	}
 }
 
 CSummary *CTocDoc::GetSummaryFromUID(unsigned long lUID)

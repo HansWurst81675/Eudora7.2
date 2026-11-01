@@ -156,3 +156,4 @@
 - [E-170/E-143 entschieden](entscheidung-e170-e143-01-11.md) — Gregor 01.11.: Label mitnehmen; Out im Filterfenster nicht anbieten
 - [Prüfstand mit Fenster 01.11.](entscheidung-pruefstand-fenster-01-11.md) — erlaubt nur an diesem Tag; Gregor testet 7.2.1.130 außerhalb der VM
 - [CHRONIST 01.11.2026 nachmittags](CHRONIST-2026-11-01b.md) — Laufbericht; Endlos-Ersetzer zum zweiten Mal, Werkzeug fällig
+- [CHRONIST 01.11.2026 abends](CHRONIST-2026-11-01c.md) — Laufbericht; 71 min Stillstand nach angekündigtem LEKTOR/PRÜFER, Stop-Haken vorgeschlagen; ersetze-text.pl erledigt

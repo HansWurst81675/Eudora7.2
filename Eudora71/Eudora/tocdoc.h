@@ -537,6 +537,12 @@ public:
 // mit einer Server-UID zusammenfallen (Gregor an 1.0.95: Kennung 13).
 class CSummary;
 CSummary* E121FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash);
+// E-184: die markierte Vorab-Kopie (IMAP -> IMAP) mit Kennung ulHash in pToc, sonst NULL.
+CSummary* E184FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash);
+// E-189: entfernt aus pZiel jede noch markierte Vorab-Kopie (E-184) mit einer der
+// alten UIDs aus szAlteUIDs (durch Komma getrennt) - also die, denen
+// ImapTransferSummaryData keine neue UID zuordnen konnte.
+void E189VorabKopienEntfernen(CTocDoc* pZiel, const char* szAlteUIDs);
 // E-121 (PRUEFER-32): eine Kennung, die weder in der Quelle noch im Ziel vorkommt -
 // fuer Nachrichten aus Out, die sonst alle die Kennung 0 tragen.
 unsigned long E121NeueKennung(CTocDoc* pQuelle, CTocDoc* pZiel);

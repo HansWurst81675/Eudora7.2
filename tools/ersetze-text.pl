@@ -24,7 +24,7 @@
 # CRLF/nur-LF/Bytes>127 vorher und nachher.
 #
 # WARUM ES DAS GIBT. Zweimal hing ein Wegwerf-Ersetzer endlos, weil der neue
-# Text den alten enthielt und die Schleife ab Anfang weitersuchte (30.10. und
+# Text den alten enthielt und die Schleife ab Anfang weitersuchte (29.10. und
 # 01.11.2026, Arbeitsweise/text-nicht-durch-schichten-schicken.md Faelle 38
 # und 40); dazu gingen Rueckstriche eines Windows-Pfads im Heredoc verloren
 # (Fall 41). Hier wird jede Stelle genau einmal ersetzt (Suche laeuft hinter

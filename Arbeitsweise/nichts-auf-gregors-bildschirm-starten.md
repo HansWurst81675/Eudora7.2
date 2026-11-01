@@ -175,3 +175,9 @@ Zeiten MEZ, gemessen am Transkript, belegt an [[E-157]].
 **How to apply, zusätzlich:**
 - **Ein Prüfstandslauf ist erst fertig, wenn er Gregors Umgebung so hinterlässt, wie er sie vorfand.** Das gilt für die Registry unter `HKCU\Software\Qualcomm`, für offene Prozesse aus `C:\Temp` und für Dateien außerhalb von `C:\Temp`.
 - Auch mit Gregors Ja bekommt jeder Lauf eine Ansagezeile mit Dauer und Fensterzahl. Das Ja beantwortet „darf ich“, die Ansage sagt „wann und wie lange“.
+
+## Nachtrag 01.11.2026, 17:23: ein Probeaufruf im Kopierbefehl
+
+Beim Anlegen des Prüfstands `C:\Temp\E184` stand im selben Bash-Aufruf wie `cp -r` ein `"/c/Temp/E184/Eudora.exe" --version` - gedacht als harmlose Versionsabfrage. Eudora kennt keinen solchen Schalter, startete normal, fand ohne Mailverzeichnis-Angabe über die Registry Gregors Mailverzeichnis von 7.2.1.128 und zeigte den E-132-Dialog auf seinem Bildschirm. Gregor schickte ein Bildschirmfoto: *„meldung von dir?“*. Beendet mit IDCANCEL an das gemessene Handle, nichts gemerkt (gemessen).
+
+**Regel:** Eine `Eudora.exe` wird nie direkt aufgerufen, auch nicht „nur zum Abfragen“. Die Fassung einer EXE liest man aus der Versionsressource (`[Diagnostics.FileVersionInfo]::GetVersionInfo(...)` oder `strings`), gestartet wird nur über `tools/testlauf.ps1`. Die Prüfstand-Freigabe des Tages deckt das Werkzeug, nicht einen freihändigen Aufruf.

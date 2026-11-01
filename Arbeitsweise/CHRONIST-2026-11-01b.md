@@ -31,7 +31,7 @@ Keine. Beide Vorfälle passen zu [[text-nicht-durch-schichten-schicken]].
 
 | Lehre | Was dazukam |
 |---|---|
-| [[text-nicht-durch-schichten-schicken]] | Fall 40: Der Ersetzer für den Versionssprung hing endlos, weil der neue Text den alten enthielt - dieselbe Falle wie Fall 38 am 30.10., also zweites Auftreten; Werkzeug `tools/ersetze-text.pl` mit Selbsttest ist fällig. Fall 41: Der Ablageort `C:\Users\Gregor\Eudora72-…` verlor im Heredoc seine Rückstriche, vor dem Commit bemerkt, obwohl dieselbe Falle 21 Minuten vorher in der Sitzungszusammenfassung stand |
+| [[text-nicht-durch-schichten-schicken]] | Fall 40: Der Ersetzer für den Versionssprung hing endlos, weil der neue Text den alten enthielt - dieselbe Falle wie Fall 38 am 29.10. (hier stand bis zum 01.11. abends „30.10.“, berichtigt nach LEKTOR-117), also zweites Auftreten; Werkzeug `tools/ersetze-text.pl` mit Selbsttest ist fällig. Fall 41: Der Ablageort `C:\Users\Gregor\Eudora72-…` verlor im Heredoc seine Rückstriche, vor dem Commit bemerkt, obwohl dieselbe Falle 21 Minuten vorher in der Sitzungszusammenfassung stand |
 
 ## Werkzeugmangel
 
