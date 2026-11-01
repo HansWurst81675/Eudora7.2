@@ -67,6 +67,10 @@ $rc_s == 0 or do { print STDERR "Commit $seit gibt es nicht\n"; exit 2 };
 my $max = 0;
 for my $f (glob("Befunde/$rolle-*.md")) { $max = $1 if $f =~ /$rolle-(\d+)\.md$/ and $1 > $max }
 my ($zweige) = git('branch', '-r', '--list', "origin/wt/*");
+# PRUEFER-78 K6: "git branch -r" rueckt jede Zeile mit Leerzeichen ein; so
+# weitergereicht meldete git grep bei allen 25 Rollenzweigen "fatal", und
+# Kennungen aus noch nicht gemergten Berichten galten als frei.
+$zweige = join("\n", grep { $_ ne '' } map { s/^\s+|\s+$//gr } split /\n/, ($zweige // ''));
 for my $z (split /\n/, $zweige) {
     $z =~ s/^\s+//;
     my ($l) = git('ls-tree', '--name-only', $z, 'Befunde/');
@@ -86,6 +90,12 @@ if ($rolle eq 'PRUEFER') {
     # berichtete Kennungen stehen in tools/AGENTEN-LAUFEN.md und zaehlen mit.
     my $emax = 0;
     my $tab = lies('Intern/BEFUNDE.md');
+    # Auch die Urteilstabelle des Zielzweigs: der Hauptbaum steht oft auf main,
+    # der Rollenlauf aber auf origin/<basis>, wo schon neue Kennungen stehen
+    # koennen. Gemessen 01.11.2026: zweimal E-188/E-189 vergeben, obwohl beide
+    # auf e184_imap_zusammenfassung seit 8b5f8342 belegt waren.
+    my ($ziel_tab) = git('show', "origin/$basis:Intern/BEFUNDE.md");
+    $tab .= "\n" . (defined $ziel_tab ? $ziel_tab : '');
     while ($tab =~ /<a id="e-(\d+)"><\/a>/g) { $emax = $1 if $1 > $emax }
     my %genannt;
     for my $t (lies("tools/AGENTEN-LAUFEN.md"), map({ lies($_) } glob(q{Befunde/*.md})),

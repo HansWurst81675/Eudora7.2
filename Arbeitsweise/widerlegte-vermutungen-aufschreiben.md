@@ -226,3 +226,11 @@ behoben (`6b4b14c`, 188/188).
 
 **Die Frage beim nächsten Mal:** *Hat der Schritt, den ich verdächtige, das
 Gelesene schon verarbeitet?*
+
+## Nachtrag 01.11.2026 spätabends (CHRONIST): „am Quelltext belegt“ war widerlegbar
+
+PRÜFER-71 (Abschnitt E-184) schrieb: *„Beim Weg innerhalb eines Kontos legt niemand vorher eine Zusammenfassung mit der alten UID im Ziel an … Ein Treffer ist also immer eine fremde Mail (am Quelltext belegt).“* Die Messung vom 01.11. (17:33, `messen-e184.ps1`) und der Quelltext danach zeigten das Gegenteil: `CTocDoc::Xfer` legt auch von IMAP nach IMAP vorab eine Kopie mit der **alten** UID an; die Suche war gewollt und traf nur die falsche Zusammenfassung. Die Behebung folgt der Messung, nicht dem Bericht.
+
+Aufgeschrieben ist die Widerlegung an drei Stellen: BEFUNDE E-184 (*„anders als in PRÜFER-71 angenommen“*), Commit `e23da6be`, Kopf von `tools/messen-e184.ps1` (gemessen). **Nicht** am widerlegten Satz in `Befunde/PRUEFER-71.md` selbst: Wer den Bericht liest, findet ihn weiter als „belegt“. Nach dem Nachtrag vom 08.09. („aufgeschrieben, aber nicht gelesen“) gehört die Rücknahme an die Stelle, an der man die Behauptung findet. Gemeldet, weil `Befunde/` außerhalb von `Arbeitsweise/` liegt.
+
+Und: „am Quelltext belegt“ für eine **Abwesenheit** („niemand legt … an“) ist eine Vermutung über alle Aufrufer. Eine Abwesenheit ist erst belegt, wenn der Weg gemessen ist ([[ausbleiben-ist-kein-befund]], [[ursache-nur-gemessen-behaupten]]).

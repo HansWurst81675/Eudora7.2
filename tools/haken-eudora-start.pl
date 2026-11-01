@@ -1,0 +1,209 @@
+#!/usr/bin/perl
+# haken-eudora-start.pl - PreToolUse-Haken von Claude Code (.claude/settings.json):
+# kein direkter Aufruf einer Eudora.exe aus Bash oder PowerShell. Gestartet
+# wird Eudora nur ueber tools/testlauf.ps1 (oder die Werkzeuge, die es rufen:
+# pruefstand-lauf.ps1, stapel-untersuchen.ps1) - die protokollieren jeden
+# Start, filtern nach Pfad und verlangen Gregors Freigabe des Tages.
+#
+# WARUM ES DAS GIBT. Am 01.11.2026 um 17:18:55 stand im selben Bash-Aufruf wie
+# ein "cp -r" ein '"/c/Temp/E184/Eudora.exe" --version' - als harmlose
+# Versionsabfrage gedacht. Eudora kennt keinen solchen Schalter, startete,
+# fand ueber die Registry Gregors Mailverzeichnis von 7.2.1.128 und zeigte den
+# E-132-Dialog auf seinem Bildschirm. Gregor: "meldung von dir?". Die Regel
+# stand seit Wochen in Arbeitsweise/nichts-auf-gregors-bildschirm-starten.md;
+# tools/pruefe-startwege.pl war blind, weil ein Start ohne Mailverzeichnis
+# keine eudora.log schreibt. Vorschlag des CHRONIST (CHRONIST-2026-11-01d).
+#
+# WIE. Liest den Werkzeugaufruf als JSON von stdin. Heredocs, PowerShell-Here-
+# Strings und Kommentare werden entfernt (sie werden nicht ausgefuehrt), der
+# Rest an ; && || | & Zeilenenden und $( zerlegt. In jedem Abschnitt wird das
+# Wort an Befehlsstelle betrachtet - ohne Anfuehrungszeichen, auch hinter
+# "&", "Start-Process", "start", "cmd /c", "Invoke-Item"/"ii", "exec", "call" und
+# hinter -FilePath. Endet es auf Eudora.exe, Rueckgabe 2 mit Begruendung.
+# Zeichenketten in Anfuehrungszeichen bleiben stehen: genau so stand der Pfad
+# beim Ausrutscher da. Dateizugriffe (cp, grep, Get-Item, FileVersionInfo)
+# haben Eudora.exe nicht an Befehlsstelle und gehen durch.
+#
+# Gegenprobe: perl tools/haken-eudora-start.pl --selbsttest (beide Richtungen).
+# Kodierung: reines ASCII.
+use strict;
+use warnings;
+use JSON::PP;
+
+selbsttest() if ($ARGV[0] // '') eq '--selbsttest';
+
+local $/;
+my $ein = <STDIN> // '';
+my $j = eval { decode_json($ein) } || {};
+# Unlesbares JSON oeffnet die Schranke nicht: dann wird der Rohtext geprueft.
+my $kommando = defined $j->{tool_input}{command} ? $j->{tool_input}{command} : $ein;
+my $treffer = eudora_aufruf($kommando);
+exit 0 unless defined $treffer;
+
+print STDERR <<"TEXT";
+KEIN DIREKTER EUDORA-START: "$treffer" stuende an Befehlsstelle.
+Eudora wird nur ueber tools/testlauf.ps1 gestartet (Pfadfilter, Protokoll in
+tools/TESTLAEUFE.md, Gregors Freigabe des Tages) - oder ueber
+tools/pruefstand-lauf.ps1, das es ruft. Die Fassung einer EXE liest man aus der
+Versionsressource ([Diagnostics.FileVersionInfo]::GetVersionInfo(...)) oder mit
+grep -a nach der Baukennung, nie durch Starten.
+Anlass: 01.11.2026 17:18:55, '"/c/Temp/E184/Eudora.exe" --version' zeigte einen
+Dialog auf Gregors Bildschirm (Arbeitsweise/nichts-auf-gregors-bildschirm-starten.md).
+TEXT
+exit 2;
+
+# Liefert das erste Wort an Befehlsstelle, das auf Eudora.exe endet, sonst undef.
+sub eudora_aufruf {
+    my ($t, $tiefe) = @_;
+    $tiefe //= 0;
+    return undef if $tiefe > 3;
+    # Heredocs (bash) und Here-Strings (PowerShell) werden nicht ausgefuehrt.
+    $t =~ s/<<-?[ \t]*(['"]?)(\w+)\1([^\n]*)\n.*?^[ \t]*\2[ \t]*$/$3/msg;
+    $t =~ s/@(['"])[ \t]*\n.*?^\1@//msg;
+    # Kommentarzeilen.
+    $t =~ s/^[ \t]*#[^\n]*//mg;
+    # PRUEFER-78 K5: was hinter "bash -c", "sh -c", "powershell -Command" oder
+    # "eval" in Anfuehrungszeichen steht, wird AUSGEFUEHRT - eigens pruefen.
+    # PRUEFER-79 K1: nur hinter einer Shell - "grep -c "Eudora.exe"" ist kein Aufruf.
+    while ($t =~ /(?:(?:^|[\s;&|(])(?:bash|sh|zsh|dash|ksh|powershell|pwsh)(?:\.exe)?\b(?:\s+-\S+)*?\s+(?:-c|-Command)|(?:^|[\s;&|(])eval)\s+(?:'([^']*)'|"((?:\\.|[^"\\])*)")/gi) {
+        my $innen = defined $1 ? $1 : $2;
+        $innen =~ s/\\(["\\])/$1/g;
+        my $w = eudora_aufruf($innen, $tiefe + 1);
+        return $w if defined $w;
+    }
+    # PRUEFER-78 K5: einer Variablen zugewiesener Pfad, spaeter "& $var".
+    my %var;
+    while ($t =~ /\$(\w+)\s*=\s*(['"])([^'"]*eudora\.exe)\2/ig) { $var{lc $1} = $3 }
+    for my $abschnitt (abschnitte($t)) {
+        my $w = befehlswort($abschnitt);
+        next unless defined $w;
+        return $var{lc $1} if $w =~ /^\$(\w+)$/ && exists $var{lc $1};
+        return $w if $w =~ /eudora\.exe['"]?$/i;
+    }
+    return undef;
+}
+
+# Zerlegt an ; && || | Zeilenende $( und ` - aber nur AUSSERHALB von
+# Anfuehrungszeichen. Erster Stand zerlegte auch darin: ein perl -e '...' mit
+# einer Markdown-Tabelle ("| ... `Eudora.exe` ...") wurde abgewiesen
+# (gemessen 01.11.2026, beim Commit dieses Hakens selbst).
+sub abschnitte {
+    my ($t) = @_;
+    my @aus; my $cur = ''; my $q = '';
+    my @z = split //, $t;
+    for (my $i = 0; $i < @z; $i++) {
+        my $c = $z[$i];
+        if ($q) {
+            $cur .= $c;
+            if ($q eq '"' && $c eq '\\' && $i + 1 < @z) { $cur .= $z[++$i]; next }
+            $q = '' if $c eq $q;
+            next;
+        }
+        if ($c eq "'" || $c eq '"') { $q = $c; $cur .= $c; next }
+        my $zwei = $c . ($i + 1 < @z ? $z[$i + 1] : '');
+        if ($zwei eq '&&' || $zwei eq '||' || $zwei eq '$(') { push @aus, $cur; $cur = ''; $i++; next }
+        # PRUEFER-79 K2: einzelnes "&" trennt ebenfalls ("sleep 1 & ./Eudora.exe") -
+        # ausser in Umleitungen wie "2>&1" und ">&2".
+        if ($c eq '&' && !($cur =~ /[<>]$/) && !($i + 1 < @z && $z[$i + 1] eq '>')) { push @aus, $cur; $cur = ''; push @aus, '& '; next }
+        if ($c eq ';' || $c eq '|' || $c eq "\n" || $c eq '`') { push @aus, $cur; $cur = ''; next }
+        $cur .= $c;
+    }
+    push @aus, $cur;
+    return @aus;
+}
+
+sub befehlswort {
+    my ($s) = @_;
+    my @wort;
+    while ($s =~ /\G\s*('[^']*'|"(?:\\.|[^"\\])*"|[^\s'"]+)/gc) { push @wort, $1 }
+    # Vorgestellte Umgebungszuweisungen (VAR=x cmd) ueberspringen.
+    shift @wort while @wort && $wort[0] =~ /^\w+=/;
+    my $i = 0;
+    while ($i < @wort) {
+        my $w = $wort[$i];
+        # PRUEFER-78 K5: Unterschale und Block - "(cd x && ./Eudora.exe)", "{ ...; }".
+        if ($w =~ /^[({]+$/) { $i++; next }
+        if ($w =~ /^[({]+(.+)$/) { $w = $1 }
+        if ($w eq '&' or $w =~ /^(?:exec|call|start|Start-Process|saps|Invoke-Item|ii|nohup|time|then|do|else|elif|if|while|until|explorer|explorer\.exe|env|xargs)$/i) { $i++; next }
+        # PRUEFER-79 K2: "wsl -e befehl", "env VAR=x befehl"
+        if ($w =~ /^wsl(?:\.exe)?$/i) { $i++; $i++ while $i < @wort && $wort[$i] =~ /^-/; next }
+        if ($i > 0 && $w =~ /^\w+=/) { $i++; next }
+        # timeout 5 befehl
+        if ($w =~ /^timeout$/i) { $i++; $i++ while $i < @wort && $wort[$i] =~ /^-?[\d.]+[smhd]?$|^-[a-z]/i; next }
+        # cmd /c und, aus Git Bash, cmd //c
+        if ($w =~ /^cmd(?:\.exe)?$/i) { $i++; $i++ while $i < @wort && $wort[$i] =~ m{^/{1,2}[a-z]$}i; next }
+        if ($w =~ /^-FilePath$/i) { $i++; next }
+        if ($w eq '""' or $w eq "''") { $i++; next }   # Fenstertitel von cmd "start"
+        if ($w =~ /^-/ && $i > 0) { $i++; next }   # Schalter von start/Start-Process
+        (my $nackt = $w) =~ s/^['"]|['"]$//g;
+        $nackt =~ s/[)}]+$//;    # Ende einer Unterschale/eines Blocks: "./Eudora.exe)"
+        return $nackt;
+    }
+    return undef;
+}
+
+sub selbsttest {
+    my @f = (
+        # [erwartet abgewiesen?, Befehl]
+        [1, 'cp -r /c/Temp/E77 /c/Temp/E184 && ls /c/Temp/E184 | wc -l; "/c/Temp/E184/Eudora.exe" --version >/dev/null 2>&1; echo'],
+        [1, '/c/Temp/E184/Eudora.exe'],
+        [1, '& "C:\\Temp\\E184\\Eudora.exe" "C:\\Temp\\E184\\Mailverzeichnis"'],
+        [1, 'Start-Process C:\\Temp\\E184\\Eudora.exe'],
+        [1, 'Start-Process -FilePath "C:\\Temp\\E184\\Eudora.exe" -ArgumentList x'],
+        [1, 'cmd /c "C:\\Temp\\E184\\Eudora.exe"'],
+        [1, 'start "" C:\\Users\\Gregor\\Eudora72-7.2.1.130-release\\Eudora.exe'],
+        [1, 'cd /c/Temp/E184 && ./Eudora.exe'],
+        [1, 'Invoke-Item C:\\Temp\\E184\\EUDORA.EXE'],
+        [1, 'x=$(/c/Temp/E184/Eudora.exe --help)'],
+        [0, 'cp Eudora71/Bin/Release/Eudora.exe /c/Temp/E184/'],
+        [0, 'grep -a -o -E "Eudora 7" /c/Temp/E184/Eudora.exe | head -1'],
+        [0, 'for f in Eudora.exe EudoraRes.dll; do cp "$B/$f" /c/Temp/E184/; done'],
+        [0, 'powershell -NoProfile -ExecutionPolicy Bypass -File tools\\testlauf.ps1 -Verzeichnis C:\\Temp\\E184 -Freigabe x'],
+        [0, "git commit -q -F - <<'EOF'\n\"/c/Temp/E184/Eudora.exe\" --version protokolliert\nEOF"],
+        [0, "\$m = \@'\n& C:\\Temp\\Eudora.exe\n'\@; git commit -m \$m"],
+        [0, 'Get-Process Eudora | Where-Object { $_.Path -ieq "C:\\Temp\\E184\\Eudora.exe" }'],
+        [0, '[Diagnostics.FileVersionInfo]::GetVersionInfo("C:\\Temp\\E184\\Eudora.exe").FileVersion'],
+        [0, "# \"/c/Temp/E184/Eudora.exe\" --version\nls"],
+        [0, 'ls -l /c/Temp/E184/Eudora.exe'],
+        # Fehlalarm des ersten Stands: | und ` innerhalb von Anfuehrungszeichen.
+        [0, q{perl -e 'print "| `tools/x` | einer `Eudora.exe` | Anlass `\"/c/Temp/E184/Eudora.exe\" --version` |\n"' > x.txt}],
+        [0, q{git commit -m "Anlass '\"/c/Temp/E184/Eudora.exe\" --version' im Kopierbefehl"}],
+        [1, q{echo "a | b"; /c/Temp/E184/Eudora.exe}],
+        # PRUEFER-78 K5: Gegenproben, die der erste Stand durchliess.
+        [1, q{cmd //c "C:\\Temp\\E184\\Eudora.exe"}],
+        [1, q{cmd //c C:\\Temp\\E184\\Eudora.exe}],
+        [1, q{powershell -NoProfile -Command "& 'C:\\Temp\\E184\\Eudora.exe'"}],
+        [1, q{bash -c "/c/Temp/E184/Eudora.exe"}],
+        [1, q{(cd /c/Temp/E184 && ./Eudora.exe)}],
+        [1, q{{ /c/Temp/E184/Eudora.exe; }}],
+        [1, q{if true; then /c/Temp/E184/Eudora.exe; fi}],
+        [1, q{timeout 5 /c/Temp/E184/Eudora.exe}],
+        [1, q{explorer.exe C:\\Temp\\E184\\Eudora.exe}],
+        [1, q{$e="C:\\Temp\\E184\\Eudora.exe"; & $e}],
+        [1, q{/c/Temp/E184/Eudora.exe &}],
+        [1, q{/c/Temp/E184/Eudora.exe 2>/dev/null}],
+        [0, q{echo x > /c/Temp/E184/Eudora.exe.txt}],
+        [0, q{bash -c "ls /c/Temp/E184/Eudora.exe"}],
+        [0, q{powershell -Command "Get-Item C:\\Temp\\E184\\Eudora.exe"}],
+        [0, q{$e="C:\\Temp\\E184\\Eudora.exe"; Get-Item $e}],
+        # PRUEFER-79 K1 (Fehlalarm) und K2 (Luecken)
+        [0, q{tasklist | grep -c 'Eudora.exe'}],
+        [0, q{grep -c "Eudora.exe" liste.txt}],
+        [0, q{ls /c/Temp/E184/Eudora.exe 2>&1 | head -1}],
+        [1, q{sleep 1 & /c/Temp/E184/Eudora.exe}],
+        [1, q{env FOO=1 /c/Temp/E184/Eudora.exe}],
+        [1, q{echo /c/Temp/E184/Eudora.exe | xargs /c/Temp/E184/Eudora.exe}],
+        [1, q{wsl -e /mnt/c/Temp/E184/Eudora.exe}],
+        [1, q{sh -c '/c/Temp/E184/Eudora.exe'}],
+    );
+    my ($ok, $f) = (0, 0);
+    for my $fall (@f) {
+        my ($soll, $cmd) = @$fall;
+        my $ist = defined eudora_aufruf($cmd) ? 1 : 0;
+        my $kurz = substr($cmd, 0, 70); $kurz =~ s/\n/ \\n /g;
+        if ($ist == $soll) { $ok++; print "  ok   ", ($soll ? 'abgewiesen ' : 'durch      '), $kurz, "\n" }
+        else               { $f++;  print "  FEHL ", ($soll ? 'durchgelassen ' : 'abgewiesen  '), $kurz, "\n" }
+    }
+    print "Ergebnis: ", $ok + $f, " Faelle, $ok bestanden, $f fehlgeschlagen\n";
+    exit($f ? 1 : 0);
+}

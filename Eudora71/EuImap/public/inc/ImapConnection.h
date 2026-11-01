@@ -139,7 +139,7 @@ public:
 	// Append message
 	HRESULT			AppendMessage ( IMAPFLAGS* pImapFlags, unsigned long Seconds, STRING *pMsg, CDWordArray *dwaNewUIDs, ImapErrorFunc pErrFn = NULL );
 	// Copy
-	HRESULT			CopyMessages (const char *pUidlist, const char *pDestMailbox, CDWordArray *dwaNewUIDs, ImapErrorFunc pErrFn = NULL);
+	HRESULT			CopyMessages (const char *pUidlist, const char *pDestMailbox, CDWordArray *dwaNewUIDs, ImapErrorFunc pErrFn = NULL, CDWordArray *dwaQuellUIDs = NULL);	// E-184 K3
 
 	HRESULT			MessageIsMultipart (IMAPUID uid, BOOL *pVal, ImapErrorFunc pErrFn = NULL);
 

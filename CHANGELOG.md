@@ -27,15 +27,16 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-193](Intern/BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | **nie gemessen** | am Prüfstand mit Mails bekannten Inhalts nachstellen (Umlaute und € im Text, in Kopfzeilen, nur im HTML-Quelltext; Latin-1, UTF-8, quoted-printable… |
+| **[E-192](Intern/BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | **nie gemessen** | die Quellmenge an allen drei Stellen durchreichen wie beim Verschieben; Prüfstandsfall für den Papierkorb. **Stufe: wichtig** (wie E-184) |
 | **[E-189](Intern/BEFUNDE.md#e-189)** | Beim Verschieben innerhalb eines IMAP-Kontos OHNE UIDPLUS steht die verschobene Mail im Zi… | 01.11.2026 an 7.2.1.130 | die Löschvermutung messen; mit dem nächsten Testpaket an Gregors Server (ohne UIDPLUS) bestätigen. Für den TESTPLAN beim nächsten Paket (K3): die… |
 | **[E-188](Intern/BEFUNDE.md#e-188)** | Dieselbe Verwechslung wie E-184 an zwei weiteren Stellen: Verschieben zwischen zwei IMAP-K… | **nie gemessen** | am Prüfstand nachstellen (für den Weg zwischen Konten braucht der Prüfserver ein zweites Konto), dann wie E-184 über das Merkzeichen suchen. **Stu… |
-| **[E-184](Intern/BEFUNDE.md#e-184)** | Beim Verschieben zwischen IMAP-Ordnern mit UIDPLUS kann Eudora die Zusammenfassung einer f… | 01.11.2026 an 7.2.1.130 | die Zuordnung über den Quellteil des `COPYUID` statt über die Listenposition (K3); ein Fall mit mehreren Mails am Prüfstand. ~~Gregor muss nichts t… |
-| **[E-179](Intern/BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | die Messung am Programm (die Behebung ist im Testpaket 7.2.1.130) — eine HTML-Mail mit `&#128293;` senden und den Textteil beim Empfänger ansehen; … |
+| **[E-184](Intern/BEFUNDE.md#e-184)** | Beim Verschieben zwischen IMAP-Ordnern mit UIDPLUS kann Eudora die Zusammenfassung einer f… | 01.11.2026 an 7.2.1.130 | K4 aus PRÜFER-75 (Warteschlange nach Neustart, klein); PRÜFER-78 K2 (Teilkopie, klein); PRÜFER über die K3-Behebung erledigt ([PRÜFER-78](Befu… |
+| **[E-179](BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | die Messung am Programm (die Behebung ist im Testpaket 7.2.1.130) — eine HTML-Mail mit `&#128293;` senden und den Textteil beim Empfänger ansehen; … |
 | **[E-178](Intern/BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Fett, Link einfügen und ähnliche Befehle Emoj… | **nie gemessen** | die Messung am Programm mit dem Testpaket 7.2.1.130 ([TESTPLAN](Intern/TESTPLAN.md#e-178-naechstes)). **Stufe: wichtig** (Datenschaden im Bearbeiten-Modus, n… |
 | **[E-177](Intern/BEFUNDE.md#e-177)** | Die Filteraktion *„an Programm übergeben"* schreibt ihre Zwischendatei ohne Zeichensatz… | **nie gemessen** | messen (Filter mit dieser Aktion, Prüfnachricht mit Euro und Umlauten, Zwischendatei ansehen), danach entscheiden, ob die Angabe dort überhaupt erw… |
 | **[E-176](Intern/BEFUNDE.md#e-176)** | Die Behebung von E-28 liest beim Schließen einer verworfenen neuen Nachricht aus einer sc… | **nie gemessen** | ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest bisher nur den Quelltext), und die Messung am Programm, am besten unter… |
 | **[E-173](Intern/BEFUNDE.md#e-173)** | Im Filterfenster sind die Labels der Aktion *Make Label* einmal ausgegraut und nicht wähl… | **nie gemessen** | erst **nach dem Release 7.2.1** — nachstellen (unter welcher Bedingung ist die Liste grau: neuer Filter, bestimmte vorherige Aktion, Persönlichkeit… |
-| **[E-172](Intern/BEFUNDE.md#e-172)** | Eine Mail steht im Lesefenster als rohe Base64-Zeichenfolge statt als lesbarer Text | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — Quelltext der Mail ansehen (*View Source*), Kopfzeilen `Content-Type`/`Content-Transfer-Encodi… |
 | **[E-170](Intern/BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | **nie gemessen** | die Messung am Programm mit dem Testpaket 7.2.1.130 ([TESTPLAN](Intern/TESTPLAN.md#e-170-naechstes)); am IMAP-Prüfserver zusätzlich der Fall ohne UIDPLUS. … |
 | **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt… |
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
@@ -106,6 +107,16 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 ---
 
 ## Im Quellstand, noch in keinem Paket
+
+**Zweig `e184_mehrere_mails`** (nach dem Merge von #197). Gebaut (Release, 0 Fehler), Tests 357/357, am Prüfstand gemessen.
+
+* **Mehrere Mails im IMAP-Konto verschieben vertauscht die Zuordnung nicht mehr** ([E-184](Intern/BEFUNDE.md#e-184), Rest K3 aus PRÜFER-75): Eudora las aus der Serverantwort `COPYUID` nur die neuen Nummern und ordnete sie nach der Reihenfolge der eigenen Liste zu; stand die Liste nicht aufsteigend nach Nummer, bekamen die Einträge im Ziel Betreff und Absender einer anderen Mail. Jetzt wird über die alten Nummern aus derselben Antwort zugeordnet. Prüfstandsfall `E-184m`: am vorigen Bau über Kreuz (`richtig=1 falsch=2`), jetzt richtig (`richtig=3 falsch=0`). Regressionstest `TestE184.cpp`. Für Papierkorb, Junk und Filter gilt das noch nicht: neu als [E-192](Intern/BEFUNDE.md#e-192).
+* Neu als Befund: [E-193](Intern/BEFUNDE.md#e-193) — die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse (Gregors Beobachtung an 7.2.1.130, noch nicht nachgestellt).
+* **[E-172](Intern/BEFUNDE.md#e-172) aufgeklärt, kein Programmfehler**: der Base64-Block steht in zwei langen Kopfzeilen von GMX und erscheint nur mit *Blah Blah Blah*; gemessen an Gregors Bildschirmfotos und seiner Kopie des Kopfes.
+* **Haken gegen direkte `Eudora.exe`-Aufrufe** (`tools/haken-eudora-start.pl`) und **`tools/auftrag-rolle.pl`** liest belegte Kennungen aus dem Zielzweig.
+* **Prüfserver** antwortet genauer wie ein echter Server: nur das Verlangte bei `FETCH`, Kopfblock mit abschließender Leerzeile, Abschnittsname wie verlangt, `COPY` in UID-Folge; neuer Schalter `--datum-absteigend`. Alle IMAP-Fälle grün.
+
+**Davor im selben Abschnitt, gemergt als #197:**
 
 **Zweig `e184_imap_zusammenfassung`** (nach dem Merge von #196). Gebaut (Release, 0 Fehler, Tests 355/355) und am Prüfstand gemessen.
 

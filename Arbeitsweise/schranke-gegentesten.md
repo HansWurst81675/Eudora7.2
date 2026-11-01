@@ -351,3 +351,22 @@ LEKTOR-Baum 5 Dateien, die es wirklich nirgends gibt — die werden jetzt
 Der gleiche Fehler hat also beide Richtungen gleichzeitig: die Hülle schloss zu viel, der Kern zu wenig.
 
 **How to apply, zusätzlich:** Jeder neue Haken wird gegengetestet (a) aus der Wurzel, (b) **aus einem Unterverzeichnis**, (c) mit fehlendem oder kaputtem Hilfswerkzeug und (d) mit unlesbarer Eingabe. Für (c) und (d) gilt: abweisen und den Grund nennen, nie stumm durchlassen ([[ausbleiben-ist-kein-befund]]). Die Hakenzeile in `settings.json` nennt ihr Skript über `$CLAUDE_PROJECT_DIR`, nie relativ.
+
+## Nachtrag 01.11.2026 nachts (CHRONIST): vier Runden für einen Haken, und die Behebung der Lücke brachte den Fehlalarm
+
+Transkript `6f848773…`, Zeiten MEZ; `Befunde/PRUEFER-78.md` K5, `Befunde/PRUEFER-79.md` K1/K2; gemessen ([[CHRONIST-2026-11-01e]]).
+
+`tools/haken-eudora-start.pl` (Vorschlag aus [[CHRONIST-2026-11-01d]]) weist jeden Befehl ab, der eine `Eudora.exe` an Befehlsstelle aufruft. Er entstand in vier Runden:
+
+| Runde | Selbsttest | Was die Runde fand |
+|---|---|---|
+| 19:03:26 erster Stand | 20/20 | der echte Befehl von 17:18:55 abgewiesen, `ls` auf die EXE durchgelassen; live 19:03:40 abgewiesen (gewollt) |
+| 19:03:59 erster Einsatz | → 23/23 | **Fehlalarm** gegen den eigenen nächsten Befehl: ein `perl -e '…'` mit einer Markdown-Tabelle für `WERKZEUGE.md`. Der Haken zerlegte auch innerhalb von Anführungszeichen |
+| PRÜFER-78 K5 (20:02) | → 39/39 | **10 von 14 Startformen durch**, darunter `cmd //c` (die Schreibweise aus Git Bash), `bash -c "…"`, `powershell -Command`, Unterschale, `timeout` |
+| PRÜFER-79 K1/K2 (20:25) | → 47/47 | **neuer Fehlalarm**: die Regel aus K5 nahm jeden Schalter `-c` vor einer Zeichenkette als `bash -c`. `grep -c "Eudora.exe"` und `tasklist \| grep -c 'Eudora.exe'`, die naheliegende Prüfung „läuft Eudora noch?“, wurden abgewiesen. Dazu fünf seltene Lücken (`a & Eudora.exe`, `env`, `xargs`, `wsl -e`, Pfad ohne `.exe`) |
+
+Die Gegenproben der Runde 3 waren alle von der Art „muss abweisen“. Erlaubte Befehle **mit demselben Wortbestandteil** (`-c`) wie die neue Regel standen nicht im Selbsttest. So machte die Behebung einer Lücke den Haken an einer anderen Stelle zu scharf. Ein Haken, der die eigene Prozessprüfung abweist, wird umgangen, und dann schützt er nichts mehr.
+
+**Gut gelaufen:** Jede Runde kam als Fall in den Selbsttest, und die Hauptsitzung behob beide PRÜFER-Runden vor dem PR. Live geprüft wurde nur, was der Haken abweisen soll (19:03:40), nicht ein erlaubter Fall im echten Hakenbetrieb.
+
+**How to apply, zusätzlich:** Jede neue Erkennungsregel eines Hakens bekommt im selben Schritt mindestens zwei **erlaubte** Fälle, die dasselbe Schlüsselwort benutzen (hier: `grep -c`, `sed -c`, `Select-String … -c`). Erst wenn beide durchgehen, ist die Regel fertig. Die Prüfbefehle, die die Sitzung selbst täglich nutzt (`tasklist`, `Get-Process … Path`, `grep -a` auf die EXE, `cp` der Binärdateien), gehören fest in den Selbsttest.

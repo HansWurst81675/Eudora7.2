@@ -1034,7 +1034,7 @@ HRESULT CImapConnection::GetMessageCount(unsigned long& ulCount, ImapErrorFunc p
 // Uidlist is an IMAP uid message set, eg: "23:45,56,58".
 // END NOTES.
 
-HRESULT CImapConnection::CopyMessages (const char *pUidlist, const char *pDestMailbox, CDWordArray *dwaNewUIDs, ImapErrorFunc pErrFn /* = NULL */)
+HRESULT CImapConnection::CopyMessages (const char *pUidlist, const char *pDestMailbox, CDWordArray *dwaNewUIDs, ImapErrorFunc pErrFn /* = NULL */, CDWordArray *dwaQuellUIDs /* = NULL */)
 {
 	HRESULT hResult = E_FAIL;
 
@@ -1058,7 +1058,7 @@ HRESULT CImapConnection::CopyMessages (const char *pUidlist, const char *pDestMa
 	// Call the imapdll function
 	if (m_pImapStream)
 	{
-		hResult = m_pImapStream->UIDCopy (pUidlist, pDestMailbox, dwaNewUIDs);
+		hResult = m_pImapStream->UIDCopy (pUidlist, pDestMailbox, dwaNewUIDs, dwaQuellUIDs);
 	}
 
 	return hResult;

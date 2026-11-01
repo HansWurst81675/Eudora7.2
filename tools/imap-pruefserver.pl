@@ -108,6 +108,7 @@ while (@ARGV) {
     elsif ($a eq '--append-verzoegerung') { $opt{append_verzoegerung} = shift @ARGV }
     elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
     elsif ($a eq '--ohne-copyuid') { $opt{ohne_copyuid} = 1 }   # E-184/E-170
+    elsif ($a eq '--datum-absteigend') { $opt{datum_absteigend} = 1 }   # E-184 K3
     else { die "unbekannt: $a\n" }
 }
 
@@ -134,7 +135,11 @@ for my $i (1 .. $opt{nachrichten}) {
         "From: Pruefserver <$von>",
         'To: pruefling@pruefserver.invalid',
         "Subject: Pruefnachricht $i von $von",
-        'Date: Thu, 10 Sep 2026 12:00:00 +0200',
+        # E-184 K3: mit --datum-absteigend ist UID 1 die juengste Nachricht -
+        # nach Datum sortiert steht die Liste dann absteigend nach UID (3,2,1).
+        ($opt{datum_absteigend}
+            ? sprintf('Date: Thu, 10 Sep 2026 %02d:00:00 +0200', 20 - $i)
+            : 'Date: Thu, 10 Sep 2026 12:00:00 +0200'),
         "Message-ID: <pruef-$i\@pruefserver.invalid>",
         'MIME-Version: 1.0',
         'Content-Type: text/plain; charset=us-ascii',
@@ -457,10 +462,28 @@ while (time < $ende) {
                 my $laenge = length $m->{text};
                 my $flags = $m->{flags} || '';
                 if ($r =~ /BODY\.PEEK\[HEADER|BODY\[HEADER|RFC822\.HEADER/i) {
-                    my ($kopf) = $m->{text} =~ /^(.*?\r\n)\r\n/s;
+                    # Mit der Leerzeile, die den Kopf abschliesst (RFC 3501 6.4.5:
+                    # HEADER und HEADER.FIELDS enden mit ihr). Ohne sie las Eudora von
+                    # drei Koepfen nur den ersten (gemessen 01.11.2026, E-184 K3).
+                    my ($kopf) = $m->{text} =~ /^(.*?\r\n\r\n)/s;
                     $kopf = $m->{text} unless defined $kopf;
-                    printf $h "* %d FETCH (UID %d FLAGS (%s) RFC822.SIZE %d BODY[HEADER] {%d}\r\n%s)\r\n",
-                        $i, $uid, $flags, $laenge, length($kopf), $kopf;
+                    # E-184 K3: den Abschnitt so zuruecknennen, wie er verlangt wurde
+                    # (RFC 3501 7.4.2: "BODY[HEADER.FIELDS (...)]", ohne ".PEEK"). Mit
+                    # "BODY[HEADER]" auf eine HEADER.FIELDS-Frage fuehrte Eudora bei drei
+                    # Nachrichten nur eine (gemessen 01.11.2026); bei einer fiel es nie auf.
+                    my ($abschnitt) = $r =~ /BODY(?:\.PEEK)?\[(HEADER[^\]]*)\]/i;
+                    $abschnitt = 'HEADER' unless defined $abschnitt;
+                    printf $h "* %d FETCH (UID %d FLAGS (%s) RFC822.SIZE %d BODY[%s] {%d}\r\n%s)\r\n",
+                        $i, $uid, $flags, $laenge, $abschnitt, length($kopf), $kopf;
+                }
+                elsif ($r !~ /BODY|RFC822(?!\.SIZE)|ENVELOPE/i) {
+                    # E-184 K3: nur FLAGS/UID/RFC822.SIZE verlangt - nur das liefern,
+                    # wie ein echter Server. Vorher kam jedes Mal die ganze Nachricht
+                    # mit; bei einer Nachricht nahm Eudora das hin, bei drei nicht.
+                    my @teile = ("UID $uid");
+                    push @teile, "FLAGS ($flags)" if $r =~ /FLAGS/i;
+                    push @teile, "RFC822.SIZE $laenge" if $r =~ /RFC822\.SIZE/i;
+                    printf $h "* %d FETCH (%s)\r\n", $i, join(' ', @teile);
                 }
                 else {
                     printf $h "* %d FETCH (UID %d FLAGS (%s) RFC822.SIZE %d BODY[] {%d}\r\n%s)\r\n",
@@ -482,7 +505,7 @@ while (time < $ende) {
             }
             else {
                 my $zliste = liste_fuer($zname);
-                my (@alt, @neu);
+                my (@alt, @neu, %gewaehlt_pos);
                 for my $teil (split /,/, $menge) {
                     my ($von, $bis) = $teil =~ /^(\d+|\*)(?::(\d+|\*))?$/ or next;
                     $bis = $von unless defined $bis;
@@ -492,17 +515,39 @@ while (time < $ende) {
                         my $lo = ($von eq '*') ? $schluessel : $von;
                         my $hi = ($bis eq '*') ? 4294967295 : $bis;
                         ($lo, $hi) = ($hi, $lo) if $lo > $hi;
-                        next unless $schluessel >= $lo && $schluessel <= $hi;
-                        my $nuid = naechste_uid($zliste);
-                        push @$zliste, { text => $m->{text}, flags => ($m->{flags} || ''), geloescht_verlangt => 0, uid => $nuid };
-                        push @alt, uid_von($m, $i);
-                        push @neu, $nuid;
+                        $gewaehlt_pos{$i} = 1 if $schluessel >= $lo && $schluessel <= $hi;
                     }
+                }
+                # E-184 K3: wie echte Server (etwa Dovecot) in aufsteigender UID-Folge
+                # kopieren und so melden - unabhaengig von der Reihenfolge der Anfrage.
+                # Eudora schickt die Reihenfolge der Ansicht ("UID COPY 3,2,1"); ein
+                # Pruefserver, der in Anfragefolge kopiert, liesse die fehlerhafte
+                # Zuordnung nach Listenposition zufaellig richtig aussehen
+                # (gemessen 01.11.2026).
+                for my $i (sort { uid_von($quelle->[$a - 1], $a) <=> uid_von($quelle->[$b - 1], $b) } keys %gewaehlt_pos) {
+                    my $m = $quelle->[$i - 1];
+                    my $nuid = naechste_uid($zliste);
+                    push @$zliste, { text => $m->{text}, flags => ($m->{flags} || ''), geloescht_verlangt => 0, uid => $nuid };
+                    push @alt, uid_von($m, $i);
+                    push @neu, $nuid;
                 }
                 notiz(sprintf('  COPY nach "%s": UID %s -> %s', sichtbar_bytes($zname),
                               join(',', @alt) || '(keine)', join(',', @neu) || '(keine)'));
                 if (@alt and !$opt{ohne_copyuid}) {
-                    $antwort = sprintf('%s OK [COPYUID 1 %s %s] COPY completed', $marke, join(',', @alt), join(',', @neu));
+                    # PRUEFER-78 K7: wie echte Server zusammenhaengende UIDs als Bereich
+                    # melden ("1:3" statt "1,2,3"). Mit Listen mass die rote Gegenprobe
+                    # zu E-184m nur den alten Leser, der keine Listen kannte - nicht die
+                    # Zuordnung nach Listenposition, um die es ging.
+                    my $bereiche = sub {
+                        my @u = @_; my @aus;
+                        while (@u) {
+                            my $a = shift @u; my $b = $a;
+                            while (@u && $u[0] == $b + 1) { $b = shift @u }
+                            push @aus, ($a == $b ? $a : "$a:$b");
+                        }
+                        return join(',', @aus);
+                    };
+                    $antwort = sprintf('%s OK [COPYUID 1 %s %s] COPY completed', $marke, $bereiche->(@alt), $bereiche->(@neu));
                 }
                 else {
                     $antwort = "$marke OK COPY completed";

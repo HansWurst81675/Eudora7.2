@@ -34,6 +34,7 @@ DAMAGE. */
 #include "ImapDefs.h"
 #include "mm.h"
 #include "Proto.h"		// Our class defs.
+#include "UidMenge.h"	// E-184 K3: Quell- und Zielmenge aus COPYUID
 
 #include "resource.h"
 #include "osdep.h"		// For fs_get and fs_give.
@@ -2009,7 +2010,7 @@ void CProtocol::Expunge (CString& szUidsActuallyRemoved)
  * Returns: T if successful else NIL
  */
 
-RCODE CProtocol::Copy (char *sequence, char *mailbox, long flags, CDWordArray *dwaNewUIDs)
+RCODE CProtocol::Copy (char *sequence, char *mailbox, long flags, CDWordArray *dwaNewUIDs, CDWordArray *dwaQuellUIDs /*= NULL*/)
 {
 	char *cmd = (IsImap4 () && (flags & CP_UID)) ? "UID COPY" : "COPY";
 	IMAPPARSEDREPLY *reply = NIL;
@@ -2028,7 +2029,7 @@ RCODE CProtocol::Copy (char *sequence, char *mailbox, long flags, CDWordArray *d
 	}
 
 	/* check for UIDPLUS responses */
-	StoreUIDPLUSResponses(reply, dwaNewUIDs);
+	StoreUIDPLUSResponses(reply, dwaNewUIDs, dwaQuellUIDs);
 
 	/* delete the messages if the user said to */
 	if (flags & CP_MOVE)
@@ -2118,7 +2119,7 @@ RCODE CProtocol::Append (char *mailbox, char *flags, char *date, STRING *msg, CD
  * StoreUIDPLUSResponses - Store the UIDPLUS responses given in a reply.
  *	Currently works for COPYUID only.
  ************************************************************************/
-void CProtocol::StoreUIDPLUSResponses(IMAPPARSEDREPLY *reply, CDWordArray *dwaNewUIDs)
+void CProtocol::StoreUIDPLUSResponses(IMAPPARSEDREPLY *reply, CDWordArray *dwaNewUIDs, CDWordArray *dwaQuellUIDs /*= NULL*/)
 {
   	char *s,*e;
    	
@@ -2135,22 +2136,43 @@ void CProtocol::StoreUIDPLUSResponses(IMAPPARSEDREPLY *reply, CDWordArray *dwaNe
 			// if it has, we'll need to discard the responses we've received so far.  They're invalid.
 		  	VerifyUIDValidity(s, e-s);
 		  	
-		  	// next block is the range of messages transferred
-		  	e++;
-		  	if (*e)
-		  	{
-		  		e = strchr(e, ' ');
-		  		if (e)
-		  		{
-		  			// Last block is the range of new UIDs
-		  			s = ++e;
-		  			e = strchr(s, ']');
-		  			if (e)
-		  			{
-		  				UIDStringToUIDs(s, e-s, dwaNewUIDs);
-		  			}
-		  		}
-		  	}
+			// next block is the range of messages transferred
+			e++;
+			if (*e)
+			{
+				char *pQuelle = e;	// E-184 K3: Anfang der Quellmenge
+				e = strchr(e, ' ');
+				if (e)
+				{
+					char *pQuelleEnde = e;
+					// Last block is the range of new UIDs
+					s = ++e;
+					e = strchr(s, ']');
+					if (e)
+					{
+						// E-184 K3 (PRUEFER-75): bei COPYUID beide Mengen mit dem vollstaendigen
+						// Leser (Listen und Bereiche, RFC 3501), und nur gemeinsam - die n-te
+						// Quell-UID gehoert zur n-ten Ziel-UID (RFC 4315). Passt die Anzahl nicht
+						// oder ist eine Menge verdorben, wird nichts uebernommen: ohne Zuordnung
+						// raeumt E-189 die Vorab-Kopie weg, mit falscher stuende sie ueber Kreuz.
+						if (dwaQuellUIDs && !strncmp(reply->text, "[COPYUID", 8))
+						{
+							CDWordArray dwaQ, dwaZ;
+							int nQ = E184UidMengeLesen(pQuelle, (int) (pQuelleEnde - pQuelle), &dwaQ);
+							int nZ = E184UidMengeLesen(s, (int) (e - s), &dwaZ);
+							if (nQ > 0 && nQ == nZ)
+							{
+								dwaQuellUIDs->Append(dwaQ);
+								dwaNewUIDs->Append(dwaZ);
+							}
+						}
+						else
+						{
+							UIDStringToUIDs(s, e-s, dwaNewUIDs);
+						}
+					}
+				}
+			}
 		}
 	}
 }

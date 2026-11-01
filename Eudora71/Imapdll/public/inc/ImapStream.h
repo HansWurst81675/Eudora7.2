@@ -122,7 +122,7 @@ public:
 
 // COPY/MOVE methods. Destination mailbox MUST be on the same server.
 // BUG: Should be extended to handle message sets.
-	HRESULT		UIDCopy (const char *pUidlist, const char *pDestMailbox, CDWordArray *dwaNewUIDs);
+	HRESULT		UIDCopy (const char *pUidlist, const char *pDestMailbox, CDWordArray *dwaNewUIDs, CDWordArray *dwaQuellUIDs = NULL);	// E-184 K3
 
 // Append:
 	HRESULT		AppendMessage (const char* pFlags, unsigned long Seconds, STRING *pMsg, CDWordArray *dwaNewUIDs);

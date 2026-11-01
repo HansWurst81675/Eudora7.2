@@ -49,7 +49,12 @@ param(
     # Mail mit derselben UID, ueberlebt sie vermutlich den Abgleich
     # (CUidMap fuehrt gleiche UIDs nur einmal). Erwartet ohne Fehler:
     # zwei Eintraege (fremd uid=1, Kopie uid=2 nach dem Abgleich).
-    [switch] $OhneCopyuid
+    [switch] $OhneCopyuid,
+    # E-184 K3 (PRUEFER-75): drei Mails, nach Datum sortiert (UID 1 ist die
+    # juengste, die Liste steht also 3,2,1), alle markiert und verschoben; im
+    # leeren Ziel muss danach jede neue UID den Betreff ihrer eigenen Mail
+    # tragen. Huelle: tools\messen-e184m.ps1.
+    [switch] $Mehrere
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
@@ -187,6 +192,10 @@ $belegt = @(Get-NetTCPConnection -LocalPort 1143 -State Listen -ErrorAction Sile
 if ($belegt.Count -gt 0) { Write-Host ('E184 FEHLER: Port 1143 belegt von Prozess ' + (($belegt | ForEach-Object { $_.OwningProcess }) -join ',')); exit 1 }
 $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 3 * $Warten),
              '--nachrichten', '1', '--fremde-uid', '1')
+if ($Mehrere) {
+    $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 3 * $Warten),
+                 '--nachrichten', '3', '--datum-absteigend')
+}
 if ($OhneCopyuid) { $srvArgs += '--ohne-copyuid' }
 $srv = Start-Process $perl -ArgumentList $srvArgs -WorkingDirectory $repo -WindowStyle Hidden -PassThru
 Start-Sleep -Seconds 2
@@ -325,9 +334,18 @@ try {
     if ($script:lb -eq [IntPtr]::Zero) { Write-Host 'E184 FEHLER: keine Liste im INBOX-Fenster'; exit 1 }
     $anzahl = [int](Snd $script:lb 0x018B ([IntPtr]0) ([IntPtr]0))                   # LB_GETCOUNT
     Write-Host "E184 INBOX-Zeilen: $anzahl"
-    if ($anzahl -ne 1) { Write-Host 'E184 FEHLER: INBOX sollte genau eine Zeile haben'; exit 1 }
+    $sollZeilen = 1; if ($Mehrere) { $sollZeilen = 3 }
+    if ($anzahl -ne $sollZeilen) { Write-Host "E184 FEHLER: INBOX sollte genau $sollZeilen Zeile(n) haben"; exit 1 }
+    if ($Mehrere) {
+        # Nach Datum sortieren (Menuebefehl, kein Tastendruck): UID 1 ist die
+        # juengste, die Liste steht danach 3,2,1 - nicht aufsteigend nach UID.
+        [void][E184]::PostMessageA($aktiv, 0x0111, [IntPtr]33247, [IntPtr]::Zero)   # ID_EDIT_SORT_SORTBYDATE
+        Start-Sleep -Seconds 2
+    }
     [void](Snd $script:lb 0x0185 ([IntPtr]0) ([IntPtr](-1)))                         # LB_SETSEL FALSE, alle
-    [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]0))                            # LB_SETSEL TRUE, 0
+    if ($Mehrere) { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr](-1))) }       # LB_SETSEL TRUE, alle
+    else          { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]0)) }          # LB_SETSEL TRUE, 0
+    Write-Host ('E184 markiert: ' + [int](Snd $script:lb 0x0190 ([IntPtr]0) ([IntPtr]0)))   # LB_GETSELCOUNT
     [void](Snd $script:lb 0x019E ([IntPtr]0) ([IntPtr]0))                            # LB_SETCARETINDEX
 
     $vorher = TocLesen $ablageToc
@@ -374,6 +392,20 @@ foreach ($e in $nachher) { Write-Host ('E184 TOC uid={0} label={1} offset={2} la
 $fremd = @($nachher | Where-Object { $_.Uid -eq 1 -and $_.Betreff -like 'Fremde Nachricht*' }).Count
 $kopie = @($nachher | Where-Object { $_.Uid -eq 2 -and $_.Betreff -like 'Pruefnachricht 1*' }).Count
 Write-Host ("E184 ERGEBNIS fremd={0} kopie={1} eintraege={2}" -f $fremd, $kopie, $nachher.Count)
+if ($Mehrere) {
+    # Im leeren Ziel vergibt der Server 1,2,3 in UID-Reihenfolge der Quelle.
+    $richtig = @($nachher | Where-Object { $_.Betreff -like ('Pruefnachricht ' + $_.Uid + ' *') }).Count
+    $falsch  = @($nachher | Where-Object { $_.Betreff -like 'Pruefnachricht *' -and $_.Betreff -notlike ('Pruefnachricht ' + $_.Uid + ' *') }).Count
+    # PRUEFER-78 K7: nur aussagekraeftig, wenn Eudora NICHT aufsteigend angefragt
+    # hat - die Anfrage steht im Serverprotokoll ("UID COPY 3,2,1").
+    $anfrage = '(keine)'
+    $z = $prot | Where-Object { $_ -match '<- \S+ UID COPY (\S+) ' } | Select-Object -First 1
+    if ($z -and $z -match 'UID COPY (\S+) ') { $anfrage = $Matches[1] }
+    $antwort = '(keine)'
+    $z = $prot | Where-Object { $_ -match 'COPYUID 1 (\S+ \S+)\]' } | Select-Object -First 1
+    if ($z -and $z -match 'COPYUID 1 (\S+ \S+)\]') { $antwort = $Matches[1] -replace ' ', '/' }
+    Write-Host ("E184M ERGEBNIS richtig={0} falsch={1} eintraege={2} anfrage={3} copyuid={4}" -f $richtig, $falsch, $nachher.Count, $anfrage, $antwort)
+}
 if ($OhneCopyuid) {
     $kopieAlt = @($nachher | Where-Object { $_.Uid -eq 1 -and $_.Betreff -like 'Pruefnachricht 1*' }).Count
     Write-Host ("E189 ERGEBNIS fremd={0} kopie-neu={1} kopie-mit-alter-uid={2} eintraege={3}" -f $fremd, $kopie, $kopieAlt, $nachher.Count)

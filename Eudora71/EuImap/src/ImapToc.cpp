@@ -1539,7 +1539,8 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 										   CTocDoc *pTargetToc,
 										   CDWordArray *pdwaNewUIDs,
 										   CImapSum *pImapSum,
-										   bool bFindNew)
+										   bool bFindNew,
+										   CDWordArray *pdwaQuellUIDs)
 {
 	if (strUIDList.IsEmpty() || !pTargetToc || !pdwaNewUIDs)
 	{
@@ -1560,8 +1561,17 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 	// This is potentially way too inefficient for a long term solution.
 	// Better would be to loop through the summaries once, adding to a CSumList any summarys that match
 	// the list and go until the size of the list matches the number of entries.
+	// E-184 K3 (PRUEFER-75): mit der Quellmenge aus COPYUID wird jede alte UID ueber
+	// ihre Stelle dort zugeordnet, nicht ueber die Stelle in strUIDList - die folgt
+	// der Sortierung der Ansicht, der Server nummeriert in UID-Reihenfolge.
+	const bool bNachQuelle = (pdwaQuellUIDs && iSize > 0 && pdwaQuellUIDs->GetSize() == iSize);
 	while (!strUIDList.IsEmpty() && (i < iSize))
 	{
+		// Je Durchlauf neu. Bis 7.2.1.130 nur einmal vor der Schleife: nach dem ersten
+		// Fehltreffer galten alle folgenden Mails als neu (zweites AddSum), und ohne
+		// bFindNew wurde die Zusammenfassung des vorigen Durchlaufs wiederverwendet.
+		pSumNew = NULL;
+		bFoundNew = true;
 		iPos = strLocalUIDList.Find(",");
 		if (iPos > -1)
 		{
@@ -1573,7 +1583,24 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 			strOldUID = strLocalUIDList;
 		}
 		lOldUID = atoi(strOldUID);
-		lNewUID = pdwaNewUIDs->ElementAt(i);
+		if (bNachQuelle)
+		{
+			int j = 0;
+			while (j < iSize && pdwaQuellUIDs->GetAt(j) != (DWORD) lOldUID)
+				j++;
+			if (j >= iSize)
+			{
+				// Der Server nennt diese UID nicht als kopiert: nichts zuordnen. Eine
+				// Vorab-Kopie bleibt markiert und faellt ueber E-189 weg.
+				++i;
+				continue;
+			}
+			lNewUID = pdwaNewUIDs->ElementAt(j);
+		}
+		else
+		{
+			lNewUID = pdwaNewUIDs->ElementAt(i);
+		}
 
 		if (bFindNew)
 		{

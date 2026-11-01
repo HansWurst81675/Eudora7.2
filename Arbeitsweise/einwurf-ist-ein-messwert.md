@@ -205,3 +205,12 @@ Gemessen mit `verlauf-messen.pl … 2026-10-29T20:20`: 29.10. 21:20 bis 22:31 ME
 Die Regel *„Jeder Einwurf Gregors bekommt eine Antwort, auch wenn ein zweiter dringlicher ist“* steht seit dem 28.10. in [[nur-offene-entscheidungen-auf-gregors-liste]]. Mit dem 15.10. (oben) und dem 28.10. ist das das dritte gemessene Auftreten ([[fehlerklassen-abstellen]]).
 
 **Vorschlag (nicht gebaut):** `verlauf-messen.pl --offen` listet jede Nachricht Gregors, auf die bis zu seiner nächsten Nachricht kein Antworttext ein Inhaltswort aus ihr aufgreift. Gegenprobe: 21:56:19 erscheint, 22:18:07 (*„wo finde ich archiv?“*, beantwortet 22:18:10) nicht.
+
+## Nachtrag 01.11.2026 spätabends (CHRONIST): gemessen, aber nicht gesagt
+
+`verlauf-messen.pl … 2026-11-01T16:18`: 17:18 bis 18:42 MEZ, **9 Nachrichten, alle 9 Einwürfe**, sieben davon in den fünf Minuten nach dem versehentlichen Start ([[nichts-auf-gregors-bildschirm-starten]], Nachtrag 01.11.). Zwei blieben ohne Antwort (gemessen: kein Antworttext bis 18:43 greift sie auf):
+
+1. **17:23:40** *„mit dem letzten PR sind auch die stände von CHANGELOG.md und BEFUNDE.md nachgezogen?“* Um 17:25:06 gemessen (`git show origin/main:…`: Abschnitt 7.2.1.130 im CHANGELOG, vier Treffer in BEFUNDE). Das Ergebnis, „ja“, steht nur in der Werkzeugausgabe.
+2. **17:24:31** *„es kam wieder die start meldung …“* Um 17:24:43 und 17:24:54 gemessen: kein Prozess, keine neue Spur. Der nächste Text (17:25:26) antwortete schon auf die dritte Nachricht.
+
+Neu gegenüber dem 15.10. und 30.10.: Die Messung war jedes Mal da und schnell, es fehlte nur der Satz an Gregor. Viertes gemessenes Auftreten (15.10., 28.10., 30.10., 01.11.). **How to apply, zusätzlich:** Eine Messung, die eine Frage Gregors beantwortet, endet mit einem Satz an ihn, bevor der nächste Werkzeugaufruf kommt. `verlauf-messen.pl --offen` (Vorschlag oben) bleibt ungebaut; Gegenprobe heute: 17:23:40 und 17:24:31 erscheinen, 17:25:11 (beantwortet 17:25:26) nicht.

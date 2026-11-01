@@ -98,3 +98,30 @@ ohne Pfad: ein Prüfserver, der immer `APPENDUID` meldet
 ([[erst-nachstellen-dann-ausliefern]]), ein Konto ohne Umlaute, ein Postfach
 mit drei Nachrichten statt dreitausend. Die Frage dahinter ist immer dieselbe:
 **worin ist es hier leichter als bei ihm?**
+
+## Nachtrag 01.11.2026 spätabends (CHRONIST): der Prüfserver war ärmer als ein echter Server
+
+Zeiten MEZ, gemessen am Transkript `6f848773` ([[CHRONIST-2026-11-01d]]).
+
+1. **Umkehrfall.** Der erste Lauf mit der E-184-Behebung (17:41:09) ergab `fremd=1 kopie=0 eintraege=1`: die fremde Mail gerettet, die verschobene fehlte. Ursache war der Prüfserver. Er meldete nach einem `COPY` von einer anderen Verbindung kein unaufgefordertes `* n EXISTS` (RFC 3501 7.3.1), also glich Eudora das Ziel nur bis zur alten Zahl ab. Ergänzt um 17:41:47, geprüft mit einer Zwei-Verbindungen-Probe (17:41:59 *„PROBE GRUEN“*), danach der alte Bau am neuen Server noch einmal rot (17:43:28), die übrigen vier IMAP-Fälle grün (17:55). Hier war der Prüfstand nicht leichter, sondern **anders** als die Wirklichkeit, und das kann auch eine richtige Behebung halb grün aussehen lassen. Die Frage heißt also nicht nur *„worin ist es hier leichter?“*, sondern *„worin ist es hier anders?“*.
+2. **Ein Schritt, der es leichter macht, offen benannt.** Nach einem roten Lauf mit der E-189-Behebung (18:09:41; 18:11:13 `kopie=0 eintraege=1`) bekam `messen-e184.ps1` um 18:11:33 ein zweites Öffnen von „Ablage“. Das ist bequemer als Gregors Ablauf. Es steht aber als K3 in BEFUNDE E-189, mit dem Satz für den TESTPLAN (*„die verschobene Mail kann im Zielordner kurz fehlen und muss nach erneutem Öffnen des Ordners erscheinen“*), und PRÜFER-77 hat geprüft, dass es keinen falschen Zustand grün macht. So sieht ein erlaubter bequemer Schritt aus: benannt, als Restfehler eingetragen, gegengeprüft.
+3. **Das Ergebnisbuch hält nur grüne Werte.** `tools/pruefstand-lauf.ps1` zeigt bei `[FEHL]` die Sollzeile (18:09:41, 18:18:17: *„fehlt in messung: E189 ERGEBNIS fremd=1 kopie-neu=1 …“*), nicht den gemessenen Wert. Die rote Gegenprobe am Paketbau ist deshalb nirgends mit Zahlen abgelegt (PRÜFER-76 K5; BEFUNDE E-189 *„Werte nicht abgelegt“*). Werkzeugmangel im Laufbericht.
+
+## Nachtrag 01.11.2026 nachts (CHRONIST): viermal ärmer als ein echter Server, an einem Abend
+
+Transkript `6f848773…`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-01e]]). Der IMAP-Prüfserver `tools/imap-pruefserver.pl` wich an einem Abend viermal von einem echten Server ab. Jedes Mal fiel es erst auf, als eine Messung nicht passte:
+
+| Zeit | Abweichung | Folge |
+|---|---|---|
+| 17:41 | kein unaufgefordertes `* n EXISTS` nach `COPY` von einer anderen Verbindung | grüner Lauf mit `kopie=0` (Nachtrag oben) |
+| 19:16:44 | auf `BODY.PEEK[HEADER.FIELDS (…)]` kam `BODY[HEADER]`, auf eine Abfrage nur nach FLAGS/SIZE die ganze Nachricht | Eudora zeigte drei Mails als eine Zeile |
+| 19:20:01 | `COPY` in Anfragereihenfolge statt aufsteigend nach UID, wie Dovecot | die falsche Zuordnung wäre zufällig richtig ausgegangen |
+| 20:05:13 | `COPYUID` als Liste `1,2,3` statt als Bereich `1:3` | die rote Gegenprobe maß den alten Leser statt der Zuordnung ([[messung-muss-den-weg-treffen]], Fall 14) |
+
+Die letzte Abweichung fand nicht die Hauptsitzung, sondern PRÜFER-78 am Quelltext. Er hatte keinen Prüfstand und rechnete nur nach. Die ersten drei fand die Hauptsitzung selbst, weil ein Ergebnis nicht zur Erwartung passte ([[ausreisser-ist-der-befund]]).
+
+Der Prüfserver ist ein Eigenbau, der nur so viel Protokoll kann, wie bisher gebraucht wurde. Jeder neue Fall läuft also über Antworten, die noch nie gegen einen echten Server verglichen wurden.
+
+**How to apply, zusätzlich:** Bevor ein neuer Prüfstandsfall einen IMAP-Befehl benutzt, den der Prüfserver bisher nicht beantworten musste, schreibe ich die Antwortform eines echten Servers aus der RFC und mit einem Beispiel von Dovecot in den Kopf des Prüfservers. Erst dann folgt der Fall. „Der Prüfserver antwortet“ ist keine Aussage darüber, ob er so antwortet wie Gregors Server.
+
+**Schranken-Vorschlag (nicht gebaut):** `tools/imap-pruefserver.pl --selbsttest` mit einer Tabelle *Anfrage → erwartete Antwortform* je unterstütztem Befehl (`EXISTS` nach fremdem `COPY`, `HEADER.FIELDS`, `COPY`-Reihenfolge, `COPYUID`-Bereiche), aufgerufen von `tools/pruefstand-lauf.ps1` vor jedem IMAP-Fall. Gegenprobe: am Stand vor `c0f70c11` wird der `COPYUID`-Fall rot, am Stand danach grün.

@@ -3087,7 +3087,8 @@ HRESULT CImapMailbox::XferMessagesOnServer (LPCSTR pUidlist,
 											CDWordArray *pdwaNewUIDs,
 											LPCSTR pDestination,
 											BOOL Copy,
-											BOOL bSilent/*=FALSE*/)
+											BOOL bSilent/*=FALSE*/,
+											CDWordArray *pdwaQuellUIDs/*=NULL*/)
 {
 	HRESULT			hResult = S_OK;
 
@@ -3160,7 +3161,7 @@ HRESULT CImapMailbox::XferMessagesOnServer (LPCSTR pUidlist,
 	if ( SUCCEEDED (hResult) )
 	{
 		// Ok, Send the command.
-		hResult = m_pImap->CopyMessages (pUidlist, pDestination, pdwaNewUIDs);
+		hResult = m_pImap->CopyMessages (pUidlist, pDestination, pdwaNewUIDs, NULL, pdwaQuellUIDs);
 	}
 
 	// If no UIDPLUS data was returned tell our account object about it.

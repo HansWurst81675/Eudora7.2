@@ -176,8 +176,24 @@ Zeiten MEZ, gemessen am Transkript, belegt an [[E-157]].
 - **Ein Prüfstandslauf ist erst fertig, wenn er Gregors Umgebung so hinterlässt, wie er sie vorfand.** Das gilt für die Registry unter `HKCU\Software\Qualcomm`, für offene Prozesse aus `C:\Temp` und für Dateien außerhalb von `C:\Temp`.
 - Auch mit Gregors Ja bekommt jeder Lauf eine Ansagezeile mit Dauer und Fensterzahl. Das Ja beantwortet „darf ich“, die Ansage sagt „wann und wie lange“.
 
-## Nachtrag 01.11.2026, 17:23: ein Probeaufruf im Kopierbefehl
+## Nachtrag 01.11.2026, 17:19 (geschrieben 17:23): ein Probeaufruf im Kopierbefehl
 
 Beim Anlegen des Prüfstands `C:\Temp\E184` stand im selben Bash-Aufruf wie `cp -r` ein `"/c/Temp/E184/Eudora.exe" --version` - gedacht als harmlose Versionsabfrage. Eudora kennt keinen solchen Schalter, startete normal, fand ohne Mailverzeichnis-Angabe über die Registry Gregors Mailverzeichnis von 7.2.1.128 und zeigte den E-132-Dialog auf seinem Bildschirm. Gregor schickte ein Bildschirmfoto: *„meldung von dir?“*. Beendet mit IDCANCEL an das gemessene Handle, nichts gemerkt (gemessen).
 
 **Regel:** Eine `Eudora.exe` wird nie direkt aufgerufen, auch nicht „nur zum Abfragen“. Die Fassung einer EXE liest man aus der Versionsressource (`[Diagnostics.FileVersionInfo]::GetVersionInfo(...)` oder `strings`), gestartet wird nur über `tools/testlauf.ps1`. Die Prüfstand-Freigabe des Tages deckt das Werkzeug, nicht einen freihändigen Aufruf.
+
+## Nachtrag 01.11.2026 spätabends (CHRONIST): ein Start, den keine Spur verrät
+
+Zeiten MEZ, gemessen am Transkript `6f848773`; Einzelheiten in [[CHRONIST-2026-11-01d]].
+
+**Zeitleiste.** Der Aufruf mit `/c/Temp/E184/Eudora.exe --version` ging um **17:18:55** hinaus (im selben Bash-Befehl wie `cp -r`), nicht um 17:23; 17:23 ist die Schreibzeit der Zeile in `tools/TESTLAEUFE.md` und des Nachtrags oben (Überschrift berichtigt; die Zeile in `TESTLAEUFE.md` liegt außerhalb von `Arbeitsweise/`). Gregors Foto kam 17:20:13, beendet war der Prozess 8816 um 17:21:09 (`IDCANCEL` an das gemessene Handle). Der Bash-Aufruf hing bis dahin an der laufenden Eudora (120 s, dann Hintergrund).
+
+**Ein Start, nicht zwei.** Gregors *„es kam wieder die start meldung …“* (17:24:31) hat keinen zweiten Prozess: Kein Werkzeugaufruf zwischen 17:21:12 und 17:24:31 startet Eudora, um 17:24:43 lief keine (gemessen). Dass er denselben Dialog meinte, ist Vermutung. Gemessen hat die Sitzung das in zwölf Sekunden, gesagt hat sie es ihm nie ([[einwurf-ist-ein-messwert]], Nachtrag 01.11.).
+
+**Die Schranke vom 21.10. war blind.** `tools/pruefe-startwege.pl` liest die `eudora.log` der Prüfstände unter `C:\Temp`. Ein Start **ohne Mailverzeichnis-Argument** schreibt dort nichts: Eudora griff über die Registry nach Gregors Verzeichnis von 7.2.1.128 und blieb im Dialog davor stehen. Gemessen: Die `eudora.log` in `C:\Temp\E184` trägt nur die Kopierzeit 17:19:04, keine `eudora.log` in Gregors `Eudora72-*` ist vom 01.11. Ohne Gregors Foto gäbe es keine Zeile ([[pruefstand-kann-blind-sein]]). Ob der Start nach `HKCU\Software\Qualcomm` schrieb, ist **nicht geprüft** (Regel vom 27.10. oben).
+
+**Rückfall in den Nachtrag vom 21.10.** („der dritte Weg: gar kein Werkzeug“). Damals hieß die Folgerung: nicht die Liste der Startwege verlängern, sondern an der Spur prüfen. Die Spur fehlt aber genau beim gefährlichsten Weg, dem ohne Prüfstandsverzeichnis. Also gehört eine zweite Prüfung **vor** den Befehl.
+
+**Vorschlag (nicht gebaut):** PreToolUse-Haken `tools/haken-eudora-start.pl` neben `haken-pr-lektor.pl`, Matcher `Bash|PowerShell`. Abweisen, wenn eine `Eudora.exe` an Befehlsstelle steht (Zeilenanfang, nach `;` `&&` `||` `|` `&`, nach `Start-Process`, `Invoke-Item`, `start`, `cmd /c`), außer der Befehl ruft `tools/testlauf.ps1`, `tools/pruefstand-lauf.ps1` oder `tools/stapel-untersuchen.ps1` auf; Heredoc-Inhalte und Kommentare vorher entfernen ([[schranke-liest-nur-code]]). **Gegenprobe:** 17:18:55 → abweisen; `& "C:\Temp\E184\Eudora.exe"` → abweisen; `cp "$B/$f" /c/Temp/E184/` über `Eudora.exe` (17:22:32), `grep -a -o … Eudora.exe`, `Get-Process … -ieq 'C:\Temp\E184\Eudora.exe'` (17:21:07), `testlauf.ps1` (17:25:28) und die Commit-Nachricht mit „Eudora.exe --version“ (17:21:53) → durchlassen.
+
+**Schranke seit 01.11.2026 abends:** `tools/haken-eudora-start.pl`, PreToolUse-Haken fuer Bash und PowerShell - weist jeden Befehl ab, der eine `Eudora.exe` an Befehlsstelle hat (auch hinter `&`, `Start-Process`, `start`, `cmd /c`). Selbsttest 23 Faelle, live geprueft (Zweig `e184_mehrere_mails`).
