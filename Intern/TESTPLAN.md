@@ -148,6 +148,8 @@ ohne Kästchen. Der Prüfstandsfall `E-139p` prüft Lauf 1.
 
 **Ergebnis 31.10.2026, Gregor an 7.2.1.129: bestanden** — *„bestätige neue meldung. nach checkbox aktivieren kommt sie nach dem neustarte nicht mehr, wird nicht mehr angezeigt. PASSED“*; in seinem Protokoll `E-139 Rechtschreibhinweis: abgeschaltet (WarnSpellUnavailable=0)`.
 
+**Bestätigt am 01.11.2026 abends, Gregor an 7.2.1.130:** *„E-139 kommt in 1.130 nicht mehr vor.“*
+
 ## <a id="e-140-naechstes"></a>In 7.2.1.129: „Speichern unter“ aus dem Nachrichten- und Verfassen-Fenster nennt den Zeichensatz ([E-140](BEFUNDE.md#e-140))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Bis

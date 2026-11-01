@@ -4,10 +4,12 @@
 # (--datum-absteigend); das Skript sortiert die INBOX nach Datum, die Liste
 # steht dann 3,2,1, markiert alle und verschiebt sie nach "Ablage" (leer).
 # Der Server vergibt dort 1,2,3 in UID-Reihenfolge der Quelle und meldet
-# "[COPYUID 1 1:3 1:3]". Ordnet Eudora nach der Reihenfolge der eigenen
+# "[COPYUID 1 1,2,3 1,2,3]". Ordnet Eudora nach der Reihenfolge der eigenen
 # Liste zu, tragen die Eintraege die UIDs ueber Kreuz.
 # Erwartet ohne Fehler:
 #   E184M ERGEBNIS richtig=3 falsch=0 eintraege=3
+# GEMESSEN am 01.11.2026: rot am Bau 6e9a43ba (E-184/E-189 behoben, K3
+# nicht: richtig=2 falsch=1), gruen mit der Behebung (Bau c4e883a9*).
 # Laeuft unter tools\testlauf.ps1 -MessenSkript (nur -Pfadfilter wird
 # durchgereicht), Pruefstand wie E-184.
 # Kodierung: reines ASCII, kein BOM.

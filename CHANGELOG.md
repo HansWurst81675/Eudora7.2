@@ -109,7 +109,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 **Zweig `e184_mehrere_mails`** (nach dem Merge von #197). Gebaut (Release, 0 Fehler), Tests 357/357, am Prüfstand gemessen.
 
 * **Mehrere Mails im IMAP-Konto verschieben vertauscht die Zuordnung nicht mehr** ([E-184](Intern/BEFUNDE.md#e-184), Rest K3 aus PRÜFER-75): Eudora las aus der Serverantwort `COPYUID` nur die neuen Nummern und ordnete sie nach der Reihenfolge der eigenen Liste zu; stand die Liste nicht aufsteigend nach Nummer, bekamen die Einträge im Ziel Betreff und Absender einer anderen Mail. Jetzt wird über die alten Nummern aus derselben Antwort zugeordnet. Prüfstandsfall `E-184m`: rot vorher, grün jetzt. Regressionstest `TestE184.cpp`.
-* **[E-172](Intern/BEFUNDE.md#e-172) aufgeklärt, kein Programmfehler** ([E-172](Intern/BEFUNDE.md#e-172)): der Base64-Block steht in zwei langen Kopfzeilen von GMX und erscheint nur mit *Blah Blah Blah*; gemessen an Gregors Bildschirmfotos und seiner Kopie des Kopfes.
+* **[E-172](Intern/BEFUNDE.md#e-172) aufgeklärt, kein Programmfehler**: der Base64-Block steht in zwei langen Kopfzeilen von GMX und erscheint nur mit *Blah Blah Blah*; gemessen an Gregors Bildschirmfotos und seiner Kopie des Kopfes.
 * **Haken gegen direkte `Eudora.exe`-Aufrufe** (`tools/haken-eudora-start.pl`) und **`tools/auftrag-rolle.pl`** liest belegte Kennungen aus dem Zielzweig.
 * **Prüfserver** antwortet genauer wie ein echter Server: nur das Verlangte bei `FETCH`, Kopfblock mit abschließender Leerzeile, Abschnittsname wie verlangt, `COPY` in UID-Folge; neuer Schalter `--datum-absteigend`. Alle IMAP-Fälle grün.
 
