@@ -76,6 +76,16 @@ void TT_Suite(const char* szName)
 //
 static int	s_bOffen = 0;
 
+//
+// GERUESTFEHLER (01.11.2026, PRUEFER-69 K2). Ein doppeltes TT_EndTest zaehlte
+// einen roten Test ein zweites Mal (zwei rote ergaben 3) oder druckte nach
+// einem gruenen eine namenlose [ok  ]-Zeile; eine Abweichung ausserhalb eines
+// Tests senkte "bestanden" unter die Zahl der benannten gruenen Tests. Beides
+// ist ein Fehler im Testcode, kein Test: es wird hier gezaehlt, nicht unter
+// "fehlgeschlagen", und macht die Rueckgabe trotzdem rot.
+//
+static int	s_iGeruestfehler = 0;
+
 static void OffenenTestAlsFehlerZaehlen(const char* szWo)
 {
 	if (!s_bOffen)
@@ -105,6 +115,12 @@ void TT_BeginTest(const char* szName)
 
 void TT_EndTest(void)
 {
+	if (!s_bOffen)
+	{
+		++s_iGeruestfehler;
+		printf("[FEHL] (Geruest) TT_EndTest ohne offenen Test - doppeltes Ende? Letzter Test davor bleibt einmal gezaehlt\n");
+		return;
+	}
 	if (s_iChecksFailed == 0)
 	{
 		printf("[ok  ] %s\n", s_szCurrent);
@@ -128,8 +144,8 @@ void TT_Fail(const char* szFormat, ...)
 		// Abweichung ausserhalb jedes Tests - kein TT_EndTest wird sie je
 		// zaehlen, also hier.
 		va_list args;
-		++s_iFailedTests;
-		printf("[FEHL] (ausserhalb eines Tests) ");
+		++s_iGeruestfehler;
+		printf("[FEHL] (Geruest, ausserhalb eines Tests) ");
 		va_start(args, szFormat);
 		vprintf(szFormat, args);
 		va_end(args);
@@ -205,5 +221,10 @@ int TT_Summary(void)
 	printf(" Ergebnis: %d Tests, %d bestanden, %d fehlgeschlagen\n",
 		   s_iTests, s_iTests - s_iFailedTests, s_iFailedTests);
 	printf("===============================================================\n");
-	return s_iFailedTests;
+	if (s_iGeruestfehler > 0)
+	{
+		printf(" Geruestfehler (Testcode, kein Test): %d - Rueckgabe deshalb nicht 0\n", s_iGeruestfehler);
+		printf("===============================================================\n");
+	}
+	return s_iFailedTests + s_iGeruestfehler;
 }
