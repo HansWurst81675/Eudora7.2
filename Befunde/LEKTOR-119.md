@@ -18,8 +18,8 @@ Begründung zu PRÜFER-72 K2 bei [E-143](../Intern/BEFUNDE.md#e-143)) stimmt in 
 Die Stellen habe ich am Quelltext nachgeprüft. Alle vier Werkzeuge sind grün, 46 Befunde
 offen.
 
-Acht Funde, keiner am Programm. **Sechs habe ich im selben Commit berichtigt.** Zwei
-bleiben stehen. Die erzeugten Listen in CHANGELOG und WEITERMACHEN enthalten einen toten
+Acht Funde, keiner am Programm. **Sechs habe ich im selben Commit berichtigt.** Die
+übrigen zwei habe ich auf Auftrag des Hauptagenten im zweiten Commit berichtigt. Die erzeugten Listen in CHANGELOG und WEITERMACHEN enthalten einen toten
 Verweis `(#e-184)`; das liegt am Erzeuger `offene-befunde.pl` ([L-119.7](#l-119.7)). Und der „Kurz“-Satz von
 [E-189](../Intern/BEFUNDE.md#e-189) behauptet als Tatsache, dass der Abgleich die Kopie nicht wegräumt. Die README sagt
 dazu „vermutlich“, und abgelegte Werte, die das belegen, habe ich nicht gefunden ([L-119.8](#l-119.8)).
@@ -145,8 +145,18 @@ Vorher endete sie beim Plan.
 
 ### <a id="l-119.7"></a>L-119.7 — Toter Verweis `(#e-184)` in den erzeugten Listen
 
-**Gewicht: Kleinkram, Werkzeug.** (gemessen) **Nicht berichtigt:** Der Block ist erzeugt, eine
-Änderung von Hand überschreibt das Werkzeug beim nächsten `-schreiben`.
+**Gewicht: Kleinkram, Werkzeug.** (gemessen)
+
+**Berichtigt im zweiten Commit** (Auftrag des Hauptagenten): Im Titel von [E-188](../Intern/BEFUNDE.md#e-188)
+(`Intern/BEFUNDE.md:400`) steht jetzt *„Dieselbe Verwechslung wie [E-184](../Intern/BEFUNDE.md#e-184) an zwei weiteren
+Stellen …“*, als reiner Text ohne Verweis. Danach habe ich `perl tools/offene-befunde.pl
+-schreiben` laufen lassen: `grep -c '(#e-184)'` → 0 in `CHANGELOG.md` und in
+`Intern/WEITERMACHEN.md` (gemessen). Einen weiteren reinen Anker gibt es in keiner erzeugten
+Zeile; gesucht habe ich mit `grep -n '](#'`. Die übrigen Treffer stehen außerhalb der
+erzeugten Blöcke und treffen ihren Anker. Das Werkzeug selbst ist unverändert. Ein neuer Titel
+mit einem reinen Anker würde wieder durchrutschen.
+
+Ursprünglicher Fund:
 
 `CHANGELOG.md:31` und `Intern/WEITERMACHEN.md:79`: *„Dieselbe Verwechslung wie [E-184](#e-184) an zwei
 weiteren Stellen …“*. Weder `CHANGELOG.md` noch `Intern/WEITERMACHEN.md` hat einen Anker `e-184`
@@ -175,7 +185,11 @@ räumt die Kopie nicht weg.“* Als Tatsache, ohne Kennzeichnung. Woanders steht
   „rot“ da, ohne die Werte (`Intern/pruefstand-buch.tsv` führt nur grüne Läufe,
   `Intern/pruefstand-ergebnis.txt` nur die letzte Gegenprobe zu [E-184](../Intern/BEFUNDE.md#e-184)).
 
-**Nicht berichtigt:** Vielleicht hat der Hauptagent die Werte gesehen. Die Protokolle unter
+**Berichtigt im zweiten Commit** (Auftrag des Hauptagenten): `Intern/BEFUNDE.md:399` *„und der
+Abgleich räumt die Kopie vermutlich nicht weg (am Quelltext, [PRÜFER-75](PRUEFER-75.md) K2; Gegenprobe am
+Paketbau rot, Werte nicht abgelegt).“* README und Skripte sagen damit dasselbe.
+
+Ursprünglich nicht berichtigt: Vielleicht hat der Hauptagent die Werte gesehen. Die Protokolle unter
 `C:\Temp\E184` habe ich nicht gelesen. **Vorschlag:** die Werte der Gegenprobe zu [E-189](../Intern/BEFUNDE.md#e-189) am
 Paketbau in BEFUNDE nachtragen. Steht dort `kopie-mit-alter-uid=1` nach dem erneuten Öffnen, ist
 der Satz gemessen und das „vermutlich“ in README und Skripten kann weg. Sonst gehört an den
