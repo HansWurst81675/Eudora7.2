@@ -266,28 +266,42 @@ try {
     }
     if (-not $baum) { Write-Host 'E184 FEHLER: Postfachbaum nicht gefunden'; exit 1 }
 
-    # 2. Ablage oeffnen und abgleichen lassen
-    if (-not (Oeffnen $baum.H @('Ablage'))) { Write-Host 'E184 FEHLER: "Ablage" nicht im Baum'; exit 1 }
-    Start-Sleep -Seconds $Warten
-    Dialoge $pp -Schliessen
-
-    # 3. INBOX oeffnen - NUR unter dem Kontoknoten, der auch "Ablage" traegt;
-    #    sonst greift das lokale Postfach "In" (erster Lauf 01.11.2026 17:25).
+    # 2./3. Den Kontoknoten finden: der Knoten, unter dem "Ablage" steht und
+    #    der NICHT die Gruppe "Recent" ist (zweiter Lauf 01.11.2026: "Recent"
+    #    fuehrt "Ablage" und das lokale "In"; erster Lauf: das lokale "In"
+    #    unter der Wurzel). Beide Ordner werden nur unter diesem Knoten geoeffnet.
+    function AlleKnoten($baum, $item, [int] $tiefe) {
+        $aus = @()
+        if ($tiefe -gt 4) { return $aus }
+        [void](Snd $baum $TVM_EXPAND ([IntPtr]2) $item)
+        foreach ($k in (Kinder $baum $item)) { $aus += $k; $aus += AlleKnoten $baum $k ($tiefe + 1) }
+        return $aus
+    }
+    $knoten = @(); $w = Snd $baum.H $TVM_GETNEXT ([IntPtr]0) ([IntPtr]0)
+    while ($w -ne [IntPtr]::Zero) { $knoten += $w; $knoten += AlleKnoten $baum.H $w 0; $w = Snd $baum.H $TVM_GETNEXT ([IntPtr]1) $w }
     $script:kontoKnoten = [IntPtr]::Zero
-    $w = Snd $baum.H $TVM_GETNEXT ([IntPtr]0) ([IntPtr]0)
-    while ($w -ne [IntPtr]::Zero -and $script:kontoKnoten -eq [IntPtr]::Zero) {
-        $f = Suche $baum.H $w @('Ablage') 0
-        if ($f -ne [IntPtr]::Zero) { $script:kontoKnoten = Snd $baum.H $TVM_GETNEXT ([IntPtr]3) $f }   # TVGN_PARENT
-        $w = Snd $baum.H $TVM_GETNEXT ([IntPtr]1) $w
+    foreach ($k in $knoten) {
+        if ((Text $baum.H $k) -ne 'Ablage') { continue }
+        $eltern = Snd $baum.H $TVM_GETNEXT ([IntPtr]3) $k                                  # TVGN_PARENT
+        $et = Text $baum.H $eltern
+        Write-Host ('E184 "Ablage" unter "' + $et + '"')
+        if ($eltern -ne [IntPtr]::Zero -and $et -ne 'Recent') { $script:kontoKnoten = $eltern; break }
     }
     if ($script:kontoKnoten -eq [IntPtr]::Zero) { Write-Host 'E184 FEHLER: Kontoknoten von "Ablage" nicht gefunden'; exit 1 }
     $namen = @(Kinder $baum.H $script:kontoKnoten | ForEach-Object { Text $baum.H $_ })
     Write-Host ('E184 Konto "' + (Text $baum.H $script:kontoKnoten) + '": ' + ($namen -join ', '))
-    $inbox = @(Kinder $baum.H $script:kontoKnoten | Where-Object { @('INBOX', 'Inbox', 'In') -contains (Text $baum.H $_) }) | Select-Object -First 1
-    if (-not $inbox) { Write-Host 'E184 FEHLER: INBOX nicht unter dem Konto'; exit 1 }
-    Write-Host ('E184 oeffne "' + (Text $baum.H $inbox) + '" im Konto')
-    [void](Snd $baum.H $TVM_SELECT ([IntPtr]9) $inbox)
-    [void][E184]::PostMessageA($baum.H, 0x0111, [IntPtr]32914, [IntPtr]::Zero)          # ID_MBOXTREE_OPEN
+    function KontoOeffnen([string[]] $wer) {
+        $z = @(Kinder $baum.H $script:kontoKnoten | Where-Object { $wer -contains (Text $baum.H $_) }) | Select-Object -First 1
+        if (-not $z) { return $false }
+        Write-Host ('E184 oeffne "' + (Text $baum.H $z) + '" im Konto')
+        [void](Snd $baum.H $TVM_SELECT ([IntPtr]9) $z)
+        [void][E184]::PostMessageA($baum.H, 0x0111, [IntPtr]32914, [IntPtr]::Zero)      # ID_MBOXTREE_OPEN
+        return $true
+    }
+    if (-not (KontoOeffnen @('Ablage'))) { Write-Host 'E184 FEHLER: "Ablage" nicht unter dem Konto'; exit 1 }
+    Start-Sleep -Seconds $Warten
+    Dialoge $pp -Schliessen
+    if (-not (KontoOeffnen @('INBOX', 'Inbox', 'In'))) { Write-Host 'E184 FEHLER: INBOX nicht unter dem Konto'; exit 1 }
     Start-Sleep -Seconds $Warten
     Dialoge $pp -Schliessen
     $aktiv = Snd $mdi.H 0x0229 ([IntPtr]::Zero) ([IntPtr]::Zero)                    # WM_MDIGETACTIVE
