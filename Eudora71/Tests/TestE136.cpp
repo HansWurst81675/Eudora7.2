@@ -21,6 +21,56 @@
 
 CString UTE136_HtmlAusBstr(const wchar_t* pwText);
 
+//
+// Zaehlt szSuche in pText, nachdem aus BEIDEN jeder Leerraum entfernt ist.
+// PRUEFER-70 K1 (01.11.2026): "szMsg=cbstr;" ohne Leerzeichen machte
+// Speichern unter wieder verlustbehaftet, und QT_Zaehle mit "szMsg = cbstr;"
+// sah es nicht - alle Tests blieben gruen.
+//
+static char* OhneLeerraum(const char* p)
+{
+	char* pNeu = (char*) malloc(strlen(p) + 1);
+	char* q = pNeu;
+	if (!pNeu)
+		return NULL;
+	for (; *p; p++)
+		if (*p != ' ' && *p != '\t' && *p != '\r' && *p != '\n')
+			*q++ = *p;
+	*q = '\0';
+	return pNeu;
+}
+
+static int ZaehleOhneLeerraum(const char* pText, const char* szSuche)
+{
+	char* pT = OhneLeerraum(pText);
+	char* pS = OhneLeerraum(szSuche);
+	int n = -1;					// -1 = Speicher fehlt, ist nie "0 gefunden"
+	if (pT && pS && *pS)
+	{
+		const size_t nLen = strlen(pS);
+		n = 0;
+		for (const char* p = strstr(pT, pS); p; p = strstr(p + nLen, pS))
+			n++;
+	}
+	free(pT);
+	free(pS);
+	return n;
+}
+
+// Abschnitt von szVon bis szBis; szBis == NULL heisst: bis zum Dateiende.
+static char* AbschnittBis(const char* pText, const char* szVon, const char* szBis)
+{
+	if (szBis)
+		return QT_Abschnitt(pText, szVon, szBis);
+	const char* p = strstr(pText, szVon);
+	if (!p)
+		return NULL;
+	char* pNeu = (char*) malloc(strlen(p) + 1);
+	if (pNeu)
+		strcpy(pNeu, p);
+	return pNeu;
+}
+
 static void Pruefe(const wchar_t* pw, const char* szSoll, const char* szWas)
 {
 	const CString	szIst = UTE136_HtmlAusBstr(pw);
@@ -72,11 +122,73 @@ static void Test_E136_Stelle(const char* szEudoraDir)
 		TT_CHECK_MSG(pFn != NULL, "GetMessageBody nicht gefunden (E-136)");
 		if (pFn)
 		{
-			const int nVerlust = QT_Zaehle(pFn, "szMsg = cbstr;");
+			const int nVerlust = ZaehleOhneLeerraum(pFn, "szMsg = cbstr;");	// PRUEFER-70 K1: jede Schreibweise
 			TT_CHECK_MSG(nVerlust == 1, "GetMessageBody hat nicht genau eine Zuweisung 'szMsg = cbstr;' (nur der Text-Zweig darf sie haben) - eine zweite ueberschreibt die Entitaeten (E-136, PRUEFER-69 K1)");
 			TT_Note("GetMessageBody: 'szMsg = cbstr;' %d-mal (soll 1)", nVerlust);
 			free(pFn);
 		}
+	}
+	// PRUEFER-70 K1, zweiter Teil: auch in SaveInfo (Strg-S) jede Schreibweise.
+	{
+		char* pFn = QT_Abschnitt(pR, "HRESULT CTridentReadMessageView::SaveInfo(", "void CTridentReadMessageView::FillBlockFormatCombo(");
+		TT_CHECK_MSG(pFn != NULL, "SaveInfo nicht gefunden (E-136)");
+		if (pFn)
+		{
+			const int nVerlust = ZaehleOhneLeerraum(pFn, "szBody = cbstr;");
+			TT_CHECK_MSG(nVerlust == 0, "SaveInfo hat eine verlustbehaftete Zuweisung 'szBody=cbstr;' in irgendeiner Schreibweise (E-136, PRUEFER-70 K1)");
+			free(pFn);
+		}
+	}
+	free(pR);
+	free(pV);
+	TT_EndTest();
+}
+
+//
+// BEFUND E-178: dieselbe verlustbehaftete Umwandlung wie E-136 in den
+// Formatierbefehlen des Bearbeiten-Modus (ExpandTag, SplitTagOff, WrapTag,
+// Link einfuegen) und in GetSelectedHTML (Antwort auf markierten Text). Aus
+// jedem Emoji wurde schon auf dem Bildschirm "??", Strg-S speicherte es.
+// Je Funktion: keine "= cbstr;" mehr (ohne Leerraum gezaehlt, also in jeder
+// Schreibweise) und die erwartete Zahl E136HtmlAusBstr-Aufrufe.
+//
+static void Test_E178_Stelle(const char* szEudoraDir)
+{
+	TT_BeginTest("E-178 (Quelltext): Formatierbefehle und markierter Text wandeln ueber E136HtmlAusBstr");
+	char* pR = QT_LiesNurCode(szEudoraDir, "TridentReadMessageView.cpp");
+	char* pV = QT_LiesNurCode(szEudoraDir, "TridentView.cpp");
+	if (!pR || !pV)
+	{
+		TT_Fail("TridentReadMessageView.cpp oder TridentView.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		if (pR) free(pR);
+		if (pV) free(pV);
+		TT_EndTest();
+		return;
+	}
+	struct { const char* pText; const char* szVon; const char* szBis; const char* szVerlust; int nAufrufe; const char* szWas; } a[] =
+	{
+		{ pR, "void CTridentReadMessageView::OnEditInsertLink(", "void CTridentReadMessageView::OnUpdateEditInsertLink(", "= cbstr;", 1, "OnEditInsertLink (Link einfuegen)" },
+		{ pR, "BOOL CTridentReadMessageView::ExpandTag(",        "BOOL CTridentReadMessageView::SplitTagOff(",            "= cbstr;", 3, "ExpandTag (Fett, Kursiv ... erweitern)" },
+		{ pR, "BOOL CTridentReadMessageView::SplitTagOff(",      "void CTridentReadMessageView::OnUpdateSize(",           "= cbstr;", 3, "SplitTagOff (Formatierung abschalten)" },
+		{ pR, "BOOL CTridentReadMessageView::WrapTag(",          NULL,                                                    "= cbstr;", 1, "WrapTag (Formatierung einschalten)" },
+		{ pV, "BOOL CTridentView::GetSelectedHTML(",             "BOOL CTridentView::GetAllText(",                        "CString( cbstrText )", 1, "GetSelectedHTML (Antwort auf markierten Text)" },
+	};
+	for (size_t i = 0; i < sizeof(a) / sizeof(a[0]); i++)
+	{
+		char* pFn = AbschnittBis(a[i].pText, a[i].szVon, a[i].szBis);
+		if (!pFn)
+		{
+			TT_Fail("%s: Funktion nicht gefunden - ungeprueft ist nicht gruen (E-178)", a[i].szWas);
+			continue;
+		}
+		const int nVerlust = ZaehleOhneLeerraum(pFn, a[i].szVerlust);
+		const int nNeu     = ZaehleOhneLeerraum(pFn, "E136HtmlAusBstr( (BSTR) ");
+		if (nVerlust != 0)
+			TT_Fail("%s: %d verlustbehaftete Zuweisung(en) '%s' - Emoji werden zu '??' (E-178)", a[i].szWas, nVerlust, a[i].szVerlust);
+		if (nNeu != a[i].nAufrufe)
+			TT_Fail("%s: %d Aufrufe von E136HtmlAusBstr, erwartet %d (E-178)", a[i].szWas, nNeu, a[i].nAufrufe);
+		TT_Note("%s: verlustbehaftet %d, E136HtmlAusBstr %d (soll 0 / %d)", a[i].szWas, nVerlust, nNeu, a[i].nAufrufe);
+		free(pFn);
 	}
 	free(pR);
 	free(pV);
@@ -87,4 +199,5 @@ void RunE136Tests(const char* szEudoraDir)
 {
 	Test_E136_Funktion();
 	Test_E136_Stelle(szEudoraDir);
+	Test_E178_Stelle(szEudoraDir);
 }

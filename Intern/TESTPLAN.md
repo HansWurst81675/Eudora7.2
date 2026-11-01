@@ -208,6 +208,28 @@ dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129: Bau `11643ee1` 
 dem nächsten Paket; als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
 kann kein Emoji tragen).
 
+## <a id="e-178-naechstes"></a>Im nächsten Testpaket: Fett, Kursiv und Link im Bearbeiten-Modus lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
+
+**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129** (dort ist die
+Behebung nicht drin). **Vorher das Postfach sichern.** Lokales Postfach, nicht
+IMAP.
+
+1. Die Prüfnachricht `Testdaten/e136-zeichen-als-entitaet.eml` (🔥 und Ж)
+   oder eine andere HTML-Nachricht mit Emoji öffnen; sie wird richtig angezeigt.
+2. In den Bearbeiten-Modus schalten (Knopf mit dem Hinweis *Edit the message* in der Leiste des
+   Nachrichtenfensters).
+3. Ein Wort **neben** dem Emoji markieren und *Fett* (Strg+B) geben, dann
+   wieder ausschalten; dasselbe mit *Kursiv* (Strg+I); dann *Make Hyperlink* auf ein
+   anderes Wort.
+4. Nach jedem Schritt: 🔥 und Ж stehen weiter da, **keine** Fragezeichen.
+5. *Strg+S*, schließen, wieder öffnen: 🔥 und Ж stehen da.
+6. Zusätzlich: Text mit dem Emoji markieren und *Antworten* — in der Antwort
+   steht das Emoji, nicht `??`.
+
+Bis 7.2.1.129 wurde aus dem Emoji schon in Schritt 3 `??` auf dem Bildschirm
+(am Quelltext belegt, nie am Programm gesehen — dieser Schritt ist die erste
+Messung).
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales

@@ -3941,7 +3941,7 @@ BOOL CTridentView::GetSelectedHTML( CString& szHTML )
 
                     if ( ( S_OK == hr ) && ( ( ( BSTR ) cbstrText ) != NULL ) ) {
                         szHTML  = "<html>";
-                        szHTML += CString( cbstrText );
+                        szHTML += E136HtmlAusBstr( (BSTR) cbstrText );	// E-178: Entitaet statt '?'
                         szHTML += "</html>";
 
 						// Convert emoticon image tags back to the original triggers

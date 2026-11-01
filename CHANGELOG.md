@@ -28,7 +28,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
 | **[E-179](Intern/BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | nachstellen (eine gespeicherte Nachricht mit `&#128293;` als Text senden oder durchsuchen), dann Codepunkte über 255 als Entität stehen lassen oder … |
-| **[E-178](Intern/BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Fett, Link einfügen und ähnliche Befehle Emoj… | **nie gemessen** | jede Stelle auf `E136HtmlAusBstr` umstellen, wo HTML herauskommt; für reinen Text eine eigene Lösung; Test, der jede Stelle zählt. **Stufe: wichtig… |
+| **[E-178](Intern/BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Fett, Link einfügen und ähnliche Befehle Emoj… | **nie gemessen** | die Messung am Programm mit dem nächsten Testpaket ([TESTPLAN](Intern/TESTPLAN.md#e-178-naechstes)). **Stufe: wichtig** (Datenschaden im Bearbeiten-Modus, n… |
 | **[E-177](Intern/BEFUNDE.md#e-177)** | Die Filteraktion *„an Programm übergeben"* schreibt ihre Zwischendatei ohne Zeichensatz… | **nie gemessen** | messen (Filter mit dieser Aktion, Prüfnachricht mit Euro und Umlauten, Zwischendatei ansehen), danach entscheiden, ob die Angabe dort überhaupt erw… |
 | **[E-176](Intern/BEFUNDE.md#e-176)** | Die Behebung von E-28 liest beim Schließen einer verworfenen neuen Nachricht aus einer sc… | **nie gemessen** | ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest bisher nur den Quelltext), und die Messung am Programm, am besten unter… |
 | **[E-173](Intern/BEFUNDE.md#e-173)** | Im Filterfenster sind die Labels der Aktion *Make Label* einmal ausgegraut und nicht wähl… | **nie gemessen** | erst **nach dem Release 7.2.1** — nachstellen (unter welcher Bedingung ist die Liste grau: neuer Filter, bestimmte vorherige Aktion, Persönlichkeit… |
@@ -113,7 +113,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 Nummer am 31.10.2026 vergeben (Gregor: *„bau mir dann ein 7.2.1.129“* — *„mit 7.2.1.129 kann ich die anderen fixes aus Intern/TESTPLAN.md testen“*). **Geschnürt am 31.10.2026, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md)). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e140-speichern-zeichensatz` (#192) und `e136_messweg`.
 
-* **FAQ 16** ([Doku/FAQ.md](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)): ein Wort in einer Mail suchen, auch in den Kopfzeilen — *Blah Blah Blah*, dann *Strg+Umschalt+F*; von Gregor am 31.10.2026 an 7.2.1.128 bestätigt.
+* **FAQ 16** ([Doku/FAQ.md](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)): ein Wort in einer Mail suchen, auch in den Kopfzeilen — *Blah Blah Blah*, dann *Strg+Umschalt+F*; von Gregor am 31.10.2026 an 7.2.1.128 und an 7.2.1.129 bestätigt (wie [FAQ 16](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)).
 * **[E-136](Intern/BEFUNDE.md#e-136), Messweg:** warum der Prüfstand den Speicherweg nicht erreicht (Speichern nur bei geänderter Nachricht, Bearbeiten-Modus am Leistenknopf) — im Befund.
 
 **Zweig `e140-speichern-zeichensatz`** (nach dem Merge von #191).
