@@ -37,11 +37,11 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-170](Intern/BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | **nie gemessen** | die Messung am Programm mit dem nächsten Testpaket ([TESTPLAN](Intern/TESTPLAN.md#e-170-naechstes)); am IMAP-Prüfserver zusätzlich der Fall ohne UIDPLUS. … |
 | **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt… |
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
-| **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
+| **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 — **veraltet** | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
 | **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | die Messung am Programm mit dem nächsten Testpaket ([TESTPLAN](Intern/TESTPLAN.md#e-143-naechstes)); für das Suchfenster eine eigene Entscheidung. **Wie zu… |
-| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 | vor 7.2.1 nichts — Gregors Entscheidung 13 (26.10.2026): *Send Again* aus IMAP ergibt eine leere Mail (T6), das kommt erst nach 7.2.1 dran; Entwürf… |
+| **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 — **veraltet** | vor 7.2.1 nichts — Gregors Entscheidung 13 (26.10.2026): *Send Again* aus IMAP ergibt eine leere Mail (T6), das kommt erst nach 7.2.1 dran; Entwürf… |
 | **[E-141](Intern/BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Messung am IMAP-Prüfserver — am alten Bau stößt eine Übertragung IMAP → `Out` die Nachbearbeitung an, am neuen nicht mehr. Die Berichtigun… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 — **veraltet** | Gregors Weg am Paket 7.2.1.129 ([TESTPLAN](Intern/TESTPLAN.md#e-136-naechstes)) oder ein Messweg, der die Nachricht wirklich verändert. **Warum der Prüfsta… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | **nie gemessen** | Gregor hat *„nur aufnehmen, nicht fixen"* entschieden — aufzugreifen wäre, bei fehlendem Verzeichnis zu fragen oder ein eigenes anzulegen statt d… |
@@ -103,9 +103,11 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## Im Quellstand, noch in keinem Paket
+## 7.2.1.130 — Testpaket: E-178, E-179, E-170, E-143 im Quelltext berichtigt; E-136 zweiter Speicherweg
 
-**Zweig `e178_bearbeiten_emoji`** (nach dem Merge von #194; davor `e165_schliessen_e136_speichern_unter`, gemergt als #194). Alles hier ist gebaut und durch Regressionstests mit Gegenprobe gesichert, **am laufenden Programm aber noch nicht gemessen**.
+Nummer am 01.11.2026 vergeben (Gregor: *„merged. ja, 7.2.1.130 schnüren“*). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e165_schliessen_e136_speichern_unter` (#194), `e178_bearbeiten_emoji` (#195) und `paket_7_2_1_130`. Alles hier ist gebaut und durch Regressionstests mit Gegenprobe gesichert, **am laufenden Programm aber noch nicht gemessen**.
+
+**Aus `e178_bearbeiten_emoji`:**
 
 * **Fett, Kursiv, Link einfügen und Antwort auf markierten Text lassen Emoji stehen** ([E-178](Intern/BEFUNDE.md#e-178)): neun Stellen, die HTML aus der Anzeige mit „CString = BSTR“ holten, wandeln über `E136HtmlAusBstr`.
 * **HTML-zu-Text schneidet Zeichenangaben nicht mehr ab** ([E-179](Intern/BEFUNDE.md#e-179)): `&#128293;` wird nicht mehr zu `%`; was windows-1252 kennt (€, –), wird zum Zeichen, sonst bleibt die Angabe stehen. Hexadezimale Angaben ergaben vorher ein Nullbyte.

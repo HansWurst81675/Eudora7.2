@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.1.129` (Paketnummer `7.2.1.129`) |
+| **Quellstand** | `7.2.1.130` (Paketnummer `7.2.1.130`) |
 | **Commit** | `c458c74d` — **Arbeitsbaum nicht sauber** (1 Dateien) |
 | **Erstellt** | 2026-10-31 21:54 |
 | **Gesamturteil** | **BESTANDEN** |

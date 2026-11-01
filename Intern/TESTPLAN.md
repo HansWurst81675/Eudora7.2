@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.129 (Testpaket, `VERSION` gleich; geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`), Stand 31.10.2026 (zuletzt getestet am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+# Testplan für Gregor — Quellstand 7.2.1.130 (Testpaket, `VERSION` gleich; vergeben am 01.11.2026; davor 7.2.1.129, geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`), Stand 01.11.2026 (zuletzt getestet am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -205,12 +205,12 @@ dem Nachrichtenfenster (`.txt`, `.htm` ohne Kopfzeilen) macht aus Emoji in
 7.2.1.129 weiter `??` — ein zweiter Weg, in 7.2.1.129 noch nicht behoben
 ([PRÜFER-68](../Befunde/PRUEFER-68.md) K1, im Befund nachgetragen). Für `.htm` ist er im Quellstand seit
 dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129: Bau `11643ee1` um 21:28, ZIP um 21:31) und kommt mit
-dem nächsten Paket; als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
+7.2.1.130 (mit 7.2.1.130 darf *Speichern unter* als `.htm` mitgeprüft werden: 🔥 steht dann als `&#128293;` in der Datei); als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
 kann kein Emoji tragen).
 
-## <a id="e-178-naechstes"></a>Im nächsten Testpaket: Fett, Kursiv und Link im Bearbeiten-Modus lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
+## <a id="e-178-naechstes"></a>In 7.2.1.130: Fett, Kursiv und Link im Bearbeiten-Modus lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
 
-**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129** (dort ist die
+**Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129** (dort ist die
 Behebung nicht drin). **Vorher das Postfach sichern.** Lokales Postfach, nicht
 IMAP.
 
@@ -230,9 +230,9 @@ Bis 7.2.1.129 wurde aus dem Emoji schon in Schritt 3 `??` auf dem Bildschirm
 (am Quelltext belegt, nie am Programm gesehen — dieser Schritt ist die erste
 Messung).
 
-## <a id="e-170-naechstes"></a>Im nächsten Testpaket: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
+## <a id="e-170-naechstes"></a>In 7.2.1.130: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
 
-**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129.** **IMAP-Konto**,
+**Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129.** **IMAP-Konto**,
 zwei Ordner **desselben** Kontos.
 
 1. Eine Mail in einem IMAP-Ordner mit einem Label versehen (z. B. grün), wie
@@ -247,9 +247,9 @@ zwei Ordner **desselben** Kontos.
    Steht dort `grund=keine-neuen-uids`, meldet dein Server keine neuen UIDs —
    dann bleibt das Label weiter aus; bitte die Zeile schicken.
 
-## <a id="e-143-naechstes"></a>Im nächsten Testpaket: Out wird einem Filter nicht angeboten ([E-143](BEFUNDE.md#e-143))
+## <a id="e-143-naechstes"></a>In 7.2.1.130: Out wird einem Filter nicht angeboten ([E-143](BEFUNDE.md#e-143))
 
-**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129.** Lokales
+**Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129.** Lokales
 Postfach oder IMAP, gleich.
 
 1. *Tools → Filters*, einen Filter auswählen oder neu anlegen, als Aktion
