@@ -283,6 +283,8 @@ Postfach *In* (nicht IMAP).
 
 Am Prüfstand am 31.10.2026 Schritt 1–3 so gefahren (Fall `E-171p`).
 
+**Bestätigt am 01.11.2026 an 7.2.1.130, gemessen an Gregors Protokoll:** im Abschnitt *Version 7.2.1.130* dreimal `E-171 Suche: kein Suchtext, Fenster ohne Start`, jedes Mal gefolgt vom Öffnen von *Find Messages*; keine Meldung *„internal error during the search“*, sauberes Beenden.
+
 ## <a id="e-166-am-release"></a>Am Release 7.2.1 zusätzlich: die Junk-Frage kommt nur einmal ([E-166](BEFUNDE.md#e-166))
 
 > Kein eigenes Testpaket — du prüfst es an der Release-Fassung (Entscheidung

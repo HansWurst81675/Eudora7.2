@@ -147,6 +147,18 @@ nach lokal kann eine fremde Zusammenfassung überschrieben werden). Der Eintrag 
 aufgeklärt (kein Programmfehler); [E-188](../Intern/BEFUNDE.md#e-188) in diesem Zweig noch nicht angefasst.“* Wer den PR so
 merged, sollte [E-188](../Intern/BEFUNDE.md#e-188) nicht für erledigt halten.
 
+## Nachtrag: zweiter Commit, Auftrag des Hauptagenten
+
+Der Hauptagent hat Gregors `eudora.log` vom 01.11.2026 ausgewertet (sein Rechner außerhalb der VM, Lauf gegen das Mailverzeichnis von 7.2.1.129) und mir die Messung übergeben; das Protokoll selbst habe ich nicht gelesen (belegt am übergebenen Wortlaut). Eingetragen:
+
+- [E-171](../Intern/BEFUNDE.md#e-171) („Search Mailfolder“ ohne markierten Text brachte „internal error during the search“): `Intern/BEFUNDE.md:408` Urteil von *„Gregors Test steht aus“* auf *„an 7.2.1.130 bei Gregor bestätigt (01.11.2026, gemessen an seinem Protokoll)“*, mit der Messung: im Abschnitt *Version 7.2.1.130* dreimal `E-171 Suche: kein Suchtext, Fenster ohne Start`, jedes Mal gefolgt vom Öffnen von *Find Messages*, keine Fehlermeldung, sauberes Beenden. Das Urteilswort bleibt „behoben“ wie bei [E-139](../Intern/BEFUNDE.md#e-139) und [E-165](../Intern/BEFUNDE.md#e-165); `perl tools/pruefe-befundurteile.pl` → *„Kein Dokument erklaert einen offenen Befund fuer erledigt - und keinen behobenen fuer unerledigt.“*, `offene-befunde.pl` weiter 45 (gemessen).
+- `Intern/TESTPLAN.md`, Abschnitt `e-171-naechstes`: Absatz *„Bestätigt am 01.11.2026 an 7.2.1.130, gemessen an Gregors Protokoll …“*.
+- [E-139](../Intern/BEFUNDE.md#e-139): ergänzt, dass dasselbe Protokoll wieder `E-139 Rechtschreibhinweis: abgeschaltet (WarnSpellUnavailable=0)` zeigt.
+
+Keine Namen, Adressen oder Pfade aus dem Protokoll übernommen. Zu [E-170](../Intern/BEFUNDE.md#e-170), [E-143](../Intern/BEFUNDE.md#e-143) und [E-178](../Intern/BEFUNDE.md#e-178) steht im Protokoll laut Hauptagent noch nichts; nichts eingetragen.
+
+Beim ersten Versuch hat mein Einschub über `perl -CSD -i -pe` diesen Bericht doppelt kodiert (23 Stellen); `pruefe-bytes.pl` hat den Commit abgewiesen. Zurückgesetzt und mit `tools/ersetze-text.pl` wiederholt.
+
 ## Zur Kenntnis
 
 - `Releases/PRUEFBERICHT.md:506` führt [E-172](../Intern/BEFUNDE.md#e-172) noch unter den kritischen Befunden ohne Test. Die
