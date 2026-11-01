@@ -1,6 +1,6 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-10-31 21:42:38
-freigabe=Gregor am 31.10.2026: 'ja, starte auf deinem lokalen prüfstand deine testes'; 'ja, laß die zwei noch zu ende laufen, wir haben noch zeit'
+zeit=2026-11-01 15:44:24
+freigabe=Gregor am 01.11.2026: 'ja, starte den prüfstandslauf. ich werde dann außerhalb der VM testen.'
 faelle=46
 bestanden=46
 fehlgeschlagen=0

@@ -551,3 +551,18 @@ Zeiten MEZ, Transkript `052dc212…`.
 **How to apply, zusätzlich:**
 - Ein Ersetzer sucht nach jeder Ersetzung **hinter** der Einfügung weiter (`index($t,$a,$i+length $b)`), oder er ersetzt genau einmal und meldet die Trefferzahl vorher.
 - Ein Ersetzungshelfer, der zum zweiten Mal gebaut wird, gehört als Werkzeug mit Selbsttest nach `tools/`. Erster Testfall: Der neue Text enthält den alten.
+
+## Nachtrag 01.11.2026 nachmittags (CHRONIST): Fall 40 und 41, beide Fälle des 30.10. kamen wieder
+
+Zeiten MEZ, Transkript `6f848773…`.
+
+| Fall | Zeit | Was | Ergebnis |
+|---|---|---|---|
+| 40 | 15:09:55 | Versionssprung auf 7.2.1.130 über ein Ersetzungsskript; der neue Text enthielt den alten (wörtlich: *„Endlosschleife, weil der Ersatztext den alten Text enthält – die `.md`-Dateien sind daher noch unverändert“*). Um 15:10:02 zweiter Fehler im selben Skript: `\$alt` statt `\Q$alt\E` | gemessen am Transkript: dieselbe Falle wie Fall 38, zwei Tage später. Kein Schaden, weil das Skript nichts schrieb, bevor es hing. Ein Ersetzer mit Selbsttest unter `tools/` gibt es weiter nicht (gemessen: nur `ersetze-bereich.pl`, für Zeilenbereiche) |
+| 41 | 15:20:16 | Ablageort `C:\Users\Gregor\Eudora72-7.2.1.130-release` über ein Bash-Heredoc in CHANGELOG, PAKETE und WEITERMACHEN geschrieben | gemessen: in den Dateien stand `C:SERSGREGORudora72-…` (Rückstriche samt Folgezeichen verschluckt). Um 15:20:33 vor dem Commit bemerkt und über `\x5c` berichtigt. Dieselbe Sitzung hatte um 14:59:19 in ihrer eigenen Zusammenfassung notiert *„heredoc lost a backslash … wrote the scripts with the Write tool and `\x5c`“* (gemessen) - die Lehre stand im Kontext und griff 21 Minuten später nicht |
+
+**Was neu ist:** Fall 40 ist das zweite Auftreten von Fall 38. Nach [[fehlerklassen-abstellen]] ist damit ein Werkzeug fällig, nicht ein dritter Nachtrag. Fall 41 zeigt, dass eine Lehre im Kontext nicht genügt, wenn der Auslöser (Windows-Pfad im Ersatztext) nicht erkannt wird ([[lehren-anwenden-nicht-nur-schreiben]]).
+
+**How to apply, zusätzlich:**
+- `tools/ersetze-text.pl` bauen: Paare `alt`/`neu` aus einer Datei, Trefferzahl vorher melden, genau einmal je Treffer ersetzen, Selbsttest mit „neu enthält alt“ und mit einem Windows-Pfad im Ersatztext. Bis dahin: kein Wegwerf-Ersetzer.
+- Steht ein `\` im Ersatztext, geht er nie durch ein Heredoc oder eine Shell-Zeichenkette, sondern über das Write-Werkzeug in eine Datei. Nach dem Schreiben `perl -ne '$n++ if /\x5c/'` gegen die erwartete Zahl.

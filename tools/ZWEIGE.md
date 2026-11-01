@@ -200,6 +200,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `e136_messweg` | 31.10.2026 | **Von Gregor bestätigt** (*„e136_messweg als branch name ok“*, auf meinen Vorschlag). Messweg für [E-136](../Intern/BEFUNDE.md#e-136) am Programm; Funde aus [LEKTOR-108](../Befunde/LEKTOR-108.md#lektor-108). |
 | `e165_schliessen_e136_speichern_unter` | 31.10.2026 | **Von Gregor bestätigt** (*„ja, branch name ok“*, auf meinen Vorschlag). [E-165](../Intern/BEFUNDE.md#e-165) schließen (Gregor: *„ja, e-165 behoben“*); zweiter Speicherweg von [E-136](../Intern/BEFUNDE.md#e-136) (PRÜFER-68 K1); Schranke gegen Tests ohne `TT_EndTest`. |
 | `e178_bearbeiten_emoji` | 01.11.2026 | **Von Gregor bestätigt** (*„ja, e178_bearbeiten_emoji ok“*, auf meinen Vorschlag). [E-178](../Intern/BEFUNDE.md#e-178) (Formatierbefehle im Bearbeiten-Modus machen Emoji zu `??`); im Lauf dazugekommen [E-179](../Intern/BEFUNDE.md#e-179), [E-170](../Intern/BEFUNDE.md#e-170), [E-143](../Intern/BEFUNDE.md#e-143), [E-184](../Intern/BEFUNDE.md#e-184) neu; dazu die Reste aus [LEKTOR-113](../Befunde/LEKTOR-113.md) [L-113.1](../Befunde/LEKTOR-113.md#l-113.1) und [PRÜFER-70](../Befunde/PRUEFER-70.md) K1/K2, FAQ 16 in CHANGELOG/PAKETE. |
+| `paket_7_2_1_130` | 01.11.2026 | **Von Gregor bestätigt** (Auswahl *„paket_7_2_1_130 (Empfohlen)“* auf meinen Vorschlag). Versionssprung, Schnüren und Buchführung zum Testpaket 7.2.1.130 nach dem Merge von #195; [L-115.1](../Befunde/LEKTOR-115.md#l-115.1) erledigt. |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 

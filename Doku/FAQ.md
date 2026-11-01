@@ -206,7 +206,7 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
 Ordnern **desselben IMAP-Kontos** verschoben, ist das Label danach weg — Eudora
 speichert Labels nur bei sich, nicht auf dem Server
 ([E-170](../Intern/BEFUNDE.md#e-170); im Quellstand berichtigt für Server, die die neuen
-Nummern der verschobenen Mails melden — kommt mit dem nächsten Paket).
+Nummern der verschobenen Mails melden — im Testpaket 7.2.1.130).
 
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund
