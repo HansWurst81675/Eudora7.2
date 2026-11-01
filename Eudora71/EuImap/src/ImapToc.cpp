@@ -1763,13 +1763,30 @@ void E189VorabKopienEntfernen(CTocDoc* pZiel, const char* szAlteUIDs)
 		CSummary *pSum = NULL;
 		while ((pSum = E184FindeVorabKopie(pZiel, ulUid)) != NULL)
 		{
+			// Merkzeichen zuerst loeschen: E184FindeVorabKopie liefert sie sonst in
+			// der naechsten Runde wieder (Endlosschleife, PRUEFER-76 K1).
+			pSum->SetE184Vorab(FALSE);
 			CString szSpur;
+
+			// PRUEFER-76 K1: ein offenes Fenster mit ungesicherten Aenderungen erst
+			// fragen (wie CTocDoc::Xfer). Lehnt es ab, bleibt die Kopie stehen - lieber
+			// ein Doppel als ein Zugriff auf eine geloeschte Zusammenfassung.
+			CFrameWnd* pFenster = pSum->m_FrameWnd;
+			if (pFenster)
+			{
+				CDocument* pFensterDoc = pFenster->GetActiveDocument();
+				if (pFensterDoc && !pFensterDoc->CanCloseFrame(pFenster))
+				{
+					szSpur.Format("E-189 Vorab-Kopie bleibt, Fenster nicht geschlossen: alte-uid=%lu ziel=\"%s\"", ulUid, (LPCTSTR) pZiel->Name());
+					PutDebugLog(DEBUG_MASK_MISC, szSpur);
+					continue;
+				}
+			}
+
 			szSpur.Format("E-189 Vorab-Kopie ohne neue UID entfernt: alte-uid=%lu ziel=\"%s\"", ulUid, (LPCTSTR) pZiel->Name());
 			PutDebugLog(DEBUG_MASK_MISC, szSpur);
-			pSum->SetE184Vorab(FALSE);
 			pSum->SetDeleteEmbedded(FALSE);
 			pZiel->InvalidateCachedPreviewSummary(pSum, true);
-			CFrameWnd* pFenster = pSum->m_FrameWnd;
 			if (pFenster)
 				pFenster->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 			pZiel->RemoveSum(pSum);
