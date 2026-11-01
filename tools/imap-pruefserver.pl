@@ -58,6 +58,15 @@ use IO::Select;
 # Mit --rename-ablehnen (seit 26.10.2026, Befund E-146) antwortet RENAME mit
 # NO und laesst die Liste, wie sie war.
 #
+# COPY / UID COPY (seit 01.11.2026, Befund E-184): kopiert die gewaehlten
+# Nachrichten in das Zielpostfach, vergibt dort neue UIDs und antwortet wie
+# ein Server mit UIDPLUS "OK [COPYUID 1 <alte> <neue>]" (RFC 4315). So
+# verschiebt Eudora innerhalb eines Kontos (COPY, \Deleted, EXPUNGE); das
+# Loeschen in der Quelle wird wie immer nur mitgeschrieben. Mit
+# --ohne-copyuid fehlt die Angabe, wie bei einem Server ohne UIDPLUS (E-170).
+# Zusammen mit --fremde-uid <n> liegt im Ziel "Ablage" schon eine fremde
+# Nachricht mit der UID, die die verschobene in INBOX traegt.
+#
 # Er hoert NUR auf 127.0.0.1. Von aussen ist er nicht erreichbar.
 #
 # WAS ER NICHT IST: eine vollstaendige IMAP-Umsetzung. Er kann genau so
@@ -76,6 +85,7 @@ my %opt = (
     ohne_appenduid => 0,
     fremde_uid   => 0,
     append_verzoegerung => 0,
+    ohne_copyuid => 0,
 );
 
 while (@ARGV) {
@@ -91,6 +101,7 @@ while (@ARGV) {
     elsif ($a eq '--fremde-uid')  { $opt{fremde_uid}   = shift @ARGV }
     elsif ($a eq '--append-verzoegerung') { $opt{append_verzoegerung} = shift @ARGV }
     elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
+    elsif ($a eq '--ohne-copyuid') { $opt{ohne_copyuid} = 1 }   # E-184/E-170
     else { die "unbekannt: $a\n" }
 }
 
@@ -450,6 +461,46 @@ while (time < $ende) {
                 }
             }
             $antwort = "$marke OK FETCH";
+        }
+        elsif ($B eq 'COPY' or ($B eq 'UID' and $rest =~ /^COPY/i)) {
+            # E-184: Kopie ins Zielpostfach mit neuer UID, Antwort mit COPYUID.
+            my $quelle = liste_fuer($gewaehlt{$h} || 'INBOX');
+            my $r = ($B eq 'UID') ? do { my $x = $rest; $x =~ s/^COPY\s*//i; $x } : $rest;
+            my ($menge, $zielteil) = $r =~ /^(\S+)\s+(.+)$/;
+            my $zname = defined $zielteil ? postfach_name($zielteil) : '';
+            if (!defined $menge or ordner_index($zname) < 0) {
+                $unbekannt++ if defined $menge;
+                notiz('  !! COPY in unbekanntes Postfach: "' . sichtbar_bytes($zname) . '"');
+                $antwort = "$marke NO [TRYCREATE] COPY: kein Postfach";
+            }
+            else {
+                my $zliste = liste_fuer($zname);
+                my (@alt, @neu);
+                for my $teil (split /,/, $menge) {
+                    my ($von, $bis) = $teil =~ /^(\d+|\*)(?::(\d+|\*))?$/ or next;
+                    $bis = $von unless defined $bis;
+                    for my $i (1 .. @$quelle) {
+                        my $m = $quelle->[$i - 1];
+                        my $schluessel = ($B eq 'UID') ? uid_von($m, $i) : $i;
+                        my $lo = ($von eq '*') ? $schluessel : $von;
+                        my $hi = ($bis eq '*') ? 4294967295 : $bis;
+                        ($lo, $hi) = ($hi, $lo) if $lo > $hi;
+                        next unless $schluessel >= $lo && $schluessel <= $hi;
+                        my $nuid = naechste_uid($zliste);
+                        push @$zliste, { text => $m->{text}, flags => ($m->{flags} || ''), geloescht_verlangt => 0, uid => $nuid };
+                        push @alt, uid_von($m, $i);
+                        push @neu, $nuid;
+                    }
+                }
+                notiz(sprintf('  COPY nach "%s": UID %s -> %s', sichtbar_bytes($zname),
+                              join(',', @alt) || '(keine)', join(',', @neu) || '(keine)'));
+                if (@alt and !$opt{ohne_copyuid}) {
+                    $antwort = sprintf('%s OK [COPYUID 1 %s %s] COPY completed', $marke, join(',', @alt), join(',', @neu));
+                }
+                else {
+                    $antwort = "$marke OK COPY completed";
+                }
+            }
         }
         elsif ($B eq 'STORE' or ($B eq 'UID' and $rest =~ /^STORE/i)) {
             # HIER ENTSCHEIDET SICH ALLES.
