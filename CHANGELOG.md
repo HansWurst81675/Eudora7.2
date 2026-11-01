@@ -27,19 +27,20 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-179](Intern/BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | nachstellen (eine gespeicherte Nachricht mit `&#128293;` als Text senden oder durchsuchen), dann Codepunkte über 255 als Entität stehen lassen oder … |
-| **[E-178](Intern/BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Fett, Link einfügen und ähnliche Befehle Emoj… | **nie gemessen** | jede Stelle auf `E136HtmlAusBstr` umstellen, wo HTML herauskommt; für reinen Text eine eigene Lösung; Test, der jede Stelle zählt. **Stufe: wichtig… |
+| **[E-184](Intern/BEFUNDE.md#e-184)** | Beim Verschieben zwischen IMAP-Ordnern mit UIDPLUS kann Eudora die Zusammenfassung einer f… | **nie gemessen** | am IMAP-Prüfserver nachstellen (im Ziel eine Mail mit derselben UID-Nummer, dann verschieben, Betreff und Inhalt vergleichen); dann je Aufrufer klär… |
+| **[E-179](Intern/BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | die Messung am Programm — eine HTML-Mail mit `&#128293;` senden und den Textteil beim Empfänger ansehen; den Klickweg erst selbst am Prüfstand dur… |
+| **[E-178](Intern/BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Fett, Link einfügen und ähnliche Befehle Emoj… | **nie gemessen** | die Messung am Programm mit dem nächsten Testpaket ([TESTPLAN](Intern/TESTPLAN.md#e-178-naechstes)). **Stufe: wichtig** (Datenschaden im Bearbeiten-Modus, n… |
 | **[E-177](Intern/BEFUNDE.md#e-177)** | Die Filteraktion *„an Programm übergeben"* schreibt ihre Zwischendatei ohne Zeichensatz… | **nie gemessen** | messen (Filter mit dieser Aktion, Prüfnachricht mit Euro und Umlauten, Zwischendatei ansehen), danach entscheiden, ob die Angabe dort überhaupt erw… |
 | **[E-176](Intern/BEFUNDE.md#e-176)** | Die Behebung von E-28 liest beim Schließen einer verworfenen neuen Nachricht aus einer sc… | **nie gemessen** | ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest bisher nur den Quelltext), und die Messung am Programm, am besten unter… |
 | **[E-173](Intern/BEFUNDE.md#e-173)** | Im Filterfenster sind die Labels der Aktion *Make Label* einmal ausgegraut und nicht wähl… | **nie gemessen** | erst **nach dem Release 7.2.1** — nachstellen (unter welcher Bedingung ist die Liste grau: neuer Filter, bestimmte vorherige Aktion, Persönlichkeit… |
 | **[E-172](Intern/BEFUNDE.md#e-172)** | Eine Mail steht im Lesefenster als rohe Base64-Zeichenfolge statt als lesbarer Text | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — Quelltext der Mail ansehen (*View Source*), Kopfzeilen `Content-Type`/`Content-Transfer-Encodi… |
-| **[E-170](Intern/BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026: *„die findigs können wir erst nach dem release beheben. das muß nur erstmal nur als befund dri… |
+| **[E-170](Intern/BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | **nie gemessen** | die Messung am Programm mit dem nächsten Testpaket ([TESTPLAN](Intern/TESTPLAN.md#e-170-naechstes)); am IMAP-Prüfserver zusätzlich der Fall ohne UIDPLUS. … |
 | **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt… |
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
 | **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
-| **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | eine Entscheidung und dann der Einbau. Entweder den Hinweis unterdrücken, wenn der Aufruf nicht vom Anwender kommt — `SingleSum && !RedisplayTOCs` … |
+| **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | **nie gemessen** | die Messung am Programm mit dem nächsten Testpaket ([TESTPLAN](Intern/TESTPLAN.md#e-143-naechstes)); für das Suchfenster eine eigene Entscheidung. **Wie zu… |
 | **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 | vor 7.2.1 nichts — Gregors Entscheidung 13 (26.10.2026): *Send Again* aus IMAP ergibt eine leere Mail (T6), das kommt erst nach 7.2.1 dran; Entwürf… |
 | **[E-141](Intern/BEFUNDE.md#e-141)** | Eine Übertragung aus einem IMAP-Ordner nach Out stößt die ganze IMAP-Nachbearbeitung an… | **nie gemessen** | die Messung am IMAP-Prüfserver — am alten Bau stößt eine Übertragung IMAP → `Out` die Nachbearbeitung an, am neuen nicht mehr. Die Berichtigun… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 22.10.2026 an 7.2.0.120 — **veraltet** | Gregors Weg am Paket 7.2.1.129 ([TESTPLAN](Intern/TESTPLAN.md#e-136-naechstes)) oder ein Messweg, der die Nachricht wirklich verändert. **Warum der Prüfsta… |
@@ -104,7 +105,15 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## Im Quellstand, noch in keinem Paket
 
-**Zweig `e165_schliessen_e136_speichern_unter`** (nach dem Merge von #193).
+**Zweig `e178_bearbeiten_emoji`** (nach dem Merge von #194; davor `e165_schliessen_e136_speichern_unter`, gemergt als #194). Alles hier ist gebaut und durch Regressionstests mit Gegenprobe gesichert, **am laufenden Programm aber noch nicht gemessen**.
+
+* **Fett, Kursiv, Link einfügen und Antwort auf markierten Text lassen Emoji stehen** ([E-178](Intern/BEFUNDE.md#e-178)): neun Stellen, die HTML aus der Anzeige mit „CString = BSTR“ holten, wandeln über `E136HtmlAusBstr`.
+* **HTML-zu-Text schneidet Zeichenangaben nicht mehr ab** ([E-179](Intern/BEFUNDE.md#e-179)): `&#128293;` wird nicht mehr zu `%`; was windows-1252 kennt (€, –), wird zum Zeichen, sonst bleibt die Angabe stehen. Hexadezimale Angaben ergaben vorher ein Nullbyte.
+* **Label beim Verschieben im IMAP-Konto** ([E-170](Intern/BEFUNDE.md#e-170), Gregors Entscheidung „Label mitnehmen“): das Label wird gemerkt und im Ziel gesetzt — **nur, wenn der Server neue UIDs meldet** (UIDPLUS); sonst sagt es eine Logzeile.
+* **Out wird einem Filter nicht angeboten** ([E-143](Intern/BEFUNDE.md#e-143), Gregors Entscheidung): in der Postfachauswahl für Filter grau; ältere Filter mit Ziel Out werden ohne Dialog übergangen, mit einer Zeile im Log. Der Abruf bleibt nicht mehr stehen.
+* Neu als Befund: [E-184](Intern/BEFUNDE.md#e-184) (Original: beim Verschieben zwischen IMAP-Ordnern kann eine fremde Zusammenfassung überschrieben werden).
+
+**Aus `e165_schliessen_e136_speichern_unter`:**
 
 * **Emoji beim *Speichern unter* als `.htm`** ([E-136](Intern/BEFUNDE.md#e-136), zweiter Weg, [PRÜFER-68](Befunde/PRUEFER-68.md) K1): auch dieser Weg schreibt Zeichen außerhalb von windows-1252 jetzt als HTML-Entität statt `??`. Als `.txt` bleibt das Ersatzzeichen — eine windows-1252-Textdatei kann kein Emoji tragen. Regressionstest `TestE136` um die Stelle erweitert, Gegenprobe gegen den Rückgabewert. [E-136](Intern/BEFUNDE.md#e-136) bleibt offen bis zur Messung am Programm.
 * **[E-165](Intern/BEFUNDE.md#e-165) geschlossen** auf Gregors Bestätigung an 7.2.1.129.
@@ -113,7 +122,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 Nummer am 31.10.2026 vergeben (Gregor: *„bau mir dann ein 7.2.1.129“* — *„mit 7.2.1.129 kann ich die anderen fixes aus Intern/TESTPLAN.md testen“*). **Geschnürt am 31.10.2026, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md)). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e140-speichern-zeichensatz` (#192) und `e136_messweg`.
 
-* **FAQ 16** ([Doku/FAQ.md](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)): ein Wort in einer Mail suchen, auch in den Kopfzeilen — *Blah Blah Blah*, dann *Strg+Umschalt+F*; von Gregor am 31.10.2026 an 7.2.1.128 bestätigt.
+* **FAQ 16** ([Doku/FAQ.md](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)): ein Wort in einer Mail suchen, auch in den Kopfzeilen — *Blah Blah Blah*, dann *Strg+Umschalt+F*; von Gregor am 31.10.2026 an 7.2.1.128 und an 7.2.1.129 bestätigt (wie [FAQ 16](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)).
 * **[E-136](Intern/BEFUNDE.md#e-136), Messweg:** warum der Prüfstand den Speicherweg nicht erreicht (Speichern nur bei geänderter Nachricht, Bearbeiten-Modus am Leistenknopf) — im Befund.
 
 **Zweig `e140-speichern-zeichensatz`** (nach dem Merge von #191).

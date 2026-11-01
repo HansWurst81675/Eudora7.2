@@ -2525,6 +2525,12 @@ void CTocFrame::OnUpdateDynamicCommand(CCmdUI * pCmdUI)
 				( theAction == CA_FORWARD_TO ) )
 
 			{
+				// E-143 (PRUEFER-71 K3): Make Filter aus dem Postfachfenster
+				if (CMainFrame::QCGetMainFrame()->E143OutGesperrt(pCommand, theAction))
+				{
+					pCmdUI->Enable(FALSE);
+					return;
+				}
 				pCmdUI->Enable(m_pSumListBox->GetSelCount() > 0);
 				return;
 			}

@@ -208,6 +208,64 @@ dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129: Bau `11643ee1` 
 dem nächsten Paket; als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
 kann kein Emoji tragen).
 
+## <a id="e-178-naechstes"></a>Im nächsten Testpaket: Fett, Kursiv und Link im Bearbeiten-Modus lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
+
+**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129** (dort ist die
+Behebung nicht drin). **Vorher das Postfach sichern.** Lokales Postfach, nicht
+IMAP.
+
+1. Die Prüfnachricht `Testdaten/e136-zeichen-als-entitaet.eml` (🔥 und Ж)
+   oder eine andere HTML-Nachricht mit Emoji öffnen; sie wird richtig angezeigt.
+2. In den Bearbeiten-Modus schalten (Knopf mit dem Hinweis *Edit the message* in der Leiste des
+   Nachrichtenfensters).
+3. Ein Wort **neben** dem Emoji markieren und *Fett* (Strg+B) geben, dann
+   wieder ausschalten; dasselbe mit *Kursiv* (Strg+I); dann *Make Hyperlink* auf ein
+   anderes Wort.
+4. Nach jedem Schritt: 🔥 und Ж stehen weiter da, **keine** Fragezeichen.
+5. *Strg+S*, schließen, wieder öffnen: 🔥 und Ж stehen da.
+6. Zusätzlich: Text mit dem Emoji markieren und *Antworten* — in der Antwort
+   steht das Emoji, nicht `??`.
+
+Bis 7.2.1.129 wurde aus dem Emoji schon in Schritt 3 `??` auf dem Bildschirm
+(am Quelltext belegt, nie am Programm gesehen — dieser Schritt ist die erste
+Messung).
+
+## <a id="e-170-naechstes"></a>Im nächsten Testpaket: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
+
+**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129.** **IMAP-Konto**,
+zwei Ordner **desselben** Kontos.
+
+1. Eine Mail in einem IMAP-Ordner mit einem Label versehen (z. B. grün), wie
+   am 29.10.2026.
+2. Die Mail in einen anderen Ordner desselben IMAP-Kontos verschieben.
+3. Den Zielordner öffnen und warten, bis Eudora ihn abgeglichen hat: die Mail
+   trägt ihr Label.
+4. In der `eudora.log` steht eine Zeile (sie wird mit dem Protokollbereich *Misc*,
+   0x8000, geschrieben — in deiner `Eudora.ini` steht `LogLevel=58527`, da ist er an;
+   in der Vorgabe 25759 ist er aus)
+   `E-170 Labels beim Verschieben im Konto: mit-label=1 … gesetzt=…  grund=…`.
+   Steht dort `grund=keine-neuen-uids`, meldet dein Server keine neuen UIDs —
+   dann bleibt das Label weiter aus; bitte die Zeile schicken.
+
+## <a id="e-143-naechstes"></a>Im nächsten Testpaket: Out wird einem Filter nicht angeboten ([E-143](BEFUNDE.md#e-143))
+
+**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129.** Lokales
+Postfach oder IMAP, gleich.
+
+1. *Tools → Filters*, einen Filter auswählen oder neu anlegen, als Aktion
+   *Transfer To* wählen und auf die Postfach-Schaltfläche der Aktion klicken.
+2. Im aufklappenden Menü ist **Out grau** und lässt sich nicht wählen; alle
+   anderen Postfächer gehen wie bisher.
+3. Danach im Hauptmenü *Transfer* öffnen (mit markierter Nachricht): dort ist
+   Out **nicht** grau — die Sperre gilt nur für Filter.
+4. Eine Nachricht im **Postfachfenster** markieren, *Special → Make Filter* (oder Rechtsklick → *Make Filter*), *Transfer to*
+   und die Postfach-Schaltfläche: Out ist **grau**. Dasselbe aus einer **geöffneten**
+   Nachricht heraus (*Make Filter* im Nachrichtenfenster): Out ist **grau**. An genau
+   diesen beiden Wegen hatte die erste Fassung versagt (PRÜFER-71 K3, PRÜFER-72 K1).
+5. Falls du einen **älteren** Filter mit Ziel Out hast: Post abrufen. Es kommt
+   **kein** Hinweisdialog, der Abruf läuft durch, und in der `eudora.log`
+   steht `E-143 Filter "<Name>": Ziel ist Out - uebergangen, nichts uebertragen`.
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales

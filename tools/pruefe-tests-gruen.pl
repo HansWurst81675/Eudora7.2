@@ -84,7 +84,7 @@ if (defined $gesamt) {
     printf "    bestanden        %4d\n", $gut;
     printf "    fehlgeschlagen   %4d\n", $rot;
 }
-printf "    Rueckgabewert    %4d   (TestMain.cpp:127 liefert die Zahl der roten)\n", $rc;
+printf "    Rueckgabewert    %4d   (TT_Summary: rote Tests plus Geruestfehler)\n", $rc;
 print "  ------------------------------------------------------------\n";
 
 if (!defined $gesamt) {

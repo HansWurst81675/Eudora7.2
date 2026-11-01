@@ -1544,6 +1544,18 @@ int CFilter::Action(const char* text, CSummary*& Sum, CFilterActions* fltAct, CO
 						if (!pDestToc)
 							break;
 
+						// BEFUND E-143: ein (aelterer) Filter mit Ziel Out wird uebergangen -
+						// ohne Dialog, der den Abruf anhielte, aber mit einer Zeile im Log
+						// (Gregor 01.11.2026). FILTERS ist in der Vorgabe eingeschaltet.
+						if (pDestToc->m_Type == MBT_OUT)
+						{
+							CString	szE143;
+							szE143.Format("E-143 Filter \"%s\": Ziel ist Out - uebergangen, nichts uebertragen", (LPCTSTR) m_Name);
+							PutDebugLog(DEBUG_MASK_FILTERS, szE143);
+							pDestToc = NULL;	// PRUEFER-71 K4: Filterbericht und "Postfach oeffnen" nennen sonst Out
+							break;
+						}
+
 						// Need to turn off Easy Open during transfer
 						short EO = GetIniShort(IDS_INI_EASY_OPEN);
 						SetIniShort(IDS_INI_EASY_OPEN, FALSE);
@@ -1981,6 +1993,17 @@ int CFilter::ImapAction(CSummary *&pSum, CFilterActions *pFltAct, int iActionNum
 				CTocDoc* DestToc = GetToc(mboxPath);
 				if (!DestToc)
 					break;
+
+				// BEFUND E-143: ein (aelterer) Filter mit Ziel Out wird uebergangen -
+				// ohne Dialog, der den Abruf anhielte, aber mit einer Zeile im Log
+				// (Gregor 01.11.2026). FILTERS ist in der Vorgabe eingeschaltet.
+				if (DestToc->m_Type == MBT_OUT)
+				{
+					CString	szE143;
+					szE143.Format("E-143 Filter \"%s\": Ziel ist Out - uebergangen, nichts uebertragen", (LPCTSTR) m_Name);
+					PutDebugLog(DEBUG_MASK_FILTERS, szE143);
+					break;
+				}
 
 				if (ppDestToc)
 				{

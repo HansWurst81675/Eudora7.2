@@ -105,3 +105,15 @@ Mitgewirkt hat ein Werkzeugmangel (belegt am Quelltext): `tools/testlauf.ps1` pr
 - Steht in einer Prüfstandsausgabe dieselbe Seite oder derselbe Zustand mehrfach, obwohl jeder Schritt weiterschalten sollte, ist das der erste Befund, vor jedem „funktioniert“.
 - Nach jedem Prüfstandslauf wird `Exception.log` im Mailverzeichnis gezählt (Zeitstempel gegen den Laufbeginn). Besser im Werkzeug: `testlauf.ps1` meldet *„Prozess endete während der Messung, Exitcode X“* und ein neues `Exception.log` als `FEHL` (Vorschlag, nicht gebaut; Gegenprobe: der Lauf vom 28.10. 13:34:54 müsste rot werden).
 - Eine Erledigung wird erst gemeldet, wenn die Ausgabe für den Fall, der sie verlangt hat, die erwartete Zahl zeigt.
+
+## Nachtrag 01.11.2026 (CHRONIST): einmal übersehen, einmal angewandt
+
+Zeiten MEZ, gemessen an Commits und Transkripten.
+
+**Übersehen, 31.10.** Ab `cb477bbf` (20:44) stand im fetten Kopf des Urteils zu E-136 (Emoji werden beim Speichern zu `??`) das kursive Wort `*Strg-S*`. Das Muster `\*\*([^*]+?)\*\*` in `offene-befunde.pl` brach daran ab und las einen späteren fetten Satz mit „behoben“. E-136 fiel aus der Liste der offenen Befunde in WEITERMACHEN und CHANGELOG. Um 22:08:35 meldete die Hauptsitzung Gregor *„Insgesamt 42 offen“*, um 22:10 kam PR #193 mit dieser Liste auf `main`. Aufgefallen ist es erst um 22:23:46, beim Nachzählen für Gregors Frage nach der Stufentabelle: *„E-136 fehlt in der Liste der offenen Befunde, obwohl sein Urteil mit ‚offen‘ beginnt.“* Richtig waren 43 (`0cc40bfc`, 22:25). Dieselbe Falle traf E-89, E-137, E-138 und E-158, dort ohne Folgen, weil alle vier erledigt sind. Schranke seit `ddc81808`: `tools/fettstellen.pl`, eine gemeinsame Stelle für drei Werkzeuge, mit Selbsttest.
+
+Eine Stunde und 41 Minuten lang zeigte die erzeugte Liste einen offenen Befund nicht, und die Schranke „Liste passt zur Quelle“ war grün, weil Quelle und Liste aus demselben falschen Lesen stammten ([[schranke-teilt-nicht-die-annahme]]).
+
+**Angewandt, 01.11.** Beim Bau der Stufentabelle ergab das neue Werkzeug 219, `pruefe-regressionstest.pl` 223. Die Hauptsitzung um 10:35:38: *„der Ausreißer ist der Befund. Ich suche die vier fehlenden Kennungen“*. Es waren die Unterzeilen mit Punkt (P-2.1 …). Danach 224 statt 223, und um 10:36:30 war die Ursache `uc("z-2b")`. Erst bei 223 auf beiden Seiten wurde committet (`380b07b3`).
+
+Offen ist ein Ausreißer vom 31.10.: 342 Ergebniszeilen bei 350 Tests, aber neun berichtigte Tests ([[pruefstand-kann-blind-sein]], Nachtrag 01.11.).

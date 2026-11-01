@@ -300,6 +300,12 @@ public:
 	HMENU GetHelpMenu()										{ return m_hHelpMenu; }
 	
 	void SetTransferMenuBeingUsed(BOOL bSet) { m_bTransferMenuBeingUsed = bSet; }
+	void SetE143OutSperren(BOOL bSet) { m_bE143OutSperren = bSet; }	// E-143: Out im Filterfenster nicht anbieten
+	// E-143 (PRUEFER-71 K3): jeder Freigabe-Handler des Transfer-Menues fragt hier -
+	// das Filterfenster und das Postfachfenster geben den Eintrag sonst vor dem
+	// Hauptfenster frei.
+	BOOL E143OutGesperrt(QCCommandObject* pCommand, COMMAND_ACTION_TYPE theAction) const;
+	static BOOL E143IstOut(QCCommandObject* pCommand);
 
 protected:
 	// Ueberschrieben, um die Bau-Kennung an den Fenstertitel zu haengen:
@@ -336,6 +342,7 @@ protected:
 	HMENU						m_hHelpMenu;
 
 	BOOL m_bTransferMenuBeingUsed;
+	BOOL m_bE143OutSperren;			// E-143: waehrend einer Postfachauswahl fuer einen Filter
 
 // Implementation
 public:

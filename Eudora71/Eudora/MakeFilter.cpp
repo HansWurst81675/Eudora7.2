@@ -344,6 +344,7 @@ void CMakeFilter::OnDetails()
 void CMakeFilter::OnMailbox()
 {
 	SetActionChoice(TRANS_DIFF);
+	m_MailboxButton.m_bE143OhneOut = TRUE;	// E-143: Out nicht anbieten
 	m_MailboxButton.SelectMailbox();
 }
 

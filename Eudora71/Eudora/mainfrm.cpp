@@ -44,6 +44,7 @@ DAMAGE. */
 #include "doc.h"
 #include "3dformv.h"
 #include "tocdoc.h"
+#include "QCMailboxCommand.h"	// E-143: Out im Filterfenster erkennen
 #include "tocview.h"
 #include "pop.h"
 #include "kclient.h"
@@ -789,6 +790,7 @@ CMainFrame::CMainFrame() :
 	m_hHelpMenu = NULL;
 
 	m_bTransferMenuBeingUsed = FALSE;
+	m_bE143OutSperren = FALSE;
 
 	// DRW - Moved here from CAdView now that ads are served here.
 	m_ldb = 0;
@@ -7966,6 +7968,26 @@ UINT uID )
 	return TRUE;
 }
 
+//
+// E-143: ist pCommand das Postfach Out?
+//
+BOOL CMainFrame::E143IstOut(QCCommandObject* pCommand)
+{
+	return pCommand && pCommand->IsKindOf(RUNTIME_CLASS(QCMailboxCommand)) &&
+		   ((QCMailboxCommand *) pCommand)->GetType() == MBT_OUT;
+}
+
+//
+// E-143 (Gregors Entscheidung 01.11.2026, "Out nicht anbieten"): waehrend
+// einer Postfachauswahl fuer einen Filter ist Out im Transfer-Menue grau.
+// PRUEFER-71 K3: nicht nur hier gefragt - CMailboxButton und CTocFrame geben
+// die Eintraege in der Befehlsweiterleitung VOR dem Hauptfenster frei.
+//
+BOOL CMainFrame::E143OutGesperrt(QCCommandObject* pCommand, COMMAND_ACTION_TYPE theAction) const
+{
+	return m_bE143OutSperren && theAction == CA_TRANSFER_TO && E143IstOut(pCommand);
+}
+
 void CMainFrame::OnUpdateDynamicCommand(CCmdUI* pCmdUI)
 {
 	QCCommandObject*	pCommand;
@@ -7978,7 +8000,18 @@ void CMainFrame::OnUpdateDynamicCommand(CCmdUI* pCmdUI)
 			if( theAction == CA_TRANSFER_TO || theAction == CA_TRANSFER_NEW )
 			{
 				if (m_bTransferMenuBeingUsed)
+				{
+					// BEFUND E-143 (Gregors Entscheidung 01.11.2026, "Out nicht
+					// anbieten"): ein Filter mit Ziel Out zeigte je Nachricht einen
+					// modalen Hinweis, und der automatische Abruf blieb daran stehen.
+					// Waehrend einer Postfachauswahl fuer einen Filter ist Out darum
+					// ausgegraut.
+					if (E143OutGesperrt(pCommand, theAction))
+					{
+						pCmdUI->Enable(FALSE);
+					}
 					return;
+				}
 			}
 			if( theAction == CA_INSERT_RECIPIENT )
 			{

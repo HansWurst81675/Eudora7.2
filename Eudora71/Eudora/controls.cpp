@@ -267,6 +267,7 @@ CMailboxButton::CMailboxButton()
 	// For IMAP mbox.
 	m_SelectedImapName.Empty();
 	m_bIsImap = FALSE;
+	m_bE143OhneOut = FALSE;
 }
 
 CMailboxButton::~CMailboxButton()
@@ -321,11 +322,21 @@ BOOL CMailboxButton::SelectMailbox(LPCSTR pPersonalityName /* = NULL */)
 	
 	CMainFrame* pMainFrame = CMainFrame::QCGetMainFrame();
 	pMainFrame->SetTransferMenuBeingUsed(TRUE);
-	if (cmdID = theTransferMenu->TrackPopupMenu(TPM_RETURNCMD, rect.left, rect.bottom, pMainFrame))
+	pMainFrame->SetE143OutSperren(m_bE143OhneOut);	// E-143
+	cmdID = theTransferMenu->TrackPopupMenu(TPM_RETURNCMD, rect.left, rect.bottom, pMainFrame);
+	pMainFrame->SetE143OutSperren(FALSE);
+	if (cmdID)
 	{
 		// The top of the stack will contain which menu item was selected
 		g_theCommandStack.GetSavedCommand(&uID , &pCommand, &theAction);
 		ASSERT_KINDOF( QCMailboxCommand, pCommand );
+		// E-143: Sicherung - kommt trotz der Sperre Out zurueck (ein Handler, der
+		// den Eintrag freigibt, ohne zu fragen), wird die Wahl verworfen.
+		if (m_bE143OhneOut && CMainFrame::E143IstOut(pCommand))
+		{
+			PutDebugLog(DEBUG_MASK_FILTERS, "E-143 Postfachauswahl fuer einen Filter: Out verworfen");
+			pCommand = NULL;
+		}
 		if (theAction == CA_TRANSFER_NEW)
 			pCommand = OnNewMailbox(pCommand);
 
@@ -432,6 +443,13 @@ void CMailboxButton::OnUpdateDynamicCommand(CCmdUI* pCmdUI)
 	{
 		if( g_theCommandStack.Lookup( ( WORD ) ( pCmdUI->m_nID ), &pCommand, &theAction ) )
 		{
+			// E-143 (PRUEFER-71 K3): im Filterfenster laeuft die Freigabe hierher,
+			// nicht zum Hauptfenster - also auch hier Out ausgrauen.
+			if (CMainFrame::QCGetMainFrame()->E143OutGesperrt(pCommand, theAction))
+			{
+				pCmdUI->Enable( FALSE );
+				return;
+			}
 			if (theAction == CA_TRANSFER_TO || theAction == CA_TRANSFER_NEW)
 			{
 				pCmdUI->Enable( TRUE );

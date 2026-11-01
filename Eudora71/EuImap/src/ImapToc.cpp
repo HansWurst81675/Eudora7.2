@@ -498,6 +498,8 @@ CSummary* CTocDoc::ImapXferOnSameAccount(CTocDoc *pTargetToc,
 	CSummary							*pSumNew = NULL;
 	CImapAccount						*pAccount = NULL;
 	CImapSameServerTransferMsgAction	*pTransferAction = NULL;
+	CDWordArray							 dwaE170AlteUIDs;	// E-170: Label je alter UID
+	CDWordArray							 dwaE170Labels;
 
 	if (!m_pImapMailbox || !pTargetToc || !pTargetToc->m_pImapMailbox)
 	{
@@ -530,6 +532,11 @@ CSummary* CTocDoc::ImapXferOnSameAccount(CTocDoc *pTargetToc,
 		// If we're not copying, don't move this summary unless we're allowed to close it.
 		// jdboyd 8/23/99
 		if (!bCopy && !CanCloseSummaryFrame(pSum)) continue;
+
+		// E-170: Label dieser Mail merken - im Ziel entsteht eine neue
+		// Zusammenfassung, die es sonst nicht kennt.
+		dwaE170AlteUIDs.Add(pSum->m_Hash);
+		dwaE170Labels.Add((DWORD) pSum->GetLabel());
 
 		// This summary is movable: add its UID to the string.
 		if (strUidlist.IsEmpty())
@@ -577,6 +584,8 @@ CSummary* CTocDoc::ImapXferOnSameAccount(CTocDoc *pTargetToc,
 		return NULL;
 	}
 
+	pTransferAction->m_dwaE170AlteUIDs.Copy(dwaE170AlteUIDs);	// E-170
+	pTransferAction->m_dwaE170Labels.Copy(dwaE170Labels);
 	pAccount->QueueAction(pTransferAction);
 
 	if (!bCopy)

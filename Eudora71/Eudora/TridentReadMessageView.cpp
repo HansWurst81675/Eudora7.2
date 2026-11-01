@@ -2676,7 +2676,7 @@ void CTridentReadMessageView::OnEditInsertLink()
 	GetDocument()->SetModifiedFlag();
 
 	hr = pElement->get_innerHTML(  BSTRARG( cbstr ) );
-	szInnerHTML = cbstr;
+	szInnerHTML = E136HtmlAusBstr( (BSTR) cbstr );	// E-178: Entitaet statt '?'
 
 	// see if this was an auto url
 	cbstr = A2BSTR( szEudora );
@@ -3215,7 +3215,7 @@ UINT			uStringID )
 		return FALSE;
 	}
 	
-	szInnerHTML = cbstr;
+	szInnerHTML = E136HtmlAusBstr( (BSTR) cbstr );	// E-178: Entitaet statt '?'
 
 	hr = pElement->get_outerHTML( BSTRARG( cbstr ) );
 
@@ -3225,7 +3225,7 @@ UINT			uStringID )
 		return FALSE;
 	}
 
-	szOuterHTML = cbstr;
+	szOuterHTML = E136HtmlAusBstr( (BSTR) cbstr );	// E-178: Entitaet statt '?'
 
 	// This assumes that end tags do not have attributes
 
@@ -3346,7 +3346,7 @@ UINT			uStringID )
 
 	// get the entire html fragment
 	hr = pNewRange->get_htmlText( BSTRARG( cbstr ) );
-	szText = cbstr;
+	szText = E136HtmlAusBstr( (BSTR) cbstr );	// E-178: Entitaet statt '?'
 
 	// replace the place holders
 	l = szText.Find( "&lt;" + szTempTag + "&gt;" );
@@ -3416,10 +3416,10 @@ UINT			uStringID )
 
 	// get the inner and out html for the element
 	hr = pElement->get_innerHTML( ( BSTRARG ) cbstr );
-	szInnerHTML = cbstr;
+	szInnerHTML = E136HtmlAusBstr( (BSTR) cbstr );	// E-178: Entitaet statt '?'
 
 	hr = pElement->get_outerHTML( ( BSTRARG ) cbstr );
-	szOuterHTML = cbstr;
+	szOuterHTML = E136HtmlAusBstr( (BSTR) cbstr );	// E-178: Entitaet statt '?'
 
 	// get the start and end tags -- this assumes that end tags do not have attributes
 	szEndTag = "</" + CRString( uStringID ) + ">";
@@ -3629,7 +3629,7 @@ UINT			uStringID )
 
 	// now get the text
 	hr = pSelectedRange->get_htmlText( ( BSTRARG ) cbstr );
-	szOuterHTML = cbstr;
+	szOuterHTML = E136HtmlAusBstr( (BSTR) cbstr );	// E-178: Entitaet statt '?'
 	
 	// first we're dealing with html now so convert the temporary tags
 	szTempDeleteEndTag = Text2Html( szTempDeleteEndTag, FALSE, FALSE );
@@ -4066,7 +4066,7 @@ LPCSTR	szOffTag )
 
 	// now get the complete html for the outer range	
 	hr = pOuterRange->get_htmlText( ( BSTRARG ) cbstr );
-	szText = cbstr;
+	szText = E136HtmlAusBstr( (BSTR) cbstr );	// E-178: Entitaet statt '?'
 
 	// replace the fake tags with the real thing
 

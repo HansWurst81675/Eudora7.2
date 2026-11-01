@@ -228,6 +228,10 @@ public:
 	CTocDoc					*m_pDestTocDoc;
 	QCImapMailboxCommand	*m_pDestCommand;
 	CDWordArray				 m_dwaNewUIDs;
+	// E-170: Label je alter UID, beim Einreihen gemerkt (ImapXferOnSameAccount)
+	CDWordArray				 m_dwaE170AlteUIDs;
+	CDWordArray				 m_dwaE170Labels;
+	void					 E170LabelsNachtragen();
 };
 
 

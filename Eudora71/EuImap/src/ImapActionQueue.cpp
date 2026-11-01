@@ -1475,6 +1475,13 @@ bool CImapTransferMsgAction::Write(XMLWriter *xmlWriter)
 void CImapTransferMsgAction::Copy(CImapAction *pImapAction)
 {
 	CImapAction::Copy(pImapAction);
+	// E-170: die gemerkten Labels gehoeren zur Uebertragung
+	CImapTransferMsgAction	*pQuelle = static_cast<CImapTransferMsgAction *>(pImapAction);
+	if (pQuelle)
+	{
+		m_dwaE170AlteUIDs.Copy(pQuelle->m_dwaE170AlteUIDs);
+		m_dwaE170Labels.Copy(pQuelle->m_dwaE170Labels);
+	}
 }
 
 //
@@ -1609,6 +1616,9 @@ void CImapTransferMsgAction::DoPostProcessing()
 										   true/*bFindNew*/);
 	}
 
+	// E-170: Labels, die ImapTransferSummaryData nicht mitbringen konnte
+	E170LabelsNachtragen();
+
 	// Resync the target mailbox.
 	// Only resync on the last item in the queue that acts on this mailbox, otherwise
 	// we might enter a state where more than one message is transferred to the same mailbox via
@@ -1623,6 +1633,129 @@ void CImapTransferMsgAction::DoPostProcessing()
 		szSpurR.Format("E-121 Ziel nach dem Abgleich: summen=%d", (int) m_pDestTocDoc->NumSums());
 		::PutDebugLog(DEBUG_MASK_MISC, szSpurR);
 	}
+}
+
+//
+//	CImapTransferMsgAction::E170LabelsNachtragen()
+//
+//	BEFUND E-170 (Gregor, 29.10.2026 an 1.0.127): eine Mail mit Label, innerhalb
+//	eines IMAP-Kontos in einen anderen Ordner verschoben, stand im Ziel ohne
+//	Label da. Eudora speichert Labels nur bei sich. Ins Ziel kommt das Label nur
+//	ueber ImapTransferSummaryData (oben), und das braucht zweierlei: neue UIDs
+//	vom Server (UIDPLUS, COPYUID) und die alte Zusammenfassung, die zu diesem
+//	Zeitpunkt noch im Quellordner stehen muss - nach einem automatischen
+//	Loeschen (m_bAutoExpunge in DoWork) kann sie schon fort sein.
+//
+//	Gregors Entscheidung vom 01.11.2026: "Label mitnehmen" (nicht als IMAP-
+//	Schluesselwort auf den Server). Darum merkt ImapXferOnSameAccount beim
+//	Einreihen die Labels je alter UID, und hier werden sie auf die neuen
+//	Zusammenfassungen gesetzt - nur, wo das Ziel noch kein Label hat.
+//
+//	ZUORDNUNG: alte und neue UIDs werden beide AUFSTEIGEND geordnet und dann
+//	paarweise zugeordnet (der Server vergibt die neuen UIDs in der Folge der
+//	alten). Stimmt die Anzahl nicht, wird NICHTS gesetzt - ein Label auf der
+//	falschen Mail waere schlimmer als ein fehlendes. Ohne neue UIDs (Server
+//	ohne UIDPLUS) gibt es keine Zuordnung; das sagt die Logzeile.
+//
+static void E170Aufsteigend(CDWordArray &a)
+{
+	for (int i = 1; i < a.GetSize(); i++)
+	{
+		const DWORD	dw = a.GetAt(i);
+		int			j = i - 1;
+		while (j >= 0 && a.GetAt(j) > dw)
+		{
+			a.SetAt(j + 1, a.GetAt(j));
+			j--;
+		}
+		a.SetAt(j + 1, dw);
+	}
+}
+
+static BOOL E170Aufsteigend_Ist(const CDWordArray &a)
+{
+	for (int i = 1; i < a.GetSize(); i++)
+	{
+		if (a.GetAt(i - 1) >= a.GetAt(i))
+			return FALSE;
+	}
+	return TRUE;
+}
+
+void CImapTransferMsgAction::E170LabelsNachtragen()
+{
+	int		nMitLabel = 0;
+	for (int k = 0; k < m_dwaE170Labels.GetSize(); k++)
+	{
+		if (m_dwaE170Labels.GetAt(k) != 0)
+			nMitLabel++;
+	}
+	if (nMitLabel == 0)
+		return;
+
+	const int	nAlt = (int) m_dwaE170AlteUIDs.GetSize();
+	const int	nNeu = (int) m_dwaNewUIDs.GetSize();
+	int			nGesetzt = 0;
+	const char	*szGrund = "ok";
+
+	if (!m_pDestTocDoc)
+	{
+		szGrund = "kein-ziel";
+	}
+	else if (nNeu == 0)
+	{
+		szGrund = "keine-neuen-uids";
+	}
+	else if (nNeu != nAlt || (int) m_dwaE170Labels.GetSize() != nAlt)
+	{
+		szGrund = "anzahl-passt-nicht";
+	}
+	else if (!E170Aufsteigend_Ist(m_dwaE170AlteUIDs))
+	{
+		// PRUEFER-71 K1: ImapTransferSummaryData ordnet in Listenreihenfolge zu,
+		// diese Funktion aufsteigend. Nur wenn die alte Liste schon aufsteigend
+		// ist, sind beide Zuordnungen gleich - sonst kaeme ein Label zusaetzlich
+		// auf eine falsche Mail.
+		szGrund = "reihenfolge-unsicher";
+	}
+	else
+	{
+		// Paare (alte UID, Label) nach der alten UID ordnen, neue UIDs ebenso.
+		CDWordArray		dwaAltSortiert;
+		CDWordArray		dwaNeuSortiert;
+		dwaAltSortiert.Copy(m_dwaE170AlteUIDs);
+		dwaNeuSortiert.Copy(m_dwaNewUIDs);
+		E170Aufsteigend(dwaAltSortiert);
+		E170Aufsteigend(dwaNeuSortiert);
+
+		for (int i = 0; i < nAlt; i++)
+		{
+			// Label zur i-kleinsten alten UID suchen
+			int		nLabel = 0;
+			for (int k = 0; k < nAlt; k++)
+			{
+				if (m_dwaE170AlteUIDs.GetAt(k) == dwaAltSortiert.GetAt(i))
+				{
+					nLabel = (int) m_dwaE170Labels.GetAt(k);
+					break;
+				}
+			}
+			if (nLabel == 0)
+				continue;
+
+			CSummary	*pZiel = m_pDestTocDoc->GetSummaryFromUID(dwaNeuSortiert.GetAt(i));
+			if (pZiel && pZiel->GetLabel() == 0)
+			{
+				pZiel->SetLabel(nLabel);
+				nGesetzt++;
+			}
+		}
+	}
+
+	CString		szSpur;
+	szSpur.Format("E-170 Labels beim Verschieben im Konto: mit-label=%d alte-uids=%d neue-uids=%d gesetzt=%d grund=%s",
+				  nMitLabel, nAlt, nNeu, nGesetzt, szGrund);
+	::PutDebugLog(DEBUG_MASK_MISC, szSpur);
 }
 
 void CImapTransferMsgAction::SetDestAccountID(unsigned long lDestAccountID)

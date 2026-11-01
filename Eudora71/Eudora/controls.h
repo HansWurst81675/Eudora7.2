@@ -124,6 +124,9 @@ public:
 	CString m_SelectedImapName;
 	BOOL	m_bIsImap;
 
+	// E-143: fuer einen Filter Out nicht anbieten (filtersv.cpp, MakeFilter.cpp)
+	BOOL	m_bE143OhneOut;
+
 // Operations
 public:
 

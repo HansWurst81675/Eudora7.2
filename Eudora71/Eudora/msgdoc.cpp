@@ -1517,6 +1517,12 @@ void CMessageDoc::OnUpdateDynamicCommand(CCmdUI* pCmdUI)
 			if ( ( theAction == CA_TRANSFER_TO ) || 
 				( theAction == CA_TRANSFER_NEW ) )
 			{
+				// E-143 (PRUEFER-72 K1): Make Filter aus dem Nachrichtenfenster
+				if (CMainFrame::QCGetMainFrame()->E143OutGesperrt(pCommand, theAction))
+				{
+					pCmdUI->Enable( FALSE );
+					return;
+				}
 				pCmdUI->Enable( TRUE );
 				return;
 			}

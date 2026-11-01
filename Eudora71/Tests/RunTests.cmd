@@ -19,5 +19,5 @@ echo.
 "%~dp0Build\Debug\EudoraTests.exe"
 set RC=%ERRORLEVEL%
 echo.
-echo Fehlgeschlagene Tests: %RC%
+echo Rueckgabe (rote Tests plus Geruestfehler): %RC%
 exit /b %RC%

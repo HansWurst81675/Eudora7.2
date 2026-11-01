@@ -468,3 +468,15 @@ $tv = Read-Lines $tvPath
 $wStart = Find-Line $tv '^CString E136HtmlAusBstr\s*\(' 0
 $wEnd = Find-Line $tv '^\}\s*$' $wStart
 Write-Region $tv $wStart $wEnd (Join-Path $OutDir "tridentview_e136.inc") $tvPath
+
+
+# ---------------------------------------------------------------- html2text.cpp (E-179)
+# Region X: E179ZeichenAusNummer (Befund E-179). Wandelt eine numerische
+# Zeichenangabe (&#128293; &#x1F525;) beim Umwandeln von HTML in Text. Vorher
+# blieb nur das unterste Byte: aus einem Emoji wurde '%', aus Zhe (&#1046;)
+# das Steuerzeichen 0x16, aus &#x...; ein Nullbyte.
+$h2tPath = Join-Path $SrcDir "html2text.cpp"
+$h2t = Read-Lines $h2tPath
+$xStart = Find-Line $h2t '^CString E179ZeichenAusNummer\s*\(' 0
+$xEnd = Find-Line $h2t '^\}\s*$' $xStart
+Write-Region $h2t $xStart $xEnd (Join-Path $OutDir "html2text_e179.inc") $h2tPath

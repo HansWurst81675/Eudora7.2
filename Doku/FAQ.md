@@ -199,13 +199,14 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
    lassen sich darunter anhängen.
 
    Sind die Labels in der Auswahl **ausgegraut**, den Filter löschen und neu
-   anlegen — dann lassen sie sich wählen ([E-173](../Intern/BEFUNDE.md#e-173); Ursache
-   noch nicht untersucht).
+   anlegen — dann lassen sie sich wählen ([E-173](../Intern/BEFUNDE.md#e-173); eine Spur
+   am Quelltext gibt es, nachgestellt ist der Fehler noch nicht).
 
 **Bekannte Einschränkung:** wird eine Mail mit Label später zwischen zwei
 Ordnern **desselben IMAP-Kontos** verschoben, ist das Label danach weg — Eudora
 speichert Labels nur bei sich, nicht auf dem Server
-([E-170](../Intern/BEFUNDE.md#e-170); eine Abhilfe kommt erst nach dem Release 7.2.1).
+([E-170](../Intern/BEFUNDE.md#e-170); im Quellstand berichtigt für Server, die die neuen
+Nummern der verschobenen Mails melden — kommt mit dem nächsten Paket).
 
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund
