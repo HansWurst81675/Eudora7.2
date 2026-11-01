@@ -179,6 +179,7 @@ my $expunge   = 0;
 my %gesehen;            # Befehl -> Anzahl
 my @ablage;             # per APPEND hochgeladene Nachrichten (Postfach "Ablage")
 my %gewaehlt;           # Verbindung -> gewaehltes Postfach
+my %bekannt;            # Verbindung -> Nachrichtenzahl, die sie zuletzt gemeldet bekam (E-184)
 my $append_nr = 0;      # laufende Nummer der Ablagedateien
 my $unbekannt = 0;      # Zugriffe auf ein Postfach, das es nicht gibt
 # Ordnerliste, wie der Server sie fuehrt (modifiziertes UTF-7, RFC 3501 5.1.3).
@@ -530,6 +531,19 @@ while (time < $ende) {
             $antwort = "$marke OK $B";
         }
 
+        # E-184: wie ein echter Server (RFC 3501 7.3.1) eine geaenderte
+        # Nachrichtenzahl im gewaehlten Postfach unaufgefordert melden - etwa
+        # nachdem ein COPY von einer anderen Verbindung dort etwas abgelegt hat.
+        # Ohne das gleicht Eudora den Zielordner nur bis zur alten Zahl ab und
+        # erfaehrt nie von der neuen UID.
+        if (defined $gewaehlt{$h}) {
+            my $n = scalar @{ liste_fuer($gewaehlt{$h}) };
+            if ($B ne 'SELECT' and $B ne 'EXAMINE' and defined $bekannt{$h} and $n != $bekannt{$h}) {
+                print $h "* $n EXISTS\r\n";
+                notiz("  -> * $n EXISTS (neu seit der letzten Meldung)");
+            }
+            $bekannt{$h} = $n;
+        }
         print $h "$antwort\r\n";
         notiz("  -> $antwort");
     }

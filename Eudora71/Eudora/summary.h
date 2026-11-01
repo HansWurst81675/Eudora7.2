@@ -374,6 +374,8 @@ public:
 	BOOL CanDeleteEmbedded(){ return m_DeleteEmbedded;}
 	void SetE121Vorab(BOOL bVorab) {m_bE121Vorab = bVorab;}	// E-121, siehe m_bE121Vorab
 	BOOL IstE121Vorab() const { return m_bE121Vorab;}
+	void SetE184Vorab(BOOL bVorab) {m_bE184Vorab = bVorab;}	// E-184, siehe m_bE184Vorab
+	BOOL IstE184Vorab() const { return m_bE184Vorab;}
 	void SetE121Quelle(BOOL bQuelle) {m_bE121Quelle = bQuelle;}	// E-121 N1, siehe m_bE121Quelle
 	BOOL IstE121Quelle() const { return m_bE121Quelle;}
 
@@ -474,6 +476,7 @@ private:
 	unsigned long	m_PersonaHash;	// hash of m_Persona (save in TOC)
 	long			m_DeleteEmbedded;
 	BOOL			m_bE121Quelle;		// E-121 N1: Quelle einer laufenden Uebertragung lokal -> IMAP; nur sie darf nach dem Hochladen entfernt werden (nur im Speicher)
+	BOOL			m_bE184Vorab;		// E-184: lokale Vorab-Kopie im IMAP-Zielordner bei IMAP -> IMAP; ImapTransferSummaryData sucht nur sie unter der alten UID, nie eine fremde Mail mit derselben Nummer (nur im Speicher, nicht gespeichert, nicht von Copy uebernommen)
 	BOOL			m_bE121Vorab;		// E-121: lokale Vorab-Kopie im IMAP-Zielordner, noch nicht hochgeladen (nur im Speicher, wird nicht gespeichert, nicht von Copy uebernommen)
 	bool			m_bNotifySearchManager;		//	Used to "gate" search manager notifications - ideally so that only occur when necessary
 	bool			m_bShouldBeAddedToIndex;	//	Used by search manager to flag whether or not message is already indexed

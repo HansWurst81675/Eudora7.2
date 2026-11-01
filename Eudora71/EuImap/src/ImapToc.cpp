@@ -1577,7 +1577,13 @@ CSummary *CTocDoc::ImapTransferSummaryData(CString &strUIDList,
 
 		if (bFindNew)
 		{
-			pSumNew = pTargetToc->GetSummaryFromUID(lOldUID);
+			// E-184: nur die eigene Vorab-Kopie (CTocDoc::Xfer, markiert) - nicht
+			// irgendeine Zusammenfassung mit dieser UID. UIDs gelten je Ordner; eine
+			// fremde Mail im Ziel mit derselben Nummer wurde bis 7.2.1.130 hier
+			// gefunden und ueberschrieben (gemessen: tools/messen-e184.ps1).
+			pSumNew = E184FindeVorabKopie(pTargetToc, lOldUID);
+			if (pSumNew)
+				pSumNew->SetE184Vorab(FALSE);
 		}
 		if (!pSumNew)
 		{
@@ -1716,6 +1722,22 @@ CSummary* E121FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
 	{
 		CSummary *pKandidat = pToc->GetSumList().GetNext(pos);
 		if (pKandidat && pKandidat->IstE121Vorab() && pKandidat->GetHash() == ulHash)
+			return pKandidat;
+	}
+	return NULL;
+}
+
+// E-184: siehe tocdoc.h.
+CSummary* E184FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
+{
+	if (!pToc)
+		return NULL;
+
+	POSITION pos = pToc->GetSumList().GetHeadPosition();
+	while (pos)
+	{
+		CSummary *pKandidat = pToc->GetSumList().GetNext(pos);
+		if (pKandidat && pKandidat->IstE184Vorab() && pKandidat->GetHash() == ulHash)
 			return pKandidat;
 	}
 	return NULL;
