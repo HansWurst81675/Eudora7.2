@@ -45,7 +45,7 @@ static void Test_E143_Stelle(const char* szEudoraDir)
 	else
 	{
 		PruefeImAbschnitt(pMain, "void CMainFrame::OnUpdateDynamicCommand(", "if( theAction == CA_INSERT_RECIPIENT )",
-						  "((QCMailboxCommand *) pCommand)->GetType() == MBT_OUT) { pCmdUI->Enable(FALSE); }",
+						  "if (E143OutGesperrt(pCommand, theAction)) { pCmdUI->Enable(FALSE); }",
 						  "OnUpdateDynamicCommand: Out ausgrauen waehrend einer Auswahl fuer einen Filter");
 		PruefeImAbschnitt(pCtl, "BOOL CMailboxButton::SelectMailbox(", "theTransferMenu->TrackPopupMenu(",
 						  "pMainFrame->SetE143OutSperren(m_bE143OhneOut);",
@@ -56,6 +56,27 @@ static void Test_E143_Stelle(const char* szEudoraDir)
 		PruefeImAbschnitt(pFv, "void CFiltersViewRight::OnMailbox()", "SelectMailbox()",
 						  "m_Mailbox[m_ActionIndex].m_bE143OhneOut = TRUE;",
 						  "Filterfenster: Out nicht anbieten");
+		// PRUEFER-71 K3: die Freigabe laeuft im Filterfenster ueber die
+		// Schaltflaeche und bei Make Filter ueber das Postfachfenster - beide
+		// muessen fragen, und nach der Wahl wird ein Out verworfen.
+		PruefeImAbschnitt(pCtl, "void CMailboxButton::OnUpdateDynamicCommand(", "BOOL CMailboxButton::OnDynamicCommand(",
+						  "if (CMainFrame::QCGetMainFrame()->E143OutGesperrt(pCommand, theAction)) { pCmdUI->Enable( FALSE ); return; }",
+						  "CMailboxButton::OnUpdateDynamicCommand: Out ausgrauen");
+		PruefeImAbschnitt(pCtl, "BOOL CMailboxButton::SelectMailbox(", "if (pCommand)",
+						  "if (m_bE143OhneOut && CMainFrame::E143IstOut(pCommand))",
+						  "SelectMailbox: ein trotzdem gewaehltes Out verwerfen");
+		{
+			char* pToc = QT_LiesNurCode(szEudoraDir, "TocFrame.cpp");
+			if (!pToc)
+				TT_Fail("TocFrame.cpp nicht lesbar - ungeprueft ist nicht gruen (E-143)");
+			else
+			{
+				PruefeImAbschnitt(pToc, "void CTocFrame::OnUpdateDynamicCommand(", "pCmdUI->Enable(m_pSumListBox->GetSelCount() > 0);",
+								  "if (CMainFrame::QCGetMainFrame()->E143OutGesperrt(pCommand, theAction)) { pCmdUI->Enable(FALSE); return; }",
+								  "CTocFrame::OnUpdateDynamicCommand: Out ausgrauen (Make Filter)");
+				free(pToc);
+			}
+		}
 		PruefeImAbschnitt(pMf, "void CMakeFilter::OnMailbox()", "SelectMailbox()",
 						  "m_MailboxButton.m_bE143OhneOut = TRUE;",
 						  "Make Filter: Out nicht anbieten");
@@ -80,7 +101,10 @@ static void Test_E143_Stelle(const char* szEudoraDir)
 			memcpy(pFn, pVon, nLen);
 			pFn[nLen] = '\0';
 			const long lOut  = QT_Stelle(pFn, "->m_Type == MBT_OUT)");
-			const long lLog  = QT_Stelle(pFn, "PutDebugLog(DEBUG_MASK_FILTERS, szE143);");
+			// PRUEFER-71 G4: ohne das break dahinter kam der Dialog zurueck, und
+			// der Test blieb gruen - darum Logzeile UND break gemeinsam suchen.
+			const long lLog  = QT_Stelle(pFn, i == 0 ? "PutDebugLog(DEBUG_MASK_FILTERS, szE143); pDestToc = NULL; break;"
+													 : "PutDebugLog(DEBUG_MASK_FILTERS, szE143); break;");
 			const long lXfer = QT_Stelle(pFn, "->Xfer(");
 			if (lOut < 0 || lLog < 0)
 				TT_Fail("%s: Out wird nicht uebergangen oder nicht ins Log geschrieben (E-143)", aWege[i][2]);

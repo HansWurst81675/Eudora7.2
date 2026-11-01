@@ -58,6 +58,9 @@ static void Test_E170_Stelle(const char* szEudoraDir)
 		// 3. Die Zuordnung setzt nur, wo das Ziel noch kein Label hat, und nichts bei ungleicher Anzahl
 		TT_CHECK_MSG(QT_Enthaelt(pPost, "if (pZiel && pZiel->GetLabel() == 0)"), "E170LabelsNachtragen ueberschreibt ein vorhandenes Label (E-170)");
 		TT_CHECK_MSG(QT_Enthaelt(pPost, "\"anzahl-passt-nicht\""), "E170LabelsNachtragen setzt auch bei ungleicher Anzahl - Gefahr: Label auf der falschen Mail (E-170)");
+		// PRUEFER-71 K1: nur zuordnen, wenn die alten UIDs schon aufsteigend sind
+		TT_CHECK_MSG(QT_Enthaelt(pPost, "else if (!E170Aufsteigend_Ist(m_dwaE170AlteUIDs)) { szGrund = \"reihenfolge-unsicher\"; }"),
+					 "E170LabelsNachtragen ordnet auch bei nicht aufsteigender alter Liste zu - Label kaeme zusaetzlich auf eine falsche Mail (E-170, PRUEFER-71 K1)");
 		free(pPost);
 	}
 

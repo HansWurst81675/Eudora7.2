@@ -1672,6 +1672,16 @@ static void E170Aufsteigend(CDWordArray &a)
 	}
 }
 
+static BOOL E170Aufsteigend_Ist(const CDWordArray &a)
+{
+	for (int i = 1; i < a.GetSize(); i++)
+	{
+		if (a.GetAt(i - 1) >= a.GetAt(i))
+			return FALSE;
+	}
+	return TRUE;
+}
+
 void CImapTransferMsgAction::E170LabelsNachtragen()
 {
 	int		nMitLabel = 0;
@@ -1699,6 +1709,14 @@ void CImapTransferMsgAction::E170LabelsNachtragen()
 	else if (nNeu != nAlt || (int) m_dwaE170Labels.GetSize() != nAlt)
 	{
 		szGrund = "anzahl-passt-nicht";
+	}
+	else if (!E170Aufsteigend_Ist(m_dwaE170AlteUIDs))
+	{
+		// PRUEFER-71 K1: ImapTransferSummaryData ordnet in Listenreihenfolge zu,
+		// diese Funktion aufsteigend. Nur wenn die alte Liste schon aufsteigend
+		// ist, sind beide Zuordnungen gleich - sonst kaeme ein Label zusaetzlich
+		// auf eine falsche Mail.
+		szGrund = "reihenfolge-unsicher";
 	}
 	else
 	{

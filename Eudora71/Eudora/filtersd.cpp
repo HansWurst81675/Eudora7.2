@@ -1552,6 +1552,7 @@ int CFilter::Action(const char* text, CSummary*& Sum, CFilterActions* fltAct, CO
 							CString	szE143;
 							szE143.Format("E-143 Filter \"%s\": Ziel ist Out - uebergangen, nichts uebertragen", (LPCTSTR) m_Name);
 							PutDebugLog(DEBUG_MASK_FILTERS, szE143);
+							pDestToc = NULL;	// PRUEFER-71 K4: Filterbericht und "Postfach oeffnen" nennen sonst Out
 							break;
 						}
 

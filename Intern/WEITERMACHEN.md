@@ -76,6 +76,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-184](BEFUNDE.md#e-184)** | Beim Verschieben zwischen IMAP-Ordnern mit UIDPLUS kann Eudora die Zusammenfassung einer f… | **nie gemessen** | am IMAP-Prüfserver nachstellen (im Ziel eine Mail mit derselben UID-Nummer, dann verschieben, Betreff und Inhalt vergleichen); dann je Aufrufer klär… |
 | **[E-179](BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | die Messung am Programm — eine HTML-Mail mit `&#128293;` senden und den Textteil beim Empfänger ansehen; den Klickweg erst selbst am Prüfstand dur… |
 | **[E-178](BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Fett, Link einfügen und ähnliche Befehle Emoj… | **nie gemessen** | die Messung am Programm mit dem nächsten Testpaket ([TESTPLAN](TESTPLAN.md#e-178-naechstes)). **Stufe: wichtig** (Datenschaden im Bearbeiten-Modus, n… |
 | **[E-177](BEFUNDE.md#e-177)** | Die Filteraktion *„an Programm übergeben"* schreibt ihre Zwischendatei ohne Zeichensatz… | **nie gemessen** | messen (Filter mit dieser Aktion, Prüfnachricht mit Euro und Umlauten, Zwischendatei ansehen), danach entscheiden, ob die Angabe dort überhaupt erw… |

@@ -70,6 +70,8 @@ static void Test_E179_Funktion()
 	Fall("&#128293;",    "&#128293;",    9, 8, "Emoji - vorher '%'");
 	Fall("&#1046;",      "&#1046;",      7, 6, "Zhe - vorher Steuerzeichen 0x16");
 	Fall("&#x1F525;",    "&#x1F525;",    9, 8, "Emoji hexadezimal - vorher Nullbyte");
+	Fall("&#X1F525;",    "&#X1F525;",    9, 8, "Emoji hexadezimal mit grossem X (PRUEFER-71 G2)");
+	Fall("&#XFC;",       "\xFC",         1, 5, "grosses X, Latin-1");
 	Fall("&#128293 x",   "&#128293",     8, 8, "ohne Semikolon");
 
 	// Keine gueltige Zahl: stehen lassen, nie ein Nullbyte.
