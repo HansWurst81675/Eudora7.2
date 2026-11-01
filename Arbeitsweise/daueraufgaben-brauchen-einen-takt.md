@@ -237,3 +237,11 @@ Die Meldung war also da, sogar am Anfang, wo [[ausloeser-an-den-anfang]] sie hab
 - **Kurze Berichtigungen aus einem LEKTOR-Bericht setzt der LEKTOR selbst** und vermerkt sie im Bericht. Meine Einarbeitung ist nur dann richtig, wenn der Fund eine Entscheidung braucht.
 
 **Vorschlag (nicht gebaut):** `rollen-faellig.pl` meldet den CHRONIST nach dem ersten PR des Tages nicht mehr als Zeile unter anderen, sondern als `JETZT: CHRONIST (letzter Bericht vor N Stunden)`, sobald N > 24. Gegenprobe: Stand 27.10. 14:45 (N ≈ 31) muss `JETZT` zeigen, Stand 26.10. 08:00 (N ≈ 1) nicht.
+
+## Nachtrag 01.11.2026: angekündigt und den Zug beendet, 73 Minuten Stillstand
+
+Um 15:47 lag der letzte Commit (`d2a85c89`, Prüfstand 46/46) auf dem Server. Meine Meldung an Gregor endete mit dem Satz *„Vor dem PR lasse ich LEKTOR und PRÜFER noch kurz laufen“*. Gestartet habe ich sie nicht. Die Sitzung stand still, bis Gregor um etwa 17:00 schrieb: *„du wartest dann immer auf meine rückmeldung? obwohl du den lektor immer starten mußt.“*, dann *„vertane zeit!“* und *„wie lange warst du untätig?“*. Gemessen: von 15:47 bis 17:00, also **73 Minuten**. Gestartet wurden LEKTOR-117 und PRÜFER-74 um 17:01.
+
+**Warum:** Eine Ankündigung im Schlusstext hat keinen Auslöser. Den Zug zu beenden heißt: bis Gregor schreibt, passiert nichts. Sein Test außerhalb der VM und die beiden Rollen hätten parallel laufen sollen, wie es der Nachtrag vom 16.10. verlangt.
+
+**How to apply:** Was ich als nächsten Schritt ankündige und ohne Gregor tun darf, starte ich **vor** der Schlussmeldung im selben Zug. Die Meldung sagt dann „läuft“, nicht „lasse ich laufen“. Steht in meinem Schlusstext ein Futur über eine fällige Rolle, ist das der Fehler.
