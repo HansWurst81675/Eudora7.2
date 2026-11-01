@@ -63,8 +63,21 @@ static void Test_E143_Stelle(const char* szEudoraDir)
 						  "if (CMainFrame::QCGetMainFrame()->E143OutGesperrt(pCommand, theAction)) { pCmdUI->Enable( FALSE ); return; }",
 						  "CMailboxButton::OnUpdateDynamicCommand: Out ausgrauen");
 		PruefeImAbschnitt(pCtl, "BOOL CMailboxButton::SelectMailbox(", "if (pCommand)",
-						  "if (m_bE143OhneOut && CMainFrame::E143IstOut(pCommand))",
-						  "SelectMailbox: ein trotzdem gewaehltes Out verwerfen");
+						  "if (m_bE143OhneOut && CMainFrame::E143IstOut(pCommand)) { PutDebugLog(DEBUG_MASK_FILTERS, \"E-143 Postfachauswahl fuer einen Filter: Out verworfen\"); pCommand = NULL; }",
+						  "SelectMailbox: ein trotzdem gewaehltes Out verwerfen (samt pCommand = NULL, PRUEFER-72 K3)");
+		{
+			// PRUEFER-72 K1: Make Filter aus dem geoeffneten Nachrichtenfenster
+			char* pDoc = QT_LiesNurCode(szEudoraDir, "msgdoc.cpp");
+			if (!pDoc)
+				TT_Fail("msgdoc.cpp nicht lesbar - ungeprueft ist nicht gruen (E-143)");
+			else
+			{
+				PruefeImAbschnitt(pDoc, "void CMessageDoc::OnUpdateDynamicCommand(", "pCmdUI->Enable( TRUE );",
+								  "if (CMainFrame::QCGetMainFrame()->E143OutGesperrt(pCommand, theAction)) { pCmdUI->Enable( FALSE ); return; }",
+								  "CMessageDoc::OnUpdateDynamicCommand: Out ausgrauen (Make Filter aus dem Nachrichtenfenster)");
+				free(pDoc);
+			}
+		}
 		{
 			char* pToc = QT_LiesNurCode(szEudoraDir, "TocFrame.cpp");
 			if (!pToc)

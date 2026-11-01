@@ -61,6 +61,10 @@ static void Test_E170_Stelle(const char* szEudoraDir)
 		// PRUEFER-71 K1: nur zuordnen, wenn die alten UIDs schon aufsteigend sind
 		TT_CHECK_MSG(QT_Enthaelt(pPost, "else if (!E170Aufsteigend_Ist(m_dwaE170AlteUIDs)) { szGrund = \"reihenfolge-unsicher\"; }"),
 					 "E170LabelsNachtragen ordnet auch bei nicht aufsteigender alter Liste zu - Label kaeme zusaetzlich auf eine falsche Mail (E-170, PRUEFER-71 K1)");
+		// PRUEFER-72 K3: umgedreht ('<' statt '>=') liesse die Schranke genau
+		// die gefaehrlichen Listen durch - darum den Rumpf woertlich pruefen.
+		TT_CHECK_MSG(QT_Enthaelt(pQ, "static BOOL E170Aufsteigend_Ist(const CDWordArray &a) { for (int i = 1; i < a.GetSize(); i++) { if (a.GetAt(i - 1) >= a.GetAt(i)) return FALSE; } return TRUE; }"),
+					 "E170Aufsteigend_Ist prueft nicht mehr 'streng aufsteigend' (E-170, PRUEFER-72 K3)");
 		free(pPost);
 	}
 
