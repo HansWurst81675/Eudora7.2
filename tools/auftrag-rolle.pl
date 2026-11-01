@@ -86,6 +86,12 @@ if ($rolle eq 'PRUEFER') {
     # berichtete Kennungen stehen in tools/AGENTEN-LAUFEN.md und zaehlen mit.
     my $emax = 0;
     my $tab = lies('Intern/BEFUNDE.md');
+    # Auch die Urteilstabelle des Zielzweigs: der Hauptbaum steht oft auf main,
+    # der Rollenlauf aber auf origin/<basis>, wo schon neue Kennungen stehen
+    # koennen. Gemessen 01.11.2026: zweimal E-188/E-189 vergeben, obwohl beide
+    # auf e184_imap_zusammenfassung seit 8b5f8342 belegt waren.
+    my ($ziel_tab) = git('show', "origin/$basis:Intern/BEFUNDE.md");
+    $tab .= "\n" . (defined $ziel_tab ? $ziel_tab : '');
     while ($tab =~ /<a id="e-(\d+)"><\/a>/g) { $emax = $1 if $1 > $emax }
     my %genannt;
     for my $t (lies("tools/AGENTEN-LAUFEN.md"), map({ lies($_) } glob(q{Befunde/*.md})),
