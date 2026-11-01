@@ -91,3 +91,23 @@ Die Herkunft der beiden falsch-Funde von LEKTOR-91 bestätigt die Tabelle vom 25
 - **Solange ein LEKTOR läuft, geht kein Doku-Text in den Zweig.** Neue Befunde, Gregors Aufträge und eigene Berichtigungen sammle ich im Stand-Vermerk. Nach dem Rücklauf kommt alles in einem Commit, dann **ein** letzter LEKTOR, dann sofort der PR.
 - Kommt während dieses letzten Laufs ein Auftrag Gregors (hier der CHANGELOG), dann frage ich mit Ja oder Nein: *„Der CHANGELOG-Nachtrag macht den LEKTOR noch einmal fällig, etwa zehn Minuten. Soll er noch in diesen PR (a), oder darf der PR jetzt kommen und der Nachtrag folgt als erster Commit auf dem nächsten Zweig (b)?“* Erst die Antwort, dann der PR.
 - Der CHANGELOG selbst wäre nie zum Engpass geworden, wenn jeder Commit ihn mitgezogen hätte ([[doku-bei-jedem-commit-mitziehen]], Nachtrag 29.10.).
+
+## Nachtrag 01.11.2026 (CHRONIST): fünf Rollenläufe für einen PR, Aufschub nur bei Kleinkram
+
+Zeiten MEZ, gemessen an Commitzeiten und Berichten auf `e165_schliessen_e136_speichern_unter` (PR #194).
+
+| Lauf | Bericht | Funde | Auslöser |
+|---|---|---|---|
+| PRÜFER-69 | 11:07 | 5, alle niedrig (auch K1, der blinde E-136-Test: *„niedrig (nur Tests)“*) | Codeänderungen des Tages |
+| LEKTOR-111 | 11:21 | 6 (3 mittel, 3 Kleinkram) | Doku des Tages und Einarbeitung PRÜFER-69 (11:12) |
+| PRÜFER-70 | 11:31 | 2 neue, niedrig | Einarbeitung PRÜFER-69 hatte Code geändert |
+| LEKTOR-112 | 11:37 | 4 neue (1 mittel, 3 Kleinkram) | Einarbeitung LEKTOR-111 (11:25) und PRÜFER-70 (11:32) |
+| LEKTOR-113 | 11:42 | 1 Kleinkram | Einarbeitung LEKTOR-112 und AN-1 (11:38/11:39) |
+
+Fünf Läufe in 35 Minuten, drei davon nur, weil das Einarbeiten des vorigen Laufs die Rolle wieder fällig machte und `haken-pr-lektor.pl` sperrte. Am 31.10. war es ähnlich: LEKTOR-106 bis -110 an einem Abend, davon -107, -108 und -110 als Bestätigungs- oder Abschlussläufe.
+
+Die Tabelle vom 25.10. bestätigt sich: Von den vier Funden von LEKTOR-112 stammen drei aus Text, den die Hauptsitzung beim Einarbeiten selbst geschrieben hatte (L-112.1 aus `f959d928`, L-112.2 und L-112.3 aus `6f762167`; belegt am Bericht). Bei L-112.4 ist das eine Vermutung.
+
+**Diesmal regelkonform.** Aufgeschoben wurden nur L-113.1 (Kleinkram, *„Falsch ist nichts“*, LEKTOR-113) und die zwei niedrigen Funde von PRÜFER-70. Beides steht offen im PR-Text bzw. in WEITERMACHEN. Ein falsch- oder wichtig-Fund ging nicht auf `main`. Gregors Entscheidung zu AN-1 (*„ja, AN-1 auf unkritisch“*, 11:37:09) kam mitten in den letzten Lauf. Die Hauptsitzung trug sie sofort ein und gab dem laufenden LEKTOR die Stelle mit. Weil der Lauf die Änderung trotzdem nicht sah, folgte LEKTOR-113.
+
+**Was die Schleife kürzer gemacht hätte (Vermutung, nicht gemessen):** beim Einarbeiten nur die genannte Zeile ändern und keinen neuen Satz über Zustände schreiben. Drei der vier Funde von LEKTOR-112 waren solche neuen Sätze.

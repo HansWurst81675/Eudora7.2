@@ -140,3 +140,22 @@ bekommt einen **Kontrollfall, der vor und nach der Behebung grün sein
 muss**. Ist der Kontrollfall auch rot, misst der Prüfstand sich selbst, nicht
 den Fehler. Und der rote Wert muss **der sein, den Gregor gesehen hat**
 (hier 330x327), nicht irgendein falscher.
+
+## Nachtrag 01.11.2026 (CHRONIST): dreimal grün aus dem falschen Grund in zwei Tagen
+
+Zeiten MEZ, gemessen an Commits und Transkripten (`473878d1…`, `6f848773…` und dem Agententranskript von PRÜFER-69).
+
+| Wann | Was grün war | Warum | Gefunden von |
+|---|---|---|---|
+| bis 31.10. 21:54 | **neun Tests** zu E-136, E-139, E-140, E-165, E-171 (fünf Dateien) | `++s_iFailedTests` steht nur in `TT_EndTest`. Den Aufruf hatten die neun Tests nicht: Sie druckten bei einem Rückfall `[FEHL]`, Summe und Rückgabewert blieben grün. Dabei kam ein verdeckter Fehler im Test selbst heraus (`TestE139` suchte `'\n'` falsch) | Prüfbericht zum Paket 7.2.1.129: *„350 Tests gemeldet, 342 Ergebniszeilen“* (Commit `c458c74d`) |
+| bis 01.11. 11:12 | der neue Test zum zweiten Speicherweg von E-136 (Emoji werden beim Speichern zu `??`) | Er prüfte nur, dass die neue Zeile **da** ist, nicht dass keine zweite verlustbehaftete Zuweisung folgt | PRÜFER-69, Fund K1 (`10102f8d`) |
+| 01.11. gegen 11:08 | der pre-push-Haken des PRÜFER | `cp -p` stellte nach der Gegenprobe die alten Dateizeiten wieder her. MSBuild sah nichts Neues und baute nicht. Der Haken fuhr die Testdatei, die noch aus dem absichtlich kaputten Stand der Gegenprobe gebaut war | PRÜFER-69 selbst: *„`cp -p` restored the old timestamps and MSBuild then saw nothing to rebuild“* |
+
+Die erste Zeile hat jetzt eine Schranke: `TinyTest.cpp` zählt einen Test, der ohne `TT_EndTest` verlassen wird, als rot (`ddc81808`, Gegenprobe 349/1 und 350/0). Die zweite ist behoben, die Schreibweise `szMsg=cbstr;` ohne Leerzeichen erkennt der Test aber weiter nicht (PRÜFER-70, als Aufgabe in WEITERMACHEN). Die dritte hat keine Schranke.
+
+**Ein Ausreißer ist nicht aufgelöst:** 350 minus 342 sind acht fehlende Ergebniszeilen, berichtigt wurden neun Tests (neun `TT_EndTest` am Hauptweg, acht in Fehlerzweigen, gezählt im Diff von `c458c74d`). Woher die Differenz von eins kommt, steht nirgends ([[ausreisser-ist-der-befund]]).
+
+**How to apply, zusätzlich:**
+- Ein Test meldet nicht nur `[FEHL]`, er muss **den Rückgabewert** ändern. Die Gegenprobe prüft den Rückgabewert, nicht die Ausgabezeile.
+- Ein Test auf „die Behebung steht da“ braucht die Umkehrung „die alte Stelle steht nicht mehr da“ ([[gegenprobe-umdrehen]]).
+- Nach einer Gegenprobe wird die Sicherung **ohne** `cp -p` zurückgelegt, oder die Datei wird danach mit `touch` berührt. Sonst misst der nächste Bau den kaputten Stand und meldet ihn als den guten.

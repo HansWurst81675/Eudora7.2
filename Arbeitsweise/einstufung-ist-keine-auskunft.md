@@ -80,3 +80,17 @@ ebenfalls nicht von selbst gefeuert: die erste Reaktion war eine Antwort zu
 5. **Die dritte Spalte wird erzeugt, nicht gepflegt** — sie kommt aus
    `Intern/BEFUNDE.md`, damit sie nicht die naechste handgefuehrte Zweitliste
    wird ([[liste-aus-einer-quelle]]).
+
+## Nachtrag 01.11.2026 (CHRONIST): „73 kritische“ ohne „davon offen“
+
+Transkript `473878d1…`, Zeiten MEZ, gemessen.
+
+Gregor um 22:21:16 zur Stufentabelle oben in `Intern/BEFUNDE.md`: *„kritisch … Diese müssen vor jedem Release laufen. 64 -> ist es noch aktuell?“* Die Spalte hieß *„Zahl am 22.10.2026“* und war von Hand gesetzt. Die Hauptsitzung zählte mit `grep` nach und bekam `kritisch: 73`. Gregor um 22:22:56: *„ok, wir haben also 73 kritische gefunden, aber wieviele davon sind noch offen und wieviele behoben? denn auf den ersten blick sieht es so aus, als wären da 73 kritische befunde - zu geheben.“*
+
+Die Antwort um 22:26:17: **72** kritische, davon **11 offen**. Die 73 enthielten das Beispiel aus der Legende. Am nächsten Morgen zählte das neue Werkzeug **71** (10:36, `uc("z-2b")` hatte Z-2b doppelt gezählt, Commit `380b07b3`). Für dieselbe Frage gab es also in 13 Stunden vier Zahlen: 64, 73, 72, 71. Keine davon sagte, was zu tun ist. Die Zahl, die Gregor brauchte, war 11 (nach seinen Herabstufungen von E-136 und AN-1 am 01.11. sind es 9).
+
+Danach erzählten zwei Dokumente den Anlass verschieden: `Intern/BEFUNDE.md` *„gelesen wurde sie als 64 zu behebende“*, `tools/WERKZEUGE.md` *„Gregor las daraus ‚73 zu beheben‘“* (LEKTOR-112, Fund L-112.2). Auch das ist eine zweite Stelle für denselben Satz ([[eine-stelle-dann-verlinken]]).
+
+Seit `380b07b3` erzeugt `tools/offene-befunde.pl` die Stufentabelle mit den Spalten offen / erledigt / ohne Urteilswort und prüft sie im pre-commit.
+
+**How to apply, zusätzlich:** Eine Zahl von Befunden steht nie allein. „73 kritische“ wird zu „72 kritische, davon 11 offen“. Wer eine Zahl nennt, die er gerade mit `grep` gezählt hat, sagt dazu, was mitgezählt ist.

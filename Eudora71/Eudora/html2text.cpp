@@ -1101,6 +1101,111 @@ void CHtml2Text::GetAttributeList(LPCTSTR* pszText, CStringArray& theArray)
 //	Return Value:
 //		None, but if at least one character is displayed on the current line, m_bTextOnLine is set to TRUE.
 //
+// ---------------------------------------------------------------------------
+// E179ZeichenAusNummer
+// ---------------------------------------------------------------------------
+//
+// BEFUND E-179 (PRUEFER-68 K3, nachgestellt am 01.11.2026 mit TestE179.cpp):
+// eine numerische Zeichenangabe wurde beim Umwandeln von HTML in Text mit
+// "( char )( atoi( szTemp ) & 0xFF )" behandelt. Es blieb nur das unterste
+// Byte: aus &#128293; (Emoji) wurde '%', aus &#1046; (Zhe) das Steuerzeichen
+// 0x16 - ohne Warnung, im Textteil einer gesendeten HTML-Mail, in der Suche.
+// Hexadezimale Angaben (&#x1F525;) und &#0; ergaben ein Nullbyte, danach
+// stand der Rest der Angabe ("x1F525;") als Text da. Wichtiger geworden ist
+// das, weil E-136 solche Angaben jetzt selbst ins Postfach schreibt.
+//
+// Jetzt:
+//   - unter 256: wie bisher das Byte (ASCII, Latin-1);
+//   - darueber, wenn die Codepage das Zeichen kennt: das Zeichen
+//     (&#8364; -> Euro, in windows-1252 0x80);
+//   - sonst, und bei jeder ungueltigen Zahl (keine Ziffern, 0, halbes
+//     Ersatzpaar, ueber 0x10FFFF): die Angabe bleibt stehen, wie sie war,
+//     samt Semikolon. Nichts geht verloren, nichts wird verfaelscht.
+//
+// szText zeigt auf "&#", ulTotalLength ist die Restlaenge ab dort.
+// ulVerbraucht: Zeichen bis hinter die letzte Ziffer (OHNE Semikolon - das
+// ueberspringt der Aufrufer wie bisher).
+//
+CString E179ZeichenAusNummer(LPCTSTR szText, ULONG ulTotalLength, ULONG& ulVerbraucht)
+{
+	CString			szErgebnis;
+	ULONG			ul = 2;
+	BOOL			bHex = FALSE;
+	BOOL			bZuGross = FALSE;
+	unsigned long	ulWert = 0;
+
+	if ( ul < ulTotalLength && ( szText[ul] == 'x' || szText[ul] == 'X' ) )
+	{
+		bHex = TRUE;
+		ul++;
+	}
+
+	const ULONG		ulZiffernAb = ul;
+
+	for ( ; ul < ulTotalLength; ul++ )
+	{
+		const int	c = (int)(unsigned char) szText[ul];
+		int			nZiffer;
+
+		if ( c >= '0' && c <= '9' )
+			nZiffer = c - '0';
+		else if ( bHex && c >= 'a' && c <= 'f' )
+			nZiffer = c - 'a' + 10;
+		else if ( bHex && c >= 'A' && c <= 'F' )
+			nZiffer = c - 'A' + 10;
+		else
+			break;
+
+		// weiterlesen, damit die ganze Zahl verbraucht wird - aber nicht
+		// weiterrechnen, sonst laeuft ulWert ueber
+		if ( ulWert > 0x10FFFF )
+			bZuGross = TRUE;
+		else
+			ulWert = ulWert * ( bHex ? 16 : 10 ) + nZiffer;
+	}
+
+	ulVerbraucht = ul;
+
+	const BOOL	bGueltig = ( ul > ulZiffernAb ) && !bZuGross && ulWert != 0 && ulWert <= 0x10FFFF &&
+						   !( ulWert >= 0xD800 && ulWert <= 0xDFFF );
+
+	if ( bGueltig && ulWert < 256 )
+	{
+		szErgebnis += (char) ulWert;
+		return szErgebnis;
+	}
+
+	if ( bGueltig )
+	{
+		wchar_t		aw[2];
+		int			nw = 1;
+
+		if ( ulWert >= 0x10000 )
+		{
+			aw[0] = (wchar_t) ( 0xD800 + ( ( ulWert - 0x10000 ) >> 10 ) );
+			aw[1] = (wchar_t) ( 0xDC00 + ( ( ulWert - 0x10000 ) & 0x3FF ) );
+			nw = 2;
+		}
+		else
+			aw[0] = (wchar_t) ulWert;
+
+		char		a[8];
+		BOOL		bErsatz = FALSE;
+		const int	n = ::WideCharToMultiByte( CP_ACP, WC_NO_BEST_FIT_CHARS, aw, nw, a, sizeof(a), NULL, &bErsatz );
+
+		if ( n > 0 && !bErsatz )
+		{
+			szErgebnis.Append( a, n );
+			return szErgebnis;
+		}
+	}
+
+	szErgebnis.Append( szText, (int) ul );
+	if ( ul < ulTotalLength && szText[ul] == ';' )
+		szErgebnis += ';';
+	return szErgebnis;
+}
+
 void CHtml2Text::AddText(LPCTSTR szText, ULONG ulTotalLength)
 {
 	ULONG	ul;
@@ -1174,14 +1279,8 @@ void CHtml2Text::AddText(LPCTSTR szText, ULONG ulTotalLength)
 				
 				if ( szText[1] == '#' )
 				{
-					// get the number string	
-					for( ul = 2; ( ul < ulTotalLength ) && isdigit( (int)(unsigned char)(szText[ul]) ); ul++ )
-					{
-						szTemp += szText[ul];
-					}
-					
-					// convert the number to a character
-					m_szDest += ( char ) ( atoi( szTemp ) & 0xFF );
+					// BEFUND E-179: siehe E179ZeichenAusNummer
+					m_szDest += E179ZeichenAusNummer( szText, ulTotalLength, ul );
 				}
 				else
 				{

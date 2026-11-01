@@ -27,7 +27,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-179](Intern/BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | nachstellen (eine gespeicherte Nachricht mit `&#128293;` als Text senden oder durchsuchen), dann Codepunkte über 255 als Entität stehen lassen oder … |
+| **[E-179](Intern/BEFUNDE.md#e-179)** | Eudoras HTML-zu-Text-Umwandlung behält von einer numerischen Zeichenangabe nur das unters… | **nie gemessen** | die Messung am Programm — eine HTML-Mail mit `&#128293;` senden und den Textteil beim Empfänger ansehen; den Klickweg erst selbst am Prüfstand dur… |
 | **[E-178](Intern/BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Fett, Link einfügen und ähnliche Befehle Emoj… | **nie gemessen** | die Messung am Programm mit dem nächsten Testpaket ([TESTPLAN](Intern/TESTPLAN.md#e-178-naechstes)). **Stufe: wichtig** (Datenschaden im Bearbeiten-Modus, n… |
 | **[E-177](Intern/BEFUNDE.md#e-177)** | Die Filteraktion *„an Programm übergeben"* schreibt ihre Zwischendatei ohne Zeichensatz… | **nie gemessen** | messen (Filter mit dieser Aktion, Prüfnachricht mit Euro und Umlauten, Zwischendatei ansehen), danach entscheiden, ob die Angabe dort überhaupt erw… |
 | **[E-176](Intern/BEFUNDE.md#e-176)** | Die Behebung von E-28 liest beim Schließen einer verworfenen neuen Nachricht aus einer sc… | **nie gemessen** | ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest bisher nur den Quelltext), und die Messung am Programm, am besten unter… |
