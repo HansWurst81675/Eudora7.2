@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-01 18:37:03
+zeit=2026-11-01 19:32:26
 freigabe=Gregor am 01.11.2026: 'ja, du kannst am prüfstand alles starten, ich mache nichts.' und 'mach weiter, aber auf deinem prüfstand.'
-nur=E-184   (Teillauf, nicht der Gesamtstand)
+nur=E-184m   (Teillauf, nicht der Gesamtstand)
 faelle=1
 bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] E-184    E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
+fall=[ ok ] E-184m   E184M ERGEBNIS richtig=3 falsch=0 eintraege=3

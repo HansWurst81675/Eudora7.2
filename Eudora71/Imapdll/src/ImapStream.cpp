@@ -1751,7 +1751,7 @@ HRESULT CImapStream::UIDAddFlaglist (LPCSTR pUidList, LPCSTR pFlagList, BOOL Sil
 // HISTORY
 // * Written by J.King, 3/20/97
 // END HISTORY
-HRESULT CImapStream::UIDCopy (const char *pUidlist, const char *pDestMailbox, CDWordArray *dwaNewUIDs)
+HRESULT CImapStream::UIDCopy (const char *pUidlist, const char *pDestMailbox, CDWordArray *dwaNewUIDs, CDWordArray *dwaQuellUIDs /*= NULL*/)
 {
 	char	*pList = NULL;
 	char	*pMbox = NULL;
@@ -1818,7 +1818,7 @@ HRESULT CImapStream::UIDCopy (const char *pUidlist, const char *pDestMailbox, CD
 			//
 			if (p && *p)
 			{
-				bThisResult =  RCODE_SUCCEEDED (m_pProtocol->Copy (p, pMbox, CP_UID, dwaNewUIDs));
+				bThisResult =  RCODE_SUCCEEDED (m_pProtocol->Copy (p, pMbox, CP_UID, dwaNewUIDs, dwaQuellUIDs));
 			}
 
 			if (!bThisResult)

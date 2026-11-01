@@ -113,7 +113,8 @@ public:
 								   CDWordArray *pdwaNewUIDs,
 								   LPCSTR pDestination, 
 								   BOOL Copy,
-								   BOOL bSilent = FALSE);
+								   BOOL bSilent = FALSE,
+								   CDWordArray *pdwaQuellUIDs = NULL);	// E-184 K3
 
 // Append
 	HRESULT  AppendMessageFromLocal (CSummary *pSum, unsigned long *pNewUid, BOOL bSilent = FALSE);

@@ -236,7 +236,8 @@ public:
 										 CTocDoc *pTargetToc,
 										 CDWordArray *pdwaNewUIDs,
 										 CImapSum *pImapSum = NULL,
-										 bool bFindNew = false);
+										 bool bFindNew = false,
+										 CDWordArray *pdwaQuellUIDs = NULL);	// E-184 K3
 	CSummary	*GetSummaryFromUID(unsigned long lUID);
 	BOOL ImapRemoveListedTocs (
 				CUidMap *pUidMap,

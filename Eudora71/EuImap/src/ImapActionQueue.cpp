@@ -1613,7 +1613,8 @@ void CImapTransferMsgAction::DoPostProcessing()
 										   m_pDestTocDoc,
 										   &m_dwaNewUIDs,
 										   NULL/*pImapSum*/,
-										   true/*bFindNew*/);
+										   true/*bFindNew*/,
+										   &m_dwaQuellUIDs);	// E-184 K3: Zuordnung ueber die Quellmenge
 	}
 
 	// E-189 (PRUEFER-75 K2): Vorab-Kopien dieser Uebertragung, die keine neue UID
@@ -1948,7 +1949,8 @@ HRESULT CImapSameServerTransferMsgAction::DoWork()
 																&m_dwaNewUIDs,
 																m_pDestTocDoc->m_pImapMailbox->GetImapName(),
 																TRUE/*Copy*/,
-																TRUE/*bSilent*/);
+																TRUE/*bSilent*/,
+																&m_dwaQuellUIDs);	// E-184 K3
 
 	if ((hResult == S_OK) && !m_bCopy)
 	{

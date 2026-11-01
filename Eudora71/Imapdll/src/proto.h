@@ -118,11 +118,11 @@ public:
 
 	void Expunge (CString& szUidsActuallyRemoved);
 
-	RCODE Copy (char *sequence, char *mailbox, long flags, CDWordArray *dwaNewUIDs);
+	RCODE Copy (char *sequence, char *mailbox, long flags, CDWordArray *dwaNewUIDs, CDWordArray *dwaQuellUIDs = NULL);	// E-184 K3
 
 	RCODE Append (char *mailbox, char *flags, char *date, STRING *msg, CDWordArray *dwaNewUIDs);
 
-	void StoreUIDPLUSResponses(IMAPPARSEDREPLY *reply, CDWordArray *dwaNewUIDs);
+	void StoreUIDPLUSResponses(IMAPPARSEDREPLY *reply, CDWordArray *dwaNewUIDs, CDWordArray *dwaQuellUIDs = NULL);	// E-184 K3
 	void VerifyUIDValidity(char *szUids, int iLen);
 
 	MESSAGECACHE* MailElt ();
