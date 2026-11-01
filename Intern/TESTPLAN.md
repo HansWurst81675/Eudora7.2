@@ -202,8 +202,11 @@ nicht — dieser Schritt ist die einzige Messung am Programm.
 
 **Nur mit Strg+S prüfen, nicht mit *Speichern unter*:** *File → Save As* aus
 dem Nachrichtenfenster (`.txt`, `.htm` ohne Kopfzeilen) macht aus Emoji in
-7.2.1.129 weiter `??` — ein zweiter Weg, noch nicht behoben
-([PRÜFER-68](../Befunde/PRUEFER-68.md) K1, im Befund nachgetragen).
+7.2.1.129 weiter `??` — ein zweiter Weg, in 7.2.1.129 noch nicht behoben
+([PRÜFER-68](../Befunde/PRUEFER-68.md) K1, im Befund nachgetragen). Für `.htm` ist er im Quellstand seit
+dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129 um 21:29) und kommt mit
+dem nächsten Paket; als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
+kann kein Emoji tragen).
 
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
