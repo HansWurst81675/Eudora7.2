@@ -2210,6 +2210,7 @@ void CFiltersViewRight::OnMailbox()
 	
 	if (IsWindow(m_Mailbox[m_ActionIndex].m_hWnd))
 	{
+		m_Mailbox[m_ActionIndex].m_bE143OhneOut = TRUE;	// E-143: Out nicht anbieten
 		if ((m_Mailbox[m_ActionIndex].SelectMailbox()) == false)
 			return; // Nothing changed, so do nothing
 		

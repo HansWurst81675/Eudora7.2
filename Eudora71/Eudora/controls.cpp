@@ -267,6 +267,7 @@ CMailboxButton::CMailboxButton()
 	// For IMAP mbox.
 	m_SelectedImapName.Empty();
 	m_bIsImap = FALSE;
+	m_bE143OhneOut = FALSE;
 }
 
 CMailboxButton::~CMailboxButton()
@@ -321,7 +322,10 @@ BOOL CMailboxButton::SelectMailbox(LPCSTR pPersonalityName /* = NULL */)
 	
 	CMainFrame* pMainFrame = CMainFrame::QCGetMainFrame();
 	pMainFrame->SetTransferMenuBeingUsed(TRUE);
-	if (cmdID = theTransferMenu->TrackPopupMenu(TPM_RETURNCMD, rect.left, rect.bottom, pMainFrame))
+	pMainFrame->SetE143OutSperren(m_bE143OhneOut);	// E-143
+	cmdID = theTransferMenu->TrackPopupMenu(TPM_RETURNCMD, rect.left, rect.bottom, pMainFrame);
+	pMainFrame->SetE143OutSperren(FALSE);
+	if (cmdID)
 	{
 		// The top of the stack will contain which menu item was selected
 		g_theCommandStack.GetSavedCommand(&uID , &pCommand, &theAction);

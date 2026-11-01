@@ -245,6 +245,21 @@ zwei Ordner **desselben** Kontos.
    Steht dort `grund=keine-neuen-uids`, meldet dein Server keine neuen UIDs —
    dann bleibt das Label weiter aus; bitte die Zeile schicken.
 
+## <a id="e-143-naechstes"></a>Im nächsten Testpaket: Out wird einem Filter nicht angeboten ([E-143](BEFUNDE.md#e-143))
+
+**Mit dem nächsten Testpaket auszuführen, nicht mit 7.2.1.129.** Lokales
+Postfach oder IMAP, gleich.
+
+1. *Tools → Filters*, einen Filter auswählen oder neu anlegen, als Aktion
+   *Transfer To* wählen und auf die Postfach-Schaltfläche der Aktion klicken.
+2. Im aufklappenden Menü ist **Out grau** und lässt sich nicht wählen; alle
+   anderen Postfächer gehen wie bisher.
+3. Danach im Hauptmenü *Transfer* öffnen (mit markierter Nachricht): dort ist
+   Out **nicht** grau — die Sperre gilt nur für Filter.
+4. Falls du einen **älteren** Filter mit Ziel Out hast: Post abrufen. Es kommt
+   **kein** Hinweisdialog, der Abruf läuft durch, und in der `eudora.log`
+   steht `E-143 Filter "<Name>": Ziel ist Out - uebergangen, nichts uebertragen`.
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales
