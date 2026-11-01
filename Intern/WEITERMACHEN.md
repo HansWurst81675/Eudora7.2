@@ -75,6 +75,8 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-193](BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | **nie gemessen** | am Prüfstand mit Mails bekannten Inhalts nachstellen (Umlaute und € im Text, in Kopfzeilen, nur im HTML-Quelltext; Latin-1, UTF-8, quoted-printable… |
+| **[E-192](BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | **nie gemessen** | die Quellmenge an allen drei Stellen durchreichen wie beim Verschieben; Prüfstandsfall für den Papierkorb. **Stufe: wichtig** (wie E-184) |
 | **[E-189](BEFUNDE.md#e-189)** | Beim Verschieben innerhalb eines IMAP-Kontos OHNE UIDPLUS steht die verschobene Mail im Zi… | 01.11.2026 an 7.2.1.130 | die Löschvermutung messen; mit dem nächsten Testpaket an Gregors Server (ohne UIDPLUS) bestätigen. Für den TESTPLAN beim nächsten Paket (K3): die… |
 | **[E-188](BEFUNDE.md#e-188)** | Dieselbe Verwechslung wie E-184 an zwei weiteren Stellen: Verschieben zwischen zwei IMAP-K… | **nie gemessen** | am Prüfstand nachstellen (für den Weg zwischen Konten braucht der Prüfserver ein zweites Konto), dann wie E-184 über das Merkzeichen suchen. **Stu… |
 | **[E-184](BEFUNDE.md#e-184)** | Beim Verschieben zwischen IMAP-Ordnern mit UIDPLUS kann Eudora die Zusammenfassung einer f… | 01.11.2026 an 7.2.1.130 | K4 (Warteschlange nach Neustart, klein); PRÜFER über die K3-Behebung; mit dem nächsten Testpaket ausliefern. ~~Gregor muss nichts testen: sein Serv… |

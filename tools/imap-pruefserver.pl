@@ -534,7 +534,20 @@ while (time < $ende) {
                 notiz(sprintf('  COPY nach "%s": UID %s -> %s', sichtbar_bytes($zname),
                               join(',', @alt) || '(keine)', join(',', @neu) || '(keine)'));
                 if (@alt and !$opt{ohne_copyuid}) {
-                    $antwort = sprintf('%s OK [COPYUID 1 %s %s] COPY completed', $marke, join(',', @alt), join(',', @neu));
+                    # PRUEFER-78 K7: wie echte Server zusammenhaengende UIDs als Bereich
+                    # melden ("1:3" statt "1,2,3"). Mit Listen mass die rote Gegenprobe
+                    # zu E-184m nur den alten Leser, der keine Listen kannte - nicht die
+                    # Zuordnung nach Listenposition, um die es ging.
+                    my $bereiche = sub {
+                        my @u = @_; my @aus;
+                        while (@u) {
+                            my $a = shift @u; my $b = $a;
+                            while (@u && $u[0] == $b + 1) { $b = shift @u }
+                            push @aus, ($a == $b ? $a : "$a:$b");
+                        }
+                        return join(',', @aus);
+                    };
+                    $antwort = sprintf('%s OK [COPYUID 1 %s %s] COPY completed', $marke, $bereiche->(@alt), $bereiche->(@neu));
                 }
                 else {
                     $antwort = "$marke OK COPY completed";

@@ -133,7 +133,7 @@ Folgen:
 
 | Fund | Was passiert | Schwere | Hält das Paket auf? |
 |---|---|---|---|
-| K1 | Papierkorb, Junk und Filter ordnen mehrere Mails weiter nach Listenposition zu: Einträge über Kreuz, jetzt bei allen verschobenen Mails (Original; Vorschlag E-192) | wichtig | nein |
+| K1 | Papierkorb, Junk und Filter ordnen mehrere Mails weiter nach Listenposition zu: Einträge über Kreuz, jetzt bei allen verschobenen Mails (Original; Vorschlag [E-192](../Intern/BEFUNDE.md#e-192)) | wichtig | nein |
 | K2 | Meldet der Server nur einen Teil als kopiert, bleiben spätere Mails der Liste ohne Zuordnung und verlieren ihre lokalen Daten | klein | nein |
 | K3 | Mengenleser: zehnstellige Werte über 4294967295 laufen über (gemessen) | gering | nein |
 | K4 | [E-170](../Intern/BEFUNDE.md#e-170) nutzt die Quellmenge nicht, Kommentar überholt; Labels bei nicht aufsteigender Liste und automatischem Löschen weiter verloren | klein | nein |

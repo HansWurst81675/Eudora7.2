@@ -38,9 +38,9 @@ E-146	ok	2026-11-01 19:26:04	C:\Temp\E146	Eudora 7.2.1.130+955d50d4* 2026-11-01 
 E-166a	ok	2026-11-01 15:44:24	C:\Temp\E166	Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15	reihenfolge=junk-no,konto-ok
 E-166b	ok	2026-11-01 15:44:24	C:\Temp\E166	Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15	AskedAboutJunk=6
 E-171p	ok	2026-11-01 15:44:24	C:\Temp\E171	Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15	E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1
-E-184	ok	2026-11-01 19:29:15	C:\Temp\E184	Eudora 7.2.1.130+c4e883a9* 2026-11-01 19:12	E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
-E-184m	ok	2026-11-01 19:32:26	C:\Temp\E184	Eudora 7.2.1.130+c4e883a9* 2026-11-01 19:12	E184M ERGEBNIS richtig=3 falsch=0 eintraege=3
-E-189	ok	2026-11-01 19:30:49	C:\Temp\E184	Eudora 7.2.1.130+c4e883a9* 2026-11-01 19:12	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
+E-184	ok	2026-11-01 20:14:57	C:\Temp\E184	Eudora 7.2.1.130+83908112* 2026-11-01 20:07	E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
+E-184m	ok	2026-11-01 20:14:57	C:\Temp\E184	Eudora 7.2.1.130+83908112* 2026-11-01 20:07	E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
+E-189	ok	2026-11-01 20:16:33	C:\Temp\E184	Eudora 7.2.1.130+83908112* 2026-11-01 20:07	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
 E-67	ok	2026-11-01 15:44:24	C:\Temp\E67	Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15	verb-gespeichert=14 verb-auswahl=0
 E-77a	ok	2026-11-01 19:25:01	C:\Temp\E77	Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15	E77 ERGEBNIS roh=0 dekodiert=2
 E-77b	ok	2026-11-01 19:25:08	C:\Temp\E77	Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15	E-77 Ordnername: server="Entw&APw-rfe"

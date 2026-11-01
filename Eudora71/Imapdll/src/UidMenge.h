@@ -37,6 +37,9 @@ inline int E184UidMengeLesen(const char *szMenge, int iLen, CDWordArray *pAus)
 		int nZiffern = 0;
 		while (i < iLen && szMenge[i] >= '0' && szMenge[i] <= '9')
 		{
+			// PRUEFER-78 K3: ueber 4294967295 nicht ueberlaufen lassen
+			// ("4294967297" wurde zu UID 1).
+			if (ulVon > 429496729UL || (ulVon == 429496729UL && szMenge[i] > '5')) return -1;
 			ulVon = ulVon * 10 + (unsigned long) (szMenge[i] - '0');
 			i++; nZiffern++;
 			if (nZiffern > 10) return -1;
@@ -49,6 +52,7 @@ inline int E184UidMengeLesen(const char *szMenge, int iLen, CDWordArray *pAus)
 			ulBis = 0; nZiffern = 0;
 			while (i < iLen && szMenge[i] >= '0' && szMenge[i] <= '9')
 			{
+				if (ulBis > 429496729UL || (ulBis == 429496729UL && szMenge[i] > '5')) return -1;
 				ulBis = ulBis * 10 + (unsigned long) (szMenge[i] - '0');
 				i++; nZiffern++;
 				if (nZiffern > 10) return -1;

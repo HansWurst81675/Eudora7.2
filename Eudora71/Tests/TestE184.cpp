@@ -49,7 +49,9 @@ static void Test_E184_Mengenleser()
 	{ static const DWORD s[] = {10,11,12,15}; Lies("10:12,15", a, n); TT_CHECK_MSG(n == 4 && Gleich(a, s, 4), "\"10:12,15\" falsch gelesen"); }
 
 	// Verdorbenes darf nichts anhaengen.
-	const char* boese[] = { ",", "2,", ",2", "a", "0", "*", "3:", "2;5", "1:99999999", "12345678901" };
+	const char* boese[] = { ",", "2,", ",2", "a", "0", "*", "3:", "2;5", "1:99999999", "12345678901",
+							"4294967296", "4294967297", "1:4294967297" };	// PRUEFER-78 K3: Ueberlauf
+	{ static const DWORD s[] = {4294967295UL}; Lies("4294967295", a, n); TT_CHECK_MSG(n == 1 && Gleich(a, s, 1), "\"4294967295\" (groesste UID) falsch gelesen"); }
 	for (int i = 0; i < (int) (sizeof(boese) / sizeof(boese[0])); i++)
 	{
 		a.RemoveAll(); a.Add(77);

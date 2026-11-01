@@ -54,15 +54,30 @@ exit 2;
 
 # Liefert das erste Wort an Befehlsstelle, das auf Eudora.exe endet, sonst undef.
 sub eudora_aufruf {
-    my ($t) = @_;
+    my ($t, $tiefe) = @_;
+    $tiefe //= 0;
+    return undef if $tiefe > 3;
     # Heredocs (bash) und Here-Strings (PowerShell) werden nicht ausgefuehrt.
     $t =~ s/<<-?[ \t]*(['"]?)(\w+)\1([^\n]*)\n.*?^[ \t]*\2[ \t]*$/$3/msg;
     $t =~ s/@(['"])[ \t]*\n.*?^\1@//msg;
     # Kommentarzeilen.
     $t =~ s/^[ \t]*#[^\n]*//mg;
+    # PRUEFER-78 K5: was hinter "bash -c", "sh -c", "powershell -Command" oder
+    # "eval" in Anfuehrungszeichen steht, wird AUSGEFUEHRT - eigens pruefen.
+    while ($t =~ /(?:^|[\s;&|(])(?:-c|-Command|eval)\s+(?:'([^']*)'|"((?:\\.|[^"\\])*)")/g) {
+        my $innen = defined $1 ? $1 : $2;
+        $innen =~ s/\\(["\\])/$1/g;
+        my $w = eudora_aufruf($innen, $tiefe + 1);
+        return $w if defined $w;
+    }
+    # PRUEFER-78 K5: einer Variablen zugewiesener Pfad, spaeter "& $var".
+    my %var;
+    while ($t =~ /\$(\w+)\s*=\s*(['"])([^'"]*eudora\.exe)\2/ig) { $var{lc $1} = $3 }
     for my $abschnitt (abschnitte($t)) {
         my $w = befehlswort($abschnitt);
-        return $w if defined $w && $w =~ /eudora\.exe['"]?$/i;
+        next unless defined $w;
+        return $var{lc $1} if $w =~ /^\$(\w+)$/ && exists $var{lc $1};
+        return $w if $w =~ /eudora\.exe['"]?$/i;
     }
     return undef;
 }
@@ -102,12 +117,19 @@ sub befehlswort {
     my $i = 0;
     while ($i < @wort) {
         my $w = $wort[$i];
-        if ($w eq '&' or $w =~ /^(?:exec|call|start|Start-Process|saps|Invoke-Item|ii|nohup|time)$/i) { $i++; next }
-        if ($w =~ /^cmd(?:\.exe)?$/i) { $i++; $i++ while $i < @wort && $wort[$i] =~ m{^/[a-z]$}i; next }
+        # PRUEFER-78 K5: Unterschale und Block - "(cd x && ./Eudora.exe)", "{ ...; }".
+        if ($w =~ /^[({]+$/) { $i++; next }
+        if ($w =~ /^[({]+(.+)$/) { $w = $1 }
+        if ($w eq '&' or $w =~ /^(?:exec|call|start|Start-Process|saps|Invoke-Item|ii|nohup|time|then|do|else|elif|if|while|until|explorer|explorer\.exe)$/i) { $i++; next }
+        # timeout 5 befehl
+        if ($w =~ /^timeout$/i) { $i++; $i++ while $i < @wort && $wort[$i] =~ /^-?[\d.]+[smhd]?$|^-[a-z]/i; next }
+        # cmd /c und, aus Git Bash, cmd //c
+        if ($w =~ /^cmd(?:\.exe)?$/i) { $i++; $i++ while $i < @wort && $wort[$i] =~ m{^/{1,2}[a-z]$}i; next }
         if ($w =~ /^-FilePath$/i) { $i++; next }
         if ($w eq '""' or $w eq "''") { $i++; next }   # Fenstertitel von cmd "start"
         if ($w =~ /^-/ && $i > 0) { $i++; next }   # Schalter von start/Start-Process
         (my $nackt = $w) =~ s/^['"]|['"]$//g;
+        $nackt =~ s/[)}]+$//;    # Ende einer Unterschale/eines Blocks: "./Eudora.exe)"
         return $nackt;
     }
     return undef;
@@ -140,6 +162,23 @@ sub selbsttest {
         [0, q{perl -e 'print "| `tools/x` | einer `Eudora.exe` | Anlass `\"/c/Temp/E184/Eudora.exe\" --version` |\n"' > x.txt}],
         [0, q{git commit -m "Anlass '\"/c/Temp/E184/Eudora.exe\" --version' im Kopierbefehl"}],
         [1, q{echo "a | b"; /c/Temp/E184/Eudora.exe}],
+        # PRUEFER-78 K5: Gegenproben, die der erste Stand durchliess.
+        [1, q{cmd //c "C:\\Temp\\E184\\Eudora.exe"}],
+        [1, q{cmd //c C:\\Temp\\E184\\Eudora.exe}],
+        [1, q{powershell -NoProfile -Command "& 'C:\\Temp\\E184\\Eudora.exe'"}],
+        [1, q{bash -c "/c/Temp/E184/Eudora.exe"}],
+        [1, q{(cd /c/Temp/E184 && ./Eudora.exe)}],
+        [1, q{{ /c/Temp/E184/Eudora.exe; }}],
+        [1, q{if true; then /c/Temp/E184/Eudora.exe; fi}],
+        [1, q{timeout 5 /c/Temp/E184/Eudora.exe}],
+        [1, q{explorer.exe C:\\Temp\\E184\\Eudora.exe}],
+        [1, q{$e="C:\\Temp\\E184\\Eudora.exe"; & $e}],
+        [1, q{/c/Temp/E184/Eudora.exe &}],
+        [1, q{/c/Temp/E184/Eudora.exe 2>/dev/null}],
+        [0, q{echo x > /c/Temp/E184/Eudora.exe.txt}],
+        [0, q{bash -c "ls /c/Temp/E184/Eudora.exe"}],
+        [0, q{powershell -Command "Get-Item C:\\Temp\\E184\\Eudora.exe"}],
+        [0, q{$e="C:\\Temp\\E184\\Eudora.exe"; Get-Item $e}],
     );
     my ($ok, $f) = (0, 0);
     for my $fall (@f) {

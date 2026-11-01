@@ -67,6 +67,10 @@ $rc_s == 0 or do { print STDERR "Commit $seit gibt es nicht\n"; exit 2 };
 my $max = 0;
 for my $f (glob("Befunde/$rolle-*.md")) { $max = $1 if $f =~ /$rolle-(\d+)\.md$/ and $1 > $max }
 my ($zweige) = git('branch', '-r', '--list', "origin/wt/*");
+# PRUEFER-78 K6: "git branch -r" rueckt jede Zeile mit Leerzeichen ein; so
+# weitergereicht meldete git grep bei allen 25 Rollenzweigen "fatal", und
+# Kennungen aus noch nicht gemergten Berichten galten als frei.
+$zweige = join("\n", grep { $_ ne '' } map { s/^\s+|\s+$//gr } split /\n/, ($zweige // ''));
 for my $z (split /\n/, $zweige) {
     $z =~ s/^\s+//;
     my ($l) = git('ls-tree', '--name-only', $z, 'Befunde/');

@@ -396,7 +396,15 @@ if ($Mehrere) {
     # Im leeren Ziel vergibt der Server 1,2,3 in UID-Reihenfolge der Quelle.
     $richtig = @($nachher | Where-Object { $_.Betreff -like ('Pruefnachricht ' + $_.Uid + ' *') }).Count
     $falsch  = @($nachher | Where-Object { $_.Betreff -like 'Pruefnachricht *' -and $_.Betreff -notlike ('Pruefnachricht ' + $_.Uid + ' *') }).Count
-    Write-Host ("E184M ERGEBNIS richtig={0} falsch={1} eintraege={2}" -f $richtig, $falsch, $nachher.Count)
+    # PRUEFER-78 K7: nur aussagekraeftig, wenn Eudora NICHT aufsteigend angefragt
+    # hat - die Anfrage steht im Serverprotokoll ("UID COPY 3,2,1").
+    $anfrage = '(keine)'
+    $z = $prot | Where-Object { $_ -match '<- \S+ UID COPY (\S+) ' } | Select-Object -First 1
+    if ($z -and $z -match 'UID COPY (\S+) ') { $anfrage = $Matches[1] }
+    $antwort = '(keine)'
+    $z = $prot | Where-Object { $_ -match 'COPYUID 1 (\S+ \S+)\]' } | Select-Object -First 1
+    if ($z -and $z -match 'COPYUID 1 (\S+ \S+)\]') { $antwort = $Matches[1] -replace ' ', '/' }
+    Write-Host ("E184M ERGEBNIS richtig={0} falsch={1} eintraege={2} anfrage={3} copyuid={4}" -f $richtig, $falsch, $nachher.Count, $anfrage, $antwort)
 }
 if ($OhneCopyuid) {
     $kopieAlt = @($nachher | Where-Object { $_.Uid -eq 1 -and $_.Betreff -like 'Pruefnachricht 1*' }).Count
