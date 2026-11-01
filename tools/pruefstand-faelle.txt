@@ -248,6 +248,12 @@ E-146 | C:\Temp\E146 | 60 | messung | E146 ERGEBNIS rename=abgelehnt baum-neu=we
 # der Behebung: beide Eintraege trugen den Betreff der verschobenen Mail
 # (fremd=0) - rot. Pruefstand C:\Temp\E184 ist eine Kopie von C:\Temp\E77.
 E-184 | C:\Temp\E184 | 20 | messung | E184 ERGEBNIS fremd=1 kopie=1 eintraege=2 | | | messen=tools\messen-e184.ps1
+# E-189 (01.11.2026, PRUEFER-75 K2): wie E-184, aber der Pruefserver meldet
+# beim COPY keine neuen UIDs (--ohne-copyuid, Server ohne UIDPLUS). Gemessen
+# an 7.2.1.130 (Quellstand 4593ab89* mit E-184-Behebung): zwei Eintraege mit
+# UID 1 (fremd und Kopie mit alter UID), verschobene Mail unter UID 2 fehlt -
+# rot. Gleicher Pruefstand C:\Temp\E184.
+E-189 | C:\Temp\E184 | 20 | messung | E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2 | | | messen=tools\messen-e189.ps1
 
 # E-97 / E-100 (25.10.2026): "Speichern unter" darf Eudora nicht abstuerzen
 # lassen - einmal aus dem Postfach mit OK und geschriebener Datei, einmal aus

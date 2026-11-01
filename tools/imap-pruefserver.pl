@@ -67,6 +67,12 @@ use IO::Select;
 # Zusammen mit --fremde-uid <n> liegt im Ziel "Ablage" schon eine fremde
 # Nachricht mit der UID, die die verschobene in INBOX traegt.
 #
+# EXISTS (seit 01.11.2026, E-184): aendert sich die Nachrichtenzahl im
+# gewaehlten Postfach einer Verbindung (etwa durch ein COPY ueber eine andere),
+# meldet er vor der naechsten Antwort unaufgefordert "* n EXISTS", wie ein
+# echter Server (RFC 3501 7.3.1). Ohne das glich Eudora nur bis zur alten
+# Zahl ab und sah eine neue UID nie.
+#
 # Er hoert NUR auf 127.0.0.1. Von aussen ist er nicht erreichbar.
 #
 # WAS ER NICHT IST: eine vollstaendige IMAP-Umsetzung. Er kann genau so

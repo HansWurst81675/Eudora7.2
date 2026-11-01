@@ -1,8 +1,12 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-01 17:55:13
+zeit=2026-11-01 18:18:17
 freigabe=Gregor am 01.11.2026: 'ja, du kannst am prüfstand alles starten, ich mache nichts.' und 'mach weiter, aber auf deinem prüfstand.'
 nur=E-184   (Teillauf, nicht der Gesamtstand)
 faelle=1
-bestanden=1
-fehlgeschlagen=0
-fall=[ ok ] E-184    E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
+bestanden=0
+fehlgeschlagen=1
+fall=[FEHL] E-184    fehlt in messung: E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
+             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
+                         Zeit vom WM_CLOSE bis zum Ende: 1 s
+                         Beendet: True
+                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\e184\tools\TESTLAEUFE.md

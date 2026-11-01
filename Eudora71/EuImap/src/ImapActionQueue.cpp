@@ -1616,6 +1616,13 @@ void CImapTransferMsgAction::DoPostProcessing()
 										   true/*bFindNew*/);
 	}
 
+	// E-189 (PRUEFER-75 K2): Vorab-Kopien dieser Uebertragung, die keine neue UID
+	// bekommen haben (Server ohne UIDPLUS), tragen weiter die ALTE UID. Liegt im
+	// Ziel eine fremde Mail mit derselben Nummer, stuende die Kopie neben ihr und
+	// ueberlebte den Abgleich; wer sie loescht, loescht auf dem Server die fremde.
+	// Entfernen - der folgende Abgleich holt die Mail mit ihrer echten UID.
+	E189VorabKopienEntfernen(m_pDestTocDoc, m_szMessageIDs);
+
 	// E-170: Labels, die ImapTransferSummaryData nicht mitbringen konnte
 	E170LabelsNachtragen();
 

@@ -9,7 +9,13 @@
 # bFindNew=true aus CImapTransferMsgAction::DoPostProcessing) die
 # Zusammenfassung im ZIELordner unter der ALTEN UID. UIDs gelten je Ordner;
 # traegt eine fremde Mail im Ziel dieselbe Nummer, wird ihr Eintrag mit den
-# Daten der verschobenen ueberschrieben. Nie gemessen.
+# Daten der verschobenen ueberschrieben.
+# GEMESSEN am 01.11.2026: rot an 7.2.1.130 (fremd=0), gruen mit der Behebung.
+# Die Ursache war eine andere als PRUEFER-71 annahm: CTocDoc::Xfer legt auch
+# von IMAP nach IMAP vorab eine lokale Kopie mit der ALTEN UID im Ziel an;
+# die Suche sollte sie finden und traf die fremde Mail (Intern/BEFUNDE.md#e-184).
+# Mit -OhneCopyuid (Huelle tools\messen-e189.ps1) derselbe Ablauf an einem
+# Server ohne UIDPLUS (Befund E-189).
 #
 # Lage (vom Pruefserver hergestellt, tools\imap-pruefserver.pl):
 #   INBOX  : genau eine Nachricht, UID 1, "Pruefnachricht 1 von ..."
@@ -37,7 +43,13 @@
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten,
-    [int] $Warten = 15
+    [int] $Warten = 15,
+    # E-189 (PRUEFER-75 K2): Server ohne UIDPLUS - COPY ohne COPYUID. Dann
+    # bleibt die Vorab-Kopie mit der alten UID im Ziel; liegt dort eine fremde
+    # Mail mit derselben UID, ueberlebt sie vermutlich den Abgleich
+    # (CUidMap fuehrt gleiche UIDs nur einmal). Erwartet ohne Fehler:
+    # zwei Eintraege (fremd uid=1, Kopie uid=2 nach dem Abgleich).
+    [switch] $OhneCopyuid
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
@@ -175,6 +187,7 @@ $belegt = @(Get-NetTCPConnection -LocalPort 1143 -State Listen -ErrorAction Sile
 if ($belegt.Count -gt 0) { Write-Host ('E184 FEHLER: Port 1143 belegt von Prozess ' + (($belegt | ForEach-Object { $_.OwningProcess }) -join ',')); exit 1 }
 $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 3 * $Warten),
              '--nachrichten', '1', '--fremde-uid', '1')
+if ($OhneCopyuid) { $srvArgs += '--ohne-copyuid' }
 $srv = Start-Process $perl -ArgumentList $srvArgs -WorkingDirectory $repo -WindowStyle Hidden -PassThru
 Start-Sleep -Seconds 2
 
@@ -333,6 +346,18 @@ try {
     foreach ($k in (MdiKinder)) { Write-Host ('E184 schliesse "' + (Txt $k.H) + '"'); [void][E184]::PostMessageA($k.H, 0x0010, [IntPtr]0, [IntPtr]0) }
     Start-Sleep -Seconds 4
     Dialoge $pp -Schliessen
+
+    # 5b. Ablage noch einmal oeffnen: Eudora gleicht ab und zeigt den Endstand.
+    #     Ob Eudora nach dem Kopieren von selbst abgleicht, schwankt von Lauf
+    #     zu Lauf (gemessen 01.11.2026); ohne Abgleich fehlt die verschobene
+    #     Mail unter ihrer neuen UID nur, weil sie noch nicht geholt ist.
+    if (KontoOeffnen @('Ablage')) {
+        Start-Sleep -Seconds $Warten
+        Dialoge $pp -Schliessen
+        foreach ($k in (MdiKinder)) { Write-Host ('E184 schliesse "' + (Txt $k.H) + '"'); [void][E184]::PostMessageA($k.H, 0x0010, [IntPtr]0, [IntPtr]0) }
+        Start-Sleep -Seconds 4
+        Dialoge $pp -Schliessen
+    }
 }
 finally {
     [void][E184]::VirtualFreeEx($hp, $fern, 0, 0x8000)
@@ -349,3 +374,7 @@ foreach ($e in $nachher) { Write-Host ('E184 TOC uid={0} label={1} offset={2} la
 $fremd = @($nachher | Where-Object { $_.Uid -eq 1 -and $_.Betreff -like 'Fremde Nachricht*' }).Count
 $kopie = @($nachher | Where-Object { $_.Uid -eq 2 -and $_.Betreff -like 'Pruefnachricht 1*' }).Count
 Write-Host ("E184 ERGEBNIS fremd={0} kopie={1} eintraege={2}" -f $fremd, $kopie, $nachher.Count)
+if ($OhneCopyuid) {
+    $kopieAlt = @($nachher | Where-Object { $_.Uid -eq 1 -and $_.Betreff -like 'Pruefnachricht 1*' }).Count
+    Write-Host ("E189 ERGEBNIS fremd={0} kopie-neu={1} kopie-mit-alter-uid={2} eintraege={3}" -f $fremd, $kopie, $kopieAlt, $nachher.Count)
+}

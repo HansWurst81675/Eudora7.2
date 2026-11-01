@@ -1743,6 +1743,40 @@ CSummary* E184FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash)
 	return NULL;
 }
 
+// E-189: siehe tocdoc.h. Nach dem Vorbild der E-121-Entfernung (Hochladen
+// gescheitert): Spurzeile, offenes Fenster schliessen, Zusammenfassung heraus.
+// Die Bilddateien gehoeren der Quelle und bleiben.
+void E189VorabKopienEntfernen(CTocDoc* pZiel, const char* szAlteUIDs)
+{
+	if (!pZiel || !szAlteUIDs || !*szAlteUIDs)
+		return;
+
+	CString strListe(szAlteUIDs);
+	int iStart = 0;
+	while (iStart >= 0 && iStart < strListe.GetLength())
+	{
+		int iKomma = strListe.Find(',', iStart);
+		CString strUid = (iKomma >= 0) ? strListe.Mid(iStart, iKomma - iStart) : strListe.Mid(iStart);
+		iStart = (iKomma >= 0) ? iKomma + 1 : -1;
+		unsigned long ulUid = strtoul(strUid, NULL, 10);
+
+		CSummary *pSum = NULL;
+		while ((pSum = E184FindeVorabKopie(pZiel, ulUid)) != NULL)
+		{
+			CString szSpur;
+			szSpur.Format("E-189 Vorab-Kopie ohne neue UID entfernt: alte-uid=%lu ziel=\"%s\"", ulUid, (LPCTSTR) pZiel->Name());
+			PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			pSum->SetE184Vorab(FALSE);
+			pSum->SetDeleteEmbedded(FALSE);
+			pZiel->InvalidateCachedPreviewSummary(pSum, true);
+			CFrameWnd* pFenster = pSum->m_FrameWnd;
+			if (pFenster)
+				pFenster->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+			pZiel->RemoveSum(pSum);
+		}
+	}
+}
+
 CSummary *CTocDoc::GetSummaryFromUID(unsigned long lUID)
 {
 	CSummary		*pSummary = NULL;
