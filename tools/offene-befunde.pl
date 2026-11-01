@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use FindBin;
+require "$FindBin::Bin/fettstellen.pl";   # Fettstellen auch mit Kursiv darin (31.10.2026, E-136)
 
 # Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
@@ -94,6 +96,8 @@ my $kennung = qr/[A-Z]{1,3}\d?-\d+[a-z]?/;
 
 my $befunde = lies($quelle);
 my (@offene, %beschreibung, %fehlt, %gemessen, %messnummer, %quelltext, %gesehen);
+# Fuer die Stufentabelle in Intern/BEFUNDE.md (01.11.2026, siehe unten).
+my (%stufe, %erledigt);
 my $zahl_quelltext = 0;
 my @kaputte_marke;
 
@@ -123,6 +127,10 @@ for my $zeile (split /\n/, $befunde) {
     next if $gesehen{$k}++;
 
     my $urteil = $s[3];
+    {
+        my ($st) = $urteil =~ /\*\*Stufe:\s*(kritisch|wichtig|unkritisch|werkzeug)\*\*/i;
+        $stufe{$k} = defined $st ? lc $st : 'ohne';
+    }
     # KEINE Laengengrenze. Bis zum 15.09.2026 stand hier {1,60}, und das war
     # eine stille Luecke: E-90 ("gemessene Grenze, kein Fehler dieser Fassung
     # - zurueckgestellt.", 62 Zeichen) und E-92 ("beobachtet, unsere Seite
@@ -130,7 +138,10 @@ for my $zeile (split /\n/, $befunde) {
     # Zaehlung, ohne dass irgendetwas meldete. Das Werkzeug sagte "Die Liste
     # deckt die offenen Befunde" und meinte 9, wo 11 stehen. Gegengetestet:
     # ohne Grenze kommen genau E-90 und E-92 dazu, kein behobener Befund.
-    my @fett_alle = $urteil =~ /\*\*([^*]+?)\*\*/g;
+    # Seit dem 01.11.2026 aus tools/fettstellen.pl: das alte Muster
+    # /\*\*([^*]+?)\*\*/ uebersprang einen Kopf mit *Kursiv* darin, und
+    # E-136 fiel am 31.10.2026 aus der Liste.
+    my @fett_alle = fettstellen($urteil);
     # LEERE FETTSTELLEN WEGWERFEN (22.10.2026, von LEKTOR gemessen). E-89
     # endet mit >>...*„keine ueberlappung."*** **Die Ursache...<<. In der
     # Folge "*** **" greift das Muster und liefert als erstes Fettwort ein
@@ -164,7 +175,10 @@ for my $zeile (split /\n/, $befunde) {
     # Satz machte ihn hier "erledigt", und er fiel aus allen Listen. Dieselbe
     # Klasse wie L-16.1: das Werkzeug las mehr hinein, als dastand.
     my $beginnt_offen = grep { $w =~ /^[\s\W]*\Q$_\E/ } @offen_wort;
-    next if !$wieder and !$beginnt_offen and grep { index($w, $_) >= 0 } @erledigt_wort;
+    if (!$wieder and !$beginnt_offen and grep { index($w, $_) >= 0 } @erledigt_wort) {
+        $erledigt{$k} = 1;
+        next;
+    }
     next unless $bleibt_offen or grep { index($w, $_) >= 0 } @offen_wort;
 
 
@@ -356,6 +370,84 @@ for my $k (@offene) {
     # in Intern/ bleibt BEFUNDE.md, in der Wurzel wird Intern/BEFUNDE.md.
     my $anker = lc $k;
     $soll .= "| **[$k](BEFUNDE.md#$anker)** | $beschreibung{$k} | $g | $f |\n";
+}
+
+# --- Stufentabelle in Intern/BEFUNDE.md ----------------------------------------
+# Seit dem 01.11.2026. Die Tabelle der Stufen trug eine Spalte "Zahl am
+# 22.10.2026", von Hand: 64 kritische. Am 31.10.2026 fragte Gregor dazu
+# "ist es noch aktuell?" - gezaehlt waren es 73, und er las daraus "73
+# kritische zu beheben", obwohl nur 11 davon offen waren. Eine Zahl ohne
+# die Teilung offen/erledigt beantwortet die Frage nicht, die man an sie
+# stellt; eine Zahl von Hand stimmt nach dem naechsten Befund nicht mehr
+# (Arbeitsweise/liste-aus-einer-quelle.md).
+#
+# Gezaehlt wird jede Kennung der Urteilstabelle einmal (erste Zeile, wie
+# oben). "offen" ist genau die Liste dieses Werkzeugs; "erledigt" sind die
+# Urteile, deren Kopf ein Erledigt-Wort traegt; was keines von beiden ist
+# (kein Fettdruck, kein Urteilswort), steht als "ohne Urteilswort" da,
+# statt still einer Seite zugeschlagen zu werden.
+my $st_anfang = '<!-- stufen: Anfang (erzeugt von tools/offene-befunde.pl) -->';
+my $st_ende   = '<!-- stufen: Ende -->';
+{
+    my %ist_offen = map { $_ => 1 } @offene;
+    # DIESELBE GESAMTZAHL WIE pruefe-regressionstest.pl. Die Schleife oben
+    # liest nur Kennungen ohne Punkt; P-2.1, P-2.2, B-2.2 und B-2.5
+    # (Unterzeilen, alle werkzeug) fehlten - erster Lauf: 219 statt 223.
+    # Gezaehlt wird darum nach dem Ankermuster jener Schranke.
+    for my $zeile (split /\n/, $befunde) {
+        next unless $zeile =~ /^\|\s*<a id="([a-z]+[0-9]*-[0-9.]+[a-z]?)"><\/a>/;
+        # Nur die Familie gross: uc("z-2b") gaebe "Z-2B", die Kennung heisst
+        # "Z-2b" - zweiter Lauf zaehlte sie doppelt (224 statt 223).
+        (my $k = $1) =~ s/^([a-z]+[0-9]*)/\U$1/;
+        next if exists $stufe{$k};
+        my ($st) = $zeile =~ /\*\*Stufe:\s*(kritisch|wichtig|unkritisch|werkzeug)\*\*/i;
+        $stufe{$k} = defined $st ? lc $st : 'ohne';
+    }
+    my (%z, %summe);
+    for my $k (keys %stufe) {
+        my $art = $ist_offen{$k} ? 'offen' : $erledigt{$k} ? 'erledigt' : 'ohne';
+        $z{$stufe{$k}}{$art}++;
+        $summe{$art}++;
+    }
+    my $mit_ohne = ($summe{ohne} // 0) > 0;
+    my $kopf = $mit_ohne ? "| Stufe | offen | erledigt | ohne Urteilswort | zusammen |\n|---|---:|---:|---:|---:|\n"
+                         : "| Stufe | offen | erledigt | zusammen |\n|---|---:|---:|---:|\n";
+    my $zeilen = '';
+    for my $s ('kritisch', 'wichtig', 'unkritisch', 'werkzeug', 'ohne') {
+        next unless $z{$s};
+        my ($o, $e, $u) = map { $z{$s}{$_} // 0 } qw(offen erledigt ohne);
+        my $name = $s eq 'ohne' ? 'ohne Stufe' : "**$s**";
+        $zeilen .= $mit_ohne ? "| $name | $o | $e | $u | " . ($o + $e + $u) . " |\n"
+                             : "| $name | $o | $e | " . ($o + $e) . " |\n";
+    }
+    my ($so, $se, $su) = map { $summe{$_} // 0 } qw(offen erledigt ohne);
+    $zeilen .= $mit_ohne ? "| zusammen | $so | $se | $su | " . ($so + $se + $su) . " |\n"
+                         : "| zusammen | $so | $se | " . ($so + $se) . " |\n";
+    my $st_block = "$st_anfang\n\n$kopf$zeilen\n$st_ende";
+
+    unless ($befunde =~ /\Q$st_anfang\E.*?\Q$st_ende\E/s) {
+        print "\n  offene-befunde: Intern/BEFUNDE.md hat keine Stufentabelle mit den Marken\n";
+        print "    $st_anfang\n    $st_ende\n";
+        print "  Einmal von Hand einsetzen, dann haelt das Werkzeug sie aktuell.\n\n";
+        exit($schreiben ? 2 : 1);
+    }
+    my ($st_ist) = $befunde =~ /(\Q$st_anfang\E.*?\Q$st_ende\E)/s;
+    if ($st_ist ne $st_block) {
+        unless ($schreiben) {
+            print "\n  offene-befunde: die Stufentabelle in Intern/BEFUNDE.md ist nicht auf dem Stand.\n";
+            print "  Neu setzen mit:   perl tools/offene-befunde.pl -schreiben\n\n";
+            exit 1;
+        }
+        (my $neu = $befunde) =~ s{\Q$st_anfang\E.*?\Q$st_ende\E}{$st_block}s;
+        my $c0 = () = $befunde =~ /\r\n/g;
+        my $c  = () = $neu =~ /\r\n/g;
+        if ($c != $c0) { printf "  ABBRUCH - %s: CRLF %d statt %d\n", $quelle, $c, $c0; exit 1; }
+        open my $o, '>:raw', $quelle or die "$quelle: $!\n";
+        print $o $neu;
+        close $o;
+        $befunde = $neu;
+        printf "  neu gesetzt: %s (Stufentabelle)\n", $quelle;
+    }
 }
 
 # --- Gegen Intern/WEITERMACHEN.md halten -----------------------------------------

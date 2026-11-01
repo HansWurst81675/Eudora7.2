@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use FindBin;
+require "$FindBin::Bin/fettstellen.pl";   # Fettstellen auch mit Kursiv darin (31.10.2026, E-136)
 
 # ziel-stand.pl - was fehlt noch zur Fassung 7.2.1.0? Erzeugt den Stand
 # oben im Massstab von ZIEL.md, aus den Urteilen in Intern/BEFUNDE.md.
@@ -62,7 +64,7 @@ for my $zeile (split /\n/, $befunde) {
     my @s = split /(?<!\\)\|/, $zeile, -1;
     next unless @s >= 4;
     my $urteil = $s[3];
-    my @fett = grep { /\S/ } ($urteil =~ /\*\*([^*]+?)\*\*/g);
+    my @fett = fettstellen($urteil);   # tools/fettstellen.pl, auch mit *Kursiv* im Kopf
     next unless @fett;
     my $w    = lc $fett[0];
     my $alle = lc join ' || ', @fett;

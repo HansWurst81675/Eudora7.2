@@ -182,7 +182,7 @@ behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
 3. Wenn nicht: ein Bildschirmfoto genügt; die Maße stehen dann in der
    `eudora.log` als Zeile `E-165 Box: …`.
 
-**Ergebnis 31.10.2026, Gregor an 7.2.1.129, mit zwei und drei Treffern: besser** — *„sieht besser aus e-165“* (Bildschirmfotos: kein grauer Balken, keine Bildlaufleiste). Offen: der Fall mit **einem** Treffer.
+**Ergebnis 31.10.2026, Gregor an 7.2.1.129, mit zwei und drei Treffern: besser** — *„sieht besser aus e-165“* (Bildschirmfotos: kein grauer Balken, keine Bildlaufleiste). Mit **einem** Treffer zeigt Eudora keine Box, sondern ergänzt im Feld (Gregor, Bildschirmfoto). Gregor: *„ja, e-165 behoben“*.
 
 ## <a id="e-136-naechstes"></a>In 7.2.1.129: gehen Emoji beim Speichern noch verloren? ([E-136](BEFUNDE.md#e-136))
 
@@ -202,8 +202,11 @@ nicht — dieser Schritt ist die einzige Messung am Programm.
 
 **Nur mit Strg+S prüfen, nicht mit *Speichern unter*:** *File → Save As* aus
 dem Nachrichtenfenster (`.txt`, `.htm` ohne Kopfzeilen) macht aus Emoji in
-7.2.1.129 weiter `??` — ein zweiter Weg, noch nicht behoben
-([PRÜFER-68](../Befunde/PRUEFER-68.md) K1, im Befund nachgetragen).
+7.2.1.129 weiter `??` — ein zweiter Weg, in 7.2.1.129 noch nicht behoben
+([PRÜFER-68](../Befunde/PRUEFER-68.md) K1, im Befund nachgetragen). Für `.htm` ist er im Quellstand seit
+dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129: Bau `11643ee1` um 21:28, ZIP um 21:31) und kommt mit
+dem nächsten Paket; als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
+kann kein Emoji tragen).
 
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 

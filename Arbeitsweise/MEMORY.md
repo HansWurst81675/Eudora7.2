@@ -151,3 +151,4 @@
 - [CHRONIST 30.10.2026 abends](CHRONIST-2026-10-30c.md) — Laufbericht; 20 Ablehnungen gezählt
 - [Stand 31.10.2026 abends](stand-31-10-2026-abend.md) — #192 gemergt; Zweig e136_messweg offen (Messweg über Stingray-Leiste); PRÜFER, CHRONIST fällig
 - [E-138 erledigt durch Doku](entscheidung-e138-erledigt-durch-doku.md) — Gregor 31.10.; nicht wieder vorschlagen
+- [Stand 01.11.2026](stand-01-11-2026.md) — Abschlussrunde PRUEFER-70/LEKTOR-112, dann PR; AN-1-Frage offen

@@ -326,7 +326,7 @@ Rechtsklick → *Search Mailfolder* / *Search Mailbox* / *Search Eudora*.
 
 *Am Programm geprüft:* den Knopf hat Gregor am 11.09.2026 an 1.0.46 bestätigt
 ([E-80](../Intern/BEFUNDE.md#e-80)); die Suche nach `x-persona` mit
-Blah Blah Blah und Strg+Umschalt+F am 31.10.2026 an 7.2.1.128 (*„ja,
+Blah Blah Blah und Strg+Umschalt+F am 31.10.2026 an 7.2.1.128 und an 7.2.1.129 (*„ja,
 funktioniert mit ctrl-shift-F“*). *Find Messages* mit *Headers* ist am
 Quelltext nachgesehen (`EudoraRes.rc`, Kategorien der Suche). Der Rechtsklick
 **ohne** markiertes Wort meldet bis 7.2.1.128 einen *internal error*
