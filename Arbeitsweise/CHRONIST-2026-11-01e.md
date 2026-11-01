@@ -1,6 +1,6 @@
 ---
 name: chronist-2026-11-01e
-description: "CHRONIST-Lauf 01.11.2026 über 18:42 bis 20:32 MEZ - keine neue Lehre, sieben Nachträge; Abweichung von der eigenen angekündigten Reihenfolge (E-177) über eine Zweigfrage ohne diese Option; E-172 fünfmal von Gregor erbeten, obwohl der Eintrag 'Gregor muss nichts tun' und 'erst nach dem Release' sagte; rote Gegenprobe E-184m aus dem falschen Grund (PRÜFER-78 K7); Prüfserver viermal ärmer als ein echter; --amend hinter ';' traf den gepushten Commit; Eudora-Haken in vier Runden; PR #198 mit fälligem PRÜFER; keine Ablehnung"
+description: "CHRONIST-Lauf 01.11.2026 über 18:42 bis 20:32 MEZ - keine neue Lehre, acht Nachträge; Abweichung von der eigenen angekündigten Reihenfolge (E-177) über eine Zweigfrage ohne diese Option; E-172 fünfmal von Gregor erbeten, obwohl der Eintrag 'Gregor muss nichts tun' und 'erst nach dem Release' sagte; rote Gegenprobe E-184m aus dem falschen Grund (PRÜFER-78 K7); Prüfserver viermal ärmer als ein echter; --amend hinter ';' traf den gepushten Commit; Eudora-Haken in vier Runden; PR #198 mit fälligem PRÜFER; keine Ablehnung"
 metadata:
   node_type: memory
   type: reference
