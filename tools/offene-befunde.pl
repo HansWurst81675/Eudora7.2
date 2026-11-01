@@ -1,6 +1,8 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use FindBin;
+require "$FindBin::Bin/fettstellen.pl";   # Fettstellen auch mit Kursiv darin (31.10.2026, E-136)
 
 # Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
 # Kennung einen Anker (tools/befunde-verlinken.pl). Wer die erste Zelle
@@ -130,7 +132,10 @@ for my $zeile (split /\n/, $befunde) {
     # Zaehlung, ohne dass irgendetwas meldete. Das Werkzeug sagte "Die Liste
     # deckt die offenen Befunde" und meinte 9, wo 11 stehen. Gegengetestet:
     # ohne Grenze kommen genau E-90 und E-92 dazu, kein behobener Befund.
-    my @fett_alle = $urteil =~ /\*\*([^*]+?)\*\*/g;
+    # Seit dem 01.11.2026 aus tools/fettstellen.pl: das alte Muster
+    # /\*\*([^*]+?)\*\*/ uebersprang einen Kopf mit *Kursiv* darin, und
+    # E-136 fiel am 31.10.2026 aus der Liste.
+    my @fett_alle = fettstellen($urteil);
     # LEERE FETTSTELLEN WEGWERFEN (22.10.2026, von LEKTOR gemessen). E-89
     # endet mit >>...*„keine ueberlappung."*** **Die Ursache...<<. In der
     # Folge "*** **" greift das Muster und liefert als erstes Fettwort ein

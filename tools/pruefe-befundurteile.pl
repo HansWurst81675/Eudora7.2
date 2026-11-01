@@ -6,6 +6,7 @@ use warnings;
 # Zeile, die vor dem Verlinken dastand.
 use FindBin;
 require "$FindBin::Bin/verweise-filtern.pl";
+require "$FindBin::Bin/fettstellen.pl";   # Fettstellen auch mit Kursiv darin (31.10.2026, E-136)
 
 
 # Die Urteilstabelle in Intern/BEFUNDE.md traegt seit dem 12.10.2026 vor jeder
@@ -194,8 +195,9 @@ for my $zeile (split /\n/, $befunde) {
     # traegt dieselbe Berichtigung.
     my $ist_offen = 0;
     my $ist_erledigt = 0;
-    if ($urteilstext =~ /\*\*([^*]+?)\*\*/) {
-        my $wort = lc $1;
+    # tools/fettstellen.pl (01.11.2026): auch ein Kopf mit *Kursiv* darin.
+    if (my ($kopf) = fettstellen($urteilstext)) {
+        my $wort = lc $kopf;
         $ist_offen    = 1 if grep { index($wort, lc $_) >= 0 } @offen;
         $ist_erledigt = 1 if grep { index($wort, lc $_) >= 0 } @erledigt;
     }

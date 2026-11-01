@@ -62,8 +62,38 @@ void TT_Suite(const char* szName)
 	printf("===============================================================\n");
 }
 
+//
+// OFFENER TEST (01.11.2026). Am 31.10.2026 waren neun neue Tests ohne
+// TT_EndTest - ein Rueckfall druckte [FEHL], aber ++s_iFailedTests steht nur
+// in TT_EndTest, und Summe wie Rueckgabewert blieben gruen. Gefunden hat es
+// erst der Pruefbericht (350 gemeldet, 342 Zeilen; PRUEFER-68 K6).
+//
+// Jetzt prueft das Geruest selbst: wer einen Test beginnt, solange der
+// vorige noch offen ist, oder TT_Summary ruft, waehrend einer offen ist,
+// bekommt diesen Test als FEHLGESCHLAGEN gezaehlt - gleich, ob er sonst
+// bestanden haette. Ein Test, der sein Ende nicht meldet, ist nicht
+// geprueft. Ebenso zaehlt eine Abweichung ausserhalb jedes Tests.
+//
+static int	s_bOffen = 0;
+
+static void OffenenTestAlsFehlerZaehlen(const char* szWo)
+{
+	if (!s_bOffen)
+		return;
+	++s_iFailedTests;
+	if (s_iChecksFailed == 0)	// sonst hat TT_Fail die Zeile schon gedruckt
+		printf("[FEHL] %s\n", s_szCurrent);
+	printf("       ^-- FEHLGESCHLAGEN: ohne TT_EndTest verlassen (bemerkt in %s)"
+		   " - %d Abweichung(en) bis dahin\n", szWo, s_iChecksFailed);
+	NotizenAusgeben();
+	s_szCurrent[0] = '\0';
+	s_bOffen = 0;
+}
+
 void TT_BeginTest(const char* szName)
 {
+	OffenenTestAlsFehlerZaehlen("TT_BeginTest");
+	s_bOffen = 1;
 	strncpy(s_szCurrent, szName, sizeof(s_szCurrent) - 1);
 	s_szCurrent[sizeof(s_szCurrent) - 1] = '\0';
 	s_iChecksFailed = 0;
@@ -88,10 +118,24 @@ void TT_EndTest(void)
 	NotizenAusgeben();
 
 	s_szCurrent[0] = '\0';
+	s_bOffen = 0;
 }
 
 void TT_Fail(const char* szFormat, ...)
 {
+	if (!s_bOffen)
+	{
+		// Abweichung ausserhalb jedes Tests - kein TT_EndTest wird sie je
+		// zaehlen, also hier.
+		va_list args;
+		++s_iFailedTests;
+		printf("[FEHL] (ausserhalb eines Tests) ");
+		va_start(args, szFormat);
+		vprintf(szFormat, args);
+		va_end(args);
+		printf("\n");
+		return;
+	}
 	++s_iChecksFailed;
 	if (s_iChecksFailed == 1)
 	{
@@ -156,6 +200,7 @@ void TT_Note(const char* szFormat, ...)
 
 int TT_Summary(void)
 {
+	OffenenTestAlsFehlerZaehlen("TT_Summary");
 	printf("\n===============================================================\n");
 	printf(" Ergebnis: %d Tests, %d bestanden, %d fehlgeschlagen\n",
 		   s_iTests, s_iTests - s_iFailedTests, s_iFailedTests);
