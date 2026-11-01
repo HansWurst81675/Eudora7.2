@@ -113,7 +113,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 * **Ohne UIDPLUS steht die verschobene Mail nicht mehr unter der alten Nummer neben einer fremden** ([E-189](Intern/BEFUNDE.md#e-189), Fehler aus dem Original, gefunden von PRÜFER-75): meldet der Server beim Kopieren keine neuen Nummern, entfernt Eudora die Vorab-Kopie, und der Abgleich holt die Mail mit ihrer echten Nummer. Vorher konnte das Löschen des Doppels auf dem Server die fremde Mail treffen (Vermutung). Gemessen mit dem Prüfstandsfall [`E-189`](Intern/BEFUNDE.md#e-189): rot an 7.2.1.130, grün mit der Behebung.
 * Neu als Befund: [E-188](Intern/BEFUNDE.md#e-188) (dieselbe Verwechslung beim Verschieben zwischen zwei IMAP-Konten und von IMAP nach lokal, nur am Quelltext). Bei [E-184](Intern/BEFUNDE.md#e-184) offen: mehrere Mails in nicht aufsteigender Reihenfolge.
 * **Prüfserver** (`tools/imap-pruefserver.pl`): `UID COPY` mit `COPYUID`, und wie ein echter Server meldet er eine geänderte Nachrichtenzahl im gewählten Postfach unaufgefordert (`* n EXISTS`) — ohne das sah Eudora die neue UID beim Abgleich nie, und ein Lauf mit der Behebung wirkte, als fehle die verschobene Mail.
-* **Werkzeug** `tools/ersetze-text.pl` (schon in #196) und `tools/messen-e184.ps1`.
+* **Werkzeug** `tools/ersetze-text.pl` (schon in #196), `tools/messen-e184.ps1` und die Hülle `tools/messen-e189.ps1` (Prüfstandsfälle [`E-184`](Intern/BEFUNDE.md#e-184), [`E-189`](Intern/BEFUNDE.md#e-189)).
 
 ---
 

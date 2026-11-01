@@ -5,6 +5,8 @@
 # ueberlebt die Kopie vermutlich den Abgleich (CUidMap fuehrt gleiche UIDs
 # nur einmal). Erwartet ohne Fehler:
 #   E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
+# GEMESSEN am 01.11.2026: rot an 7.2.1.130 (Quellstand 4593ab89*: zwei
+# Eintraege mit uid=1, kopie-neu=0), gruen mit der Behebung (Bau 8c904144*).
 # Laeuft unter tools\testlauf.ps1 -MessenSkript (nur -Pfadfilter wird
 # durchgereicht), Pruefstand wie E-184.
 # Kodierung: reines ASCII, kein BOM.
