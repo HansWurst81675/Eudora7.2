@@ -240,7 +240,9 @@ zwei Ordner **desselben** Kontos.
 2. Die Mail in einen anderen Ordner desselben IMAP-Kontos verschieben.
 3. Den Zielordner öffnen und warten, bis Eudora ihn abgeglichen hat: die Mail
    trägt ihr Label.
-4. In der `eudora.log` steht eine Zeile
+4. In der `eudora.log` steht eine Zeile (sie wird mit dem Protokollbereich *Misc*,
+   0x8000, geschrieben — in deiner `Eudora.ini` steht `LogLevel=58527`, da ist er an;
+   in der Vorgabe 25759 ist er aus)
    `E-170 Labels beim Verschieben im Konto: mit-label=1 … gesetzt=…  grund=…`.
    Steht dort `grund=keine-neuen-uids`, meldet dein Server keine neuen UIDs —
    dann bleibt das Label weiter aus; bitte die Zeile schicken.
@@ -256,7 +258,11 @@ Postfach oder IMAP, gleich.
    anderen Postfächer gehen wie bisher.
 3. Danach im Hauptmenü *Transfer* öffnen (mit markierter Nachricht): dort ist
    Out **nicht** grau — die Sperre gilt nur für Filter.
-4. Falls du einen **älteren** Filter mit Ziel Out hast: Post abrufen. Es kommt
+4. Eine Nachricht im **Postfachfenster** markieren, *Special → Make Filter* (oder Rechtsklick → *Make Filter*), *Transfer to*
+   und die Postfach-Schaltfläche: Out ist **grau**. Dasselbe aus einer **geöffneten**
+   Nachricht heraus (*Make Filter* im Nachrichtenfenster): Out ist **grau**. An genau
+   diesen beiden Wegen hatte die erste Fassung versagt (PRÜFER-71 K3, PRÜFER-72 K1).
+5. Falls du einen **älteren** Filter mit Ziel Out hast: Post abrufen. Es kommt
    **kein** Hinweisdialog, der Abruf läuft durch, und in der `eudora.log`
    steht `E-143 Filter "<Name>": Ziel ist Out - uebergangen, nichts uebertragen`.
 

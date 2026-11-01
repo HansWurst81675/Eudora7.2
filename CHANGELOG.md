@@ -105,7 +105,15 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## Im Quellstand, noch in keinem Paket
 
-**Zweig `e165_schliessen_e136_speichern_unter`** (nach dem Merge von #193).
+**Zweig `e178_bearbeiten_emoji`** (nach dem Merge von #194; davor `e165_schliessen_e136_speichern_unter`, gemergt als #194). Alles hier ist gebaut und durch Regressionstests mit Gegenprobe gesichert, **am laufenden Programm aber noch nicht gemessen**.
+
+* **Fett, Kursiv, Link einfügen und Antwort auf markierten Text lassen Emoji stehen** ([E-178](Intern/BEFUNDE.md#e-178)): neun Stellen, die HTML aus der Anzeige mit „CString = BSTR“ holten, wandeln über `E136HtmlAusBstr`.
+* **HTML-zu-Text schneidet Zeichenangaben nicht mehr ab** ([E-179](Intern/BEFUNDE.md#e-179)): `&#128293;` wird nicht mehr zu `%`; was windows-1252 kennt (€, –), wird zum Zeichen, sonst bleibt die Angabe stehen. Hexadezimale Angaben ergaben vorher ein Nullbyte.
+* **Label beim Verschieben im IMAP-Konto** ([E-170](Intern/BEFUNDE.md#e-170), Gregors Entscheidung „Label mitnehmen“): das Label wird gemerkt und im Ziel gesetzt — **nur, wenn der Server neue UIDs meldet** (UIDPLUS); sonst sagt es eine Logzeile.
+* **Out wird einem Filter nicht angeboten** ([E-143](Intern/BEFUNDE.md#e-143), Gregors Entscheidung): in der Postfachauswahl für Filter grau; ältere Filter mit Ziel Out werden ohne Dialog übergangen, mit einer Zeile im Log. Der Abruf bleibt nicht mehr stehen.
+* Neu als Befund: [E-184](Intern/BEFUNDE.md#e-184) (Original: beim Verschieben zwischen IMAP-Ordnern kann eine fremde Zusammenfassung überschrieben werden).
+
+**Aus `e165_schliessen_e136_speichern_unter`:**
 
 * **Emoji beim *Speichern unter* als `.htm`** ([E-136](Intern/BEFUNDE.md#e-136), zweiter Weg, [PRÜFER-68](Befunde/PRUEFER-68.md) K1): auch dieser Weg schreibt Zeichen außerhalb von windows-1252 jetzt als HTML-Entität statt `??`. Als `.txt` bleibt das Ersatzzeichen — eine windows-1252-Textdatei kann kein Emoji tragen. Regressionstest `TestE136` um die Stelle erweitert, Gegenprobe gegen den Rückgabewert. [E-136](Intern/BEFUNDE.md#e-136) bleibt offen bis zur Messung am Programm.
 * **[E-165](Intern/BEFUNDE.md#e-165) geschlossen** auf Gregors Bestätigung an 7.2.1.129.
