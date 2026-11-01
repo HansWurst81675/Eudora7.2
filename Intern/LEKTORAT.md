@@ -2973,3 +2973,7 @@ Nach 62251f42 sind alle drei behoben, nichts Neues ist kaputt ([Nachprüfung](..
 ## LEKTOR-115 (01.11.2026) — Nachlauf vor dem PR nach ebcee8d6
 
 [LEKTOR-115](../Befunde/LEKTOR-115.md): Alle zehn Funde aus [LEKTOR-114](../Befunde/LEKTOR-114.md) sind erledigt, je mit Datei:Zeile nachgemessen. Der neue Text stimmt; die Stichprobe der Zeilenangaben trifft. `doku-pruefen.pl` ohne Widerspruch, 44 offene Befunde in beiden Listen. Ein Fund, Kleinkram: die Zweigzeile im CHANGELOG nennt #194 zweimal ([L-115.1](../Befunde/LEKTOR-115.md#l-115.1)).
+
+## LEKTOR-116 (01.11.2026) — Kurzlauf vor dem Testpaket 7.2.1.130
+
+[LEKTOR-116](../Befunde/LEKTOR-116.md): Der Fund aus [LEKTOR-115](../Befunde/LEKTOR-115.md) ist erledigt (die CHANGELOG-Zweigzeile nennt #194 einmal). Die Nummer 7.2.1.130 ist in CHANGELOG, TESTPLAN, PAKETE, README, ZIEL, WEITERMACHEN, AUFGABEN, MITARBEITEN, DEFENDER-FEHLALARM, WERKZEUGE und ZWEIGE einheitlich angekommen; nirgends steht, das Paket sei geschnürt. Alle vier Werkzeuge grün, 44 offen. Drei Funde, keiner am Programm: die Urteile zu [E-178](BEFUNDE.md#e-178), [E-170](BEFUNDE.md#e-170) und [E-143](BEFUNDE.md#e-143) sagen weiter „mit dem nächsten Testpaket“, das steht dadurch auch in den erzeugten Listen von CHANGELOG und WEITERMACHEN ([L-116.1](../Befunde/LEKTOR-116.md#l-116.1)); README und BEFUNDE nennen bei [E-136](BEFUNDE.md#e-136) nur 7.2.1.129, den `.htm`-Weg in 7.2.1.130 nicht ([L-116.2](../Befunde/LEKTOR-116.md#l-116.2)); die FAQ sagt zu E-170 „kommt mit dem nächsten Paket“ ([L-116.3](../Befunde/LEKTOR-116.md#l-116.3)).
