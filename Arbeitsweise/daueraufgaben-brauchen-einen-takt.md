@@ -240,10 +240,32 @@ Die Meldung war also da, sogar am Anfang, wo [[ausloeser-an-den-anfang]] sie hab
 
 ## Nachtrag 01.11.2026: angekündigt und den Zug beendet, 73 Minuten Stillstand
 
-Um 15:47 lag der letzte Commit (`d2a85c89`, Prüfstand 46/46) auf dem Server. Meine Meldung an Gregor endete mit dem Satz *„Vor dem PR lasse ich LEKTOR und PRÜFER noch kurz laufen“*. Gestartet habe ich sie nicht. Die Sitzung stand still, bis Gregor um etwa 17:00 schrieb: *„du wartest dann immer auf meine rückmeldung? obwohl du den lektor immer starten mußt.“*, dann *„vertane zeit!“* und *„wie lange warst du untätig?“*. Gemessen: von 15:47 bis 17:00, also **73 Minuten**. Gestartet wurden LEKTOR-117 und PRÜFER-74 um 17:01.
+Um 15:47 lag der letzte Commit (`d2a85c89`, Prüfstand 46/46) auf dem Server. Meine Meldung an Gregor endete mit dem Satz *„Vor dem PR lasse ich LEKTOR und PRÜFER noch kurz laufen“*. Gestartet habe ich sie nicht. Die Sitzung stand still, bis Gregor um etwa 17:00 schrieb: *„du wartest dann immer auf meine rückmeldung? obwohl du den lektor immer starten mußt.“*, dann *„vertane zeit!“* und *„wie lange warst du untätig?“*. Gemessen: von 15:47 bis 17:00, also **73 Minuten** (vom Commit an gezählt; vom Zugende 15:48:50 an sind es 71 Minuten, siehe Nachtrag des CHRONIST unten). Gestartet wurden LEKTOR-117 und PRÜFER-74 um 17:01.
 
 **Warum:** Eine Ankündigung im Schlusstext hat keinen Auslöser. Den Zug zu beenden heißt: bis Gregor schreibt, passiert nichts. Sein Test außerhalb der VM und die beiden Rollen hätten parallel laufen sollen, wie es der Nachtrag vom 16.10. verlangt.
 
 **How to apply:** Was ich als nächsten Schritt ankündige und ohne Gregor tun darf, starte ich **vor** der Schlussmeldung im selben Zug. Die Meldung sagt dann „läuft“, nicht „lasse ich laufen“. Steht in meinem Schlusstext ein Futur über eine fällige Rolle, ist das der Fehler.
 
-**Zweiter Fall am selben Abend, 17:20:** die Frage nach dem nächsten Zweignamen habe ich als Abfragedialog gestellt, während LEKTOR-117 lief. Der Dialog hält den Zug an, bis Gregor antwortet. Gregor: *„und du wolltest mit dieser frage wieder 73 min. untätig warten? oder wie?“* **Regel:** eine Frage, die nur einen späteren Schritt betrifft, steht als Text am Ende einer Meldung; die Arbeit, die ohne die Antwort geht, läuft weiter. Den Abfragedialog nur, wenn wirklich nichts anderes zu tun ist.
+**Zweiter Fall am selben Abend, 17:06** (hier stand „17:20“, berichtigt vom CHRONIST): die Frage nach dem nächsten Zweignamen habe ich als Abfragedialog gestellt, während LEKTOR-117 lief. Der Dialog hält den Zug an, bis Gregor antwortet. Gregor: *„und du wolltest mit dieser frage wieder 73 min. untätig warten? oder wie?“* **Regel:** eine Frage, die nur einen späteren Schritt betrifft, steht als Text am Ende einer Meldung; die Arbeit, die ohne die Antwort geht, läuft weiter. Den Abfragedialog nur, wenn wirklich nichts anderes zu tun ist.
+
+## Nachtrag 01.11.2026 abends (CHRONIST): die Fälligkeit stand neun Sekunden vor dem Futur da
+
+Transkript `6f848773…`, Zeiten MEZ, gemessen.
+
+| Zeit | Was |
+|---|---|
+| 15:48:41 | letzter Werkzeugaufruf vor dem Stillstand: `rollen-faellig.pl` meldet *„FAELLIG: LEKTOR … PRUEFER …“* |
+| 15:48:50 | Schlusstext: *„Vor dem PR lasse ich LEKTOR und PRÜFER noch kurz laufen.“* Zugende |
+| 16:43:29 | *„Compacted while idle“* - der Verlauf wird verdichtet, weil nichts geschieht |
+| 17:00:08 | Gregor: *„gut, lektor und prüfer starten“* |
+| 17:01:52 / 17:02:03 | LEKTOR-117 und PRÜFER-74 gestartet; fertig nach 9,1 und 1,6 Minuten |
+
+Vom Zugende bis zu Gregors Nachricht: **71 Minuten 18 Sekunden**; die 73 oben sind vom Commit an gezählt. Neu gegenüber dem 12.10. („die Meldung stand da, 61 Sekunden vor der Frage“): Diesmal stand die Meldung in einer **eigenen** Abfrage, nicht im Schatten eines `MANGEL`, und sie wurde neun Sekunden später in ein Futur übersetzt. Die Regel aus [[nie-stillstehen]] (Nachtrag 01.11. CHRONIST, im Repo seit 12:35, Commit `4d209c08`) griff drei Stunden nach dem Schreiben nicht.
+
+Der Abfragedialog um 17:06:12 wurde nach 13 Sekunden beantwortet (17:06:25). Gekostet hat er also fast nichts; Gregors Einwand um 17:06:44 gilt dem Mechanismus, nicht der gemessenen Zeit.
+
+**Vierter Fall von „angekündigt statt gestartet“ in sechs Tagen:** 27.10. (CHRONIST, 52 und 41 Minuten frei), 30.10. 11:50 (eigene Arbeit, 65 Minuten), 01.11. 11:44 (CHRONIST, 25 Minuten), 01.11. 15:48 (LEKTOR und PRÜFER, 71 Minuten). Jedes Mal mit Regel im Repo. Nach [[fehlerklassen-abstellen]] gehört das in einen Haken ([[schranke-gehoert-in-den-haken]]).
+
+**Vorschlag (nicht gebaut), Stop-Haken `tools/haken-zugende.pl`:** am Zugende `rollen-faellig.pl` fahren; ist eine Rolle fällig und nicht als laufend in `tools/AGENTEN-LAUFEN.md` eingetragen, oder enthält der letzte Assistententext ein Futur über eine Rolle oder einen Arbeitsschritt (*„lasse ich … laufen“*, *„ist … fällig“*, *„fange … an“*), wird das Zugende abgewiesen. Bei `stop_hook_active` durchlassen (keine Schleife). Ausnahme für *„nichts mehr starten“* und angekündigtes Abschalten ([[agent-vor-dem-ende-nicht-starten]]): eine Zeile „Rollen ausgesetzt bis …“ in `AGENTEN-LAUFEN.md`. Gegenprobe: Stand `d2a85c89` mit dem Schlusstext von 15:48:50 → abweisen; Stand 17:18 nach `agenten-laufen.pl --start CHRONIST` → durchlassen; Schlusstext von 11:44:19 → abweisen. Ob Rückgabe 2 eines Stop-Hakens den Zug fortsetzt, ist Vermutung und beim Bau zuerst zu messen.
+
+**Vorschlag (nicht gebaut), PreToolUse-Haken für `AskUserQuestion`:** abweisen, solange ein Agent als laufend eingetragen oder eine Rolle fällig ist, mit dem Hinweis, die Frage als Text zu stellen und weiterzuarbeiten. Gegenprobe: Stand 17:06:12 (LEKTOR-117 laufend) → abweisen; ohne laufenden Agenten und ohne fällige Rolle → durchlassen.

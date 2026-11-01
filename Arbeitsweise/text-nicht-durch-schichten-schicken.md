@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-29T20:38:17.853Z
 ---
 
-Schranke: tools/pruefe-rueckstrich.pl (pre-commit 14d seit 14.10.2026 — weist einen Windows-Pfad ohne Rückstrich im Zuwachs einer .md ab) und tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile)
+Schranke: tools/pruefe-rueckstrich.pl (pre-commit 14d seit 14.10.2026 — weist einen Windows-Pfad ohne Rückstrich im Zuwachs einer .md ab) und tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile) und tools/ersetze-text.pl (Textstellen statt Zeilenbereiche, seit 01.11.2026; Selbsttest mit „neu enthält alt“ und Windows-Pfad)
 
 **Gregor am 06.09.2026:** *„das hatten wir schon mit bash und PS. warum lernst du
 nicht daraus? warum passiert dir das immer wieder?"*
@@ -543,7 +543,7 @@ Zeiten MEZ, Transkript `052dc212…`.
 
 | Fall | Zeit | Was | Ergebnis |
 |---|---|---|---|
-| 38 | 21:55:39 | Regel 1 dieser Lehre war befolgt: Paare `alt`/`neu` aus einer Datei, ein Helfer im Scratchpad ersetzt mit `while(($i=index($t,$a))>=0){substr($t,$i,length $a)=$b}`. Das Paar für `PAKETE.md` hängte einen Satz an, **der neue Text enthielt den alten**. Die Suche beginnt nach jeder Ersetzung wieder bei 0, also ohne Ende | Endlosschleife, in den Hintergrund geschoben und nie gestoppt ([[haengende-kommandos-abbrechen]], Nachtrag 30.10.). Nachgestellt in diesem Lauf: dasselbe Programm, Ziel `x A y`, Paar `A` → `A B`, `timeout 5` → Rückgabe 124, keine Ausgabe, Datei unverändert; Paar `A` → `C` → *„1“*, Rückgabe 0. Kein Schaden, weil der Helfer erst am Ende schreibt |
+| 38 | 29.10. 21:55:39 | Regel 1 dieser Lehre war befolgt: Paare `alt`/`neu` aus einer Datei, ein Helfer im Scratchpad ersetzt mit `while(($i=index($t,$a))>=0){substr($t,$i,length $a)=$b}`. Das Paar für `PAKETE.md` hängte einen Satz an, **der neue Text enthielt den alten**. Die Suche beginnt nach jeder Ersetzung wieder bei 0, also ohne Ende | Endlosschleife, in den Hintergrund geschoben und nie gestoppt ([[haengende-kommandos-abbrechen]], Nachtrag 30.10.). Nachgestellt in diesem Lauf: dasselbe Programm, Ziel `x A y`, Paar `A` → `A B`, `timeout 5` → Rückgabe 124, keine Ausgabe, Datei unverändert; Paar `A` → `C` → *„1“*, Rückgabe 0. Kein Schaden, weil der Helfer erst am Ende schreibt |
 | 39 | 21:58:18 | `grep -c '\\' datei` zum Zählen der Rückstriche in den Release-Notizen | *„grep: Trailing backslash“*, die Zählung blieb leer (*„Rueckstriche: “*). Um 21:58:24 bemerkt und mit `perl -ne '$n++ if /\x5c/'` neu gezählt: 0. So soll es sein ([[ausbleiben-ist-kein-befund]]) |
 
 **Was Fall 38 Neues zeigt:** Regel 1 schützt den **Text** vor den Schichten, aber nicht vor dem Werkzeug, das ihn einsetzt. Der Helfer war ein Wegwerfskript ohne Selbsttest, und im Repo gibt es `tools/ersetze-bereich.pl`, allerdings nur für Zeilenbereiche ([[werkzeug-vor-eigenbau]]).
@@ -552,13 +552,13 @@ Zeiten MEZ, Transkript `052dc212…`.
 - Ein Ersetzer sucht nach jeder Ersetzung **hinter** der Einfügung weiter (`index($t,$a,$i+length $b)`), oder er ersetzt genau einmal und meldet die Trefferzahl vorher.
 - Ein Ersetzungshelfer, der zum zweiten Mal gebaut wird, gehört als Werkzeug mit Selbsttest nach `tools/`. Erster Testfall: Der neue Text enthält den alten.
 
-## Nachtrag 01.11.2026 nachmittags (CHRONIST): Fall 40 und 41, beide Fälle des 30.10. kamen wieder
+## Nachtrag 01.11.2026 nachmittags (CHRONIST): Fall 40 und 41, beide Fälle vom 29.10. abends kamen wieder
 
 Zeiten MEZ, Transkript `6f848773…`.
 
 | Fall | Zeit | Was | Ergebnis |
 |---|---|---|---|
-| 40 | 15:09:55 | Versionssprung auf 7.2.1.130 über ein Ersetzungsskript; der neue Text enthielt den alten (wörtlich: *„Endlosschleife, weil der Ersatztext den alten Text enthält – die `.md`-Dateien sind daher noch unverändert“*). Um 15:10:02 zweiter Fehler im selben Skript: `\$alt` statt `\Q$alt\E` | gemessen am Transkript: dieselbe Falle wie Fall 38, zwei Tage später. Kein Schaden, weil das Skript nichts schrieb, bevor es hing. Ein Ersetzer mit Selbsttest unter `tools/` gibt es weiter nicht (gemessen: nur `ersetze-bereich.pl`, für Zeilenbereiche) |
+| 40 | 15:09:55 | Versionssprung auf 7.2.1.130 über ein Ersetzungsskript; der neue Text enthielt den alten (wörtlich: *„Endlosschleife, weil der Ersatztext den alten Text enthält – die `.md`-Dateien sind daher noch unverändert“*). Um 15:10:02 zweiter Fehler im selben Skript: `\$alt` statt `\Q$alt\E` | gemessen am Transkript: dieselbe Falle wie Fall 38, drei Tage später (Fall 38 war am 29.10. um 21:55; hier stand „zwei Tage“, berichtigt nach LEKTOR-117). Kein Schaden, weil das Skript nichts schrieb, bevor es hing. Ein Ersetzer mit Selbsttest unter `tools/` gibt es weiter nicht (gemessen: nur `ersetze-bereich.pl`, für Zeilenbereiche) |
 | 41 | 15:20:16 | Ablageort `C:\Users\Gregor\Eudora72-7.2.1.130-release` über ein Bash-Heredoc in CHANGELOG, PAKETE und WEITERMACHEN geschrieben | gemessen: in den Dateien stand `C:SERSGREGORudora72-…` (Rückstriche samt Folgezeichen verschluckt). Um 15:20:33 vor dem Commit bemerkt und über `\x5c` berichtigt. Dieselbe Sitzung hatte um 14:59:19 in ihrer eigenen Zusammenfassung notiert *„heredoc lost a backslash … wrote the scripts with the Write tool and `\x5c`“* (gemessen) - die Lehre stand im Kontext und griff 21 Minuten später nicht |
 
 **Was neu ist:** Fall 40 ist das zweite Auftreten von Fall 38. Nach [[fehlerklassen-abstellen]] ist damit ein Werkzeug fällig, nicht ein dritter Nachtrag. Fall 41 zeigt, dass eine Lehre im Kontext nicht genügt, wenn der Auslöser (Windows-Pfad im Ersatztext) nicht erkannt wird ([[lehren-anwenden-nicht-nur-schreiben]]).
@@ -566,3 +566,19 @@ Zeiten MEZ, Transkript `6f848773…`.
 **How to apply, zusätzlich:**
 - `tools/ersetze-text.pl` bauen: Paare `alt`/`neu` aus einer Datei, Trefferzahl vorher melden, genau einmal je Treffer ersetzen, Selbsttest mit „neu enthält alt“ und mit einem Windows-Pfad im Ersatztext. Bis dahin: kein Wegwerf-Ersetzer.
 - Steht ein `\` im Ersatztext, geht er nie durch ein Heredoc oder eine Shell-Zeichenkette, sondern über das Write-Werkzeug in eine Datei. Nach dem Schreiben `perl -ne '$n++ if /\x5c/'` gegen die erwartete Zahl.
+
+## Nachtrag 01.11.2026 abends (CHRONIST): Fall 42, der Pfad ging im Test des Werkzeugs verloren, das ihn schützen soll
+
+Zeiten MEZ, Transkript `6f848773…`.
+
+| Fall | Zeit | Was | Ergebnis |
+|---|---|---|---|
+| 42 | 17:04:29 | Ende-zu-Ende-Test für `tools/ersetze-text.pl`. Die Paare-Datei bekam einen Platzhalter, eingesetzt mit `perl -pi -e "s|PLATZHALTER|$S/e2e.txt|"`. `$S` war aus `$TEMP` gebildet, und `$TEMP` steht in Git Bash in Windows-Form (`C:\Users\Gregor\AppData\Local\Temp`). In der doppelt gequoteten Perl-Ersetzung wurden `\U` und `\L` als Groß- und Kleinschreibung gelesen | gemessen: *„C:SERSGREGORAPPDATAocaltemp/…/e2e.txt: No such file or directory“*, Rückgabe 2, nichts geschrieben. Acht Sekunden später (17:04:37) mit relativem Pfad und `/c/`-Form neu gemacht, dann grün |
+
+**Was neu ist:** Dritter Pfadverlust in zwei Stunden (Fall 41 um 15:20 im Heredoc, Fall 42 um 17:04 in `s|||`), diesmal ohne `\` im Quelltext des Befehls: der Rückstrich kam aus einer Umgebungsvariablen. Der Platzhalter-Ersatz war selbst ein Wegwerf-Ersetzer, gebaut im Test des Werkzeugs, das Wegwerf-Ersetzer ablösen soll. `tools/pruefe-rueckstrich.pl` hätte nicht gegriffen, es prüft nur den Zuwachs von `.md`-Dateien (belegt am Schranken-Kopf dieser Lehre). Kein Schaden, weil die Datei nicht gefunden wurde.
+
+**Erledigt:** der Werkzeugmangel aus dem Nachtrag 01.11. nachmittags. `tools/ersetze-text.pl` steht seit `d64f4737`, Selbsttest 11 von 11, Gegenprobe mit dem alten Fehler rot (gemessen 17:04:30), in derselben Stunde viermal mit erwarteter Trefferzahl benutzt.
+
+**How to apply, zusätzlich:**
+- Ein Pfad aus `$TEMP`, `$USERPROFILE` oder `$TMP` geht nie in eine Perl-Ersetzung oder eine doppelt gequotete Perl-Zeichenkette. Den Scratchpad-Pfad in `/c/…`-Form schreiben oder als Argument übergeben (`@ARGV`, `$ENV{…}`).
+- Auch für Platzhalter in Testdateien gilt: `tools/ersetze-text.pl` oder die Datei gleich mit dem Write-Werkzeug fertig schreiben.

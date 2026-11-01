@@ -100,3 +100,7 @@ Die Meldung zu PR #194 um 11:44:19 endete mit *„Danach ist der CHRONIST fälli
 Das ist das Muster vom 30.10. (*„Ich fange jetzt … an“* ohne Aufruf), nur mit einer Rolle statt einer eigenen Arbeit.
 
 **How to apply, zusätzlich:** Nennt eine Meldung eine fällige Rolle, die von nichts Offenem abhängt, dann wird sie im selben Zug gestartet ([[daueraufgaben-brauchen-einen-takt]]). Ein PR, der auf Gregors Merge wartet, ist kein Grund zu warten.
+
+## Nachtrag 01.11.2026 abends (CHRONIST): der Nachtrag vom Mittag griff drei Stunden später nicht
+
+Um 15:48:50 MEZ endete ein Zug mit *„Vor dem PR lasse ich LEKTOR und PRÜFER noch kurz laufen.“*, neun Sekunden nachdem `rollen-faellig.pl` beide fällig gemeldet hatte; danach 71 Minuten nichts, bis Gregor schrieb (gemessen). Der Nachtrag direkt hierüber stand seit 12:35 im Repo. Messung, Zählung der vier Fälle seit dem 27.10. und der Vorschlag für einen Stop-Haken stehen in [[daueraufgaben-brauchen-einen-takt]], Nachtrag 01.11.2026 abends.
