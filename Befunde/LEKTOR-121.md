@@ -116,6 +116,10 @@ WEITERMACHEN neu erzeugt mit `offene-befunde.pl -schreiben`.
 
 `perl tools/ziel-stand.pl`: *„27 von 27 erfüllt, 0 offen - ZIEL.md ist auf dem Stand.“*
 
+## Nachtrag: 7b41c8d7 gegengelesen
+
+[E-192](../Intern/BEFUNDE.md#e-192) nennt für den Papierkorb jetzt richtig `CTocDoc::ImapMoveMsgsToTrash` (`ImapToc.cpp:2730`, Aufruf `:2828`), und WERKZEUGE nennt 47 Fälle für den Haken mit K1/K2 wie in [PRÜFER-79](PRUEFER-79.md) — `perl tools/haken-eudora-start.pl --selbsttest` → *„Ergebnis: 47 Faelle, 47 bestanden, 0 fehlgeschlagen“* (gemessen). Derselbe falsche Name `CTocDoc::ImapDoPostExpunge` stand noch in [E-184](../Intern/BEFUNDE.md#e-184) (`Intern/BEFUNDE.md:403`, die zwei weiteren Aufrufer); **berichtigt im selben Commit**.
+
 ## Was nur Gregor entscheiden kann
 
 Nichts Neues.
