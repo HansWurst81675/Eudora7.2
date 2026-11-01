@@ -195,6 +195,10 @@ Paketbau in BEFUNDE nachtragen. Steht dort `kopie-mit-alter-uid=1` nach dem erne
 der Satz gemessen und das „vermutlich“ in README und Skripten kann weg. Sonst gehört an den
 Satz „(am Quelltext, PRÜFER-75 K2)“.
 
+## Nachtrag: dritter Commit
+
+Dritter Commit: [PRÜFER-76](PRUEFER-76.md) in [E-189](../Intern/BEFUNDE.md#e-189) eingetragen (Auftrag des Hauptagenten). Das sind die Prüfung (355/355, Messfall trennscharf), K1 (mit `878f38e9` abgesichert, `CanCloseFrame` zuerst), K2 bis K4 offen und klein, K3 als Hinweis für den TESTPLAN beim nächsten Paket. Aus „Was noch fehlt“ habe ich „PRÜFER;“ gestrichen, weil die Prüfung erledigt ist. Dazu kommt der Rest von [L-119.1](#l-119.1): `878f38e9` fügt in `ImapToc.cpp` noch einmal 17 Zeilen ein, die zwei anderen Aufrufer stehen jetzt bei `:2801` und `:3107` (gemessen). Bei [E-184](../Intern/BEFUNDE.md#e-184) stehen deshalb jetzt die Funktionen (`CTocDoc::ImapDoPostExpunge`, `CTocDoc::ImapChangeMsgsJunkStatus`) mit den Zeilen am Stand `878f38e9`. Das ist der Vorschlag aus [L-119.1](#l-119.1), so veralten die Angaben nicht mehr mit jedem Einschub.
+
 ## Zur Kenntnis
 
 - **README ohne [E-188](../Intern/BEFUNDE.md#e-188).** [E-188](../Intern/BEFUNDE.md#e-188) (*wichtig*: zwischen zwei IMAP-Konten oder beim Verschieben nach
