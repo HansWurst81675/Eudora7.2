@@ -95,8 +95,9 @@ da, nicht zum Lesen.
 | [AGENTEN.md](Intern/AGENTEN.md) | wie hier mit Agenten gearbeitet wird |
 | [BEFUNDE-ALTBESTAND.md](Intern/BEFUNDE-ALTBESTAND.md) | abgeschlossene Befunde aus der Frühzeit |
 
-Dazu [`Befunde/`](Befunde) (112 Prüfberichte), [`Arbeitsweise/`](Arbeitsweise)
-(109 Lehren aus Fehlern) und [`tools/`](tools) (über 100 Werkzeuge und
+Dazu [`Befunde/`](Befunde) (189 LEKTOR- und PRÜFER-Berichte), [`Arbeitsweise/`](Arbeitsweise)
+(124 Lehren aus Fehlern; beides am 01.11.2026 mit `git ls-files` gezählt, ohne
+Laufberichte, Stand-Notizen und Entscheidungen) und [`tools/`](tools) (über 100 Werkzeuge und
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
