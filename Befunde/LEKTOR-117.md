@@ -11,7 +11,8 @@ SHA-256, Bau-Kennung, 355 Unit-Tests, 19 Schranken, 46 Prüfstandsfälle und 18
 Eudora-Starts stehen in PAKETE, PRUEFBERICHT, den Prüfstandsdateien und
 TESTLAEUFE gleich; Größe und SHA-256 des ZIP habe ich an der Datei
 nachgemessen. Alle vier Werkzeuge grün, 44 offene Befunde in beiden Listen.
-Sechs Funde, keiner am Programm. Die zwei wichtigsten: `ZIEL.md` nennt sich
+Sechs Funde, keiner am Programm; **alle sechs vom LEKTOR berichtigt im selben
+Commit** (Auftrag des Hauptagenten, Lehre vom 27.10.). Die zwei wichtigsten: `ZIEL.md` nennt sich
 selbst die Quelle für den Stand, sagt aber „Quellstand 7.2.1.128“ ([L-117.2](#l-117.2)); der
 Kopf des TESTPLAN sagt, zuletzt getestet sei am 29.10. das Release 7.2.1.128,
 obwohl Gregor am 31.10. an 7.2.1.129 getestet hat ([L-117.1](#l-117.1)).
@@ -60,6 +61,8 @@ Gesucht nach überholten Paketzuständen über alle `git ls-files '*.md'` ohne
 
 **Gewicht: Kleinkram**, aber in der ersten Zeile der Datei, die Gregor zum Testen liest. (gemessen)
 
+**Berichtigt im selben Commit:** `Intern/TESTPLAN.md:1` *„zuletzt getestet am 31.10.2026 das Testpaket 7.2.1.129: [E-139](../Intern/BEFUNDE.md#e-139) bestanden, [E-165](../Intern/BEFUNDE.md#e-165) bestätigt; davor am 29.10.2026 das Release 7.2.1.128, [E-166](../Intern/BEFUNDE.md#e-166) bestanden“*.
+
 `Intern/TESTPLAN.md:1`: *„Stand 01.11.2026 (zuletzt getestet am 29.10.2026 das
 Release 7.2.1.128, [E-166](../Intern/BEFUNDE.md#e-166) bestanden)“*. In derselben Datei stehen zwei spätere
 Tests Gregors an 7.2.1.129: `:149` *„Ergebnis 31.10.2026, Gregor an 7.2.1.129:
@@ -74,6 +77,8 @@ und an 7.2.1.129“*.
 ### <a id="l-117.2"></a>L-117.2 — ZIEL.md nennt als Stand „Quellstand 7.2.1.128“
 
 **Gewicht: mittel** — die Datei erklärt sich selbst zur Quelle des Stands. (gemessen)
+
+**Berichtigt im selben Commit:** `ZIEL.md:191` *„Stand 01.11.2026. Quellstand 7.2.1.130 (`VERSION` gleich; Testpaket, geschnürt am 01.11.2026, nicht veröffentlicht; davor 7.2.1.129 …). Veröffentlicht zuletzt 7.2.1.128 …“*; in `ZIEL.md:89` [E-143](../Intern/BEFUNDE.md#e-143) *„(Filterteil in 7.2.1.130 im Quelltext berichtigt, nicht gemessen)“* und [E-136](../Intern/BEFUNDE.md#e-136) *„(Strg+S in 7.2.1.129, Speichern unter als `.htm` in 7.2.1.130 geändert, nicht gemessen)“*.
 
 `ZIEL.md:186-189`: *„Diese Tabelle ist die Quelle. `README.md`, `AUFGABEN.md`,
 `WEITERMACHEN.md`, `CHANGELOG.md`, `PORTIERUNG.md` und `Releases/PAKETE.md`
@@ -99,6 +104,8 @@ mit *„(in 7.2.1.130 im Quelltext berichtigt, nicht gemessen)“*, [E-143](../I
 
 **Gewicht: Kleinkram.** (gemessen)
 
+**Berichtigt im selben Commit, anders als vorgeschlagen:** `tools/ersetze-text.pl` gibt es seit `d64f4737` (Selbsttest 11/11, `tools/WERKZEUGE.md:20`). Die Zeile `Intern/WEITERMACHEN.md:58` ist darum **gestrichen**, nicht als erledigt markiert — die Tabelle sagt in `:28-29` *„Erledigtes wird gestrichen, nicht abgehakt — die Geschichte steht im Commit“*. Beide Endlosfälle (29.10.2026 21:55:39 und 01.11.2026 15:09:55) stehen in der Commit-Nachricht und hier. **Nicht berichtigt**, weil außerhalb meiner Dateien: das Datum „am 30.10.“ für Fall 38 in [CHRONIST-2026-11-01b](../Arbeitsweise/CHRONIST-2026-11-01b.md) Zeile 34; derselbe Datumsfehler steht auch in `tools/WERKZEUGE.md:20` und im Kopf von `tools/ersetze-text.pl` (*„30.10. und 01.11.2026“*, gemessen) — richtig ist 29.10.
+
 [CHRONIST-2026-11-01b](../Arbeitsweise/CHRONIST-2026-11-01b.md) Zeile 34 und 38: der Ersetzer hing am 01.11. um 15:09
 zum zweiten Mal endlos (der neue Text enthielt den alten), *„Werkzeug
 `tools/ersetze-text.pl` mit Selbsttest ist fällig“*. Die einzige Stelle, an der
@@ -121,6 +128,8 @@ das Datum des Nachtrags.
 
 **Gewicht: Kleinkram.** (gemessen)
 
+**Berichtigt im selben Commit:** `Releases/PAKETE.md:6` *„Nummern bis 7.2.1.130 verzeichnet“*.
+
 `Releases/PAKETE.md:6`: *„Stand 01.11.2026 (Nummern bis 7.2.1.128
 verzeichnet, geschnürt ist bis 7.2.1.129 …, geschnürt ist auch 7.2.1.130
 …“*. Eigene Abschnitte gibt es für `7.2.1.130` (`:182`) und `7.2.1.129`
@@ -134,6 +143,8 @@ Nummer stimmen.
 
 **Gewicht: Kleinkram, Altlast.** (gemessen)
 
+**Berichtigt im selben Commit:** `README.md:98-100` *„189 LEKTOR- und PRÜFER-Berichte … 124 Lehren aus Fehlern; beides am 01.11.2026 mit `git ls-files` gezählt, ohne Laufberichte, Stand-Notizen und Entscheidungen“*. Gezählt (gemessen): `git ls-files 'Befunde/*.md'` → 211, davon `LEKTOR-<n>` 117 und `PRUEFER-<n>` 72; `git ls-files 'Arbeitsweise/*.md'` ohne `CHRONIST-*`, `stand-*`, `entscheidung-*`, `MEMORY.md`, `README.md` → 124. Die Zahl veraltet mit jedem Lauf wieder.
+
 `README.md:98`: *„Dazu `Befunde/` (112 Prüfberichte), `Arbeitsweise/` (109
 Lehren aus Fehlern)“*. Gemessen: `git ls-files 'Befunde/*.md' | wc -l` → 209,
 `git ls-files 'Arbeitsweise/*.md' | wc -l` → 175 (darin auch Laufberichte und
@@ -146,6 +157,8 @@ oder aus einem Werkzeug erzeugen. Eine Handzahl veraltet mit jedem Lauf.
 ### <a id="l-117.6"></a>L-117.6 — AUFGABEN: „Nummer 7.2.1.130 vergeben“
 
 **Gewicht: Kleinkram.** (gemessen)
+
+**Berichtigt im selben Commit:** `Intern/AUFGABEN.md:8` *„Am 01.11.2026 Testpaket 7.2.1.130 geschnürt (wie 7.2.1.129 nicht veröffentlicht)“*.
 
 `Intern/AUFGABEN.md:8`: *„Am 01.11.2026 Nummer 7.2.1.130 vergeben: [[E-178](../Intern/BEFUNDE.md#e-178)] …
 im Quelltext berichtigt, am Programm noch nicht gemessen.“* Das Paket ist
