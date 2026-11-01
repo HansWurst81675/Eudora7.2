@@ -1,52 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-01 15:44:24
-freigabe=Gregor am 01.11.2026: 'ja, starte den prüfstandslauf. ich werde dann außerhalb der VM testen.'
-faelle=46
-bestanden=46
+zeit=2026-11-01 17:55:13
+freigabe=Gregor am 01.11.2026: 'ja, du kannst am prüfstand alles starten, ich mache nichts.' und 'mach weiter, aber auf deinem prüfstand.'
+nur=E-184   (Teillauf, nicht der Gesamtstand)
+faelle=1
+bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] E-131a   ohne MRUFloatXPos=-2147483648
-fall=[ ok ] E-131b   ohne MRUFloatYPos=-2147483648
-fall=[ ok ] E-131c   E-131 Leistenposition:
-fall=[ ok ] E-121    ablage-dateien=1
-fall=[ ok ] E-118    E-118 Bild:
-fall=[ ok ] E-125a   E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0
-fall=[ ok ] E-125b   E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1
-fall=[ ok ] E-125c   E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out
-fall=[ ok ] E-103p   E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64
-fall=[ ok ] E-112p   E-112 Metadatei: angegeben=35x35 Datei=330x327 gemalt=35x35
-fall=[ ok ] E-112f2  E-112 Metadatei: angegeben=150x0 Datei=985x378 gemalt=150x58
-fall=[ ok ] E-112n1  E-112 Metadatei: angegeben=600x0 Datei=985x378 gemalt=600x230
-fall=[ ok ] E-112h   E-112 Metadatei: angegeben=0x600 Datei=330x327 gemalt=606x600
-fall=[ ok ] E-106p   E-106 groesser als angegeben: attr=35x35 quelle=330x327
-fall=[ ok ] E-110p   E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1
-fall=[ ok ] E-105p   E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet
-fall=[ ok ] E-108p   Logging shutdown
-fall=[ ok ] BILD-lauf BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8
-fall=[ ok ] E-113p   Datei=985x378 gemalt=718x276
-fall=[ ok ] E-113b   BILD E113B
-fall=[ ok ] E-113b2  neu=0 lebt=1 probe=ok
-fall=[ ok ] E-119a   data-db1b9f48.png faden=1 ok=1
-fall=[ ok ] E-119b   E-119 data-Bild als Datei:
-fall=[ ok ] E-119c   data-2eaa4a58.png laenge=1574
-fall=[ ok ] E-119e   laenge=78519
-fall=[ ok ] ZIEL24   Logging shutdown
-fall=[ ok ] ZIEL24b  Logging shutdown
-fall=[ ok ] E-119d   vollstaendig=1 probe=ok
-fall=[ ok ] E-77a    E77 ERGEBNIS roh=0 dekodiert=2
-fall=[ ok ] E-77b    E-77 Ordnername: server="Entw&APw-rfe"
-fall=[ ok ] E-77c    E-77 Ordnername: server="Gel&APY-scht"
-fall=[ ok ] E-77d    E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0
-fall=[ ok ] E-146    E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)
-fall=[ ok ] E-97     E97 ERGEBNIS dialog=1 lebt=1 datei=1
-fall=[ ok ] E-100    E100 ERGEBNIS dialog=1 lebt=1 ini=ok
-fall=[ ok ] E-67     verb-gespeichert=14 verb-auswahl=0
-fall=[ ok ] E-137a   E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1
-fall=[ ok ] E-137b   E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1
-fall=[ ok ] E-137c   E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja
-fall=[ ok ] E-166a   reihenfolge=junk-no,konto-ok
-fall=[ ok ] E-166b   AskedAboutJunk=6
-fall=[ ok ] E-13p    E13 FORTSCHRITT sichtbar=1
-fall=[ ok ] E-144p   E144 ERGEBNIS probe=ok gleich=1 references=1
-fall=[ ok ] E-140p   E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
-fall=[ ok ] E-139p   E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1
-fall=[ ok ] E-171p   E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1
+fall=[ ok ] E-184    E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
