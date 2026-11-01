@@ -50,8 +50,11 @@ static void Test_E184_Mengenleser()
 
 	// Verdorbenes darf nichts anhaengen.
 	const char* boese[] = { ",", "2,", ",2", "a", "0", "*", "3:", "2;5", "1:99999999", "12345678901",
-							"4294967296", "4294967297", "1:4294967297" };	// PRUEFER-78 K3: Ueberlauf
+							"4294967296", "4294967297", "4294967300", "1:4294967297" };	// PRUEFER-78 K3: Ueberlauf
+	// PRUEFER-79 K4: "4294967296" liefe auf 0 und waere ohnehin abgewiesen -
+	// "4294967300" liefe auf 4 und belegt die Pruefung wirklich (oben in "boese").
 	{ static const DWORD s[] = {4294967295UL}; Lies("4294967295", a, n); TT_CHECK_MSG(n == 1 && Gleich(a, s, 1), "\"4294967295\" (groesste UID) falsch gelesen"); }
+	{ static const DWORD s[] = {4294967294UL, 4294967295UL}; Lies("4294967294:4294967295", a, n); TT_CHECK_MSG(n == 2 && Gleich(a, s, 2), "Bereich an der Obergrenze falsch gelesen (Schleife darf nicht ueberlaufen)"); }
 	for (int i = 0; i < (int) (sizeof(boese) / sizeof(boese[0])); i++)
 	{
 		a.RemoveAll(); a.Add(77);

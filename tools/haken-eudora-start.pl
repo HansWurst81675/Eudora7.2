@@ -64,7 +64,8 @@ sub eudora_aufruf {
     $t =~ s/^[ \t]*#[^\n]*//mg;
     # PRUEFER-78 K5: was hinter "bash -c", "sh -c", "powershell -Command" oder
     # "eval" in Anfuehrungszeichen steht, wird AUSGEFUEHRT - eigens pruefen.
-    while ($t =~ /(?:^|[\s;&|(])(?:-c|-Command|eval)\s+(?:'([^']*)'|"((?:\\.|[^"\\])*)")/g) {
+    # PRUEFER-79 K1: nur hinter einer Shell - "grep -c "Eudora.exe"" ist kein Aufruf.
+    while ($t =~ /(?:(?:^|[\s;&|(])(?:bash|sh|zsh|dash|ksh|powershell|pwsh)(?:\.exe)?\b(?:\s+-\S+)*?\s+(?:-c|-Command)|(?:^|[\s;&|(])eval)\s+(?:'([^']*)'|"((?:\\.|[^"\\])*)")/gi) {
         my $innen = defined $1 ? $1 : $2;
         $innen =~ s/\\(["\\])/$1/g;
         my $w = eudora_aufruf($innen, $tiefe + 1);
@@ -101,6 +102,9 @@ sub abschnitte {
         if ($c eq "'" || $c eq '"') { $q = $c; $cur .= $c; next }
         my $zwei = $c . ($i + 1 < @z ? $z[$i + 1] : '');
         if ($zwei eq '&&' || $zwei eq '||' || $zwei eq '$(') { push @aus, $cur; $cur = ''; $i++; next }
+        # PRUEFER-79 K2: einzelnes "&" trennt ebenfalls ("sleep 1 & ./Eudora.exe") -
+        # ausser in Umleitungen wie "2>&1" und ">&2".
+        if ($c eq '&' && !($cur =~ /[<>]$/) && !($i + 1 < @z && $z[$i + 1] eq '>')) { push @aus, $cur; $cur = ''; push @aus, '& '; next }
         if ($c eq ';' || $c eq '|' || $c eq "\n" || $c eq '`') { push @aus, $cur; $cur = ''; next }
         $cur .= $c;
     }
@@ -120,7 +124,10 @@ sub befehlswort {
         # PRUEFER-78 K5: Unterschale und Block - "(cd x && ./Eudora.exe)", "{ ...; }".
         if ($w =~ /^[({]+$/) { $i++; next }
         if ($w =~ /^[({]+(.+)$/) { $w = $1 }
-        if ($w eq '&' or $w =~ /^(?:exec|call|start|Start-Process|saps|Invoke-Item|ii|nohup|time|then|do|else|elif|if|while|until|explorer|explorer\.exe)$/i) { $i++; next }
+        if ($w eq '&' or $w =~ /^(?:exec|call|start|Start-Process|saps|Invoke-Item|ii|nohup|time|then|do|else|elif|if|while|until|explorer|explorer\.exe|env|xargs)$/i) { $i++; next }
+        # PRUEFER-79 K2: "wsl -e befehl", "env VAR=x befehl"
+        if ($w =~ /^wsl(?:\.exe)?$/i) { $i++; $i++ while $i < @wort && $wort[$i] =~ /^-/; next }
+        if ($i > 0 && $w =~ /^\w+=/) { $i++; next }
         # timeout 5 befehl
         if ($w =~ /^timeout$/i) { $i++; $i++ while $i < @wort && $wort[$i] =~ /^-?[\d.]+[smhd]?$|^-[a-z]/i; next }
         # cmd /c und, aus Git Bash, cmd //c
@@ -179,6 +186,15 @@ sub selbsttest {
         [0, q{bash -c "ls /c/Temp/E184/Eudora.exe"}],
         [0, q{powershell -Command "Get-Item C:\\Temp\\E184\\Eudora.exe"}],
         [0, q{$e="C:\\Temp\\E184\\Eudora.exe"; Get-Item $e}],
+        # PRUEFER-79 K1 (Fehlalarm) und K2 (Luecken)
+        [0, q{tasklist | grep -c 'Eudora.exe'}],
+        [0, q{grep -c "Eudora.exe" liste.txt}],
+        [0, q{ls /c/Temp/E184/Eudora.exe 2>&1 | head -1}],
+        [1, q{sleep 1 & /c/Temp/E184/Eudora.exe}],
+        [1, q{env FOO=1 /c/Temp/E184/Eudora.exe}],
+        [1, q{echo /c/Temp/E184/Eudora.exe | xargs /c/Temp/E184/Eudora.exe}],
+        [1, q{wsl -e /mnt/c/Temp/E184/Eudora.exe}],
+        [1, q{sh -c '/c/Temp/E184/Eudora.exe'}],
     );
     my ($ok, $f) = (0, 0);
     for my $fall (@f) {
