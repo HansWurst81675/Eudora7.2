@@ -440,3 +440,19 @@ Dieselbe Falle hatte der Vorabend in größerem Maßstab: Von den 17 `TT_EndTest
 **How to apply, zusätzlich:**
 - Den Fehler für eine Gegenprobe an der Stelle einsetzen, die der Lauf **nachweislich** durchläuft. Im Zweifel vorher eine Spurzeile an der Stelle ausgeben lassen.
 - Vergleicht man eine Dateizeit mit „jetzt“, dann gehören `date` und `ls -l` in dieselbe Ausgabe. Eine Uhrzeit aus dem Kopf ist keine Messung, und die Uhr dieser VM ging am 31.10. rund 20 Stunden nach ([[entscheidung-pruefstand-fenster-31-10]]).
+
+## Nachtrag 01.11.2026 nachts (CHRONIST), Fall 14: rot aus dem falschen Grund, und die Zahl hätte es verraten
+
+Transkript `6f848773…`, Zeiten MEZ; `Befunde/PRUEFER-78.md` K7, gemessen ([[CHRONIST-2026-11-01e]]).
+
+Für E-184 K3 (mehrere Mails, neue UIDs nach Listenposition zugeordnet) meldete die Hauptsitzung um 19:22:01 **„Rot nachgestellt: Unter UID 1 steht der Betreff von Mail 3, und Mail 1 fehlt ganz (`richtig=2 falsch=1`)“** am Bau `6e9a43ba` ohne K3-Behebung. Das ging so in Commit `2fd14adc` und in BEFUNDE E-184.
+
+PRÜFER-78 K7 (Rücklauf 20:02:52) rechnete nach: Eine Vertauschung von drei Einträgen hat 0, 1 oder 3 Fixpunkte, **nie 2**. `richtig=2 falsch=1` kann die geprüfte Zuordnung also gar nicht erzeugen. Rot war der Lauf, weil der Prüfserver `COPYUID` als **Liste** meldete (`1,2,3`) und der alte Leser `UIDStringToUIDs` aus einer Liste per `atoi` nur die erste Zahl nimmt. Der K3-Mechanismus selbst war am Prüfstand nie rot gewesen. Echte Server melden zusammenhängende UIDs als Bereich (`1:3`), und genau den versteht der alte Leser.
+
+Behoben in `c0f70c11` (20:18:41): Der Prüfserver fasst zu Bereichen zusammen, der Fall verlangt `anfrage=3,2,1 copyuid=1:3/1:3` in der Ergebniszeile. Neu gemessen am alten Bau `richtig=1 falsch=2` (über Kreuz: alte UID 3 bekommt die neue 1, alte 1 die neue 3, nur die mittlere stimmt), mit Behebung `richtig=3 falsch=0`. PRÜFER-79 hat die Trennschärfe nachgerechnet.
+
+**Was zurückfiel:** Regel 1 dieser Lehre (*„erst prüfen, ob der geprüfte Weg überhaupt gelaufen ist“*) und [[ausreisser-ist-der-befund]]: Die rote Zahl wurde als Bestätigung gelesen, ohne zu fragen, ob der vermutete Mechanismus sie überhaupt liefern kann. Die Messung war ehrlich, der Satz darüber nicht.
+
+**How to apply, zusätzlich:**
+- Vor dem Satz „rot nachgestellt“ rechne ich aus, **welchen** roten Wert der vermutete Fehler liefert, und schreibe ihn vor dem Lauf in die Sollzeile der Gegenprobe. Kommt ein anderer roter Wert, ist das ein zweiter Fehler oder ein Prüfstandsfehler, keine Bestätigung.
+- Die Ergebniszeile trägt neben dem Ergebnis den Weg (`anfrage=`, `copyuid=`), so wie `reihenfolge=` bei Fall 12.

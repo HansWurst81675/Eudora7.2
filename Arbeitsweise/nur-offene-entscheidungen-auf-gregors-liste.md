@@ -70,3 +70,17 @@ Zeiten MEZ, Transkript `c21b8f54…`. Am 29.10. um 22:18:29 hatte Gregor beide Z
 Am Vorabend gingen zwei Einwürfe ohne Antwort durch ([[einwurf-ist-ein-messwert]], Nachtrag 30.10.). Bei Gregor kommen also beide Fehler an: Fragen, die er nicht braucht, und keine Antwort auf seine eigenen.
 
 **How to apply, zusätzlich:** Hat Gregor Name und Plan schon bestätigt, wird nicht gefragt, sondern gemeldet: *„Ich fange mit 1 an, Zweig wie gestern bestätigt.“* Gefragt wird nur, was in der Antwort neu ist.
+
+## Nachtrag 01.11.2026 nachts (CHRONIST): „warum wartet es also auf mich?“
+
+Transkript `6f848773…`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-01e]]).
+
+Seit dem 29.10. endete der Eintrag E-172 (Mail als rohe Base64-Zeichenfolge) mit *„Gregor muss nichts tun.“* Am 01.11. bat die Hauptsitzung trotzdem **fünfmal** um den Quelltext der Mail: 13:09:17 (*„Dafür brauche ich den Quelltext der Mail. Hast du sie noch?“*), 14:04:09, 17:56:13 (*„Ich brauche weiter den Quelltext“*), 18:43:16 (Liste „was ich von dir brauche“) und 19:32:50 (*„E-172 wartet auf den Quelltext der Mail von dir“*). Dazu kam ein zweiter Widerspruch im selben Eintrag: *„Was noch fehlt: erst **nach dem Release 7.2.1** (Gregor 29.10.2026) — Quelltext der Mail ansehen“* (gemessen am Stand `21bc5272`). Gregor hatte den Befund also selbst hinter das Release gestellt ([[zurueckgestellte-befunde]]); die fünf Bitten kamen alle vor dem Release. Gregor setzte um 19:35:18 die Zeile aus `WEITERMACHEN.md` in den Chat und fragte um 19:35:24: *„warum wartet es also auf mich?“*
+
+Antwort 19:35:25: *„Eines von beiden ist falsch.“* Dann wurde zuerst der Eintrag an die Bitte angeglichen (19:36:00 *„selbst nachstellen … Deine Mail ist nur noch eine Bestätigung“*), nicht die Bitte an den Eintrag. Gregor um 19:38:59: *„ich weiß ehrlich gesagt nicht mehr, welche mail es war … kannst du mir sagen, nach welcher mail ich suchen soll?“* Betreff und Datum fand die Hauptsitzung in 50 Sekunden in ihrem eigenen Protokoll vom 29.10. (19:39:05 → 19:39:55). Keine der fünf Bitten hatte sie genannt ([[rueckfrage-ist-keine-messung]], Nachtrag 01.11.). Gelöst war E-172 dann um 19:47:54, durch zwei Bildschirmfotos und den eingefügten Kopf von Gregor: kein Programmfehler.
+
+Damit gibt es die Klasse in beiden Richtungen: am 30.10. eine Frage, die Gregor nicht brauchte (*„brauchst mich nicht dazu?“*), heute eine Bitte, die der eigene Eintrag verneinte.
+
+**How to apply, zusätzlich:** Vor jeder Bitte an Gregor den Eintrag des Befunds lesen. Sagt er *„Gregor muss nichts tun“*, gibt es zwei ehrliche Wege: die Bitte lassen, oder **zuerst** den Eintrag ändern und Gregor sagen, warum er doch gebraucht wird und was genau er suchen soll (Betreff, Datum, Ordner). Eine Bitte, die dem Eintrag widerspricht, geht nicht hinaus.
+
+**Schranken-Vorschlag (nicht gebaut):** `tools/offene-befunde.pl` meldet beim Erzeugen jeden offenen Befund, dessen Urteil *„Gregor muss nichts tun“* sagt und dessen „Was noch fehlt“ zugleich *„Gregor“*, *„von dir“* oder *„Quelltext der Mail“* als Voraussetzung nennt. Gegenprobe: der E-172-Eintrag am Stand `21bc5272` → gemeldet, wenn sein „Was noch fehlt“ die Mail verlangt; derselbe Eintrag am Stand `2fd14adc` (erledigt) → still.

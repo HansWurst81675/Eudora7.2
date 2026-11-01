@@ -158,3 +158,4 @@
 - [CHRONIST 01.11.2026 nachmittags](CHRONIST-2026-11-01b.md) — Laufbericht; Endlos-Ersetzer zum zweiten Mal, Werkzeug fällig
 - [CHRONIST 01.11.2026 abends](CHRONIST-2026-11-01c.md) — Laufbericht; 71 min Stillstand nach angekündigtem LEKTOR/PRÜFER, Stop-Haken vorgeschlagen; ersetze-text.pl erledigt
 - [CHRONIST 01.11.2026 spätabends](CHRONIST-2026-11-01d.md) — Laufbericht; Eudora.exe --version auf Gregors Bildschirm (17:18:55), Haken vorgeschlagen; zwei Einwürfe ohne Antwort; auftrag-rolle.pl doppelte Kennungen
+- [CHRONIST 01.11.2026 nachts](CHRONIST-2026-11-01e.md) — Laufbericht; von eigener Reihenfolge (E-177) abgewichen; E-172 fünfmal erbeten trotz „Gregor muss nichts tun“; Rot aus falschem Grund; --amend hinter `;`

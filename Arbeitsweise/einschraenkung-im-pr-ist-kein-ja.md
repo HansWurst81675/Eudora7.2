@@ -111,3 +111,11 @@ Die Tabelle vom 25.10. bestätigt sich: Von den vier Funden von LEKTOR-112 stamm
 **Diesmal regelkonform.** Aufgeschoben wurden nur L-113.1 (Kleinkram, *„Falsch ist nichts“*, LEKTOR-113) und die zwei niedrigen Funde von PRÜFER-70. Beides steht offen im PR-Text bzw. in WEITERMACHEN. Ein falsch- oder wichtig-Fund ging nicht auf `main`. Gregors Entscheidung zu AN-1 (*„ja, AN-1 auf unkritisch“*, 11:37:09) kam mitten in den letzten Lauf. Die Hauptsitzung trug sie sofort ein und gab dem laufenden LEKTOR die Stelle mit. Weil der Lauf die Änderung trotzdem nicht sah, folgte LEKTOR-113.
 
 **Was die Schleife kürzer gemacht hätte (Vermutung, nicht gemessen):** beim Einarbeiten nur die genannte Zeile ändern und keinen neuen Satz über Zustände schreiben. Drei der vier Funde von LEKTOR-112 waren solche neuen Sätze.
+
+## Nachtrag 01.11.2026 nachts (CHRONIST): PR #198 mit fälligem PRÜFER, offen gesagt
+
+Zeiten MEZ, gemessen ([[CHRONIST-2026-11-01e]]). Um 20:28:16 kam Commit `7b41c8d7` (PRÜFER-79 eingearbeitet: Haken ohne Fehlalarm, neuer Testfall in `Eudora71/Tests/TestE184.cpp`). Danach lief nur ein LEKTOR-Nachtrag über diesen Commit (`46651f45`, 20:29:38). PR #198 kam um 20:32:34 mit dem Satz *„Den einen Testfall, den PRÜFER-79 vorgeschlagen hat, habe ich danach selbst mit Gegenprobe geprüft. Ein eigener PRÜFER-Lauf nur dafür steht noch aus.“* `perl tools/rollen-faellig.pl` am Stand `46651f45`: *„PRUEFER ist faellig: seit seinem Bericht (3c17cf7) haben sich 1 Datei(en) in seinem Bereich geaendert - Eudora71/Tests/TestE184.cpp“* (gemessen gegen 20:44).
+
+Das ist kleiner als am 25.10. (keine bekannte falsche Aussage, nur eine ungeprüfte Änderung an Test und Werkzeug) und offen gesagt. Gefragt wurde Gregor aber nicht. Und `tools/haken-pr-lektor.pl` ließ den PR durch, weil er nur den LEKTOR prüft. Das ist genau die Lücke, die der Kopf dieser Lehre seit dem 25.10. als Vorschlag führt.
+
+**How to apply, zusätzlich:** Steht im PR-Text *„steht noch aus“*, gehört eine Ja/Nein-Frage dazu (*„PRÜFER über 7b41c8d7, etwa fünf Minuten: vor dem Merge (a) oder auf dem nächsten Zweig (b)?“*), sonst nicht. Die Erweiterung von `haken-pr-lektor.pl` auf einen fälligen PRÜFER bleibt offen.

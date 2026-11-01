@@ -78,3 +78,25 @@ Zeiten MEZ, Transkript `72be6093…`, gemessen.
 **15:46:48.** `git commit -q -F - <<'EOF' >/dev/null 2>&1 … EOF; echo "commit rc=$?"; git push -q origin e166-junk_message_fix >/dev/null 2>&1; echo "push rc=$?"`. Ergebnis: `commit rc=1`, `push rc=0`. Der Haken hatte abgewiesen (`lehren-uebersicht.pl`), der Push schob den alten Stand ein zweites Mal. Drei Sekunden vorher stand im Chat *„Die Backslashes sind erhalten. Ich committe und pushe.“* Gregor suchte in dieser Zeit auf GitHub nach dem Absturz-Hinweis, fand um 15:48:02 eine alte Stelle von 1.0.98 und schrieb um 15:49:47 *„weitermachen.md ist vor 9 min.“*, er sah also `8ef3c3d`. Gemeldet habe ich die Abweisung um 15:47:22, der richtige Stand war um 15:49:34 oben. Regel 2 oben (*„`git commit` und `git push` nie in eine Pipe“*) und der Nachtrag vom 27.10. (*„mit `&&`, nie mit `;`“*) standen beide da.
 
 **How to apply, zusätzlich:** Ein Push hängt mit `&&` am Commit. Wer Gregor gerade einen Stand auf GitHub zeigen will, meldet ihn erst, wenn `git log origin/<zweig> -1` die neue Kennung zeigt.
+
+## Nachtrag 01.11.2026 nachts (CHRONIST): ein `--amend` hinter `;` traf den gepushten Commit
+
+Transkript `6f848773…`, Zeiten MEZ, gemessen am Transkript und am Reflog ([[CHRONIST-2026-11-01e]]).
+
+| Zeit | Was |
+|---|---|
+| 19:01:37 | Commit `8c620666` (`auftrag-rolle.pl`), im selben Befehl **gepusht** |
+| 19:04:40 | ein Befehl: Text an eine Lehre im Gedächtnis anhängen; `git commit -q -F - <<'EOF' … 2>&1 \| grep -E 'MANGEL\|abgebrochen\|git add'`; **`git add Arbeitsweise; git commit -q --amend --no-edit 2>/dev/null`**; `git log --oneline -1` |
+| 19:04:40 | Ausgabe: *„Der Commit wurde abgebrochen.“* (der Commit-Haken spiegelte die eben geänderte Lehre nach `Arbeitsweise/` und verlangte `git add Arbeitsweise`), danach `3cf9752e auftrag-rolle.pl: …`. Das `--amend` lief trotzdem, weil `;` nicht auf den Erfolg wartet. Statt den neuen Commit zu ergänzen, schrieb es den **gepushten** `8c620666` um und packte den Haken samt `settings.json` hinein. |
+| 19:05:11 | erkannt (31 s), `git reflog -3` gelesen, `git reset -q --soft 8c620666` |
+| 19:05:21 | neuer Commit `c4e883a9` mit dem Haken, gepusht. Kein Force-Push, auf dem Server nichts verändert |
+
+Die Filter haben diesmal nichts verschluckt: `abgebrochen` stand im Muster und kam durch. Der Fehler lag im Schritt danach. Ein **geplanter** Folgeschritt (das `--amend` war für den Fall gedacht, dass der Haken die gespiegelte Lehre nachreicht) hing mit `;` am Commit, und sein Fehlerkanal ging nach `/dev/null`. Regel 2 oben (*„`git commit` und `git push` nie in eine Pipe“*) stand da und galt für den ersten Commit des Befehls ebenso.
+
+**Gut gelaufen:** In 31 Sekunden bemerkt, erst den Reflog gelesen, dann `reset --soft` auf die gemessene Kennung statt `reset --hard` ([[auftrag-darf-nicht-loeschen]]).
+
+**How to apply, zusätzlich:**
+- Ein Schritt, der den Erfolg des vorigen voraussetzt, hängt mit `&&` daran, nie mit `;`. Das gilt vor allem für `--amend`, `push` und `reset`.
+- `git commit --amend` nur, wenn `git log -1` im **selben** Befehl die Kennung zeigt, die ich gerade selbst erzeugt habe, und `git status -sb` `[ahead n]` zeigt, der Commit also noch nicht gepusht ist. Ändert der Commit-Haken das Gedächtnis, wird `Arbeitsweise` **vor** dem Commit gestagt, nicht danach per `--amend`.
+
+**Schranken-Vorschlag (nicht gebaut):** PreToolUse-Haken `tools/haken-git-amend.pl` (Matcher `Bash|PowerShell`): abweisen, wenn ein Befehl `git commit … --amend` enthält und (a) davor im selben Befehl ein weiteres `git commit` steht oder (b) `git merge-base --is-ancestor HEAD @{u}` wahr ist, `HEAD` also schon auf dem Server liegt. Gegenprobe: der Befehl von 19:04:40 → abweisen (a); `git commit --amend --no-edit` allein auf einem gepushten Commit → abweisen (b); auf einem ungepushten → durchlassen; eine Commit-Nachricht, die das Wort „--amend“ nur im Heredoc enthält → durchlassen ([[schranke-liest-nur-code]]).

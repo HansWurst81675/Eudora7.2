@@ -113,3 +113,15 @@ Zeiten MEZ, Transkript `f6188ad4`, gemessen. Gregor um 22:36:30: *„eine weiter
 Der Befehl stand schon im Transkript des Agenten, `f6188ad4-…/subagents/agent-aeab87a7f2fc280c8.jsonl`, mit Zeit und Wortlaut, und er ist mit Grep ohne Abfrage lesbar. Diesen Ort hatte der CHRONIST-Bericht vom Vormittag genannt ([[CHRONIST-2026-10-30b]], Werkzeugmängel Punkt 2: *„Die Ausgabedateien unter `tasks/` sind für Grep blind“*, die sehende Quelle ist `subagents/agent-*.jsonl`). Gefunden habe ich dort alle acht Ablehnungen des ersten LEKTOR, jede mit Befehl.
 
 **How to apply, zusätzlich:** Was ein laufender Agent getan hat, steht in `<sitzung>/subagents/agent-<id>.jsonl`. Gesucht wird dort mit Grep nach `"toolUseResult":"Error: Permission` oder nach `"name":"Bash"`, bevor Gregor gefragt wird, was er gesehen hat.
+
+## Nachtrag 01.11.2026 nachts (CHRONIST): „nach welcher mail soll ich suchen?“
+
+Transkript `6f848773…`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-01e]]).
+
+Fünfmal an diesem Tag (13:09 bis 19:32) bat die Hauptsitzung Gregor um *„den Quelltext der Mail“* zu E-172, ohne zu sagen, **welche** Mail. Gregor um 19:38:59: *„ich weiß ehrlich gesagt nicht mehr, welche mail es war. alle mails, die ich abgerufen habe, sind jeweils im mailverzeichnis zu sehen. kannst du mir sagen, nach welcher mail ich suchen soll?“* Die Antwort kam in 50 Sekunden aus dem eigenen Sitzungsprotokoll vom 29.10. (Betreff, Datum, Ordner; 19:39:55). Das Wissen lag also die ganze Zeit bei mir, die Suche wurde Gregor zugeschoben.
+
+Dieselbe Bewegung wie am 22.10. mit „S-3b“: Ich frage Gregor nach etwas, das ich selbst nachlesen kann. Diesmal war es nicht die Bedeutung einer Kennung, sondern das Merkmal, an dem er den Gegenstand findet.
+
+**Die Vermutung dazwischen wurde richtig behandelt** ([[ursache-nur-gemessen-behaupten]]): Um 19:47:05 schrieb die Hauptsitzung nach Gregors Bildschirmfotos in den Eintrag *„vermutlich eine `Autocrypt:`-Kopfzeile … (Vermutung)“*. Gregors eingefügter Kopf um 19:47:26 zeigte zwei lange Kopfzeilen des Mailanbieters (`UI-OutboundReport:`, `UI-InboundReport:`). Um 19:47:47, 42 Sekunden nach dem Schreiben, stand der Messwert im Eintrag und die Vermutung als widerlegt daneben; committet wurde sie nie (`2fd14adc`, gemessen). Der Satz in BEFUNDE E-172 *„vor diesem Eintrag geäußert, nie eingetragen“* stimmt deshalb nur halb: eingetragen war sie 42 Sekunden lang, nie committet.
+
+**How to apply, zusätzlich:** Eine Bitte an Gregor um eine Datei, Mail oder Einstellung nennt, woran er sie erkennt: Betreff, Datum, Ordner, Kontoart. Vorher suche ich das selbst heraus (`grep` über die eigenen Sitzungsprotokolle unter `~/.claude/projects/…/*.jsonl`, BEFUNDE, TESTLAEUFE). Namen und Adressen aus seinen Mails bleiben dabei im Chat und gehen nicht ins Repo ([[gedaechtnis-ist-oeffentlich]]).
