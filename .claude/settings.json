@@ -21,6 +21,12 @@
             "command": "perl \"$CLAUDE_PROJECT_DIR/tools/haken-pr-lektor.pl\"",
             "timeout": 60,
             "statusMessage": "Pruefe: ist der LEKTOR vor dem PR gelaufen?"
+          },
+          {
+            "type": "command",
+            "command": "perl \"$CLAUDE_PROJECT_DIR/tools/haken-eudora-start.pl\"",
+            "timeout": 30,
+            "statusMessage": "Pruefe: kein direkter Eudora-Start"
           }
         ]
       }
