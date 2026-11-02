@@ -218,31 +218,26 @@ kann kein Emoji tragen).
 
 ## <a id="e-178-naechstes"></a>In 7.2.1.130: Fett, Kursiv und Link im Bearbeiten-Modus lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
 
-**Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129** (dort ist die
-Behebung nicht drin). Geprüft wird an einer Nachricht im **lokalen** Postfach
-*In*, nicht in einem IMAP-Ordner.
+> **Für Gregor entfällt dieser Test vorerst — er misst sich am Prüfstand.**
+> Am 02.11.2026 an 7.2.1.130 versucht, nach der früheren Fassung dieses
+> Abschnitts: eine HTML-Mail mit 🔥 und Ж aus dem Webmailer, über IMAP
+> abgerufen und nach *In* übertragen. Schon beim Öffnen standen Fragezeichen
+> da — im Betreff ([E-90](BEFUNDE.md#e-90): Emoji im Betreff gehen beim Empfang
+> verloren) und im Text (die UTF-8-Mail wird beim Abruf nach windows-1252
+> übersetzt, `E-85 imap: … uebersetzt=ja`; alles außerhalb von windows-1252
+> wird `?`, [E-147](BEFUNDE.md#e-147)). Beide Befunde hat Gregor bis nach 7.2.1
+> zurückgestellt. **Eine Mail mit Emoji kann über den Server heute nicht
+> unbeschädigt ankommen** — die frühere Vorbereitung war nicht ausführbar,
+> das hätte vor dem Schreiben geprüft werden müssen.
+>
+> Gemessen wird E-178 stattdessen am Prüfstand mit der Prüfnachricht
+> `Testdaten/e136-zeichen-als-entitaet.eml`, in der 🔥 und Ж als HTML-Entitäten
+> (`&#128293;`, `&#1046;`) stehen und den Empfang deshalb überstehen (Fall
+> `E-178p`). Die Schritte unten bleiben als Beschreibung dessen, was der
+> Prüfstand tut; einen Testschritt für Gregor gibt es erst wieder, wenn eine
+> Emoji-Mail auf seinem Weg nach *In* kommen kann.
 
-**Vorbereitung — eine Nachricht mit Emoji nach *In* bringen:**
-
-a. Aus dem Webmailer (z. B. web.de oder GMX im Browser) eine Mail an dich
-   selbst schicken, **HTML-Format**, im Text ein paar Wörter, dazwischen 🔥
-   und ein kyrillisches Ж (zum Kopieren: 🔥 Ж).
-b. In Eudora den IMAP-Posteingang abrufen, die Mail markieren und mit
-   *Transfer → In* in das **lokale** *In* übertragen.
-c. Die Mail in *In* per Doppelklick öffnen: 🔥 und Ж stehen richtig da.
-   Steht dort schon jetzt ein Fragezeichen, bitte hier aufhören und ein
-   Bildschirmfoto schicken — dann liegt der Fehler beim Übertragen, nicht im
-   Bearbeiten-Modus.
-
-**Vorbereitung — *In* sichern** (falls beim Bearbeiten etwas schiefgeht):
-
-d. Eudora beenden.
-e. Im Mailverzeichnis des Testpakets die beiden Dateien `In.mbx` und `In.toc`
-   in einen anderen Ordner kopieren (z. B. `Sicherung-E178` daneben).
-f. Eudora wieder starten. Zurückholen hieße: Eudora beenden, die beiden
-   Dateien zurückkopieren, starten.
-
-**Der Test:**
+**Was der Prüfstand tut** (an der Prüfnachricht im lokalen *In*):
 
 1. Die Mail aus Schritt c in *In* öffnen.
 2. In den Bearbeiten-Modus schalten: Knopf in der Leiste des
@@ -306,6 +301,19 @@ Postfach oder IMAP, gleich.
    steht `E-143 Filter "<Name>": Ziel ist Out - uebergangen, nichts uebertragen`.
 
 **Bestätigt am 01.11.2026, Gregor an 7.2.1.130, Schritt 4 aus dem Postfachfenster:** im Bildschirmfoto ist Out im Menü von *Make Filter* grau, alle anderen Postfächer sind wählbar. **Am 02.11.2026 ebenso Schritt 1–2 im Filterfenster** (*Tools → Filters*, *Transfer To*): Out grau, alle anderen wählbar. **Ebenso am 02.11.2026 Schritt 3 und 4 vollständig:** im Hauptmenü *Transfer* ist Out wählbar, *Make Filter* aus der geöffneten Nachricht zeigt Out grau. **Schritt 5 entfällt bei Gregor** — er hat keinen alten Filter mit Ziel Out; das Übergehen ist am Programm noch nicht gemessen.
+
+**Suchfenster — erst mit dem nächsten Paket (nicht mit 7.2.1.130)**, Gregors
+Entscheidung vom 02.11.2026: ein Hinweis je Übertragung. Lokales Postfach *In*.
+
+6. *Edit → Find → Find Messages* (oder Strg+F), ein Wort suchen, das in
+   **mehreren empfangenen** Mails vorkommt (z. B. drei Treffer).
+7. Alle Treffer in der Liste markieren, dann im Hauptmenü *Transfer → Out*.
+8. **Bestanden:** genau **ein** Hinweis *„Messages can't be transferred to the
+   Out mailbox …“*, nach *OK* ist nichts in Out, die Treffer stehen weiter in
+   *In*. **Nicht bestanden:** der Hinweis kommt je Treffer.
+
+Am Prüfstand am 02.11.2026 so gefahren (Fall `E-143s`): neuer Bau ein Hinweis
+bei drei Treffern, der Bau ohne die Änderung drei.
 
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
