@@ -321,3 +321,10 @@ E-171p | C:\Temp\E171 | 60 | messung | E171 ERGEBNIS fehlermeldung=0 suchfenster
 # falsche-angabe=1 meldete nach der Behebung "bestanden", weil nun [roh] statt
 # [pop] falsch war - Zaehler ueber alle Dateien sind blind fuer den Weg.
 E-177p | C:\Temp\E177 | 60 | messung | E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1 | | | messen=tools\messen-e177.ps1
+# E-143, Teil Suchfenster (02.11.2026): drei EMPFANGENE Treffer aus "Find
+# Messages" nach Out uebertragen. Bis a7e05aef kam je Treffer ein Hinweis
+# "Transfer to Out mailbox" (CTocDoc::Xfer, Logzeile E-125); seither zaehlt
+# CSearchView die abgelehnten Treffer und zeigt den Hinweis einmal. Die
+# Erwartung ist die Behebungszeile; vor der Behebung: hinweise=3
+# abgelehnt-log=- e125-zeilen=3. Beim Eintrag ungetestet.
+E-143s | C:\Temp\E143S | 90 | messung | E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1 | | | messen=tools\messen-e143s.ps1
