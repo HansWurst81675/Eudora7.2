@@ -140,44 +140,20 @@ if ($NurPruefen) {
 # Scratchpad, die danach JEDES Eudora auf dem Rechner lud. Festgehalten
 # werden beide Schluessel mit Namen, Wert und Art; nach dem Lauf werden neue
 # Werte entfernt und geaenderte zurueckgeschrieben - auch bei Abbruch
-# (finally unten).
-$regSchluessel = @('HKCU:\Software\Qualcomm\Eudora\CommandLine', 'HKCU:\Software\Qualcomm\Eudora\LaunchManager')
-function RegistryFesthalten {
-    $bild = @{}
-    foreach ($s in $regSchluessel) {
-        $k = Get-Item -LiteralPath $s -ErrorAction SilentlyContinue
-        if (-not $k) { $bild[$s] = $null; continue }
-        $werte = @{}
-        foreach ($n in $k.GetValueNames()) { $werte[$n] = @($k.GetValue($n, $null, 'DoNotExpandEnvironmentNames'), $k.GetValueKind($n)) }
-        $bild[$s] = $werte
-    }
-    return $bild
+#
+# Seit 02.11.2026 (PRUEFER-87 K1): Festhalten und Zuruecksetzen stehen in
+# tools\pruefstand-sperre.ps1, zusammen mit der Sperre, die gleichzeitige
+# Laeufe aus anderen Arbeitsbaeumen ausschliesst. Zurueckgesetzt werden nur
+# noch EIGENE Werte (die jetzt auf einen Pruefstand zeigen); fremde bleiben
+# stehen und werden gemeldet. Die Sperre wird VOR dem Festhalten genommen
+# und erst NACH dem Zuruecksetzen freigegeben; testlauf.ps1 und die
+# -Vorbereiten-Laeufe erben sie.
+. (Join-Path $PSScriptRoot 'pruefstand-sperre.ps1')
+if (-not (Sperre-Nehmen 'pruefstand-lauf.ps1' 15)) {
+    Write-Host '  ABGEWIESEN: die Pruefstandssperre ist belegt (siehe oben). Nichts gestartet.'
+    exit 2
 }
-function RegistryZurueck($bild) {
-    $geaendert = 0
-    foreach ($s in $regSchluessel) {
-        $vorher = $bild[$s]
-        $k = Get-Item -LiteralPath $s -ErrorAction SilentlyContinue
-        if ($null -eq $vorher) {
-            if ($k) { Remove-Item -LiteralPath $s -Recurse -Force; $geaendert++ }
-            continue
-        }
-        if (-not $k) { $k = New-Item -Path $s -Force }
-        foreach ($n in @($k.GetValueNames())) {
-            if (-not $vorher.ContainsKey($n)) { Remove-ItemProperty -LiteralPath $s -Name $n; $geaendert++ }
-        }
-        foreach ($n in $vorher.Keys) {
-            $alt = $vorher[$n]
-            $jetzt = $k.GetValue($n, $null, 'DoNotExpandEnvironmentNames')
-            if ($null -eq $jetzt -or "$jetzt" -ne "$($alt[0])") {
-                New-ItemProperty -LiteralPath $s -Name $n -Value $alt[0] -PropertyType $alt[1] -Force | Out-Null
-                $geaendert++
-            }
-        }
-    }
-    Write-Host ("  Registry (CommandLine, LaunchManager): {0} Wert(e) auf den Stand vor dem Lauf zurueckgesetzt" -f $geaendert)
-}
-$regVorher = RegistryFesthalten
+$regVorher = Registry-Festhalten
 
 # --- E-157: Abstuerze aus dem Windows-Ereignisprotokoll -------------------
 # Ein Fall, dessen Protokollzeile vor einem Absturz geschrieben wurde, blieb
@@ -374,7 +350,13 @@ foreach ($g in $gruppen) {
             # Messweg nicht griff (gemessen 25.10.2026 an der E-97-Gegenprobe:
             # nur "fehlt in messung", der Absturz stand erst in Exception.log).
             if ($f.Quelle -eq 'messung' -and $messtext) {
-                $letzte = @($messtext -split "`n" | Where-Object { $_.Trim() } | Select-Object -Last 4)
+                # Dazu die Zeilen, die mit denselben zwei Woertern beginnen wie
+                # die erwartete (etwa "E133 ERGEBNIS") - am 02.11.2026 stand die
+                # abweichende Ergebniszeile vor den letzten vier und fehlte im
+                # Bericht.
+                $kopf = (($f.Muss -split ' ') | Select-Object -First 2) -join ' '
+                $gleicherKopf = @($messtext -split "`n" | Where-Object { $_.Trim().StartsWith($kopf) } | ForEach-Object { $_.Trim() })
+                $letzte = @($gleicherKopf + @($messtext -split "`n" | Where-Object { $_.Trim() } | Select-Object -Last 4))
                 $was += "`n             gemeldet: " + ($letzte -join "`n                       ")
             }
         }
@@ -396,7 +378,8 @@ foreach ($g in $gruppen) {
     }
 }
 } finally {
-    RegistryZurueck $regVorher
+    [void](Registry-Zurueck $regVorher)
+    Sperre-Freigeben
 }
 
 Write-Host '  ------------------------------------------------------------'

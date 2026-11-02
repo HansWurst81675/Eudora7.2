@@ -5,18 +5,17 @@
 # dort -Pfadfilter <Verzeichnis> und arbeitet nur auf Prozessen aus diesem
 # Pfad.
 #
-#   powershell -ExecutionPolicy Bypass -File tools\messen-e133.ps1 -Vorbereiten -Pfadfilter C:\Temp\E133
-#   powershell -ExecutionPolicy Bypass -File tools\testlauf.ps1 -OhneArgument `
+#   powershell -ExecutionPolicy Bypass -File tools\testlauf.ps1 -OhneArgument -MitVorbereiten `
 #       -Verzeichnis C:\Temp\E133 -Freigabe "<Gregors Satz von heute>" `
 #       -MessenSkript tools\messen-e133.ps1 -Sekunden 5
+#   (oder als Fall E-133p/E-133q ueber tools\pruefstand-lauf.ps1)
 #
 # ACHTUNG REGISTRY. -Vorbereiten setzt
 # HKCU\Software\Qualcomm\Eudora\CommandLine\Current - denselben Wert, den
 # Gregors eigene Eudora liest (Befund E-157). Zurueckgesetzt wird er NICHT
-# hier, sondern vom Aufrufer: tools\pruefstand-lauf.ps1 haelt CommandLine und
-# LaunchManager vor dem Lauf fest und setzt sie im finally zurueck. Wer dieses
-# Skript von Hand faehrt, muss den Schluessel vorher sichern und danach
-# zuruecksetzen; testlauf.ps1 allein tut das NICHT.
+# hier, sondern vom Aufrufer, der die Pruefstandssperre haelt
+# (tools\pruefstand-sperre.ps1): pruefstand-lauf.ps1 oder testlauf.ps1
+# -MitVorbereiten. Ohne die Sperre verweigert -Vorbereiten.
 #
 # WARUM ES DAS GIBT. Gregor am 21.10.2026: Doppelklick auf Eudora.exe, dann
 # "The directory specified in the command line: C:\Temp\SICHER~1 doesn't
@@ -63,6 +62,17 @@ if ($Vorbereiten) {
         $exe = Join-Path $voll 'Eudora.exe'
         if (-not (Test-Path $exe)) { Write-Host "E133 FEHLER: keine Eudora.exe in $voll"; exit 1 }
         if (Test-Path (Join-Path $voll 'Eudora.ini')) { Write-Host "E133 FEHLER: Eudora.ini neben der EXE - dann liest Eudora die Registry nicht"; exit 1 }
+        # Seit 02.11.2026 (PRUEFER-87 K1): Current wird nur UNTER der
+        # Pruefstandssperre gesetzt - also aus pruefstand-lauf.ps1 oder
+        # testlauf.ps1 -MitVorbereiten, die vorher sichern und danach die
+        # eigenen Werte zuruecksetzen. Sonst haelt ein gleichzeitiger Lauf
+        # C:\Temp\E133-gibt-es-nicht als "Stand vorher" fest.
+        . (Join-Path $PSScriptRoot 'pruefstand-sperre.ps1')
+        $erbe = [Environment]::GetEnvironmentVariable('EUDORA72_SPERRE')
+        if (-not $erbe -or (Sperre-HalterPid) -ne ($erbe -as [int])) {
+            Write-Host 'E133 ABGEWIESEN: -Vorbereiten schreibt CommandLine\Current und laeuft nur unter der Pruefstandssperre (pruefstand-lauf.ps1 oder testlauf.ps1 -MitVorbereiten)'
+            exit 2
+        }
         if (Test-Path $fehlt) { Remove-Item -LiteralPath $fehlt -Recurse -Force }
         $log = Join-Path (Join-Path $voll 'Mailverzeichnis') 'eudora.log'
         if (Test-Path $log) { Remove-Item -LiteralPath $log -Force }
