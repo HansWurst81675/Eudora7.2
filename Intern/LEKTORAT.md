@@ -3109,3 +3109,13 @@ Nachtrag LEKTOR-127 (86e58a79..a46ff55f gegengelesen): Alle acht Funde eingearbe
 Nachtrag LEKTOR-128 (7f7fc395..3d9f603b gegengelesen): Sieben von neun Funden erledigt, [L-128.6](../Befunde/LEKTOR-128.md#l-128.6) teilweise (`Doku/FUNKTIONEN.md` nennt weiter 7.2.1.130; die Überschriften „Testpaket“ beim Veröffentlichen), [L-128.9](../Befunde/LEKTOR-128.md#l-128.9) durch die Einreichung als `release_7_2_1_131` mit einem Commit geregelt. Neu im Diff: die Release-Notizen sagen für [E-188](BEFUNDE.md#e-188) „auf dem Server geht nichts verloren“, die README „nicht untersucht“ ([Nachtrag](../Befunde/LEKTOR-128.md#nachtrag-02-11-2026)).
 
 Nachtrag 2 LEKTOR-128 (1525b290..cbe9b328 gegengelesen): Der Satz zu [E-188](BEFUNDE.md#e-188) in den Release-Notizen stimmt jetzt mit der README überein; `release_7_2_1_131` steht in `tools/ZWEIGE.md`. Kein neuer Fund; offen nur das Nachziehen beim Veröffentlichen ([L-128.6](../Befunde/LEKTOR-128.md#l-128.6)).
+
+## LEKTOR-129 (02.11.2026) — Kurzlauf nach der Veröffentlichung von v7.2.1.131, Zweig release_7_2_1_131_doku nach 1f4b54de
+
+[LEKTOR-129](../Befunde/LEKTOR-129.md): GitHub und Repo stimmen überein — `v7.2.1.131` ist *Latest*, Marke auf `7564f54e` (#204), ZIP mit derselben Größe und SHA-256 wie in PAKETE, Release-Text zeichengleich mit den Release-Notizen. Die Nachträge sind aber nur halb gezogen. Drei Funde, keiner am Programm; der Rest aus [L-128.6](../Befunde/LEKTOR-128.md#l-128.6) ist erledigt.
+
+- „Zuletzt veröffentlicht: 7.2.1.128“ steht weiter in WEITERMACHEN, PAKETE und ZIEL.md, im selben Absatz wie „v7.2.1.131 veröffentlicht“; `pruefe-release-buchfuehrung.pl` meldet grün ([L-129.1](../Befunde/LEKTOR-129.md#l-129.1)).
+- Unter der neuen Überschrift „Release“ steht in CHANGELOG und PAKETE noch „nicht veröffentlicht“, „veröffentlicht wird nach seinem Ja“ und beim ZIP „nicht auf GitHub“ ([L-129.2](../Befunde/LEKTOR-129.md#l-129.2)).
+- TESTPLAN-Kopf, AUFGABEN und eine Zeile in FUNKTIONEN nennen 7.2.1.131 weiter Testpaket, Kandidat oder „im Quellstand“ ([L-129.3](../Befunde/LEKTOR-129.md#l-129.3)).
+
+Nachtrag LEKTOR-129 (716216fc..b9da9b1e gegengelesen): [L-129.1](../Befunde/LEKTOR-129.md#l-129.1) bis [L-129.3](../Befunde/LEKTOR-129.md#l-129.3) erledigt, README-Zahl 209 stimmt; offen nur die Schranke in `pruefe-release-buchfuehrung.pl`, die „zuletzt veröffentlicht“ mit einer älteren Marke nicht erkennt ([Nachtrag](../Befunde/LEKTOR-129.md#nachtrag-02-11-2026)).

@@ -47,3 +47,4 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 > eine Fassung, in der **[E-98](../Intern/BEFUNDE.md#e-98)** offen ist und **[E-101](../Intern/BEFUNDE.md#e-101)** noch gar nicht gefunden
 > war (die gespeicherte Datei ist fuer andere Programme unbrauchbar).
 | 2026-10-29 22:17:31 | v7.2.1.128 | Gregor am 29.10.2026 nach Merge von PR #187: 'gemergt. ja, release veroeffentlichen' | veroeffentlicht |
+| 2026-11-02 14:51:08 | v7.2.1.131 | Gregor am 02.11.2026: 'ja, veroeffentliche v7.2.1.131' (nach seinem Test: alle sieben Schritte bestanden) | veroeffentlicht |

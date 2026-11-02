@@ -95,13 +95,13 @@ da, nicht zum Lesen.
 | [AGENTEN.md](Intern/AGENTEN.md) | wie hier mit Agenten gearbeitet wird |
 | [BEFUNDE-ALTBESTAND.md](Intern/BEFUNDE-ALTBESTAND.md) | abgeschlossene Befunde aus der Frühzeit |
 
-Dazu [`Befunde/`](Befunde) (208 LEKTOR- und PRÜFER-Berichte), [`Arbeitsweise/`](Arbeitsweise)
+Dazu [`Befunde/`](Befunde) (209 LEKTOR- und PRÜFER-Berichte), [`Arbeitsweise/`](Arbeitsweise)
 (124 Lehren aus Fehlern; beides am 02.11.2026 mit `git ls-files` gezählt, ohne
 Laufberichte, Stand-Notizen und Entscheidungen) und [`tools/`](tools) (über 100 Werkzeuge und
 Schranken).
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
-*Stand **7.2.1.131** — zweites Release 7.2.1, am 02.11.2026 geschnürt, von Gregor am 02.11.2026 an seinem System getestet (alle sieben Schritte [bestanden](Intern/TESTPLAN.md#test-7-2-1-131)), zur Veröffentlichung als `v7.2.1.131` nach seinem Ja; es enthält die nicht veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130, was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.131 bis 7.2.1.129. Davor das erste Release 7.2.1, [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) vom 29.10.2026 (CHANGELOG unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123). Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).*
+*Stand **7.2.1.131** — zweites Release 7.2.1, am 02.11.2026 geschnürt, von Gregor am 02.11.2026 an seinem System getestet (alle sieben Schritte [bestanden](Intern/TESTPLAN.md#test-7-2-1-131)), veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131); es enthält die nicht veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130, was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.131 bis 7.2.1.129. Davor das erste Release 7.2.1, [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) vom 29.10.2026 (CHANGELOG unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123). Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).*
 
 ### Was geht
 

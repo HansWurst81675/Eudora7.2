@@ -15,9 +15,8 @@ englisch und kursiv, so wie das Programm sie zeigt.
 | Vorlage | aus der Ressourcendatei `Eudora71/Eudora/EudoraRes.rc` oder dem Code gelesen — so **steht** es im Programm; in dieser Portierung hat es noch niemand eigens angeklickt |
 | **bestätigt** | Gregor hat es am laufenden Programm gesehen; der Verweis führt zum Beleg in [FAQ](FAQ.md), [BEFUNDE](../Intern/BEFUNDE.md) oder [TESTPLAN](../Intern/TESTPLAN.md) |
 
-**Stand:** Quellstand nach dem Testpaket 7.2.1.130 (02.11.2026). Was sich
-gegenüber 7.2.1.130 im Quellstand schon geändert hat, steht an der Zeile
-dabei.
+**Stand:** Release 7.2.1.131 (02.11.2026). Was sich gegenüber älteren
+Fassungen geändert hat, steht an der Zeile dabei.
 
 Was nur *Vorlage* ist, kann trotzdem tun, was dasteht — es ist nur nicht
 nachgesehen. Die Liste der Einträge, deren Bestätigung am meisten hilft, steht
@@ -191,8 +190,8 @@ statt es zu öffnen; *New…* legt ein Postfach an und verschiebt hinein.
 | ein Postfach | verschiebt die markierten Nachrichten dorthin | **bestätigt**, dass *Out* im Hauptmenü *Transfer* wählbar ist ([TESTPLAN, E-143](../Intern/TESTPLAN.md#e-143-naechstes), 02.11.2026) |
 
 Beim Verschieben nach *Out* fragt Eudora nach. Aus dem Suchfenster heraus kam
-der Hinweis bis 7.2.1.130 je Nachricht; im Quellstand kommt er einmal je
-Übertragung (seit #201, [E-143](../Intern/BEFUNDE.md#e-143), *Out-Hinweis je Treffer*).
+der Hinweis bis 7.2.1.130 je Nachricht; seit 7.2.1.131 kommt er einmal je
+Übertragung (#201, [E-143](../Intern/BEFUNDE.md#e-143), *Out-Hinweis je Treffer*).
 
 Beim Verschieben zwischen zwei Ordnern **desselben IMAP-Kontos** kann Eudora
 Betreff und Absender zweier Mails verwechseln, wenn im Ziel schon eine Mail
@@ -906,7 +905,7 @@ gespeichert wird beim Verlassen des Fensters nach Rückfrage
 | *Open* | öffnet das Postfach oder die Nachricht | Vorlage |
 | *Print* | druckt die Nachricht | Vorlage |
 | *Notify User* | meldet die Nachricht wie unter [*Getting Attention*](#getting-attention) oder nur im Filterbericht | Vorlage |
-| *Notify Application* | übergibt die Nachricht an ein Programm ([E-177](../Intern/BEFUNDE.md#e-177), *Zeichensatzangabe der Zwischendatei, im Quellstand berichtigt*) | Vorlage |
+| *Notify Application* | übergibt die Nachricht an ein Programm ([E-177](../Intern/BEFUNDE.md#e-177), *Zeichensatzangabe der Zwischendatei, berichtigt in 7.2.1.131*) | Vorlage |
 | *Forward To* / *Redirect To* | leitet weiter bzw. um | Vorlage |
 | *Reply with* | antwortet mit einem Briefpapier | Vorlage |
 | *Server Options* | merkt *Fetch* oder *Delete* auf dem Server vor. **Löschen auf dem Server ist hier gesperrt**, bis `FilterMayDeleteFromServer=1` gesetzt ist ([FILTER.md](../Intern/FILTER.md#die-aktion-server-options), [E-73](../Intern/BEFUNDE.md#e-73), *Filter leerte ein Serverpostfach*) | Vorlage |
