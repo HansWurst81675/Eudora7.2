@@ -160,3 +160,5 @@
 - [CHRONIST 01.11.2026 abends](CHRONIST-2026-11-01c.md) — Laufbericht; 71 min Stillstand nach angekündigtem LEKTOR/PRÜFER, Stop-Haken vorgeschlagen; ersetze-text.pl erledigt
 - [CHRONIST 01.11.2026 spätabends](CHRONIST-2026-11-01d.md) — Laufbericht; Eudora.exe --version auf Gregors Bildschirm (17:18:55), Haken vorgeschlagen; zwei Einwürfe ohne Antwort; auftrag-rolle.pl doppelte Kennungen
 - [CHRONIST 01.11.2026 nachts](CHRONIST-2026-11-01e.md) — Laufbericht; von eigener Reihenfolge (E-177) abgewichen; E-172 fünfmal erbeten trotz „Gregor muss nichts tun“; Rot aus falschem Grund; --amend hinter `;`
+- [Merge-Art ist keine Abhilfe](kein-squash-im-repo.md) — berichtigt: Squash ist erlaubt, hätte aber nichts genützt; Gregors Pfade gar nicht erst schreiben, auch nicht in die Commit-Nachricht
+- [CHRONIST 02.11.2026](CHRONIST-2026-11-02.md) — Laufbericht; E-140 trotz Marke null bestätigt; VM-Pfad in Commit-Nachricht; Squash doch erlaubt (gemessen); Reihenfolge zweiter Morgen übergangen; drei LEKTOR-Runden

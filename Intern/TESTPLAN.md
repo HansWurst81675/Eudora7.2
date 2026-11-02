@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.130 (Testpaket, `VERSION` gleich; geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`; davor 7.2.1.129, geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`), Stand 02.11.2026 (zuletzt getestet am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 im Verfassen-Fenster und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+# Testplan für Gregor — Quellstand 7.2.1.130 (Testpaket, `VERSION` gleich; geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`; davor 7.2.1.129, geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`), Stand 02.11.2026 (zuletzt getestet am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -172,7 +172,7 @@ aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
 
 Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
 
-**Bestätigt am 01.11.2026, Gregor an 7.2.1.130, nur Schritt 2 (Verfassen-Fenster):** die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. **Schritt 1 bitte noch einmal:** die erste Datei kam laut Protokoll aus der Postfachliste (`E-101 speichern:` ohne `E-140 speichern aus Nachrichtenfenster:`), nicht aus dem geöffneten Fenster. Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus der Postfachliste), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe).
+**Bestätigt am 01.11.2026, Gregor an 7.2.1.130, nur Schritt 2 (Verfassen-Fenster):** die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. **Schritt 1 bitte noch einmal:** die erste Datei kam laut Protokoll aus der Postfachliste (`E-101 speichern:` ohne `E-140 speichern aus Nachrichtenfenster:`), nicht aus dem geöffneten Fenster. **Am 02.11.2026 nachgeholt, bestanden:** im Protokoll `E-140 speichern aus Nachrichtenfenster:`, die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, € und Umlaute stimmen. **E-140 ist damit an beiden Fenstern bestätigt.** Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus der Postfachliste), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe).
 
 ## <a id="e-165-naechstes"></a>In 7.2.1.129: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
 
@@ -219,20 +219,51 @@ kann kein Emoji tragen).
 ## <a id="e-178-naechstes"></a>In 7.2.1.130: Fett, Kursiv und Link im Bearbeiten-Modus lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
 
 **Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129** (dort ist die
-Behebung nicht drin). **Vorher das Postfach sichern.** Lokales Postfach, nicht
-IMAP.
+Behebung nicht drin). Geprüft wird an einer Nachricht im **lokalen** Postfach
+*In*, nicht in einem IMAP-Ordner.
 
-1. Die Prüfnachricht `Testdaten/e136-zeichen-als-entitaet.eml` (🔥 und Ж)
-   oder eine andere HTML-Nachricht mit Emoji öffnen; sie wird richtig angezeigt.
-2. In den Bearbeiten-Modus schalten (Knopf mit dem Hinweis *Edit the message* in der Leiste des
-   Nachrichtenfensters).
-3. Ein Wort **neben** dem Emoji markieren und *Fett* (Strg+B) geben, dann
-   wieder ausschalten; dasselbe mit *Kursiv* (Strg+I); dann *Make Hyperlink* auf ein
-   anderes Wort.
-4. Nach jedem Schritt: 🔥 und Ж stehen weiter da, **keine** Fragezeichen.
-5. *Strg+S*, schließen, wieder öffnen: 🔥 und Ж stehen da.
-6. Zusätzlich: Text mit dem Emoji markieren und *Antworten* — in der Antwort
-   steht das Emoji, nicht `??`.
+**Vorbereitung — eine Nachricht mit Emoji nach *In* bringen:**
+
+a. Aus dem Webmailer (z. B. web.de oder GMX im Browser) eine Mail an dich
+   selbst schicken, **HTML-Format**, im Text ein paar Wörter, dazwischen 🔥
+   und ein kyrillisches Ж (zum Kopieren: 🔥 Ж).
+b. In Eudora den IMAP-Posteingang abrufen, die Mail markieren und mit
+   *Transfer → In* in das **lokale** *In* übertragen.
+c. Die Mail in *In* per Doppelklick öffnen: 🔥 und Ж stehen richtig da.
+   Steht dort schon jetzt ein Fragezeichen, bitte hier aufhören und ein
+   Bildschirmfoto schicken — dann liegt der Fehler beim Übertragen, nicht im
+   Bearbeiten-Modus.
+
+**Vorbereitung — *In* sichern** (falls beim Bearbeiten etwas schiefgeht):
+
+d. Eudora beenden.
+e. Im Mailverzeichnis des Testpakets die beiden Dateien `In.mbx` und `In.toc`
+   in einen anderen Ordner kopieren (z. B. `Sicherung-E178` daneben).
+f. Eudora wieder starten. Zurückholen hieße: Eudora beenden, die beiden
+   Dateien zurückkopieren, starten.
+
+**Der Test:**
+
+1. Die Mail aus Schritt c in *In* öffnen.
+2. In den Bearbeiten-Modus schalten: Knopf in der Leiste des
+   Nachrichtenfensters mit dem Hinweis *Edit the message* (laut Menüvorlage
+   `EudoraRes.rc`, Hinweistext zu `ID_EDIT_MESSAGE`).
+3. Ein Wort **neben** dem Emoji markieren und *Fett* geben (Strg+B), dann
+   wieder ausschalten; dasselbe mit *Kursiv* (Strg+I).
+4. Ein **anderes** Wort markieren und *Make Hyperlink* wählen. Es steht im
+   Menü *Edit → Text → Make Hyperlink* und als Knopf mit dem Hinweis
+   *Make hyperlink* in der Formatierleiste (laut Menüvorlage `EudoraRes.rc`;
+   am laufenden Programm von mir noch nicht nachgesehen — findest du es dort
+   nicht, bitte sagen).
+5. Nach jedem der Schritte 3 und 4: 🔥 und Ж stehen weiter da, **keine**
+   Fragezeichen.
+6. *Strg+S*, die Mail schließen, wieder öffnen: 🔥 und Ж stehen da.
+7. Zusätzlich: Text mit dem Emoji markieren und *Reply* — in der Antwort
+   steht das Emoji, nicht `??`. Die Antwort danach ohne Senden schließen.
+
+**Bestanden:** in den Schritten 5 bis 7 nirgends ein Fragezeichen statt 🔥
+oder Ж. **Nicht bestanden:** ein `?` oder `??` an der Stelle — dann bitte
+sagen, nach welchem Schritt es zuerst auftrat.
 
 Bis 7.2.1.129 wurde aus dem Emoji schon in Schritt 3 `??` auf dem Bildschirm
 (am Quelltext belegt, nie am Programm gesehen — dieser Schritt ist die erste

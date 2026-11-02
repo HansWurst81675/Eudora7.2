@@ -1,0 +1,11 @@
+From: Pruefung <absender@e177.invalid>
+To: empfaenger@e177.invalid
+Subject: Pruefung E-177 UTF-8 an ein Programm
+Date: Mon, 02 Nov 2026 10:00:00 +0100
+Message-ID: <e177-utf8@e177.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+
+E-177 Pruefnachricht: Preis 5 €, Grüße aus München, äöü ÄÖÜ ß.
+Erwartet in der Datei fuer das Programm: die Zeichensatzangabe passt zu den Bytes.

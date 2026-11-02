@@ -84,3 +84,11 @@ Damit gibt es die Klasse in beiden Richtungen: am 30.10. eine Frage, die Gregor 
 **How to apply, zusätzlich:** Vor jeder Bitte an Gregor den Eintrag des Befunds lesen. Sagt er *„Gregor muss nichts tun“*, gibt es zwei ehrliche Wege: die Bitte lassen, oder **zuerst** den Eintrag ändern und Gregor sagen, warum er doch gebraucht wird und was genau er suchen soll (Betreff, Datum, Ordner). Eine Bitte, die dem Eintrag widerspricht, geht nicht hinaus.
 
 **Schranken-Vorschlag (nicht gebaut):** `tools/offene-befunde.pl` meldet beim Erzeugen jeden offenen Befund, dessen Urteil *„Gregor muss nichts tun“* sagt und dessen „Was noch fehlt“ zugleich *„Gregor“*, *„von dir“* oder *„Quelltext der Mail“* als Voraussetzung nennt. Gegenprobe: der E-172-Eintrag am Stand `21bc5272` → gemeldet, wenn sein „Was noch fehlt“ die Mail verlangt; derselbe Eintrag am Stand `2fd14adc` (erledigt) → still.
+
+## Nachtrag 02.11.2026 (CHRONIST): eine offene Entscheidung zwischen Testergebnissen
+
+Transkript `25e03584-…jsonl`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-02]]).
+
+Um 07:11:10 meldete die Hauptsitzung Gregors Ergebnisse zu E-143 als Tabelle, dann zwei Absätze über Testschritte, dann: *„E-143 bleibt trotzdem offen, weil du über das Suchfenster noch nicht entschieden hast.“* Keine Frage, keine Optionen. Gregor las es als Testauftrag. Um 07:13:53 fragte er mit dem Link auf den Testplan: *„wo steht hier was zum suchfenster?“*, und um 07:23:40 erklärte er: *„ich habe es so verstanden, daß ich hierzu ein testszenario abarbeiten muß.“* Erst um 07:17:37 kam die Entscheidung als Frage mit zwei Möglichkeiten und Empfehlung. Gregor entschied sechs Minuten später (*„ja, ein hinweis reicht, richtig.“*). Um 07:26:40 schrieb die Hauptsitzung selbst: *„Das hatte ich missverständlich geschrieben.“*
+
+**How to apply, zusätzlich:** *„bleibt offen, weil du noch nicht entschieden hast“* ist keine Frage. Eine offene Entscheidung steht in einem eigenen Absatz am Ende, als Frage mit Möglichkeiten, getrennt von allem, was Gregor testen soll. Sonst liest er sie als Teil des Tests ([[einstufung-ist-keine-auskunft]]).

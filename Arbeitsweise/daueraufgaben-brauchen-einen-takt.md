@@ -275,3 +275,25 @@ Der Abfragedialog um 17:06:12 wurde nach 13 Sekunden beantwortet (17:06:25). Gek
 Zeiten MEZ, gemessen an Transkript `6f848773` und Commits ([[CHRONIST-2026-11-01d]]). Nach Gregors Tadel von 17:00 wurden LEKTOR und PRÜFER dreimal ohne Nachfrage nach dem Commit gestartet: `e23da6be` (17:48:27) → PRÜFER-75 17:50:55, LEKTOR-118 17:51:02; `8b5f8342` (18:21:25) → PRÜFER-76 18:23:31, LEKTOR-119 18:23:36; `878f38e9` (18:37:20) → PRÜFER-77 18:39:08. Abstand 1:48 bis 2:35, davon rund eine Minute für `auftrag-rolle.pl`. Die Ankündigung *„starte ich sofort“* (17:49:24) wurde ohne Zugende eingelöst.
 
 Offen bleiben zwei Dinge. `rollen-faellig.pl` wurde zwischen 17:29 und 18:41:04 nicht aufgerufen; nach seiner Regel (jede Änderung unter `tools/` oder `Eudora71/`) war der CHRONIST ab `4593ab89` (17:33:45) fällig, gestartet um 18:42:15, beim PR wie zuvor üblich. Und von 18:24:00 bis 18:31:05 stand der Hauptzug, während PRÜFER-76 und LEKTOR-119 liefen (*„Sobald beide fertig sind, stelle ich den PR“*); der Werkzeugmangel in `auftrag-rolle.pl` hätte in diese sieben Minuten gepasst ([[nie-stillstehen]]).
+
+## Nachtrag 02.11.2026 (CHRONIST): drei LEKTOR-Runden für einen Doku-PR, 36 Minuten Warten
+
+Transkript `25e03584-…jsonl` und Commits, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-02]]).
+
+| Zeit | Was |
+|---|---|
+| 07:15:06 | `1c75f5c3`, Gregors Testergebnisse und drei neue Befunde, nur Dokumentation |
+| 07:26:27 → 07:35:33 | LEKTOR-122: **acht** Funde, darunter das vorschnelle E-140 und die Daten von Gregors Rechner |
+| 07:35:08 | Gregor: *„ja, pr für test ergebnisse, warte ich drauf.“* |
+| 07:45:30 | Einarbeitung `09c39785`; danach meldet `rollen-faellig.pl` den LEKTOR wieder fällig (07:49:14, *„9 Datei(en)“*) |
+| 07:51:05 → 07:57:13 | LEKTOR-123 als Nachtrag: **sechs** Reste, darunter eine falsch berichtigte Stelle (L-123.1: *„es war die erste“*) |
+| 08:00:54 | Gregor: *„gibt es jetzt was zum mergen?“* |
+| 08:01:32 | Einarbeitung `f4f9116f`; dritte Runde per Nachricht an denselben LEKTOR |
+| 08:07:03 | Der LEKTOR kann nicht committen. Grund: Die Hauptsitzung hatte um 08:04:04 eine neue Gedächtnisnotiz ohne Zeile `Schranke:` geschrieben |
+| 08:08:29 | `ed697a24`: *„Alle sechs Funde sind erledigt“*, **nichts Neues** |
+| 08:11:08 | `haken-pr-lektor.pl` weist `gh pr create` ab, denn `--fertig LEKTOR` fehlte. Drei Sekunden später nachgeholt |
+| 08:11:36 | PR #199 |
+
+Die Schranke hat getan, was sie soll. Die zweite Runde fand echte Fehler in der Einarbeitung. Teuer war der **erste** Commit: Zwei der acht Funde waren Rückfälle in vorhandene Lehren ([[eingebaute-messung-auslesen]], [[gedaechtnis-ist-oeffentlich]]). Ein Fund nährt sich selbst: Die README-Zahl der Prüfberichte veraltet mit **jedem** LEKTOR-Bericht (L-122.7 *„zum sechsten Mal“*, L-123.5 *„mit diesem Bericht wieder veraltet“*). Den Werkzeugmangel dazu meldet [[CHRONIST-2026-11-01e]] (Nr. 3), und er ist weiter offen.
+
+**How to apply, zusätzlich:** Vor dem ersten Commit eines Doku-Zweigs mit Gregors Testergebnissen zwei Prüfungen von Hand: Markenzeile mit Anzahl je Bestätigung und Herkunftsangaben ohne Pfad. Jede gesparte LEKTOR-Runde spart Gregor etwa zehn Minuten Warten. Eine neue Gedächtnisnotiz bekommt ihre Zeile `Schranke:` beim Schreiben, nicht wenn der Haken eines anderen abweist.
