@@ -216,7 +216,15 @@ dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129: Bau `11643ee1` 
 7.2.1.130 (mit 7.2.1.130 darf *Speichern unter* als `.htm` mitgeprüft werden: 🔥 steht dann als `&#128293;` in der Datei); als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
 kann kein Emoji tragen).
 
-## <a id="e-178-naechstes"></a>In 7.2.1.130: Fett, Kursiv und Link im Bearbeiten-Modus lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
+## <a id="e-178-naechstes"></a>In 7.2.1.130: Link, Festbreite und Antwort auf markierten Text lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
+
+> **Am Prüfstand gemessen am 02.11.2026 (Fall `E-178p`):** am Bau mit der
+> Behebung `fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt`,
+> am Bau 7.2.1.128 ohne sie `tt=kaputt link=kaputt gespeichert=kaputt antwort=kaputt`.
+> **Fett und Kursiv waren nie betroffen** (sie laufen über `ExecCommand`) —
+> betroffen waren Festbreite, *Make Hyperlink* und die Antwort auf markierten
+> Text. Die frühere Überschrift nannte Fett und Kursiv; das war am Quelltext
+> vermutet, nicht gemessen.
 
 > **Für Gregor entfällt dieser Test vorerst — er misst sich am Prüfstand.**
 > Am 02.11.2026 an 7.2.1.130 versucht, nach der früheren Fassung dieses
