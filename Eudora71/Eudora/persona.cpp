@@ -572,6 +572,33 @@ BOOL CPersonality::Remove( const char* Name )
 	// delete the section associated with the personality
 	WritePrivateProfileString(PersonaID, NULL, NULL, INIPath);
 
+	// E-39: war die geloeschte Persoenlichkeit die aktuelle, blieb m_Current
+	// auf ihr stehen. FlushINIFile schreibt SavePassword und SavePasswordText
+	// in den Abschnitt der aktuellen (rs.cpp) - beim naechsten Umschalten
+	// oder beim Beenden entstand [Persona-<Name>] wieder. Am Pruefstand
+	// gemessen am 02.11.2026 (tools\messen-e39.ps1): Change Password laesst
+	// die Persoenlichkeit bei einem Konto ohne "@" als aktuelle stehen,
+	// Forget Password(s) markiert SavePasswordText, Delete, beenden ->
+	// [Persona-E39Zwei] SavePasswordText= war wieder da.
+	// Deshalb: ihre beiden Kennwortschluessel ungeschrieben aus dem
+	// Zwischenspeicher nehmen, dann auf <Dominant> umschalten (SetCurrent
+	// schreibt den Rest des Zwischenspeichers wie sonst) und ihr Kennwort
+	// im Speicher vergessen.
+	{
+		const BOOL bWarAktuell = ( m_Current.CompareNoCase( PersonaID ) == 0 );
+		if ( bWarAktuell )
+		{
+			RemoveIniFromCache( IDS_INI_SAVE_PASSWORD );
+			RemoveIniFromCache( IDS_INI_SAVE_PASSWORD_TEXT );
+			SetCurrent( NULL );
+			m_Passwords.RemoveKey( PersonaID );
+		}
+		CString strSpur;
+		strSpur.Format( "E-39 Remove %s: war-aktuell=%d aktuell=%s", Name, bWarAktuell ? 1 : 0,
+			m_Current.IsEmpty() ? "<Dominant>" : (LPCTSTR) GetCurrent() );
+		PutDebugLog( DEBUG_MASK_MISC, strSpur );
+	}
+
 	//
 	// Notify the personality director that the Persona has been nuked
 	// so that it can update its Message:Change:Personality menu.

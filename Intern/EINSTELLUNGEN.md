@@ -63,14 +63,15 @@ perl tools/pruefe-ini-abschnitte.pl --tabelle
 **1.2 Gesucht wird in vier Stufen**, und die erste, die etwas liefert,
 gewinnt: Abschnitt der aktiven Persönlichkeit → `Eudora.ini` →
 `DEudora.ini` → eingebauter Wert aus `EudoraRes.rc`
-(`GetIniString`, `rs.cpp:334-346`). Die vollständige Tabelle steht in
-[README.md](../README.md).
+(`GetIniString`, `rs.cpp:334-346`). Ausgeführt, mit allen Abschnitten und
+den Schlüsseln, die ein Konto eigens haben kann:
+[FUNKTIONEN.md, Abschnitt 6](../Doku/FUNKTIONEN.md#6-die-abschnitte-der-eudoraini).
 
-**1.3 Solange es nur eine Persönlichkeit gibt, heißt deren Abschnitt
-wörtlich `[Settings]`** (`persona.cpp:887-903`). Ein dorthin verirrter
-`[Debug]`- oder `[Window Position]`-Schlüssel wird deshalb über Stufe 1
-gefunden und **scheint zu wirken** — bis eine zweite Persönlichkeit aktiv
-wird. Wer so etwas prüft, prüft auf dem gefährlichsten Untergrund.
+**1.3 Der Abschnitt des Hauptkontos heißt wörtlich `[Settings]`** — immer,
+unabhängig von der Zahl der Persönlichkeiten (`persona.cpp:903-938`). Ein
+dorthin verirrter `[Debug]`- oder `[Window Position]`-Schlüssel wird deshalb
+über Stufe 1 gefunden und **scheint zu wirken**, solange das Hauptkonto
+aktiv ist — bis eine zweite Persönlichkeit aktiv wird. Wer so etwas prüft, prüft auf dem gefährlichsten Untergrund.
 
 **1.4 Eudora schreibt Werte selbst zurück**, und zwar in den Abschnitt, der
 zur Nummer gehört (`FlushINIFile`, `rs.cpp:1189`, Abschnitt `:1203`,

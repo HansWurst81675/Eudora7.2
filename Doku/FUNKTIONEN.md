@@ -133,7 +133,7 @@ Zusatzmodulen. Woraus, steht jeweils dabei.
 | *Find* ▸ *Find Text* | Strg+Umschalt+F | sucht in der offenen Nachricht | **bestätigt** ([FAQ 16](FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus), 31.10.2026) |
 | *Find* ▸ *Find Text Again* | F3, Strg+G | nächster Treffer | **bestätigt** für F3 ([FAQ 16](FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)) |
 | *Find* ▸ *Find Messages* | Strg+F | öffnet das Suchfenster über viele Postfächer | **bestätigt** ([E-115](../Intern/BEFUNDE.md#e-115), 13.10.2026) |
-| *Find* ▸ *Find Messages Using* ▸ | | gespeicherte Suchen (`CDynamicSavedSearchMenu`, `mainfrm.cpp:8380`) | Vorlage |
+| *Find* ▸ *Find Messages Using* ▸ | | gespeicherte Suchen (`CDynamicSavedSearchMenu`, `mainfrm.cpp:8495`) | Vorlage |
 | *Find* ▸ *Search Web* / *Search Eudora* / *Search Mailbox* / *Search Mailfolder* | | sucht den markierten Text im Netz, in allen Postfächern, im Postfach, im Ordner (ohne Statuszeilentext) | Vorlage |
 | *Sort* ▸ *Sort by Status* … *Sort by Subject* | | sortiert das Postfach nach Zustand, Dringlichkeit, Anhang, Label, Absender, Datum, Größe, Serverzustand, Stimmung (*Mood*), Junk-Punktzahl oder Betreff | Vorlage |
 | *Sort* ▸ *Group by Subject* | | hält nach dem Sortieren Nachrichten mit gleichem Betreff zusammen | Vorlage |
@@ -168,7 +168,7 @@ Ordner ist ein Untermenü mit demselben Aufbau.
 | *New Message To* ▸ / *Forward To* ▸ / *Redirect To* ▸ | | dasselbe an einen Empfänger aus der Empfängerliste (*Special → Add as Recipient*) | Vorlage |
 | *New Message With* ▸ / *Reply With* ▸ / *Reply to All With* ▸ | | dasselbe mit einem Briefpapier (*Tools → Stationery*) | Vorlage |
 | *Attach File* | Strg+H | hängt eine Datei an | Vorlage |
-| *Attach* ▸ | | Anhang-Befehle der Zusatzmodule (`CDynamicPluginMenu`, `mainfrm.cpp:8310`) | Vorlage |
+| *Attach* ▸ | | Anhang-Befehle der Zusatzmodule (`CDynamicPluginMenu`, `mainfrm.cpp:8425`) | Vorlage |
 | *Send Immediately* | Strg+E | verschickt sofort bzw. stellt in *Out*; mit Umschalt Zeitpunkt wählen | Vorlage |
 | *Change* ▸ *Queuing…* | | wann die Nachricht verschickt wird | Vorlage |
 | *Change* ▸ *Status* ▸ | | setzt den Zustand: *Unread*, *Read*, *Replied*, *Forwarded*, *Redirected*, *Recovered*; bei ausgehender Post *Unsendable*, *Sendable*, *Queued*, *Time Queued*, *Sent*, *Unsent* | Vorlage |
@@ -183,7 +183,7 @@ Ordner ist ein Untermenü mit demselben Aufbau.
 
 ### *Transfer*
 
-Aufgebaut wie *Mailbox* (`CDynamicMailboxMenu`, `mainfrm.cpp:8367`), nur
+Aufgebaut wie *Mailbox* (`CDynamicMailboxMenu`, `mainfrm.cpp:8482`), nur
 **verschiebt** ein Klick die markierten Nachrichten in das gewählte Postfach,
 statt es zu öffnen; *New…* legt ein Postfach an und verschiebt hinein.
 
@@ -213,7 +213,7 @@ Eintrags ([E-184](../Intern/BEFUNDE.md#e-184), [E-189](../Intern/BEFUNDE.md#e-18
 | *Empty Trash* | | löscht alles im Papierkorb endgültig; Anhänge nur mit [*Delete attachments when emptying Trash*](#attachments) ([FAQ 14](FAQ.md#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche)) | **bestätigt** mit `TidyAttach=1` ([FAQ 14](FAQ.md#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), 29.10.2026) |
 | *Compact Mailboxes* | | gibt ungenutzten Platz in allen Postfächern frei | Vorlage |
 | *Forget Password(s)* | | fragt beim nächsten Abruf wieder nach dem Kennwort | Vorlage |
-| *Change Password…* | | ändert das Kennwort auf dem POP-Server — **ab Werk ausgeblendet**: `RemoveChangePassword` ist eingebaut `1` und nimmt den Eintrag beim Start heraus (`mainfrm.cpp:8372-8373`) | Vorlage |
+| *Change Password…* | | ändert das Kennwort auf dem POP-Server — **ab Werk ausgeblendet**: `RemoveChangePassword` ist eingebaut `1` und nimmt den Eintrag beim Start heraus (`mainfrm.cpp:8487-8488`) | Vorlage |
 | *Message Plug-ins Settings…* | | Einstellungen der Zusatzmodule | Vorlage |
 
 ### *Tools*
@@ -232,12 +232,12 @@ Eintrags ([E-184](../Intern/BEFUNDE.md#e-184), [E-189](../Intern/BEFUNDE.md#e-18
 | *Address Book* | Strg+L | Adressbuch mit den Kurznamen ([FAQ 8](FAQ.md#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben)) | **bestätigt**: *New* und Kurzname ([E-134](../Intern/BEFUNDE.md#e-134), 21.10.2026) |
 | *Directory Services* | Strg+Y | Suche über Ph und Finger — **fällt hier aus**, es fehlen `MFC71.DLL`/`MSVCP71.dll` ([ANWENDER.md](ANWENDER.md#was-es-nicht-kann)) | Vorlage |
 | *Link History* | | Liste der angeklickten Verweise | Vorlage |
-| *Statistics* | | Nutzungsstatistik; grau, wenn `DisableStatistics=1` (`mainfrm.cpp:10503-10511`) | Vorlage |
-| *Reset Tools…* | | ohne Statuszeilentext; setzt die Werkzeugleisten zurück (`OnResetTools`, `mainfrm.cpp:7350`) | Vorlage |
+| *Statistics* | | Nutzungsstatistik; grau, wenn `DisableStatistics=1` (`mainfrm.cpp:10618-10626`) | Vorlage |
+| *Reset Tools…* | | ohne Statuszeilentext; setzt die Werkzeugleisten zurück (`OnResetTools`, `mainfrm.cpp:7465`) | Vorlage |
 | *Options…* | | die Einstellungen — siehe [Abschnitt 3](#3-tools--options) | **bestätigt** (Seiten *Checking Mail*, *Labels*, *Attachments*, siehe dort) |
 
 Zusatzmodule können vor *Options…* eigene Einträge einfügen
-(`mainfrm.cpp:8395-8405`).
+(`mainfrm.cpp:8510-8520`).
 
 ### *Window*
 
@@ -270,7 +270,7 @@ stehen auf der Registerleiste unten ([E-48](../Intern/BEFUNDE.md#e-48),
 
 ### Rechtsklickmenüs
 
-Die Kontextmenüs stehen in `IDR_CONTEXT_POPUPS` (`EudoraRes.rc:5855`) und
+Die Kontextmenüs stehen in `IDR_CONTEXT_POPUPS` (`EudoraRes.rc:5858`) und
 einigen eigenen Ressourcen. Aufgezählt ist, was **nicht** schon gleichlautend
 im Hauptmenü steht; die Untermenüs *Change Status*, *Change Priority*,
 *Change Label*, *Change Server Status* entsprechen *Message → Change*.
@@ -313,8 +313,9 @@ weitere `ACCELERATORS`-Ressource. Die Tabelle hängt am Hauptfenster und gilt
 deshalb überall; Windows reicht den Befehl an das gerade aktive Fenster
 weiter, und **wirken** kann er nur dort, wo ein Fenster ihn behandelt. Die
 Spalte *wo es gilt* ist daraus abgeleitet: aus den Quelldateien, die den
-Befehl per `ON_COMMAND` behandeln (`perl tools/funktionen-auslesen.pl --kuerzel`
-listet sie je Zeile). Dazu kommen Kürzel, die **nur im Menütext** stehen
+Befehl per `ON_COMMAND` behandeln (für Entwickler: das Werkzeug
+`funktionen-auslesen.pl` im Projektordner `tools`, siehe
+[WERKZEUGE.md](../tools/WERKZEUGE.md), listet sie je Zeile). Dazu kommen Kürzel, die **nur im Menütext** stehen
 (hinter dem Tabulator, etwa *Delete*`\tDel`) — die behandelt das Fenster
 selbst, nicht die Tabelle.
 
@@ -337,11 +338,11 @@ Kopfzeilen im Verfassen-Fenster) · *Liste* (das genannte Werkzeugfenster).
 | Strg+C | kopieren; ebenso Strg+Einfg | überall, wo markiert werden kann | [*Edit → Copy*](#edit) | Vorlage |
 | Strg+D | Nachricht in den Papierkorb | Postfachliste, Lesefenster, Verfassen-Fenster, Suchfenster | [*Message → Delete*](#message) | Vorlage |
 | Strg+E | sofort senden bzw. nach *Out* stellen; **mit Umschalt** Versandzeitpunkt wählen | Verfassen-Fenster, Postfachliste | [*Message → Send Immediately*](#message) | Vorlage |
-| Strg+F | ***Find Messages*** — **umschaltbar:** mit `SwitchFindKeyAccl=1` in der `Eudora.ini` (Vorgabe `0`) tauschen Strg+F und Strg+Umschalt+F (`mainfrm.cpp:4289-4305`) | überall | [*Edit → Find → Find Messages*](#edit) | **bestätigt** ([E-115](../Intern/BEFUNDE.md#e-115), 13.10.2026) |
+| Strg+F | ***Find Messages*** — **umschaltbar:** mit `SwitchFindKeyAccl=1` in der `Eudora.ini` (Vorgabe `0`) tauschen Strg+F und Strg+Umschalt+F (`mainfrm.cpp:4291-4307`) | überall | [*Edit → Find → Find Messages*](#edit) | **bestätigt** ([E-115](../Intern/BEFUNDE.md#e-115), 13.10.2026) |
 | Strg+G | nächster Treffer (wie F3) | überall | [*Edit → Find → Find Text Again*](#edit) | Vorlage |
 | Strg+H | Datei anhängen | Verfassen-Fenster | [*Message → Attach File*](#message) | Vorlage |
 | Strg+I | kursiv (umschaltend) | Verfassen-Fenster; Lesefenster im Bearbeiten-Modus | [*Edit → Text → Italic*](#edit) | Vorlage |
-| Strg+J | **doppelt belegt, umschaltbar:** mit `CtrlJMapping=1` *Junk*, sonst ***Filter Messages*** (`mainfrm.cpp:4390-4397`). Einstellbar unter [*Junk Mail Extras*](#junk-mail-extras); diese Portierung stellt beim ersten Start ohne Filter auf *Filter Messages* ([FAQ 12](FAQ.md#12-filter-messages-strgj-tut-nichts), [E-75](../Intern/BEFUNDE.md#e-75)) | Postfachliste, Lese- und Verfassen-Fenster | [*Special → Filter Messages*](#special) bzw. [*Message → Junk*](#message) | Vorlage |
+| Strg+J | **doppelt belegt, umschaltbar:** mit `CtrlJMapping=1` *Junk*, sonst ***Filter Messages*** (`mainfrm.cpp:4392-4399`). Einstellbar unter [*Junk Mail Extras*](#junk-mail-extras); diese Portierung stellt beim ersten Start ohne Filter auf *Filter Messages* ([FAQ 12](FAQ.md#12-filter-messages-strgj-tut-nichts), [E-75](../Intern/BEFUNDE.md#e-75)) | Postfachliste, Lese- und Verfassen-Fenster | [*Special → Filter Messages*](#special) bzw. [*Message → Junk*](#message) | Vorlage |
 | Strg+K | Adressbucheintrag aus der Nachricht | Postfachliste, Lese- und Verfassen-Fenster, Adressbuch | [*Special → Make Address Book Entry…*](#special) | Vorlage |
 | Strg+L | Adressbuch öffnen | überall | [*Tools → Address Book*](#tools) | Vorlage |
 | Strg+M | Post holen; **mit Umschalt** die Übertragungsoptionen | überall | [*File → Check Mail*](#file) | Vorlage |
@@ -349,7 +350,7 @@ Kopfzeilen im Verfassen-Fenster) · *Liste* (das genannte Werkzeugfenster).
 | Strg+O | Textdatei öffnen | überall | [*File → Open File…*](#file) | Vorlage |
 | Strg+P | drucken | Lese-, Verfassen-, Postfach-, Adressbuchfenster | [*File → Print…*](#file) | Vorlage |
 | Strg+Q | beenden; **mit Umschalt** nur die Fensterpositionen sichern | überall | [*File → Exit*](#file) | Vorlage |
-| Strg+R | **umschaltbar:** antwortet dem Absender, **mit Umschalt** allen. Mit *Map Ctrl+R to “Reply to All”* ([*Replying*](#replying), `ReplyToAll=1`) genau umgekehrt (`mainfrm.cpp:4574-4586`) | Postfachliste, Lesefenster | [*Message → Reply*](#message) / *Reply to All* (der Menütext zeigt Strg+R am jeweils belegten Eintrag) | Vorlage |
+| Strg+R | **umschaltbar:** antwortet dem Absender, **mit Umschalt** allen. Mit *Map Ctrl+R to “Reply to All”* ([*Replying*](#replying), `ReplyToAll=1`) genau umgekehrt (`mainfrm.cpp:4576-4588`) | Postfachliste, Lesefenster | [*Message → Reply*](#message) / *Reply to All* (der Menütext zeigt Strg+R am jeweils belegten Eintrag) | Vorlage |
 | Strg+S | sichern | Verfassen-Fenster, Lesefenster, Textdateien, Suchfenster | [*File → Save*](#file) | Vorlage |
 | Strg+T | wartende Post verschicken | überall | [*File → Send Queued Messages*](#file) | Vorlage |
 | Strg+U | unterstrichen (umschaltend) | Verfassen-Fenster; Lesefenster im Bearbeiten-Modus | [*Edit → Text → Underline*](#edit) | Vorlage |
@@ -365,7 +366,7 @@ Kopfzeilen im Verfassen-Fenster) · *Liste* (das genannte Werkzeugfenster).
 |---|---|---|---|---|
 | Strg+0 | Postfach *Out* öffnen | überall | [*Mailbox → Out*](#mailbox) | Vorlage |
 | Strg+1 | Postfach *In* öffnen | überall | [*Mailbox → In*](#mailbox) | Vorlage |
-| Strg+2 … Strg+5, Strg+7 … Strg+9 | **frei belegbar, ab Werk ohne Wirkung:** führen die Einträge `SelectedTextURL1` … `SelectedTextURL7` aus der `Eudora.ini` (`[Settings]`) mit dem markierten Text aus — 1 bis 3 auf Strg+7 bis Strg+9, 4 bis 7 auf Strg+2 bis Strg+5; jeder Eintrag erscheint dann an vorletzter Stelle im Menü *Edit* (`mainfrm.cpp:8183-8225`). Aufbau am Quelltext: Menüname, Tabulator, Webadresse mit `%s`; der markierte Text wird URL-kodiert für `%s` eingesetzt und die Adresse im Browser geöffnet (`mainfrm.cpp:7933`, `QCSelectedTextURLCommand.cpp:53`). Etwa `SelectedTextURL1=Wikipedia<Tab>https://de.wikipedia.org/wiki/%s` — Beispiel, nicht ausprobiert | überall | — (erst mit Eintrag in *Edit*) | Vorlage |
+| Strg+2 … Strg+5, Strg+7 … Strg+9 | **frei belegbar, ab Werk ohne Wirkung:** führen die Einträge `SelectedTextURL1` … `SelectedTextURL7` aus der `Eudora.ini` (`[Settings]`) mit dem markierten Text aus — 1 bis 3 auf Strg+7 bis Strg+9, 4 bis 7 auf Strg+2 bis Strg+5; jeder Eintrag erscheint dann an vorletzter Stelle im Menü *Edit* (`mainfrm.cpp:8298-8340`). Aufbau am Quelltext: Menüname, Tabulator, Webadresse mit `%s`; der markierte Text wird URL-kodiert für `%s` eingesetzt und die Adresse im Browser geöffnet (`mainfrm.cpp:8048`, `QCSelectedTextURLCommand.cpp:53`). Etwa `SelectedTextURL1=Wikipedia<Tab>https://de.wikipedia.org/wiki/%s` — Beispiel, nicht ausprobiert | überall | — (erst mit Eintrag in *Edit*) | Vorlage |
 | Strg+6 | Rechtschreibprüfung — fehlt in diesem Paket ([E-139](../Intern/BEFUNDE.md#e-139)) | Verfassen-Fenster | [*Edit → Check Spelling*](#edit) | Vorlage |
 
 ### Strg + Umschalt + …
@@ -375,11 +376,11 @@ Nur die, die etwas anderes tun als ohne Umschalt.
 | Kürzel | was es tut | wo es gilt | Menüeintrag | Herkunft |
 |---|---|---|---|---|
 | Strg+Umschalt+F | ***Find Text*** — Suche in der offenen Nachricht; mit `SwitchFindKeyAccl=1` stattdessen *Find Messages* | überall | [*Edit → Find → Find Text*](#edit) | **bestätigt** ([FAQ 16](FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus), 31.10.2026) |
-| Strg+Umschalt+J | ***Not Junk*** — **nur** wenn Strg+J auf *Junk* steht, sonst ohne Wirkung (`mainfrm.cpp:4399-4404`; ohne Statuszeilentext) | Postfachliste, Lesefenster, Suchfenster | [*Message → Not Junk*](#message) | Vorlage |
-| Strg+Umschalt+L | ***Filter Messages*** — **nur** wenn Strg+J auf *Junk* steht, sonst ohne Wirkung (`mainfrm.cpp:4406-4411`; ohne Statuszeilentext) | Postfachliste, Lese- und Verfassen-Fenster | [*Special → Filter Messages*](#special) | Vorlage |
+| Strg+Umschalt+J | ***Not Junk*** — **nur** wenn Strg+J auf *Junk* steht, sonst ohne Wirkung (`mainfrm.cpp:4401-4406`; ohne Statuszeilentext) | Postfachliste, Lesefenster, Suchfenster | [*Message → Not Junk*](#message) | Vorlage |
+| Strg+Umschalt+L | ***Filter Messages*** — **nur** wenn Strg+J auf *Junk* steht, sonst ohne Wirkung (`mainfrm.cpp:4408-4413`; ohne Statuszeilentext) | Postfachliste, Lese- und Verfassen-Fenster | [*Special → Filter Messages*](#special) | Vorlage |
 | Strg+Umschalt+R | das Gegenteil von Strg+R (siehe dort) | Postfachliste, Lesefenster | [*Message → Reply to All*](#message) | Vorlage |
-| Strg+Umschalt+S | **alle** offenen Fenster sichern (`OnSaveAll`, `mainfrm.cpp:4440`; ohne Statuszeilentext) | überall | — | Vorlage |
-| Strg+Umschalt+W | **alle** offenen Fenster schließen (`OnCloseAll`, `mainfrm.cpp:4415`; ohne Statuszeilentext) | überall | — | Vorlage |
+| Strg+Umschalt+S | **alle** offenen Fenster sichern (`OnSaveAll`, `mainfrm.cpp:4442`; ohne Statuszeilentext) | überall | — | Vorlage |
+| Strg+Umschalt+W | **alle** offenen Fenster schließen (`OnCloseAll`, `mainfrm.cpp:4417`; ohne Statuszeilentext) | überall | — | Vorlage |
 | Strg+Umschalt+Z | wiederherstellen | Verfassen-Fenster; Lesefenster im Bearbeiten-Modus | [*Edit → Redo*](#edit) | Vorlage |
 | Strg+Umschalt+, | Kurzname **auflösen** statt nur vervollständigen | Textfeld | [*Edit → Finish Address Book Entry*](#edit) | Vorlage |
 
@@ -415,7 +416,7 @@ Nur die, die etwas anderes tun als ohne Umschalt.
 | Strg+. | eine Zitatebene weniger | Verfassen-Fenster | [*Edit → Text → Remove Quote Level*](#edit) | Vorlage |
 | Strg+Umschalt+. (`VK_OEM_PERIOD` mit Umschalt; Menütext und US-Tastatur: Strg+>) | eine Zitatebene mehr. Auf der deutschen Tastatur ist `>` eine eigene Taste — dort gilt Strg+Umschalt+**Punkt**, nicht Strg+Umschalt+`<` (vermutlich, nicht gemessen) | Verfassen-Fenster | [*Edit → Text → Add Quote Level*](#edit) | Vorlage |
 | Strg+' (`VK_OEM_7`; deutsche Tastatur vermutlich **Strg+Ä**, nicht gemessen) | Zwischenablage als Zitat einfügen | Verfassen-Fenster; Lesefenster im Bearbeiten-Modus | [*Edit → Paste As Quotation*](#edit) | Vorlage |
-| Strg+\\ (`VK_OEM_5`; deutsche Tastatur vermutlich **Strg+^**, nicht gemessen) | ohne Statuszeilentext; am Code fordert es die Nachbearbeitung der Hintergrundaufgaben an (`OnProcessAllofThem`, `mainfrm.cpp:4588`). **Wirkung unklar** — was die Nachbearbeitung für den Anwender sichtbar tut, ist nicht untersucht | überall | — | Vorlage |
+| Strg+\\ (`VK_OEM_5`; deutsche Tastatur vermutlich **Strg+^**, nicht gemessen) | ohne Statuszeilentext; am Code fordert es die Nachbearbeitung der Hintergrundaufgaben an (`OnProcessAllofThem`, `mainfrm.cpp:4590`). **Wirkung unklar** — was die Nachbearbeitung für den Anwender sichtbar tut, ist nicht untersucht | überall | — | Vorlage |
 | Strg+Leertaste | Formatierung entfernen — steht nicht in der Tastentabelle, der Editor fängt die Taste selbst ab (`PaigeEdtView.cpp:2990-2992`) | Verfassen-Fenster | [*Edit → Text → Clear Formatting*](#edit) | Vorlage |
 | Umschalt+Entf | ausschneiden | Textfeld | [*Edit → Cut*](#edit) | Vorlage |
 | Strg+Einfg / Umschalt+Einfg | kopieren / einfügen | Textfeld | [*Edit → Copy*](#edit) / *Paste* | Vorlage |
@@ -478,7 +479,8 @@ folgen drei Regeln für die Tabellen:
   schreiben in `[Settings]`, also für das Hauptkonto. Welche Schlüssel das
   sind und woher die Liste stammt:
   [Abschnitt 6](#was-ein-zusätzliches-konto-eigens-haben-kann).
-  Ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung.
+  Ein Eintrag, der weder im Abschnitt seiner Nummer noch in dem des aktiven
+  Kontos steht, wirkt nicht, ohne Meldung.
 
 **Vorgabe** ist der eingebaute Wert aus `EudoraRes.rc`. Wo die `DEudora.ini`
 des Pakets für **neu angelegte** Mailverzeichnisse etwas anderes vorgibt,
@@ -902,7 +904,7 @@ gespeichert wird beim Verlassen des Fensters nach Rückfrage
 
 **Aktionen** — fünf Plätze je Regel, abgearbeitet von oben nach unten
 ([FILTER.md](../Intern/FILTER.md#aktionen); Menü `IDR_FILTER_MENUS`,
-`EudoraRes.rc:6081`):
+`EudoraRes.rc:6084`):
 
 | Aktion | was sie tut | Herkunft |
 |---|---|---|
@@ -930,8 +932,8 @@ gespeichert wird beim Verlassen des Fensters nach Rückfrage
 
 ## 5. `Eudora.ini`-Schlüssel ohne Optionsseite
 
-Die Ressourcendatei kennt **842** `IDS_INI_…`-Schlüssel (gezählt mit
-`perl tools/funktionen-auslesen.pl --zaehlen`); 284 davon stehen auf einer
+Die Ressourcendatei kennt **842** `IDS_INI_…`-Schlüssel (gezählt am
+Quelltext mit `funktionen-auslesen.pl`, [WERKZEUGE.md](../tools/WERKZEUGE.md)); 284 davon stehen auf einer
 Optionsseite. Aufgenommen ist hier nur, was **mindestens eine** dieser
 Bedingungen erfüllt:
 
@@ -942,13 +944,16 @@ Bedingungen erfüllt:
 
 Nicht aufgenommen: Fensterpositionen, Spaltenbreiten, Zähler und die vielen
 Schlüssel, die Eudora selbst schreibt. Wer einen bestimmten Schlüssel sucht:
-`perl tools/funktionen-auslesen.pl --ini <Name>`.
+die maßgeblichen Namen und Vorgaben stehen in `Eudora71/Eudora/EudoraRes.rc`
+im Format `IDS_INI_… "Name\nVorgabe"` ([EINSTELLUNGEN.md, Regel 1.5](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
 
 **Bevor man etwas einträgt:** Eudora beenden — beim Beenden schreibt es die
 Datei zurück. Der **Abschnitt** ergibt sich aus der Nummer, nicht aus dem
-Namen, und ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung
+Namen, und ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung —
+außer er steht zufällig im Abschnitt des gerade aktiven Kontos
+([Abschnitt 6](#in-welcher-reihenfolge-eudora-sucht)). Welcher Abschnitt
+richtig ist, sagt die Spalte *Abschnitt* in den Tabellen
 ([EINSTELLUNGEN.md, Regel 1.1](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
-`perl tools/pruefe-ini-abschnitte.pl --was <Name>` sagt ihn an.
 
 | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
 |---|---|---|---|---|
@@ -965,8 +970,8 @@ Namen, und ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung
 | `WarnSpellUnavailable` | `[Settings]` | `1` | **gibt es nur hier**: mit `0` (Kästchen in der Meldung) kommt der Hinweis auf die fehlende Rechtschreibprüfung nicht mehr | **bestätigt** ([E-139](../Intern/BEFUNDE.md#e-139), 31.10.2026) |
 | `MaxConcurrentTasks` | `[Settings]` | `10` | wie viele Hintergrundaufgaben gleichzeitig laufen; `0` = ohne Grenze ([EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md#3-schalter-ohne-menüpunkt)) | Vorlage |
 | `MessageStyleSheet` | `[Settings]` | eingebautes Stylesheet | Aussehen der Nachrichtenansicht; eine `read.css` neben `Eudora.exe` ersetzt es ganz ([EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md#3-schalter-ohne-menüpunkt), [E-81](../Intern/BEFUNDE.md#e-81), *Kopfzeilen schwarz auf schwarz*) | Vorlage |
-| `RemoveChangePassword` | `[Settings]` | `1` | blendet *Special → Change Password…* aus; mit `0` erscheint der Eintrag (`mainfrm.cpp:8372-8373`) | Vorlage |
-| `DisableStatistics` | `[Settings]` | `0` | mit `1` ist *Tools → Statistics* grau (`mainfrm.cpp:10508-10510`) | Vorlage |
+| `RemoveChangePassword` | `[Settings]` | `1` | blendet *Special → Change Password…* aus; mit `0` erscheint der Eintrag (`mainfrm.cpp:8487-8488`) | Vorlage |
+| `DisableStatistics` | `[Settings]` | `0` | mit `1` ist *Tools → Statistics* grau (`mainfrm.cpp:10623-10625`) | Vorlage |
 | `AccountDir` | `[Settings]` bzw. `[Persona-<Name>]` | | Unterverzeichnis eines IMAP-Kontos im Mailverzeichnis; fehlt das Verzeichnis, tut IMAP nichts ([EINSTELLUNGEN.md, 2.2](../Intern/EINSTELLUNGEN.md#2-beim-einrichten-und-beim-umsteigen-auf-eine-neue-fassung)) | Vorlage |
 | `Mode` | `[Settings]` | `-1` | Betriebsart; `1` wäre *Light* (keine Werbung, dafür weniger Funktionen, siehe oben). **Nicht nachgemessen** — nicht ohne Not ändern ([AN-2](../Intern/BEFUNDE.md#an-2), *Werbeabruf beim Start*) | Vorlage |
 | `UseMyFilterWindowPosition` | `[Window Position]` | `0` (neu: `1`) | die Breite der linken Spalte im Filterfenster überlebt den Neustart nur mit `1` | Vorlage |
@@ -990,7 +995,7 @@ Für jeden Schlüssel mit einer `IDS_INI_…`-Nummer fragt Eudora nacheinander
 
 1. den Abschnitt der **gerade aktiven Persönlichkeit** — beim Hauptkonto
    (`<Dominant>`) ist das `[Settings]`, sonst `[Persona-<Name>]`
-   (`persona.cpp:876-911`);
+   (`persona.cpp:903-938`);
 2. den Abschnitt, der zur **Nummer** des Schlüssels gehört, in der
    `Eudora.ini` (siehe Tabelle unten);
 3. denselben Abschnitt in der **`DEudora.ini`** neben `Eudora.exe`;
@@ -1000,34 +1005,40 @@ Daraus folgt: ein Schlüssel, der in `[Debug]` gehört, aber in `[Settings]`
 steht, wird über Stufe 1 gefunden und **scheint zu wirken, solange nur das
 Hauptkonto aktiv ist** — bis ein zweites Konto die Arbeit übernimmt
 ([EINSTELLUNGEN.md, Regel 1.3](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
-Ein Eintrag im falschen Abschnitt wirkt nicht, und Eudora meldet nichts.
-Wohin ein Schlüssel gehört, sagt `perl tools/pruefe-ini-abschnitte.pl --was <Name>`.
+Sonst wirkt ein Eintrag im falschen Abschnitt nicht, und Eudora meldet
+nichts: gefunden wird er nur im Abschnitt des aktiven Kontos oder in dem,
+der zu seiner Nummer gehört. Welcher das ist, sagt die Spalte *Abschnitt* in
+den Tabellen oben.
 
 **Geschrieben** wird so: *Tools → Options* schreibt in den Abschnitt, der zur
 Nummer gehört (`FlushINIFile`, `rs.cpp:1257`) — außer `SavePassword` und
 `SavePasswordText`, die in den Abschnitt der aktiven Persönlichkeit gehen
 (`rs.cpp:1238-1252`). Die Kontoeinstellungen eines Kontos schreiben in
 dessen Abschnitt, beim Hauptkonto in `[Settings]` (`SavePersonaInfo`,
-`persona.cpp:931-940`).
+`persona.cpp:958-967`).
 
 ### Die Abschnitte
 
 | Abschnitt | was darin steht | Fundstelle | Herkunft |
 |---|---|---|---|
-| `[Settings]` | fast alle Schlüssel: die Nummern bis 10800 und ab 11101 — und zugleich die Kontoeinstellungen des **Hauptkontos** | `GetSectionID`, `rs.cpp:89-97`; Hauptkonto `persona.cpp:876-911` | Vorlage |
+| `[Settings]` | fast alle Schlüssel: die Nummern bis 10800 und ab 11101 — und zugleich die Kontoeinstellungen des **Hauptkontos** | `GetSectionID`, `rs.cpp:89-97`; Hauptkonto `persona.cpp:903-938` | Vorlage |
 | `[Debug]` | die Nummern 10801 bis 10900, etwa `LogLevel`, `LogFileName`, `LogFileSize` ([FAQ 17](FAQ.md#17-wie-schreibt-eudora-mehr-ins-protokoll-loglevel)) | `rs.cpp:95-96` | Vorlage |
 | `[Window Position]` | die Nummern 10901 bis 11100: Fensterpositionen und -größen, dazu `UseMyFilterWindowPosition` | `rs.cpp:93-94` | Vorlage |
 | `[Personalities]` | die Liste der **zusätzlichen** Konten, je Zeile `Persona0=Persona-<Name>`, `Persona1=…` | `persona.cpp:79-90` (Abschnittsname `IDS_PERSONALITIES`, `EudoraRes.rc:8007`) | Vorlage |
 | `[Persona-<Name>]` | je zusätzliches Konto ein Abschnitt; `<Name>` wie unter *Tools → Personalities*. Das Hauptkonto hat keinen, es benutzt `[Settings]` | `persona.cpp:52` (`"Persona-"`, mit Bindestrich), `:876-911` | Vorlage |
 | `[Mappings]` | Zuordnung Dateiendung ↔ Dateityp für Anhänge; gelesen aus der `Eudora.ini`, sonst aus der `DEudora.ini`. Das Paket bringt 124 Zeilen mit ([EINSTELLUNGEN.md, 2.3](../Intern/EINSTELLUNGEN.md#2-beim-einrichten-und-beim-umsteigen-auf-eine-neue-fassung)) | `MIMEMap.cpp:253-268` | Vorlage |
-| `[ToolBar-ToolBarManager]` | Zustand der Werkzeugleisten; dazu in dieser Portierung `FloatCx<id>`, `FloatCy<id>` für losgerissene Fenster ([E-84](../Intern/BEFUNDE.md#e-84)) | `mainfrm.cpp:1054` (`SaveBarState("ToolBar")`), `OTShim_Werkzeugleiste.cpp:4336` (`"%s-ToolBarManager"`) | Vorlage |
-| weitere `[ToolBar-…]` | Lage der angedockten Leisten; diese Abschnitte legt die MFC-Bibliothek selbst an, ihre Namen stehen nicht im Quelltext dieses Projekts | `mainfrm.cpp:1054` | Vorlage |
-| `[Configurations]`, `[Switches]`, `[Miscellaneous]` | Abschnitte **alter** Eudora-Fassungen; findet Eudora sie beim Start, übernimmt es ihren Inhalt nach `[Settings]` | `ConvertIni`, `rs.cpp:1271`, aufgerufen `:1420-1427` | Vorlage |
+| `[ToolBar-ToolBarManager]` | Zustand der Werkzeugleisten; dazu in dieser Portierung `FloatCx<id>`, `FloatCy<id>` für losgerissene Fenster ([E-84](../Intern/BEFUNDE.md#e-84)) | beim Beenden `SaveBarState("ToolBar")` (`mainfrm.cpp:5981`, `CMainFrame::SaveBarState` `:2909`); Name `mainfrm.cpp:1095` und `OTShim_Werkzeugleiste.cpp:4336` (`"%s-ToolBarManager"`) | Vorlage |
+| `[ToolBar-BarID<n>]` | eigene Schaltflächen einer Werkzeugleiste (`CustomButtonCount`), je Leiste | `mainfrm.cpp:1877` (`"%s-BarID%lu"`) | Vorlage |
+| `[ToolBar-Summary]`, `[ToolBar-Bar<n>]` | Lage der angedockten Leisten; diese Namen bildet die MFC-Bibliothek (`dockstat.cpp`: `"%Ts-Summary"`, `"%Ts-Bar%d"`, in der MFC-Quelle von Visual Studio, nicht in diesem Projekt). `CMainFrame::SaveBarState` schreibt zunächst in die Registry (`mainfrm.cpp:2917-2918`); ob und wie diese beiden in die `Eudora.ini` gelangen, ist **unklar** — für `[ToolBar-ToolBarManager]` ist es gemessen ([E-84](../Intern/BEFUNDE.md#e-84)) | `mainfrm.cpp:2909-2923` | Vorlage |
+| `[Configurations]`, `[Switches]`, `[Miscellaneous]` | Abschnitte **alter** Eudora-Fassungen; Eudora übernimmt ihren Inhalt beim Start nach `[Settings]` — aber nur, solange die Datei noch kein `[Settings]` hat; danach werden sie nicht mehr gelesen | `ConvertIni`, `rs.cpp:1271`, Bedingung `:1415-1418`, aufgerufen `:1420-1427` | Vorlage |
 
-Die Verzeichnisdienste (LDAP, Ph) lesen ihre Einstellungen aus einer eigenen
-Datei neben ihrem Modul, nicht aus der `Eudora.ini`
-(`DirectoryServices/LDAP/src/config_init.cpp:239`,
-`DirectoryServices/Ph/src/configinit.cpp:82`). Ob Zusatzmodule eigene
+Die Verzeichnisdienste (LDAP, Ph) haben eine eigene Datei neben ihrem Modul
+und lesen nicht aus der `Eudora.ini`. Bei LDAP heißt sie `LDAPinit.ini` und
+ist nur die **Vorlage** für die eigentliche Ablage, aus der die Einstellungen
+dann kommen (`DirectoryServices/LDAP/src/config_init.cpp:247-259`; vermutlich
+die Registry, der Schalter heißt *UpdateRegistry* — nicht nachgesehen); bei
+Ph ist nur der Dateiname neben dem Modul belegt
+(`DirectoryServices/Ph/src/configinit.cpp:82-95`). Ob Zusatzmodule eigene
 Abschnitte in die `Eudora.ini` schreiben, ist **nicht untersucht**.
 
 ### Was ein zusätzliches Konto eigens haben kann
@@ -1038,7 +1049,12 @@ diese — die Liste ist aus dem Quelltext gelesen, nicht vermutet:
 
 **Aus den Kontoeinstellungen** (*Tools → Personalities*, Rechtsklick →
 *Properties*), 40 Schlüssel, geschrieben von `SavePersonaInfo`
-(`persona.cpp:931-1078`), gelesen von `GetParams` (`persona.cpp:278-490`):
+(`persona.cpp:958-1105`). Gelesen werden davon 38 von `GetParams`
+(`persona.cpp:278-490`): `SavePasswordText` liest es nicht, und
+`MarkAsDeleted` bildet es dort aus dem Gegenteil von
+`TransferToTrashOnDelete` (`persona.cpp:431-432`) — wer `MarkAsDeleted` von
+Hand im Abschnitt eines Kontos ändert, sieht im Dialog vermutlich keine
+Wirkung (nicht gemessen):
 
 | Gruppe | Schlüssel |
 |---|---|
@@ -1084,7 +1100,7 @@ Jeweils: Klickweg, was zu sehen sein soll.
 | 6 | *Edit → Find → Find Messages* (Strg+F), Kriterium *Headers* *contains* `x-persona` | Treffer aus Mails zusätzlicher Konten | [FAQ 16](FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus): dieser Teil nur am Quelltext |
 | 7 | *Message → Reply*, *Reply to All*, *Redirect*; Strg+R | Verfassen-Fenster mit den erwarteten Empfängern | täglicher Weg; bestätigt ist nur *Forward* |
 | 8 | *Special → Empty Trash* mit `TidyAttach=0` (Häkchen unter *Attachments* aus) | die Anhang-Dateien der gelöschten Mail bleiben im Anhangverzeichnis | [FAQ 14](FAQ.md#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche): bestätigt ist nur der Fall `1` |
-| 9 | *Tools → Options → Junk Mail Extras*, *Use Ctrl-J for Junk* an- und wieder abhaken, jeweils *OK*, und die Menüs *Message* und *Special* ansehen | Häkchen an: *Message → Junk* zeigt Strg+J, *Special → Filter Messages* zeigt Strg+Umschalt+L. Häkchen aus: *Special → Filter Messages* zeigt Strg+J, *Junk* kein Kürzel (`mainfrm.cpp:8506-8516`) | [FAQ 12](FAQ.md#12-filter-messages-strgj-tut-nichts), [FAQ 19](FAQ.md#19-welche-einstellungen-sind-anders-als-im-original-eudora--und-warum) |
+| 9 | *Tools → Options → Junk Mail Extras*, *Use Ctrl-J for Junk* an- und wieder abhaken, jeweils *OK*, und die Menüs *Message* und *Special* ansehen | Häkchen an: *Message → Junk* zeigt Strg+J, *Special → Filter Messages* zeigt Strg+Umschalt+L. Häkchen aus: *Special → Filter Messages* zeigt Strg+J, *Junk* kein Kürzel (`mainfrm.cpp:8621-8631`) | [FAQ 12](FAQ.md#12-filter-messages-strgj-tut-nichts), [FAQ 19](FAQ.md#19-welche-einstellungen-sind-anders-als-im-original-eudora--und-warum) |
 | 10 | `WholeSummaryLabelColor=0` in die `Eudora.ini` (`[Settings]`, Eudora vorher beenden), neu starten | nur die Spalte *Label* ist farbig | [FAQ 9](FAQ.md#9-wie-markiere-ich-wichtige-mails-farbig) nennt es als Wahl |
 | 11 | Menü *Special* ansehen | *Change Password…* fehlt (ab Werk ausgeblendet) | prüft eine Aussage dieser Datei, die sonst niemand trifft |
 | 12 | *Tools → Personalities*, Rechtsklick auf ein Konto → *Properties* | dieselben Felder für Verschlüsselung wie unter *Checking Mail* | [FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich) und [7](FAQ.md#7-wie-lege-ich-ein-zweites-konto-an) verweisen darauf |
