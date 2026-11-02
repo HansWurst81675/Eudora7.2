@@ -149,9 +149,17 @@ static void Test_E143_Suchfenster(const char* szEudoraDir)
 	TT_CHECK_MSG(pFn != NULL, "Schalter bE143NachOut im Suchfenster nicht gefunden (E-143)");
 	if (pFn)
 	{
-		TT_CHECK_MSG(QT_Enthaelt(pFn, "if ( bE143NachOut && !pSum->IsComp() ) { nE143Abgelehnt++; ProgressAdd(1); continue; }"), "empfangene Treffer nach Out gehen wieder einzeln an Xfer - ein Hinweis je Treffer (E-143)");
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "if ( bE143NachOut && !pSum->IsComp() && pTocDoc != pDestTocDoc ) { nE143Abgelehnt++; ProgressAdd(1); continue; }"), "empfangene Treffer nach Out gehen wieder einzeln an Xfer - ein Hinweis je Treffer (E-143), oder ein Treffer, der schon in Out liegt, zaehlt mit (PRUEFER-82 K4)");
 		TT_CHECK_MSG(QT_Zaehle(pFn, "AlertDialog( IDD_XFER_TO_OUT_REFUSED );") == 1, "der Out-Hinweis steht nicht genau einmal im Uebertragungsweg des Suchfensters (E-143)");
 		TT_CHECK_MSG(QT_Enthaelt(pFn, "if ( nE143Abgelehnt > 0 )"), "der Hinweis haengt nicht mehr an der Zahl der abgelehnten Treffer (E-143)");
+		// PRUEFER-82 K4: der Hinweis muss NACH der Schleife stehen und die
+		// Logzeile schreiben - vorher blieb der Test gruen, wenn der Block in
+		// die Schleife wanderte oder die Logzeile fehlte.
+		char* pNach = QT_Abschnitt(pFn, "CloseProgress();", "return TRUE;");
+		TT_CHECK_MSG(pNach != NULL && QT_Enthaelt(pNach, "AlertDialog( IDD_XFER_TO_OUT_REFUSED );"), "der Out-Hinweis steht nicht mehr nach der Schleife (CloseProgress) - dann kommt er wieder je Treffer (E-143)");
+		TT_CHECK_MSG(pNach != NULL && QT_Enthaelt(pNach, "E-143 Suchfenster nach Out:"), "die Logzeile 'E-143 Suchfenster nach Out' fehlt (E-143)");
+		if (pNach)
+			free(pNach);
 		free(pFn);
 	}
 	free(pText);

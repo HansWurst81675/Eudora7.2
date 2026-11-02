@@ -3878,8 +3878,11 @@ BOOL CSearchView::OnDynamicCommand(UINT uID)
 							continue;
 						
 						// E-143: empfangene Nachricht nach Out - Xfer wuerde je
-						// Treffer einen Hinweis zeigen; zaehlen, weiter.
-						if ( bE143NachOut && !pSum->IsComp() )
+						// Treffer einen Hinweis zeigen; zaehlen, weiter. Liegt
+						// der Treffer schon in Out, gibt Xfer still zurueck
+						// (tocdoc.cpp, TargetToc == this) - dann auch hier kein
+						// Hinweis (PRUEFER-82 K4).
+						if ( bE143NachOut && !pSum->IsComp() && pTocDoc != pDestTocDoc )
 						{
 							nE143Abgelehnt++;
 							ProgressAdd(1);
