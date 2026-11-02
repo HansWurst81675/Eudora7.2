@@ -340,6 +340,30 @@ Entscheidung vom 02.11.2026: ein Hinweis je Übertragung. Lokales Postfach *In*.
 Am Prüfstand am 02.11.2026 so gefahren (Fall `E-143s`): neuer Bau ein Hinweis
 bei drei Treffern, der Bau ohne die Änderung drei.
 
+## <a id="e-122-naechstes"></a>Mit dem nächsten Paket: Eingangsdatum einer nach IMAP übertragenen Mail ([E-122](BEFUNDE.md#e-122))
+
+**Erst mit dem nächsten Paket auszuführen, nicht mit 7.2.1.130** (dort ist die
+Behebung nicht drin). Bis dahin trug eine Mail, die man aus einem **lokalen**
+Postfach in einen **IMAP-Ordner** überträgt, dort ein Eingangsdatum, das um die
+Zeitzone deines Rechners zu früh lag (im Winter eine Stunde, im Sommer zwei).
+Der `Date:`-Kopf der Mail selbst blieb richtig; falsch war nur das Datum, nach
+dem der Server und andere Programme „nach Eingang“ sortieren.
+
+1. Im lokalen *In* eine Mail aussuchen, deren Uhrzeit du kennst (Spalte
+   *Date*), z. B. 10:15.
+2. Die Mail markieren und mit *Transfer* in einen Ordner deines IMAP-Kontos
+   übertragen (am besten einen Ordner, in dem sonst wenig liegt).
+3. Den Ordner im **Webmailer** öffnen und die Mail ansehen: das angezeigte
+   Datum stimmt mit der Uhrzeit aus Schritt 1 überein.
+   **Nicht bestanden:** die Uhrzeit liegt eine Stunde (Sommerzeit: zwei
+   Stunden) früher.
+4. In der `eudora.log` steht eine Zeile
+   `E-122 IMAP-Eingangsdatum aus Date:-Kopf: … uebernommen`
+   (Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet).
+
+Am Prüfstand am 02.11.2026 so gefahren (Fall `E-122p`, IMAP-Prüfserver): neuer
+Bau `differenz-min=0` für +0200 und −0500, alter Bau `differenz-min=-60`.
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales
