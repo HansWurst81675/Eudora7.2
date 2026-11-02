@@ -26,7 +26,10 @@
 # (Arbeitsweise/keine-tastendruecke-verschicken.md).
 #
 # Ausgabe:
-#   E39 ERGEBNIS abschnitt-wieder=<0|1> schluessel=<liste|-> aktuell-danach=<name|ungemessen> lebt=<0|1>
+#   E39 ERGEBNIS abschnitt-wieder=<0|1> schluessel=<liste|-> war-aktuell=<0|1|-> aktuell-danach=<name|ungemessen> lebt=<0|1>
+# war-aktuell kommt aus der Spurzeile; "-" heisst: der Bau schreibt sie nicht
+# (vor der Behebung). E-39p verlangt war-aktuell=1 - sonst hat der Lauf das
+# Loeschen einer NICHT aktuellen Persoenlichkeit gemessen (PRUEFER-85 K5).
 # Positivprobe (E39 PROBE): der Abschnitt stand vorher da, die Rueckfrage kam,
 # und direkt nach Yes fehlten Abschnitt und Listeneintrag - sonst hat das
 # Loeschen nicht stattgefunden, und abschnitt-wieder=0 waere nichts wert.
@@ -228,7 +231,10 @@ if ($mp -ne [IntPtr]::Zero) {
         Write-Output ('E39 Change Password: Meldung [' + ($txt -replace "`r?`n", ' ') + ']')
         [void][E39W]::PostMessage($fehler, 0x0111, [IntPtr]1, (Kind $fehler 1))
         Start-Sleep -Seconds 1
-        $vorlauf += 'kennwort-meldung'
+        # PRUEFER-85 K5: nur DIESE Meldung (IDS_ERR_BAD_POP_ACCT) laesst die
+        # Persoenlichkeit als aktuelle stehen; jeder andere Dialog ist kein
+        # Vorlauf, sonst blieben E-39v und E-39p gruen, ohne dass er wirkt.
+        if ($txt -like '*machine name*') { $vorlauf += 'kennwort-meldung' } else { $vorlauf += 'kennwort-andere-meldung' }
     } else { $vorlauf += 'kennwort-ohne-meldung' }
 } else { $vorlauf += 'kennwort-kein-dialog' }
 $d = Dialoge
@@ -320,13 +326,17 @@ $schl = '-'
 if ($null -ne $s2) { $schl = (@($s2.Zeilen | ForEach-Object { ($_ -split '=', 2)[0] }) -join ',') }
 
 $aktuell = 'ungemessen'
+$warAktuell = '-'
 $log = Join-Path $md 'eudora.log'
 if (Test-Path -LiteralPath $log) {
     # Spurzeile: "E-39 Remove <Name>: war-aktuell=<0|1> aktuell=<name>" -
     # mit Leerzeichen davor, sonst trifft "war-aktuell=" (am 02.11.2026 so
     # geschehen: aktuell-danach=1).
     $spur = @(Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-39 .* aktuell=(\S+)' })
-    if ($spur.Count -gt 0) { [void]($spur[-1] -match ' aktuell=(\S+)'); $aktuell = $Matches[1] }
+    if ($spur.Count -gt 0) {
+        [void]($spur[-1] -match ' aktuell=(\S+)'); $aktuell = $Matches[1]
+        if ($spur[-1] -match 'war-aktuell=(\d)') { $warAktuell = $Matches[1] }
+    }
 }
 
 $probe = 'ok'
@@ -334,4 +344,4 @@ if ($vorher -ne 1 -or $listeVorher -ne 1) { $probe = 'abschnitt-fehlte-vorher' }
 elseif ($frage -ne 1) { $probe = 'keine-rueckfrage' }
 elseif ($nachAbschnitt -ne 0 -or $nachListe -ne 0) { $probe = 'nicht-geloescht' }
 Write-Output ('E39 PROBE ' + $probe)
-Write-Output ('E39 ERGEBNIS abschnitt-wieder=' + $wieder + ' schluessel=' + $schl + ' aktuell-danach=' + $aktuell + ' lebt=' + $lebt)
+Write-Output ('E39 ERGEBNIS abschnitt-wieder=' + $wieder + ' schluessel=' + $schl + ' war-aktuell=' + $warAktuell + ' aktuell-danach=' + $aktuell + ' lebt=' + $lebt)

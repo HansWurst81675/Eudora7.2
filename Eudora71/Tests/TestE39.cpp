@@ -17,7 +17,8 @@
 // geloeschten Abschnitt.
 //
 // Gegenprobe beim Bau: die Zeile "SetCurrent( NULL );" in Remove
-// entfernen -> genau Test_E39_Remove wird rot.
+// entfernen -> genau Test_E39_Remove wird rot. Ebenso (PRUEFER-85 K1)
+// "if ( FALSE && bWarAktuell )" und RemoveKey vor SetCurrent( NULL ).
 
 #include <afx.h>
 #include <string.h>
@@ -54,6 +55,19 @@ static void Test_E39_Remove(const char* szEudoraDir)
 			TT_CHECK_MSG(pCache1 < pUmsch && pCache2 < pUmsch, "die Kennwortschluessel werden erst NACH dem Umschalten aus dem Zwischenspeicher genommen - zu spaet, SetCurrent hat sie schon geschrieben (E-39)");
 		if (pLoesch && pUmsch)
 			TT_CHECK_MSG(pLoesch < pUmsch, "umgeschaltet wird vor dem Loeschen des Abschnitts - Reihenfolge pruefen (E-39)");
+		// PRUEFER-85 K1: einzelne Zeilen genuegen nicht. Mit
+		// "if ( FALSE && bWarAktuell )" oder mit RemoveKey VOR SetCurrent
+		// (SavePassInfo legt das Kennwort beim Umschalten wieder ab) blieb
+		// der Test gruen. Verlangt wird deshalb der ganze Block in dieser
+		// Reihenfolge, unter der unveraenderten Bedingung.
+		TT_CHECK_MSG(QT_Enthaelt(pFn,
+			"const BOOL bWarAktuell = ( m_Current.CompareNoCase( PersonaID ) == 0 ); "
+			"if ( bWarAktuell ) { "
+			"RemoveIniFromCache( IDS_INI_SAVE_PASSWORD ); "
+			"RemoveIniFromCache( IDS_INI_SAVE_PASSWORD_TEXT ); "
+			"SetCurrent( NULL ); "
+			"m_Passwords.RemoveKey( PersonaID ); }"),
+			"der E-39-Block in Remove steht nicht mehr vollstaendig unter if ( bWarAktuell ) in der Reihenfolge Zwischenspeicher - Umschalten - Kennwort vergessen (E-39, PRUEFER-85 K1)");
 		free(pFn);
 	}
 	free(pText);

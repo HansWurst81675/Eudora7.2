@@ -360,9 +360,11 @@ E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=
 # stehen, Forget Password(s) markiert SavePasswordText, dann Personalities >
 # Delete > Yes, beenden. Am 02.11.2026: Bau 7.2.1.131+7e38b87b (ohne die
 # Behebung) abschnitt-wieder=1 schluessel=SavePasswordText; mit der Behebung
-# (6e7d3252) abschnitt-wieder=0. E-39v/E-39w sind die Positivproben: ohne
+# (6e7d3252) abschnitt-wieder=0. Seit PRUEFER-85 K5 verlangt E-39p
+# war-aktuell=1 aus der Spurzeile, und E-39v zaehlt nur die Meldung mit
+# "machine name" (IDS_ERR_BAD_POP_ACCT). E-39v/E-39w sind die Positivproben: ohne
 # den Vorlauf ist die geloeschte nicht die aktuelle, und ohne Loeschen ist
 # abschnitt-wieder=0 nichts wert.
-E-39p | C:\Temp\E39 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
+E-39p | C:\Temp\E39 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=1 aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
 E-39v | C:\Temp\E39 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
 E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
