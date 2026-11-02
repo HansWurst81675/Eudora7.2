@@ -37,6 +37,7 @@
 // Die echten Funktionen aus eudora.cpp, von Extract.ps1 geschnitten.
 #include "generated/eudora_e209.inc"
 #include "generated/eudora_e133_klammer.inc"
+#include "generated/fileutil_e209.inc"
 
 static void Test_E133_Stelle(const char* szEudoraDir)
 {
@@ -293,9 +294,77 @@ static void Test_E209(void)
 	TT_EndTest();
 }
 
+// PRUEFER-87 P1: seit buf 790 Zeichen fasst, kam ein Ordner mit 261 bis 789
+// Zeichen geklammert bei GetDirs an, und CheckMailDirectory schrieb mit
+// strcat ueber szShortEDir[_MAX_PATH + 1].
+static void Test_E209_Laenge(const char* szEudoraDir)
+{
+	TT_BeginTest("E-209 (P1): ein zu langes Mailverzeichnis wird abgewiesen, nicht ueber den Puffer geschrieben");
+	{
+		char szLang[400];
+		memset(szLang, 'a', sizeof(szLang));
+		szLang[0] = 'C'; szLang[1] = ':'; szLang[2] = '\\';
+
+		szLang[_MAX_PATH - 1] = 0;		// 259 Zeichen: passt (mit Rueckstrich 260)
+		TT_CHECK_MSG(E209MailDirPasst(szLang, FALSE), "259 Zeichen werden abgewiesen - das passt noch in CheckMailDirectory (P1)");
+		TT_CHECK_MSG(!E209MailDirPasst(szLang, TRUE), "259 Zeichen plus Laufwerk werden durchgelassen (P1)");
+
+		szLang[_MAX_PATH - 1] = 'a';
+		szLang[_MAX_PATH] = 0;			// 260 Zeichen: Rueckstrich passt nicht mehr
+		TT_CHECK_MSG(!E209MailDirPasst(szLang, FALSE), "260 Zeichen werden durchgelassen - der Rueckstrich in CheckMailDirectory laeuft ueber (P1)");
+
+		szLang[_MAX_PATH] = 'a';
+		szLang[275] = 0;				// der Bereich aus PRUEFER-87 P1
+		TT_CHECK_MSG(!E209MailDirPasst(szLang, FALSE), "275 Zeichen werden durchgelassen - strcat schreibt ueber szShortEDir (P1)");
+		TT_CHECK_MSG(!E209MailDirPasst(NULL, FALSE), "NULL wird durchgelassen");
+	}
+	{
+		// E133InBefehlszeile mit einem Ordner ueber der Grenze: ohne Kurzform
+		// (den Ordner gibt es nicht) bleibt die Langform, CheckMailDirectory
+		// weist sie dann ab. Kein Absturz, buf bleibt abgeschlossen.
+		CString szOrdner("C:\\");
+		while (szOrdner.GetLength() < 270)
+			szOrdner += "E209 zu lang ";
+		TCHAR buf[3 * MAX_PATH + 10];
+		buf[sizeof(buf) / sizeof(TCHAR) - 1] = 'X';
+		E133InBefehlszeile(szOrdner, buf, sizeof(buf) / sizeof(TCHAR) - 1);
+		TT_CHECK_MSG(_tcslen(buf) < sizeof(buf) / sizeof(TCHAR) - 1, "E133InBefehlszeile schliesst buf nicht ab (P1)");
+		TT_CHECK_MSG(buf[sizeof(buf) / sizeof(TCHAR) - 1] == 'X', "E133InBefehlszeile schreibt hinter buf (P1)");
+	}
+
+	char* pText = QT_LiesNurCode(szEudoraDir, "eudora.cpp");
+	char* pFu   = QT_LiesNurCode(szEudoraDir, "fileutil.cpp");
+	TT_CHECK_MSG(pText != NULL && pFu != NULL, "eudora.cpp oder fileutil.cpp nicht lesbar - ungeprueft ist nicht gruen");
+	if (pText)
+	{
+		// Beide Kurzform-Ausweichen vergleichen gegen die Grenze von
+		// CheckMailDirectory, nicht nur gegen buf.
+		char* pKl = QT_Abschnitt(pText, "static void E133InBefehlszeile(", "BOOL CEudoraApp::StartEudoraWithDefaultLocation()");
+		TT_CHECK_MSG(pKl && QT_Enthaelt(pKl, "if (szPfad.GetLength() > MAX_PATH - 1 ||"), "E133InBefehlszeile weicht erst ab der Groesse von buf auf die Kurzform aus (P1)");
+		if (pKl) free(pKl);
+		TT_CHECK_MSG(QT_Enthaelt(pText, "if (szEigenes.GetLength() > MAX_PATH - 1 ||"), "E-132 \"Nein\" weicht erst ab der Groesse von buf auf die Kurzform aus (P1)");
+		free(pText);
+	}
+	if (pFu)
+	{
+		char* pFn = QT_Abschnitt(pFu, "BOOL CheckMailDirectory(", "BOOL GetDirs(");
+		TT_CHECK_MSG(pFn != NULL, "CheckMailDirectory nicht gefunden");
+		if (pFn)
+		{
+			const long lPruef  = QT_Stelle(pFn, "if (!E209MailDirPasst(dir,");
+			const long lStrcat = QT_Stelle(pFn, "strcat(szShortEDir, dir);");
+			TT_CHECK_MSG(lPruef >= 0 && lStrcat >= 0 && lPruef < lStrcat, "CheckMailDirectory prueft die Laenge nicht VOR strcat(szShortEDir, dir) (P1)");
+			free(pFn);
+		}
+		free(pFu);
+	}
+	TT_EndTest();
+}
+
 void RunE133Tests(const char* szEudoraDir)
 {
 	Test_E133_Stelle(szEudoraDir);
 	Test_E133_Klammer();
 	Test_E209();
+	Test_E209_Laenge(szEudoraDir);
 }

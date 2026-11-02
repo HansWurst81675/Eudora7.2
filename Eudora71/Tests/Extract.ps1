@@ -379,6 +379,14 @@ $r4Start = Find-Line $eu '^static void E133InBefehlszeile' 0
 $r4End = Find-Line $eu '^\}\s*$' $r4Start
 Write-Region $eu $r4Start $r4End (Join-Path $OutDir "eudora_e133_klammer.inc") $euPath
 
+# Region R5: E209MailDirPasst (fileutil.cpp) - passt ein Mailverzeichnis in
+# die Puffer von CheckMailDirectory? Sonst Stapelueberlauf (PRUEFER-87 P1).
+$fuPath = Join-Path $SrcDir "fileutil.cpp"
+$fu = Read-Lines $fuPath
+$r5Start = Find-Line $fu '^BOOL E209MailDirPasst' 0
+$r5End = Find-Line $fu '^\}\s*$' $r5Start
+Write-Region $fu $r5Start $r5End (Join-Path $OutDir "fileutil_e209.inc") $fuPath
+
 Write-Host "Extract.ps1: fertig."
 
 # ---------------------------------------------------------------- ReadMessageDoc.cpp

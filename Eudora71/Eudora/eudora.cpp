@@ -4147,7 +4147,11 @@ static void E133InBefehlszeile(const CString& szPfad, LPTSTR pBuf, size_t nBuf)
 	CString szGeklammert;
 	szGeklammert.Format("\"%s\"", (LPCTSTR) szPfad);
 
-	if (szGeklammert.GetLength() >= (int) nBuf)
+	// PRUEFER-87 P1: die Grenze ist nicht buf (seit N1 790 Zeichen), sondern
+	// CheckMailDirectory hinter GetDirs (_MAX_PATH - 1, siehe
+	// E209MailDirPasst). Laenger: Kurzform. Gibt es keine, bleibt die
+	// Langform, und CheckMailDirectory weist sie sicher ab.
+	if (szPfad.GetLength() > MAX_PATH - 1 || szGeklammert.GetLength() >= (int) nBuf)
 	{
 		TCHAR szKurz[MAX_PATH + 1];
 		if (::GetShortPathName(szPfad, szKurz, MAX_PATH + 1) > 0)
@@ -4573,7 +4577,10 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				// (:3686): die Kurzform hat keine Leerzeichen und braucht
 				// keine Klammer.
 				//
-				if (szGeklammert.GetLength() >= (int)(sizeof(buf) / sizeof(TCHAR)))
+				// PRUEFER-87 P1: gegen die Grenze von CheckMailDirectory, nicht
+				// gegen buf (seit N1 790 Zeichen) - wie in E133InBefehlszeile.
+				if (szEigenes.GetLength() > MAX_PATH - 1 ||
+					szGeklammert.GetLength() >= (int)(sizeof(buf) / sizeof(TCHAR)))
 				{
 					TCHAR szKurz[MAX_PATH + 1];
 					if (::GetShortPathName(szEigenes, szKurz, MAX_PATH + 1) > 0)
