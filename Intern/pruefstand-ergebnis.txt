@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 09:14:36
-freigabe=Gregor am 02.11.2026: ja, du kannst deine tests durchführen, ich werde meine tests außerhalb der VM machen.
-nur=E-140p   (Teillauf, nicht der Gesamtstand)
+zeit=2026-11-02 11:42:00
+freigabe=Gregor am 02.11.2026: 'ja, du kannst deine tests durchführen, ich werde meine tests außerhalb der VM machen.'
+nur=E-122p   (Teillauf, nicht der Gesamtstand)
 faelle=1
 bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] E-140p   E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
+fall=[ ok ] E-122p   E122 ERGEBNIS nachrichten=2 passt=2 verschoben=0 lebt=1
