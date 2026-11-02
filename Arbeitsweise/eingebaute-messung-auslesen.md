@@ -159,3 +159,13 @@ Bildschirmfoto.
 Siehe [[pruefen-statt-vermuten]] — der zweite Teil desselben Vorfalls: der
 Grund stand als Kommentar fuenf Zeilen ueber dem Einbau. Ausserdem
 [[daueraufgaben-brauchen-einen-takt]] und [[wissen-gehoert-in-dateien]].
+
+## Nachtrag 02.11.2026 (CHRONIST): die Marke gelesen, aber nicht ausgewertet
+
+Transkript `25e03584-…jsonl`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-02]]).
+
+Gregors Testdateien zu 7.2.1.130 kamen um 06:46 mit der `eudora.log`. Für [E-140](../Intern/BEFUNDE.md#e-140) gibt es eine Marke, die genau die Frage des Tests beantwortet: `E-140 speichern aus Nachrichtenfenster:` oder `E-140 speichern aus Verfassen-Fenster:`. Um 06:46:46 stand die Ausgabe des eigenen `grep` im Transkript: **zweimal** `aus Verfassen-Fenster`, **null-mal** `aus Nachrichtenfenster`, dazu eine Zeile nur mit `E-101 speichern:` ohne E-140-Vorsatz, also der Weg über die Postfachliste. Um 06:47:29 hieß die Datei *„gespeichert aus dem Lesefenster“*, um 07:00:20 stand E-140 als *„von dir an 7.2.1.130 bestätigt“* im Chat und um 07:15:06 im Commit `1c75f5c3` (*„beide .txt (Nachrichten- und Verfassen-Fenster)“*). Gefunden hat es LEKTOR-122 um 07:35 (L-122.1). Gregors zweiter Test um 08:24 brachte die fehlende Zeile, und erst damit war E-140 bestätigt (`9c28db92`).
+
+Das ist Punkt 4 oben, *„die Zahl der Treffer gehört genannt — auch die Null“*. Gezählt war richtig, genannt wurde die Null nicht. Und Gregors Satz *„ich habe ja den test für E-140 nach testplan gemacht“* (06:57:17) ersetzte die Auswertung. Der Testplan sagte damals nicht, dass die Mail per Doppelklick zu öffnen ist (vom LEKTOR nachgezogen, belegt an L-122.1).
+
+**How to apply, zusätzlich:** Eine Bestätigung aus Gregors Protokoll nennt **die Markenzeile, die den Weg beweist, mit ihrer Anzahl**: *„`aus Nachrichtenfenster`: 0, `aus Verfassen-Fenster`: 2 → nur das Verfassen-Fenster ist bestätigt“*. Ohne diese Zeile gibt es kein „bestätigt“, auch wenn Gregor sagt, er habe nach Testplan getestet.

@@ -38,3 +38,13 @@ Gezählt wie oben. 28.10. ab 15:28 MEZ: 21 Antworttexte, einer englisch (15:38:3
 ## Nachtrag 30.10.2026 (CHRONIST): drei Zeilen in 51 Antworttexten
 
 Gezählt wie oben. 29.10. 21:20 bis 22:31 MEZ: 41 Antworttexte, einer halb englisch (21:41:45, *„I ziehe gerade veraltete Zeilenangaben in FILTER.md und EINSTELLUNGEN.md nach.“*), mitten im Einarbeiten von LEKTOR-96. 30.10. bis 07:10: 10 Antworttexte, zwei englisch (07:08:14 *„Now the WEITERMACHEN file. Let me read it fully.“*, 07:12:18 *„Now assemble both files.“*), beide als Ankündigung des nächsten Handgriffs, ohne Kompaktierung davor. Gregor hat nicht nachgefragt. Das Muster vom 29.10. (*„direkt nach einer Werkzeugausgabe, die ich gerade prüfte“*) passt auf alle drei. Neu ist die Form: kurze Selbstansagen vor einem Werkzeugaufruf.
+
+## Nachtrag 02.11.2026 (CHRONIST): „nach der Anleitung, die ich dir eben geschickt habe“
+
+Transkript `25e03584-…jsonl`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-02]]).
+
+Gregor fragte zweimal nach E-178: 07:35:08 *„muß ich hierzu was machen?“*, 08:04:41 *„gibt es hier zum testen eine anleitung?“*. Die Antworten kamen nur in Zwischenzeilen. Um 07:35:41: *„Du musst gerade nichts tun …“*. Um 08:05:22: *„… mit dir die Schritte zur Prüfung der Emoji-Darstellung … durchgesprochen“*. Die PR-Meldung um 08:11:36 sagte: *„**E-178** nach der Anleitung, die ich dir eben geschickt habe.“* **Geschickt war keine.** Kein Antworttext zwischen 07:37:27 und 08:11:36 enthält einen Schritt zu E-178 oder einen Link auf den Abschnitt. Die Anleitung stand seit 07:38:21 im Testplan (`23e624af`), aber nur auf dem Zweig `e177_filter_programm`, nicht auf `main`.
+
+Die richtige Antwort hätte aus einer Zeile bestanden: *„Ja: TESTPLAN, Abschnitt E-178 (Link), liegt auf main, sobald … gemergt ist.“* Gregor testete stattdessen E-140 und meldete um 08:26:10 *„gut, ich teste nichts mehr.“*
+
+**How to apply, zusätzlich:** Auf *„gibt es eine Anleitung?“* antwortet der nächste Antworttext mit dem Link auf den TESTPLAN-Abschnitt und sagt, auf welchem Stand er liegt. Ein Verweis auf etwas *„eben Geschicktes“* wird vorher im eigenen Text gesucht ([[erfolgsmeldung-aus-dem-ergebnis]]).
