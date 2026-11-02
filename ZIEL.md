@@ -119,7 +119,7 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
 * **Die Nummer:** das erste Paket 7.2.2 heißt **7.2.2.132** — die letzte
   Stelle zählt weiter wie bei 7.2.1 (Gregor am 02.11.2026: *„7.2.2.132,
   ja“*). Die Marke auf GitHub heißt entsprechend `v7.2.2.<n>`.
-* **Umgesetzt im Zweig `hilfe_menue`, am Prüfstand gemessen** (kommt mit
+* **Umgesetzt, am Prüfstand gemessen, auf `main` seit #206** (kommt mit
   7.2.2.132, [A-5](Intern/BEFUNDE.md#a-5)): im Hilfe-Menü *Keyboard
   Shortcuts* und *Settings Reference* — eine HTML-Seite, erzeugt aus der
   Funktionsübersicht [`Doku/FUNKTIONEN.md`](Doku/FUNKTIONEN.md) (gemergt
