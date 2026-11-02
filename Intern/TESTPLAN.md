@@ -213,20 +213,51 @@ kann kein Emoji tragen).
 ## <a id="e-178-naechstes"></a>In 7.2.1.130: Fett, Kursiv und Link im Bearbeiten-Modus lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
 
 **Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129** (dort ist die
-Behebung nicht drin). **Vorher das Postfach sichern.** Lokales Postfach, nicht
-IMAP.
+Behebung nicht drin). Geprüft wird an einer Nachricht im **lokalen** Postfach
+*In*, nicht in einem IMAP-Ordner.
 
-1. Die Prüfnachricht `Testdaten/e136-zeichen-als-entitaet.eml` (🔥 und Ж)
-   oder eine andere HTML-Nachricht mit Emoji öffnen; sie wird richtig angezeigt.
-2. In den Bearbeiten-Modus schalten (Knopf mit dem Hinweis *Edit the message* in der Leiste des
-   Nachrichtenfensters).
-3. Ein Wort **neben** dem Emoji markieren und *Fett* (Strg+B) geben, dann
-   wieder ausschalten; dasselbe mit *Kursiv* (Strg+I); dann *Make Hyperlink* auf ein
-   anderes Wort.
-4. Nach jedem Schritt: 🔥 und Ж stehen weiter da, **keine** Fragezeichen.
-5. *Strg+S*, schließen, wieder öffnen: 🔥 und Ж stehen da.
-6. Zusätzlich: Text mit dem Emoji markieren und *Antworten* — in der Antwort
-   steht das Emoji, nicht `??`.
+**Vorbereitung — eine Nachricht mit Emoji nach *In* bringen:**
+
+a. Aus dem Webmailer (z. B. web.de oder GMX im Browser) eine Mail an dich
+   selbst schicken, **HTML-Format**, im Text ein paar Wörter, dazwischen 🔥
+   und ein kyrillisches Ж (zum Kopieren: 🔥 Ж).
+b. In Eudora den IMAP-Posteingang abrufen, die Mail markieren und mit
+   *Transfer → In* in das **lokale** *In* übertragen.
+c. Die Mail in *In* per Doppelklick öffnen: 🔥 und Ж stehen richtig da.
+   Steht dort schon jetzt ein Fragezeichen, bitte hier aufhören und ein
+   Bildschirmfoto schicken — dann liegt der Fehler beim Übertragen, nicht im
+   Bearbeiten-Modus.
+
+**Vorbereitung — *In* sichern** (falls beim Bearbeiten etwas schiefgeht):
+
+d. Eudora beenden.
+e. Im Mailverzeichnis des Testpakets die beiden Dateien `In.mbx` und `In.toc`
+   in einen anderen Ordner kopieren (z. B. `Sicherung-E178` daneben).
+f. Eudora wieder starten. Zurückholen hieße: Eudora beenden, die beiden
+   Dateien zurückkopieren, starten.
+
+**Der Test:**
+
+1. Die Mail aus Schritt c in *In* öffnen.
+2. In den Bearbeiten-Modus schalten: Knopf in der Leiste des
+   Nachrichtenfensters mit dem Hinweis *Edit the message* (laut Menüvorlage
+   `EudoraRes.rc`, Hinweistext zu `ID_EDIT_MESSAGE`).
+3. Ein Wort **neben** dem Emoji markieren und *Fett* geben (Strg+B), dann
+   wieder ausschalten; dasselbe mit *Kursiv* (Strg+I).
+4. Ein **anderes** Wort markieren und *Make Hyperlink* wählen. Es steht im
+   Menü *Edit → Text → Make Hyperlink* und als Knopf mit dem Hinweis
+   *Make hyperlink* in der Formatierleiste (laut Menüvorlage `EudoraRes.rc`;
+   am laufenden Programm von mir noch nicht nachgesehen — findest du es dort
+   nicht, bitte sagen).
+5. Nach jedem der Schritte 3 und 4: 🔥 und Ж stehen weiter da, **keine**
+   Fragezeichen.
+6. *Strg+S*, die Mail schließen, wieder öffnen: 🔥 und Ж stehen da.
+7. Zusätzlich: Text mit dem Emoji markieren und *Reply* — in der Antwort
+   steht das Emoji, nicht `??`. Die Antwort danach ohne Senden schließen.
+
+**Bestanden:** in den Schritten 5 bis 7 nirgends ein Fragezeichen statt 🔥
+oder Ж. **Nicht bestanden:** ein `?` oder `??` an der Stelle — dann bitte
+sagen, nach welchem Schritt es zuerst auftrat.
 
 Bis 7.2.1.129 wurde aus dem Emoji schon in Schritt 3 `??` auf dem Bildschirm
 (am Quelltext belegt, nie am Programm gesehen — dieser Schritt ist die erste
