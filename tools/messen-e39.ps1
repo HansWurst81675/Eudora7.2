@@ -287,6 +287,11 @@ if ($eintrag -ge 0) {
     Write-Output ('E39 gewaehlt: ' + [E39W]::Gewaehlt($liste) + ' Eintrag(e)')
 
     $dlgVorher = @([E39W]::Fenster($pid32) | Where-Object { [E39W]::Klasse($_) -eq '#32770' })
+    # PRUEFER-88 K9: Laenge der eudora.log vor Delete - gesucht wird die
+    # Spurzeile nur dahinter, sonst gaelte die eines frueheren Laufs.
+    $logDatei = Join-Path $md 'eudora.log'
+    $logVorDelete = 0
+    if (Test-Path -LiteralPath $logDatei) { $logVorDelete = (Get-Item -LiteralPath $logDatei).Length }
     [void][E39W]::PostMessage($liste, 0x0111, [IntPtr]33038, [IntPtr]::Zero)   # IDM_DELETE_PERSONALITY
     $dlg = [IntPtr]::Zero
     $frist = (Get-Date).AddSeconds($WarteSekunden)
@@ -335,11 +340,17 @@ if ($null -ne $s2) { $schl = (@($s2.Zeilen | ForEach-Object { ($_ -split '=', 2)
 $aktuell = 'ungemessen'
 $warAktuell = '-'
 $log = Join-Path $md 'eudora.log'
-if (Test-Path -LiteralPath $log) {
+if ((Test-Path -LiteralPath $log) -and $null -ne $logVorDelete) {
     # Spurzeile: "E-39 Remove <Name>: war-aktuell=<0|1> aktuell=<name>" -
     # mit Leerzeichen davor, sonst trifft "war-aktuell=" (am 02.11.2026 so
-    # geschehen: aktuell-danach=1).
-    $spur = @(Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-39 .* aktuell=(\S+)' })
+    # geschehen: aktuell-danach=1). Nur hinter der Laenge vor Delete
+    # (PRUEFER-88 K9); ist die Datei kuerzer, wurde sie neu angelegt: ganz.
+    $fs = [IO.File]::Open($log, 'Open', 'Read', 'ReadWrite')
+    try {
+        if ($fs.Length -ge $logVorDelete) { [void]$fs.Seek($logVorDelete, 'Begin') }
+        $lt = (New-Object IO.StreamReader($fs, $ansi)).ReadToEnd()
+    } finally { $fs.Close() }
+    $spur = @($lt -split "`r?`n" | Where-Object { $_ -match 'E-39 .* aktuell=(\S+)' })
     if ($spur.Count -gt 0) {
         [void]($spur[-1] -match ' aktuell=(\S+)'); $aktuell = $Matches[1]
         if ($spur[-1] -match 'war-aktuell=(\d)') { $warAktuell = $Matches[1] }
