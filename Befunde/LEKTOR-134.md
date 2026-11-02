@@ -215,4 +215,15 @@ Gegengelesen: `git diff be422780..origin/messungen_vor_7_2_2_132` (Stand `f08258
 
 **Vorschlag:** *„… steht in der `eudora.log` eine Zeile mit dem Grund, wenn der Protokollbereich *Misc* eingeschaltet ist (`LogLevel` mit 0x8000; in der Vorgabe aus)“*.
 
-Werkzeuge nach dem Angleichen: `perl tools/doku-pruefen.pl` *„Kein Widerspruch gefunden.“*; `perl tools/offene-befunde.pl` *„52 offene Befunde, in beiden Listen gleich.“* Offen damit: [L-134.9](#l-134.9) bis [L-134.12](#l-134.12).
+**Nachgereicht `b9819cb6`** (*„Release-Notizen 7.2.1.131: GitHub-Text berichtigt ([E-170](../Intern/BEFUNDE.md#e-170), [E-141](../Intern/BEFUNDE.md#e-141), [E-179](../Intern/BEFUNDE.md#e-179), [E-176](../Intern/BEFUNDE.md#e-176))“*), gegengelesen nach erneutem Angleichen: Gregors Frage 1 oben ist entschieden (*„ja, berichtige den text auf github“*, zitiert in der letzten Zeile von `Releases/7.2.1.131/RELEASE-NOTIZEN.md`). Abgleich mit `gh release view v7.2.1.131 --json body` (gemessen): der veröffentlichte Text enthält die drei Stellen *„Nachtrag 02.11.2026“* und ist bis auf die Schlusszeile der Repo-Datei zeilengleich (`diff` → nur Zeile 141); dass die Schlusszeile mit ihrem relativen Verweis auf GitHub fehlt, ist richtig. Meine Angabe in der Tabelle oben (*„Schlusssatz, dass der Text auf GitHub unverändert ist“*) ist damit überholt. Der Rest aus [L-134.12](#l-134.12) betrifft die FAQ, nicht die Release-Notizen — dort steht zur Logzeile nur *„7.2.1.131 schreibt dann nur den Grund ins Protokoll“*, ohne die Bedingung *Misc*; ebenfalls Kleinkram.
+
+### <a id="l-134.13"></a>L-134.13 — Der Merge von `main` hat elf Startzeilen in TESTLAEUFE verdoppelt
+
+**Gewicht: Kleinkram.** Die Zählung der Starts gegen das Protokoll (`pruefe-startwege.pl`) zählt die Zeilen doppelt; ein fehlender Start kann dadurch verdeckt werden (Vermutung über die Zählweise, nicht nachgelesen). (gemessen)
+
+- `grep '^| 20' tools/TESTLAEUFE.md | sort | uniq -d | wc -l` → 11, alle vom 02.11. zwischen 15:50:04 und 16:06:10 (`C:\Temp\E194`, `E194K`, `E194-140`, `E194-177`, `E194-178`, `E194-alt`, `E194K-alt`).
+- Je Stand gezählt: `ae8083b0`, `c3a56169`, `ebb003d7` und `origin/main` (`ee7b5400`) je 0 doppelte Zeilen, der Merge `fc2f9eae` 11 — beide Seiten hatten dieselben fremden Zeilen nachgetragen, an verschiedenen Stellen.
+
+**Vorschlag:** die Dubletten entfernen (eine Zeile je Zeitpunkt und Verzeichnis); `startzeilen-sammeln.pl` oder die Merge-Auflösung von `TESTLAEUFE.md` danach mit `sort | uniq -d` prüfen lassen.
+
+Werkzeuge nach dem Angleichen: `perl tools/doku-pruefen.pl` *„Kein Widerspruch gefunden.“*; `perl tools/offene-befunde.pl` *„52 offene Befunde, in beiden Listen gleich.“* Offen damit: [L-134.9](#l-134.9) bis [L-134.13](#l-134.13).
