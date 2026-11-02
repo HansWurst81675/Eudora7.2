@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 08:45:11
+zeit=2026-11-02 09:14:36
 freigabe=Gregor am 02.11.2026: ja, du kannst deine tests durchführen, ich werde meine tests außerhalb der VM machen.
-nur=E-177p   (Teillauf, nicht der Gesamtstand)
+nur=E-140p   (Teillauf, nicht der Gesamtstand)
 faelle=1
 bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] E-177p   E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1
+fall=[ ok ] E-140p   E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
