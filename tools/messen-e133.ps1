@@ -144,8 +144,21 @@ try {
             Write-Host ("E133 Hauptfenster {0}, Registry jetzt: {1}" -f $haupt, (RegJetzt))
             Start-Sleep -Seconds 3
             [void][E133]::PostMessageA($haupt, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)
+            # Beim Beenden kann ein Dialog warten - lesen und nennen, damit ein
+            # Abschuss durch testlauf.ps1 nicht ohne Grund dasteht.
             $ende = (Get-Date).AddSeconds(30)
-            while (-not $proz.HasExited -and (Get-Date) -lt $ende) { Start-Sleep -Milliseconds 500 }
+            while (-not $proz.HasExited -and (Get-Date) -lt $ende) {
+                Start-Sleep -Milliseconds 500
+                foreach ($h in [E133]::Oben([uint32]$proz.Id)) {
+                    if ([E133]::Kl($h) -ne '#32770' -or $gesehen.ContainsKey([string]$h)) { continue }
+                    $gesehen[[string]$h] = 1
+                    Write-Host ("E133 DIALOG BEIM BEENDEN titel=""{0}"" text=""{1}""" -f [E133]::Tx($h), ([E133]::Kinder($h) -replace "[\r\n\t]+", ' '))
+                }
+            }
+            Write-Host ("E133 beendet nach WM_CLOSE: {0}" -f $proz.HasExited)
+            if (-not $proz.HasExited) {
+                foreach ($h in [E133]::Oben([uint32]$proz.Id)) { Write-Host ("E133 offen: {0} [{1}]" -f [E133]::Kl($h), [E133]::Tx($h)) }
+            }
             break
         }
         Start-Sleep -Milliseconds 500

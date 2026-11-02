@@ -384,3 +384,15 @@ E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.
 # schreibt Eudora gepuffert - geprueft wird sie nach dem Beenden (A-5p-log).
 A-5p | C:\Temp\EHILFE | 60 | messung | HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1 | | | messen=tools\messen-hilfe.ps1
 A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: Tastenkuerzel.html geoeffnet | | messen=tools\messen-hilfe.ps1
+# E-133 (02.11.2026): zeigt CommandLine\Current auf ein Mailverzeichnis, das
+# es nicht mehr gibt, fragt Eudora beim Start ohne Argument (Doppelklick)
+# statt sich mit zwei Fehlermeldungen zu beenden. messen-e133.ps1 setzt im
+# -Vorbereiten Current auf C:\Temp\E133-gibt-es-nicht, beantwortet die
+# Rueckfrage mit "No" (Ordner neben dem Programm) und liest danach die
+# Registry; pruefstand-lauf.ps1 setzt CommandLine und LaunchManager hinterher
+# zurueck (E-157). Erwartung mit der Behebung (Bau 7.2.1.131+88142c78*);
+# vor der Behebung (456c95e1): meldung=fehlermeldung gestartet=0 lebt=0.
+# Pruefstand C:\Temp\E133 ist eine Kopie von C:\Temp\E132; er muss beim
+# Beenden abgeschossen werden wie schon E132 seit dem 20.10.2026.
+E-133p | C:\Temp\E133 | 5 | messung | E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1 | | | ohne-argument,messen=tools\messen-e133.ps1
+E-133q | C:\Temp\E133 | 5 | log | E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\" | | | ohne-argument,messen=tools\messen-e133.ps1
