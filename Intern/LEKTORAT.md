@@ -3075,3 +3075,5 @@ Nachtrag LEKTOR-125 (964a9447..cb99c5f4 gegengelesen): Von elf Funden sind neun 
 - README „Bekannte Fehler“: E-122 ohne „im Quellstand behoben“; 204 statt 206 Berichte ([L-126.4](../Befunde/LEKTOR-126.md#l-126.4)).
 - Der gewertete Lauf `E-122p` hat in `TESTLAEUFE.md` keine Titelzeile, neun von 22 Starts am 02.11. ([L-126.5](../Befunde/LEKTOR-126.md#l-126.5)).
 - E-122 nennt `ImapMailbox.cpp:4281`, die Zeile steht in `:4282` ([L-126.6](../Befunde/LEKTOR-126.md#l-126.6)).
+
+Nachtrag LEKTOR-126 (9c5bfbc8..a26b5181 gegengelesen): Vier von sechs Funden erledigt, der TESTPLAN-Schritt zu [E-122](BEFUNDE.md#e-122) prüft jetzt die Logzeile und ist nicht mehr blind, `TestE122.cpp` fängt beide Lücken aus PRÜFER-83 K2. Teilweise: WEITERMACHEN und AUFGABEN tragen neben „PR folgt“ weiter „`e122_imap_datum` in Arbeit“ ([L-126.2](../Befunde/LEKTOR-126.md#l-126.2)); vermerkt: die fehlende Titelzeile des Laufs `E-122p` bleibt bewusst stehen ([L-126.5](../Befunde/LEKTOR-126.md#l-126.5)).
