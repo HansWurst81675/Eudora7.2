@@ -233,3 +233,66 @@ Hat nur die INI ein Leerzeichen, geht auch die ungeklammerte Zeile richtig durch
 | N5 | Gegentest der Sperre bleibt grün ohne Anbindung in `testlauf.ps1`/`pruefstand-lauf.ps1`; Fall 1 zeitabhängig | gering | nein |
 | N6 | `TestE133`-Fall „nur INI mit Leerzeichen“ bleibt grün, wenn das gemeinsame Klammern fehlt (GE2) | gering | nein |
 | N7 | `PathCount`-Lücke (verträglich), `AlreadyWarned#N` fehlt, Verdichtung, Ausweichen auf `Local\` | gering | nein |
+
+## <a id="nachtrag-2-02-11-2026"></a>Nachtrag 2 (02.11.2026)
+
+Geprüft wurde `git diff 863311f4..origin/e133_mailverzeichnis_fehlt -- Eudora71 tools` im Baum `.wt\pruefer87b`, Zweig wt/pruefer-20261102j, Stand eb7e67cd. Inhaltlich ist das eb7e67cd (N1, N2, N4 bis N7 eingearbeitet). Den Merge 7876f242 (main #209/#210) habe ich nur auf Verluste geprüft. Eudora habe ich weder gebaut noch gestartet. Vor dem Gegentest der Sperre lief kein Eudora-Prozess, und weder Halterdatei noch Standdatei lagen in `C:\Temp` (gemessen).
+
+### Ergebnis vorweg
+
+Die Einarbeitung trägt. Der Leser in `StartEudoraWithDefaultLocation` fasst jetzt, was der Schreiber schreibt, die zweite Abfrage kann nicht mehr über den Puffer schreiben, und `cmdLine` liest keinen Stapelinhalt mehr. Die Sperre setzt nach einem abgeschossenen Halter zuerst dessen Stand zurück. Eine Ausnahme beim Zurücksetzen überspringt die Freigabe nicht mehr. Gemessen: 390/390 Tests, Gegentest der Sperre 33/33 (B wartete 7583 ms, die Übernahme nach dem Abschuss dauerte 38 ms).
+
+Ein neuer Fund, und er kommt von N1 selbst. Weil `buf` jetzt 790 Zeichen fasst, greift die Kurzform-Ausweiche aus PRUEFER-42 K3 an zwei Stellen erst ab 790 statt ab 261 Zeichen. `GetDirs` gibt das Verzeichnis aber an `CheckMailDirectory` weiter, und dort ist der Puffer weiterhin 261 Byte groß (P1, belegt). Treffen kann das nur einen Programmpfad von etwa 244 bis 259 Zeichen. Es hält das Paket nicht auf, sollte aber vor dem Merge berichtigt werden, weil es ein neuer Überlauf ist.
+
+### N1 an allen Pufferstellen
+
+(am Quelltext belegt, Zeilen in `eudora.cpp` am Stand eb7e67cd)
+
+- **Registry lesen:** `buflen = sizeof(cmdLine) - sizeof(TCHAR)` und nach der gescheiterten ersten Abfrage neu gesetzt, `cmdLine[0] = 0` davor und nach einem Fehlschlag, dazu ein Abschluss am Ende des Puffers. Damit kann keine der beiden Abfragen über `cmdLine` hinaus schreiben, und ohne Wert bleibt `buf` leer. Richtig.
+- **`strcpy(buf, c)`:** `c` zeigt in `cmdLine`, das höchstens 789 Zeichen und die Null trägt. `buf` ist gleich groß. Richtig.
+- **Application Data:** `GetShortPathName(FullPath, buf, sizeof(cmdLine)/sizeof(TCHAR))` stimmt weiterhin, beide Puffer sind gleich groß. `GetPrivateProfileString(…, buf, sizeof(buf), …)` meldet die Größe in Byte statt in Zeichen, was mit ANSI dasselbe ist.
+- **`E132AufrufZerlegen`** schneidet auf `MAX_PATH` (`szVerzeichnis`, `szIni`). Die E-132- und E-133-Entscheidung fällt damit am abgeschnittenen Namen, `GetDirs` bekommt dagegen das ganze `buf`. Aus unserem Schreiber ist der erste Teil nie länger als 262 Zeichen (260 und die Klammern), der Unterschied tritt also nur bei einem fremden oder von Hand geschriebenen Wert auf. Kein eigener Fund.
+- **E-208-Weg:** Fehlen beide Werte, ist `cmdLine` leer, also auch `buf`. Danach kommt Application Data, und `err` beendet den Start wie bisher. Die Frage mit dem Unsinnspfad aus K2 kann nicht mehr kommen. Der Startabbruch bleibt, wie vermerkt, eine Entscheidung für Gregor.
+- **Neu: P1**, siehe unten.
+
+### P1: Die Kurzform-Ausweiche greift erst ab 790 Zeichen, `CheckMailDirectory` hat 261
+
+(am Quelltext belegt; nicht gemessen)
+
+Zwei Stellen fragen, ob der geklammerte Pfad in `buf` passt, und weichen sonst auf die 8.3-Form aus (PRUEFER-42 K3):
+
+- *[E-132](../Intern/BEFUNDE.md#e-132) „Nein“*: `if (szGeklammert.GetLength() >= (int)(sizeof(buf) / sizeof(TCHAR)))` (:4576). `szEigenes` ist `ExecutableDir` + `Mailverzeichnis` (:4531).
+- *[E-133](../Intern/BEFUNDE.md#e-133) „No“*: `E133InBefehlszeile(szGewaehlt, buf, sizeof(buf) / sizeof(TCHAR))` (:4691) mit `if (szGeklammert.GetLength() >= (int) nBuf)` (:4150). `szNeben` ist `ExecutableDir` + `\Mailverzeichnis` (:4108).
+
+Seit eb7e67cd hat `buf` 790 Zeichen (:4205). Bis dahin hieß die Grenze 261. Ein Pfad mit 259 bis 789 Zeichen wird jetzt geklammert durchgereicht. `GetDirs` nimmt die Klammern weg und ruft `CheckMailDirectory(CmdLine, …)`. Dort steht `char szShortEDir[_MAX_PATH + 1]` und `strcat(szShortEDir, dir)` (fileutil.cpp:324, :340), danach `strcpy(Edir, szShortEDir)` in einen gleich großen Puffer (:356). Ein Verzeichnisname ab 261 Zeichen schreibt dort über den Stapel. Erreichbar ist das, wenn `ExecutableDir` zwischen etwa 244 und 259 Zeichen lang ist, denn mehr lässt `GetModuleFileName` mit `MAX_PATH` nicht zu. Vorher kam an dieser Stelle die Kurzform, oder `buf` schnitt ab. Die *Yes*-Wahl ist nicht betroffen (`SHGetPathFromIDList` liefert höchstens `MAX_PATH`).
+
+**Abhilfe:** an beiden Stellen gegen `MAX_PATH` vergleichen (die Grenze von `GetDirs`/`CheckMailDirectory`), nicht gegen `sizeof(buf)`. Zusätzlich gehört in `CheckMailDirectory` eine Längenprüfung vor das `strcat`, dann ist auch ein fremder Registrywert abgefangen. Einen Testfall dafür gibt es noch nicht. Er ließe sich fensterlos bauen: `E133InBefehlszeile` mit einem 250 Zeichen langen Ordner auf ein Ergebnis von höchstens `MAX_PATH` prüfen. **Schwere: gering** (enger Bereich, aber Stapelüberlauf). **Hält das Paket nicht auf.** Vor dem Merge berichtigen.
+
+### N2: Stand ablegen und übernehmen
+
+(am Quelltext belegt; Fall 6 gemessen)
+
+- **Kann der Stand eines noch lebenden Halters übernommen werden?** Nein. Die Standdatei wird erst gelesen, wenn der Mutex gehalten wird (Sperre-Nehmen nach `WaitOne`). Solange der Halter lebt, kommt kein anderer dorthin. Ein erbendes Kind kehrt vorher zurück und liest sie nie. `Registry-Festhalten` legt nur ab, wenn der Prozess den Mutex selbst hält und nicht erbt. Belegt.
+- **Reihenfolge beim Übernehmen:** Erst wird nach dem fremden Stand zurückgesetzt und die Datei gelöscht (in `Sperre-Nehmen`), dann hält der neue Läufer fest (`Registry-Festhalten` im `try` von `testlauf.ps1` und `pruefstand-lauf.ps1`). Richtig.
+- **Wird die Datei nach Erfolg gelöscht?** Ja, am Ende von `Registry-Zurueck`, aber nur, wenn `$bild.Pid -eq $PID`. Scheitert vorher etwas außerhalb der Einzel-`try` (`Get-Item`/`New-Item` je Schlüssel, `reg.exe`), bleibt die Datei liegen. Der nächste Halter setzt dann noch einmal nach diesem Stand zurück. Das schadet nicht, weil nur Werte angefasst werden, die auf einen Prüfstand zeigen. Kein Fund.
+- **Randfälle**, beide gering und ohne eigene Nummer:
+  - Ist die pid des Abgeschossenen inzwischen an den Übernehmer vergeben, gilt der Stand als eigener und wird ungelesen gelöscht (`if ($alt.Pid -ne $PID)`). Vermutung, sehr unwahrscheinlich.
+  - Ein liegengebliebener Stand mit anderer Basis legt die Probeschlüssel wieder an (`New-Item -Path $s -Force` bei fehlendem Schlüssel). Das kann nur der Gegentest selbst hinterlassen, wenn er mitten in Fall 6 abbricht. Dann entsteht `HKCU\Software\Eudora72Probe` mit Beispielwerten, Ballast ohne Wirkung.
+
+### N4 und N5
+
+- **N4** (belegt): In beiden Werkzeugen steht `Sperre-Nehmen` jetzt unmittelbar vor dem `try`, `Registry-Festhalten` darin, und die Freigabe in einem inneren `finally` hinter dem Zurücksetzen. Jede Registryänderung hat ein eigenes `try` mit `-ErrorAction Stop`, Fehler werden gemeldet. Richtig.
+- **N5** (gemessen, Fall 7): Die Quelltextschranke prüft vier Stellen der Reihenfolge und das innere `finally`. Ihre Gegenproben (vertauscht, ohne `Sperre-Nehmen`) fallen im Speicher durch. Grenze: Sie prüft nur die Reihenfolge der Namen, nicht ob `Registry-Festhalten` wirklich innerhalb des `try` steht. Das genügt für die beiden gefundenen Fehlerbilder. Fall 1 wartet jetzt auf „A-HAT“ statt auf 2 s.
+
+### Merge 7876f242 auf Verluste
+
+(gemessen)
+
+Unter `Eudora71/` und `tools/` hat der Merge nur in vier Dateien von Hand zusammengeführt: `TESTLAEUFE.md`, `WERKZEUGE.md`, `ZWEIGE.md` und `pruefstand-faelle.txt`. Gezählt habe ich die nichtleeren Zeilen jedes Elternstands, die im Ergebnis fehlen. In `TESTLAEUFE.md`, `ZWEIGE.md` und `pruefstand-faelle.txt` fehlt keine. In `WERKZEUGE.md` fehlen drei: die Standzeile und die alten Einträge zu `strg-n-pruefen.ps1` und `testlauf.ps1`. Alle drei stehen in neuer Fassung da (Stilllegung, Sperre). Kein Verlust.
+
+### Übersicht Nachtrag 2
+
+| Fund | Was passiert | Schwere | Hält das Paket auf? |
+|---|---|---|---|
+| P1 | Seit `buf` 790 Zeichen fasst, kürzt die [E-132](../Intern/BEFUNDE.md#e-132)/E-133-Ausweiche erst ab 790 statt 261; ein Verzeichnis von 261 bis 275 Zeichen läuft in `CheckMailDirectory` (fileutil.cpp:340) über den Stapel (nur bei Programmpfad ab etwa 244 Zeichen) | gering | nein; vor dem Merge berichtigen |
+| – | N1, N2, N4, N5, N6, N7 eingearbeitet und geprüft; N3 bleibt offen (in [E-157](../Intern/BEFUNDE.md#e-157) vermerkt) | – | – |
