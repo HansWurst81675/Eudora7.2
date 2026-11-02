@@ -130,7 +130,44 @@ static void Test_E143_Stelle(const char* szEudoraDir)
 	TT_EndTest();
 }
 
+// E-143, Suchfenster (Gregor 02.11.2026: "ja, ein hinweis reicht, richtig."):
+// CSearchView ueberspringt empfangene Treffer nach Out selbst und zeigt den
+// Hinweis EINMAL nach der Schleife - vorher kam er aus CTocDoc::Xfer je Treffer.
+// Gegenprobe beim Bau: die Abfrage "bE143NachOut && !pSum->IsComp()" entfernen
+// -> Test rot.
+static void Test_E143_Suchfenster(const char* szEudoraDir)
+{
+	TT_BeginTest("E-143 (Quelltext): Suchfenster zeigt den Out-Hinweis einmal je Uebertragung, nicht je Treffer");
+	char* pText = QT_LiesNurCode(szEudoraDir, "SearchView.cpp");
+	if (!pText)
+	{
+		TT_Fail("SearchView.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
+		return;
+	}
+	char* pFn = QT_Abschnitt(pText, "const BOOL bE143NachOut = ( pDestTocDoc->m_Type == MBT_OUT );", "if( ( theAction == CA_REPLY_WITH ) ||");
+	TT_CHECK_MSG(pFn != NULL, "Schalter bE143NachOut im Suchfenster nicht gefunden (E-143)");
+	if (pFn)
+	{
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "if ( bE143NachOut && !pSum->IsComp() && pTocDoc != pDestTocDoc ) { nE143Abgelehnt++; ProgressAdd(1); continue; }"), "empfangene Treffer nach Out gehen wieder einzeln an Xfer - ein Hinweis je Treffer (E-143), oder ein Treffer, der schon in Out liegt, zaehlt mit (PRUEFER-82 K4)");
+		TT_CHECK_MSG(QT_Zaehle(pFn, "AlertDialog( IDD_XFER_TO_OUT_REFUSED );") == 1, "der Out-Hinweis steht nicht genau einmal im Uebertragungsweg des Suchfensters (E-143)");
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "if ( nE143Abgelehnt > 0 )"), "der Hinweis haengt nicht mehr an der Zahl der abgelehnten Treffer (E-143)");
+		// PRUEFER-82 K4: der Hinweis muss NACH der Schleife stehen und die
+		// Logzeile schreiben - vorher blieb der Test gruen, wenn der Block in
+		// die Schleife wanderte oder die Logzeile fehlte.
+		char* pNach = QT_Abschnitt(pFn, "CloseProgress();", "return TRUE;");
+		TT_CHECK_MSG(pNach != NULL && QT_Enthaelt(pNach, "AlertDialog( IDD_XFER_TO_OUT_REFUSED );"), "der Out-Hinweis steht nicht mehr nach der Schleife (CloseProgress) - dann kommt er wieder je Treffer (E-143)");
+		TT_CHECK_MSG(pNach != NULL && QT_Enthaelt(pNach, "E-143 Suchfenster nach Out:"), "die Logzeile 'E-143 Suchfenster nach Out' fehlt (E-143)");
+		if (pNach)
+			free(pNach);
+		free(pFn);
+	}
+	free(pText);
+	TT_EndTest();
+}
+
 void RunE143Tests(const char* szEudoraDir)
 {
 	Test_E143_Stelle(szEudoraDir);
+	Test_E143_Suchfenster(szEudoraDir);
 }
