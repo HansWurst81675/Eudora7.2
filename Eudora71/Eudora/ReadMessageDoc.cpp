@@ -581,12 +581,22 @@ BOOL CReadMessageDoc::SaveAs(CSaveAs& SA)
 		if ( pszRumpf && *pszRumpf )
 			::UnwrapText( pszRumpf );
 
-		BOOL Status = SA.PutText(CopyText);
+		//
+		// BEFUND E-177: dieser Weg (einziger Aufrufer: die Filteraktion
+		// "Notify Application" mit %6, filtersd.cpp SetupCommandLine)
+		// schrieb die Nachricht samt ORIGINAL-Kopfzeile in die Datei - bei
+		// einer per POP empfangenen UTF-8-Mail "charset=utf-8" ueber einem
+		// Rumpf, den Eudora beim Empfang nach windows-1252 uebersetzt hat.
+		// Am 02.11.2026 am Pruefstand gemessen (tools/messen-e177.ps1).
+		// Jetzt durch denselben Kern wie "Speichern unter" (E-101, E-140):
+		// er ersetzt eine falsche Angabe oder ergaenzt eine fehlende.
+		//
+		BOOL Status = SA.PutText( (LPCTSTR) E140TextFuerDatei( CopyText, ( bKopfzeilen && !m_Sum->IsSubPart() ) ? true : false, "Filteraktion an Programm (E-177)" ) );
 		delete [] CopyText;
 		return (Status);
 	}
 	
-	return (SA.PutText(Text));
+	return ( SA.PutText( (LPCTSTR) E140TextFuerDatei( Text, ( bKopfzeilen && !m_Sum->IsSubPart() ) ? true : false, "Filteraktion an Programm (E-177)" ) ) );
 }
 
 /////////////////////////////////////////////////////////////////////////////
