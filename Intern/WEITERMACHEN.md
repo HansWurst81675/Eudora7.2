@@ -76,6 +76,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-207](BEFUNDE.md#e-207)** | Speichern unter aus dem Signaturfenster schreibt eine leere Datei — und das Fenster gilt… | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132. **Stufe: kritisch** (eine Änderung geht still verloren: die Datei ist leer, das Fenster fragt nicht mehr, und der Anwender hält… |
 | **[E-206](BEFUNDE.md#e-206)** | Speichern unter als .txt aus dem Nachrichtenfenster ohne Kopfzeilen verliert die Zitatzeic… | **nie gemessen** | Entscheidung, ob und wann es angegangen wird; Vorschlag aus PRÜFER-86: ohne Kopfzeilen unter derselben Bedingung wie `GetAllText` den Rumpf des Rohte… |
 | **[E-205](BEFUNDE.md#e-205)** | Speichern unter aus dem Verfassen-Fenster mit Kopfzeilen schreibt ein unsinniges Datum … | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132. **Stufe: wichtig** (falsches Datum in der gespeicherten Datei, am Quelltext gelesen auch in der Anzeige von *Out* bis zum nächst… |
 | **[E-199](BEFUNDE.md#e-199)** | Festbreite im Bearbeiten-Modus schreibt t; sichtbar in den Text — wer in einer empfangen… | 02.11.2026 an 7.2.1.130 | nur abschneiden, wenn der Text wirklich auf `"\r\n"` endet, an allen Stellen in `WrapTag` und `SplitTagOff`; dazu ein Regressionstest und im Messskrip… |

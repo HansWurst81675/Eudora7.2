@@ -151,7 +151,7 @@ Geprüft wurde `ed7b9d83..e12e267d` auf `e194_e196_speichern_unter`. Das sind ce
 
 Die Behebung von [E-205](../Intern/BEFUNDE.md#e-205) ist richtig, und K1 ist in seinem wichtigsten Teil widerlegt. Gemessen am alten Bau (`C:\Temp\E205-alt`) geben beide Speicherungen einer eingereihten Nachricht dieselbe `Date:`-Zeile (`16:54:55 +0100`, zweimal, aus *Out* wie aus der Liste). Der Grund steht am Quelltext: `FormatDate` liest die Zone aus dem eben geschriebenen Datumstext zurück und zieht sie von `m_Seconds` wieder ab (`FormatDateMT`, QCUtils/src/services.cpp:2067-2076). Bei gültiger Zone hebt sich die Verschiebung also auf. Nur `+6000` liegt außerhalb ±2400 und bleibt stehen, daher die 119 Stunden beim zweiten Speichern. Meine Vermutung, *Send Later* werde verschoben, war falsch. Ich hatte `FormatDate` nicht bis in `FormatDateMT` gelesen.
 
-Die Testsuite läuft mit 382/382. Von acht Gegenproben an den neuen Stellen werden sieben rot, eine bleibt grün (N3). Neu sind drei Funde. N1: Das Signaturfenster schreibt `.rtf` **nicht** als RTF, die Begründung zu K2 in [E-195](../Intern/BEFUNDE.md#e-195), im Kommentar von saveas.cpp und in TestE196.cpp stimmt für dieses Fenster nicht. *Speichern unter* aus dem Signaturfenster schreibt nach dem Quelltext gar nichts in die Datei (Vorschlag: E-207). N2: der Fall `E-205p` erwartet `zone=+0100` und wird in der Sommerzeit rot. N3: eine Schranke in `E196HtmlZeichensatz` ist ungetestet. Keiner der drei hält das Paket auf.
+Die Testsuite läuft mit 382/382. Von acht Gegenproben an den neuen Stellen werden sieben rot, eine bleibt grün (N3). Neu sind drei Funde. N1: Das Signaturfenster schreibt `.rtf` **nicht** als RTF, die Begründung zu K2 in [E-195](../Intern/BEFUNDE.md#e-195), im Kommentar von saveas.cpp und in TestE196.cpp stimmt für dieses Fenster nicht. *Speichern unter* aus dem Signaturfenster schreibt nach dem Quelltext gar nichts in die Datei (Vorschlag: [E-207](../Intern/BEFUNDE.md#e-207)). N2: der Fall `E-205p` erwartet `zone=+0100` und wird in der Sommerzeit rot. N3: eine Schranke in `E196HtmlZeichensatz` ist ungetestet. Keiner der drei hält das Paket auf.
 
 ### E-205 am Quelltext
 
@@ -186,7 +186,7 @@ Am Quelltext belegt, nicht gemessen. `CSignatureDoc::OnFileSaveAs` setzt `m_Save
 
 Damit stimmt die Begründung für K2 nur zur Hälfte. Das Textdatei-Fenster schreibt RTF (`CTextFileView::Serialize`), das Signaturfenster nicht. Falsch sind der Satz *„bzw. `CPaigeEdtView::Serialize` → `PgDataTranslator::kFmtRtf`“* in [E-195](../Intern/BEFUNDE.md#e-195), der Kommentar in saveas.cpp:93-97 und der Kommentar in `Test_E195_Filter` (TestE196.cpp). Für den Filter selbst ändert sich nichts. Ob das Signaturfenster ihn mit oder ohne `.rtf` bekommt, ist gleich, solange es nichts schreibt.
 
-`befund-suchen.pl CPaigeEdtView::Serialize`, `OnFileSaveAs` und `signatur.cpp` finden nur [E-97](../Intern/BEFUNDE.md#e-97), [E-195](../Intern/BEFUNDE.md#e-195) und [E-205](../Intern/BEFUNDE.md#e-205), keiner nennt das. Vorschlag: als E-207 aufnehmen, zuerst messen (Signatur öffnen, *File → Save As*, Dateigröße). Für die Behebung genügt bei `m_SaveAs` ein Aufruf von `CSignatureView::Serialize`, der Text oder HTML schreibt (signatur.cpp:158-172). **Schwere: mittel**, wenn die Messung die leere Datei zeigt (der Anwender hält etwas für gesichert, was nicht gesichert ist).
+`befund-suchen.pl CPaigeEdtView::Serialize`, `OnFileSaveAs` und `signatur.cpp` finden nur [E-97](../Intern/BEFUNDE.md#e-97), [E-195](../Intern/BEFUNDE.md#e-195) und [E-205](../Intern/BEFUNDE.md#e-205), keiner nennt das. Vorschlag: als [E-207](../Intern/BEFUNDE.md#e-207) aufnehmen, zuerst messen (Signatur öffnen, *File → Save As*, Dateigröße). Für die Behebung genügt bei `m_SaveAs` ein Aufruf von `CSignatureView::Serialize`, der Text oder HTML schreibt (signatur.cpp:158-172). **Schwere: mittel**, wenn die Messung die leere Datei zeigt (der Anwender hält etwas für gesichert, was nicht gesichert ist).
 
 ### N2: Der Fall `E-205p` hängt an der Jahreszeit
 
@@ -201,6 +201,6 @@ Gemessen (H6). Ohne die Schranke bleibt die Suite grün. Der Testfall `content="
 | Fund | Was passiert | Schwere | Hält das Paket auf? |
 |---|---|---|---|
 | K1 | Vermutung „*Send Later* wird verschoben“ widerlegt (gemessen am alten Bau, `FormatDateMT` gleicht aus); Behebung von [E-205](../Intern/BEFUNDE.md#e-205) richtig | – | nein |
-| N1 | Signaturfenster: *Speichern unter* ruft eine auskommentierte Funktion, die Datei bleibt leer (belegt, nicht gemessen); Begründung zu K2 in BEFUNDE, saveas.cpp und TestE196.cpp falsch (Vorschlag E-207) | mittel | nein |
+| N1 | Signaturfenster: *Speichern unter* ruft eine auskommentierte Funktion, die Datei bleibt leer (belegt, nicht gemessen); Begründung zu K2 in BEFUNDE, saveas.cpp und TestE196.cpp falsch (Vorschlag [E-207](../Intern/BEFUNDE.md#e-207)) | mittel | nein |
 | N2 | `E-205p` erwartet `zone=+0100`, rot in der Sommerzeit | gering | nein |
 | N3 | Gegenprobe H6 grün: der Test zu K7 braucht die Schranke `nGegen < nZu` nie | gering | nein |

@@ -14,6 +14,14 @@
 //        unterscheiden nur .htm/.html). Geprueft wird der Filtertext
 //        IDS_TXT_HTML_FILE_FILTER in EudoraRes.rc.
 //
+// E-207: "Speichern unter" aus dem Signaturfenster schrieb eine LEERE Datei
+//        und setzte das Geaendert-Kennzeichen zurueck - die Aenderungen
+//        gingen beim Schliessen ohne Frage verloren. CSignatureDoc::Serialize
+//        rief CPaigeEdtView::Serialize, die seit dem Original auskommentiert
+//        ist (landet in CObject::Serialize). Gemessen am 02.11.2026 an
+//        7.2.1.131 (tools/messen-e207.ps1): txt=leer htm=leer frage=0.
+//        Geprueft wird die STELLE in signatur.cpp (Quelltext.h).
+//
 #include <afx.h>
 #include <afxwin.h>
 #include <stdlib.h>
@@ -171,11 +179,12 @@ static void Test_E196_Quelltext(const char* szEudoraDir)
 static void Test_E195_Filter(const char* szEudoraDir)
 {
 	//
-	// PRUEFER-86 K2: das Textdatei- und das Signaturfenster schreiben .rtf
-	// als ECHTES RTF (TextFileView.cpp, CPaigeEdtView::Serialize). Dort
-	// bleibt "Rtf Files" (IDS_TXT_HTML_FILE_FILTER); die Speicherdialoge fuer
-	// Nachrichten (compmsgd.cpp, saveas.cpp) nehmen IDS_MSG_SAVEAS_FILE_FILTER
-	// ohne .rtf.
+	// PRUEFER-86 K2/N1: das Textdatei- und das Signaturfenster behalten
+	// "Rtf Files" (IDS_TXT_HTML_FILE_FILTER) wie im Original. Echtes RTF
+	// schreibt nur das Textdateifenster (TextFileView.cpp); das
+	// Signaturfenster schreibt Text bzw. HTML (E-207). Die Speicherdialoge
+	// fuer Nachrichten (compmsgd.cpp, saveas.cpp) nehmen
+	// IDS_MSG_SAVEAS_FILE_FILTER ohne .rtf.
 	//
 	TT_BeginTest("E-195 (Quelltext): Speicherdialog fuer Nachrichten ohne .rtf, Textdatei/Signatur mit");
 	char* pRc = QT_LiesNurCode(szEudoraDir, "EudoraRes.rc");
@@ -198,7 +207,7 @@ static void Test_E195_Filter(const char* szEudoraDir)
 	TT_CHECK_MSG(pTxt != NULL, "IDS_TXT_HTML_FILE_FILTER nicht gefunden");
 	if (pTxt)
 	{
-		TT_CHECK_MSG(QT_Enthaelt(pTxt, "Rtf Files (*.rtf)|*.rtf|"), "Textdatei-/Signaturfenster ohne .rtf - dort wird echtes RTF geschrieben (PRUEFER-86 K2)");
+		TT_CHECK_MSG(QT_Enthaelt(pTxt, "Rtf Files (*.rtf)|*.rtf|"), "Textdatei-/Signaturfenster ohne .rtf - das Textdateifenster schreibt echtes RTF (PRUEFER-86 K2)");
 		free(pTxt);
 	}
 	free(pRc);
@@ -239,11 +248,54 @@ static void Test_E196_K7()
 	UTE196_HtmlZeichensatz("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"><p>x</p>", szD3, szS3);
 	if (szD3 != "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"><p>x</p>") TT_Fail("Angabe am Ende von content falsch: [%s]", (LPCTSTR) szD3);
 
+	// PRUEFER-86 N3: dasselbe mit einem Attribut in Anfuehrungszeichen
+	// dahinter. Erst hier steht ein Gegenstueck zum Ende von content - aber
+	// HINTER dem Tag. Ohne die Schranke nGegen < nZu wuerde das Ende von
+	// content uebersprungen und der Name dahinter gesetzt.
+	CString szD4, szS4;
+	UTE196_HtmlZeichensatz("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"><p class=\"x\">x</p>", szD4, szS4);
+	if (szD4 != "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"><p class=\"x\">x</p>") TT_Fail("Anfuehrungszeichen hinter dem Tag als Gegenstueck genommen (N3): [%s]", (LPCTSTR) szD4);
+
 	CString szD2, szS2;
 	UTE196_HtmlZeichensatz("<!-- <head> --><html><body>\xE4</body></html>", szD2, szS2);
 	TT_CHECK_MSG(szD2.Find("<!-- <head> -->") == 0, "Kommentar veraendert");
 	TT_CHECK_MSG(szD2.Find(kMeta) > (int) strlen("<!-- <head> -->"), "Angabe im Kommentar eingesetzt (K7)");
 	TT_CHECK_MSG(Hat(szS2, "ort=html"), "Kommentar-<head> als Kopf genommen");
+	TT_EndTest();
+}
+
+static void Test_E207_Signatur(const char* szEudoraDir)
+{
+	TT_BeginTest("E-207 (Quelltext): Speichern unter im Signaturfenster schreibt den Inhalt");
+	char* pText = QT_LiesNurCode(szEudoraDir, "signatur.cpp");
+	if (!pText)
+	{
+		TT_Fail("signatur.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		TT_EndTest();
+		return;
+	}
+	// Im Code (Kommentare weg) darf der Aufruf ins Leere nirgends stehen.
+	TT_CHECK_MSG(!QT_Enthaelt(pText, "CPaigeEdtView::Serialize"), "signatur.cpp ruft wieder CPaigeEdtView::Serialize - die ist auskommentiert, die Datei bleibt leer (E-207)");
+	char* pSer = QT_Abschnitt(pText, "void CSignatureDoc::Serialize(", "SetModifiedFlag(FALSE);");
+	TT_CHECK_MSG(pSer != NULL, "CSignatureDoc::Serialize nicht gefunden");
+	if (pSer)
+	{
+		const long lSaveAs = QT_Stelle(pSer, "if (m_SaveAs)");
+		const long lAufruf = QT_Stelle(pSer, "pView->E207SpeichernUnter(ar);");
+		if (!(lSaveAs >= 0 && lAufruf > lSaveAs))
+			TT_Fail("Speichern unter (m_SaveAs) ruft nicht E207SpeichernUnter (%ld %ld)", lSaveAs, lAufruf);
+		free(pSer);
+	}
+	char* pFn = QT_Abschnitt(pText, "void CSignatureView::E207SpeichernUnter(", "void CSignatureView::Serialize(");
+	TT_CHECK_MSG(pFn != NULL, "CSignatureView::E207SpeichernUnter nicht gefunden");
+	if (pFn)
+	{
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "theTxr.ExportData( pDatei, format );"), "E207SpeichernUnter schreibt nichts (E-207)");
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "format = PgDataTranslator::kFmtText;"), "E207SpeichernUnter schreibt nicht Text als Vorgabe");
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "CRString( IDS_HTM_EXTENSION )") && QT_Enthaelt(pFn, "format = PgDataTranslator::kFmtHtml;"), "E207SpeichernUnter schreibt .htm nicht als HTML");
+		free(pFn);
+	}
+	free(pText);
 	TT_EndTest();
 }
 
@@ -257,4 +309,5 @@ void RunE196Tests(const char* szEudoraDir)
 	Test_E196_K7();
 	Test_E196_Quelltext(szEudoraDir);
 	Test_E195_Filter(szEudoraDir);
+	Test_E207_Signatur(szEudoraDir);
 }

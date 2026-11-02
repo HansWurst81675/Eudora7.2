@@ -10,9 +10,11 @@
 # der Zukunft. PRUEFER-86 K1 hat die Kette am Quelltext belegt:
 # CCompMessageDoc::InitializeNew legt m_TimeZoneMinutes in SEKUNDEN an
 # (compmsgd.cpp), und ComposeDate(buf, m_Sum) schreibt m_Seconds der
-# Zusammenfassung um (sendmail.cpp). Jedes weitere Speichern verschiebt also
-# weiter - bei einer eingereihten Nachricht den Zeitpunkt, den Send Later
-# mit der Uhr vergleicht.
+# Zusammenfassung um (sendmail.cpp). Die Vermutung von K1, jedes weitere
+# Speichern verschiebe bei einer eingereihten Nachricht den Zeitpunkt, den
+# Send Later mit der Uhr vergleicht, ist WIDERLEGT (PRUEFER-86 Nachtrag, am
+# alten Bau q1=q2=0h): FormatDate liest die Zone zurueck und gleicht bei
+# gueltiger Zone aus; nur +6000 bleibt stehen.
 #
 # Ablauf:
 #   1. In: Nachricht oeffnen, Antwort anlegen (neue, ungesicherte Nachricht)
@@ -27,10 +29,12 @@
 # die Zusammenfassung verschoben hat.
 #
 # Ausgabe:
-#   E205 DATEI <weg> date=<Date:-Zeile> zone=<+hhmm> abweichung=<h>h
-#   E205 ERGEBNIS neu1=<h>h neu2=<h>h q1=<h>h q2=<h>h liste1=<h>h liste2=<h>h zone=<..> lebt=<0|1>
-#   Erwartet nach der Behebung: alle 0h, zone=+0100 (Rechnerzone).
-#   Vor der Behebung (7.2.1.131): neu1=59h neu2=119h, zone=+6000; q2 > q1.
+#   E205 DATEI <weg> date=<Date:-Zeile> zone=<+hhmm> soll=<+hhmm> abweichung=<h>h
+#   E205 ERGEBNIS neu1=<h>h neu2=<h>h q1=<h>h q2=<h>h liste1=<h>h liste2=<h>h zone=<passt|ist-statt-soll> lebt=<0|1>
+#   Erwartet nach der Behebung: alle 0h, zone=passt.
+#   Vor der Behebung (7.2.1.131): neu1=59h neu2=119h, zone=+6000-statt-+0100; q2 > q1.
+#   "soll" ist die Zone des Rechners zum Zeitpunkt der Datei (Sommer-/Winterzeit,
+#   PRUEFER-86 N2) - vorher stand +0100 fest im Fall, rot ab der Sommerzeit.
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten
@@ -233,8 +237,12 @@ function Auswerten([string] $weg) {
     $datei = (Get-Item -LiteralPath $ziel).LastWriteTime
     $h = [int][Math]::Round(($d - $datei).TotalHours)
     $script:abw[$weg] = ('{0}h' -f $h)
-    if ($script:zone -eq '-') { $script:zone = $m.Groups[7].Value }
-    Write-Host ("E205 DATEI {0} date=[{1}] zone={2} abweichung={3}h datei={4:yyyy-MM-dd HH:mm:ss}" -f $weg, $m.Value.Trim(), $m.Groups[7].Value, $h, $datei)
+    $off = [TimeZoneInfo]::Local.GetUtcOffset($datei)
+    $soll = '{0}{1:00}{2:00}' -f $(if ($off.Ticks -lt 0) { '-' } else { '+' }), [Math]::Abs($off.Hours), [Math]::Abs($off.Minutes)
+    $ist = $m.Groups[7].Value
+    if ($ist -ne $soll) { if ($script:zone -eq '-' -or $script:zone -eq 'passt') { $script:zone = ('{0}-statt-{1}' -f $ist, $soll) } }
+    elseif ($script:zone -eq '-') { $script:zone = 'passt' }
+    Write-Host ("E205 DATEI {0} date=[{1}] zone={2} soll={3} abweichung={4}h datei={5:yyyy-MM-dd HH:mm:ss}" -f $weg, $m.Value.Trim(), $ist, $soll, $h, $datei)
 }
 function Schliessen($h) {
     [void][E205]::PostMessageA($h, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)   # WM_CLOSE

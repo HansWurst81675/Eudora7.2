@@ -1,9 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 16:01:15
+zeit=2026-11-02 17:30:15
 freigabe=Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig.
-nur=A-5p   (Teillauf, nicht der Gesamtstand)
-faelle=2
-bestanden=2
+nur=E-205p   (Teillauf, nicht der Gesamtstand)
+faelle=1
+bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] A-5p     HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1
-fall=[ ok ] A-5p-log Hilfe: Tastenkuerzel.html fehlt
+fall=[ ok ] E-205p   E205 ERGEBNIS neu1=0h neu2=0h q1=0h q2=0h liste1=0h liste2=0h zone=passt lebt=1

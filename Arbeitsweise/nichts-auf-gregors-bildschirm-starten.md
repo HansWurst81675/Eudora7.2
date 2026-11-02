@@ -197,3 +197,15 @@ Zeiten MEZ, gemessen am Transkript `6f848773`; Einzelheiten in [[CHRONIST-2026-1
 **Vorschlag (nicht gebaut):** PreToolUse-Haken `tools/haken-eudora-start.pl` neben `haken-pr-lektor.pl`, Matcher `Bash|PowerShell`. Abweisen, wenn eine `Eudora.exe` an Befehlsstelle steht (Zeilenanfang, nach `;` `&&` `||` `|` `&`, nach `Start-Process`, `Invoke-Item`, `start`, `cmd /c`), außer der Befehl ruft `tools/testlauf.ps1`, `tools/pruefstand-lauf.ps1` oder `tools/stapel-untersuchen.ps1` auf; Heredoc-Inhalte und Kommentare vorher entfernen ([[schranke-liest-nur-code]]). **Gegenprobe:** 17:18:55 → abweisen; `& "C:\Temp\E184\Eudora.exe"` → abweisen; `cp "$B/$f" /c/Temp/E184/` über `Eudora.exe` (17:22:32), `grep -a -o … Eudora.exe`, `Get-Process … -ieq 'C:\Temp\E184\Eudora.exe'` (17:21:07), `testlauf.ps1` (17:25:28) und die Commit-Nachricht mit „Eudora.exe --version“ (17:21:53) → durchlassen.
 
 **Schranke seit 01.11.2026 abends:** `tools/haken-eudora-start.pl`, PreToolUse-Haken fuer Bash und PowerShell - weist jeden Befehl ab, der eine `Eudora.exe` an Befehlsstelle hat (auch hinter `&`, `Start-Process`, `start`, `cmd /c`). Selbsttest 23 Faelle, live geprueft (Zweig `e184_mehrere_mails`).
+
+## Nachtrag 02.11.2026 tagsüber (CHRONIST): Freigabe ja, Ansage nein
+
+Zeiten MEZ, Transkript `25e03584`, gemessen. Einzelheiten in [[CHRONIST-2026-11-02b]], Abschnitt 6.
+
+Gregor hatte den Prüfstand für den Tag freigegeben (14:28:44: *„du kannst jetzt wider, wen notwendig.“*). Der Auftrag an MESSER5 (16:54:51) verlangte ausdrücklich eine Gegenprobe am alten Bau. Im Chat stand dazu nur *„messe ich … am Prüfstand nach“* (16:53:59). Dass Fenster aufgehen und eine ältere Fassung läuft, stand nirgends. Um 17:17:34 startete 7.2.1.128 aus einem Prüfstand unter `C:\Temp`, und um 17:18:02 fragte Gregor: *„warum sehe ich ein 1.128 build laufen?“* Die Antwort nach 15 Sekunden war vollständig (wer, welche Fassung, welcher Ordner, nichts von ihm berührt, Abbruch angeboten). Gregor: *„ok, laß laufen“*.
+
+Um 14:28:50 war es am selben Tag richtig gelaufen: *„Dabei gehen ein Eudora-Fenster und kurz der Browser auf.“*
+
+**How to apply, zusätzlich:**
+- **Die Ansage gehört zum Start des Agenten**, nicht zu seinem ersten Lauf. Wenn ein Auftrag eine Gegenprobe am alten Bau enthält, steht im Chat **im selben Zug**: welche Fassung, ungefähr wann, wie viele Fenster.
+- **Eine Fassungsnummer, die Gregor selbst benutzt, ausdrücklich nennen.** 7.2.1.128 ist auch die Nummer seines eigenen Mailverzeichnisses. Ein Fenster „1.128“ sieht für ihn aus wie seines.
