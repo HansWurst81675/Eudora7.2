@@ -1,8 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 11:19:03
-freigabe=Gregor am 02.11.2026: ja, miss E-178 am Prüfstand.
-nur=E-178   (Teillauf, nicht der Gesamtstand)
+zeit=2026-11-02 11:53:09
+freigabe=Gregor am 02.11.2026: ja, du kannst deine tests durchführen, ich werde meine tests außerhalb der VM machen.
+nur=E-143s   (Teillauf, nicht der Gesamtstand)
 faelle=1
 bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] E-178p   E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1
+fall=[ ok ] E-143s   E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1
