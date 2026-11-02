@@ -368,6 +368,8 @@ E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=
 E-39p | C:\Temp\E39 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=1 aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
 E-39v | C:\Temp\E39 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
 E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
+
+# -------------------------------------------------------------------------
 # A-5 - Hilfe-Menue (Help -> Keyboard Shortcuts / Settings Reference), 7.2.2
 # -------------------------------------------------------------------------
 # Pruefstand C:\Temp\EHILFE (Kopie von C:\Temp\E140, Hilfe\ erzeugt mit
