@@ -864,3 +864,6 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-11-02 18:28:13 | `C:\Temp\E204` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 11208250 - Eudora   [Eudora 7.2.1.131+f96f8797* 2026-11-02 18:25 - E204]  Schliesszeit 1 s. |
 | 2026-11-02 18:29:15 | `C:\Temp\E203-alt` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 24380420 - Eudora   [Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38 - E203-alt] |
 | 2026-11-02 18:29:26 | `C:\Temp\E203` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 11994832 - Eudora   [Eudora 7.2.1.131+f96f8797* 2026-11-02 18:25 - E203] |
+| 2026-11-02 18:42:55 | `C:\Temp\E133` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Kein Hauptfenster (EudoraMainWindow) innerhalb von 5 s.  ABER: musste abgeschossen werden. |
+| 2026-11-02 18:42:19 | `C:\Temp\E204` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 9046020 - Eudora  Schliesszeit 1 s. |
+| 2026-11-02 18:42:33 | `C:\Temp\E203` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 15795424 - Eudora   [Eudora 7.2.1.131+f96f8797* 2026-11-02 18:25 - E203] |

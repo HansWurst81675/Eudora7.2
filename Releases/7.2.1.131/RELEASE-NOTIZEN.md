@@ -138,4 +138,4 @@ Defender meldet Dateien dieses Projekts gelegentlich als Trojaner. Das ist
 ein Fehlalarm ([Einzelheiten](https://github.com/HansWurst81675/Eudora7.2/blob/main/Releases/DEFENDER-FEHLALARM.md));
 gegebenenfalls muss die Datei aus der Quarantäne zurückgeholt werden.
 
-*Die mit „Nachtrag 02.11.2026“ markierten Stellen stehen nur in dieser Datei im Repository ([LEKTOR-134](../../Befunde/LEKTOR-134.md#l-134.1)); der veröffentlichte Text auf GitHub ist unverändert — ob er berichtigt wird, entscheidet Gregor.*
+*Die mit „Nachtrag 02.11.2026“ markierten Stellen ([LEKTOR-134](../../Befunde/LEKTOR-134.md#l-134.1)) stehen seit dem 02.11.2026 auch im veröffentlichten Text auf GitHub (Gregor: *„ja, berichtige den text auf github“*); das ZIP ist unverändert.*
