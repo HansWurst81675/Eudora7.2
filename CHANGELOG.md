@@ -115,7 +115,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## Im Quellstand, noch in keinem Paket
 
-**Zweig `e39_persona_loeschen`, Quellstand weiter 7.2.1.131 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
+**Zweig `e39_persona_loeschen` (gemergt als #207), Quellstand weiter 7.2.1.131 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
 
 * **Eine gelöschte Persönlichkeit kommt nicht mehr in die `Eudora.ini` zurück** ([E-39](Intern/BEFUNDE.md#e-39)). War die gelöschte Persönlichkeit in dem Moment Eudoras „aktuelle“ — über die Oberfläche nur nach *Change Password* mit einem POP-Konto ohne „@“; der Befehl steht ab Werk nicht im Menü (`RemoveChangePassword=1`) und ist nur über einen eigenen Knopf aus *Customize Toolbar* oder `RemoveChangePassword=0` erreichbar —, schrieb Eudora beim Beenden einen leeren Rest `SavePasswordText=` in ihren gelöschten Abschnitt. Herabgestuft auf *unkritisch* ([PRÜFER-85](Befunde/PRUEFER-85.md#pruefer-85) K4). Kommt mit 7.2.2.132. `CPersonality::Remove` (`persona.cpp`) schaltet jetzt auf `<Dominant>` um, ohne ihre Kennwortschlüssel vorher zu schreiben. Am Prüfstand vorher rot (`abschnitt-wieder=1`), nachher grün (`abschnitt-wieder=0`); Regressionsfälle `E-39p`/`E-39v`/`E-39w` und `Eudora71/Tests/TestE39.cpp`. Für Gregor nichts zu prüfen.
 

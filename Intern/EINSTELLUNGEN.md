@@ -48,7 +48,8 @@ Wer diese fünf kennt, spart sich die meisten Runden.
 `GetSectionID` (`Eudora71/Eudora/rs.cpp:89-97`) teilt vier Bereiche ein:
 bis 10800 `[Settings]`, 10801–10900 `[Debug]`, 10901–11100
 `[Window Position]`, ab 11101 wieder `[Settings]`. **Ein Eintrag im falschen
-Abschnitt wirkt nicht — ohne jede Meldung.** Das ausgearbeitete Beispiel —
+Abschnitt wirkt nicht — ohne jede Meldung** (Ausnahme: im Abschnitt des gerade
+aktiven Kontos, siehe Regel 1.3). Das ausgearbeitete Beispiel —
 der Protokollschalter mit der Nummer 10802 — steht in
 [ANWENDER.md](../Doku/ANWENDER.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
 Der früher hier genannte Abschnitt *Wo ein Schlüssel stehen muss* ist am
