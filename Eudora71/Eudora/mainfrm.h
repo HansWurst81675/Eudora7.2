@@ -601,6 +601,10 @@ protected:
 	void OnHelp();
 	void OnHelpTopics();
 	void OnTechSupport();
+	// Help -> Keyboard Shortcuts / Settings Reference (Hilfe-Menue, 7.2.2)
+	afx_msg void OnHelpKeyboardShortcuts();
+	afx_msg void OnHelpSettingsReference();
+	void HilfeSeiteOeffnen(const char* szDatei);
 
 public:
 	void NewMessage(LPCTSTR To, LPCTSTR From, LPCTSTR Subject, LPCTSTR Cc,

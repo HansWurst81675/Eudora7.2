@@ -1,5 +1,7 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern. Je Fall der letzte Lauf.
 # kennung	ergebnis	zeit	pruefstand	bau	gemessen
+A-5p	ok	2026-11-02 16:01:15	C:\Temp\EHILFE	Eudora 7.2.1.131+d3cdc551* 2026-11-02 15:58	HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1
+A-5p-log	ok	2026-11-02 16:01:15	C:\Temp\EHILFE	Eudora 7.2.1.131+d3cdc551* 2026-11-02 15:58	Hilfe: Tastenkuerzel.html fehlt
 BILD-lauf	ok	2026-11-02 13:54:36	C:\Temp\EBILD	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8
 E-100	ok	2026-11-02 13:54:36	C:\Temp\E97	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E100 ERGEBNIS dialog=1 lebt=1 ini=ok
 E-103p	ok	2026-11-02 13:54:36	C:\Temp\EBILD	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64

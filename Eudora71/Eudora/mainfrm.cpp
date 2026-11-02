@@ -573,6 +573,8 @@ BEGIN_MESSAGE_MAP(CMainFrame, QCWorkbook)
 	// Global help commands
 	ON_COMMAND(ID_HELP_TOPICS, OnHelpTopics) 
 	ON_COMMAND(ID_HELP_TECHNICAL_SUPPORT, OnTechSupport)
+	ON_COMMAND(ID_HELP_KEYBOARD_SHORTCUTS, OnHelpKeyboardShortcuts)
+	ON_COMMAND(ID_HELP_SETTINGS_REFERENCE, OnHelpSettingsReference)
 	ON_COMMAND(ID_HELP, QCWorkbook::OnHelp)
 	ON_MESSAGE(WM_CONTEXTMENU, OnContextMenu)
 	ON_COMMAND(IDM_VIEW_FILTER_REPORT, OnViewFilterReport )
@@ -6116,6 +6118,119 @@ void CMainFrame::OnTechSupport()
 		// user code is present
 		WinHelp(0x10000 + IDC_MHELP_IC);
 	return;
+}
+
+// Help -> Keyboard Shortcuts / Settings Reference. Gregor am 02.11.2026: "das
+// dann einfach als HTML im default browser anzeigen". Die zwei Seiten erzeugt
+// tools/hilfe-html.pl aus Doku/FUNKTIONEN.md; tools/paket-bauen.ps1 legt sie
+// in den Ordner Hilfe neben Eudora.exe. Fehlt eine, sagt eine Meldung, welche
+// Datei wo erwartet wird - kein ASSERT, kein stilles Nichts
+// (Arbeitsweise/assert-ist-im-release-nichts.md). Jeder Aufruf schreibt eine
+// Zeile "Hilfe: <datei> geoeffnet|fehlt|fehler=n" ins Protokoll.
+// Bewacht von Tests/TestHilfeMenue.cpp.
+void CMainFrame::OnHelpKeyboardShortcuts()
+{
+	HilfeSeiteOeffnen("Tastenkuerzel.html");
+}
+
+void CMainFrame::OnHelpSettingsReference()
+{
+	HilfeSeiteOeffnen("Einstellungen.html");
+}
+
+void CMainFrame::HilfeSeiteOeffnen(const char* szDatei)
+{
+	// Verzeichnis der laufenden Eudora.exe, nicht das Arbeitsverzeichnis:
+	// "Eudora starten.cmd" und Verknuepfungen starten aus anderen Ordnern.
+	// Breit (W) und mit Platz fuer lange Pfade (PRUEFER-84 K5): mit der
+	// A-Fassung wurde ein Ordner mit Zeichen ausserhalb der ANSI-Codepage zu
+	// '?', und ab 260 Zeichen blieb der Ordner leer - beides meldete "could
+	// not be found", obwohl die Seite da war.
+	const DWORD nPlatz = 32768;
+	CStringW strExe;
+	const DWORD nLen = ::GetModuleFileNameW(NULL, strExe.GetBuffer(nPlatz), nPlatz);
+	strExe.ReleaseBuffer((nLen > 0 && nLen < nPlatz) ? (int) nLen : 0);
+	CStringW strOrdnerW;
+	const int iTrenner = strExe.ReverseFind(L'\\');
+	if (iTrenner >= 0)
+		strOrdnerW = strExe.Left(iTrenner + 1);
+	const CStringW strPfadW = strOrdnerW + L"Hilfe\\" + CStringW(szDatei);
+	// Fuer die Meldung (ANSI-Anzeige); nicht darstellbare Zeichen werden dort
+	// zu '?', der Zugriff selbst laeuft ueber strPfadW.
+	const CString strPfad(strPfadW);
+	// Ab MAX_PATH Zeichen braucht GetFileAttributesW ein Praefix (PRUEFER-84
+	// N3): lokal \\?\, ein Netzpfad \\server\... wird \\?\UNC\server\..., und
+	// ein Pfad, der schon mit \\?\ beginnt, bekommt keines. Die Shell bekommt
+	// immer den Pfad ohne Praefix.
+	CStringW strPruefW = strPfadW;
+	if (strPfadW.GetLength() >= MAX_PATH && strPfadW.Left(4) != L"\\\\?\\")
+	{
+		if (strPfadW.Left(2) == L"\\\\")
+			strPruefW = L"\\\\?\\UNC\\" + strPfadW.Mid(2);
+		else
+			strPruefW = L"\\\\?\\" + strPfadW;
+	}
+	CString strLog;
+
+	const DWORD dwAttr = ::GetFileAttributesW(strPruefW);
+	if (strOrdnerW.IsEmpty() || dwAttr == INVALID_FILE_ATTRIBUTES || (dwAttr & FILE_ATTRIBUTE_DIRECTORY))
+	{
+		strLog.Format("Hilfe: %s fehlt", szDatei);
+		PutDebugLog(DEBUG_MASK_MISC, strLog);
+		CString strMeldung;
+		strMeldung.Format("The help page %s could not be found.\n\n"
+						  "Eudora expects it here:\n%s\n\n"
+						  "The file belongs in the folder \"Hilfe\" next to Eudora.exe and is part of the "
+						  "Eudora package. Please unpack the package again, or copy its \"Hilfe\" folder "
+						  "next to Eudora.exe.",
+						  szDatei, (LPCTSTR) strPfad);
+		AfxMessageBox(strMeldung, MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+
+	// SEE_MASK_FLAG_NO_UI: Windows zeigt keinen eigenen Dialog (etwa "Wie
+	// moechten Sie diese Datei oeffnen?"), damit der Anwender genau EINE
+	// Meldung sieht - die von Eudora (PRUEFER-84 K5).
+	SHELLEXECUTEINFOW sei;
+	memset(&sei, 0, sizeof(sei));
+	sei.cbSize = sizeof(sei);
+	sei.fMask = SEE_MASK_FLAG_NO_UI;
+	sei.lpVerb = L"open";
+	sei.lpFile = strPfadW;
+	sei.nShow = SW_SHOWNORMAL;
+	const BOOL bGeoeffnet = ::ShellExecuteExW(&sei);
+	// Sofort festhalten, bevor ein weiterer Aufruf ihn ueberschreibt
+	// (PRUEFER-84 N4): bei einem Fehlschlag ohne SE_ERR-Code ist er die
+	// einzige Auskunft ueber die Ursache.
+	const DWORD dwWinFehler = bGeoeffnet ? 0 : ::GetLastError();
+	INT_PTR nErgebnis = (INT_PTR) sei.hInstApp;
+	if (!bGeoeffnet && nErgebnis > 32)
+		nErgebnis = 0;		// Fehler ohne SE_ERR-Code: als 0 melden, Ursache in dwWinFehler
+	if (nErgebnis <= 32)
+	{
+		strLog.Format("Hilfe: %s fehler=%d winfehler=%lu", szDatei, (int) nErgebnis, dwWinFehler);
+		PutDebugLog(DEBUG_MASK_MISC, strLog);
+		CString strMeldung;
+		if (nErgebnis == SE_ERR_NOASSOC)
+			strMeldung.Format("Windows has no program assigned to open .html files, so Eudora cannot "
+							  "show the help page.\n\n"
+							  "File: %s\n\n"
+							  "Please choose a default web browser in the Windows settings "
+							  "(Apps > Default apps), or open the file directly with your browser.",
+							  (LPCTSTR) strPfad);
+		else
+			strMeldung.Format("Eudora could not open the help page in your web browser.\n\n"
+							  "File: %s\n"
+							  "Windows error code (ShellExecute): %d, system error: %lu\n\n"
+							  "You can open the file directly with your browser. If this keeps happening, "
+							  "check which program Windows uses to open .html files.",
+							  (LPCTSTR) strPfad, (int) nErgebnis, dwWinFehler);
+		AfxMessageBox(strMeldung, MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+
+	strLog.Format("Hilfe: %s geoeffnet", szDatei);
+	PutDebugLog(DEBUG_MASK_MISC, strLog);
 }
 
 void CMainFrame::OnPaymentAndRegistration()

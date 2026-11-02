@@ -3119,3 +3119,17 @@ Nachtrag 2 LEKTOR-128 (1525b290..cbe9b328 gegengelesen): Der Satz zu [E-188](BEF
 - TESTPLAN-Kopf, AUFGABEN und eine Zeile in FUNKTIONEN nennen 7.2.1.131 weiter Testpaket, Kandidat oder „im Quellstand“ ([L-129.3](../Befunde/LEKTOR-129.md#l-129.3)).
 
 Nachtrag LEKTOR-129 (716216fc..b9da9b1e gegengelesen): [L-129.1](../Befunde/LEKTOR-129.md#l-129.1) bis [L-129.3](../Befunde/LEKTOR-129.md#l-129.3) erledigt, README-Zahl 209 stimmt; offen nur die Schranke in `pruefe-release-buchfuehrung.pl`, die „zuletzt veröffentlicht“ mit einer älteren Marke nicht erkennt ([Nachtrag](../Befunde/LEKTOR-129.md#nachtrag-02-11-2026)).
+
+## LEKTOR-130 (02.11.2026) — Bestand nach dem Hilfe-Menü (A-5), Zweig hilfe_menue nach b65e4f1c
+
+[LEKTOR-130](../Befunde/LEKTOR-130.md): Das Hilfe-Menü ist stimmig beschrieben — Testplan, Befund, Werkzeugliste und Quelltext stimmen in Menüstelle, Statuszeile, Meldung und Logzeile überein; die Seiten unter `C:\Temp\EHILFE\Hilfe\` sind inhaltlich gleich mit einer frischen Erzeugung aus `Doku/FUNKTIONEN.md`. Acht Funde, keiner am Programmcode; [L-129.1](../Befunde/LEKTOR-129.md#l-129.1) bis [L-129.3](../Befunde/LEKTOR-129.md#l-129.3) bleiben erledigt, die Schranken aus L-129.1, L-128.2 und L-128.3 fehlen weiter.
+
+- In der Geschichte von `hilfe_menue` liegt eine Gedächtnisdatei mit einer persönlichen Angabe, die nicht ins Repo soll; ein gewöhnlicher Merge brächte sie nach `main` ([L-130.1](../Befunde/LEKTOR-130.md#l-130.1)).
+- Testplan, Befund A-5 und die Listen nennen das kommende Paket „7.2.2.0“; Nummernregel und `pruefe-fassungsnummer.pl` erwarten die laufende Buildnummer ([L-130.2](../Befunde/LEKTOR-130.md#l-130.2)).
+- Der 7.2.2-Block steht im CHANGELOG im Abschnitt des veröffentlichten Releases 7.2.1.131 ([L-130.3](../Befunde/LEKTOR-130.md#l-130.3)); ZIEL.md sagt „umgesetzt ist davon noch nichts“ ([L-130.4](../Befunde/LEKTOR-130.md#l-130.4)).
+- Testplan Schritt 5 verschweigt, dass die Logzeile erst nach dem Beenden in der `eudora.log` steht ([L-130.5](../Befunde/LEKTOR-130.md#l-130.5)).
+- Kleinkram: `release_7_2_1_131_doku` „laufend“ nach dem Merge von #205, `paket_7_2_1_131` „nicht auf GitHub“ ([L-130.6](../Befunde/LEKTOR-130.md#l-130.6)); Marke „Vorlage“ an den neuen Help-Einträgen ([L-130.7](../Befunde/LEKTOR-130.md#l-130.7)); Seitenkopf nennt einen Commit, der nicht die Quelle der Seite ist ([L-130.8](../Befunde/LEKTOR-130.md#l-130.8)).
+
+Nachtrag LEKTOR-130 (83093a38..1aa731fc gegengelesen): [L-130.2](../Befunde/LEKTOR-130.md#l-130.2) bis [L-130.8](../Befunde/LEKTOR-130.md#l-130.8) erledigt (Paket heißt jetzt 7.2.2.132, Gregor: *„7.2.2.132, ja“*); [L-130.1](../Befunde/LEKTOR-130.md#l-130.1) wird über den Zweig `hilfe_menue_7_2_2` gelöst, dort nachzumessen; die neuen Hilfeseiten verlinken nichts Internes und nennen keine Namen; neu [L-130.9](../Befunde/LEKTOR-130.md#l-130.9): ihre Verweise zeigen auf die Marke `v7.2.2.132`, die es bei Gregors Test noch nicht gibt ([Nachtrag](../Befunde/LEKTOR-130.md#nachtrag-02-11-2026)).
+
+Nachtrag 2 LEKTOR-130 (949bee0e..00fcdb4d gegengelesen): [L-130.9](../Befunde/LEKTOR-130.md#l-130.9) erledigt — die Seiten verlinken alle 83 Verweise auf den Commit der Quelle, keinen auf `blob/v…`, keine Namen; Hinweis (Vermutung): das Paket sollte von einem Commit gebaut werden, der auf GitHub erreichbar bleibt ([Nachtrag 2](../Befunde/LEKTOR-130.md#nachtrag-2-02-11-2026)).

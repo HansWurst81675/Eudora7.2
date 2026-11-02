@@ -68,6 +68,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-47](Intern/BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | eine Entscheidung, keine Behebung — `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nicht zur Weitergabe freigegeben, `RegisterCOMObjects()` scheitert d… |
 | **[E-39](Intern/BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Bestätigung am laufenden Programm — belegt ist nur der Quelltext (`persona.cpp:565-566` und `:179-198`, `rs.cpp:1237-1250`). Zu fahren wäre: d… |
 | **[S-6](Intern/BEFUNDE.md#s-6)** | Bereiche überlagern sich | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | das Nachstellen — ob sich die Bereiche heute überhaupt noch überlagern, ist seit dem 30.08.2026 **nie geprüft** worden. Die beiden damals genannt… |
+| **[A-5](Intern/BEFUNDE.md#a-5)** | Hilfe-Menü: *Help → Keyboard Shortcuts* und *Help → Settings Reference* zeigen die Ta… | 02.11.2026 an 7.2.1.130 | Gregors Blick am Paket 7.2.2.132 (Testplan, Abschnitt *Mit 7.2.2.132*). **Stufe: unkritisch** (neue Funktion, betrifft keine Post) |
 | **[NP2-3](Intern/BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Behebung selbst — `CPaletteDC::BitBltTransparent` (`OTShim_Werkzeugleiste.cpp:239`) meldet unverändert Erfolg, ohne gezeichnet zu haben. Seit d… |
 | **[NP3-3](Intern/BEFUNDE.md#np3-3)** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | eine Zeile Text — der Kommentar in `OTShim_Bild.h:326-330` sagt weiterhin *„an drei von fünf Stellen"* und zählt die Aufrufstellen damit falsch.… |
 | **[S-3](Intern/BEFUNDE.md#s-3)** | erster Lauf durch Gregor: drei Beobachtungen | 28.10.2026 an 7.2.0.127 | allein S-3c (die beiden Laufzeitbibliotheken) — `MFC71.DLL` und `MSVCP71.dll` fehlen dauerhaft, damit fallen die Verzeichnisdienste aus (Protokoll `… |
@@ -107,6 +108,15 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > crasht nicht, aber es passiert auch nichts. beenden kann ich es auch nicht.
 > nichts statt crash ist auch keine verbesserung!"* — kein Absturz ist kein
 > Fortschritt, solange der Anwender nichts damit tun kann.
+
+---
+
+## Im Quellstand, noch in keinem Paket
+
+**Für 7.2.2 — Zweig `hilfe_menue`** (noch nicht gemergt, noch in keinem Paket; das erste Paket 7.2.2 heißt **7.2.2.132**, Gregor am 02.11.2026: *„7.2.2.132, ja“*). Die erste Fassung mit neuen Funktionen; 7.2.1.x bleibt die Reihe der Fehlerbehebungen.
+
+* **Neu im Menü *Help*: *Keyboard Shortcuts* und *Settings Reference*** ([A-5](Intern/BEFUNDE.md#a-5), Gregor am 02.11.2026: *„das dann einfach als HTML im default browser anzeigen“*): zeigen die Tastenkürzel-Übersicht bzw. *Tools → Options* mit den `Eudora.ini`-Schlüsseln (mit Abschnitt) und die übrigen INI-Schlüssel als HTML-Seite im Standard-Browser. Die Seiten erzeugt `tools/hilfe-html.pl` beim Paketbau aus [Doku/FUNKTIONEN.md](Doku/FUNKTIONEN.md); sie liegen im Paket unter `Hilfe\`. Fehlt eine, sagt Eudora, welche Datei wo erwartet wird; fehlt in Windows eine Zuordnung für `.html`, sagt es das. Am Prüfstand gemessen (Fall `A-5p`).
+* **Nach [PRÜFER-84](Befunde/PRUEFER-84.md#pruefer-84) und [LEKTOR-130](Befunde/LEKTOR-130.md#lektor-130):** Pfad breit (Unicode, lange Pfade), eine einzige Meldung ohne `.html`-Zuordnung, Quelltext-Test nachgeschärft (Durchfall, Trenner, Verzeichnis, leerer Ordner); der Erzeuger bricht bei leerem Abschnitt ab, verlinkt auf den Seiten keine internen Projektdateien mehr, nennt keine Personen und verlinkt öffentliche Doku auf den Commit der Quelle (nicht auf eine Release-Marke, die es beim Test noch nicht gibt). Nach dem Nachtrag zu PRÜFER-84: Quelltext-Test auch für Ordner mit Rückstrich, Präfix nur für die Dateiprüfung, Rückgabe und Systemfehler von `ShellExecuteExW`; Präfix `\\?\UNC\` für lange Netzpfade; Systemfehler in Meldung und Logzeile.
 
 ---
 
