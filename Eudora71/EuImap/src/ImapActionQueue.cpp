@@ -1481,6 +1481,9 @@ void CImapTransferMsgAction::Copy(CImapAction *pImapAction)
 	{
 		m_dwaE170AlteUIDs.Copy(pQuelle->m_dwaE170AlteUIDs);
 		m_dwaE170Labels.Copy(pQuelle->m_dwaE170Labels);
+		m_dwaE170Sekunden.Copy(pQuelle->m_dwaE170Sekunden);
+		m_saE170Von.Copy(pQuelle->m_saE170Von);
+		m_saE170Betreff.Copy(pQuelle->m_saE170Betreff);
 	}
 }
 
@@ -1662,8 +1665,16 @@ void CImapTransferMsgAction::DoPostProcessing()
 //	ZUORDNUNG: alte und neue UIDs werden beide AUFSTEIGEND geordnet und dann
 //	paarweise zugeordnet (der Server vergibt die neuen UIDs in der Folge der
 //	alten). Stimmt die Anzahl nicht, wird NICHTS gesetzt - ein Label auf der
-//	falschen Mail waere schlimmer als ein fehlendes. Ohne neue UIDs (Server
-//	ohne UIDPLUS) gibt es keine Zuordnung; das sagt die Logzeile.
+//	falschen Mail waere schlimmer als ein fehlendes.
+//
+//	OHNE UIDPLUS (gemessen 02.11.2026, tools/messen-e170o.ps1: das Label ging
+//	an 7.2.1.128 und 7.2.1.131 verloren): keine neuen UIDs, also keine
+//	Zuordnung hier. Die Vorab-Kopie mit dem Label entfernt E-189, und der
+//	Abgleich holt die Mail als neue Zusammenfassung ohne Label. Darum werden
+//	die Labels mit Datum, Absender und Betreff am Ziel vorgemerkt
+//	(E170LabelsVormerken), und CImapMailbox::ImapAppendSumList setzt sie nach
+//	dem Abgleich auf die neu angelegte Zusammenfassung - nur, wenn genau eine
+//	dazu passt (E170NachAbgleich, E170Zuordnung.h).
 //
 static void E170Aufsteigend(CDWordArray &a)
 {
@@ -1704,6 +1715,8 @@ void CImapTransferMsgAction::E170LabelsNachtragen()
 	const int	nAlt = (int) m_dwaE170AlteUIDs.GetSize();
 	const int	nNeu = (int) m_dwaNewUIDs.GetSize();
 	int			nGesetzt = 0;
+	int			nVorgemerkt = 0;	// E-170 ohne UIDPLUS
+	int			nSchonDa = 0;
 	const char	*szGrund = "ok";
 
 	if (!m_pDestTocDoc)
@@ -1713,6 +1726,8 @@ void CImapTransferMsgAction::E170LabelsNachtragen()
 	else if (nNeu == 0)
 	{
 		szGrund = "keine-neuen-uids";
+		nVorgemerkt = E170LabelsVormerken(m_pDestTocDoc, m_dwaE170Labels, m_dwaE170Sekunden,
+										  m_saE170Von, m_saE170Betreff, &nSchonDa);
 	}
 	else if (nNeu != nAlt || (int) m_dwaE170Labels.GetSize() != nAlt)
 	{
@@ -1761,8 +1776,8 @@ void CImapTransferMsgAction::E170LabelsNachtragen()
 	}
 
 	CString		szSpur;
-	szSpur.Format("E-170 Labels beim Verschieben im Konto: mit-label=%d alte-uids=%d neue-uids=%d gesetzt=%d grund=%s",
-				  nMitLabel, nAlt, nNeu, nGesetzt, szGrund);
+	szSpur.Format("E-170 Labels beim Verschieben im Konto: mit-label=%d alte-uids=%d neue-uids=%d gesetzt=%d grund=%s vorgemerkt=%d schon-da=%d",
+				  nMitLabel, nAlt, nNeu, nGesetzt, szGrund, nVorgemerkt, nSchonDa);
 	::PutDebugLog(DEBUG_MASK_MISC, szSpur);
 }
 

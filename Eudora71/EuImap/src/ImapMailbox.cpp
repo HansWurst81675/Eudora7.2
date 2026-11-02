@@ -4984,6 +4984,7 @@ BOOL CImapMailbox::ImapAppendSumList (CTocDoc* pTocDoc, CImapSumList* pImapSumLi
 	pos = pImapSumList->GetHeadPosition ();
 
 	BOOL bRes;
+	CPtrArray aE170Neu;		// E-170 ohne UIDPLUS: hier neu angelegte Zusammenfassungen
 
 	for (next = pos; pos; pos = next)
 	{
@@ -5040,6 +5041,7 @@ BOOL CImapMailbox::ImapAppendSumList (CTocDoc* pTocDoc, CImapSumList* pImapSumLi
 						pSum->SetNotifySearchManager(true);
 
 						pTocDoc->AddSum(pSum);
+						aE170Neu.Add(pSum);
 
 						// Add to pRefSumList as well.
 						//
@@ -5059,6 +5061,10 @@ BOOL CImapMailbox::ImapAppendSumList (CTocDoc* pTocDoc, CImapSumList* pImapSumLi
 		if (::EscapePressed())
 			break;
 	}
+
+	// E-170 ohne UIDPLUS: vorgemerkte Labels verschobener Mails auf ihre Kopie
+	// setzen, wenn sie eindeutig unter den neuen Zusammenfassungen steht.
+	E170NachAbgleich(pTocDoc, aE170Neu);
 
 	// Whether we succeeded or not, force a save of the TOC when we're exiting.
 	// We don't want the MBX file to have an earlier timespamp than the TOC file.

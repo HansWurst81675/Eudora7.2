@@ -232,6 +232,10 @@ public:
 	// E-170: Label je alter UID, beim Einreihen gemerkt (ImapXferOnSameAccount)
 	CDWordArray				 m_dwaE170AlteUIDs;
 	CDWordArray				 m_dwaE170Labels;
+	// E-170 ohne UIDPLUS: Merkmale je alter UID (Datum, Absender, Betreff)
+	CDWordArray				 m_dwaE170Sekunden;
+	CStringArray			 m_saE170Von;
+	CStringArray			 m_saE170Betreff;
 	void					 E170LabelsNachtragen();
 };
 

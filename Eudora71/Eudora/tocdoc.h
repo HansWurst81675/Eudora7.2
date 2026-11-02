@@ -544,6 +544,16 @@ CSummary* E184FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash);
 // alten UIDs aus szAlteUIDs (durch Komma getrennt) - also die, denen
 // ImapTransferSummaryData keine neue UID zuordnen konnte.
 void E189VorabKopienEntfernen(CTocDoc* pZiel, const char* szAlteUIDs);
+// E-170 ohne UIDPLUS (EuImap/src/ImapToc.cpp, E170Zuordnung.h): merkt fuer jede
+// Mail mit Label ihre Merkmale (Datum, Absender, Betreff) am Ziel vor - nur, wenn
+// dort noch keine Zusammenfassung mit denselben Merkmalen steht (*pnSchonDa
+// zaehlt die uebergangenen). Rueckgabe: Zahl der Vormerkungen.
+int E170LabelsVormerken(CTocDoc* pZiel, const CDWordArray& dwaLabels, const CDWordArray& dwaSekunden,
+						const CStringArray& saVon, const CStringArray& saBetreff, int* pnSchonDa);
+// E-170 ohne UIDPLUS: nach dem Abgleich von pToc mit den dabei NEU angelegten
+// Zusammenfassungen (aNeu, CSummary*) gerufen; setzt das vorgemerkte Label nur
+// bei eindeutiger Zuordnung (E170Zuordnen), sonst nichts.
+void E170NachAbgleich(CTocDoc* pToc, const CPtrArray& aNeu);
 // E-121 (PRUEFER-32): eine Kennung, die weder in der Quelle noch im Ziel vorkommt -
 // fuer Nachrichten aus Out, die sonst alle die Kennung 0 tragen.
 unsigned long E121NeueKennung(CTocDoc* pQuelle, CTocDoc* pZiel);
