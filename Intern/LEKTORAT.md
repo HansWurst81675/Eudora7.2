@@ -3001,3 +3001,29 @@ Nachtrag LEKTOR-120, zweiter Commit (Auftrag des Hauptagenten): [E-171](BEFUNDE.
 [LEKTOR-121](../Befunde/LEKTOR-121.md): Die Buchführung von `c0f70c11` stimmt mit Code, Prüfstandsbuch und Testlaufprotokoll: [E-184](BEFUNDE.md#e-184) (beim Verschieben mehrerer Mails im IMAP-Konto bekamen die Einträge im Ziel die Daten einer anderen Mail) mit ehrlicher Gegenprobe (rot `richtig=1 falsch=2` am `6e9a43ba`, grün am `83908112*`), neu [E-192](BEFUNDE.md#e-192) (Papierkorb, Junk und Filter ordnen weiter nach Listenposition zu; drei Aufrufer am Quelltext bestätigt) und [E-193](BEFUNDE.md#e-193) (Suche mit Umlauten oder € widersprüchlich; ohne Namen aus Gregors Post). Haken-Selbsttest 39/39, alle vier Werkzeuge grün, 47 offen. Vier Funde, keiner am Programm, alle im selben Commit berichtigt: der Kopf von `messen-e184m.ps1` beschrieb noch die blinde Gegenprobe mit Listen ([L-121.1](../Befunde/LEKTOR-121.md#l-121.1)); bei E-184 stand `c4e883a9*` als jüngster Bau ([L-121.2](../Befunde/LEKTOR-121.md#l-121.2)); zwei verschiedene „K4“ im selben Eintrag, „Was noch fehlt“ ohne K2 und mit der schon erledigten Prüfung ([L-121.3](../Befunde/LEKTOR-121.md#l-121.3)); die README-Zahl der Prüfberichte, jetzt 196 ([L-121.4](../Befunde/LEKTOR-121.md#l-121.4)).
 
 Nachtrag LEKTOR-121 (7b41c8d7 gegengelesen): [E-192](BEFUNDE.md#e-192) nennt für den Papierkorb jetzt richtig `CTocDoc::ImapMoveMsgsToTrash`, WERKZEUGE 47 Haken-Fälle wie gemessen; derselbe falsche Funktionsname stand noch in [E-184](BEFUNDE.md#e-184) und ist berichtigt.
+
+## LEKTOR-122 (02.11.2026) — Bestand nach Gregors Test an 7.2.1.130, Zweig test_1130_ergebnisse nach 5411527d
+
+[LEKTOR-122](../Befunde/LEKTOR-122.md): Die Funde aus [LEKTOR-121](../Befunde/LEKTOR-121.md) sind erledigt, nur die README-Zahl der Prüfberichte ist zum sechsten Mal veraltet. Die Buchführung zu Gregors Test an 7.2.1.130 stimmt in den Bytes der vier abgelegten Dateien, zieht aber einen falschen Schluss: Die erste Textdatei kam aus der Postfachliste, nicht aus dem geöffneten Nachrichtenfenster. Sein Protokoll hat die Zeile des alten [E-101](BEFUNDE.md#e-101)-Weges ohne `E-140 speichern aus Nachrichtenfenster`, und das Fenster ging erst 56 s später auf. Alle vier Werkzeuge grün, 50 offen. Acht Funde, keiner am Programm, nach Auftrag keiner berichtigt:
+
+- [E-140](BEFUNDE.md#e-140) (Speichern unter aus Nachrichten- und Verfassen-Fenster ohne Zeichensatz) ist bei Gregor nur für das Verfassen-Fenster bestätigt ([L-122.1](../Befunde/LEKTOR-122.md#l-122.1)).
+- [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der gespeicherten Datei) sucht den Ort im Nachrichtenfenster. Die Klammern kommen aus `CTocView::OnFileSaveAs`, dessen Kern aus E-101 nur `<x-html>` entfernt ([L-122.2](../Befunde/LEKTOR-122.md#l-122.2)).
+- Pfad des Freigabeordners, Betreff, Dateinamen und Name des Bildschirmfotos aus Gregors Rechner stehen in E-143, E-194, E-195 und E-196, noch nicht auf `main` ([L-122.3](../Befunde/LEKTOR-122.md#l-122.3)).
+- [E-143](BEFUNDE.md#e-143) (Out-Hinweis je Nachricht aus Suchfenster und Filtern) sagt nach Gregors Entscheidung vom 02.11. dreimal „nicht entschieden“; die Listen führen ihn als „nie gemessen“ ([L-122.4](../Befunde/LEKTOR-122.md#l-122.4)).
+- Bei [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext) gehört `saveas.cpp:92` nicht zur Postfachliste ([L-122.5](../Befunde/LEKTOR-122.md#l-122.5)).
+- Der WEITERMACHEN-Kopf steht auf dem 01.11. abends ([L-122.6](../Befunde/LEKTOR-122.md#l-122.6)).
+- Die README-Zahl der Prüfberichte ist veraltet: 196 statt 198, mit diesem Bericht 199 ([L-122.7](../Befunde/LEKTOR-122.md#l-122.7)).
+- In PRÜFER-79 sind nachträglich Verweise auf die inzwischen vergebenen E-194 und E-195 eingesetzt ([L-122.8](../Befunde/LEKTOR-122.md#l-122.8)).
+
+## LEKTOR-123 (02.11.2026) — Nachtrag zu LEKTOR-122, Einarbeitung in 09c39785, Zweig test_1130_ergebnisse
+
+[LEKTOR-123](../Befunde/LEKTOR-123.md): Die acht Funde aus [LEKTOR-122](../Befunde/LEKTOR-122.md) sind in der Sache richtig eingearbeitet: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der gespeicherten Textdatei) nennt die Postfachliste als Weg, [E-140](BEFUNDE.md#e-140) (Speichern unter ohne Zeichensatz) ist nur für das Verfassen-Fenster als bestätigt geführt, im Stand steht kein Pfad oder Dateiname aus Gregors Rechner mehr. Alle vier Werkzeuge grün, 50 offen, E-143 jetzt „aktuell gemessen“. Sechs Reste, keiner am Programm, nach Auftrag keiner berichtigt:
+
+- [E-140](BEFUNDE.md#e-140) nennt die Datei aus der Postfachliste „seine zweite Datei“; nach den Dateizeiten war es die erste, wie im TESTPLAN ([L-123.1](../Befunde/LEKTOR-123.md#l-123.1)).
+- `Intern/TESTPLAN.md:175` nennt [E-194](BEFUNDE.md#e-194) weiter „in der Datei aus dem Nachrichtenfenster“ ([L-123.2](../Befunde/LEKTOR-123.md#l-123.2)).
+- [E-143](BEFUNDE.md#e-143) (Out-Hinweis aus Suchfenster und Filtern): „Offen … nicht Teil der Entscheidung“ und „Was noch fehlt: die Messung am Programm“ stehen noch, ebenso in den erzeugten Listen ([L-123.3](../Befunde/LEKTOR-123.md#l-123.3)).
+- Freigabepfad und Dateinamen stehen weiter in `1c75f5c3`; mit einem Merge-Commit kämen sie in die Geschichte von `main` ([L-123.4](../Befunde/LEKTOR-123.md#l-123.4)).
+- README-Zahl der Prüfberichte von Hand auf 199 gesetzt, Zähldatum nicht; mit diesem Bericht 200 ([L-123.5](../Befunde/LEKTOR-123.md#l-123.5)).
+- [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext) nennt die übrigen Aufrufer von `CSaveAs` nicht ([L-123.6](../Befunde/LEKTOR-123.md#l-123.6)).
+
+Nachtrag LEKTOR-123 (f4f9116f gegengelesen): alle sechs Reste erledigt. E-140 nennt die erste Datei, der TESTPLAN führt E-194 bei der Postfachliste, E-143 sagt „gemessen bis auf das Übergehen, Suchfenster entschieden und noch einzubauen“, E-195 nennt die Aufrufer von `CSaveAs`, README 200 Berichte; die Namen in `1c75f5c3` verschwinden mit *Squash and merge* (laut Hauptagent von Gregor bestätigt).
