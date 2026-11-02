@@ -3092,3 +3092,20 @@ Nachtrag LEKTOR-126 (9c5bfbc8..a26b5181 gegengelesen): Vier von sechs Funden erl
 - Kleinkram im Bestand: `EINSTELLUNGEN.md` nennt `filtersd.cpp:1133` (heute `:1155`) und `EudoraRes.rc:8463` (heute `:8465`), README 206 statt 207 Berichte ([L-127.8](../Befunde/LEKTOR-127.md#l-127.8)).
 
 Nachtrag LEKTOR-127 (86e58a79..a46ff55f gegengelesen): Alle acht Funde eingearbeitet, sieben ganz; offen bleiben die Schranke gegen „PR folgt“ nach dem Merge ([L-127.3](../Befunde/LEKTOR-127.md#l-127.3)) und, bewusst, die README-Zahl der Berichte ([L-127.8](../Befunde/LEKTOR-127.md#l-127.8)); Strg+\ und MoodWatch stehen bewusst weiter als „unklar“.
+
+## LEKTOR-128 (02.11.2026) — Bestand vor dem Release 7.2.1.131, Zweig paket_7_2_1_131 nach eb6f01e1
+
+[LEKTOR-128](../Befunde/LEKTOR-128.md): Das Programm ist geprüft — Prüfbericht BESTANDEN (362/19/53), Gregors Test an seinem System mit allen sieben Schritten bestanden und mit Belegen aus seiner `eudora.log` im TESTPLAN. Die Doku trägt das Release noch nicht. Neun Funde, keiner am Programm; von LEKTOR-127 ist die Berichtigung der Stand-Köpfe durch einen Merge verloren gegangen.
+
+- README *Bekannte Fehler*: acht offene Programmfehler fehlen, darunter [E-199](BEFUNDE.md#e-199) (*Festbreite* schreibt Zeichenmüll in den Text) und [E-193](BEFUNDE.md#e-193) (Suche mit Umlauten widersprüchlich), auf die die Release-Notizen ausdrücklich verweisen; ZIEL.md Punkt 1 macht die README zum Maßstab ([L-128.1](../Befunde/LEKTOR-128.md#l-128.1)).
+- Der Merge `eb6f01e1` hat die Köpfe von WEITERMACHEN und AUFGABEN aus #203 überschrieben: „`e122_imap_datum`, PR folgt“ zum fünften Mal; käme mit dem Paket auch auf `main` zurück ([L-128.2](../Befunde/LEKTOR-128.md#l-128.2)).
+- Der Kopf „Entwurf — nicht veröffentlicht“ der Release-Notizen ginge 1:1 auf GitHub (`release-veroeffentlichen.ps1:261`) ([L-128.3](../Befunde/LEKTOR-128.md#l-128.3)).
+- Release-Notizen: [E-141](BEFUNDE.md#e-141) und [E-176](BEFUNDE.md#e-176) fehlen; [E-72](BEFUNDE.md#e-72), alte Out-Filter und *Speichern unter* `.htm` ohne den Vorbehalt „nicht am Programm gemessen“ ([L-128.4](../Befunde/LEKTOR-128.md#l-128.4)).
+- Gregors Ergebnis steht nur im TESTPLAN; CHANGELOG, PAKETE, ZIEL und der TESTPLAN-Kopf sagen, der Test stehe aus ([L-128.5](../Befunde/LEKTOR-128.md#l-128.5)).
+- CHANGELOG 7.2.1.131 ohne #203 (`Doku/FUNKTIONEN.md`); ZIEL.md 7.2.2 nennt sie „noch nicht auf `main`“ ([L-128.6](../Befunde/LEKTOR-128.md#l-128.6)).
+- Zwei Lücken eines frischen Arbeitsbaums beim Schnüren (Plug-ins, VC++-Laufzeit) stehen nur in PAKETE ([L-128.7](../Befunde/LEKTOR-128.md#l-128.7)); README-Zeilen zu E-72 und E-141 und der README-Kopf hinken hinterher ([L-128.8](../Befunde/LEKTOR-128.md#l-128.8)).
+- Persönliche Angaben: im heutigen Stand keine, aber in drei Commits dieses Zweigs, der schon auf GitHub liegt; wie der Zweig nach `main` kommt, entscheidet Gregor ([L-128.9](../Befunde/LEKTOR-128.md#l-128.9)).
+
+Nachtrag LEKTOR-128 (7f7fc395..3d9f603b gegengelesen): Sieben von neun Funden erledigt, [L-128.6](../Befunde/LEKTOR-128.md#l-128.6) teilweise (`Doku/FUNKTIONEN.md` nennt weiter 7.2.1.130; die Überschriften „Testpaket“ beim Veröffentlichen), [L-128.9](../Befunde/LEKTOR-128.md#l-128.9) durch die Einreichung als `release_7_2_1_131` mit einem Commit geregelt. Neu im Diff: die Release-Notizen sagen für [E-188](BEFUNDE.md#e-188) „auf dem Server geht nichts verloren“, die README „nicht untersucht“ ([Nachtrag](../Befunde/LEKTOR-128.md#nachtrag-02-11-2026)).
+
+Nachtrag 2 LEKTOR-128 (1525b290..cbe9b328 gegengelesen): Der Satz zu [E-188](BEFUNDE.md#e-188) in den Release-Notizen stimmt jetzt mit der README überein; `release_7_2_1_131` steht in `tools/ZWEIGE.md`. Kein neuer Fund; offen nur das Nachziehen beim Veröffentlichen ([L-128.6](../Befunde/LEKTOR-128.md#l-128.6)).

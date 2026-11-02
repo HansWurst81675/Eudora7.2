@@ -1,4 +1,60 @@
-# Testplan für Gregor — Quellstand 7.2.1.130 (Testpaket, `VERSION` gleich; geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`; davor 7.2.1.129, geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`), Stand 02.11.2026 (zuletzt getestet am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+# Testplan für Gregor — Quellstand 7.2.1.131 (Testpaket, `VERSION` gleich; geschnürt am 02.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`, ZIP daneben; davor 7.2.1.130, geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`), Stand 02.11.2026 (zuletzt getestet am 02.11.2026 der Release-Kandidat 7.2.1.131: alle sieben Schritte bestanden, siehe unten; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+
+## <a id="test-7-2-1-131"></a>Dein Test an 7.2.1.131 — ca. 10 Minuten, an deinem echten System
+
+**Hier steht nur, was der Prüfstand nicht kann:** deine echten Konten und
+Server, dein Mailverzeichnis, deine Einstellungen und Filter. Was der
+Prüfstand selbst misst, steht im Kasten darunter und braucht dich nicht.
+Mit diesem Test entscheidest du, ob 7.2.1.131 als Release auf GitHub geht.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.1.131+` beginnt. |
+| 2 | POP | Post abrufen (*File → Check Mail*). | neue Post im lokalen *In* ankommt und *Task Errors* nichts meldet. |
+| 3 | IMAP | Einen Ordner deines IMAP-Kontos öffnen und Post abrufen. | die Liste kommt und *Task Errors* nichts meldet. |
+| 4 | Senden (SMTP) | Eine Mail mit Umlauten und `€` an dich selbst senden. | sie rausgeht und beim nächsten Abruf mit richtigen Umlauten und `€` ankommt. |
+| 5 | lokal | Ein vorhandener Filter von dir läuft beim Abruf aus Schritt 2 mit. | er wirkt wie gewohnt (Mail im Zielpostfach, Label gesetzt, je nach Filter). |
+| 6 | lokal → IMAP | Eine Mail aus einem **lokalen** Postfach markieren und mit *Transfer* in einen Ordner deines **IMAP**-Kontos übertragen. | in der `eudora.log` eine Zeile `E-122 IMAP-Eingangsdatum aus Date:-Kopf: … uebernommen` steht ([E-122](BEFUNDE.md#e-122); Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet). **Nicht bestanden:** die Zeile fehlt oder endet mit `nicht lesbar - bleibt`. |
+| 7 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
+bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
+
+**Ergebnis 02.11.2026, Gregor an 7.2.1.131 (mit seinem Mailverzeichnis von
+7.2.1.128): alle sieben Schritte bestanden** — vom Hauptagenten an der
+`eudora.log` (ab dem Start von 7.2.1.131, 1809 Zeilen) und an Gregors
+Bildschirmfoto nachgelesen:
+
+| # | Beleg |
+|---|---|
+| 1 | Titelzeile `Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23` (Bildschirmfoto); Log `Version 7.2.1.131`, `rootcerts.p7b` aus dem neuen Paket |
+| 2, 3 | Abrufaufgaben laufen durch (`E-83 … FERTIG`), keine Task-Fehler; IMAP-Teile übersetzt (`E-85 imap: … utf-8 … uebersetzt=ja`) |
+| 4 | `Preparing messages to Send` / `E-88 auf der Leitung`; die Antwort auf „test mit üöäß“ zeigt €, öfters, älter, über, streß richtig (Bildschirmfoto) |
+| 5 | Filter `From:service.freenet.de` greift beim Abruf (`E-64 Match=1`) |
+| 6 | zweimal `E-122 IMAP-Eingangsdatum aus Date:-Kopf: … uebernommen`, Korrektur je 3600 s (Ortszone) |
+| 7 | `CloseDown … liefere TRUE`, kein Fehlerdialog |
+
+Einzige Fehlerzeile: `Error opening LMOS file … lmos.dat: OsError=2` —
+stand schon zweimal in früheren Läufen derselben Log (Datei für „Leave on
+Server“ fehlt), nicht neu in 7.2.1.131.
+
+> **Am Prüfstand erledigt, nur zur Kenntnis — keine Schritte für dich.**
+> Jede Behebung in 7.2.1.131 hat einen Prüfstandsfall, der am alten Bau rot
+> und am neuen grün war. Voller Lauf am Bau `Eudora 7.2.1.131+a2f29b69*
+> 2026-11-02 13:23` (dem Bau im Paket): **53 Fälle, 53 bestanden**, dazu 362
+> Unit-Tests und 19 Schranken, [PRUEFBERICHT](../Releases/PRUEFBERICHT.md)
+> **BESTANDEN**.
+>
+> | Befund | Fall | Ergebnis am Prüfstand |
+> |---|---|---|
+> | [E-143](BEFUNDE.md#e-143) Suchfenster nach Out | `E-143s` | drei Treffer, **ein** Hinweis (`hinweise=1`); am Bau ohne die Änderung drei. Deine früheren Schritte 6–8 sind [freiwillig](#e-143-naechstes) |
+> | [E-122](BEFUNDE.md#e-122) Eingangsdatum nach IMAP | `E-122p` (IMAP-Prüfserver) | `differenz-min=0` für +0200 und −0500; alter Bau −60. Der [frühere Abschnitt](#e-122-naechstes) ist freiwillig, Pflicht ist nur Schritt 6 oben |
+> | [E-177](BEFUNDE.md#e-177) *Notify Application* | `E-177p` | keine falsche Zeichensatzangabe mehr (`falsche-angabe=0`); vorher rot |
+> | [E-178](BEFUNDE.md#e-178) Bearbeiten-Modus | `E-178p` | Link, Festbreite und Speichern lassen Emoji stehen; die Antwort auf markierten Text ist **nicht** gemessen |
+> | [E-136](BEFUNDE.md#e-136) Strg+S | `E-178p` (`gespeichert=passt`) | die Zeichen bleiben erhalten; eine Gegenprobe gibt es dafür nicht |
+> | [E-184](BEFUNDE.md#e-184), [E-189](BEFUNDE.md#e-189) Verschieben im IMAP-Konto | `E-184`, `E-184m`, `E-189` (IMAP-Prüfserver) | keine fremde Zusammenfassung überschrieben, auch bei mehreren Mails und ohne UIDPLUS |
+
+## <a id="release-7-2-1-128"></a>Release 7.2.1.128 — getestet am 29.10.2026
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -327,7 +383,7 @@ Postfach oder IMAP, gleich.
 
 **Bestätigt am 01.11.2026, Gregor an 7.2.1.130, Schritt 4 aus dem Postfachfenster:** im Bildschirmfoto ist Out im Menü von *Make Filter* grau, alle anderen Postfächer sind wählbar. **Am 02.11.2026 ebenso Schritt 1–2 im Filterfenster** (*Tools → Filters*, *Transfer To*): Out grau, alle anderen wählbar. **Ebenso am 02.11.2026 Schritt 3 und 4 vollständig:** im Hauptmenü *Transfer* ist Out wählbar, *Make Filter* aus der geöffneten Nachricht zeigt Out grau. **Schritt 5 entfällt bei Gregor** — er hat keinen alten Filter mit Ziel Out; das Übergehen ist am Programm noch nicht gemessen.
 
-**Suchfenster — erst mit dem nächsten Paket (nicht mit 7.2.1.130)**, Gregors
+**Suchfenster — in 7.2.1.131, am Prüfstand erledigt (Fall `E-143s`); für dich nur freiwillig**, siehe [Dein Test an 7.2.1.131](#test-7-2-1-131). Gregors
 Entscheidung vom 02.11.2026: ein Hinweis je Übertragung. Lokales Postfach *In*.
 
 6. *Edit → Find → Find Messages* (oder Strg+F), ein Wort suchen, das in
@@ -340,10 +396,11 @@ Entscheidung vom 02.11.2026: ein Hinweis je Übertragung. Lokales Postfach *In*.
 Am Prüfstand am 02.11.2026 so gefahren (Fall `E-143s`): neuer Bau ein Hinweis
 bei drei Treffern, der Bau ohne die Änderung drei.
 
-## <a id="e-122-naechstes"></a>Mit dem nächsten Paket: Eingangsdatum einer nach IMAP übertragenen Mail ([E-122](BEFUNDE.md#e-122))
+## <a id="e-122-naechstes"></a>In 7.2.1.131, freiwillig: Eingangsdatum einer nach IMAP übertragenen Mail ([E-122](BEFUNDE.md#e-122))
 
-**Erst mit dem nächsten Paket auszuführen, nicht mit 7.2.1.130** (dort ist die
-Behebung nicht drin). Bis dahin trug eine Mail, die man aus einem **lokalen**
+**Freiwillig, mit 7.2.1.131** (in 7.2.1.130 ist die Behebung nicht drin).
+Schritt 3 steckt als Pflicht in [deinem Test an 7.2.1.131](#test-7-2-1-131)
+(Schritt 6); der Rest ist am IMAP-Prüfserver gemessen. Bis dahin trug eine Mail, die man aus einem **lokalen**
 Postfach in einen **IMAP-Ordner** überträgt, dort ein Eingangsdatum, das um die
 Zeitzone deines Rechners zu früh lag (im Winter eine Stunde, im Sommer zwei).
 Der `Date:`-Kopf der Mail selbst blieb richtig; falsch war nur das Datum, nach
