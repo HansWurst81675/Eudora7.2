@@ -24,6 +24,7 @@
 //
 #include <afx.h>
 #include <afxwin.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -264,6 +265,15 @@ static void Test_E196_K7()
 	TT_EndTest();
 }
 
+// Zwischen lVon und lBis steht nur Leerraum.
+static bool NurLeerraum(const char* pText, long lVon, long lBis)
+{
+	for (long i = lVon; i < lBis; i++)
+		if (!isspace((unsigned char) pText[i]))
+			return false;
+	return true;
+}
+
 static void Test_E207_Signatur(const char* szEudoraDir)
 {
 	TT_BeginTest("E-207 (Quelltext): Speichern unter im Signaturfenster schreibt den Inhalt");
@@ -292,7 +302,29 @@ static void Test_E207_Signatur(const char* szEudoraDir)
 	{
 		TT_CHECK_MSG(QT_Enthaelt(pFn, "theTxr.ExportData( pDatei, format );"), "E207SpeichernUnter schreibt nichts (E-207)");
 		TT_CHECK_MSG(QT_Enthaelt(pFn, "format = PgDataTranslator::kFmtText;"), "E207SpeichernUnter schreibt nicht Text als Vorgabe");
-		TT_CHECK_MSG(QT_Enthaelt(pFn, "CRString( IDS_HTM_EXTENSION )") && QT_Enthaelt(pFn, "format = PgDataTranslator::kFmtHtml;"), "E207SpeichernUnter schreibt .htm nicht als HTML");
+		//
+		// PRUEFER-86 N5: die FOLGE als Ganzes - Bedingung .htm/.html, die
+		// Zuweisung kFmtHtml als einzige Anweisung dahinter, dann sofort
+		// ExportData. Nur "steht irgendwo in der Funktion" blieb gruen, als
+		// hinter der Zuweisung wieder kFmtText gesetzt wurde (Gegenprobe J3).
+		//
+		const char* const kIf   = "if ( szEndung.CompareNoCase( CRString( IDS_HTM_EXTENSION ) ) == 0 ||";
+		const char* const kOder = "szEndung.CompareNoCase( CRString( IDS_HTML_EXTENSION ) ) == 0 )";
+		const char* const kZuw  = "format = PgDataTranslator::kFmtHtml;";
+		const char* const kExp  = "theTxr.ExportData( pDatei, format );";
+		const long lIf   = QT_Stelle(pFn, kIf);
+		const long lOder = QT_Stelle(pFn, kOder);
+		const long lZuw  = QT_Stelle(pFn, kZuw);
+		const long lExp  = QT_Stelle(pFn, kExp);
+		if (!(lIf >= 0 && lOder > lIf && lZuw > lOder && lExp > lZuw))
+			TT_Fail("E207SpeichernUnter: Bedingung .htm/.html, HTML-Zuweisung und ExportData nicht in dieser Folge (%ld %ld %ld %ld)", lIf, lOder, lZuw, lExp);
+		else
+		{
+			TT_CHECK_MSG(NurLeerraum(pFn, lIf + (long) strlen(kIf), lOder), "zwischen .htm- und .html-Bedingung steht etwas anderes (E-207, N5)");
+			TT_CHECK_MSG(NurLeerraum(pFn, lOder + (long) strlen(kOder), lZuw), "die Bedingung .htm/.html steuert nicht die HTML-Zuweisung (E-207, N5)");
+			TT_CHECK_MSG(NurLeerraum(pFn, lZuw + (long) strlen(kZuw), lExp), "zwischen HTML-Zuweisung und ExportData steht etwas - .htm koennte als Text hinausgehen (E-207, N5)");
+		}
+		TT_CHECK_MSG(QT_Zaehle(pFn, "format =") == 2, "E207SpeichernUnter setzt das Format nicht genau zweimal (Vorgabe Text, HTML bei .htm) (E-207, N5)");
 		free(pFn);
 	}
 	free(pText);
