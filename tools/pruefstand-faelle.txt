@@ -352,3 +352,17 @@ E-143s | C:\Temp\E143S | 90 | messung | E143S ERGEBNIS treffer=3 hinweise=1 abge
 # fett/kursiv laufen ueber ExecCommand und waren nie betroffen - sie stehen
 # drin, damit eine Umstellung auf eigenes HTML-Umbauen auffaellt.
 E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1 | | | messen=tools\messen-e178.ps1
+
+# -------------------------------------------------------------------------
+# E-39 - der INI-Abschnitt einer geloeschten aktuellen Persoenlichkeit
+# -------------------------------------------------------------------------
+# Change Password mit einem Konto ohne "@" laesst E39Zwei als aktuelle
+# stehen, Forget Password(s) markiert SavePasswordText, dann Personalities >
+# Delete > Yes, beenden. Am 02.11.2026: Bau 7.2.1.131+7e38b87b (ohne die
+# Behebung) abschnitt-wieder=1 schluessel=SavePasswordText; mit der Behebung
+# (6e7d3252) abschnitt-wieder=0. E-39v/E-39w sind die Positivproben: ohne
+# den Vorlauf ist die geloeschte nicht die aktuelle, und ohne Loeschen ist
+# abschnitt-wieder=0 nichts wert.
+E-39p | C:\Temp\E39 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
+E-39v | C:\Temp\E39 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
+E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1

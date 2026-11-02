@@ -322,8 +322,11 @@ if ($null -ne $s2) { $schl = (@($s2.Zeilen | ForEach-Object { ($_ -split '=', 2)
 $aktuell = 'ungemessen'
 $log = Join-Path $md 'eudora.log'
 if (Test-Path -LiteralPath $log) {
-    $spur = @(Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-39 .*aktuell=(\S+)' })
-    if ($spur.Count -gt 0) { [void]($spur[-1] -match 'aktuell=(\S+)'); $aktuell = $Matches[1] }
+    # Spurzeile: "E-39 Remove <Name>: war-aktuell=<0|1> aktuell=<name>" -
+    # mit Leerzeichen davor, sonst trifft "war-aktuell=" (am 02.11.2026 so
+    # geschehen: aktuell-danach=1).
+    $spur = @(Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-39 .* aktuell=(\S+)' })
+    if ($spur.Count -gt 0) { [void]($spur[-1] -match ' aktuell=(\S+)'); $aktuell = $Matches[1] }
 }
 
 $probe = 'ok'

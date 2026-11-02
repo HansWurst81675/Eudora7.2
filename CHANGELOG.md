@@ -66,7 +66,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-78](Intern/BEFUNDE.md#e-78)** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… | 22.10.2026 an 7.2.0.121 — **veraltet** | die Auswertung der vorhandenen Spurmarken und danach die Behebung — `E-78 nach SetDockState` und `E-78 vor/nach LoadWazooBarConfig` (`mainfrm.cpp`,… |
 | **[E-71](Intern/BEFUNDE.md#e-71)** | der Filterbericht ist nach einem Filterlauf leer | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | nicht die Behebung, sondern Gregors Freigabe — er hat ihn ausdrücklich auf die nächste Fassung geschoben. Die Messung steht fertig da: in `CFilter… |
 | **[E-47](Intern/BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | eine Entscheidung, keine Behebung — `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nicht zur Weitergabe freigegeben, `RegisterCOMObjects()` scheitert d… |
-| **[E-39](Intern/BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Bestätigung am laufenden Programm — belegt ist nur der Quelltext (`persona.cpp:565-566` und `:179-198`, `rs.cpp:1237-1250`). Zu fahren wäre: d… |
+| **[E-39](Intern/BEFUNDE.md#e-39)** | wird die aktuell benutzte Persönlichkeit gelöscht, kann ihr INI-Abschnitt teilweise wied… | 02.11.2026 an 7.2.1.131 | das nächste Paket; für Gregor nichts zu prüfen — der Prüfstand sieht den Weg vollständig. **Stufe: kritisch** (Datenschaden: INI-Abschnitt eine… |
 | **[S-6](Intern/BEFUNDE.md#s-6)** | Bereiche überlagern sich | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | das Nachstellen — ob sich die Bereiche heute überhaupt noch überlagern, ist seit dem 30.08.2026 **nie geprüft** worden. Die beiden damals genannt… |
 | **[NP2-3](Intern/BEFUNDE.md#np2-3)** | BitBltTransparent meldet Erfolg, ohne gezeichnet zu haben | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Behebung selbst — `CPaletteDC::BitBltTransparent` (`OTShim_Werkzeugleiste.cpp:239`) meldet unverändert Erfolg, ohne gezeichnet zu haben. Seit d… |
 | **[NP3-3](Intern/BEFUNDE.md#np3-3)** | Kommentar zu CreateFromBitmap zählt die Aufrufstellen falsch | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | eine Zeile Text — der Kommentar in `OTShim_Bild.h:326-330` sagt weiterhin *„an drei von fünf Stellen"* und zählt die Aufrufstellen damit falsch.… |
@@ -109,6 +109,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## Im Quellstand, noch in keinem Paket
+
+**Zweig `e39_persona_loeschen`, Quellstand weiter 7.2.1.131 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
+
+* **Eine gelöschte Persönlichkeit kommt nicht mehr in die `Eudora.ini` zurück** ([E-39](Intern/BEFUNDE.md#e-39)). War die gelöschte Persönlichkeit in dem Moment Eudoras „aktuelle“ — über die Oberfläche nur nach *Special → Change Password* mit einem POP-Konto ohne „@“ —, schrieb Eudora beim Beenden `SavePasswordText=` in ihren gelöschten Abschnitt. `CPersonality::Remove` (`persona.cpp`) schaltet jetzt auf `<Dominant>` um, ohne ihre Kennwortschlüssel vorher zu schreiben. Am Prüfstand vorher rot (`abschnitt-wieder=1`), nachher grün (`abschnitt-wieder=0`); Regressionsfälle `E-39p`/`E-39v`/`E-39w` und `Eudora71/Tests/TestE39.cpp`. Für Gregor nichts zu prüfen.
 
 ## 7.2.1.131 — Release (`v7.2.1.131`, veröffentlicht am 02.11.2026): E-177, E-143 (Suchfenster), E-122, E-184, E-189 im Quelltext berichtigt und am Prüfstand gemessen; E-178 und E-136 (Strg+S) gemessen
 

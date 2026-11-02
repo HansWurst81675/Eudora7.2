@@ -765,3 +765,7 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-11-02 15:33:31 | `C:\Temp\E39` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 985160 - Eudora   [Eudora 7.2.1.131+7e38b87b 2026-11-02 15:29 - E39] |
 | 2026-11-02 15:35:46 | `C:\Temp\E39` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 1835514 - Eudora   [Eudora 7.2.1.131+7e38b87b 2026-11-02 15:29 - E39] |
 | 2026-11-02 15:36:12 | `C:\Temp\E39` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 4654522 - Eudora   [Eudora 7.2.1.131+7e38b87b 2026-11-02 15:29 - E39] |
+| 2026-11-02 15:43:22 | `C:\Temp\E39` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 1116100 - Eudora   [Eudora 7.2.1.131+6e7d3252 2026-11-02 15:42 - E39] |
+| 2026-11-02 15:43:33 | `C:\Temp\E39-alt` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 1771120 - Eudora   [Eudora 7.2.1.131+7e38b87b 2026-11-02 15:29 - E39-alt] |
+| 2026-11-02 15:44:18 | `C:\Temp\E39` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 1378026 - Eudora   [Eudora 7.2.1.131+6e7d3252 2026-11-02 15:42 - E39] |
+| 2026-11-02 15:44:41 | `C:\Temp\E39` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 5179020 - Eudora   [Eudora 7.2.1.131+6e7d3252 2026-11-02 15:42 - E39] |
