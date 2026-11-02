@@ -140,3 +140,15 @@ Belegt an meiner Antwort von 18:28:39 und am Commit `da0590b2`: Am 22.10. lief E
 Zeiten MEZ, gemessen am Transkript `6f848773`. Um 17:19:11 schrieb ein Ersetzungslauf in die README zu E-184 und E-189 die Abhilfe *„den Zielordner neu abgleichen lassen (Mailbox → Resynchronize)“*. Um 17:19:15: *„Bevor ich … als Abhilfe stehen lasse, sehe ich nach, ob es den Menüpunkt wirklich gibt“*. `EudoraRes.rc:6159` zeigte ihn nur im Kontextmenü des Postfachbaums (`Re&synchronize Mailbox`); berichtigt 17:19:29. Um 17:19:43 kam der zweite, wichtigere Schritt: Ob der Abgleich die Anzeige überhaupt richtigstellt, war **nicht gemessen**. Die Zeilen sagen jetzt „ist nicht gemessen“ bzw. „räumt ihn vermutlich nicht weg“. Nichts davon wurde committet oder Gregor gesagt (gemessen: `git log -S` leer).
 
 Das Ergebnis stimmt, die Reihenfolge nicht: Die Prüfung kam nach dem Schreiben, weil der Ersatztext für mehrere Stellen fertig in einer Paare-Datei stand. **How to apply, zusätzlich:** Ein Menüpfad oder eine Abhilfe in einer Paare-Datei wird geprüft, **bevor** die Datei an `ersetze-text.pl` geht: Menüpfad aus der `.rc`, Wirkung aus einer Messung, sonst steht „nicht gemessen“ im Text.
+
+## Nachtrag 02.11.2026 tagsüber (CHRONIST): ein unmöglicher Testschritt und ein ungeprobter Pfad
+
+Zeiten MEZ, Transkript `25e03584`, gemessen. Einzelheiten in [[CHRONIST-2026-11-02b]], Abschnitte 1 und 7.
+
+**Testschritt.** Der Testplan zu E-178 verlangte in Schritt a eine Mail mit Emoji, die über IMAP ankommt. Wegen E-90 und E-147, beide zurückgestellt in `BEFUNDE.md`, kann sie nicht unbeschädigt ankommen. Gregor arbeitete den Schritt ab und schickte um 10:12:19 sein Bild. Die Antwort um 10:13:01: *„Das hätte ich prüfen müssen, bevor ich ihn in den Testplan geschrieben habe.“* Gregor um 10:13:54: *„koorigiere auch den testplan.md!“*, um 12:17:01: *„testplan entsprechend updated?“*.
+
+**Befehl.** Der `!`-Befehl für Gregor (13:35:57) enthielt `git -C .wt/doku …` mit relativem Pfad. Er scheiterte bei ihm mit `cannot change to '.wt/doku'` (13:46:58). Probiert wurde er vorher nie. Ob er überhaupt hätte gegeben werden dürfen, steht in [[abweisung-ist-eine-antwort]].
+
+**How to apply, zusätzlich:**
+- **Jeder Testschritt wird gegen die zurückgestellten Befunde gelesen.** Wenn eine Eingabe über einen Weg muss, den ein offener Befund beschädigt, ist der Schritt falsch. Dann kommt die Eingabe über einen Weg, der hält (hier: Entitäten statt Zeichen), oder der Schritt geht an den Prüfstand.
+- **Ein Befehl für Gregor hat absolute Pfade** und lief vorher einmal in genau dieser Form.

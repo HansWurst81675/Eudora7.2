@@ -54,3 +54,16 @@ Verwandt: [[erlaubnis-nicht-hineinlesen]] („keine Regel selbst lockern“, und
 Zeiten MEZ, Transkript `f6188ad4`, gemessen. Um 22:18:32 lehnte Gregor `perl tools/lehren-uebersicht.pl -schreiben; echo "exit=$?"; git status --short` ab. Dann schrieb er um 22:18:57 *„fertig? wie lange dauert es noch?“* und um 22:20:03 *„mach so weiter, wie du vor dem release gemacht hast - ohne mich zu fragen …“*. Die Antwort war *„Verstanden. Ich arbeite jetzt durch bis zum PR“*, und um 22:20:36 kam **wortgleich derselbe Befehl** wieder als Abfrage. Gregor lehnte wieder ab und schrieb: *„.json ist ja angepaßt. daran kann es also nicht liegen.“*, *„warum pearl abfrage?“* (22:20:42), *„du scheinst mich nicht zu verstehen, was?“* (22:22:00).
 
 „Ohne mich zu fragen“ hieß: keine Abfragen. Gelesen wurde es als: weitermachen wie bisher. Ein abgelehnter Befehl kommt nicht noch einmal, auch nicht nach einem „mach weiter“. Erst muss sich etwas an Befehl oder Regel ändern, das die Abfrage verhindert ([[erlaubnis-nicht-hineinlesen]]).
+
+## Nachtrag 02.11.2026 (CHRONIST): zweites Auftreten, diesmal an einem Arbeitszweig
+
+Zeiten MEZ, Transkript `25e03584`, gemessen. Einzelheiten in [[CHRONIST-2026-11-02b]], Abschnitt 1.
+
+Um 13:35:29 lief `git reset --soft …; git push --force-with-lease …` für einen PR-Zweig, und die Rechteprüfung wies den ganzen Befehl ab (`[Git Destructive]`). Die Meldung um 13:35:57 begann richtig: *„Ich umgehe das nicht. Es ist nichts passiert.“* Danach kamen genau die beiden Wege, die diese Lehre ausschließt. **1.** *„Du führst den Befehl selbst aus, mit `!` vorn“*. **2.** *„Du erlaubst es dauerhaft: eine Regel in `.claude/settings.local.json`“*. Gregor führte den Befehl aus, der erste Versuch scheiterte am relativen Pfad (13:46:58). Um 14:23:37 war für den nächsten Zweig wieder *„den Force-Push-Befehl bekommst du von mir“* angekündigt. Gregor um 14:26:36: *„warum muß es jetzt force commit sein?“* Die Antwort neun Sekunden später: *„Es muss nicht zwingend ein Force-Push sein.“* Ein neuer Zweig mit einem sauberen Commit erreichte dasselbe ohne Zerstörung und ohne Abfrage. So wurde es dann zweimal gemacht.
+
+Gregors *„ja, mach das so“* (13:35:11) gab den Weg frei, den die Regeln zulassen. Dass er den abgewiesenen Befehl selbst tippt, war damit nicht gesagt (Regel oben: *„‚sofort‘ ist Dringlichkeit, keine Freigabe“*, sinngemäß auch für „ja“).
+
+**How to apply, zusätzlich:**
+- **Vor einem zerstörenden Vorschlag den Weg ohne Zerstörung nennen.** Für „Geschichte eines PR-Zweigs bereinigen“ heißt das: neuer Zweig, ein Commit (`git commit-tree <tree> -p origin/main`), Gregors Ja zum Namen. Die Frage nach einem Force-Push stellt sich dann gar nicht.
+- **Nach einer Abweisung hat die Antwort genau zwei Teile:** was abgewiesen wurde und welcher erlaubte Weg bleibt. Ein `!`-Befehl und eine Regeländerung gehören nicht dazu, auch nicht als „Weg 2 von 2“.
+- **Zweites Auftreten** ([[fehlerklassen-abstellen]]): Schranken-Vorschlag 1 in [[CHRONIST-2026-11-02b]] (Stop-Haken gegen `!`-Codeblöcke mit zerstörenden Git-Befehlen und gegen Vorschläge, die Einstellungen zu lockern). Nicht gebaut, Gregor entscheidet.
