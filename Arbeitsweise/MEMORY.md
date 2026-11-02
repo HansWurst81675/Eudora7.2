@@ -162,3 +162,4 @@
 - [CHRONIST 01.11.2026 nachts](CHRONIST-2026-11-01e.md) — Laufbericht; von eigener Reihenfolge (E-177) abgewichen; E-172 fünfmal erbeten trotz „Gregor muss nichts tun“; Rot aus falschem Grund; --amend hinter `;`
 - [Merge-Art ist keine Abhilfe](kein-squash-im-repo.md) — berichtigt: Squash ist erlaubt, hätte aber nichts genützt; Gregors Pfade gar nicht erst schreiben, auch nicht in die Commit-Nachricht
 - [CHRONIST 02.11.2026](CHRONIST-2026-11-02.md) — Laufbericht; E-140 trotz Marke null bestätigt; VM-Pfad in Commit-Nachricht; Squash doch erlaubt (gemessen); Reihenfolge zweiter Morgen übergangen; drei LEKTOR-Runden
+- [Stand 02.11.2026](stand-02-11-2026.md) — #199/#200 gemergt; nächster Schritt E-143 Suchfenster, Gregor testet E-178; bauen.ps1 testet blind

@@ -3832,6 +3832,21 @@ BOOL CSearchView::OnDynamicCommand(UINT uID)
 					CWaitCursor		wait_cursor;
 					int				nItem;
 
+					//
+					// BEFUND E-143, Suchfenster: zwanzig Treffer nach "Out"
+					// uebertragen ergaben zwanzig Hinweise. Diese Schleife ruft
+					// CTocDoc::Xfer je Treffer einzeln auf, und Xfer lehnt jede
+					// EMPFANGENE Nachricht nach Out mit einem eigenen
+					// AlertDialog(IDD_XFER_TO_OUT_REFUSED) ab (E-125,
+					// tocdoc.cpp). Gregors Entscheidung vom 02.11.2026: "ja, ein
+					// hinweis reicht, richtig." - die Uebertragung nach Out
+					// bleibt erlaubt (verfasste Nachrichten gehen weiter durch),
+					// abgelehnte Treffer werden hier gezaehlt und uebersprungen,
+					// und der Hinweis kommt EINMAL nach der Schleife.
+					//
+					const BOOL		bE143NachOut = ( pDestTocDoc->m_Type == MBT_OUT );
+					int				nE143Abgelehnt = 0;
+
 					Progress( 0, CRString(IDS_SEARCH_PROGRESS_TRANSFERING), SelIdxList.size() ); // "Transfering..."
 			
 					for ( std::list<int>::iterator selItr = SelIdxList.begin();
@@ -3862,6 +3877,18 @@ BOOL CSearchView::OnDynamicCommand(UINT uID)
 						if (!pSum)
 							continue;
 						
+						// E-143: empfangene Nachricht nach Out - Xfer wuerde je
+						// Treffer einen Hinweis zeigen; zaehlen, weiter. Liegt
+						// der Treffer schon in Out, gibt Xfer still zurueck
+						// (tocdoc.cpp, TargetToc == this) - dann auch hier kein
+						// Hinweis (PRUEFER-82 K4).
+						if ( bE143NachOut && !pSum->IsComp() && pTocDoc != pDestTocDoc )
+						{
+							nE143Abgelehnt++;
+							ProgressAdd(1);
+							continue;
+						}
+
 						if (theAction == CA_TRANSFER_TO && ((QCMailboxCommand*)pCommand)->m_theType == MBT_TRASH)
 							pSumNew = pTocDoc->Xfer(pDestTocDoc, pSum);
 						else
@@ -3886,6 +3913,15 @@ BOOL CSearchView::OnDynamicCommand(UINT uID)
 					}
 
 					CloseProgress();
+
+					if ( nE143Abgelehnt > 0 )
+					{
+						CString		szSpur;
+						szSpur.Format( "E-143 Suchfenster nach Out: %d von %d Treffern abgelehnt (empfangen), ein Hinweis",
+									   nE143Abgelehnt, (int) SelIdxList.size() );
+						PutDebugLog( DEBUG_MASK_MISC, szSpur );
+						AlertDialog( IDD_XFER_TO_OUT_REFUSED );
+					}
 				}
 			}
 
