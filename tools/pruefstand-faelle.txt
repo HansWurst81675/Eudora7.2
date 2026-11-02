@@ -384,3 +384,26 @@ E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.
 # schreibt Eudora gepuffert - geprueft wird sie nach dem Beenden (A-5p-log).
 A-5p | C:\Temp\EHILFE | 60 | messung | HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1 | | | messen=tools\messen-hilfe.ps1
 A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: Tastenkuerzel.html geoeffnet | | messen=tools\messen-hilfe.ps1
+
+# -------------------------------------------------------------------------
+# Messungen vor 7.2.2.132 (MESSER5, 02.11.2026) - Behebungen, die in
+# 7.2.1.131 ausgeliefert, aber nie am laufenden Programm gemessen waren.
+# Vorher-Bau jeweils 7.2.1.128+640e1a0e (C:\Temp\EM*-alt), nachher
+# 7.2.1.131+f31dbff9 (C:\Temp\EM*, Quellstand gleich main 88142c78).
+# -------------------------------------------------------------------------
+# E-170 mit UIDPLUS: das Label bleibt. An BEIDEN Bauten gruen - der alte Weg
+# (ImapTransferSummaryData) nahm es schon mit; ein Regressionstest, keine
+# Gegenprobe fuer die Behebung (Intern/BEFUNDE.md#e-170).
+E-170p | C:\Temp\EM170 | 30 | messung | kopie-mit-label=1 log-grund=ok lebt=1 | | | messen=tools\messen-e170.ps1
+# E-170 ohne UIDPLUS: das Label geht an BEIDEN Bauten verloren (der Fehler
+# ist offen). Behauptet wird nur, was die Behebung leistet: die Logzeile
+# nennt den Grund. Am alten Bau rot (keine Logzeile).
+E-170o | C:\Temp\EM170 | 30 | messung | log-grund=keine-neuen-uids | | | messen=tools\messen-e170o.ps1
+# E-141: Entwurf aus IMAP nach Out, E-142-Rueckfrage Yes - danach KEINE
+# Meldung "No messages were transferred!". Alter Bau: nicht-uebertragen=1.
+# Gegenprobe IMAP -> lokal und Loeschen in derselben Zeile (lokal, geloescht).
+E-141p | C:\Temp\EM141 | 30 | messung | E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1 | | | messen=tools\messen-e141.ps1
+E-141g | C:\Temp\EM141 | 30 | messung | geloescht=2 lebt=1 | | | messen=tools\messen-e141.ps1
+# E-179: Textteil einer gesendeten HTML-Mail (SMTP-Pruefserver). Alter Bau:
+# emoji=kaputt ("%"), kyr=kaputt (0x16), und nach &#x1F525; endet der Text.
+E-179p | C:\Temp\EM179 | 30 | messung | E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1 | | | messen=tools\messen-e179.ps1
