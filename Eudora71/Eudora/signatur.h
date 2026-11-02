@@ -77,6 +77,10 @@ public:
 protected:
 	virtual ~CSignatureView();
 	void Serialize(CArchive& ar);
+public:
+	// E-207: Speichern unter schreibt den Inhalt (Text, bei .htm HTML).
+	void E207SpeichernUnter(CArchive& ar);
+protected:
 #ifdef _DEBUG
 	virtual void AssertValid() const;
 	virtual void Dump(CDumpContext& dc) const;

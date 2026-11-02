@@ -3872,7 +3872,8 @@ bool E89BilderMessbarMachen( const char* pszHtml, CString& out_szHtml, CString& 
 //   1. Sie trennt Kopfzeilen und Rumpf an der ersten Leerzeile.
 //   2. Sie entfernt den <x-html>-Marker und sein Gegenstueck </x-html>.
 //      Der Marker darf Zusaetze tragen (<x-html content-base="...">),
-//      deshalb wird bis zum > gelesen.
+//      deshalb wird bis zum > gelesen. Ebenso <x-flowed> und <x-rich>
+//      (E-194, siehe dort).
 //   3. Fehlt eine Content-Type-Zeile, ergaenzt sie MIME-Version,
 //      Content-Type und Content-Transfer-Encoding.
 //   4. Der Untertyp folgt dem Marker: war er da, ist es text/html, sonst
@@ -3977,10 +3978,52 @@ bool E101SpeicherfassungAufbereiten(
 	// der Ressource IDS_MIME_XHTML zusammen, und eine Nachricht aus fremder
 	// Hand kann alles Moegliche tragen.
 	//
-	bool		bWarHtml = false;
+	bool		bWarHtml   = false;
+	bool		bWarFlowed = false;
+	bool		bWarRich   = false;
 
 	CString		szKlein( szRumpf );
 	szKlein.MakeLower();
+
+	//
+	// BEFUND E-194 (02.11.2026): nicht nur <x-html>.
+	//
+	// Gregor hat am 01.11.2026 an 7.2.1.130 eine Mail im Format
+	// format=flowed aus der Postfachliste gespeichert. In der Datei standen
+	// <x-flowed> als erste und </x-flowed> als letzte Zeile des Rumpfs -
+	// Eudoras interne Klammern, die der Empfangsweg setzt (TextReader.cpp,
+	// IDS_MIME_RICH_ON mit IDS_MIME_XFLOWED). Gemessen am 02.11.2026 an
+	// 7.2.1.131 (tools/messen-e194.ps1): liste-xflowed=2, und mit
+	// Kopfzeilen ebenso aus dem Nachrichtenfenster (lesen-xflowed=2).
+	//
+	// Die drei Huellen sind dieselbe Sorte Marker und werden gleich
+	// behandelt. Was sich unterscheidet, ist die Angabe danach:
+	//
+	//   x-html    text/html (wie bisher)
+	//   x-flowed  text/plain mit "format=flowed" - die Zeilen bleiben, wie
+	//             sie sind. Die weichen Umbrueche (Leerzeichen am Zeilen-
+	//             ende) sind genau das, was format=flowed beschreibt; ein
+	//             Leser, der es kennt, fuegt sie wieder zusammen, und im
+	//             Editor bleibt der Text in kurzen Zeilen lesbar. Zusammen-
+	//             gefuegt wird HIER nichts: FlowText (msgutils.cpp) kann das,
+	//             aber was es zusammenklebt, ist dann nicht mehr zu trennen,
+	//             und ein Zitat mit wechselnder Tiefe wird verschoben.
+	//   x-rich    text/enriched - der Rumpf ist RFC 1896 (<bold>, <<),
+	//             als text/plain gelesen stuenden die Befehle im Text.
+	//
+	const char *	pszHuelle = NULL;
+
+	if ( szKlein.Left( 7 ) == "<x-html" )
+		pszHuelle = "x-html";
+	else if ( szKlein.Left( 10 ) == "<x-flowed>" )
+		pszHuelle = "x-flowed";
+	else if ( szKlein.Left( 8 ) == "<x-rich>" )
+		pszHuelle = "x-rich";
+
+	CString		szHuelleZu;
+	if ( pszHuelle )
+		szHuelleZu.Format( "</%s>", pszHuelle );
+	const int	nHuelleZu = szHuelleZu.GetLength();
 
 	//
 	// PRUEFER P-18: der Marker steht, wenn ueberhaupt, als ERSTE ZEILE des
@@ -3998,7 +4041,7 @@ bool E101SpeicherfassungAufbereiten(
 	// gemessenen Faelle auf einmal - darunter den, dass eine EMPFANGENE
 	// Nachricht Rumpftext verlor, obwohl an ihr nichts anzutasten ist.
 	//
-	if ( szKlein.Left( 7 ) == "<x-html" )
+	if ( pszHuelle )
 	{
 		//
 		// PRUEFER P-28, DATENVERLUST: es wird das TAG entfernt, nicht die
@@ -4049,7 +4092,9 @@ bool E101SpeicherfassungAufbereiten(
 
 		if ( nZu >= 0 )
 		{
-			bWarHtml = true;
+			bWarHtml   = ( strcmp( pszHuelle, "x-html" ) == 0 );
+			bWarFlowed = ( strcmp( pszHuelle, "x-flowed" ) == 0 );
+			bWarRich   = ( strcmp( pszHuelle, "x-rich" ) == 0 );
 
 			int		nNach = nZu + 1;
 
@@ -4084,9 +4129,9 @@ bool E101SpeicherfassungAufbereiten(
 				const char *	pszK  = (const char *) szKlein;
 				const int		nKLen = szKlein.GetLength();
 
-				for ( int i = nKLen - 9; i >= 0; i-- )
+				for ( int i = nKLen - nHuelleZu; i >= 0; i-- )
 				{
-					if ( memcmp( pszK + i, "</x-html>", 9 ) == 0 )
+					if ( memcmp( pszK + i, (const char *) szHuelleZu, nHuelleZu ) == 0 )
 					{
 						nEnde = i;
 						break;
@@ -4106,7 +4151,7 @@ bool E101SpeicherfassungAufbereiten(
 				//
 				bool	bNurLeerraum = true;
 
-				for ( int k = nEnde + 9; k < szRumpf.GetLength(); k++ )
+				for ( int k = nEnde + nHuelleZu; k < szRumpf.GetLength(); k++ )
 				{
 					const char	c = szRumpf[k];
 
@@ -4117,9 +4162,29 @@ bool E101SpeicherfassungAufbereiten(
 					}
 				}
 
-				if ( bNurLeerraum )
+				//
+				// E-194: bei <x-flowed> und <x-rich> darf hinter dem
+				// Gegenstueck noch etwas folgen - eine Nachricht mit Anhang
+				// traegt danach "Attachment Converted: ...". Entfernt wird es
+				// dann nur, wenn es ALLEIN auf seiner Zeile steht; mitten in
+				// einer Zeile ist es zitierter Text (P-19). Fuer <x-html>
+				// bleibt es bei der Regel von P-19.
+				//
+				bool	bEigeneZeile = false;
+
+				if ( !bNurLeerraum && !bWarHtml )
 				{
-					int		nNachEnde = nEnde + 9;
+					const int	nHinter = nEnde + nHuelleZu;
+
+					bEigeneZeile =
+						( nEnde == 0 || szRumpf[nEnde-1] == '\n' ) &&
+						( nHinter >= szRumpf.GetLength() ||
+						  szRumpf[nHinter] == '\r' || szRumpf[nHinter] == '\n' );
+				}
+
+				if ( bNurLeerraum || bEigeneZeile )
+				{
+					int		nNachEnde = nEnde + nHuelleZu;
 
 					if ( nNachEnde < szRumpf.GetLength() && szRumpf[nNachEnde] == '\r' )
 						nNachEnde++;
@@ -4273,11 +4338,30 @@ bool E101SpeicherfassungAufbereiten(
 	bool		bCtErsetzt = false;
 	bool		bKopfSagtHtml = false;
 
+	//
+	// PRUEFER-86 K5 und K6 (02.11.2026): zwei Angaben der vorgefundenen
+	// Zeile, die die neue tragen muss, wenn sie die alte ersetzt.
+	//   K5  <x-rich> steht beim Empfang fuer text/richtext UND text/enriched
+	//       (TextReader.cpp) - sagt die alte Zeile richtext, bleibt es dabei.
+	//   K6  format=flowed mit delsp=yes: ohne den Parameter fuegt ein Leser
+	//       das Leerzeichen vor dem weichen Umbruch mit ein.
+	//
+	bool		bKopfSagtRichtext = false;
+	bool		bKopfDelSp        = false;
+
 	if ( bHatContentType )
 	{
 		CString		szCt = KopfwertKlein( szKopf, "content-type:" );
 		szCt.TrimLeft();
 		bKopfSagtHtml = ( szCt.Left( 9 ) == "text/html" );
+		bKopfSagtRichtext = ( szCt.Left( 13 ) == "text/richtext" );
+		{
+			CString		szOhne( szCt );
+			szOhne.Remove( ' ' );
+			szOhne.Remove( '\t' );
+			szOhne.Remove( '"' );
+			bKopfDelSp = ( szOhne.Find( "delsp=yes" ) >= 0 );
+		}
 
 		const bool	bMultipart = ( szCt.Left( 10 ) == "multipart/" );
 		const bool	bTypFalsch = ( bWarHtml && !bKopfSagtHtml );
@@ -4398,7 +4482,8 @@ bool E101SpeicherfassungAufbereiten(
 		}
 	}
 
-	const char *	pszUntertyp = ( bWarHtml || bKopfSagtHtml ) ? "html" : "plain";
+	const char *	pszUntertyp = ( bWarHtml || bKopfSagtHtml ) ? "html"
+								: ( bWarRich ? ( bKopfSagtRichtext ? "richtext" : "enriched" ) : "plain" );
 
 	//
 	// 4b. E-101 (13.10.2026): die Zeichensatzangabe IM HTML.
@@ -4537,12 +4622,16 @@ bool E101SpeicherfassungAufbereiten(
 			szNeu += "; charset=\"";
 			szNeu += pszCharset;
 			szNeu += "\"";
+			if ( bWarFlowed )
+				szNeu += "; format=flowed";		// E-194
+			if ( bWarFlowed && bKopfDelSp )
+				szNeu += "; delsp=yes";			// PRUEFER-86 K6
 			szNeu += "\r\nContent-Transfer-Encoding: 8bit";
 		}
 
 		szNeu += "\r\n\r\n";
 	}
-	else if ( !bHatContentType && ( bWarHtml || bHochbyte ) )
+	else if ( !bHatContentType && ( bWarHtml || bWarRich || bHochbyte ) )
 	{
 		//
 		// BEFUND E-101, zweiter Teil: ohne Kopfzeilen wurde GAR NICHTS ergaenzt - und
@@ -4594,6 +4683,8 @@ bool E101SpeicherfassungAufbereiten(
 		szNeu += "; charset=\"";
 		szNeu += pszCharset;
 		szNeu += "\"";
+		if ( bWarFlowed )
+			szNeu += "; format=flowed";		// E-194
 		szNeu += "\r\nContent-Transfer-Encoding: 8bit";
 		szNeu += "\r\n\r\n";
 	}
@@ -4608,7 +4699,8 @@ bool E101SpeicherfassungAufbereiten(
 	out_szSpur.Format(
 		"E-101 speichern: kopfzeilen=%d trenner=%d xhtml=%d content-type-vorhanden=%d "
 		"typ=text/%s charset=%s bytes-vorher=%d nachher=%d rumpf-vorher=%d "
-		"rumpf-nachher=%d mime-ergaenzt=%d ct-ersetzt=%d meta-charset=%d geaendert=%d",
+		"rumpf-nachher=%d mime-ergaenzt=%d ct-ersetzt=%d meta-charset=%d geaendert=%d "
+		"huelle=%s",
 		bHatKopfzeilen ? 1 : 0,
 		( nKopfEnde > 0 ) ? 1 : 0,
 		bWarHtml ? 1 : 0,
@@ -4622,7 +4714,8 @@ bool E101SpeicherfassungAufbereiten(
 		bMimeErgaenzt ? 1 : 0,
 		bCtErsetzt ? 1 : 0,
 		nMetaUmgeschrieben,
-		bGeaendert ? 1 : 0 );
+		bGeaendert ? 1 : 0,
+		( pszHuelle && ( bWarHtml || bWarFlowed || bWarRich ) ) ? pszHuelle : "-" );
 
 	return bGeaendert;
 }
@@ -4676,6 +4769,298 @@ CString E140TextFuerDatei(
 		return szDatei;
 
 	return CString( pszText ? pszText : "" );
+}
+
+
+//
+// ---------------------------------------------------------------------------
+// E196HtmlZeichensatz
+// ---------------------------------------------------------------------------
+//
+// BEFUND E-196: "Speichern unter" als .htm aus dem Nachrichten- und aus dem
+// Verfassen-Fenster schrieb keine Zeichensatzangabe. Gregors Datei vom
+// 01.11.2026 (7.2.1.130, Verfassen-Fenster, 175 Byte): "<html>\r\n<body>...",
+// die Umlaute als E4 FC F6 DF und das Euro-Zeichen als 80 - windows-1252,
+// aber ohne <meta>. Ein Browser, der UTF-8 annimmt, zeigt Ersatzzeichen.
+// Gemessen am 02.11.2026 an 7.2.1.131 (tools/messen-e194.ps1): htm-meta=0
+// in beiden Fenstern, mit und ohne Kopfzeilen.
+//
+// Der HTML-Zweig laeuft nicht ueber E140TextFuerDatei - Kopfzeilen vor
+// HTML waeren kein HTML mehr. Die Angabe gehoert hier ins Dokument.
+//
+// WARUM IMMER windows-1252: der Text kommt aus der Anzeige, nicht aus dem
+// Postfach. Paige haelt ihn als ANSI, und die Trident-Leseansicht wandelt
+// ihn mit CP_ACP um (E136HtmlAusBstr, TridentView.cpp; Zeichen ausserhalb
+// der Codepage werden Entitaeten, E-136). Welche Angabe die Nachricht
+// mitbrachte, sagt ueber diese Bytes nichts mehr. Dieselbe Angabe schreibt
+// der Anzeigeweg (TridentView.cpp, szCharsetMeta).
+//
+// WAS DIESE FUNKTION TUT
+//
+//   1. Jedes <meta ...> mit "charset=": ein anderer Wert als windows-1252
+//      wird umgeschrieben (wie E-101 Schritt 4b) - nur der Name, nichts
+//      wird entfernt.
+//   2. Steht keine Angabe da, wird eine eingefuegt: hinter <head ...>,
+//      sonst hinter <html ...> als eigener <head>, wenn davor nur Leerraum
+//      oder eine <!...>-Erklaerung steht, sonst ganz vorn (hinter einem
+//      fuehrenden <!DOCTYPE ...>). Ein Browser sucht die Angabe in den
+//      ersten 1024 Byte; vorn steht sie in jedem Fall darin.
+//
+// Reine Textverarbeitung, ohne Fenster pruefbar (TestE196.cpp).
+// Rueckgabe: true, wenn out_szDatei gefuellt ist und an die Stelle des
+// Eingangstextes tritt. out_szSpur gehoert ins Protokoll.
+//
+bool E196HtmlZeichensatz(
+		const char *		pszHtml,
+		CString &			out_szDatei,
+		CString &			out_szSpur )
+{
+	static const char	szWunsch[] = "windows-1252";
+	static const char	szMeta[]   =
+		"<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\">";
+
+	out_szDatei.Empty();
+
+	CString		szText( pszHtml ? pszHtml : "" );
+	CString		szKlein( szText );
+	szKlein.MakeLower();
+
+	//
+	// PRUEFER-86 K7: Kommentare ausblenden. "<!-- <head> -->" ist kein Kopf,
+	// und eine Angabe darin wirkt nicht. szKlein dient nur der Suche; die
+	// Stellen bleiben dieselben, weil mit Leerzeichen gleicher Laenge
+	// ueberschrieben wird.
+	//
+	{
+		int		nK = szKlein.Find( "<!--" );
+		while ( nK >= 0 )
+		{
+			const int	nE   = szKlein.Find( "-->", nK + 4 );
+			const int	nBis = ( nE < 0 ) ? szKlein.GetLength() : nE + 3;
+			for ( int q = nK; q < nBis; q++ )
+				szKlein.SetAt( q, ' ' );
+			nK = szKlein.Find( "<!--", nBis );
+		}
+	}
+
+	const int	nVorher = szText.GetLength();
+	int			nGefunden      = 0;
+	int			nUmgeschrieben = 0;
+	CString		szAlt( "-" );
+	const char *	pszOrt = "-";
+
+	//
+	// Ende eines Tags: erstes '>' ausserhalb von Anfuehrungszeichen.
+	//
+	auto	TagEnde = []( const CString & szK, int nAb ) -> int
+	{
+		char	cAnf = 0;
+		for ( int q = nAb; q < szK.GetLength(); q++ )
+		{
+			const char	c = szK[q];
+			if ( cAnf )
+			{
+				if ( c == cAnf )
+					cAnf = 0;
+			}
+			else if ( c == '"' || c == '\'' )
+				cAnf = c;
+			else if ( c == '>' )
+				return q;
+		}
+		return -1;
+	};
+
+	//
+	// Anfang eines Tags <name - nur, wenn danach '>' oder Leerraum folgt;
+	// "<header" ist kein "<head".
+	//
+	auto	TagAnfang = []( const CString & szK, const char * pszName ) -> int
+	{
+		const int	nName = (int) strlen( pszName );
+		int			nAb   = 0;
+		for (;;)
+		{
+			const int	n = szK.Find( pszName, nAb );
+			if ( n < 0 )
+				return -1;
+			const int	nHinter = n + nName;
+			if ( nHinter < szK.GetLength() )
+			{
+				const char	c = szK[nHinter];
+				if ( c == '>' || c == ' ' || c == '\t' || c == '\r' || c == '\n' || c == '/' )
+					return n;
+			}
+			nAb = n + 1;
+		}
+	};
+
+	//
+	// 1. Vorhandene Angaben.
+	//
+	int		nPos = 0;
+	for (;;)
+	{
+		const int	nMeta = TagAnfang( szKlein.Mid( nPos ), "<meta" );
+		if ( nMeta < 0 )
+			break;
+		const int	nAnf = nPos + nMeta;
+		int			nZu  = TagEnde( szKlein, nAnf + 5 );
+		if ( nZu < 0 )
+			break;
+
+		const int	nCs = szKlein.Find( "charset", nAnf );
+		if ( nCs >= 0 && nCs < nZu )
+		{
+			int		q = nCs + 7;
+			while ( q < nZu && ( szKlein[q] == ' ' || szKlein[q] == '\t' ) )
+				q++;
+			if ( q < nZu && szKlein[q] == '=' )
+			{
+				q++;
+				while ( q < nZu && ( szKlein[q] == ' ' || szKlein[q] == '\t' ) )
+					q++;
+				//
+				// PRUEFER-86 K7: genau EIN oeffnendes Anfuehrungszeichen
+				// ueberspringen, und nur, wenn sein Gegenstueck noch im Tag
+				// steht. Vorher fielen bei charset="" beide weg, und der Name
+				// landete dahinter: <meta charset=""windows-1252>. Bei
+				// content="text/html; charset=" ist das naechste Zeichen das
+				// Ende von content - dann wird VOR ihm eingesetzt.
+				//
+				if ( q < nZu && ( szKlein[q] == '"' || szKlein[q] == '\'' ) )
+				{
+					const int	nGegen = szKlein.Find( szKlein[q], q + 1 );
+					if ( nGegen > q && nGegen < nZu )
+						q++;
+				}
+				int		nWertEnde = q;
+				while ( nWertEnde < nZu &&
+						( isalnum( (unsigned char) szKlein[nWertEnde] ) ||
+						  szKlein[nWertEnde] == '-' || szKlein[nWertEnde] == '_' ||
+						  szKlein[nWertEnde] == '.' || szKlein[nWertEnde] == ':' ) )
+					nWertEnde++;
+
+				nGefunden++;
+				const CString	szWert = szKlein.Mid( q, nWertEnde - q );
+				if ( nGefunden == 1 )
+					szAlt = szWert.IsEmpty() ? CString( "(leer)" ) : szWert;
+
+				if ( szWert != szWunsch )
+				{
+					szText  = szText.Left( q )  + szWunsch + szText.Mid( nWertEnde );
+					szKlein = szKlein.Left( q ) + szWunsch + szKlein.Mid( nWertEnde );
+					nZu += (int) strlen( szWunsch ) - ( nWertEnde - q );
+					nUmgeschrieben++;
+				}
+			}
+		}
+		nPos = nZu + 1;
+	}
+
+	//
+	// 2. Keine Angabe: eine einfuegen.
+	//
+	if ( nGefunden == 0 )
+	{
+		const int	nHead = TagAnfang( szKlein, "<head" );
+		const int	nHtml = TagAnfang( szKlein, "<html" );
+
+		// Steht vor nAb nur Leerraum oder <!...>?
+		auto	NurVorspann = [&]( int nBis ) -> bool
+		{
+			int		q = 0;
+			while ( q < nBis )
+			{
+				const char	c = szKlein[q];
+				if ( c == ' ' || c == '\t' || c == '\r' || c == '\n' )
+				{
+					q++;
+					continue;
+				}
+				if ( c == '<' && q + 1 < nBis && szKlein[q+1] == '!' )
+				{
+					const int	nE = TagEnde( szKlein, q + 2 );
+					if ( nE < 0 || nE >= nBis )
+						return false;
+					q = nE + 1;
+					continue;
+				}
+				return false;
+			}
+			return true;
+		};
+
+		int			nEin = -1;
+		CString		szEin;
+
+		if ( nHead >= 0 && TagEnde( szKlein, nHead + 5 ) >= 0 )
+		{
+			nEin   = TagEnde( szKlein, nHead + 5 ) + 1;
+			szEin  = CString( "\r\n" ) + szMeta;
+			pszOrt = "head";
+		}
+		else if ( nHtml >= 0 && TagEnde( szKlein, nHtml + 5 ) >= 0 && NurVorspann( nHtml ) )
+		{
+			nEin   = TagEnde( szKlein, nHtml + 5 ) + 1;
+			szEin  = CString( "\r\n<head>" ) + szMeta + "</head>";
+			pszOrt = "html";
+		}
+		else
+		{
+			nEin = 0;
+			if ( szKlein.Left( 9 ) == "<!doctype" && TagEnde( szKlein, 9 ) >= 0 )
+				nEin = TagEnde( szKlein, 9 ) + 1;
+			szEin  = ( nEin > 0 ) ? ( CString( "\r\n" ) + szMeta ) : ( CString( szMeta ) + "\r\n" );
+			pszOrt = "anfang";
+		}
+
+		szText = szText.Left( nEin ) + szEin + szText.Mid( nEin );
+	}
+
+	const bool	bGeaendert = ( nGefunden == 0 || nUmgeschrieben > 0 );
+
+	if ( bGeaendert )
+		out_szDatei = szText;
+
+	out_szSpur.Format(
+		"E-196 html: meta=%s alt=%s ort=%s angaben=%d umgeschrieben=%d bytes-vorher=%d nachher=%d",
+		( nGefunden == 0 ) ? "eingefuegt" : ( nUmgeschrieben > 0 ? "umgeschrieben" : "passt" ),
+		(LPCTSTR) szAlt,
+		pszOrt,
+		nGefunden,
+		nUmgeschrieben,
+		nVorher,
+		szText.GetLength() );
+
+	return bGeaendert;
+}
+
+//
+// E196HtmlFuerDatei - der eine Eingang fuer den HTML-Zweig beider Fenster
+// (ReadMessageDoc.cpp, compmsgd.cpp): ruft E196HtmlZeichensatz und schreibt
+// die Spur mit dem Namen des Weges ins Protokoll (DEBUG_MASK_DIALOG, wie
+// E-101/E-140). Liefert die Funktion nichts, geht der Text unveraendert
+// hinaus.
+//
+CString E196HtmlFuerDatei(
+		const char *		pszHtml,
+		const char *		pszWeg )
+{
+	CString		szDatei;
+	CString		szSpur;
+
+	const bool	bOk = E196HtmlZeichensatz( pszHtml, szDatei, szSpur );
+
+	CString		szZeile;
+	szZeile.Format( "E-196 speichern aus %s: %s",
+					pszWeg ? pszWeg : "?", (LPCTSTR) szSpur );
+	PutDebugLog( DEBUG_MASK_DIALOG, szZeile );
+
+	if ( bOk )
+		return szDatei;
+
+	return CString( pszHtml ? pszHtml : "" );
 }
 
 

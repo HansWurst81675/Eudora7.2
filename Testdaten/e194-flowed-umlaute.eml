@@ -1,0 +1,20 @@
+From: Pruefung <absender@e194.invalid>
+To: empfaenger@e194.invalid
+Subject: Pruefung E-194 format=flowed speichern
+Date: Mon, 02 Nov 2026 11:00:00 +0100
+Message-ID: <e194-flowed@e194.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+
+E-194 Pruefnachricht im Format format=flowed. Dieser Absatz ist so lang, 
+dass er umbrochen wurde: Grüße aus München, Preis 5 €, 
+äöü ÄÖÜ ß.
+
+Zweiter Absatz, eine einzige Zeile.
+
+> Zitat aus einer frueheren Nachricht, ebenfalls 
+> umbrochen.
+
+-- 
+Signatur E-194

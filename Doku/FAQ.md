@@ -303,8 +303,11 @@ Anhänge der gelöschten Mail aus dem Anhangverzeichnis verschwunden, die
 ## 15. Kann ich eine Mail als Anhang weiterleiten?
 
 Nein — einen solchen Befehl gibt es in Eudora nicht. Wer eine Mail
-unverändert weitergeben will, sichert sie als Datei (*File → Save As…*) und
-hängt diese Datei an eine neue Mail an.
+unverändert weitergeben will, sichert sie als Datei und hängt diese Datei an
+eine neue Mail an — am besten aus der **Postfachliste** (Nachricht markieren,
+*File → Save As…*): dort bleiben die Zitatzeichen `>` stehen (am 02.11.2026 am
+Prüfstand gemessen, `e194-liste.txt`). Aus dem geöffneten Nachrichtenfenster
+ohne *Kopfzeilen einschließen* gehen sie verloren ([E-206](../Intern/BEFUNDE.md#e-206)).
 
 *Am Quelltext nachgesehen* ([EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md),
 Abschnitt 4).

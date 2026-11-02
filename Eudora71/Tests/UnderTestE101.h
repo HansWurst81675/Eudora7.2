@@ -19,4 +19,10 @@ bool UTE101_SpeicherfassungAufbereiten(const char* pszVoll,
 									   CString& out_szDatei,
 									   CString& out_szSpur);
 
+// Ruft E196HtmlZeichensatz auf (Befund E-196, aus derselben msgutils.cpp
+// geschnitten, generated/msgutils_e196.inc). Rueckgabe wie dort.
+bool UTE196_HtmlZeichensatz(const char* pszHtml,
+							CString& out_szDatei,
+							CString& out_szSpur);
+
 #endif
