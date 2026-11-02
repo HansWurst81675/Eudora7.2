@@ -905,7 +905,7 @@ gespeichert wird beim Verlassen des Fensters nach Rückfrage
 | *Open* | öffnet das Postfach oder die Nachricht | Vorlage |
 | *Print* | druckt die Nachricht | Vorlage |
 | *Notify User* | meldet die Nachricht wie unter [*Getting Attention*](#getting-attention) oder nur im Filterbericht | Vorlage |
-| *Notify Application* | übergibt die Nachricht an ein Programm ([E-177](../Intern/BEFUNDE.md#e-177), *Zeichensatzangabe der Zwischendatei, im Quellstand berichtigt*) | Vorlage |
+| *Notify Application* | übergibt die Nachricht an ein Programm ([E-177](../Intern/BEFUNDE.md#e-177), *Zeichensatzangabe der Zwischendatei, berichtigt in 7.2.1.131*) | Vorlage |
 | *Forward To* / *Redirect To* | leitet weiter bzw. um | Vorlage |
 | *Reply with* | antwortet mit einem Briefpapier | Vorlage |
 | *Server Options* | merkt *Fetch* oder *Delete* auf dem Server vor. **Löschen auf dem Server ist hier gesperrt**, bis `FilterMayDeleteFromServer=1` gesetzt ist ([FILTER.md](../Intern/FILTER.md#die-aktion-server-options), [E-73](../Intern/BEFUNDE.md#e-73), *Filter leerte ein Serverpostfach*) | Vorlage |
