@@ -110,7 +110,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## 7.2.1.131 — Testpaket: E-177, E-143 (Suchfenster), E-122, E-184, E-189 im Quelltext berichtigt und am Prüfstand gemessen; E-178 und E-136 (Strg+S) gemessen
+## 7.2.1.131 — Release (`v7.2.1.131`, veröffentlicht am 02.11.2026): E-177, E-143 (Suchfenster), E-122, E-184, E-189 im Quelltext berichtigt und am Prüfstand gemessen; E-178 und E-136 (Strg+S) gemessen
 
 Nummer am 02.11.2026 vergeben (Gregor: *„ja, paket_7_2_1_131 ist ok“*), Zweig `paket_7_2_1_131`. **Geschnürt am 02.11.2026, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md)); Prüfbericht BESTANDEN (362 Unit-Tests, 19 Schranken, 53 Prüfstandsfälle). **Von Gregor am 02.11.2026 an seinem System getestet: alle sieben Schritte bestanden** ([TESTPLAN](Intern/TESTPLAN.md#test-7-2-1-131), Belege aus seiner `eudora.log`); als Release 7.2.1.131 veröffentlicht wird nach seinem Ja, danach 7.2.2. Darin die Zweige `e184_imap_zusammenfassung` (#197), `e184_mehrere_mails` (#198), `e177_filter_programm` (#200), `e143_suchfenster` (#201) und `e122_imap_datum` (#202), dazu `was_eudora_alles_kann` (#203, nur Doku im Repo, nicht im Paket). Testschritte für Gregor: [TESTPLAN](Intern/TESTPLAN.md#test-7-2-1-131). Kurz:
 
