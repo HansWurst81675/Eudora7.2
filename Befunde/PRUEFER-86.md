@@ -142,3 +142,65 @@ Gemessen. `C:\Temp\E194\Mailverzeichnis\e194-lesen.txt` (ohne Kopfzeilen) hat di
 | K8 | `TestE194` bleibt grün ohne die Bedingung „Gegenstück am Zeilenanfang“ | gering | nein |
 | K9 | `messen-e194.ps1`: ERGEBNIS prüft weder Umbruch noch Euro/Umlaute, die Prüfnachricht hat keinen Anhang | gering | nein |
 | K10 | `.txt` aus dem Nachrichtenfenster ohne Kopfzeilen verliert die Zitatzeichen `>` (Originalverhalten, Vorschlag [E-206](../Intern/BEFUNDE.md#e-206)) | mittel | nein |
+
+## Nachtrag 02.11.2026
+
+Geprüft wurde `ed7b9d83..e12e267d` auf `e194_e196_speichern_unter`. Das sind cecab886 (Funde dieses Berichts eingearbeitet, [E-205](../Intern/BEFUNDE.md#e-205) fortgeschrieben, [E-206](../Intern/BEFUNDE.md#e-206) neu) und e12e267d (Behebung von [E-205](../Intern/BEFUNDE.md#e-205)). Mein Baum wurde mit `tools/arbeitsbaum-angleichen.sh` vorgespult. Eudora habe ich weder gebaut noch gestartet. `C:\Temp\E205` und `C:\Temp\E205-alt` habe ich nur gelesen.
+
+### Ergebnis vorweg
+
+Die Behebung von [E-205](../Intern/BEFUNDE.md#e-205) ist richtig, und K1 ist in seinem wichtigsten Teil widerlegt. Gemessen am alten Bau (`C:\Temp\E205-alt`) geben beide Speicherungen einer eingereihten Nachricht dieselbe `Date:`-Zeile (`16:54:55 +0100`, zweimal, aus *Out* wie aus der Liste). Der Grund steht am Quelltext: `FormatDate` liest die Zone aus dem eben geschriebenen Datumstext zurück und zieht sie von `m_Seconds` wieder ab (`FormatDateMT`, QCUtils/src/services.cpp:2067-2076). Bei gültiger Zone hebt sich die Verschiebung also auf. Nur `+6000` liegt außerhalb ±2400 und bleibt stehen, daher die 119 Stunden beim zweiten Speichern. Meine Vermutung, *Send Later* werde verschoben, war falsch. Ich hatte `FormatDate` nicht bis in `FormatDateMT` gelesen.
+
+Die Testsuite läuft mit 382/382. Von acht Gegenproben an den neuen Stellen werden sieben rot, eine bleibt grün (N3). Neu sind drei Funde. N1: Das Signaturfenster schreibt `.rtf` **nicht** als RTF, die Begründung zu K2 in [E-195](../Intern/BEFUNDE.md#e-195), im Kommentar von saveas.cpp und in TestE196.cpp stimmt für dieses Fenster nicht. *Speichern unter* aus dem Signaturfenster schreibt nach dem Quelltext gar nichts in die Datei (Vorschlag: E-207). N2: der Fall `E-205p` erwartet `zone=+0100` und wird in der Sommerzeit rot. N3: eine Schranke in `E196HtmlZeichensatz` ist ungetestet. Keiner der drei hält das Paket auf.
+
+### E-205 am Quelltext
+
+- **Zone überall in Minuten?** Ja. Alle Leser rechnen `m_TimeZoneMinutes * 60` (sendmail.cpp:242-261, :3866, :3892; compmsgd.cpp:2794; tocdoc.cpp:920, :1160; JunkMail.cpp; pop.cpp:624, :633; summary.cpp:2689). Alle anderen Schreiber setzen Minuten (`SetDate` summary.cpp:2918, `Build` :2440, changeq.cpp:218, `FormatDateMT`). Die Stelle in `InitializeNew` war die einzige mit Sekunden. `-GetGMTOffset() * 60` steht sonst nirgends. Belegt.
+- **Senden (sendmail.cpp:3329).** `ComposeDate(Date, SMTPmsg->m_Sum)` schreibt weiter zurück. Bei gültiger Zone gleicht `FormatDate` das aus, siehe oben. Vor dem Senden setzt das Sichern `SetDate` (compmsgd.cpp:1803), die Zone ist dann ohnehin in Minuten. Unverändert zu lassen ist richtig. Belegt. Am Prüfstand gemessen ist, dass die Zusammenfassung nicht wandert (`q1`/`q2` gleich). Das gesendete `Date:` selbst ist nicht gemessen. In [E-205](../Intern/BEFUNDE.md#e-205) steht *„nichts ging falsch hinaus — gemessen“*. Richtig wäre: am Quelltext belegt, an der Zusammenfassung gemessen.
+- **Alte Zusammenfassungen mit 3600 in einer `.toc`.** Die Zone wird als `short` geschrieben und gelesen (summary.cpp:2576, :2497-2498), 3600 überlebt also ein Speichern der Inhaltsliste. `Read` ruft `SetDate()` ohne Sekunden (summary.cpp:2500), das setzt die Zone nicht neu. Eine solche Zusammenfassung entsteht nur aus einer neuen Nachricht, die nie gesichert wurde, deren Inhaltsliste aber trotzdem geschrieben wurde. Jedes Sichern heilt sie über `SetDate( time(NULL) … )`. Was sie bis dahin anrichtet, ist dasselbe Datum `+6000` beim Speichern unter. Ein Pfad, auf dem eine ungesicherte neue Nachricht in *Out* stehen bleibt, ist mir nicht bekannt (Vermutung: ein Absturz bei offenem Verfassen-Fenster). Keine Behebung nötig, ein Satz in [E-205](../Intern/BEFUNDE.md#e-205) genügt.
+- **Messung.** `C:\Temp\E205-alt`: `neu1` `Thu, 05 Nov 2026 03:54:43 +6000`, `neu2` `Sat, 07 Nov 2026 15:54:43 +6000`, `q1`/`q2`/`liste1`/`liste2` je `Mon, 02 Nov 2026 16:54:55 +0100`. `C:\Temp\E205`: alle sechs `Mon, 02 Nov 2026 17:02:04` bzw. `17:02:15 +0100`, Dateizeiten 17:02:10 bis 17:02:40. Gemessen (Dateien gelesen).
+
+### Filter
+
+`IDS_MSG_SAVEAS_FILE_FILTER` hat die Nummer 3130. Sie kommt in resource.h genau einmal vor (33130 ist eine andere Nummer). Aufrufer: compmsgd.cpp:3368 und saveas.cpp:98 nehmen den neuen Filter, signatur.cpp:73 und textfile.cpp:110 den alten mit `.rtf`. Weitere Aufrufer gibt es nicht. Belegt.
+
+### Gegenproben
+
+Gemessen, wie in Abschnitt 3. Sicherung der vier Dateien, Perl `:raw`, Treffer je 1, nach jedem Lauf zurück, `cmp` gleich, `git status` leer.
+
+| Lauf | Änderung (vorübergehend) | Ergebnis |
+|---|---|---|
+| 0 | keine | 382/382 |
+| H1 | compmsgd.cpp `InitializeNew` wieder `-GetGMTOffset() * 60` und `- m_TimeZoneMinutes` | 381/382, rot `E-205 (Quelltext): InitializeNew legt die Zone in Minuten an` |
+| H2 | tocview.cpp wieder `ComposeDate( szDateMaybe, pSummary )` | 381/382, rot `E-205 (Quelltext): Speichern unter schreibt die Zusammenfassung nicht zurueck` |
+| H3 | msgutils.cpp `delsp=yes` nicht mehr anhängen | 381/382, rot `E-194 PRUEFER-86 K5/K6 …` |
+| H4 | msgutils.cpp Untertyp immer `enriched` | 381/382, rot `E-194 PRUEFER-86 K5/K6 …` |
+| H5 | `E196HtmlZeichensatz`: Kommentare nicht mehr ausblenden | 381/382, rot `E-196 PRUEFER-86 K7 …` |
+| H6 | `E196HtmlZeichensatz`: Schranke `nGegen < nZu` entfernt | **382/382, grün** (N3) |
+| H7 | Bedingung „Gegenstück am Zeilenanfang“ entfernt (wie G4) | 381/382, rot `E-194: </x-flowed> auf eigener Zeile …`, K8 ist damit geschlossen |
+| H8 | saveas.cpp wieder `IDS_TXT_HTML_FILE_FILTER` | 381/382, rot `E-195 (Quelltext): Speicherdialog fuer Nachrichten ohne .rtf …` |
+
+### N1: Das Signaturfenster schreibt bei *Speichern unter* nichts (Vorschlag: E-207)
+
+Am Quelltext belegt, nicht gemessen. `CSignatureDoc::OnFileSaveAs` setzt `m_SaveAs` und ruft `CDocument::OnSaveDocument` (signatur.cpp:69-89). `CSignatureDoc::Serialize` ruft bei `m_SaveAs` ausdrücklich `pView->CPaigeEdtView::Serialize(ar)` (signatur.cpp:100-103). Diese Funktion gibt es nicht mehr: Sie ist seit dem Originalstand auskommentiert („03-17-2000 Commented this function as this is moved to TextFileView.Cpp“, PaigeEdtView.cpp:5594-5634, Deklaration PaigeEdtView.h:361). Der Aufruf landet also bei `CObject::Serialize`, und die tut nichts (MFC afx.inl:105-106). `OnSaveDocument` legt die Datei neu an und setzt danach das Geändert-Kennzeichen zurück. Heraus kommt eine leere Datei, und das Fenster gilt als gesichert. Das gilt für jede Endung, nicht nur `.rtf` (Vermutung zur Wirkung, nicht gemessen; die Signatur selbst bleibt unberührt, weil *Speichern unter* in eine andere Datei schreibt).
+
+Damit stimmt die Begründung für K2 nur zur Hälfte. Das Textdatei-Fenster schreibt RTF (`CTextFileView::Serialize`), das Signaturfenster nicht. Falsch sind der Satz *„bzw. `CPaigeEdtView::Serialize` → `PgDataTranslator::kFmtRtf`“* in [E-195](../Intern/BEFUNDE.md#e-195), der Kommentar in saveas.cpp:93-97 und der Kommentar in `Test_E195_Filter` (TestE196.cpp). Für den Filter selbst ändert sich nichts. Ob das Signaturfenster ihn mit oder ohne `.rtf` bekommt, ist gleich, solange es nichts schreibt.
+
+`befund-suchen.pl CPaigeEdtView::Serialize`, `OnFileSaveAs` und `signatur.cpp` finden nur [E-97](../Intern/BEFUNDE.md#e-97), [E-195](../Intern/BEFUNDE.md#e-195) und [E-205](../Intern/BEFUNDE.md#e-205), keiner nennt das. Vorschlag: als E-207 aufnehmen, zuerst messen (Signatur öffnen, *File → Save As*, Dateigröße). Für die Behebung genügt bei `m_SaveAs` ein Aufruf von `CSignatureView::Serialize`, der Text oder HTML schreibt (signatur.cpp:158-172). **Schwere: mittel**, wenn die Messung die leere Datei zeigt (der Anwender hält etwas für gesichert, was nicht gesichert ist).
+
+### N2: Der Fall `E-205p` hängt an der Jahreszeit
+
+Belegt an tools/pruefstand-faelle.txt. Erwartet wird `zone=+0100`, das Skript liest die Zone aus der Datei. Ab der Umstellung auf Sommerzeit schreibt Eudora richtig `+0200`, und der Fall wird rot, ohne dass etwas kaputt ist. Vorschlag: im Skript die Rechnerzone ermitteln und `zone=passt` ausgeben. **Schwere: gering.**
+
+### N3: Der Test zu K7 prüft die Schranke `nGegen < nZu` nicht
+
+Gemessen (H6). Ohne die Schranke bleibt die Suite grün. Der Testfall `content="text/html; charset="` hat hinter dem Tag kein weiteres Anführungszeichen. `Find` liefert dann -1, und die Schranke wird nie gebraucht. Steht im Dokument danach noch ein Attribut in Anführungszeichen, würde ohne Schranke das schließende Anführungszeichen von `content` übersprungen und der Name dahinter gesetzt. Der Code ist richtig, der Test sieht es nur nicht. Vorschlag: denselben Fall mit `<p class="x">` dahinter. **Schwere: gering.**
+
+### Übersicht Nachtrag
+
+| Fund | Was passiert | Schwere | Hält das Paket auf? |
+|---|---|---|---|
+| K1 | Vermutung „*Send Later* wird verschoben“ widerlegt (gemessen am alten Bau, `FormatDateMT` gleicht aus); Behebung von [E-205](../Intern/BEFUNDE.md#e-205) richtig | – | nein |
+| N1 | Signaturfenster: *Speichern unter* ruft eine auskommentierte Funktion, die Datei bleibt leer (belegt, nicht gemessen); Begründung zu K2 in BEFUNDE, saveas.cpp und TestE196.cpp falsch (Vorschlag E-207) | mittel | nein |
+| N2 | `E-205p` erwartet `zone=+0100`, rot in der Sommerzeit | gering | nein |
+| N3 | Gegenprobe H6 grün: der Test zu K7 braucht die Schranke `nGegen < nZu` nie | gering | nein |
