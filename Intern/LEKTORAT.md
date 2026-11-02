@@ -3026,4 +3026,19 @@ Nachtrag LEKTOR-121 (7b41c8d7 gegengelesen): [E-192](BEFUNDE.md#e-192) nennt fü
 - README-Zahl der Prüfberichte von Hand auf 199 gesetzt, Zähldatum nicht; mit diesem Bericht 200 ([L-123.5](../Befunde/LEKTOR-123.md#l-123.5)).
 - [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext) nennt die übrigen Aufrufer von `CSaveAs` nicht ([L-123.6](../Befunde/LEKTOR-123.md#l-123.6)).
 
-Nachtrag LEKTOR-123 (f4f9116f gegengelesen): alle sechs Reste erledigt. E-140 nennt die erste Datei, der TESTPLAN führt E-194 bei der Postfachliste, E-143 sagt „gemessen bis auf das Übergehen, Suchfenster entschieden und noch einzubauen“, E-195 nennt die Aufrufer von `CSaveAs`, README 200 Berichte; die Namen in `1c75f5c3` verschwinden mit *Squash and merge* (laut Hauptagent von Gregor bestätigt).
+Nachtrag LEKTOR-123 (f4f9116f gegengelesen): alle sechs Reste erledigt. E-140 nennt die erste Datei, der TESTPLAN führt E-194 bei der Postfachliste, E-143 sagt „gemessen bis auf das Übergehen, Suchfenster entschieden und noch einzubauen“, E-195 nennt die Aufrufer von `CSaveAs`, README 200 Berichte; die Namen in `1c75f5c3` verschwinden mit *Squash and merge* (laut Hauptagent von Gregor bestätigt). **Berichtigt in [LEKTOR-124 L-124.1](../Befunde/LEKTOR-124.md#l-124.1):** gemergt wurde normal, Gregor entschied „ja, so lassen“; die Geschichte bleibt.
+
+## LEKTOR-124 (02.11.2026) — Bestand nach E-177, Zweig e177_filter_programm nach 0a04175a
+
+[LEKTOR-124](../Befunde/LEKTOR-124.md): [E-177](BEFUNDE.md#e-177) (die Filteraktion *Notify Application* mit `%6` übergab eine Datei mit falscher Zeichensatzangabe) ist in der Sache sauber belegt: behoben in `034162bc`, Prüfstand grün am neuen Bau und rot am alten, Regressionstest. Die Texte darum stehen auf drei verschiedenen Ständen. Im Stand und in den neun Commit-Nachrichten seit `34ff9e92` stehen keine Daten von Gregors Rechner. Alle vier Werkzeuge grün, 50 offen, E-177 jetzt „aktuell gemessen“; der PRÜFER ist fällig. Zehn Funde, keiner am Programm, nach Auftrag keiner berichtigt:
+
+- Berichtigung zu L-123.4: #199 wurde normal gemergt, `1c75f5c3` steht auf `main`, Gregor entschied „ja, so lassen“; *Squash* hätte mit `COMMIT_MESSAGES` den Pfad mitgenommen ([L-124.1](../Befunde/LEKTOR-124.md#l-124.1)).
+- WEITERMACHEN-Kopf, TESTPLAN-Kopf und ZWEIGE melden E-177 als nur gemessen und [E-140](BEFUNDE.md#e-140) (Speichern unter ohne Zeichensatz) als halb bestätigt; keine Zeile zur Reihenfolge ([L-124.2](../Befunde/LEKTOR-124.md#l-124.2)).
+- E-177 beschreibt im Kurztext und beim Prüfstandsfall noch den Fehlerstand, E-140 nennt E-177 „ungemessen, ohne Angabe“ ([L-124.3](../Befunde/LEKTOR-124.md#l-124.3)).
+- E-177 sagt „Gregor muss nichts tun“ und verlangt „Gregors Test am nächsten Paket“, im TESTPLAN steht nichts dazu ([L-124.4](../Befunde/LEKTOR-124.md#l-124.4)).
+- Der Filterzweig für ausgehende Nachrichten (`filtersd.cpp:2106-2109`, ohne Kopfzeilen) ist im Eintrag nicht erwähnt ([L-124.5](../Befunde/LEKTOR-124.md#l-124.5)).
+- WERKZEUGE führt `messen-e177.ps1` mit altem Urteil und ohne die Messung nach der Behebung ([L-124.6](../Befunde/LEKTOR-124.md#l-124.6)).
+- `12d47ba5` enthält den ganzen CHRONIST-Lauf, die Nachricht sagt davon nichts ([L-124.7](../Befunde/LEKTOR-124.md#l-124.7)).
+- `kein-squash-im-repo`: Treffer ab 24.10., nicht 26.10.; der Titel widerspricht der eigenen Berichtigung ([L-124.8](../Befunde/LEKTOR-124.md#l-124.8)).
+- Bauzeit 08:39 statt 08:32 laut Titelzeile; `ReadMessageDoc.cpp:597` bei [E-195](BEFUNDE.md#e-195) ist jetzt `:607` ([L-124.9](../Befunde/LEKTOR-124.md#l-124.9)).
+- README: E-177 fehlt unter „Bekannte Fehler“, E-140 ohne „von Gregor bestätigt“, 201 statt 200 Berichte ([L-124.10](../Befunde/LEKTOR-124.md#l-124.10)).
