@@ -204,3 +204,59 @@ Gemessen (H6). Ohne die Schranke bleibt die Suite grün. Der Testfall `content="
 | N1 | Signaturfenster: *Speichern unter* ruft eine auskommentierte Funktion, die Datei bleibt leer (belegt, nicht gemessen); Begründung zu K2 in BEFUNDE, saveas.cpp und TestE196.cpp falsch (Vorschlag [E-207](../Intern/BEFUNDE.md#e-207)) | mittel | nein |
 | N2 | `E-205p` erwartet `zone=+0100`, rot in der Sommerzeit | gering | nein |
 | N3 | Gegenprobe H6 grün: der Test zu K7 braucht die Schranke `nGegen < nZu` nie | gering | nein |
+
+## Nachtrag 2, 02.11.2026
+
+Geprüft wurde `dde4db0d..9e098eb9` auf `e194_e196_speichern_unter`, also die Behebung von [E-207](../Intern/BEFUNDE.md#e-207) (Speichern unter im Signaturfenster) und die eingearbeiteten N2 und N3. Mein Baum wurde mit `tools/arbeitsbaum-angleichen.sh` vorgespult. Eudora habe ich weder gebaut noch gestartet. `C:\Temp\E207` und `C:\Temp\E207-alt` habe ich nur gelesen.
+
+### Ergebnis vorweg
+
+Die Behebung von [E-207](../Intern/BEFUNDE.md#e-207) ist richtig. Gemessen: Am alten Bau sind `e207-sig.txt` und `e207-sig.htm` je 0 Byte groß. Am neuen Bau hat die `.txt` 43 Byte, die `.htm` 79 Byte. Beide enthalten den Signaturtext mit der eingetippten Marke `Q7Z` und den Umlauten, die `.htm` als `<html><body>…<br>…</body></html>`. Die Signaturdatei `Sigs\Standard.txt` hat nach dem Lauf denselben Inhalt wie vorher. Die Testsuite läuft mit 383/383. Von drei Gegenproben am neuen Test werden zwei rot, eine bleibt grün (N5).
+
+Ein Rest bleibt, und er ist Originalverhalten. Nach *Speichern unter* steht im Fenstertitel der Name der Kopie. Das Dokument zeigt aber weiter auf die Signatur, und es gilt als gesichert. Beim Schließen fragt Eudora also nicht, und die Änderungen stehen nur in der Kopie, nicht in der Signatur (gemessen: `frage=0 sig=unveraendert` bei eingetippter Marke). Ein späteres *Save* schreibt in die Signatur, obwohl der Titel die Kopie nennt (belegt). Ich stufe das als gering ein (N4). Kein Fund hält das Paket auf.
+
+### E207SpeichernUnter gegen MFC
+
+- **Dateiname.** `CDocument::OnSaveDocument` öffnet über `GetFile` eine `CMirrorFile`. Gibt es die Zieldatei schon, schreibt sie in eine Zwischendatei `MFC*.TMP`, setzt `m_strFileName` aber auf den gewünschten Namen (MFC doccore.cpp:648-651). `GetFileName()` liefert deshalb in beiden Fällen den Zielnamen ohne Pfad, also die richtige Endung. Belegt.
+- **Endungen.** `CompareNoCase` gegen `IDS_HTM_EXTENSION` und `IDS_HTML_EXTENSION`. `.HTM`, `.Html` und `.html` werden also HTML, alles andere wird Text. Ohne Punkt (`nPunkt < 0`) wird es Text. Ein Punkt im Verzeichnisnamen stört nicht, weil `GetFileName` keinen Pfad enthält. Belegt. Gemessen ist nur `.txt` und `.htm`.
+- **`ar.GetFile()` und Export am Archiv vorbei.** Das ist dasselbe Muster wie in `CSignatureView::Serialize` (signatur.cpp:180-195) und `CTextFileView::Serialize`. Vorher wird nichts ins Archiv geschrieben, es gibt also nichts zu leeren. Belegt.
+- **Signaturdatei unangetastet?** Ja. `OnFileSaveAs` ruft `CDocument::OnSaveDocument(pathName)` mit dem Pfad aus dem Dialog (signatur.cpp:85). `m_strPathName` ändert sich nicht, weil nur `DoSave` `SetPathName` ruft. Gemessen: `Sigs\Standard.txt` ist vor und nach dem Lauf gleich.
+- **Gesichert oder geändert?** Nach dem Aufruf ist das Dokument „ungeändert“ (`SetModifiedFlag(FALSE)` in signatur.cpp:117 und in `OnSaveDocument`). Siehe N4.
+- **`.rtf` und Zeichensatz.** Der Dialog des Signaturfensters bietet weiter *Rtf Files* an (signatur.cpp:73) und schreibt darunter Text. Die `.htm` trägt kein `<meta charset>`, die Umlaute stehen als Latin-1 in der Datei (gemessen, `e207-sig.htm`). Beides steht schon in [E-207](../Intern/BEFUNDE.md#e-207) unter „Nicht geändert“. Ich bestätige es am Quelltext und an der Datei. Kein neuer Fund.
+
+### Messskript
+
+- **Trifft es den Weg?** Ja. `ID_FILE_SAVE_AS` geht an das Hauptfenster, nachdem das Signaturfenster mit `WM_MDIACTIVATE` nach vorn geholt wurde. MFC leitet den Befehl an das Dokument des aktiven Kindfensters, also an `CSignatureDoc::OnFileSaveAs` (signatur.cpp:32). Die alten Dateien mit 0 Byte belegen das. Ein anderer Weg hätte am alten Bau Inhalt geschrieben. Gemessen.
+- **Ist die Gegenprobe haltbar?** Ja. Die Marke `Q7Z` steht in den neuen Dateien, und vorher fragte Eudora beim Schließen nach (`geaendert=1`). Das Fenster war also wirklich geändert, und gespeichert wurde der Inhalt des Fensters, nicht die Datei auf der Platte. Gemessen.
+- **Was der Fall festschreibt.** `E-207p` erwartet `frage=0 sig=unveraendert`. Damit ist das Verhalten aus N4 zum Sollwert geworden. Das ist in Ordnung, solange N4 so entschieden ist. Wird N4 behoben, muss der Fall mit.
+
+### Gegenproben am Test „E-207 (Quelltext)“
+
+Gemessen. Sicherung von `signatur.cpp`, Perl `:raw`, Treffer je 1, danach zurück, `cmp` gleich, `git status` leer.
+
+| Lauf | Änderung (vorübergehend) | Ergebnis |
+|---|---|---|
+| 0 | keine | 383/383 |
+| J1 | wieder `pView->CPaigeEdtView::Serialize(ar);` | 382/383, rot `E-207 (Quelltext) …` |
+| J2 | `theTxr.ExportData( pDatei, format );` auskommentiert | 382/383, rot `E-207 (Quelltext) …` |
+| J3 | hinter `format = PgDataTranslator::kFmtHtml;` gleich wieder `format = PgDataTranslator::kFmtText;` (`.htm` wird Text) | **383/383, grün** (N5) |
+
+### N5: Der Test „E-207 (Quelltext)“ prüft nicht, dass `.htm` wirklich HTML wird
+
+Gemessen (J3). Der Test verlangt nur, dass die Zeile `format = PgDataTranslator::kFmtHtml;` und der Vergleich mit `IDS_HTM_EXTENSION` irgendwo in der Funktion stehen. Ob die Zuweisung wirkt, prüft er nicht. Am Prüfstand fängt der Fall `E-207p` das (`htm=passt` verlangt HTML-Tags). Die Suite allein sieht es nicht. Vorschlag: die Folge `if ( szEndung.CompareNoCase( CRString( IDS_HTM_EXTENSION ) ) == 0 || … ) format = PgDataTranslator::kFmtHtml; theTxr.ExportData( pDatei, format );` als Ganzes nach `QT_LeerraumZusammen` verlangen. **Schwere: gering.**
+
+### N4: Nach *Speichern unter* aus dem Signaturfenster gelten die Änderungen als gesichert, stehen aber nicht in der Signatur
+
+Gemessen am Prüfstand (`C:\Temp\E207`: Marke eingetippt, *Speichern unter* zweimal, beim Schließen keine Frage, `Sigs\Standard.txt` unverändert). Die Ursache ist belegt. `CSignatureDoc::OnFileSaveAs` setzt den Titel auf den Namen der Kopie (signatur.cpp:79-83) und schreibt die Kopie über `OnSaveDocument`. Den Pfad des Dokuments ändert das nicht, das Geändert-Kennzeichen löscht es aber (signatur.cpp:117). Das ist so seit dem Originalstand 567a5d87.
+
+Für den Anwender heißt das: Wer an der Signatur etwas ändert, *Speichern unter* als Sicherungskopie wählt und das Fenster schließt, hat die Änderungen nur in der Kopie. Die Signatur ist die alte, und Eudora hat nicht gefragt. Wer stattdessen weiterarbeitet und *Save* wählt, schreibt in die Signatur, obwohl der Titel die Kopie nennt. Verloren geht in beiden Fällen nichts, aber die Änderung landet nicht dort, wo der Anwender sie erwartet.
+
+Vorschlag, eine von zwei Richtungen. (a) *Speichern unter* als Kopie behandeln: den Titel nicht umsetzen und das Geändert-Kennzeichen so lassen, wie es war. (b) Ein echtes *Speichern unter*: danach `SetPathName` auf die Kopie. (a) passt besser zu einem Signaturfenster. Die Entscheidung liegt bei Gregor. **Schwere: gering.**
+
+### Übersicht Nachtrag 2
+
+| Fund | Was passiert | Schwere | Hält das Paket auf? |
+|---|---|---|---|
+| N1 | Behebung von [E-207](../Intern/BEFUNDE.md#e-207) richtig, am Prüfstand gemessen (vorher 0 Byte, nachher Inhalt mit Marke, Signatur unverändert) | – | nein |
+| N4 | Nach *Speichern unter* gilt das Signaturfenster als gesichert, die Änderungen stehen aber nur in der Kopie; späteres *Save* schreibt in die Signatur, der Titel nennt die Kopie (Originalverhalten) | gering | nein, Entscheidung Gregor |
+| N5 | Gegenprobe J3 grün: der Test „[E-207](../Intern/BEFUNDE.md#e-207) (Quelltext)“ merkt nicht, wenn `.htm` als Text geschrieben wird; am Prüfstand fängt es `E-207p` | gering | nein |
