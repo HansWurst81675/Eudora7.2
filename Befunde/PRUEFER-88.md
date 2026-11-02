@@ -137,3 +137,79 @@ Wäre E204Zwei beim Löschen die aktuelle, nähme schon der E-39-Block das Kennw
 | K5 | `strcpy` des POP-Kontos (bis 511 Zeichen) in `Username[128]` in `ChangePassword`, Originalbestand (Vorschlag [E-210](../Intern/BEFUNDE.md#e-210)) | gering bis mittel | nein; Entscheidung Gregor |
 | K6 | `startzeilen-sammeln.pl` übernimmt ungesicherte fremde Zeilen, hängt unsortiert an (Konflikte beim Zusammenführen), verbreitert die Zeitabdeckung; verliert aber nichts | gering | nein |
 | K7 | Stilllegung von `strg-n-pruefen.ps1` aus ff49d438 nicht übernommen | gering | nein |
+
+## <a id="nachtrag-1"></a>Nachtrag 02.11.2026
+
+Geprüft wurde `git diff 4182961e..origin/e203_e204_persona_kennwort -- Eudora71 tools`, nach `arbeitsbaum-angleichen.sh` auf 78b47ebe. Der größte Teil des Bereichs kommt mit dem Merge von `main` (#209/#210, [E-194](../Intern/BEFUNDE.md#e-194)/[E-196](../Intern/BEFUNDE.md#e-196)/[E-205](../Intern/BEFUNDE.md#e-205) und Messskripte anderer Befunde). Diese Teile habe ich nicht geprüft. Inhaltlich neu für diesen Bericht ist 78b47ebe: Behebungen zu K1 bis K7, neu [E-210](../Intern/BEFUNDE.md#e-210) und [E-211](../Intern/BEFUNDE.md#e-211). Eudora habe ich wieder weder gebaut noch gestartet.
+
+### Ergebnis vorweg
+
+Alle sieben Funde sind behoben, und die Behebungen stimmen. Die Längenprüfung von [E-210](../Intern/BEFUNDE.md#e-210) liegt genau an der richtigen Grenze. Das Zurückschalten von [E-211](../Intern/BEFUNDE.md#e-211) steht an der richtigen Stelle und schaltet nicht doppelt. Die neuen Tests werden bei allen fünf Gegenproben rot, die vorher grün blieben oder neu sind. Die Testsuite läuft mit 389/389. `startzeilen-sammeln.pl` verschiebt keine vorhandene Zeile mehr und hat in meinem Baum drei Zeilen richtig eingeordnet. Es kann aber eine Zeile verlieren, wenn im selben Baum gleichzeitig ein Testlauf schreibt (K8). Dazu kommen zwei kleine Funde (K9, K10). **Keiner hält 7.2.2.132 auf.**
+
+### E-210: Längenprüfung (password.cpp:469-480)
+
+- **Grenze.** `if (strlen(POPAccount) >= sizeof(Username))` mit `char Username[128]` weist ab 128 Zeichen ab. 127 Zeichen plus Nullbyte sind genau 128 Byte, die passen. 128 Zeichen bräuchten 129 Byte und werden abgewiesen. Richtig. Belegt.
+- **Nullbyte.** `GetIniString` liefert immer einen abgeschlossenen Puffer von höchstens 511 Zeichen (rs.cpp:48). `strlen` liest also nicht über das Ende hinaus. `NULL` und die leere Zeichenkette fängt vorher :461 ab. Belegt.
+- **Meldung.** `ErrorDialog` formatiert mit `_vsnprintf(buf, 1023, …)` in `char buf[1024]` (guiutils.cpp:939-952). Der Text von `IDS_ERR_BAD_POP_ACCT` (EudoraRes.rc:9160) hat etwa 65 Zeichen, mit einem Konto von 511 Zeichen sind das knapp 580 Zeichen. Abgeschnitten wird nichts, und die Ausgabe ist abgeschlossen. Belegt. Ein unabgeschlossener Puffer entstünde erst ab 1023 Zeichen. Das ist Altbestand von `ErrorDialog` und hier nicht erreichbar. Die Meldung *„can't tell where the machine name is“* passt nur halb zu einem zu langen Konto. Das ist eine Kleinigkeit und Absicht des BEHEBERS.
+- **Zurückschalten** wie bei [E-203](../Intern/BEFUNDE.md#e-203). Der Test zählt jetzt fünf Ausgänge. Belegt.
+
+### E-211: `NewCompDocument` (compmsgd.cpp:2260-2270)
+
+- `csCurPersona` wird am Anfang festgehalten, vor jedem Umschalten (:2190). Umgeschaltet wird nur bei gültigem `csPersona` (:2250-2251). Im Fehlerzweig schaltet die Funktion jetzt vor dem `return` zurück (:2267). War nicht umgeschaltet worden, tut `SetCurrent` nichts (persona.cpp:188). Auf dem Fehlerweg gibt es also genau ein Umschalten und genau ein Zurückschalten. Auf dem Erfolgsweg bleibt alles wie vorher (:2341, :2350). Belegt.
+- `#ifdef COMMERCIAL` um das Zurückschalten passt zur Deklaration von `csCurPersona` (:2195-2253). Ohne `COMMERCIAL` würde der Bau sonst nicht übersetzt. Belegt.
+- **MFC.** `NewChildDocument` liefert bei einem Fehler `NULL` (das ist der Zweig hier). Ob es auf einem anderen Weg eine Ausnahme werfen kann, an der das Zurückschalten vorbeiläuft, habe ich nicht nachgesehen. Vermutung: `CDocTemplate::OpenDocumentFile` fängt seine Ausnahmen selbst.
+
+### Die neuen Tests (in meinem Baum)
+
+Gemessen, so gefahren wie in Abschnitt 3. Danach war jede Datei byte-gleich zurückgeschrieben, und `git status` war leer.
+
+| Lauf | Änderung (vorübergehend) | Ergebnis |
+|---|---|---|
+| 0 | keine | 389/389 |
+| N1 | `if (0)` vor dem ersten Zurückschalten (vorher G3) | 388/389, rot [E-203](../Intern/BEFUNDE.md#e-203) |
+| N2 | `if ( Name[0] == 'E' ) return TRUE;` vor dem E-39-Block (vorher G5) | 388/389, rot [E-204](../Intern/BEFUNDE.md#e-204) |
+| N3 | `>=` → `>` in der Längenprüfung: 128 Zeichen liefen wieder über | 388/389, rot [E-210](../Intern/BEFUNDE.md#e-210) |
+| N4 | `if (bMultiple) OrgPersona.Empty();` direkt vor `strcpy` | 388/389, rot [E-210](../Intern/BEFUNDE.md#e-210) (nur, weil der Block nicht mehr direkt vor `strcpy` steht; die Zählung `OrgPersona =` sieht `.Empty()` nicht) |
+| N5 | `if (0)` vor das Zurückschalten in `NewCompDocument` | 388/389, rot [E-211](../Intern/BEFUNDE.md#e-211) |
+| N6 | `throw 1;` am Anfang von `Remove` | **389/389, grün** (konstruiert; kein Fund) |
+
+`QT_LiesNurCode` wirft `#if 0`-Blöcke weg (Quelltext.cpp:205). Das `return` in `#if 0` bei compmsgd.cpp:2225 zählt deshalb nicht, und die Erwartung *zwei Ausgänge* stimmt. Belegt. Blind ist keiner der neuen Tests. Grenzen bleiben: eine Zuweisung ohne Leerzeichen (`OrgPersona=`) oder über `.Empty()` zählt die Prüfung „genau einmal belegt“ nicht mit (N4 zeigt das).
+
+### `messen-e204.ps1` liest die Spurzeile (K3)
+
+Das Skript wartet bis zu 10 s auf `E-39 Remove E204Zwei: war-aktuell=` in der `eudora.log` und verlangt `0`. Es nimmt den *letzten* Treffer der ganzen Datei. Siehe K9.
+
+### `startzeilen-sammeln.pl`: Einsortieren
+
+- **Verschiebt es vorhandene Zeilen?** Nein. Jede neue Zeile wird vor die erste vorhandene Datenzeile mit späterer Zeit gesetzt, sonst hinter die letzte Datenzeile (:94-102). Vor dem Schreiben prüft das Werkzeug, ob die alten Zeilen in alter Reihenfolge vollständig sind (:105-108). Gemessen: In meinem Baum kamen drei Zeilen aus `.wt/e170` dazu. Die ersten 933 Zeilen waren danach byte-gleich mit der Sicherung (`cmp`), und die drei neuen standen hinter der letzten, früheren Zeile. Die Datei hat 0 CR, das Zurückschreiben mit LF ändert also nichts.
+- **Sortierte Lage.** Die Datei ist selbst nicht sortiert. Gemessen: 13 Rücksprünge bei 925 Datenzeilen, zum Beispiel Zeile 851. Eine neue Zeile landet dann vor dem ersten späteren Eintrag, nicht unbedingt neben ihren zeitlichen Nachbarn. Das ist harmlos und kein Fund.
+- **Verlieren:** siehe K8. **Zeile ohne Sekunden:** siehe K10.
+
+### Funde
+
+#### <a id="k8"></a>K8: `startzeilen-sammeln.pl` kann eine gleichzeitig geschriebene Zeile verlieren
+
+(am Quelltext belegt)
+
+Vorher hängte das Werkzeug nur an (`>>`). Jetzt liest es die Datei (:41-42), holt dann bis zu 35 Zweige über `git show` (:72-78, das dauert Sekunden) und schreibt die Datei danach ganz neu (`>:raw`, :109). Hängt `testlauf.ps1` im *selben* Arbeitsbaum dazwischen eine Zeile an, wird sie überschrieben. Danach fehlt die Protokollzeile eines echten Starts, und `pruefe-startwege.pl` weist genau diesen Start ab, oder ein fremder Start im selben Zehnminutenfenster deckt ihn zu. Die Prüfung auf :105-108 vergleicht nur mit dem eigenen, früheren Lesestand und sieht das nicht. Das Werkzeug nimmt die Prüfstandssperre nicht. **Abhilfe:** direkt vor dem Schreiben die Datei noch einmal lesen und abbrechen, wenn sie sich seit :42 verändert hat, oder über eine Hilfsdatei und `rename` schreiben. **Schwere: gering** (nur bei gleichzeitigem Lauf im selben Baum). **Hält das Paket nicht auf.**
+
+#### <a id="k9"></a>K9: `messen-e204.ps1` und `messen-e39.ps1` lesen die Spurzeile aus der ganzen `eudora.log`
+
+(am Quelltext belegt)
+
+Beide nehmen den letzten Treffer der ganzen Datei (messen-e204.ps1:360-372, messen-e39.ps1:337-346). `-Vorbereiten` leert die `eudora.log` nicht. Kommt die Zeile des aktuellen Laufs nicht oder zu spät an, gilt die eines früheren Laufs, und der stand mit dem behobenen Bau auf `war-aktuell=0`. `geloescht=1` belegt zwar, dass `Remove` lief, aber nicht, dass seine Spurzeile in den zehn Sekunden in der Datei steht. **Abhilfe:** die Länge der `eudora.log` vor *Delete* merken und nur dahinter suchen. **Schwere: gering.**
+
+#### <a id="k10"></a>K10: Eine fremde Zeile ohne Sekunden wird an den Anfang der Tabelle sortiert
+
+(am Quelltext belegt)
+
+`aufnehmen` lässt jede Zeile `| JJJJ-MM-TT …` durch (:52). `zeit()` verlangt aber `hh:mm:ss` (:90). Solche Zeilen gibt es: Zeile 671 hat nur `17:23`. Kommt so eine Zeile als neu dazu, ist ihre Zeit `undef`. Unter `use warnings` gibt das Warnungen beim Sortieren (:94), und `$ti gt $t` ist für die erste Datenzeile wahr (:99). Die Zeile landet ganz oben in der Tabelle. Verloren geht nichts. **Abhilfe:** auf :52 dasselbe Muster wie in `zeit()` verlangen, oder solche Zeilen hinter die letzte Datenzeile setzen. **Schwere: gering.**
+
+### Übersicht zum Nachtrag
+
+| Fund | Was passiert | Schwere | Hält das Paket auf? |
+|---|---|---|---|
+| K1 bis K7 | behoben in 78b47ebe ([E-210](../Intern/BEFUNDE.md#e-210), [E-211](../Intern/BEFUNDE.md#e-211) neu und behoben) | – | nein |
+| K8 | `startzeilen-sammeln.pl` schreibt die Datei ganz neu; eine gleichzeitig von `testlauf.ps1` angehängte Zeile geht verloren | gering | nein |
+| K9 | Spurzeile `war-aktuell` wird aus der ganzen `eudora.log` gelesen, auch aus früheren Läufen | gering | nein |
+| K10 | fremde Zeile ohne Sekunden landet am Tabellenanfang | gering | nein |
