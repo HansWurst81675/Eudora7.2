@@ -177,3 +177,5 @@ Gegengelesen: `git diff affd031c..origin/funktionen_ini_abschnitte` (Stand `90de
 **Vorschlag:** *„auf `main` seit #207“* an beiden Stellen, im Stand-Kopf `funktionen_ini_abschnitte` nennen. Die Schranke aus [L-128.2](LEKTOR-128.md#l-128.2) fehlt weiter.
 
 Werkzeuge nach dem Merge: `perl tools/offene-befunde.pl` *„54 offene Befunde, in beiden Listen gleich.“* (mit [E-203](../Intern/BEFUNDE.md#e-203) und [E-204](../Intern/BEFUNDE.md#e-204) aus #207).
+
+**<a id="nachtrag-2-02-11-2026"></a>Nachtrag 2 (02.11.2026, `01a108a1..48025bf3` gegengelesen, gemessen):** [L-132.9](#l-132.9) erledigt — `Intern/WEITERMACHEN.md:3` *„Gemergt als #207: Zweig `e39_persona_loeschen`“*, `CHANGELOG.md:118` *„Zweig `e39_persona_loeschen` (gemergt als #207)“*; nur der Vorschlag, im Stand-Kopf den laufenden Zweig `funktionen_ini_abschnitte` zu nennen, ist nicht umgesetzt (`grep -c funktionen_ini_abschnitte Intern/WEITERMACHEN.md` → 0, Kleinkram). Rest von [L-132.6](#l-132.6) erledigt — `Intern/EINSTELLUNGEN.md:50-52` *„(Ausnahme: im Abschnitt des gerade aktiven Kontos, siehe Regel 1.3)“*. `tools/TESTLAEUFE.md`: sieben Startzeilen von 16:59:42 bis 17:03:55 angefügt, keine entfernt.
