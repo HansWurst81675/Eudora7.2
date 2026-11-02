@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.130 (Testpaket, `VERSION` gleich; geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`; davor 7.2.1.129, geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`), Stand 01.11.2026 (zuletzt getestet am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+# Testplan für Gregor — Quellstand 7.2.1.130 (Testpaket, `VERSION` gleich; geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`; davor 7.2.1.129, geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`), Stand 02.11.2026 (zuletzt getestet am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 im Verfassen-Fenster und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
 > `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
@@ -158,7 +158,11 @@ Zeichensatzangabe in die Datei, aus dem geöffneten Nachrichtenfenster und
 aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
 
 1. Eine Nachricht mit Umlauten (und möglichst einem €-Zeichen) im lokalen
-   *In* **öffnen**, *File → Save As*, als `.txt` speichern.
+   *In* per **Doppelklick öffnen**, sodass sie in einem eigenen Fenster steht,
+   und **in diesem Fenster** *File → Save As*, als `.txt` speichern. Nicht aus
+   der Postfachliste heraus speichern — das ist ein anderer Weg, der schon
+   vorher richtig war. In der `eudora.log` steht danach eine Zeile mit
+   `E-140 speichern aus Nachrichtenfenster:`.
 2. Auf dieselbe Nachricht *Reply*, im Verfassen-Fenster *File → Save As*,
    als `.txt` speichern; die Antwort danach ohne Speichern schließen.
 3. Beide Dateien im Editor öffnen: oben stehen jetzt
@@ -168,7 +172,7 @@ aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
 
 Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
 
-**Bestätigt am 01.11.2026, Gregor an 7.2.1.130:** beide `.txt`-Dateien tragen den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus dem Nachrichtenfenster), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe).
+**Bestätigt am 01.11.2026, Gregor an 7.2.1.130, nur Schritt 2 (Verfassen-Fenster):** die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. **Schritt 1 bitte noch einmal:** die erste Datei kam laut Protokoll aus der Postfachliste (`E-101 speichern:` ohne `E-140 speichern aus Nachrichtenfenster:`), nicht aus dem geöffneten Fenster. Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus dem Nachrichtenfenster), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe).
 
 ## <a id="e-165-naechstes"></a>In 7.2.1.129: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
 
