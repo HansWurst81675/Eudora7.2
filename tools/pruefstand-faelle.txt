@@ -311,3 +311,9 @@ E-144p | C:\Temp\E144 | 60 | messung | E144 ERGEBNIS probe=ok gleich=1 reference
 E-140p | C:\Temp\E140 | 90 | messung | E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3 | | | messen=tools\messen-e140.ps1
 E-139p | C:\Temp\E139 | 60 | messung | E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1 | | | messen=tools\messen-e139.ps1
 E-171p | C:\Temp\E171 | 60 | messung | E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1 | | | messen=tools\messen-e171.ps1
+# E-177 (02.11.2026): Filteraktion "Notify Application" mit %6 - die Datei
+# fuer das Programm. ACHTUNG: die Erwartung ist der GEMESSENE FEHLERSTAND an
+# 7.2.1.130 (falsche-angabe=1: die per POP empfangene UTF-8-Nachricht steht
+# als windows-1252 in der Datei, der Kopf sagt weiter charset=utf-8). Nach
+# der Behebung auf falsche-angabe=0 umstellen.
+E-177p | C:\Temp\E177 | 60 | messung | E177 ERGEBNIS dateien=3 falsche-angabe=1 fehlende-angabe=0 lebt=1 | | | messen=tools\messen-e177.ps1

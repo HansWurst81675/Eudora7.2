@@ -155,7 +155,9 @@
 - [CHRONIST 01.11.2026](CHRONIST-2026-11-01.md) — Laufbericht; sieben Nachträge, dreimal blind grün, 1 Ablehnung in zwei Tagen
 - [E-170/E-143 entschieden](entscheidung-e170-e143-01-11.md) — Gregor 01.11.: Label mitnehmen; Out im Filterfenster nicht anbieten
 - [Prüfstand mit Fenster 01.11.](entscheidung-pruefstand-fenster-01-11.md) — erlaubt nur an diesem Tag; Gregor testet 7.2.1.130 außerhalb der VM
+- [Prüfstand mit Fenster 02.11.](entscheidung-pruefstand-fenster-02-11.md) — erlaubt nur an diesem Tag; Gregor testet außerhalb der VM
 - [CHRONIST 01.11.2026 nachmittags](CHRONIST-2026-11-01b.md) — Laufbericht; Endlos-Ersetzer zum zweiten Mal, Werkzeug fällig
 - [CHRONIST 01.11.2026 abends](CHRONIST-2026-11-01c.md) — Laufbericht; 71 min Stillstand nach angekündigtem LEKTOR/PRÜFER, Stop-Haken vorgeschlagen; ersetze-text.pl erledigt
 - [CHRONIST 01.11.2026 spätabends](CHRONIST-2026-11-01d.md) — Laufbericht; Eudora.exe --version auf Gregors Bildschirm (17:18:55), Haken vorgeschlagen; zwei Einwürfe ohne Antwort; auftrag-rolle.pl doppelte Kennungen
 - [CHRONIST 01.11.2026 nachts](CHRONIST-2026-11-01e.md) — Laufbericht; von eigener Reihenfolge (E-177) abgewichen; E-172 fünfmal erbeten trotz „Gregor muss nichts tun“; Rot aus falschem Grund; --amend hinter `;`
+- [Kein Squash im Repo](kein-squash-im-repo.md) — Zwischen-Commits landen auf main; Gregors Pfade gar nicht erst schreiben
