@@ -37,3 +37,22 @@ Transkript `6f848773…`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-01e]]).
 - Eine Frage nach dem nächsten Zweig enthält die angekündigte Fortsetzung immer als Option. Weicht meine Empfehlung ab, steht das im Fragetext: *„Angekündigt war E-177; ich empfehle E-184, weil …“*.
 
 **Schranken-Vorschlag (nicht gebaut):** PreToolUse-Haken auf `AskUserQuestion` mit `header` „Zweigname“: abweisen, wenn weder Frage noch Optionen die erste offene Kennung der Zeile `Reihenfolge` in `Intern/WEITERMACHEN.md` nennen. Gegenprobe: die Frage von 17:06:13 → abweisen (E-177 fehlt); dieselbe Frage mit der Option `e177_filter_programm` → durchlassen; ohne `Reihenfolge`-Zeile → durchlassen.
+
+## Nachtrag 02.11.2026 (CHRONIST): am nächsten Morgen wieder, und die Zeile `Reihenfolge` fehlte
+
+Transkript `25e03584-…jsonl`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-02]]).
+
+Am Abend des 01.11. hatte Gregor gefragt, ob der Testplan zu E-178 eindeutig ist. Die Antwort war eine Ankündigung: *„Morgen ZUERST …: Abschnitt E-178 (e-178-naechstes) hat drei Unklarheiten“*, danach `e177_filter_programm`. Sie stand **nur in `memory/stand-01-11-2026.md`, Zeile 55**. Deren Indexzeile in `MEMORY.md` sagt *„Abschlussrunde PRUEFER-70/LEKTOR-112, dann PR; AN-1-Frage offen“*. In `Intern/WEITERMACHEN.md` am Stand `99e77aa1` gibt es keine Zeile `Reihenfolge`, und `sitzungsbeginn.pl` zeigt so etwas nicht an.
+
+| Zeit | Was |
+|---|---|
+| 06:46–07:00 | Gregors Testdateien ausgewertet, drei neue Befunde (richtig: er hatte sie geschickt) |
+| 07:00:38 | Frage nach dem Zweig **`e194_speichern_unter`**, also ein neues Thema |
+| 07:08:07 | Gregor: *„warum machen wir jetzt e194 branch auf? ist der rest schon fertig?“* |
+| 07:12:52 | Der Satz „Morgen ZUERST“ erscheint zum ersten Mal im Transkript, in der Ausgabe eines `git diff` auf den Stand-Vermerk |
+| 07:17:37 | *„Unabhängig davon habe ich etwas übersehen: Gestern Abend war vereinbart …“* |
+| 07:35:08 | Gregor: *„ok, mach weiter mit E-178 testplan.“* |
+
+**Was zurückfiel:** der Nachtrag vom Vorabend selbst. Sein *„Ich trage es im selben Zug als Zeile `Reihenfolge (angekündigt <Datum>):` in `Intern/WEITERMACHEN.md` ein“* wurde am selben Abend nicht angewandt, keine fünf Stunden nach dem Schreiben ([[lehren-anwenden-nicht-nur-schreiben]]). Gut war: Die Abweichung kam von selbst auf den Tisch, zehn Minuten nach Gregors Frage und ohne Ausrede. Und die Zweigfrage um 07:08:36 benannte den Namen als schlecht gewählt.
+
+**Schranken-Vorschlag (nicht gebaut), ersetzt den vom 01.11.:** `tools/sitzungsbeginn.pl` gibt die Zeilen `Reihenfolge` aus `Intern/WEITERMACHEN.md` aus und dazu jede Zeile mit `ZUERST` aus dem jüngsten `memory/stand-*.md`. Gegenprobe: am Stand vom Morgen des 02.11. → Zeile 55 erscheint; ein Stand-Vermerk ohne `ZUERST` → nichts. Der `AskUserQuestion`-Haken vom 01.11. hätte heute nicht gegriffen, denn die Zweigfrage war eine Textfrage.

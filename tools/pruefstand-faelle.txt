@@ -315,5 +315,9 @@ E-171p | C:\Temp\E171 | 60 | messung | E171 ERGEBNIS fehlermeldung=0 suchfenster
 # fuer das Programm. ACHTUNG: die Erwartung ist der GEMESSENE FEHLERSTAND an
 # 7.2.1.130 (falsche-angabe=1: die per POP empfangene UTF-8-Nachricht steht
 # als windows-1252 in der Datei, der Kopf sagt weiter charset=utf-8). Nach
-# der Behebung auf falsche-angabe=0 umstellen.
-E-177p | C:\Temp\E177 | 60 | messung | E177 ERGEBNIS dateien=3 falsche-angabe=1 fehlende-angabe=0 lebt=1 | | | messen=tools\messen-e177.ps1
+# der Behebung umgestellt (02.11.2026): Urteil je Weg - [pop] und e118 muessen
+# passen; [roh] (roh eingelegtes UTF-8, gibt es nach einem Empfang nicht) steht
+# seither als windows-1252 da und zaehlt nicht mit. Die alte Erwartung
+# falsche-angabe=1 meldete nach der Behebung "bestanden", weil nun [roh] statt
+# [pop] falsch war - Zaehler ueber alle Dateien sind blind fuer den Weg.
+E-177p | C:\Temp\E177 | 60 | messung | E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1 | | | messen=tools\messen-e177.ps1

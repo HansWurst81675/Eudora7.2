@@ -29,8 +29,11 @@
 # Ausgabe:
 #   E177 MBX <nachricht> charset=<wert|-> rumpf=<cp1252|utf8|ascii|beide>
 #   E177 DATEI <n> bytes=<n> ct=<Content-Type-Zeile|-> charset=<wert|-> euro=<cp1252|utf8|fragezeichen|fehlt> umlaute=<n> nachricht=<..> rumpf=<..> urteil=<passt|falsch|fehlt>
-#   E177 ERGEBNIS dateien=<n> falsche-angabe=<n> fehlende-angabe=<n> lebt=<0|1>
+#   E177 ERGEBNIS dateien=<n> pop=<urteil> e118=<urteil> roh=<urteil> falsche-angabe=<n> fehlende-angabe=<n> lebt=<0|1>
 #   "falsch" = charset sagt utf-8, die Bytes sind windows-1252 (oder umgekehrt).
+#   falsche-angabe/fehlende-angabe zaehlen nur [pop] und e118 - die Wege,
+#   auf denen Eudora eine Nachricht wirklich empfaengt. [roh] steht nur zur
+#   Auskunft da: roh eingelegtes UTF-8 gibt es nach einem Empfang nicht.
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten
@@ -303,6 +306,7 @@ Start-Sleep -Seconds 1
 
 # --- 4. Auswertung -----------------------------------------------------------
 $falsch = 0; $fehlt = 0
+$weg = @{ 'e177-pop' = '-'; 'e118' = '-'; 'e177-roh' = '-' }
 $dateien = @(Get-ChildItem -LiteralPath $md -File | Where-Object { $_.Name -match '^e177-(\d+)\.txt$' } |
              Sort-Object { [int]([regex]::Match($_.Name, '^e177-(\d+)').Groups[1].Value) })
 foreach ($f in (Get-ChildItem -LiteralPath $md -File -Filter 'e177-aufrufe-*.log')) {
@@ -322,12 +326,22 @@ foreach ($f in $dateien) {
     $uml = ([regex]::Matches($ohne8, '[\xE4\xF6\xFC\xDF\xC4\xD6\xDC]')).Count +
            ([regex]::Matches($t, '\xC3[\xA4\xB6\xBC\x9F\x84\x96\x9C]')).Count
     $u = Urteil $cs $art
-    if ($u -eq 'falsch') { $falsch++ }
-    if ($u -eq 'fehlt')  { $fehlt++ }
+    $wer = Nachricht $t
+    $weg[$wer] = $u
+    # [roh] zaehlt NICHT mit: so liegt eine Nachricht nie im Postfach, wenn
+    # Eudora sie empfangen hat (der Rumpf wird beim Empfang nach
+    # windows-1252 uebersetzt, msgutils.cpp Abschnitt 4a, PRUEFER-37 F3).
+    # Am 02.11.2026 meldete der Fall nach der Behebung weiter
+    # falsche-angabe=1 - jetzt von [roh] statt von [pop], und die alte
+    # Erwartung hiess genau so: "bestanden" aus falschem Grund.
+    if ($wer -ne 'e177-roh') {
+        if ($u -eq 'falsch') { $falsch++ }
+        if ($u -eq 'fehlt')  { $fehlt++ }
+    }
     $nr = [regex]::Match($f.Name, '^e177-(\d+)').Groups[1].Value
     Write-Host ("E177 DATEI {0} bytes={1} ct={2} charset={3} euro={4} umlaute={5} nachricht={6} rumpf={7} urteil={8}" -f `
                 $nr, $b.Length, $ctz, $cs, $euro, $uml, (Nachricht $t), $art, $u)
     $erste = ($t -split "`r?`n" | Select-Object -First 12) -join ' | '
     Write-Host ("E177 KOPF {0}: {1}" -f $nr, $erste)
 }
-Write-Host ("E177 ERGEBNIS dateien={0} falsche-angabe={1} fehlende-angabe={2} lebt={3}" -f $dateien.Count, $falsch, $fehlt, [int](Lebt $pp))
+Write-Host ("E177 ERGEBNIS dateien={0} pop={1} e118={2} roh={3} falsche-angabe={4} fehlende-angabe={5} lebt={6}" -f $dateien.Count, $weg['e177-pop'], $weg['e118'], $weg['e177-roh'], $falsch, $fehlt, [int](Lebt $pp))

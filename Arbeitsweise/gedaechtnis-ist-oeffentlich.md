@@ -84,3 +84,15 @@ Beim Lesen für diesen Lauf gefunden (gemessen mit `git grep -i` nach dem Namen 
 Eine zweite Fundstelle mit demselben Ordner steht in `Intern/BEFUNDE.md` (Befundzeile E-148). Die Datei liegt außerhalb des CHRONIST-Bereichs und ist der Hauptsitzung gemeldet ([[CHRONIST-2026-10-30]]).
 
 **How to apply, zusätzlich:** Zur Musterprüfung von oben (*„Adressen, `Fw:`/`Re:`/`Subject:`“*) gehören Pfade: `\\<rechner>\`, `C:\Users\<name>\` außer den in `CLAUDE.md` genannten, Laufwerksbuchstaben außer `C:\Temp`. Ein Pfad aus Gregors Rechner ist ein Name aus Gregors Rechner.
+
+## Nachtrag 02.11.2026 (CHRONIST): der Pfad stand in der Commit-Nachricht
+
+Transkript `25e03584-…jsonl` und Commits, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-02]]).
+
+Um 07:15:06 ging `1c75f5c3` hinaus: der Freigabepfad von Gregors VM in der **Commit-Nachricht** (Zeile „Quelle: …“), dazu Pfad, Betreff der Testmail und Datei- und Bildnamen in Befunden, Testplan und einem gespiegelten Stand-Vermerk. Der Nachtrag vom 30.10. oben sagt wörtlich: *„Ein Pfad aus Gregors Rechner ist ein Name aus Gregors Rechner.“* Gefunden hat es LEKTOR-122 (L-122.3) zwanzig Minuten später, berichtigt um 07:42 in den Dateien. Die Nachricht bleibt: `git log origin/main -i --grep=vmware-host` trifft `1c75f5c3`.
+
+Zwei Lücken in der Handprüfung von oben:
+- **Die Commit-Nachricht steht nicht im Diff.** *„die Begriffe … über `git diff --cached` suchen“* sieht sie nicht.
+- **`tools/anonym-begriffe.lokal` kennt den Freigabeordner nicht** (gemessen: 0 Treffer nach `vmware` und `Shared Folders` in 11 Zeilen). Der Nachtrag vom 30.10. hat die Pfade in die Musterprüfung aufgenommen, die Liste nicht.
+
+**How to apply, zusätzlich:** Die Herkunft von Gregors Testdateien heißt in Commit, Befund und Notiz nur *„Gregors Testdateien vom <Datum>“*. Vor dem Push auch die Nachricht lesen: `git log -1 --format=%B` auf `\`, `C:\Users\` und `Shared Folders`. Die Begriffsprüfung im Commit-Haken hat Gregor am 29.10. abgelehnt; hier steht deshalb kein Haken-Vorschlag, nur der Vorschlag an ihn, den Freigabeordner in seine lokale Liste aufzunehmen.
