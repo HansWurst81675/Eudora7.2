@@ -50,6 +50,7 @@ private:
 	BOOL SpoolMessageToFile (CString& SpoolFilepath);
 	BOOL ReformatMessage ();
 	BOOL ReformatHeader ();
+	void E122DatumAusKopf (const char * pszZeile, int nLaenge);	// BEFUND E-122
 	BOOL ReformatBody ();
 	BOOL ReformatAttachment (LPCSTR pAttachmentPathname, CFileWriter *pBodyFileWriter,
 							 LPCSTR pszZusatzKopf = NULL, BOOL bInline = FALSE);

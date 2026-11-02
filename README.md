@@ -95,7 +95,7 @@ da, nicht zum Lesen.
 | [AGENTEN.md](Intern/AGENTEN.md) | wie hier mit Agenten gearbeitet wird |
 | [BEFUNDE-ALTBESTAND.md](Intern/BEFUNDE-ALTBESTAND.md) | abgeschlossene Befunde aus der Frühzeit |
 
-Dazu [`Befunde/`](Befunde) (204 LEKTOR- und PRÜFER-Berichte), [`Arbeitsweise/`](Arbeitsweise)
+Dazu [`Befunde/`](Befunde) (206 LEKTOR- und PRÜFER-Berichte), [`Arbeitsweise/`](Arbeitsweise)
 (124 Lehren aus Fehlern; beides am 02.11.2026 mit `git ls-files` gezählt, ohne
 Laufberichte, Stand-Notizen und Entscheidungen) und [`tools/`](tools) (über 100 Werkzeuge und
 Schranken).
@@ -176,7 +176,7 @@ Die zweite Spalte sagt, was dabei verlorengehen oder verfälscht werden kann;
 | **Verzeichnisdienste** (LDAP, Ph, EudoraBk) , S/MIME und der Junk-Filter fehlen — Dialog *„Directory Services unavailable“*. Liegen `MFC71.DLL` und `MSVCP71.dll` schon auf dem Rechner (etwa von anderer Software in `C:\Windows\SysWOW64`), laden Junk-Filter und S/MIME doch ([FILTER.md](Intern/FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)). **Das eigene Adressbuch ist davon nicht betroffen** und arbeitet | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](Intern/BEFUNDE.md#e-47) |
 | Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten **bis Paket 1.0.122** als grauer Kasten; **im Testpaket 7.2.0.123** kleine Bilder richtig, Bilder über 48 KB verstümmelt (grüne oder graue Fläche mit Streifen) | nichts – die Nachricht selbst bleibt unverändert | die Behebung für große Bilder ist im Testpaket 7.2.0.124, von Gregor bestätigt, und kommt mit dem Release 7.2.1 | [E-119](Intern/BEFUNDE.md#e-119) |
 | **Bis Paket 1.0.122:** sehr breite Bilder laufen im Verfassen-Fenster rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | **Behoben ab dem Release 7.2.1** (schon im Testpaket 7.2.0.123): ein zu breites Bild wird beim Laden auf die Fensterbreite verkleinert | [E-113](Intern/BEFUNDE.md#e-113), [E-116](Intern/BEFUNDE.md#e-116) |
-| In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nichts | – | [E-122](Intern/BEFUNDE.md#e-122) |
+| In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nichts | – ; im Quellstand behoben, kommt mit dem nächsten Paket | [E-122](Intern/BEFUNDE.md#e-122) |
 | **Bis Paket 1.0.122:** IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nichts | **Behoben ab dem Release 7.2.1** (schon im Testpaket 7.2.0.123), auch beim Anlegen und Umbenennen | [E-77](Intern/BEFUNDE.md#e-77) |
 | Emoji in Betreffzeilen erscheinen gar nicht — sie fallen beim Abrufen ersatzlos weg (seit 7.2.0.59; davor standen zwei `?` je Emoji) | nichts | – | [E-90](Intern/BEFUNDE.md#e-90) |
 | Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nichts | es gilt die zuletzt gewählte Einstellung | [E-98](Intern/BEFUNDE.md#e-98) |

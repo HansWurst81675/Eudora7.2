@@ -340,6 +340,35 @@ Entscheidung vom 02.11.2026: ein Hinweis je Übertragung. Lokales Postfach *In*.
 Am Prüfstand am 02.11.2026 so gefahren (Fall `E-143s`): neuer Bau ein Hinweis
 bei drei Treffern, der Bau ohne die Änderung drei.
 
+## <a id="e-122-naechstes"></a>Mit dem nächsten Paket: Eingangsdatum einer nach IMAP übertragenen Mail ([E-122](BEFUNDE.md#e-122))
+
+**Erst mit dem nächsten Paket auszuführen, nicht mit 7.2.1.130** (dort ist die
+Behebung nicht drin). Bis dahin trug eine Mail, die man aus einem **lokalen**
+Postfach in einen **IMAP-Ordner** überträgt, dort ein Eingangsdatum, das um die
+Zeitzone deines Rechners zu früh lag (im Winter eine Stunde, im Sommer zwei).
+Der `Date:`-Kopf der Mail selbst blieb richtig; falsch war nur das Datum, nach
+dem der Server und andere Programme „nach Eingang“ sortieren.
+
+1. Im lokalen *In* eine Mail aussuchen, deren Uhrzeit du kennst (Spalte
+   *Date*), z. B. 10:15.
+2. Die Mail markieren und mit *Transfer* in einen Ordner deines IMAP-Kontos
+   übertragen (am besten einen Ordner, in dem sonst wenig liegt).
+3. **Bestanden:** in der `eudora.log` steht danach eine Zeile
+   `E-122 IMAP-Eingangsdatum aus Date:-Kopf: … uebernommen`
+   (Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet). **Nicht
+   bestanden:** die Zeile fehlt oder sagt `nicht lesbar`.
+4. Zusätzlich, nur wenn dein Webmailer ein **Eingangsdatum** zeigt (manche
+   zeigen nur das Datum aus dem `Date:`-Kopf der Mail, und das war nie
+   falsch — dann sagt dieser Schritt nichts): die Eingangszeit stimmt mit der
+   Uhrzeit aus Schritt 1 überein und liegt nicht eine oder zwei Stunden
+   früher (wie viel, hängt vom Datum der Mail ab: Sommerzeit zwei, Winterzeit
+   eine Stunde).
+
+Der Prüfstand misst das Eingangsdatum direkt am Server (Fall `E-122p`, aus dem
+Protokoll des IMAP-Prüfservers, nicht aus einer Anzeige): am 02.11.2026 neuer
+Bau `differenz-min=0` für +0200 und −0500, alter Bau `differenz-min=-60`
+([PRÜFER-83](../Befunde/PRUEFER-83.md) K4, [LEKTOR-126](../Befunde/LEKTOR-126.md) L-126.1).
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales

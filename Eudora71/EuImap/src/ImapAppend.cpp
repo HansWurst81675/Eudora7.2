@@ -1018,6 +1018,65 @@ BOOL CImapAppend::ReformatMessage ()
 // 3. IMAP_IMFLAGS_XHEADER.
 // END NOTES
 
+//
+// BEFUND E-122: das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen
+// Nachricht war um die Zeitzone verschoben ("Date: 09:10 +0200" kam als
+// "07:10:00 +0200" an; gemessen am IMAP-Pruefserver 14.10.2026,
+// Originalfehler). Der Aufrufer gab CSummary::m_Seconds weiter, und das ist
+// fuer eine Nachricht mit Date:-Kopf NICHT UTC: GetTimeMT liest die Felder
+// mit mktime als ORTSZEIT, FormatDateMT zieht danach die Zone des Absenders
+// ab - heraus kommt UTC minus die Ortszone des Rechners. Fuer gesendete
+// Nachrichten setzt sendmail.cpp dagegen echtes UTC. append_date
+// (Imapdll/src/osdep.cpp) erwartet echtes UTC.
+//
+// Statt m_Seconds zu korrigieren (dessen Herkunft hier nicht bekannt ist),
+// wird die Zeit aus dem Date:-Kopf selbst berechnet, den diese Funktion ohnehin
+// liest: dieselben Felder als UTC (_mkgmtime statt mktime), dann die Zone
+// des Absenders ab. Kann der Kopf nicht gelesen werden, bleibt m_Seconds.
+//
+static long E122DatumAlsUtc( const char * pszWert )
+{
+	if ( !pszWert || !*pszWert )
+		return 0L;
+
+	const long	lOrt = GetTimeMT( pszWert, FALSE );	// Felder als Ortszeit
+	if ( lOrt <= 1L )
+		return 0L;
+
+	time_t		tOrt = (time_t) lOrt;
+	struct tm *	pFelder = localtime( &tOrt );		// dieselben Felder zurueck
+	if ( !pFelder )
+		return 0L;
+
+	struct tm	Felder = *pFelder;
+	const time_t	tFelderAlsUtc = _mkgmtime( &Felder );
+	if ( tFelderAlsUtc == (time_t) -1 )
+		return 0L;
+
+	long		lUtc = (long) tFelderAlsUtc;
+	int			nZoneMinuten = 0;
+	FormatDateMT( pszWert, lUtc, nZoneMinuten );		// Zone des Absenders ab
+	return lUtc;
+}
+
+void CImapAppend::E122DatumAusKopf( const char * pszZeile, int nLaenge )
+{
+	// pszZeile zeigt auf "Date: ...", nicht unbedingt nullterminiert.
+	if ( !pszZeile || nLaenge <= DateHeader.GetLength() )
+		return;
+
+	CString		szWert( pszZeile + DateHeader.GetLength(), nLaenge - DateHeader.GetLength() );
+	const long	lUtc = E122DatumAlsUtc( szWert );
+
+	CString		szSpur;
+	szSpur.Format( "E-122 IMAP-Eingangsdatum aus Date:-Kopf: utc=%ld vorher=%lu %s",
+				   lUtc, (unsigned long) m_Seconds, lUtc > 0 ? "uebernommen" : "nicht lesbar - bleibt" );
+	::PutDebugLog( DEBUG_MASK_MISC, szSpur );
+
+	if ( lUtc > 0 )
+		m_Seconds = (unsigned long) lUtc;
+}
+
 BOOL CImapAppend::ReformatHeader ()
 {
 	BOOL			bResult = FALSE;
@@ -1129,6 +1188,7 @@ BOOL CImapAppend::ReformatHeader ()
 					if (strnicmp ( t, (LPCSTR) DateHeader, DateHeader.GetLength() ) == 0)
 					{
 						bDateHeaderFound = TRUE;
+						E122DatumAusKopf( t, (int) len );	// BEFUND E-122
 					}
 				}
 			}
@@ -1181,6 +1241,7 @@ BOOL CImapAppend::ReformatHeader ()
 				if (strnicmp ( t, (LPCSTR) DateHeader, DateHeader.GetLength() ) == 0)
 				{
 					bDateHeaderFound = TRUE;
+					E122DatumAusKopf( t, (int) len );	// BEFUND E-122
 				}
 			}
 			else

@@ -3064,3 +3064,16 @@ Nachtrag 2 LEKTOR-124 (a8c61b80 gegengelesen): Die vier Reste bei [E-177](BEFUND
 - Gregors E-178-Versuch: Das *„Fragezeichen im Betreff“* widerspricht [E-90](BEFUNDE.md#e-90) (Emoji im Betreff fallen weg). Der E-136-Abschnitt bietet Gregor die Prüfnachricht an, die E-178 für ihn unerreichbar nennt ([L-125.11](../Befunde/LEKTOR-125.md#l-125.11)).
 
 Nachtrag LEKTOR-125 (964a9447..cb99c5f4 gegengelesen): Von elf Funden sind neun erledigt und zwei teilweise: README nennt 204 statt 205 Berichte, und [E-90](BEFUNDE.md#e-90) (Emoji im Betreff gehen beim Empfang verloren) nennt Gregors Betreff-Beobachtung `tesmail  ?).` nicht, die nur bei [E-178](BEFUNDE.md#e-178) steht. Neu [E-199](BEFUNDE.md#e-199) (*Festbreite* schreibt `t;` in den Text) ist am Quelltext als Originalfehler belegt. Die Berichtigung in `offene-befunde.pl` (angeschnittener Link fing den Link der nächsten Zeile ein) ist folgerichtig, hat aber keinen Gegentest. „Antwort auf markierten Text nicht gemessen“ steht bei E-178 überall gleich; der Prüfstandsfall erwartet weiter `antwort=passt` ([LEKTOR-125 Nachtrag](../Befunde/LEKTOR-125.md#nachtrag-02-11-2026)).
+
+## LEKTOR-126 (02.11.2026) — Bestand nach E-122, Zweig e122_imap_datum nach 3c1f5948
+
+[LEKTOR-126](../Befunde/LEKTOR-126.md): Die Messung zu [E-122](BEFUNDE.md#e-122) (das Eingangsdatum einer in einen IMAP-Ordner hochgeladenen Nachricht ist um die Zeitzone verschoben) ist in der Sache sauber: Mit der Behebung stimmt das Datum der `APPEND`-Zeile für beide Absenderzonen, ohne sie liegt es je 60 Minuten zu früh. Der Merge `fda44d5e` hat in `WERKZEUGE.md`, `pruefstand-faelle.txt` und `TESTLAEUFE.md` nichts verloren und nichts verdoppelt. Sechs Funde, keiner am Programm; von LEKTOR-125 sind zwei Funde wieder veraltet und zwei Reste offen.
+
+- TESTPLAN E-122: Schritt 3 prüft im Webmailer das angezeigte Datum, nach dem eigenen Text des Abschnitts vermutlich der `Date:`-Kopf, der nie falsch war; „so gefahren“ stimmt nicht, der Prüfstand liest das Serverprotokoll ([L-126.1](../Befunde/LEKTOR-126.md#l-126.1)).
+- WEITERMACHEN, AUFGABEN, ZWEIGE: `e143_suchfenster` „PR folgt“ nach dem Merge von #201, `e122_imap_datum` „in Arbeit“ bzw. ohne Stand — dritte Wiederholung, Schranke vorgeschlagen ([L-126.2](../Befunde/LEKTOR-126.md#l-126.2)).
+- CHANGELOG „Im Quellstand, noch in keinem Paket“: E-122 fehlt, `e143_suchfenster` „PR folgt“ ([L-126.3](../Befunde/LEKTOR-126.md#l-126.3)).
+- README „Bekannte Fehler“: E-122 ohne „im Quellstand behoben“; 204 statt 206 Berichte ([L-126.4](../Befunde/LEKTOR-126.md#l-126.4)).
+- Der gewertete Lauf `E-122p` hat in `TESTLAEUFE.md` keine Titelzeile, neun von 22 Starts am 02.11. ([L-126.5](../Befunde/LEKTOR-126.md#l-126.5)).
+- E-122 nennt `ImapMailbox.cpp:4281`, die Zeile steht in `:4282` ([L-126.6](../Befunde/LEKTOR-126.md#l-126.6)).
+
+Nachtrag LEKTOR-126 (9c5bfbc8..a26b5181 gegengelesen): Vier von sechs Funden erledigt, der TESTPLAN-Schritt zu [E-122](BEFUNDE.md#e-122) prüft jetzt die Logzeile und ist nicht mehr blind, `TestE122.cpp` fängt beide Lücken aus PRÜFER-83 K2. Teilweise: WEITERMACHEN und AUFGABEN tragen neben „PR folgt“ weiter „`e122_imap_datum` in Arbeit“ ([L-126.2](../Befunde/LEKTOR-126.md#l-126.2)); vermerkt: die fehlende Titelzeile des Laufs `E-122p` bleibt bewusst stehen ([L-126.5](../Befunde/LEKTOR-126.md#l-126.5)).
