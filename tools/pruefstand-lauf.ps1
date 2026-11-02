@@ -78,8 +78,11 @@ foreach ($zeile in (Get-Content -LiteralPath $Faelle)) {
         Nachricht   = $f[6].Trim()
         Schalter    = $f[7].Trim().ToLower()
     }
-    if ($fall.Schalter -ne '' -and $fall.Schalter -ne 'ohne-argument' -and $fall.Schalter -notmatch '^messen=tools[\\/]messen-[a-z0-9-]+\.ps1$') {
-        Write-Host ("  Zeile {0}: Schalter '{1}' - erlaubt sind ohne-argument und messen=tools\messen-<name>.ps1" -f $zeilennr, $fall.Schalter)
+    # E-133 (02.11.2026): beide Schalter zusammen, "ohne-argument,messen=..." -
+    # die Rueckfrage zum fehlenden Mailverzeichnis kommt nur ohne Argument,
+    # und beantworten muss sie ein Messskript.
+    if ($fall.Schalter -ne '' -and $fall.Schalter -notmatch '^(ohne-argument|messen=tools[\\/]messen-[a-z0-9-]+\.ps1|ohne-argument,messen=tools[\\/]messen-[a-z0-9-]+\.ps1)$') {
+        Write-Host ("  Zeile {0}: Schalter '{1}' - erlaubt sind ohne-argument, messen=tools\messen-<name>.ps1 und ohne-argument,messen=tools\messen-<name>.ps1" -f $zeilennr, $fall.Schalter)
         exit 2
     }
     if ($fall.Schalter -ne '' -and $fall.Nachricht -ne '') {
@@ -261,14 +264,18 @@ foreach ($g in $gruppen) {
         # Funktion nie erreicht; ein Fall ohne diesen Schalter misst dort
         # nichts (Arbeitsweise/messung-muss-den-weg-treffen.md).
         $tlArgs = @('-Verzeichnis', $verz, '-Freigabe', $Freigabe, '-Sekunden', $sek)
-        if ($sch -eq 'ohne-argument') { $tlArgs += '-OhneArgument' }
+        $ohneArg = ($sch -eq 'ohne-argument' -or $sch -like 'ohne-argument,*')
+        $messenTeil = ''
+        if ($sch -like 'messen=*') { $messenTeil = $sch }
+        elseif ($sch -like 'ohne-argument,messen=*') { $messenTeil = $sch.Substring(14) }
+        if ($ohneArg) { $tlArgs += '-OhneArgument' }
         # messen=<skript>: ein Messskript bedient das Fenster, solange es
         # steht (E-125, 23.10.2026). Seine Ausgabe wird als Quelle "messung"
         # geprueft. Vor dem Start legt das Skript mit -Vorbereiten die Lage
         # im Pruefstand frisch an - sonst misst der zweite Lauf, was der
         # erste hinterlassen hat.
-        if ($sch -like 'messen=*') {
-            $skript = Join-Path $wurzel ($sch.Substring(7))
+        if ($messenTeil -ne '') {
+            $skript = Join-Path $wurzel ($messenTeil.Substring(7))
             & powershell -NoProfile -ExecutionPolicy Bypass -File $skript -Vorbereiten -Pfadfilter $verz | Out-Null
             if ($LASTEXITCODE -ne 0) {
                 foreach ($f in $hier) {
@@ -293,7 +300,7 @@ foreach ($g in $gruppen) {
     # das ist der Gegenstand von E-132, also wird es dort gesucht, wo es
     # wirklich ist, statt den Fall an der falschen Stelle gruen oder rot
     # zu melden.
-    if ($sch -eq 'ohne-argument' -and -not (Test-Path $log)) {
+    if (($sch -eq 'ohne-argument' -or $sch -like 'ohne-argument,*') -and -not (Test-Path $log)) {
         $neueste = Get-ChildItem 'C:\Temp' -Recurse -Depth 2 -Filter 'eudora.log' -ErrorAction SilentlyContinue |
                    Where-Object { $_.LastWriteTime -gt $beginn } |
                    Sort-Object LastWriteTime -Descending | Select-Object -First 1

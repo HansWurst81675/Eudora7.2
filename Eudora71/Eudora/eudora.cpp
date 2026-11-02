@@ -3997,6 +3997,110 @@ static void E132LangerPfad(LPTSTR pPfad, size_t nPfad)
 	}
 }
 
+//
+// BEFUND E-133 (21.10.2026 gefunden, 02.11.2026 behoben) - zeigte die
+// Registry auf ein Mailverzeichnis, das es nicht mehr gibt, verweigerte
+// Eudora den Start.
+//
+// Der Weg: Doppelklick, leere Befehlszeile, keine Eudora.ini neben der EXE.
+// Dann liest StartEudoraWithDefaultLocation CommandLine\Current. Nennt das
+// ein geloeschtes, verschobenes oder auf einem abgezogenen Datentraeger
+// liegendes Verzeichnis, scheiterte GetDirs: CheckMailDirectory fand es mit
+// FileExistsMT nicht (fileutil.cpp:374), meldete IDS_ERR_BAD_EUDORA_DIR,
+// danach kam IDS_ERR_CANNOT_START_WITH_ATTACH - zwei Meldungen, kein
+// Eudora. Der Anwender konnte nur noch die Registry von Hand berichtigen.
+//
+// Gregor am 21.10.2026: "nur aufnehmen, nicht fixen"; am 02.11.2026:
+// "ja, e133_mailverzeichnis_fehlt erst fuer 7.2.2.132".
+//
+// Jetzt wird gefragt: anderen Ordner waehlen, den Ordner neben dem Programm
+// nehmen oder abbrechen. Nach der Wahl schreibt RegisterCommandLine den
+// neuen Ort in die Registry, damit der naechste Start nicht wieder fragt.
+//
+#ifndef BIF_NEWDIALOGSTYLE
+#define BIF_NEWDIALOGSTYLE 0x0040
+#endif
+
+// Gibt es das Verzeichnis nicht? Ein leerer Name ist kein fehlendes
+// Verzeichnis - dann sucht Eudora woanders weiter (Application Data).
+static bool E133VerzeichnisFehlt(LPCTSTR pVerzeichnis)
+{
+	if (!pVerzeichnis || !*pVerzeichnis)
+		return false;
+
+	// Wie CheckMailDirectory: ohne abschliessenden Rueckstrich pruefen,
+	// ausser beim Laufwerk selbst ("C:\").
+	CString szPfad(pVerzeichnis);
+	while (szPfad.GetLength() > 3 && (szPfad.Right(1) == "\\" || szPfad.Right(1) == "/"))
+		szPfad = szPfad.Left(szPfad.GetLength() - 1);
+
+	return !FileExistsMT(szPfad);
+}
+
+// Der Ordner neben dem Programm - dieselbe Regel wie bei E-132 "Nein":
+// "Mailverzeichnis" neben der EXE, wenn dort eine Eudora.ini liegt (so sind
+// unsere Pakete gebaut, siehe tools/paket-bauen.ps1), sonst das
+// Programmverzeichnis selbst.
+static CString E133NebenProgramm(const CString& szExeDir)
+{
+	CString szEigenes(szExeDir);
+	while (szEigenes.GetLength() > 3 && szEigenes.Right(1) == "\\")
+		szEigenes = szEigenes.Left(szEigenes.GetLength() - 1);
+
+	CString szUnter(szEigenes);
+	szUnter += "\\Mailverzeichnis";
+
+	CString szProbe(szUnter);
+	szProbe += "\\";
+	szProbe += CRString(IDS_EUDORA_INI_NAME);
+
+	return FileExistsMT(szProbe) ? szUnter : szEigenes;
+}
+
+// Ordnerauswahl. false = abgebrochen oder kein Dateisystempfad.
+static bool E133OrdnerWaehlen(CString& szGewaehlt)
+{
+	BROWSEINFO bi;
+	memset(&bi, 0, sizeof(bi));
+	bi.hwndOwner = NULL;
+	bi.lpszTitle = _T("Choose the folder for your Eudora mail. It holds Eudora.ini and your mailboxes.");
+	bi.ulFlags = BIF_RETURNONLYFSDIRS | BIF_NEWDIALOGSTYLE;
+
+	LPITEMIDLIST pidl = ::SHBrowseForFolder(&bi);
+	if (!pidl)
+		return false;
+
+	TCHAR szPfad[MAX_PATH + 1];
+	szPfad[0] = 0;
+	const BOOL bOk = ::SHGetPathFromIDList(pidl, szPfad);
+	::CoTaskMemFree(pidl);
+
+	if (!bOk || !szPfad[0])
+		return false;
+
+	szGewaehlt = szPfad;
+	return true;
+}
+
+// Den gewaehlten Ordner so in buf legen, dass GetDirs ihn als EINEN Pfad
+// nimmt - geklammert wie bei E-132 (PRUEFER-41 K2), bei Ueberlaenge die
+// Kurzform (PRUEFER-42 K3).
+static void E133InBefehlszeile(const CString& szPfad, LPTSTR pBuf, size_t nBuf)
+{
+	CString szGeklammert;
+	szGeklammert.Format("\"%s\"", (LPCTSTR) szPfad);
+
+	if (szGeklammert.GetLength() >= (int) nBuf)
+	{
+		TCHAR szKurz[MAX_PATH + 1];
+		if (::GetShortPathName(szPfad, szKurz, MAX_PATH + 1) > 0)
+			szGeklammert = szKurz;
+	}
+
+	_tcsncpy(pBuf, szGeklammert, nBuf - 1);
+	pBuf[nBuf - 1] = 0;
+}
+
 BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 {
     HKEY  hkResult;
@@ -4146,6 +4250,8 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 	// Die Vorgabe ist "Eigenes anlegen" (MB_DEFBUTTON2): wer die Meldung
 	// wegdrueckt, beschaedigt nichts.
 	//
+	bool bE133Gewaehlt = false;	// E-133: Verzeichnis fehlte, Anwender hat neu gewaehlt
+
 	if (*buf)
 	{
 		//
@@ -4440,12 +4546,100 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 				E132SpurMerken("E-132 Startverzeichnis: fremdes bewusst uebernommen");
 			}
 		}
+
+		//
+		// BEFUND E-133: das gespeicherte Verzeichnis gibt es nicht mehr.
+		//
+		// Ohne diese Stelle scheitert GetDirs unten an CheckMailDirectory,
+		// und Eudora beendet sich mit zwei Fehlermeldungen. Ein fremdes
+		// Verzeichnis (E-132) fehlt nie - dort liegt ja eine Einrichtung -,
+		// darum schliessen sich beide Rueckfragen aus.
+		//
+		// Die Vorgabe ist "No" (der Ordner neben dem Programm): wer die
+		// Meldung wegdrueckt, bekommt ein laufendes Eudora und beschaedigt
+		// nichts. Ein Fehlschlag von MessageBox (0) gilt als Abbrechen -
+		// dann bleibt es beim alten Ausgang, ohne dass irgendwo
+		// hineingeschrieben wurde.
+		//
+		if (!bFremd && E133VerzeichnisFehlt(szVerzeichnis))
+		{
+			szSpur.Format("E-133 Startverzeichnis fehlt: \"%s\"", szVerzeichnis);
+			E132SpurMerken(szSpur);
+
+			const CString szNeben = E133NebenProgramm(ExecutableDir);
+
+			CString szText;
+			szText.Format(
+				"The mail folder Eudora used last time does not exist any more:\n\n%s\n\n"
+				"It may have been moved, renamed or deleted, or it is on a drive "
+				"that is not connected.\n\n"
+				"Yes\tchoose another mail folder\n"
+				"No\tuse the folder next to this program:\n\t%s\n"
+				"Cancel\tquit Eudora\n\n"
+				"Eudora remembers the folder you pick for the next start.",
+				szVerzeichnis, (LPCTSTR) szNeben);
+
+			CString szGewaehlt;
+			for (;;)
+			{
+				const int nWahl = ::MessageBox(NULL, szText, "Eudora 7.2",
+											   MB_YESNOCANCEL | MB_ICONWARNING | MB_DEFBUTTON2);
+
+				if (nWahl == IDYES)
+				{
+					if (E133OrdnerWaehlen(szGewaehlt))
+						break;
+
+					// Ordnerauswahl abgebrochen: zurueck zur Frage, nicht
+					// still beenden.
+					E132SpurMerken("E-133 Ordnerauswahl abgebrochen, frage erneut");
+					continue;
+				}
+
+				if (nWahl == IDNO)
+				{
+					szGewaehlt = szNeben;
+					break;
+				}
+
+				E132SpurMerken("E-133 Antwort: abgebrochen");
+				return FALSE;
+			}
+
+			E133InBefehlszeile(szGewaehlt, buf, sizeof(buf) / sizeof(TCHAR));
+			bE133Gewaehlt = true;
+
+			szSpur.Format("E-133 Antwort: gewaehlt=\"%s\" (%s)", (LPCTSTR) szGewaehlt,
+						  (szGewaehlt == szNeben) ? "neben dem Programm" : "Ordnerauswahl");
+			E132SpurMerken(szSpur);
+
+			szHerkunftGemerkt.Format("E-133: gespeichertes Verzeichnis %s fehlte, "
+				"nach Rueckfrage gewaehlt", szVerzeichnis);
+			pHerkunft = szHerkunftGemerkt;
+		}
 	}
 
 	if (err || !GetDirs(buf))
 	{
 		ErrorDialog(IDS_ERR_CANNOT_START_WITH_ATTACH);
 		return FALSE;
+	}
+
+	//
+	// E-133: den neuen Ort sofort in die Registry, auf JEDEM Startweg.
+	// Beim Doppelklick schreibt InitInstance ihn ohnehin (RegisterCommandLine
+	// nach diesem Aufruf), beim Start mit Anhang, mailto: oder Automation
+	// nicht - dort fragte Eudora sonst bei jedem Start wieder.
+	// RegisterCommandLine liest EudoraDir und INIPath, die GetDirs eben
+	// gesetzt hat; der Parameter wird nicht benutzt.
+	//
+	if (bE133Gewaehlt)
+	{
+		RegisterCommandLine(NULL);
+
+		CString szE133;
+		szE133.Format("E-133 Registry berichtigt: Mailverzeichnis=\"%s\"", (LPCTSTR) EudoraDir);
+		E132SpurMerken(szE133);
 	}
 
 	// K6 aus PRUEFER-41, Weg 2: ist buf trotz allem leer geblieben, hat

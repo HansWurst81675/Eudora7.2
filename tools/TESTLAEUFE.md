@@ -777,3 +777,4 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-11-02 16:12:30 | `C:\Temp\E39` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 6424122 - Eudora   [Eudora 7.2.1.131+52013cac 2026-11-02 16:11 - E39] |
 | 2026-11-02 16:12:53 | `C:\Temp\E39-alt` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 3278618 - Eudora   [Eudora 7.2.1.131+7e38b87b 2026-11-02 15:29 - E39-alt] |
 | 2026-11-02 16:40:15 | `C:\Temp\E39` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 6358488 - Eudora   [Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38 - E39] |
+| 2026-11-02 17:00:02 | `C:\Temp\E133` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Kein Hauptfenster (EudoraMainWindow) innerhalb von 5 s. |
