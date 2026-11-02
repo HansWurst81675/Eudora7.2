@@ -99,8 +99,18 @@ void CSignatureDoc::Serialize(CArchive& ar)
 	{
 		if (m_SaveAs)
 		{
+			//
+			// E-207: hier stand pView->CPaigeEdtView::Serialize(ar). Diese
+			// Funktion ist seit dem Originalstand auskommentiert
+			// (PaigeEdtView.cpp, "03-17-2000 Commented this function"), der
+			// Aufruf landete in CObject::Serialize und schrieb nichts.
+			// Speichern unter legte eine LEERE Datei an und setzte das
+			// Geaendert-Kennzeichen zurueck - die Aenderungen gingen beim
+			// Schliessen ohne Frage verloren (gemessen 02.11.2026,
+			// tools/messen-e207.ps1).
+			//
 			CSignatureView* pView = (CSignatureView*)GetNextView(pos);
-			pView->CPaigeEdtView::Serialize(ar);
+			pView->E207SpeichernUnter(ar);
 		}
 		else
 			GetNextView(pos)->Serialize(ar);
@@ -153,6 +163,28 @@ void CSignatureView::OnUpdateEditPaste( CCmdUI* pCmdUI )
 void CSignatureView::OnUpdateInsertPicture(CCmdUI* pCmdUI) 
 {
     pCmdUI->Enable( FALSE );
+}
+
+//
+// E207SpeichernUnter - Speichern unter aus dem Signaturfenster.
+// Wie das uebrige Speichern unter: .htm/.html als HTML, alles andere als Text.
+// Die Signaturdatei selbst wird hier nicht beruehrt.
+//
+void CSignatureView::E207SpeichernUnter(CArchive& ar)
+{
+	PgDataTranslator	theTxr( m_paigeRef );
+	PgDataTranslator::FormatType	format = PgDataTranslator::kFmtText;
+
+	CFile*		pDatei = ar.GetFile();
+	CString		szName = pDatei->GetFileName();
+	const int	nPunkt = szName.ReverseFind( '.' );
+	const CString	szEndung = ( nPunkt >= 0 ) ? szName.Mid( nPunkt + 1 ) : CString();
+
+	if ( szEndung.CompareNoCase( CRString( IDS_HTM_EXTENSION ) ) == 0 ||
+		 szEndung.CompareNoCase( CRString( IDS_HTML_EXTENSION ) ) == 0 )
+		format = PgDataTranslator::kFmtHtml;
+
+	theTxr.ExportData( pDatei, format );
 }
 
 void CSignatureView::Serialize(CArchive& ar)

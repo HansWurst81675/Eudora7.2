@@ -3139,7 +3139,9 @@ void CTocView::OnFileSaveAs()
 					else
 					{
 						// build the Date: header
-						ComposeDate( szDateMaybe, pSummary );
+						// BEFUND E-205: nur lesen, die Zusammenfassung nicht
+						// umschreiben (siehe compmsgd.cpp, SaveAsFile).
+						ComposeDate( szDateMaybe, pSummary->m_Seconds, pSummary->m_TimeZoneMinutes );
 						if (*szDateMaybe)
 							strcat( szDateMaybe, "\r\n" );
 					}

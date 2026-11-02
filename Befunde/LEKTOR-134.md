@@ -1,6 +1,6 @@
 # <a id="lektor-134"></a>LEKTOR-134 — Bestand nach den Messungen vor 7.2.2.132 (E-141, E-170, E-176, E-179), Zweig messungen_vor_7_2_2_132 nach fc2f9eae (02.11.2026)
 
-Rolle: [AGENTEN.md](../Intern/AGENTEN.md). Vorgänger: LEKTOR-133 (`Befunde/LEKTOR-133.md`, liegt auf `origin/wt/lektor-20261102` und `origin/e194_e196_speichern_unter`, nicht in diesem Zweig und nicht auf `main` — darum hier ohne Verweis; gelesen mit `git show origin/wt/lektor-20261102:Befunde/LEKTOR-133.md`).
+Rolle: [AGENTEN.md](../Intern/AGENTEN.md). Vorgänger: [LEKTOR-133](LEKTOR-133.md#lektor-133) (`Befunde/LEKTOR-133.md`, liegt auf `origin/wt/lektor-20261102` und `origin/e194_e196_speichern_unter`, nicht in diesem Zweig und nicht auf `main` — darum hier ohne Verweis; gelesen mit `git show origin/wt/lektor-20261102:Befunde/LEKTOR-133.md`).
 Arbeitsbaum `.wt/lektor`, Zweig `wt/lektor-20261102b`, abgezweigt von `origin/messungen_vor_7_2_2_132`, Stand `fc2f9eae` (*„Merge remote-tracking branch 'origin/main' into messungen_vor_7_2_2_132“*).
 Umfang: Bestand der MD-Dateien außerhalb von `Arbeitsweise/` und `Befunde/`. `git log 456c95e1..HEAD` umfasst 33 Commits, davon sind alle außer sechs schon auf `main` (#207, #208) und dort von [LEKTOR-131](LEKTOR-131.md#lektor-131) und [LEKTOR-132](LEKTOR-132.md#lektor-132) geprüft. Schwerpunkt sind darum die sechs eigenen Commits `origin/main..HEAD` (gemessen): `ae8083b0` (Zweig eingetragen), `c3a56169` ([E-170](../Intern/BEFUNDE.md#e-170)), `ffc3fd81` ([E-141](../Intern/BEFUNDE.md#e-141)), `9bfbd0ce` (*„[E-179](../Intern/BEFUNDE.md#e-179) am Pruefstand bestaetigt, [E-141](../Intern/BEFUNDE.md#e-141) bestaetigt, [E-170](../Intern/BEFUNDE.md#e-170) bleibt offen, [E-176](../Intern/BEFUNDE.md#e-176) nicht messbar“*), `ebb003d7` (Gegenprobe an 7.2.1.128), `fc2f9eae` (Merge von `main`). Keine Codeänderung unter `Eudora71/` (`git diff --stat origin/main HEAD -- Eudora71` → leer, gemessen). Nichts gebaut, nichts gestartet, keine Prüfstände angefasst; `pruefstand-buch.tsv`, `pruefstand-ergebnis.txt`, Messskripte und Quelltext nur gelesen.
 
@@ -10,19 +10,19 @@ Die vier neuen Urteile stimmen mit dem, was gemessen wurde: [E-141](../Intern/BE
 
 ## Funde aus LEKTOR-133 — heutiger Stand
 
-LEKTOR-133 prüfte `e194_e196_speichern_unter`. Dieser Zweig ist **nicht** gemergt: `git merge-base --is-ancestor origin/e194_e196_speichern_unter origin/main` → nein; `git branch -r --contains origin/e194_e196_speichern_unter` → nur er selbst und `origin/wt/lektor-20261102` (gemessen). Was LEKTOR-133 dort berichtigt sehen wollte, steht darum weder auf `main` noch hier; gemessen ist der Stand mit `git show origin/e194_e196_speichern_unter:<datei>` (Spitze `5204474a`, *„LEKTOR-133 Nachtrag 1: L-133.1 bis L-133.8 erledigt …, neu L-133.9“*).
+[LEKTOR-133](LEKTOR-133.md#lektor-133) prüfte `e194_e196_speichern_unter`. Dieser Zweig ist **nicht** gemergt: `git merge-base --is-ancestor origin/e194_e196_speichern_unter origin/main` → nein; `git branch -r --contains origin/e194_e196_speichern_unter` → nur er selbst und `origin/wt/lektor-20261102` (gemessen). Was [LEKTOR-133](LEKTOR-133.md#lektor-133) dort berichtigt sehen wollte, steht darum weder auf `main` noch hier; gemessen ist der Stand mit `git show origin/e194_e196_speichern_unter:<datei>` (Spitze `5204474a`, *„[LEKTOR-133](LEKTOR-133.md#lektor-133) Nachtrag 1: [L-133.1](LEKTOR-133.md#l-133.1) bis [L-133.8](LEKTOR-133.md#l-133.8) erledigt …, neu [L-133.9](LEKTOR-133.md#l-133.9)“*).
 
 | Fund | Stand | Stelle (gemessen) |
 |---|---|---|
-| L-133.1 Zweig auf #206, sechs Konflikte | **erledigt auf `e194_…`** | laut LEKTOR-133 Nachtrag 1 `main` hereingeholt; hier nicht nachgemessen. Neu: dieser Zweig und `e194_…` stoßen beim zweiten Merge aufeinander ([L-134.9](#l-134.9)) |
-| L-133.2 Stand-Köpfe, Berichtszahl | **erledigt auf `e194_…`, hier offen** | `origin/e194_…:Intern/WEITERMACHEN.md:3` *„Laufend: Zweig `e194_e196_speichern_unter`“*, `origin/e194_…:README.md:98` *„(216 LEKTOR- und PRÜFER-Berichte, gezählt am 02.11.2026)“*; hier siehe [L-134.6](#l-134.6) |
-| L-133.3 README/CHANGELOG zu E-207 | **erledigt auf `e194_…`**, hier nicht enthalten | laut Nachtrag 1; hier gibt es E-207 gar nicht (`grep -c 'id="e-207"' Intern/BEFUNDE.md` → 0) |
-| L-133.4 [E-195](../Intern/BEFUNDE.md#e-195) im Signaturfenster | **erledigt auf `e194_…` als Einengung**, hier nicht enthalten | wie L-133.3 |
-| L-133.5 E-206 „nie gemessen“ | **erledigt auf `e194_…`**, hier nicht enthalten | wie L-133.3 |
-| L-133.6 Messangaben [E-194](../Intern/BEFUNDE.md#e-194) bis [E-196](../Intern/BEFUNDE.md#e-196) | **erledigt auf `e194_…`**, hier nicht enthalten | wie L-133.3 |
-| L-133.7 CHANGELOG „alle drei Wege“, ZWEIGE | **erledigt auf `e194_…`**, hier nicht enthalten | wie L-133.3 |
-| L-133.8 FAQ 15 *Save As* „unverändert“ | **erledigt auf `e194_…`**, hier offen | hier `Doku/FAQ.md` unverändert gegen `main` (`git diff origin/main HEAD -- Doku/FAQ.md` → leer) |
-| L-133.9 Nachbarfälle nicht am gemergten Bau | **offen auf `e194_…`** | `origin/e194_…:CHANGELOG.md:127` *„`E-140p`, `E-177p`, `E-178p` am neuen Bau grün.“*; `origin/e194_…:Intern/pruefstand-buch.tsv:38`, `:45`, `:46` weiter *„2026-11-02 17:04:02 … Eudora 7.2.1.131+cecab886*“* |
+| [L-133.1](LEKTOR-133.md#l-133.1) Zweig auf #206, sechs Konflikte | **erledigt auf `e194_…`** | laut [LEKTOR-133](LEKTOR-133.md#lektor-133) Nachtrag 1 `main` hereingeholt; hier nicht nachgemessen. Neu: dieser Zweig und `e194_…` stoßen beim zweiten Merge aufeinander ([L-134.9](#l-134.9)) |
+| [L-133.2](LEKTOR-133.md#l-133.2) Stand-Köpfe, Berichtszahl | **erledigt auf `e194_…`, hier offen** | `origin/e194_…:Intern/WEITERMACHEN.md:3` *„Laufend: Zweig `e194_e196_speichern_unter`“*, `origin/e194_…:README.md:98` *„(216 LEKTOR- und PRÜFER-Berichte, gezählt am 02.11.2026)“*; hier siehe [L-134.6](#l-134.6) |
+| [L-133.3](LEKTOR-133.md#l-133.3) README/CHANGELOG zu [E-207](../Intern/BEFUNDE.md#e-207) | **erledigt auf `e194_…`**, hier nicht enthalten | laut Nachtrag 1; hier gibt es [E-207](../Intern/BEFUNDE.md#e-207) gar nicht (`grep -c 'id="e-207"' Intern/BEFUNDE.md` → 0) |
+| [L-133.4](LEKTOR-133.md#l-133.4) [E-195](../Intern/BEFUNDE.md#e-195) im Signaturfenster | **erledigt auf `e194_…` als Einengung**, hier nicht enthalten | wie [L-133.3](LEKTOR-133.md#l-133.3) |
+| [L-133.5](LEKTOR-133.md#l-133.5) [E-206](../Intern/BEFUNDE.md#e-206) „nie gemessen“ | **erledigt auf `e194_…`**, hier nicht enthalten | wie [L-133.3](LEKTOR-133.md#l-133.3) |
+| [L-133.6](LEKTOR-133.md#l-133.6) Messangaben [E-194](../Intern/BEFUNDE.md#e-194) bis [E-196](../Intern/BEFUNDE.md#e-196) | **erledigt auf `e194_…`**, hier nicht enthalten | wie [L-133.3](LEKTOR-133.md#l-133.3) |
+| [L-133.7](LEKTOR-133.md#l-133.7) CHANGELOG „alle drei Wege“, ZWEIGE | **erledigt auf `e194_…`**, hier nicht enthalten | wie [L-133.3](LEKTOR-133.md#l-133.3) |
+| [L-133.8](LEKTOR-133.md#l-133.8) FAQ 15 *Save As* „unverändert“ | **erledigt auf `e194_…`**, hier offen | hier `Doku/FAQ.md` unverändert gegen `main` (`git diff origin/main HEAD -- Doku/FAQ.md` → leer) |
+| [L-133.9](LEKTOR-133.md#l-133.9) Nachbarfälle nicht am gemergten Bau | **offen auf `e194_…`** | `origin/e194_…:CHANGELOG.md:127` *„`E-140p`, `E-177p`, `E-178p` am neuen Bau grün.“*; `origin/e194_…:Intern/pruefstand-buch.tsv:38`, `:45`, `:46` weiter *„2026-11-02 17:04:02 … Eudora 7.2.1.131+cecab886*“* |
 | [L-131.8](LEKTOR-131.md#l-131.8) Berichtszahl in der README | **offen, die Klasse ohne Werkzeug** | `README.md:98` *„(213 LEKTOR- und PRÜFER-Berichte, gezählt am 02.11.2026)“* bei 214 im Verzeichnis (`ls Befunde \| grep -cE '^(LEKTOR\|PRUEFER)-[0-9]+\.md$'`), mit diesem 215 |
 | [L-130.1](LEKTOR-130.md#l-130.1) persönliche Angabe in alten Zweigen | **unverändert** | `git branch -r --contains d9ae24c8` → `origin/hilfe_menue`, `origin/wt/lektor-20261102k`, `origin/wt/pruefer-20261102d`; dieser Zweig ist frei davon |
 | [L-129.1](LEKTOR-129.md#l-129.1) Schranke „zuletzt veröffentlicht“ | **offen** | `grep -c 'zuletzt ver' tools/pruefe-release-buchfuehrung.pl` → 0 |
@@ -132,7 +132,7 @@ LEKTOR-133 prüfte `e194_e196_speichern_unter`. Dieser Zweig ist **nicht** gemer
 **Gewicht: Kleinkram, aber vor dem zweiten PR zu erledigen.** (gemessen mit `git merge-tree`, nichts ausgecheckt)
 
 - `git merge-tree --write-tree --name-only HEAD origin/e194_e196_speichern_unter` → *„CONFLICT (content)“* in `Intern/BEFUNDE.md`, `Intern/pruefstand-buch.tsv`, `Intern/pruefstand-dauer.txt`, `Intern/pruefstand-ergebnis.txt`, `tools/TESTLAEUFE.md`. Mit `origin/e203_e204_persona_kennwort` nur `tools/TESTLAEUFE.md`.
-- In `BEFUNDE.md` ist es die Stufentabelle (`:159`, `:162`): hier 52 offen, auf `e194_…` 57 (LEKTOR-133 Nachtrag 1); zusammen zu erwarten 55 (Vermutung: 57 − [E-141](../Intern/BEFUNDE.md#e-141) − [E-179](../Intern/BEFUNDE.md#e-179)). Die Tabellen in CHANGELOG und WEITERMACHEN vereinigen sich ohne Konfliktmarke und müssen trotzdem neu erzeugt werden; `README.md:98` und `WEITERMACHEN.md:3` ebenso ([L-134.6](#l-134.6)).
+- In `BEFUNDE.md` ist es die Stufentabelle (`:159`, `:162`): hier 52 offen, auf `e194_…` 57 ([LEKTOR-133](LEKTOR-133.md#lektor-133) Nachtrag 1); zusammen zu erwarten 55 (Vermutung: 57 − [E-141](../Intern/BEFUNDE.md#e-141) − [E-179](../Intern/BEFUNDE.md#e-179)). Die Tabellen in CHANGELOG und WEITERMACHEN vereinigen sich ohne Konfliktmarke und müssen trotzdem neu erzeugt werden; `README.md:98` und `WEITERMACHEN.md:3` ebenso ([L-134.6](#l-134.6)).
 
 **Vorschlag:** wer als Zweiter gemergt wird, holt `main` herein, erzeugt Stufentabelle und Listen mit `offene-befunde.pl -schreiben` neu und nimmt `pruefstand-ergebnis.txt`/`-dauer.txt` vom letzten echten Lauf statt einer Konfliktauflösung von Hand.
 
@@ -142,7 +142,7 @@ Seit `456c95e1` geänderte MDs außerhalb von `Arbeitsweise/` und `Befunde/` (`g
 
 ## Werkzeuge
 
-`perl tools/doku-pruefen.pl` (gemessen): *„gepruefte Dateien 52“*, *„Kennungen im Verzeichnis 178“*, *„Kein Widerspruch gefunden.“*; *Zur Kenntnis* wie in LEKTOR-133 (u. a. `Doku/ANWENDER.md` und `Intern/PORTIERUNG.md` höchste Fassung 7.2.1.128, `Doku/FAQ.md` 7.2.1.130). [L-134.1](#l-134.1) bis [L-134.9](#l-134.9) sieht es nicht — es vergleicht Fassungsnummern, nicht Aussagen über Verhalten gegen Messungen.
+`perl tools/doku-pruefen.pl` (gemessen): *„gepruefte Dateien 52“*, *„Kennungen im Verzeichnis 178“*, *„Kein Widerspruch gefunden.“*; *Zur Kenntnis* wie in [LEKTOR-133](LEKTOR-133.md#lektor-133) (u. a. `Doku/ANWENDER.md` und `Intern/PORTIERUNG.md` höchste Fassung 7.2.1.128, `Doku/FAQ.md` 7.2.1.130). [L-134.1](#l-134.1) bis [L-134.9](#l-134.9) sieht es nicht — es vergleicht Fassungsnummern, nicht Aussagen über Verhalten gegen Messungen.
 
 `perl tools/offene-befunde.pl` (gemessen): *„52 offene Befunde, in beiden Listen gleich.“*, *„davon NIE gemessen 13“* — [E-176](../Intern/BEFUNDE.md#e-176) zu Recht darunter. Die alte Aufgabe bei [E-170](../Intern/BEFUNDE.md#e-170) erkennt es nicht ([L-134.2](#l-134.2)).
 

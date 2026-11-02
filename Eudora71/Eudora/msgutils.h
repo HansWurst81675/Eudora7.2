@@ -66,6 +66,22 @@ CString E140TextFuerDatei(
 				const char *		pszWeg );
 
 //
+// BEFUND E-196: "Speichern unter" als .htm schrieb keine Zeichensatzangabe.
+// E196HtmlZeichensatz setzt ein <meta ... charset=windows-1252> ein oder
+// schreibt ein vorhandenes um (reine Textverarbeitung, Erlaeuterung am Rumpf
+// in msgutils.cpp); E196HtmlFuerDatei ist der Eingang fuer beide Fenster und
+// schreibt die Spur ins Protokoll. Nur fuer HTML-Dateien.
+//
+bool E196HtmlZeichensatz(
+				const char *		pszHtml,
+				CString &			out_szDatei,
+				CString &			out_szSpur );
+
+CString E196HtmlFuerDatei(
+				const char *		pszHtml,
+				const char *		pszWeg );
+
+//
 // BEFUND E-89: die Bilder im Verfassenfenster lesbar machen. Ergaenzt in
 // der Fassung, die in den Editor geht, jedem <img> ohne auswertbare
 // Groesse ein width- und ein height-Attribut. Erlaeuterung am Rumpf in
