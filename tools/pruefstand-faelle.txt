@@ -391,8 +391,9 @@ A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: 
 # Vorher-Bau jeweils 7.2.1.128+640e1a0e (C:\Temp\EM*-alt), nachher
 # 7.2.1.131+f31dbff9 (C:\Temp\EM*, Quellstand gleich main 88142c78).
 # -------------------------------------------------------------------------
-# E-170 mit UIDPLUS: das Label bleibt. An BEIDEN Bauten gruen - der alte Weg
-# (ImapTransferSummaryData) nahm es schon mit; ein Regressionstest, keine
+# E-170 mit UIDPLUS: das Label bleibt an BEIDEN Bauten - der alte Weg
+# (ImapTransferSummaryData) nahm es schon mit. Der Fall ist am alten Bau rot
+# nur wegen log-grund (dort gibt es die Logzeile nicht); ein Regressionstest, keine
 # Gegenprobe fuer die Behebung (Intern/BEFUNDE.md#e-170).
 E-170p | C:\Temp\EM170 | 30 | messung | kopie-mit-label=1 log-grund=ok lebt=1 | | | messen=tools\messen-e170.ps1
 # E-170 ohne UIDPLUS: das Label geht an BEIDEN Bauten verloren (der Fehler

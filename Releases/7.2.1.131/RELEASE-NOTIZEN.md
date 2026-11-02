@@ -19,7 +19,9 @@ veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130.
   Als `.txt` gespeichert bleibt ein Ersatzzeichen — eine solche Textdatei
   kann kein Emoji tragen.
 * **Textfassung von HTML-Mails:** aus `&#128293;` wird nicht mehr ein
-  einzelnes falsches Zeichen (am laufenden Programm noch nicht gemessen)
+  einzelnes falsches Zeichen (Nachtrag 02.11.2026: am Prüfstand beim Senden als
+  reiner Text bestätigt; der Textteil neben dem HTML-Teil und die Suche sind
+  nicht gemessen)
   ([E-179](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-179)).
 * **Filter mit „doesn't appear“** trifft nur noch die richtigen Nachrichten,
   nicht mehr jede (am Quelltext und im Regressionstest gesichert, am
@@ -37,8 +39,9 @@ veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130.
   in einen IMAP-Ordner überträgt, liegt nicht mehr um die Zeitzone zu früh
   ([E-122](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-122)).
   Beim Verschieben innerhalb eines IMAP-Kontos bleibt das Label erhalten,
-  wenn der Server die neuen Nummern meldet (am laufenden Programm noch nicht
-  gemessen)
+  wenn der Server die neuen Nummern meldet (Nachtrag 02.11.2026, am Prüfstand
+  gemessen: das tat schon 7.2.1.128; meldet der Server sie nicht, geht das
+  Label weiter verloren, 7.2.1.131 schreibt dann nur den Grund ins Protokoll)
   ([E-170](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-170)),
   und Eudora überschreibt im Zielordner nicht mehr Betreff und Absender einer
   fremden Mail mit derselben Nummer
@@ -66,8 +69,8 @@ veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130.
   und beim Schließen einer neuen Nachricht ohne Speichern liest Eudora nicht
   mehr aus schon freigegebenem Speicher
   ([E-176](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-176))
-  — beide am Quelltext und im Regressionstest gesichert, am laufenden
-  Programm noch nicht gemessen.
+  — beide am Quelltext und im Regressionstest gesichert (Nachtrag 02.11.2026:
+  E-141 am Prüfstand bestätigt; E-176 auf dem Prüfstand nicht messbar).
 
 Neu im Repository, nicht im Paket: eine Übersicht, was Eudora kann und wo
 man es findet — Menüs, Tastenkürzel, Einstellungen, Filter
@@ -134,3 +137,5 @@ geschieht **auf eigene Gefahr**.
 Defender meldet Dateien dieses Projekts gelegentlich als Trojaner. Das ist
 ein Fehlalarm ([Einzelheiten](https://github.com/HansWurst81675/Eudora7.2/blob/main/Releases/DEFENDER-FEHLALARM.md));
 gegebenenfalls muss die Datei aus der Quarantäne zurückgeholt werden.
+
+*Die mit „Nachtrag 02.11.2026“ markierten Stellen stehen nur in dieser Datei im Repository ([LEKTOR-134](../../Befunde/LEKTOR-134.md#l-134.1)); der veröffentlichte Text auf GitHub ist unverändert — ob er berichtigt wird, entscheidet Gregor.*

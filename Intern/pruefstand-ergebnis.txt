@@ -1,27 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 18:13:07
+zeit=2026-11-02 18:01:00
 freigabe=Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig.
-faelle=5
+nur=E-179   (Teillauf, nicht der Gesamtstand)
+faelle=1
 bestanden=1
-fehlgeschlagen=4
-fall=[FEHL] E-170p-alt fehlt in messung: kopie-mit-label=1 log-grund=ok lebt=1
-             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
-                         Zeit vom WM_CLOSE bis zum Ende: 1 s
-                         Beendet: True
-                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\messen\tools\TESTLAEUFE.md
-fall=[FEHL] E-170o-alt fehlt in messung: log-grund=keine-neuen-uids
-             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
-                         Zeit vom WM_CLOSE bis zum Ende: 1 s
-                         Beendet: True
-                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\messen\tools\TESTLAEUFE.md
-fall=[FEHL] E-141p-alt fehlt in messung: E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1
-             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
-                         Zeit vom WM_CLOSE bis zum Ende: 1 s
-                         Beendet: True
-                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\messen\tools\TESTLAEUFE.md
-fall=[ ok ] E-141g-alt geloescht=2 lebt=1
-fall=[FEHL] E-179p-alt fehlt in messung: E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1
-             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
-                         Zeit vom WM_CLOSE bis zum Ende: 1 s
-                         Beendet: True
-                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\messen\tools\TESTLAEUFE.md
+fehlgeschlagen=0
+fall=[ ok ] E-179p   E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1
