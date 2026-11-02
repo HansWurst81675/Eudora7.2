@@ -2258,7 +2258,16 @@ CCompMessageDoc* NewCompDocument
 	if (NewCompDoc)
 		NewCompDoc->InitializeNew(To, From, Subject, Cc, Bcc, Attachments, Body, ECHeaders, ResponseType);
 	else
+	{
+		// E-211: oben ist schon auf csPersona umgeschaltet. Ohne das
+		// Zurueckschalten blieb sie die aktuelle Persoenlichkeit, wenn das
+		// Dokument nicht angelegt werden konnte - wie bei E-203 lasen dann
+		// alle Einstellungen zuerst aus ihrem Abschnitt (PRUEFER-88 K4).
+#ifdef COMMERCIAL
+		g_Personalities.SetCurrent( csCurPersona );
+#endif // COMMERCIAL
 		return (NewCompDoc);	// error creating document
+	}
 
 
 	//No need for Persona and stationery in 4.1 Light

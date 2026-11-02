@@ -466,6 +466,18 @@ BOOL ChangePassword()
 		return (FALSE);
 	}
 
+	// E-210: POPAccount kommt aus GetIniString (Puffer 512 Byte, rs.cpp),
+	// Username hat 128. Ein laengeres Konto lief mit strcpy ueber den Stapel
+	// hinaus (PRUEFER-88 K5, Originalbestand). Jetzt gilt es als unbrauchbar -
+	// dieselbe Meldung wie beim Konto ohne "@", und zurueckgeschaltet wird wie
+	// bei E-203.
+	if (strlen(POPAccount) >= sizeof(Username))
+	{
+		ErrorDialog(IDS_ERR_BAD_POP_ACCT, POPAccount);
+		if ( bMultiple )
+			g_Personalities.SetCurrent( OrgPersona );
+		return (FALSE);
+	}
 	strcpy(Username, POPAccount);
 	char *At = strrchr(Username, '@');
 	if (!At || !At[1])

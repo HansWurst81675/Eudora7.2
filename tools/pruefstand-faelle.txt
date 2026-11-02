@@ -399,9 +399,16 @@ E-207p | C:\Temp\E207 | 60 | messung | E207 ERGEBNIS fenster=1 geaendert=1 txt=p
 # Meldung zurueck - der Vorlauf macht E39Zwei nicht mehr zur aktuellen. Aus
 # E-39p (war-aktuell=1) wird deshalb E-203p: dieselbe Messung, jetzt das
 # Urteil ueber E-203. Am Bau 7.2.1.131+f31dbff9 (ohne E-203) war-aktuell=1.
-# Die E-39-Behebung selbst ist ueber die Oberflaeche nicht mehr erreichbar;
-# sie sichert TestE39.cpp.
+# Ueber die Oberflaeche ist kein Weg mehr BEKANNT, der die E-39-Behebung
+# erreicht (durchgesehen ist nur Change Password, PRUEFER-88 K4); sie sichert
+# TestE39.cpp.
 E-203p | C:\Temp\E203 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
+# PRUEFER-88 K1: die Positivproben laufen im SELBEN Start wie E-203p.
+# war-aktuell=0 kommt auch heraus, wenn der Vorlauf gar nicht wirkt (keine
+# Meldung, kein Umschalten) - erst E-203v (die Meldung kam) und E-203w
+# (geloescht wurde wirklich) machen E-203p zu einer Aussage ueber E-203.
+E-203v | C:\Temp\E203 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
+E-203w | C:\Temp\E203 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
 E-39v | C:\Temp\E39 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
 E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
 

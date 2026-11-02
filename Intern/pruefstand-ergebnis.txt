@@ -1,5 +1,5 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 18:44:19
+zeit=2026-11-02 19:23:28
 freigabe=Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig.
 nur=E-204   (Teillauf, nicht der Gesamtstand)
 faelle=2

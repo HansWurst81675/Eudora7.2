@@ -40,7 +40,8 @@
 # Ausgabe:
 #   E204 ERGEBNIS rueckfrage=<0|1> user=<name|-> pass=<alt|neu|leer|anderes|keins> lebt=<0|1>
 # Vorher (Bau 7.2.1.131+f31dbff9): rueckfrage=0 user=e204neu pass=alt.
-# Positivprobe (E204 PROBE ok): Abruf 1 mit Frage und PASS alt, Abruf 2 ohne
+# Positivprobe (E204 PROBE ok): Spurzeile war-aktuell=0 (PRUEFER-88 K3; sonst
+# naehme schon der E-39-Block das Kennwort weg), Abruf 1 mit Frage und PASS alt, Abruf 2 ohne
 # Frage mit PASS alt, nach Yes Abschnitt und Listeneintrag weg, nach dem
 # Assistenten [Persona-E204Zwei] mit LoginName=e204neu da - sonst hat der Lauf
 # den Weg nicht getroffen, und pass=neu waere nichts wert.
@@ -350,6 +351,25 @@ try {
     }
     Write-Output ('E204 geloescht=' + $geloescht)
     if ($geloescht -ne 1) { [void]$probe.Add('loeschen') }
+
+    # PRUEFER-88 K3: war E204Zwei beim Loeschen die aktuelle, naehme schon
+    # der E-39-Block das Kennwort weg, und pass=neu sagte nichts ueber E-204.
+    # Die Spurzeile "E-39 Remove E204Zwei: war-aktuell=<0|1>" (persona.cpp)
+    # muss war-aktuell=0 melden.
+    $warAktuell = '-'
+    $log = Join-Path $md 'eudora.log'
+    $frist = (Get-Date).AddSeconds(10)
+    while ((Get-Date) -lt $frist -and $warAktuell -eq '-') {
+        if (Test-Path -LiteralPath $log) {
+            $fs = [IO.File]::Open($log, 'Open', 'Read', 'ReadWrite')
+            try { $lt = (New-Object IO.StreamReader($fs, $ansi)).ReadToEnd() } finally { $fs.Close() }
+            $m = [regex]::Matches($lt, ('E-39 Remove ' + [regex]::Escape($NAME) + ': war-aktuell=(\d)'))
+            if ($m.Count -gt 0) { $warAktuell = $m[$m.Count - 1].Groups[1].Value }
+        }
+        if ($warAktuell -eq '-') { Start-Sleep -Milliseconds 500 }
+    }
+    Write-Output ('E204 Spur: war-aktuell=' + $warAktuell)
+    if ($warAktuell -ne '0') { [void]$probe.Add('war-aktuell-' + $warAktuell) }
 
     # 4. Neu anlegen ueber den Assistenten
     $angelegt = 0
