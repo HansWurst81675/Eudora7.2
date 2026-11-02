@@ -47,9 +47,9 @@ E-178p	ok	2026-11-02 13:54:36	C:\Temp\E178	Eudora 7.2.1.131+a2f29b69* 2026-11-02
 E-184	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
 E-184m	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
 E-189	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
-E-39p	ok	2026-11-02 16:12:33	C:\Temp\E39	Eudora 7.2.1.131+52013cac 2026-11-02 16:11	E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=1 aktuell-danach=<Dominant> lebt=1
-E-39v	ok	2026-11-02 16:12:33	C:\Temp\E39	Eudora 7.2.1.131+52013cac 2026-11-02 16:11	E39 Vorlauf: kennwort-meldung,vergessen
-E-39w	ok	2026-11-02 16:12:33	C:\Temp\E39	Eudora 7.2.1.131+52013cac 2026-11-02 16:11	E39 PROBE ok
+E-39p	ok	2026-11-02 16:40:17	C:\Temp\E39	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=1 aktuell-danach=<Dominant> lebt=1
+E-39v	ok	2026-11-02 16:40:17	C:\Temp\E39	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E39 Vorlauf: kennwort-meldung,vergessen
+E-39w	ok	2026-11-02 16:40:17	C:\Temp\E39	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E39 PROBE ok
 E-67	ok	2026-11-02 13:54:36	C:\Temp\E67	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	verb-gespeichert=14 verb-auswahl=0
 E-77a	ok	2026-11-02 13:54:36	C:\Temp\E77	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E77 ERGEBNIS roh=0 dekodiert=2
 E-77b	ok	2026-11-02 13:54:36	C:\Temp\E77	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-77 Ordnername: server="Entw&APw-rfe"
