@@ -5844,6 +5844,9 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "Ti&p of the Day",             ID_TIP_OF_THE_DAY
         MENUITEM SEPARATOR
+        MENUITEM "&Keyboard Shortcuts",         ID_HELP_KEYBOARD_SHORTCUTS
+        MENUITEM "Settings Re&ference",         ID_HELP_SETTINGS_REFERENCE
+        MENUITEM SEPARATOR
         MENUITEM "Payment && &Registration",    ID_HELP_PAYMENT_AND_REGISTRATION
 
         MENUITEM "&Insert System Configuration", IDM_SYSTEM_CONFIGURATION
@@ -7356,6 +7359,10 @@ BEGIN
                             "Opens the window for managing signature files\nSignatures"
     ID_CHANGE_PERSONA       "Changes the Personality for the selected message(s)"
     ID_TIP_OF_THE_DAY       "Displays the Tip of the Day dialog"
+    ID_HELP_KEYBOARD_SHORTCUTS
+                            "Shows all keyboard shortcuts in your web browser\nKeyboard shortcuts"
+    ID_HELP_SETTINGS_REFERENCE
+                            "Shows Tools > Options and the Eudora.ini keys in your web browser\nSettings reference"
     ID_CHECK_REG_CODE_FILE  "Checks RegCode.dat for registration number at startup"
     IDC_SIGNATURE_COMBO     "Signature to be appended to the message\nSignature"
     IDC_ENCODING_COMBO      "Attachment encoding\nEncoding"

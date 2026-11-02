@@ -642,6 +642,28 @@ if (Test-Path -LiteralPath $vorgaben -PathType Leaf) {
   Write-Host '   DEudora.ini  FEHLT (Kontovorgaben)' -ForegroundColor Yellow
   Melde-Warnung 'Keine DEudora.ini im Paket. Jedes neu angelegte Konto bekommt dann "If Available, STARTTLS" statt "Required, Alternate Port" und loescht die abgeholten Nachrichten auf dem Server (Leave mail on server ist aus).'
 }
+
+# Hilfeseiten (Help -> Keyboard Shortcuts / Settings Reference, ab 7.2.2).
+# Ob sie gebraucht werden, sagt die EXE selbst: steht der Dateiname in
+# Eudora.exe, oeffnet das Menue ihn - fehlt die Datei, sieht der Anwender
+# nur eine Fehlermeldung. Aeltere Pakete ohne die Menueeintraege werden
+# nicht bemaengelt. Gesucht wird nur der Dateiname: "Hilfe\" und der Name
+# stehen in der EXE als zwei getrennte Zeichenketten (gemessen am
+# Release-Bau vom 02.11.2026; mit "Hilfe\<name>" war die Pruefung blind).
+$exeH = Join-Path $Paket 'Eudora.exe'
+if (Test-Path -LiteralPath $exeH -PathType Leaf) {
+  $exeText = [Text.Encoding]::ASCII.GetString([IO.File]::ReadAllBytes($exeH))
+  foreach ($h in @('Tastenkuerzel.html', 'Einstellungen.html')) {
+    if ($exeText.IndexOf($h) -lt 0) { continue }
+    $hp = Join-Path (Join-Path $Paket 'Hilfe') $h
+    if ((Test-Path -LiteralPath $hp -PathType Leaf) -and (Get-Item -LiteralPath $hp).Length -ge 2000) {
+      Write-Host ("   Hilfe\{0}" -f $h) -ForegroundColor Green
+    } else {
+      Write-Host ("   Hilfe\{0}  FEHLT" -f $h) -ForegroundColor Red
+      Melde-Fehler ("Eudora.exe oeffnet Hilfe\{0} aus dem Menue Help, die Datei fehlt aber im Paket (oder ist kleiner als 2000 Byte). tools\paket-bauen.ps1 erzeugt sie mit tools\hilfe-html.pl." -f $h)
+    }
+  }
+}
 Write-Host ''
 
 # ------------------------------------------------ 5. Bekannte Luecken       --
