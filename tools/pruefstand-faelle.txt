@@ -400,8 +400,9 @@ E-207p | C:\Temp\E207 | 60 | messung | E207 ERGEBNIS fenster=1 geaendert=1 txt=p
 # E-39p (war-aktuell=1) wird deshalb E-203p: dieselbe Messung, jetzt das
 # Urteil ueber E-203. Am Bau 7.2.1.131+f31dbff9 (ohne E-203) war-aktuell=1.
 # Ueber die Oberflaeche ist kein Weg mehr BEKANNT, der die E-39-Behebung
-# erreicht (durchgesehen ist nur Change Password, PRUEFER-88 K4); sie sichert
-# TestE39.cpp.
+# erreicht (PRUEFER-85: alle 97 SetCurrent-Aufrufe innerhalb je einer Funktion
+# durchgesehen, Wege ueber Funktionsgrenzen nicht; offen bleibt der Fehlerfall
+# in DownloadSingleMessage, LEKTOR-135 L-135.3); sie sichert TestE39.cpp.
 E-203p | C:\Temp\E203 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
 # PRUEFER-88 K1: die Positivproben laufen im SELBEN Start wie E-203p.
 # war-aktuell=0 kommt auch heraus, wenn der Vorlauf gar nicht wirkt (keine
@@ -409,8 +410,10 @@ E-203p | C:\Temp\E203 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluesse
 # (geloescht wurde wirklich) machen E-203p zu einer Aussage ueber E-203.
 E-203v | C:\Temp\E203 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
 E-203w | C:\Temp\E203 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
-E-39v | C:\Temp\E39 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
-E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
+# STILLGELEGT am 02.11.2026 (LEKTOR-135 L-135.2): E-39v und E-39w auf
+# C:\Temp\E39 waren die Positivproben zu E-39p. Seit E-39p zu E-203p wurde,
+# sichern sie keinen Fall mehr; dieselbe Messung machen E-203v/E-203w im
+# selben Start wie E-203p (oben). Die Behebung von E-39 sichert TestE39.cpp.
 
 # -------------------------------------------------------------------------
 # E-204 - das Kennwort einer geloeschten Persoenlichkeit im Speicher

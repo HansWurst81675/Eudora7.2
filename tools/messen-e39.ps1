@@ -35,8 +35,10 @@
 # genau die Messung von E-203: Fall E-203p verlangt war-aktuell=0, E-203v und
 # E-203w sind seine Positivproben im selben Start (PRUEFER-88 K1). Damit ist
 # der einzige BEKANNTE Weg ueber die Oberflaeche zur geloeschten "aktuellen"
-# Persoenlichkeit zu - durchgesehen ist nur Change Password (PRUEFER-88 K4);
-# die E-39-Behebung selbst sichert TestE39.cpp.
+# Persoenlichkeit zu - PRUEFER-85 hat alle 97 SetCurrent-Aufrufe innerhalb je
+# einer Funktion durchgesehen, Wege ueber Funktionsgrenzen nicht; offen bleibt
+# der Fehlerfall in DownloadSingleMessage (LEKTOR-135 L-135.3). Die
+# E-39-Behebung selbst sichert TestE39.cpp.
 # Positivprobe (E39 PROBE): der Abschnitt stand vorher da, die Rueckfrage kam,
 # und direkt nach Yes fehlten Abschnitt und Listeneintrag - sonst hat das
 # Loeschen nicht stattgefunden, und abschnitt-wieder=0 waere nichts wert.
