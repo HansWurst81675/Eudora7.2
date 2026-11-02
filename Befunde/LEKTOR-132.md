@@ -149,3 +149,31 @@ Persönliche Angaben: im Diff `456c95e1..HEAD` und in beiden Commit-Nachrichten 
 ## Was nur Gregor entscheiden kann
 
 1. **Sollen die Zweige auf GitHub gelöscht werden, die noch die Datei mit der persönlichen Angabe tragen** ([L-130.1](LEKTOR-130.md#l-130.1): eine Gedächtnisdatei mit einer Angabe, die nicht ins Repo soll)? `origin/hilfe_menue`, `origin/wt/lektor-20261102k`, `origin/wt/pruefer-20261102d`; `main` und dieser Zweig sind frei davon. Unverändert seit [LEKTOR-131](LEKTOR-131.md#lektor-131).
+
+## <a id="nachtrag-02-11-2026"></a>Nachtrag 02.11.2026
+
+Gegengelesen: `git diff affd031c..origin/funktionen_ini_abschnitte` (Stand `90decc23`, *„Merge origin/main (#207, [E-39](../Intern/BEFUNDE.md#e-39)) nach [LEKTOR-132](#lektor-132); [LEKTOR-132](#lektor-132) eingearbeitet“*), Arbeitsbaum vorgespult mit `tools/arbeitsbaum-angleichen.sh`. Nichts gebaut, nichts gestartet.
+
+| Fund | Stand | Stelle (gemessen) |
+|---|---|---|
+| [L-132.1](#l-132.1) Merge mit `e39_persona_loeschen`, `persona.cpp`-Angaben | **erledigt** | `main` (#207) ist hereingeholt; `Doku/FUNKTIONEN.md` nennt `persona.cpp:903-938` (`GetProfileInt` steht auf `:903`, `GetProfileString` endet `:938`), `:958-967` und `:958-1105` (`SavePersonaInfo` auf `:958`) — treffen |
+| [L-132.2](#l-132.2) Testplan, [A-5](../Intern/BEFUNDE.md#a-5), CHANGELOG | **erledigt** | `Intern/TESTPLAN.md` Schritt 3 *„… und am Ende *6. Die Abschnitte der `Eudora.ini`* mit der Liste der Schlüssel, die ein zusätzliches Konto eigens haben kann“*; [A-5](../Intern/BEFUNDE.md#a-5) *„`--selbsttest` 50 Fälle“*, *„171 Zeilen `[Settings]` und 26 …“*; `CHANGELOG.md:124` nennt die Abschnitte und die 46 Schlüssel |
+| [L-132.3](#l-132.3) `[ToolBar-…]` | **erledigt** | `FUNKTIONEN.md:1030-1032`: gewöhnlicher Weg `mainfrm.cpp:5981`/`:2909`, eigene Zeile `[ToolBar-BarID<n>]` (`:1877`), `[ToolBar-Summary]`, `[ToolBar-Bar<n>]` aus der MFC, Weg über die Registry als **unklar** gekennzeichnet |
+| [L-132.4](#l-132.4) alte Abschnitte | **erledigt** | *„aber nur, solange die Datei noch kein `[Settings]` hat; danach werden sie nicht mehr gelesen“*, Bedingung `rs.cpp:1415-1418` |
+| [L-132.5](#l-132.5) `GetParams` | **erledigt** | *„Gelesen werden davon 38 von `GetParams` … `MarkAsDeleted` bildet es dort aus dem Gegenteil von `TransferToTrashOnDelete` (`persona.cpp:431-432`)“* — `:431` *„This is always the opposite of bIMAPXferToTrash.“* trifft |
+| [L-132.6](#l-132.6) „falscher Abschnitt wirkt nicht“ | **erledigt in FUNKTIONEN und EINSTELLUNGEN 1.2/1.3; ein Rest** | `FUNKTIONEN.md` an allen drei Stellen mit der Ausnahme des aktiven Kontos; `EINSTELLUNGEN.md` 1.3 *„Der Abschnitt des Hauptkontos heißt wörtlich `[Settings]` — immer, unabhängig von der Zahl der Persönlichkeiten“*, 1.2 verweist auf FUNKTIONEN Abschnitt 6. Rest: `Intern/EINSTELLUNGEN.md:50-51` (Regel 1.1) sagt weiter ohne Einschränkung *„**Ein Eintrag im falschen Abschnitt wirkt nicht — ohne jede Meldung.**“* — die Ausnahme steht zwei Regeln weiter in 1.3, Kleinkram |
+| [L-132.7](#l-132.7) Perl-Aufruf auf der Anwenderseite | **erledigt** | in den Teilen der Hilfeseiten kein `perl ` mehr; einziger Treffer in `FUNKTIONEN.md` ist `:34` in der Einleitung, die nicht auf die Seiten kommt |
+| [L-132.8](#l-132.8) LDAP | **erledigt** | *„Bei LDAP heißt sie `LDAPinit.ini` und ist nur die **Vorlage** …; vermutlich die Registry … — nicht nachgesehen“*, `config_init.cpp:247-259` |
+
+**Merge-Teile aus `main` auf Verlust geprüft** (gemessen): 13 Dateien sind gleich mit `origin/main` (`88142c78`), darunter `persona.cpp`, `TestE39.cpp`, `messen-e39.ps1`, `pruefstand-faelle.txt`, `LEKTOR-131.md`, `PRUEFER-85.md`, `README.md`, `ZIEL.md`, `WEITERMACHEN.md`, `FAQ.md`. In den übrigen (`CHANGELOG.md`, `FUNKTIONEN.md`, `BEFUNDE.md`, `EINSTELLUNGEN.md`, `TESTPLAN.md`, `WERKZEUGE.md`, `hilfe-html.pl`) fehlt keine Zeile, die `main` gegenüber `456c95e1` neu hat (`comm` über sortierte Zeilen, je 0). Die Änderungen an diesem Bericht in `90decc23` sind nur Verweise auf [LEKTOR-131](LEKTOR-131.md#lektor-131) und die Kennungen, die jetzt im Baum liegen.
+
+### <a id="l-132.9"></a>L-132.9 — Nach #207 heißt `e39_persona_loeschen` weiter „laufend“
+
+**Gewicht: Kleinkram, dieselbe Klasse zum achten Mal** ([L-128.2](LEKTOR-128.md#l-128.2): nach dem Merge bleibt „läuft/Zweig“ stehen). (gemessen; beide Stellen stehen so auch auf `main`)
+
+- `Intern/WEITERMACHEN.md:3` *„Laufend: Zweig `e39_persona_loeschen` ([E-39](../Intern/BEFUNDE.md#e-39) im Quellstand behoben …)“* — `88142c78` ist *„Merge pull request #207 from HansWurst81675/e39_persona_loeschen“*. Der laufende Zweig `funktionen_ini_abschnitte` steht dort nicht.
+- `CHANGELOG.md:118` *„**Zweig `e39_persona_loeschen`, Quellstand weiter 7.2.1.131 — nur übersetzt …**“* — ohne „gemergt als #207“, während der Block darunter (`:122`) *„auf `main` seit #206“* sagt.
+
+**Vorschlag:** *„auf `main` seit #207“* an beiden Stellen, im Stand-Kopf `funktionen_ini_abschnitte` nennen. Die Schranke aus [L-128.2](LEKTOR-128.md#l-128.2) fehlt weiter.
+
+Werkzeuge nach dem Merge: `perl tools/offene-befunde.pl` *„54 offene Befunde, in beiden Listen gleich.“* (mit [E-203](../Intern/BEFUNDE.md#e-203) und [E-204](../Intern/BEFUNDE.md#e-204) aus #207).
