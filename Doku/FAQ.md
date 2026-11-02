@@ -150,9 +150,12 @@ Verschlüsselung für das Konto einstellen
 Post getrennt liegen soll, einen Filter anlegen
 ([FAQ 6](#6-wie-trenne-ich-die-post-verschiedener-konten)).
 
-**Vorsicht beim Löschen:** vor dem Löschen der gerade benutzten
-Persönlichkeit auf eine andere wechseln (bekannter Fehler
-[E-39](../Intern/BEFUNDE.md#e-39) in der README).
+**Löschen:** das gewöhnliche Löschen über *Personalities → Delete* ist
+unbedenklich (am Prüfstand gemessen). Nur wer vorher *Change Password* für
+diese Persönlichkeit aufgerufen und die Fehlermeldung *„I can't tell where the
+machine name is …“* bekommen hat, sollte Eudora vor dem Löschen einmal beenden
+und neu starten — sonst bleibt ein leerer Rest in der `Eudora.ini` (bekannter
+Fehler [E-39](../Intern/BEFUNDE.md#e-39) in der README, behoben ab 7.2.2.132).
 
 *Belegt:* dass der Assistent ohne Windows-Meldung aufgeht, hat Gregor am
 27.10.2026 an 1.0.127 geprüft ([E-160](../Intern/BEFUNDE.md#e-160)); den

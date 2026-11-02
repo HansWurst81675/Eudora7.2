@@ -51,6 +51,9 @@ E-194k	ok	2026-11-02 17:04:02	C:\Temp\E194K	Eudora 7.2.1.131+cecab886* 2026-11-0
 E-194p	ok	2026-11-02 17:04:02	C:\Temp\E194	Eudora 7.2.1.131+cecab886* 2026-11-02 16:58	E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
 E-205p	ok	2026-11-02 17:30:15	C:\Temp\E205	Eudora 7.2.1.131+cecab886* 2026-11-02 16:58	E205 ERGEBNIS neu1=0h neu2=0h q1=0h q2=0h liste1=0h liste2=0h zone=passt lebt=1
 E-207p	ok	2026-11-02 17:27:06	C:\Temp\E207	Eudora 7.2.1.131+dde4db0d* 2026-11-02 17:24	E207 ERGEBNIS fenster=1 geaendert=1 txt=passt htm=passt frage=0 sig=unveraendert lebt=1
+E-39p	ok	2026-11-02 16:40:17	C:\Temp\E39	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=1 aktuell-danach=<Dominant> lebt=1
+E-39v	ok	2026-11-02 16:40:17	C:\Temp\E39	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E39 Vorlauf: kennwort-meldung,vergessen
+E-39w	ok	2026-11-02 16:40:17	C:\Temp\E39	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E39 PROBE ok
 E-67	ok	2026-11-02 13:54:36	C:\Temp\E67	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	verb-gespeichert=14 verb-auswahl=0
 E-77a	ok	2026-11-02 13:54:36	C:\Temp\E77	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E77 ERGEBNIS roh=0 dekodiert=2
 E-77b	ok	2026-11-02 13:54:36	C:\Temp\E77	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-77 Ordnername: server="Entw&APw-rfe"

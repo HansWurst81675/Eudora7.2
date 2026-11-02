@@ -48,7 +48,8 @@ Wer diese fünf kennt, spart sich die meisten Runden.
 `GetSectionID` (`Eudora71/Eudora/rs.cpp:89-97`) teilt vier Bereiche ein:
 bis 10800 `[Settings]`, 10801–10900 `[Debug]`, 10901–11100
 `[Window Position]`, ab 11101 wieder `[Settings]`. **Ein Eintrag im falschen
-Abschnitt wirkt nicht — ohne jede Meldung.** Das ausgearbeitete Beispiel —
+Abschnitt wirkt nicht — ohne jede Meldung** (Ausnahme: im Abschnitt des gerade
+aktiven Kontos, siehe Regel 1.3). Das ausgearbeitete Beispiel —
 der Protokollschalter mit der Nummer 10802 — steht in
 [ANWENDER.md](../Doku/ANWENDER.md), Abschnitt *Mehr ins Protokoll schreiben lassen*.
 Der früher hier genannte Abschnitt *Wo ein Schlüssel stehen muss* ist am
@@ -63,14 +64,15 @@ perl tools/pruefe-ini-abschnitte.pl --tabelle
 **1.2 Gesucht wird in vier Stufen**, und die erste, die etwas liefert,
 gewinnt: Abschnitt der aktiven Persönlichkeit → `Eudora.ini` →
 `DEudora.ini` → eingebauter Wert aus `EudoraRes.rc`
-(`GetIniString`, `rs.cpp:334-346`). Die vollständige Tabelle steht in
-[README.md](../README.md).
+(`GetIniString`, `rs.cpp:334-346`). Ausgeführt, mit allen Abschnitten und
+den Schlüsseln, die ein Konto eigens haben kann:
+[FUNKTIONEN.md, Abschnitt 6](../Doku/FUNKTIONEN.md#6-die-abschnitte-der-eudoraini).
 
-**1.3 Solange es nur eine Persönlichkeit gibt, heißt deren Abschnitt
-wörtlich `[Settings]`** (`persona.cpp:887-903`). Ein dorthin verirrter
-`[Debug]`- oder `[Window Position]`-Schlüssel wird deshalb über Stufe 1
-gefunden und **scheint zu wirken** — bis eine zweite Persönlichkeit aktiv
-wird. Wer so etwas prüft, prüft auf dem gefährlichsten Untergrund.
+**1.3 Der Abschnitt des Hauptkontos heißt wörtlich `[Settings]`** — immer,
+unabhängig von der Zahl der Persönlichkeiten (`persona.cpp:903-938`). Ein
+dorthin verirrter `[Debug]`- oder `[Window Position]`-Schlüssel wird deshalb
+über Stufe 1 gefunden und **scheint zu wirken**, solange das Hauptkonto
+aktiv ist — bis eine zweite Persönlichkeit aktiv wird. Wer so etwas prüft, prüft auf dem gefährlichsten Untergrund.
 
 **1.4 Eudora schreibt Werte selbst zurück**, und zwar in den Abschnitt, der
 zur Nummer gehört (`FlushINIFile`, `rs.cpp:1189`, Abschnitt `:1203`,

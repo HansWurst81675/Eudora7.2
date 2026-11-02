@@ -444,8 +444,10 @@ gebraucht.
    Fassung 7.2.2.132 und der Stand der Vorlage.
 3. *Help → Settings Reference* wählen. **Bestanden:** eine zweite Seite
    *Eudora — Einstellungen und Eudora.ini-Schlüssel* mit je einer Tabelle pro
-   Seite von *Tools → Options* (*Getting Started* bis *Find Messages*) und am
-   Ende die Tabelle der `Eudora.ini`-Schlüssel ohne Optionsseite.
+   Seite von *Tools → Options* (*Getting Started* bis *Find Messages*), danach
+   die Tabelle der `Eudora.ini`-Schlüssel ohne Optionsseite und am Ende
+   *6. Die Abschnitte der `Eudora.ini`* mit der Liste der Schlüssel, die ein
+   zusätzliches Konto eigens haben kann (`[Persona-<Name>]`).
 4. **Gegenprobe:** Eudora beenden, im Paketordner den Ordner `Hilfe` in
    `Hilfe-weg` umbenennen, Eudora wieder starten, *Help → Keyboard Shortcuts*
    wählen. **Bestanden:** eine Meldung *The help page Tastenkuerzel.html could
