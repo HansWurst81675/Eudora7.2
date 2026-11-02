@@ -1,6 +1,6 @@
 # <a id="pruefer-85"></a>PRUEFER-85
 
-Lauf nach PRUEFER-84 (liegt auf `wt/pruefer-20261102d`, noch nicht auf `main`). Geprüft wurde `253a8a40..HEAD -- Eudora71 tools Releases/1.0` auf Zweig wt/pruefer-20261102e (von `origin/e39_persona_loeschen`). Inhaltlich sind das 7e38b87b (ZWEIGE), fd216aa2 (Messskript), 6e7d3252 (Behebung und Test) und cf126b0d (Prüfstandsfälle, Doku). Schwerpunkt ist [E-39](../Intern/BEFUNDE.md#e-39): `CPersonality::Remove` in `persona.cpp`, der Auslöser `ChangePassword` in `password.cpp`, `TestE39.cpp`, `tools/messen-e39.ps1` und die Fälle `E-39p`/`E-39v`/`E-39w`. Eudora habe ich weder gebaut noch gestartet. `C:\Temp\E39` und `C:\Temp\E39-alt` habe ich nur gelesen.
+Lauf nach [PRUEFER-84](PRUEFER-84.md#pruefer-84) (liegt auf `wt/pruefer-20261102d`, noch nicht auf `main`). Geprüft wurde `253a8a40..HEAD -- Eudora71 tools Releases/1.0` auf Zweig wt/pruefer-20261102e (von `origin/e39_persona_loeschen`). Inhaltlich sind das 7e38b87b (ZWEIGE), fd216aa2 (Messskript), 6e7d3252 (Behebung und Test) und cf126b0d (Prüfstandsfälle, Doku). Schwerpunkt ist [E-39](../Intern/BEFUNDE.md#e-39): `CPersonality::Remove` in `persona.cpp`, der Auslöser `ChangePassword` in `password.cpp`, `TestE39.cpp`, `tools/messen-e39.ps1` und die Fälle `E-39p`/`E-39v`/`E-39w`. Eudora habe ich weder gebaut noch gestartet. `C:\Temp\E39` und `C:\Temp\E39-alt` habe ich nur gelesen.
 
 ## Ergebnis vorweg
 
