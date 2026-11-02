@@ -112,3 +112,18 @@ Gegenüber [LEKTOR-122](LEKTOR-122.md#lektor-122) ist [E-143](../Intern/BEFUNDE.
 ## Was nur Gregor entscheiden kann
 
 - Den PR für `test_1130_ergebnisse` gequetscht mergen (*Squash and merge*), damit Freigabepfad und Dateinamen aus `1c75f5c3` nicht in die Geschichte von `main` kommen ([L-123.4](#l-123.4))? Bisher wurde mit Merge-Commit gemergt; gemergt wird nur von Gregor.
+
+## <a id="nachtrag-02-11-2026"></a>Nachtrag 02.11.2026
+
+Gegengelesen: `git diff 6aeac4cf..origin/test_1130_ergebnisse` (ein Commit `f4f9116f`, fünf Dateien), nach `tools/arbeitsbaum-angleichen.sh`. Alle sechs Funde sind erledigt (gemessen):
+
+| Fund | Stand | Stelle |
+|---|---|---|
+| [L-123.1](#l-123.1) [E-140](../Intern/BEFUNDE.md#e-140) „zweite Datei“ | erledigt | `Intern/BEFUNDE.md:429` jetzt *„seine erste (23:12) Datei kam aus der Postfachliste“* |
+| [L-123.2](#l-123.2) TESTPLAN zu [E-194](../Intern/BEFUNDE.md#e-194) | erledigt | `Intern/TESTPLAN.md:175` *„(`<x-flowed>` in der Datei aus der Postfachliste)“* |
+| [L-123.3](#l-123.3) [E-143](../Intern/BEFUNDE.md#e-143) Restsätze | erledigt | `Intern/BEFUNDE.md:395` *„**Suchfenster:** … nicht Teil der Entscheidung vom 01.11.2026, entschieden am 02.11.2026“*, *„**Was noch fehlt:** der Filterteil ist am Programm gemessen … bis auf das Übergehen eines alten Out-Filters beim Abruf; das Suchfenster ist entschieden (ein Hinweis je Übertragung) und noch einzubauen.“*; die erzeugten Zeilen in `Intern/WEITERMACHEN.md` und `CHANGELOG.md` ziehen mit |
+| [L-123.4](#l-123.4) Namen in `1c75f5c3` | erledigt durch Entscheidung | laut Hauptagent hat Gregor *Squash and merge* für diesen PR bestätigt (belegt nur durch die Nachricht des Hauptagenten); im Stand weiter 0 Treffer |
+| [L-123.5](#l-123.5) README-Zahl | erledigt | `README.md:98-99` *„200 LEKTOR- und PRÜFER-Berichte … am 02.11.2026 mit `git ls-files` gezählt“*; 122 LEKTOR + 78 PRÜFER = 200 (gemessen) |
+| [L-123.6](#l-123.6) [E-195](../Intern/BEFUNDE.md#e-195) Aufrufer | erledigt | `Intern/BEFUNDE.md:400` *„`ReadMessageDoc.cpp:597` und `PgReadMsgView.cpp:620`, außerdem `Trnslate.cpp:1964`/`:2106`; die Filteraktion `filtersd.cpp:2113` legt die Datei ohne Dialog an“* |
+
+Zur Kenntnis, kein Fund: `DSPrintEdit.cpp:102` (Verzeichnisdienste) fehlt in der Aufruferliste von [E-195](../Intern/BEFUNDE.md#e-195). Das neue Zähldatum der README gilt auch für die *„124 Lehren“*. Mein Filter (`.md` unter `Arbeitsweise/` ohne `stand-`, `CHRONIST`, `entscheidung`, `README`) zählt 125. Ob der README-Filter derselbe ist, habe ich nicht geprüft (Vermutung: eine Lehre seit dem 01.11.).

@@ -3025,3 +3025,5 @@ Nachtrag LEKTOR-121 (7b41c8d7 gegengelesen): [E-192](BEFUNDE.md#e-192) nennt fü
 - Freigabepfad und Dateinamen stehen weiter in `1c75f5c3`; mit einem Merge-Commit kämen sie in die Geschichte von `main` ([L-123.4](../Befunde/LEKTOR-123.md#l-123.4)).
 - README-Zahl der Prüfberichte von Hand auf 199 gesetzt, Zähldatum nicht; mit diesem Bericht 200 ([L-123.5](../Befunde/LEKTOR-123.md#l-123.5)).
 - [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext) nennt die übrigen Aufrufer von `CSaveAs` nicht ([L-123.6](../Befunde/LEKTOR-123.md#l-123.6)).
+
+Nachtrag LEKTOR-123 (f4f9116f gegengelesen): alle sechs Reste erledigt. E-140 nennt die erste Datei, der TESTPLAN führt E-194 bei der Postfachliste, E-143 sagt „gemessen bis auf das Übergehen, Suchfenster entschieden und noch einzubauen“, E-195 nennt die Aufrufer von `CSaveAs`, README 200 Berichte; die Namen in `1c75f5c3` verschwinden mit *Squash and merge* (laut Hauptagent von Gregor bestätigt).
