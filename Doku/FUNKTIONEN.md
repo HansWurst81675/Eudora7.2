@@ -45,7 +45,8 @@ sich aus dem Namen ohne Raten sagen lässt.
 3. [*Tools → Options*](#3-tools--options)
 4. [Filter: Zeitpunkte, Bedingungen, Aktionen](#4-filter-zeitpunkte-bedingungen-aktionen)
 5. [`Eudora.ini`-Schlüssel ohne Optionsseite](#5-eudoraini-schlüssel-ohne-optionsseite)
-6. [Zum Bestätigen durch Gregor](#zum-bestätigen-durch-gregor)
+6. [Die Abschnitte der `Eudora.ini`](#6-die-abschnitte-der-eudoraini)
+7. [Zum Bestätigen durch Gregor](#zum-bestätigen-durch-gregor)
 
 ---
 
@@ -312,8 +313,9 @@ weitere `ACCELERATORS`-Ressource. Die Tabelle hängt am Hauptfenster und gilt
 deshalb überall; Windows reicht den Befehl an das gerade aktive Fenster
 weiter, und **wirken** kann er nur dort, wo ein Fenster ihn behandelt. Die
 Spalte *wo es gilt* ist daraus abgeleitet: aus den Quelldateien, die den
-Befehl per `ON_COMMAND` behandeln (`perl tools/funktionen-auslesen.pl --kuerzel`
-listet sie je Zeile). Dazu kommen Kürzel, die **nur im Menütext** stehen
+Befehl per `ON_COMMAND` behandeln (für Entwickler: das Werkzeug
+`funktionen-auslesen.pl` im Projektordner `tools`, siehe
+[WERKZEUGE.md](../tools/WERKZEUGE.md), listet sie je Zeile). Dazu kommen Kürzel, die **nur im Menütext** stehen
 (hinter dem Tabulator, etwa *Delete*`\tDel`) — die behandelt das Fenster
 selbst, nicht die Tabelle.
 
@@ -469,11 +471,16 @@ folgen drei Regeln für die Tabellen:
   der gewählte steht auf `1`, die anderen auf `0`.
 * Der **Abschnitt** der `Eudora.ini`, in dem der Schlüssel steht, ist in
   der Spalte *Abschnitt* genannt (aus der Kennung gelesen, `GetSectionID`
-  in `rs.cpp`); auf den Optionsseiten ist es überall `[Settings]` — außer
-  bei einem Konto, das nicht das Hauptkonto ist: dort steht der Wert im
-  Abschnitt der Persönlichkeit
-  ([EINSTELLUNGEN.md, Regel 1.2](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
-  Ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung.
+  in `rs.cpp`). Auf den Optionsseiten ist das `[Settings]`. Steht dort
+  „`[Settings]` bzw. `[Persona-<Name>]`“, kann jedes **zusätzliche** Konto
+  den Schlüssel eigens haben: er steht dann im Abschnitt dieses Kontos und
+  wird über dessen Kontoeinstellungen (*Tools → Personalities*, Rechtsklick
+  → *Properties*) gesetzt, nicht über *Tools → Options* — die Optionsseiten
+  schreiben in `[Settings]`, also für das Hauptkonto. Welche Schlüssel das
+  sind und woher die Liste stammt:
+  [Abschnitt 6](#was-ein-zusätzliches-konto-eigens-haben-kann).
+  Ein Eintrag, der weder im Abschnitt seiner Nummer noch in dem des aktiven
+  Kontos steht, wirkt nicht, ohne Meldung.
 
 **Vorgabe** ist der eingebaute Wert aus `EudoraRes.rc`. Wo die `DEudora.ini`
 des Pakets für **neu angelegte** Mailverzeichnisse etwas anderes vorgibt,
@@ -488,24 +495,24 @@ auch auf *Checking Mail* und *Sending Mail*.
 
 | Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
 |---|---|---|---|---|---|
-| *Real name* | `RealName` | `[Settings]` | | Ihr Name im Absender | Vorlage |
-| *Email address* | `ReturnAddress` | `[Settings]` | | Ihre Absenderadresse | Vorlage |
-| *Mail Server (Incoming)* | `PopServer` | `[Settings]` | | Server für den Abruf | Vorlage |
-| *User Name* | `LoginName` | `[Settings]` | | Anmeldename beim Abruf | Vorlage |
-| *SMTP Server (Outgoing)* | `SMTPServer` | `[Settings]` | | Server für den Versand | Vorlage |
-| *Allow authentication* | `SmtpAuthAllowed` | `[Settings]` | `1` | Anmeldung beim Versandserver erlauben | Vorlage |
+| *Real name* | `RealName` | `[Settings]` bzw. `[Persona-<Name>]` | | Ihr Name im Absender | Vorlage |
+| *Email address* | `ReturnAddress` | `[Settings]` bzw. `[Persona-<Name>]` | | Ihre Absenderadresse | Vorlage |
+| *Mail Server (Incoming)* | `PopServer` | `[Settings]` bzw. `[Persona-<Name>]` | | Server für den Abruf | Vorlage |
+| *User Name* | `LoginName` | `[Settings]` bzw. `[Persona-<Name>]` | | Anmeldename beim Abruf | Vorlage |
+| *SMTP Server (Outgoing)* | `SMTPServer` | `[Settings]` bzw. `[Persona-<Name>]` | | Server für den Versand | Vorlage |
+| *Allow authentication* | `SmtpAuthAllowed` | `[Settings]` bzw. `[Persona-<Name>]` | `1` | Anmeldung beim Versandserver erlauben | Vorlage |
 
 ### Checking Mail
 
 | Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
 |---|---|---|---|---|---|
-| *Mail Server* | `PopServer` | `[Settings]` | | Server für den Abruf | Vorlage |
-| *User Name* | `LoginName` | `[Settings]` | | Anmeldename | Vorlage |
+| *Mail Server* | `PopServer` | `[Settings]` bzw. `[Persona-<Name>]` | | Server für den Abruf | Vorlage |
+| *User Name* | `LoginName` | `[Settings]` bzw. `[Persona-<Name>]` | | Anmeldename | Vorlage |
 | *Check for mail every … minute(s)* | `CheckForMailEvery` | `[Settings]` | `0` | Abstand des automatischen Abrufs; `0` = kein automatischer Abruf (`eudora.cpp:2607-2621`) | Vorlage |
 | *Don't check without a network connection* | `DontCheckUnconnected` | `[Settings]` | `0` | automatischen Abruf auslassen, solange keine Netzverbindung besteht | Vorlage |
 | *Don't check when using battery* | `DonotCheckWithBattery` | `[Settings]` | `0` | automatischen Abruf im Akkubetrieb auslassen | Vorlage |
 | *Send on check* | `SendOnCheck` | `[Settings]` | `1` | beim Abruf die wartende Post mit verschicken | Vorlage |
-| *Secure Sockets when Receiving* | `SSLReceiveUse` | `[Settings]` | `1` (neu: `2`) | Verschlüsselung beim Abruf: `0` nie, `1` falls verfügbar, `2` erforderlich auf eigenem Port (995), `3` erforderlich über STARTTLS ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich)) | **bestätigt** ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich), 06.09.2026: Port 995, TLSv1.3) |
+| *Secure Sockets when Receiving* | `SSLReceiveUse` | `[Settings]` bzw. `[Persona-<Name>]` | `1` (neu: `2`) | Verschlüsselung beim Abruf: `0` nie, `1` falls verfügbar, `2` erforderlich auf eigenem Port (995), `3` erforderlich über STARTTLS ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich)) | **bestätigt** ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich), 06.09.2026: Port 995, TLSv1.3) |
 | Knopf *Last SSL Info* | — | | | zeigt, wie die letzte Abrufverbindung verschlüsselt war ([FAQ 3](FAQ.md#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist)) | **bestätigt** ([FAQ 3](FAQ.md#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist), 06.09.2026) |
 
 ### Incoming Mail
@@ -514,38 +521,38 @@ Die Seite zeigt je nach Wahl von *POP* oder *IMAP* andere Felder.
 
 | Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
 |---|---|---|---|---|---|
-| *Server configuration:* *POP* / *IMAP* | `UsesPOP` / `UsesIMAP` | `[Settings]` | `1` / `0` | Abrufverfahren des Kontos | Vorlage |
-| *Leave mail on server* (POP) | `LeaveMailOnServer` | `[Settings]` | `0` (neu: `1`) | abgeholte Post auf dem Server lassen | Vorlage |
-| *Delete from server after … day(s)* (POP) | `DeleteMailFromServer`, Tage `LeaveOnServerDays` | `[Settings]` | `0`, `0` | auf dem Server gelassene Post nach so vielen Tagen löschen | Vorlage |
-| *Delete from server when emptied from Trash* (POP) | `ServerDelete` | `[Settings]` | `0` | beim Leeren des Papierkorbs auch auf dem Server löschen | Vorlage |
-| *Skip messages over … K in size* (POP) | `SkipBigMessages`, Grenze `BigMessageThreshold` | `[Settings]` | `0`, `40960` | große Nachrichten nur anlesen | Vorlage |
-| *IMAP Mailbox Location Prefix* (IMAP) | `ImapDirectoryPrefix` | `[Settings]` | | Wurzel der Ordner auf dem IMAP-Server | Vorlage |
-| *For new mail, download:* *Minimal headers only* / *Full message except attachments over … K* (IMAP) | `IMAPMinDownload` / `IMAPOmitAttachments`, Grenze `IMAPMaxDownloadSize` | `[Settings]` | `1` / `0`, `0` | wie viel einer neuen IMAP-Nachricht sofort geholt wird | Vorlage |
-| *When I delete a message:* *Mark it as deleted* / *Move it to:* (IMAP) | `MarkAsDeleted` / `TransferToTrashOnDelete`, Ziel `TrashMailboxName` | `[Settings]` | `1` / `0`, `Trash` | Löschen nur markieren (dann [FAQ 5](FAQ.md#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt)) oder in einen Papierkorbordner verschieben | Vorlage |
+| *Server configuration:* *POP* / *IMAP* | `UsesPOP` / `UsesIMAP` | `[Settings]` bzw. `[Persona-<Name>]` | `1` / `0` | Abrufverfahren des Kontos | Vorlage |
+| *Leave mail on server* (POP) | `LeaveMailOnServer` | `[Settings]` bzw. `[Persona-<Name>]` | `0` (neu: `1`) | abgeholte Post auf dem Server lassen | Vorlage |
+| *Delete from server after … day(s)* (POP) | `DeleteMailFromServer`, Tage `LeaveOnServerDays` | `[Settings]` bzw. `[Persona-<Name>]` | `0`, `0` | auf dem Server gelassene Post nach so vielen Tagen löschen | Vorlage |
+| *Delete from server when emptied from Trash* (POP) | `ServerDelete` | `[Settings]` bzw. `[Persona-<Name>]` | `0` | beim Leeren des Papierkorbs auch auf dem Server löschen | Vorlage |
+| *Skip messages over … K in size* (POP) | `SkipBigMessages`, Grenze `BigMessageThreshold` | `[Settings]` bzw. `[Persona-<Name>]` | `0`, `40960` | große Nachrichten nur anlesen | Vorlage |
+| *IMAP Mailbox Location Prefix* (IMAP) | `ImapDirectoryPrefix` | `[Settings]` bzw. `[Persona-<Name>]` | | Wurzel der Ordner auf dem IMAP-Server | Vorlage |
+| *For new mail, download:* *Minimal headers only* / *Full message except attachments over … K* (IMAP) | `IMAPMinDownload` / `IMAPOmitAttachments`, Grenze `IMAPMaxDownloadSize` | `[Settings]` bzw. `[Persona-<Name>]` | `1` / `0`, `0` | wie viel einer neuen IMAP-Nachricht sofort geholt wird | Vorlage |
+| *When I delete a message:* *Mark it as deleted* / *Move it to:* (IMAP) | `MarkAsDeleted` / `TransferToTrashOnDelete`, Ziel `TrashMailboxName` | `[Settings]` bzw. `[Persona-<Name>]` | `1` / `0`, `Trash` | Löschen nur markieren (dann [FAQ 5](FAQ.md#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt)) oder in einen Papierkorbordner verschieben | Vorlage |
 | *Offline* | `Offline` | `[Settings]` | `0` | ohne Verbindung arbeiten; kein automatischer Abruf | Vorlage |
-| *Authentication style:* *Passwords* / *Kerberos* / *APOP* / *RPA* | `AuthenticatePassword` / `AuthenticateKerberos` / `AuthenticateAPOP` / `AuthenticateRPA` | `[Settings]` | `1` / `0` / `0` / `0` | Anmeldeverfahren beim Abruf | Vorlage |
+| *Authentication style:* *Passwords* / *Kerberos* / *APOP* / *RPA* | `AuthenticatePassword` / `AuthenticateKerberos` / `AuthenticateAPOP` / `AuthenticateRPA` | `[Settings]` bzw. `[Persona-<Name>]` | `1` / `0` / `0` / `0` | Anmeldeverfahren beim Abruf | Vorlage |
 
 ### Sending Mail
 
 | Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
 |---|---|---|---|---|---|
-| *Email address* | `ReturnAddress` | `[Settings]` | | Absenderadresse | Vorlage |
-| *Domain to add to unqualified addresses* | `DomainQualifier` | `[Settings]` | | wird an Adressen ohne `@…` angehängt | Vorlage |
-| *SMTP server* | `SMTPServer` | `[Settings]` | | Versandserver | Vorlage |
+| *Email address* | `ReturnAddress` | `[Settings]` bzw. `[Persona-<Name>]` | | Absenderadresse | Vorlage |
+| *Domain to add to unqualified addresses* | `DomainQualifier` | `[Settings]` bzw. `[Persona-<Name>]` | | wird an Adressen ohne `@…` angehängt | Vorlage |
+| *SMTP server* | `SMTPServer` | `[Settings]` bzw. `[Persona-<Name>]` | | Versandserver | Vorlage |
 | *SMTP Relay Personality* | `RelayPersona` | `[Settings]` | | über welches Konto verschickt wird | Vorlage |
-| *Allow authentication* | `SmtpAuthAllowed` | `[Settings]` | `1` | Anmeldung beim Versandserver erlauben | Vorlage |
+| *Allow authentication* | `SmtpAuthAllowed` | `[Settings]` bzw. `[Persona-<Name>]` | `1` | Anmeldung beim Versandserver erlauben | Vorlage |
 | *Immediate send* | `ImmediateSend` | `[Settings]` | `1` | *Send* verschickt sofort statt nur nach *Out* zu stellen | Vorlage |
 | *Send on check* | `SendOnCheck` | `[Settings]` | `1` | wie auf *Checking Mail* | Vorlage |
-| *Use submission port (587)* | `UseSubmissionPort` | `[Settings]` | `0` | Port 587 statt 25 | Vorlage |
-| *Secure Sockets when Sending* | `SSLSendUse` | `[Settings]` | `1` (neu: `2`) | Verschlüsselung beim Versand, Werte wie beim Abruf; `2` = eigener Port 465 ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich)) | Vorlage |
+| *Use submission port (587)* | `UseSubmissionPort` | `[Settings]` bzw. `[Persona-<Name>]` | `0` | Port 587 statt 25 | Vorlage |
+| *Secure Sockets when Sending* | `SSLSendUse` | `[Settings]` bzw. `[Persona-<Name>]` | `1` (neu: `2`) | Verschlüsselung beim Versand, Werte wie beim Abruf; `2` = eigener Port 465 ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich)) | Vorlage |
 | Knopf *Last SSL Info* | — | | | zeigt die Verschlüsselung der letzten Versandverbindung | Vorlage |
 
 ### Composing Mail
 
 | Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
 |---|---|---|---|---|---|
-| *Default Stationery* | `Stationery` | `[Settings]` | | Briefpapier für neue Nachrichten | Vorlage |
-| *Signature* | `Signature` | `[Settings]` | | Standardsignatur | Vorlage |
+| *Default Stationery* | `Stationery` | `[Settings]` bzw. `[Persona-<Name>]` | | Briefpapier für neue Nachrichten | Vorlage |
+| *Signature* | `Signature` | `[Settings]` bzw. `[Persona-<Name>]` | | Standardsignatur | Vorlage |
 | *Word wrap* | `WordWrap` | `[Settings]` | `1` | Zeilen beim Schreiben umbrechen | Vorlage |
 | *Keep copies* | `KeepCopies` | `[Settings]` | `1` | verschickte Nachrichten in *Out* behalten | Vorlage |
 | *May use quoted-printable* | `UseQP` | `[Settings]` | `1` | Kodierung *quoted-printable* erlauben | Vorlage |
@@ -925,8 +932,8 @@ gespeichert wird beim Verlassen des Fensters nach Rückfrage
 
 ## 5. `Eudora.ini`-Schlüssel ohne Optionsseite
 
-Die Ressourcendatei kennt **842** `IDS_INI_…`-Schlüssel (gezählt mit
-`perl tools/funktionen-auslesen.pl --zaehlen`); 284 davon stehen auf einer
+Die Ressourcendatei kennt **842** `IDS_INI_…`-Schlüssel (gezählt am
+Quelltext mit `funktionen-auslesen.pl`, [WERKZEUGE.md](../tools/WERKZEUGE.md)); 284 davon stehen auf einer
 Optionsseite. Aufgenommen ist hier nur, was **mindestens eine** dieser
 Bedingungen erfüllt:
 
@@ -937,13 +944,16 @@ Bedingungen erfüllt:
 
 Nicht aufgenommen: Fensterpositionen, Spaltenbreiten, Zähler und die vielen
 Schlüssel, die Eudora selbst schreibt. Wer einen bestimmten Schlüssel sucht:
-`perl tools/funktionen-auslesen.pl --ini <Name>`.
+die maßgeblichen Namen und Vorgaben stehen in `Eudora71/Eudora/EudoraRes.rc`
+im Format `IDS_INI_… "Name\nVorgabe"` ([EINSTELLUNGEN.md, Regel 1.5](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
 
 **Bevor man etwas einträgt:** Eudora beenden — beim Beenden schreibt es die
 Datei zurück. Der **Abschnitt** ergibt sich aus der Nummer, nicht aus dem
-Namen, und ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung
+Namen, und ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung —
+außer er steht zufällig im Abschnitt des gerade aktiven Kontos
+([Abschnitt 6](#in-welcher-reihenfolge-eudora-sucht)). Welcher Abschnitt
+richtig ist, sagt die Spalte *Abschnitt* in den Tabellen
 ([EINSTELLUNGEN.md, Regel 1.1](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
-`perl tools/pruefe-ini-abschnitte.pl --was <Name>` sagt ihn an.
 
 | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
 |---|---|---|---|---|
@@ -962,7 +972,7 @@ Namen, und ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung
 | `MessageStyleSheet` | `[Settings]` | eingebautes Stylesheet | Aussehen der Nachrichtenansicht; eine `read.css` neben `Eudora.exe` ersetzt es ganz ([EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md#3-schalter-ohne-menüpunkt), [E-81](../Intern/BEFUNDE.md#e-81), *Kopfzeilen schwarz auf schwarz*) | Vorlage |
 | `RemoveChangePassword` | `[Settings]` | `1` | blendet *Special → Change Password…* aus; mit `0` erscheint der Eintrag (`mainfrm.cpp:8487-8488`) | Vorlage |
 | `DisableStatistics` | `[Settings]` | `0` | mit `1` ist *Tools → Statistics* grau (`mainfrm.cpp:10623-10625`) | Vorlage |
-| `AccountDir` | `[Settings]` bzw. Abschnitt des Kontos | | Unterverzeichnis eines IMAP-Kontos im Mailverzeichnis; fehlt das Verzeichnis, tut IMAP nichts ([EINSTELLUNGEN.md, 2.2](../Intern/EINSTELLUNGEN.md#2-beim-einrichten-und-beim-umsteigen-auf-eine-neue-fassung)) | Vorlage |
+| `AccountDir` | `[Settings]` bzw. `[Persona-<Name>]` | | Unterverzeichnis eines IMAP-Kontos im Mailverzeichnis; fehlt das Verzeichnis, tut IMAP nichts ([EINSTELLUNGEN.md, 2.2](../Intern/EINSTELLUNGEN.md#2-beim-einrichten-und-beim-umsteigen-auf-eine-neue-fassung)) | Vorlage |
 | `Mode` | `[Settings]` | `-1` | Betriebsart; `1` wäre *Light* (keine Werbung, dafür weniger Funktionen, siehe oben). **Nicht nachgemessen** — nicht ohne Not ändern ([AN-2](../Intern/BEFUNDE.md#an-2), *Werbeabruf beim Start*) | Vorlage |
 | `UseMyFilterWindowPosition` | `[Window Position]` | `0` (neu: `1`) | die Breite der linken Spalte im Filterfenster überlebt den Neustart nur mit `1` | Vorlage |
 | `FloatCx<id>`, `FloatCy<id>` | `[ToolBar-ToolBarManager]` | kein Eintrag | **gibt es nur hier**: Größe eines losgerissenen Fensters über den Neustart ([E-84](../Intern/BEFUNDE.md#e-84)) | Vorlage |
@@ -970,6 +980,107 @@ Namen, und ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung
 Die Abweichungen dieser Portierung vom Original stehen vollständig an einer
 Stelle: [EINSTELLUNGEN.md, *Was hier anders eingestellt ist als im Original*](../Intern/EINSTELLUNGEN.md#abweichungen).
 Die rund 40 Filter- und Junk-Schlüssel: [FILTER.md, *Die Einstellungen in der `Eudora.ini`*](../Intern/FILTER.md#die-einstellungen-in-der-eudoraini).
+
+---
+
+## 6. Die Abschnitte der `Eudora.ini`
+
+Die `Eudora.ini` im Mailverzeichnis ist in Abschnitte geteilt, jeder beginnt
+mit einer Zeile in eckigen Klammern. **Nicht alles steht in `[Settings]`.**
+
+### In welcher Reihenfolge Eudora sucht
+
+Für jeden Schlüssel mit einer `IDS_INI_…`-Nummer fragt Eudora nacheinander
+(`rs.cpp:449-464`) und nimmt den ersten Treffer:
+
+1. den Abschnitt der **gerade aktiven Persönlichkeit** — beim Hauptkonto
+   (`<Dominant>`) ist das `[Settings]`, sonst `[Persona-<Name>]`
+   (`persona.cpp:903-938`);
+2. den Abschnitt, der zur **Nummer** des Schlüssels gehört, in der
+   `Eudora.ini` (siehe Tabelle unten);
+3. denselben Abschnitt in der **`DEudora.ini`** neben `Eudora.exe`;
+4. den eingebauten Wert aus `EudoraRes.rc` (`rs.cpp:461-464`).
+
+Daraus folgt: ein Schlüssel, der in `[Debug]` gehört, aber in `[Settings]`
+steht, wird über Stufe 1 gefunden und **scheint zu wirken, solange nur das
+Hauptkonto aktiv ist** — bis ein zweites Konto die Arbeit übernimmt
+([EINSTELLUNGEN.md, Regel 1.3](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
+Sonst wirkt ein Eintrag im falschen Abschnitt nicht, und Eudora meldet
+nichts: gefunden wird er nur im Abschnitt des aktiven Kontos oder in dem,
+der zu seiner Nummer gehört. Welcher das ist, sagt die Spalte *Abschnitt* in
+den Tabellen oben.
+
+**Geschrieben** wird so: *Tools → Options* schreibt in den Abschnitt, der zur
+Nummer gehört (`FlushINIFile`, `rs.cpp:1257`) — außer `SavePassword` und
+`SavePasswordText`, die in den Abschnitt der aktiven Persönlichkeit gehen
+(`rs.cpp:1238-1252`). Die Kontoeinstellungen eines Kontos schreiben in
+dessen Abschnitt, beim Hauptkonto in `[Settings]` (`SavePersonaInfo`,
+`persona.cpp:958-967`).
+
+### Die Abschnitte
+
+| Abschnitt | was darin steht | Fundstelle | Herkunft |
+|---|---|---|---|
+| `[Settings]` | fast alle Schlüssel: die Nummern bis 10800 und ab 11101 — und zugleich die Kontoeinstellungen des **Hauptkontos** | `GetSectionID`, `rs.cpp:89-97`; Hauptkonto `persona.cpp:903-938` | Vorlage |
+| `[Debug]` | die Nummern 10801 bis 10900, etwa `LogLevel`, `LogFileName`, `LogFileSize` ([FAQ 17](FAQ.md#17-wie-schreibt-eudora-mehr-ins-protokoll-loglevel)) | `rs.cpp:95-96` | Vorlage |
+| `[Window Position]` | die Nummern 10901 bis 11100: Fensterpositionen und -größen, dazu `UseMyFilterWindowPosition` | `rs.cpp:93-94` | Vorlage |
+| `[Personalities]` | die Liste der **zusätzlichen** Konten, je Zeile `Persona0=Persona-<Name>`, `Persona1=…` | `persona.cpp:79-90` (Abschnittsname `IDS_PERSONALITIES`, `EudoraRes.rc:8007`) | Vorlage |
+| `[Persona-<Name>]` | je zusätzliches Konto ein Abschnitt; `<Name>` wie unter *Tools → Personalities*. Das Hauptkonto hat keinen, es benutzt `[Settings]` | `persona.cpp:52` (`"Persona-"`, mit Bindestrich), `:876-911` | Vorlage |
+| `[Mappings]` | Zuordnung Dateiendung ↔ Dateityp für Anhänge; gelesen aus der `Eudora.ini`, sonst aus der `DEudora.ini`. Das Paket bringt 124 Zeilen mit ([EINSTELLUNGEN.md, 2.3](../Intern/EINSTELLUNGEN.md#2-beim-einrichten-und-beim-umsteigen-auf-eine-neue-fassung)) | `MIMEMap.cpp:253-268` | Vorlage |
+| `[ToolBar-ToolBarManager]` | Zustand der Werkzeugleisten; dazu in dieser Portierung `FloatCx<id>`, `FloatCy<id>` für losgerissene Fenster ([E-84](../Intern/BEFUNDE.md#e-84)) | beim Beenden `SaveBarState("ToolBar")` (`mainfrm.cpp:5981`, `CMainFrame::SaveBarState` `:2909`); Name `mainfrm.cpp:1095` und `OTShim_Werkzeugleiste.cpp:4336` (`"%s-ToolBarManager"`) | Vorlage |
+| `[ToolBar-BarID<n>]` | eigene Schaltflächen einer Werkzeugleiste (`CustomButtonCount`), je Leiste | `mainfrm.cpp:1877` (`"%s-BarID%lu"`) | Vorlage |
+| `[ToolBar-Summary]`, `[ToolBar-Bar<n>]` | Lage der angedockten Leisten; diese Namen bildet die MFC-Bibliothek (`dockstat.cpp`: `"%Ts-Summary"`, `"%Ts-Bar%d"`, in der MFC-Quelle von Visual Studio, nicht in diesem Projekt). `CMainFrame::SaveBarState` schreibt zunächst in die Registry (`mainfrm.cpp:2917-2918`); ob und wie diese beiden in die `Eudora.ini` gelangen, ist **unklar** — für `[ToolBar-ToolBarManager]` ist es gemessen ([E-84](../Intern/BEFUNDE.md#e-84)) | `mainfrm.cpp:2909-2923` | Vorlage |
+| `[Configurations]`, `[Switches]`, `[Miscellaneous]` | Abschnitte **alter** Eudora-Fassungen; Eudora übernimmt ihren Inhalt beim Start nach `[Settings]` — aber nur, solange die Datei noch kein `[Settings]` hat; danach werden sie nicht mehr gelesen | `ConvertIni`, `rs.cpp:1271`, Bedingung `:1415-1418`, aufgerufen `:1420-1427` | Vorlage |
+
+Die Verzeichnisdienste (LDAP, Ph) haben eine eigene Datei neben ihrem Modul
+und lesen nicht aus der `Eudora.ini`. Bei LDAP heißt sie `LDAPinit.ini` und
+ist nur die **Vorlage** für die eigentliche Ablage, aus der die Einstellungen
+dann kommen (`DirectoryServices/LDAP/src/config_init.cpp:247-259`; vermutlich
+die Registry, der Schalter heißt *UpdateRegistry* — nicht nachgesehen); bei
+Ph ist nur der Dateiname neben dem Modul belegt
+(`DirectoryServices/Ph/src/configinit.cpp:82-95`). Ob Zusatzmodule eigene
+Abschnitte in die `Eudora.ini` schreiben, ist **nicht untersucht**.
+
+### Was ein zusätzliches Konto eigens haben kann
+
+Grundsätzlich wird **jeder** Schlüssel zuerst im Abschnitt der aktiven
+Persönlichkeit gesucht (Stufe 1 oben). **Eigens gesetzt** werden aber nur
+diese — die Liste ist aus dem Quelltext gelesen, nicht vermutet:
+
+**Aus den Kontoeinstellungen** (*Tools → Personalities*, Rechtsklick →
+*Properties*), 40 Schlüssel, geschrieben von `SavePersonaInfo`
+(`persona.cpp:958-1105`). Gelesen werden davon 38 von `GetParams`
+(`persona.cpp:278-490`): `SavePasswordText` liest es nicht, und
+`MarkAsDeleted` bildet es dort aus dem Gegenteil von
+`TransferToTrashOnDelete` (`persona.cpp:431-432`) — wer `MarkAsDeleted` von
+Hand im Abschnitt eines Kontos ändert, sieht im Dialog vermutlich keine
+Wirkung (nicht gemessen):
+
+| Gruppe | Schlüssel |
+|---|---|
+| Konto und Absender | `POPAccount`, `RealName`, `ReturnAddress`, `DomainQualifier`, `Signature`, `Stationery`, `CheckMailByDefault` |
+| Abruf | `PopServer`, `LoginName`, `UsesPOP`, `UsesIMAP`, `UseWinSock`, `AuthenticatePassword`, `AuthenticateKerberos`, `AuthenticateAPOP`, `AuthenticateRPA`, `SSLReceiveUse`, `SavePasswordText` |
+| POP: was auf dem Server bleibt | `LeaveMailOnServer`, `DeleteMailFromServer`, `LeaveOnServerDays`, `ServerDelete`, `SkipBigMessages`, `BigMessageThreshold` |
+| IMAP | `ImapDirectoryPrefix`, `IMAPMinDownload`, `IMAPOmitAttachments`, `IMAPMaxDownloadSize`, `MarkAsDeleted`, `TransferToTrashOnDelete`, `TrashMailboxName`, `IMAPAutoPurgeNever`, `IMAPAutoPurgeAlways`, `IMAPAutoPurgeOnPct`, `IMAPAutoPurgePercent` |
+| Versand | `SMTPServer`, `SmtpAuthAllowed`, `UseRelay`, `UseSubmissionPort`, `SSLSendUse` |
+
+**Von Eudora selbst je Konto geschrieben oder gelesen**, ohne Feld im Dialog:
+
+| Schlüssel | wozu | Fundstelle |
+|---|---|---|
+| `SavePassword` | ob das Kennwort gespeichert wird | `rs.cpp:1238-1252` |
+| `AccountDir` | Unterverzeichnis des IMAP-Kontos im Mailverzeichnis | `QCImapMailboxDirector.cpp:205`, `:225-227` |
+| `ImapUIDPLUSFound` | ob der IMAP-Server UIDPLUS kann (beim Verbinden ermittelt) | `ImapAccount.cpp:801-818` |
+| `ImapScoreJunk` | Junk-Bewertung für dieses IMAP-Konto | `ImapAccount.cpp:858-872` |
+| `ImapIgnoreUIDPLUS`, `ImapIgnoreNAMESPACE` | nur gelesen: Fähigkeiten des Servers übergehen | `ImapAccount.cpp:202-218` |
+
+Zusammen **46 Schlüssel**. Bei diesen steht in den Tabellen von
+[Abschnitt 3](#3-tools--options) und [Abschnitt 5](#5-eudoraini-schlüssel-ohne-optionsseite)
+„`[Settings]` bzw. `[Persona-<Name>]`“, sofern sie dort vorkommen.
+
+**Unklar** (nicht untersucht): ob *Tools → Options* andere Werte zeigt,
+während gerade ein zusätzliches Konto aktiv ist — die Seiten lesen über
+dieselbe Suche (Stufe 1), schreiben aber in `[Settings]`.
 
 ---
 
