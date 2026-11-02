@@ -6,7 +6,7 @@ Lauf nach [PRUEFER-81](PRUEFER-81.md#pruefer-81), geprüft: `6c95e284..HEAD -- E
 
 Die Änderung im Suchfenster tut, was sie soll: Werden mehrere empfangene Treffer nach Out übertragen, kommt der Hinweis einmal statt je Treffer, und verfasste Nachrichten gehen weiter durch. Das steht so im Quelltext und im Protokoll des Prüfstands, und die Testsuite läuft bei mir durch. Eine kleine Nebenwirkung habe ich gefunden: Liegt eine empfangene Nachricht schon in Out und wird aus dem Suchfenster nach Out übertragen, kam vorher gar nichts, jetzt kommt der Hinweis. Der Test fängt nicht ab, wenn jemand den Hinweis in die Schleife zurückschiebt.
 
-Wichtiger ist ein Fund an der Messung zu [E-178](../Intern/BEFUNDE.md#e-178). Die Antwort auf markierten Text ist am neuen Bau **nicht** gemessen. Die gespeicherte Antwort in `C:\Temp\E178\Mailverzeichnis\Out.mbx` zitiert die ganze Nachricht, nicht die Markierung. Eudora hat also gar keine Markierung bekommen, und die reparierte Stelle `GetSelectedHTML` lief nicht. Am alten Bau zitiert dieselbe Messung nur die Markierung. „antwort=passt“ ist damit kein Beleg, und weil der TESTPLAN Gregors Test für [E-178](../Intern/BEFUNDE.md#e-178) gestrichen hat, prüft diesen Weg im Moment niemand. Dazu ein Originalfehler von QUALCOMM, den die Messung nebenbei sichtbar macht, ohne ihn zu bemerken: *Festbreite* im Bearbeiten-Modus schreibt die Zeichen `t;` in den Text (neu: E-199).
+Wichtiger ist ein Fund an der Messung zu [E-178](../Intern/BEFUNDE.md#e-178). Die Antwort auf markierten Text ist am neuen Bau **nicht** gemessen. Die gespeicherte Antwort in `C:\Temp\E178\Mailverzeichnis\Out.mbx` zitiert die ganze Nachricht, nicht die Markierung. Eudora hat also gar keine Markierung bekommen, und die reparierte Stelle `GetSelectedHTML` lief nicht. Am alten Bau zitiert dieselbe Messung nur die Markierung. „antwort=passt“ ist damit kein Beleg, und weil der TESTPLAN Gregors Test für [E-178](../Intern/BEFUNDE.md#e-178) gestrichen hat, prüft diesen Weg im Moment niemand. Dazu ein Originalfehler von QUALCOMM, den die Messung nebenbei sichtbar macht, ohne ihn zu bemerken: *Festbreite* im Bearbeiten-Modus schreibt die Zeichen `t;` in den Text (neu: [E-199](../Intern/BEFUNDE.md#e-199)).
 
 Für das Paket: Der Suchfenster-Teil hält nichts auf. Bei [E-178](../Intern/BEFUNDE.md#e-178) muss vor dem Paket die Aussage über die Antwort berichtigt oder nachgemessen werden.
 
@@ -85,7 +85,7 @@ Das Urteil (`Zustand`, messen-e178.ps1:222-232; Datei :405-412) prüft nur, ob �
 | Fund | Was passiert | Schwere | Hält das Paket auf? |
 |---|---|---|---|
 | K1 | Antwort auf markierten Text am neuen Bau nicht gemessen: Die Antwort zitiert die ganze Nachricht, `antwort=passt` belegt nichts; Gregors Test ist gestrichen | wichtig | nur die Aussage: vor dem Paket nachmessen oder in [E-178](../Intern/BEFUNDE.md#e-178)/TESTPLAN berichtigen |
-| K2 (E-199) | *Festbreite* im Bearbeiten-Modus schreibt `t;` in den Text (Originalfehler, `Left(-2)` ohne `\r\n`) | klein | nein |
+| K2 ([E-199](../Intern/BEFUNDE.md#e-199)) | *Festbreite* im Bearbeiten-Modus schreibt `t;` in den Text (Originalfehler, `Left(-2)` ohne `\r\n`) | klein | nein |
 | K3 | Messskript [E-178](../Intern/BEFUNDE.md#e-178) wertet nur die zwei Zeichen, sieht weder leeren Link noch Zeichenmüll noch Vollzitat | klein | nein |
 | K4 | Test fängt einen Hinweis in der Schleife nicht (G1b grün), Logzeile ungeprüft; Out nach Out zeigt jetzt einen falschen Hinweis | klein | nein |
 | K5 | Gegenprobe E-143s mit falscher Bau-Kennung; gemischte Auswahl ungemessen | klein | nein |

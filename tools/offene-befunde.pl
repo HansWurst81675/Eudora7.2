@@ -306,6 +306,15 @@ for my $zeile (split /\n/, $befunde) {
             # dass sich inhaltlich etwas geaendert hatte.
             1 while length($f) && $f =~ /[\x80-\xBF]\z/ && do { chop $f; 1 };
             chop $f if $f =~ /[\xC0-\xFF]\z/;
+            # KEINEN LINK ANGESCHNITTEN STEHEN LASSEN (02.11.2026, L-125.10).
+            # Bei E-184 endete die Kuerzung in "([PRUEFER-78](Befu" - ohne
+            # schliessende Klammer. block_fuer() suchte dann ueber das
+            # Zeilenende hinweg nach ")" und fing den Link der NAECHSTEN Zeile
+            # (E-179) ein: der blieb im CHANGELOG "BEFUNDE.md#e-179" und zeigte
+            # ins Leere. Ein angeschnittener Link wird darum ganz weggekuerzt.
+            $f =~ s/\[[^\]]*\]\([^)]*\z//;
+            $f =~ s/\[[^\]]*\z//;
+            $f =~ s/[\s(]+\z//;
             $f .= '…';
         }
 
@@ -561,7 +570,8 @@ ENDE
 sub block_fuer {
     my ($roh, $datei) = @_;
     return $roh if $datei =~ m{/Intern/};      # schon richtig
-    $roh =~ s{\]\(([^)#][^)]*)\)}{
+    # [^)\n]: ein Link endet in seiner Zeile (siehe L-125.10 oben).
+    $roh =~ s{\]\(([^)#\n][^)\n]*)\)}{
         my $z = $1;
         if ($z =~ m{^(?:https?:|mailto:|/|Intern/)}) { "]($z)" }
         else {

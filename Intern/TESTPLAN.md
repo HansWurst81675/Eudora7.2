@@ -194,33 +194,45 @@ behoben. Deinen Fall mit **einem** Treffer konnte ich nicht nachstellen.
 
 ## <a id="e-136-naechstes"></a>In 7.2.1.129: gehen Emoji beim Speichern noch verloren? ([E-136](BEFUNDE.md#e-136))
 
-**Mit dem Paket 7.2.1.129 auszuführen. Vorher das
-Postfach sichern** (bis 7.2.1.128 ging das Zeichen dabei unwiderruflich
-verloren). Lokales Postfach, nicht IMAP. Mein Prüfstand erreicht diesen Weg
-nicht — dieser Schritt ist die einzige Messung am Programm.
+> **Strg+S ist am Prüfstand gemessen (02.11.2026, an 7.2.1.130):** mit der
+> E-178-Messung `tools/messen-e178.ps1` (Fall `E-178p`) — nach einer
+> Änderung im Bearbeiten-Modus und *Strg+S* stehen `&#128293;` und `&#1046;`
+> in `In.mbx`, `gespeichert=passt`. Eine Gegenprobe am alten Bau gibt es für
+> diesen Weg nicht: dort ist `gespeichert=kaputt` ein Folgefehler der
+> Festbreite ([E-178](BEFUNDE.md#e-178)), und der Bau hatte den Strg-S-Weg
+> schon behoben.
 
-1. Eine HTML-Nachricht mit einem Emoji, die richtig angezeigt wird — so wie
-   am 22.10.2026 mit dem Plug-in EudoraUnicodeFix, oder die Prüfnachricht
-   `Testdaten/e136-zeichen-als-entitaet.eml` (🔥 und Ж).
-2. Öffnen, ändern, wie du es damals getan hast, *Strg+S*, schließen.
-3. Wieder öffnen: 🔥 und Ж stehen da, **keine** Fragezeichen. In der
-   `.mbx` steht `&#128293;` bzw. `&#1046;`.
-4. Falls doch `??`: bitte sagen, welche Schritte zwischen Öffnen und
-   *Strg+S* lagen — genau die fehlen meinem Prüfstand.
+> **Für Gregor entfällt dieser Test vorerst — er misst sich am Prüfstand.**
+> Die Prüfnachricht `Testdaten/e136-zeichen-als-entitaet.eml` (🔥 und Ж als
+> HTML-Entität) kommt auf Gregors Weg nicht nach *In*: eine Mail mit Emoji
+> kommt über den Server heute nicht unbeschädigt an (siehe
+> [E-178](#e-178-naechstes)). Der Prüfstand legt sie direkt ins lokale
+> Postfach.
 
-**Nur mit Strg+S prüfen, nicht mit *Speichern unter*:** *File → Save As* aus
+**Was der Prüfstand tut:** die Prüfnachricht im lokalen *In* öffnen, in den
+Bearbeiten-Modus schalten, formatieren, speichern (`ID_FILE_SAVE`), dann
+`In.mbx` lesen — 🔥 und Ж stehen dort als `&#128293;` bzw. `&#1046;`,
+**keine** Fragezeichen. Die einzelnen Schritte stehen beim
+[E-178](#e-178-naechstes)-Abschnitt.
+
+**Zum zweiten Weg, *Speichern unter*:** *File → Save As* aus
 dem Nachrichtenfenster (`.txt`, `.htm` ohne Kopfzeilen) macht aus Emoji in
 7.2.1.129 weiter `??` — ein zweiter Weg, in 7.2.1.129 noch nicht behoben
 ([PRÜFER-68](../Befunde/PRUEFER-68.md) K1, im Befund nachgetragen). Für `.htm` ist er im Quellstand seit
 dem 31.10.2026, 22:12 behoben (nach dem Schnüren von 7.2.1.129: Bau `11643ee1` um 21:28, ZIP um 21:31) und kommt mit
-7.2.1.130 (mit 7.2.1.130 darf *Speichern unter* als `.htm` mitgeprüft werden: 🔥 steht dann als `&#128293;` in der Datei); als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
+7.2.1.130 (am Programm noch nicht gemessen; erwartet: 🔥 steht als `&#128293;` in der Datei); als `.txt` bleibt das Ersatzzeichen (eine windows-1252-Textdatei
 kann kein Emoji tragen).
 
 ## <a id="e-178-naechstes"></a>In 7.2.1.130: Link, Festbreite und Antwort auf markierten Text lassen Emoji stehen ([E-178](BEFUNDE.md#e-178))
 
 > **Am Prüfstand gemessen am 02.11.2026 (Fall `E-178p`):** am Bau mit der
-> Behebung `fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt`,
+> Behebung `fett=passt kursiv=passt tt=passt link=passt gespeichert=passt`,
 > am Bau 7.2.1.128 ohne sie `tt=kaputt link=kaputt gespeichert=kaputt antwort=kaputt`.
+> **Antwort: nicht gemessen.** Am Bau mit der Behebung meldet die Messung
+> zwar `antwort=passt`, die gespeicherte Antwort zitiert aber die ganze
+> Nachricht statt der Markierung — die reparierte Stelle lief nicht, das ist
+> kein Beleg ([PRÜFER-82](../Befunde/PRUEFER-82.md) K1). Am alten Bau zitierte
+> die Antwort nur die Markierung, dort ist `antwort=kaputt` echt.
 > **Fett und Kursiv waren nie betroffen** (sie laufen über `ExecCommand`) —
 > betroffen waren Festbreite, *Make Hyperlink* und die Antwort auf markierten
 > Text. Die frühere Überschrift nannte Fett und Kursiv; das war am Quelltext
@@ -230,8 +242,10 @@ kann kein Emoji tragen).
 > Am 02.11.2026 an 7.2.1.130 versucht, nach der früheren Fassung dieses
 > Abschnitts: eine HTML-Mail mit 🔥 und Ж aus dem Webmailer, über IMAP
 > abgerufen und nach *In* übertragen. Schon beim Öffnen standen Fragezeichen
-> da — im Betreff ([E-90](BEFUNDE.md#e-90): Emoji im Betreff gehen beim Empfang
-> verloren) und im Text (die UTF-8-Mail wird beim Abruf nach windows-1252
+> da — im Betreff stand `tesmail  ?).` (zwei Leerzeichen: ein Zeichen fiel
+> weg, eines wurde `?`; welches welches war, ist ungeklärt — Vermutung: das
+> Emoji fiel weg wie bei [E-90](BEFUNDE.md#e-90), Ж wurde `?`) — und im Text
+> (die UTF-8-Mail wird beim Abruf nach windows-1252
 > übersetzt, `E-85 imap: … uebersetzt=ja`; alles außerhalb von windows-1252
 > wird `?`, [E-147](BEFUNDE.md#e-147)). Beide Befunde hat Gregor bis nach 7.2.1
 > zurückgestellt. **Eine Mail mit Emoji kann über den Server heute nicht
@@ -241,36 +255,39 @@ kann kein Emoji tragen).
 > Gemessen wird E-178 stattdessen am Prüfstand mit der Prüfnachricht
 > `Testdaten/e136-zeichen-als-entitaet.eml`, in der 🔥 und Ж als HTML-Entitäten
 > (`&#128293;`, `&#1046;`) stehen und den Empfang deshalb überstehen (Fall
-> `E-178p`). Die Schritte unten bleiben als Beschreibung dessen, was der
-> Prüfstand tut; einen Testschritt für Gregor gibt es erst wieder, wenn eine
+> `E-178p`). Einen Testschritt für Gregor gibt es erst wieder, wenn eine
 > Emoji-Mail auf seinem Weg nach *In* kommen kann.
 
-**Was der Prüfstand tut** (an der Prüfnachricht im lokalen *In*):
+**Was der Prüfstand tut** (`tools/messen-e178.ps1`, Einzelheiten in
+[WERKZEUGE](../tools/WERKZEUGE.md)). Er schickt Befehlsbotschaften an
+gemessene Fenster und drückt keine Taste; die Prüfnachricht liegt zweimal im
+lokalen *In*.
 
-1. Die Mail aus Schritt c in *In* öffnen.
-2. In den Bearbeiten-Modus schalten: Knopf in der Leiste des
-   Nachrichtenfensters mit dem Hinweis *Edit the message* (laut Menüvorlage
-   `EudoraRes.rc`, Hinweistext zu `ID_EDIT_MESSAGE`).
-3. Ein Wort **neben** dem Emoji markieren und *Fett* geben (Strg+B), dann
-   wieder ausschalten; dasselbe mit *Kursiv* (Strg+I).
-4. Ein **anderes** Wort markieren und *Make Hyperlink* wählen. Es steht im
-   Menü *Edit → Text → Make Hyperlink* und als Knopf mit dem Hinweis
-   *Make hyperlink* in der Formatierleiste (laut Menüvorlage `EudoraRes.rc`;
-   am laufenden Programm von mir noch nicht nachgesehen — findest du es dort
-   nicht, bitte sagen).
-5. Nach jedem der Schritte 3 und 4: 🔥 und Ж stehen weiter da, **keine**
-   Fragezeichen.
-6. *Strg+S*, die Mail schließen, wieder öffnen: 🔥 und Ж stehen da.
-7. Zusätzlich: Text mit dem Emoji markieren und *Reply* — in der Antwort
-   steht das Emoji, nicht `??`. Die Antwort danach ohne Senden schließen.
+1. Die erste Abschrift öffnen und in den Bearbeiten-Modus schalten
+   (`ID_EDIT_MESSAGE`, Hinweistext *Edit the message*).
+2. Text über Emoji und Ж markieren, *Fett* geben, danach *Kursiv* — beide
+   nur zur Kontrolle, sie waren nie betroffen.
+3. Nur das Emoji markieren, *Make Hyperlink* geben und eine Adresse
+   eintragen.
+4. Wieder über Emoji und Ж markieren und *Festbreite* geben.
+5. Nach jedem der Schritte 2 bis 4 das Dokument der Anzeige lesen: 🔥 und Ж
+   stehen da, **kein** `?`. War ein Schritt kaputt, setzt der Prüfstand die
+   Nachricht vor dem nächsten zurück — vor dem Speichern nicht.
+6. Speichern (*Strg+S*, `ID_FILE_SAVE`) und `In.mbx` lesen: `&#128293;` und
+   `&#1046;` stehen darin.
+7. In der zweiten Abschrift Text mit dem Emoji markieren, *Reply*, die
+   Antwort speichern und `Out.mbx` lesen. **Dieser Schritt misst am neuen Bau
+   bisher nichts:** die Antwort zitierte die ganze Nachricht, nicht die
+   Markierung (siehe oben).
 
-**Bestanden:** in den Schritten 5 bis 7 nirgends ein Fragezeichen statt 🔥
-oder Ж. **Nicht bestanden:** ein `?` oder `??` an der Stelle — dann bitte
-sagen, nach welchem Schritt es zuerst auftrat.
+**Bestanden** heißt `passt` bei `tt`, `link` und `gespeichert` — und bei
+`antwort` erst, wenn die Antwort nachweislich nur die Markierung zitiert.
+Das Urteil sieht nur die beiden Zeichen: einen leeren Link, den `t;`-Rest aus
+[E-199](BEFUNDE.md#e-199) oder ein Vollzitat erkennt es nicht.
 
-Bis 7.2.1.129 wurde aus dem Emoji schon in Schritt 3 `??` auf dem Bildschirm
-(am Quelltext belegt, nie am Programm gesehen — dieser Schritt ist die erste
-Messung).
+Bis 7.2.1.129 machten *Make Hyperlink* und *Festbreite* aus dem Emoji schon
+auf dem Bildschirm `??` (gemessen am 02.11.2026 am Bau 7.2.1.128+d3a625fd\*,
+die erste Messung am Programm).
 
 ## <a id="e-170-naechstes"></a>In 7.2.1.130: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
 
