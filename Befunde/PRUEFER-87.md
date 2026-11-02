@@ -131,3 +131,105 @@ Beim Doppelklick schreibt `InitInstance` denselben Wert ohnehin (:1067). `regist
 | K5 | `TestE133` bleibt grün bei vertauschtem *Yes*/*No*, fehlender Klammer, falschem Ordnernamen und unterdrückter Registryberichtigung | gering | nein |
 | K6 | `E-133p` wäre auch ohne die eigene Berichtigung grün; Anhang, `mailto:`, *Yes* und *Cancel* ungemessen | gering | nein |
 | K7 | *Cancel* schreibt keine Spur (41-K9) | gering | nein |
+
+## <a id="nachtrag-02-11-2026"></a>Nachtrag 02.11.2026
+
+Geprüft wurde `git diff 9c23df4f..origin/e133_mailverzeichnis_fehlt`, also 80336491 (K3 als [E-209](../Intern/BEFUNDE.md#e-209) behoben, K5 eingearbeitet, K2 als [E-208](../Intern/BEFUNDE.md#e-208) offen) und ff49d438 (K1: `tools/pruefstand-sperre.ps1`, Anbindung in `testlauf.ps1` und `pruefstand-lauf.ps1`, `strg-n-pruefen.ps1` stillgelegt, Gegentest `pruefstand-sperre-test.ps1`). Mein Baum stand danach auf ff49d438. Eudora habe ich weder gebaut noch gestartet. Den Gegentest der Sperre habe ich gefahren, er startet kein Eudora und schreibt nur in den Probeschlüssel `HKCU\Software\Eudora72Probe`, den er danach entfernt.
+
+### Ergebnis vorweg
+
+`E209BefehlszeileBauen` schreibt, was alle eigenen Leser verstehen. Ohne Leerzeichen bleibt die Zeile Byte für Byte wie vorher, fremde Leser bekommen also nichts Neues. Der Puffer reicht für den längsten Fall. Die Sperre schließt gleichzeitige Läufe aus und setzt nur eigene Werte zurück. Beides ist gemessen: 372/372 Tests, Gegentest der Sperre 22/22.
+
+Drei Dinge bleiben offen. Erstens gilt die Sperre nur in Bäumen, die sie schon haben. Sechs von zehn Arbeitsbäumen fahren noch das alte `pruefstand-lauf.ps1`, das alles zurückschreibt, darunter `.wt\messen`, das heute misst. Bis alle Bäume angeglichen sind, ist K1 nicht geschlossen (N3, gemessen). Zweitens macht ein abgeschossener Halter seine Registryänderungen nicht rückgängig, und der nächste Läufer hält sie als „Stand vorher“ fest. Das ist dieselbe Klasse wie K1, nur über einen anderen Weg (N2, belegt). Drittens schreibt `RegisterCommandLine` auf Laufwerken ohne 8.3-Namen jetzt Langformen, aber der Leser liest höchstens 261 Byte. Eine lange Zeile endet im Startabbruch von [E-208](../Intern/BEFUNDE.md#e-208), und die zweite Abfrage kann über den Puffer schreiben (N1, belegt, Reichweite Vermutung).
+
+Für das Paket: Kein Fund hält 7.2.2.132 auf. N3 sollte vor dem nächsten Prüfstandslauf erledigt sein, sonst gilt K1 weiter.
+
+### E209BefehlszeileBauen gegen die Leser
+
+| Form (Beispiel) | `StartEudoraWithDefaultLocation` (:4232-4242) | `GetDirs` (fileutil.cpp:443-456) | `E132AufrufZerlegen` (:3913) |
+|---|---|---|---|
+| ohne Leerzeichen: `A B C` | unverändert | unverändert | unverändert |
+| nur Programm: `"A x" B C` | springt über das `"…"` (:4232-4233), Rest `B C` | – | – |
+| Verzeichnis und INI: `A "B x" "B x\C"` | Rest `"B x" "B x\C"` | trennt an `" ` (:443-444), `StripQuotesMT` beide | dieselbe Regel, beide richtig |
+| INI fehlt (`GetShortPathName` scheitert, neue Einrichtung): `A "B x" ` | Rest `"B x" ` | trennt an `" `, `Ini` = leer, `SetupINIFilename` nimmt die Vorgabe (rs.cpp:1371) | Verzeichnis richtig, INI leer |
+
+Alle Zeilen am Quelltext belegt, die mittlere Spalte zusätzlich im Test (`E209ProgrammAbschneiden`). Die letzte Zeile hat schon vorher so ausgesehen (`"%s %s %s"` mit leerem dritten Teil). Neu ist nur die Klammer. Die Form steht in keinem Test.
+
+**Fremde Leser** (am Quelltext belegt):
+
+- *Hermes / Eudora 7.1* hat dieselbe Lesestelle (567a5d87) und versteht die Klammer genauso.
+- *MAPI* `GetEudoraWindowHandle` gibt die Zeile an `WinExec` (MAPI/mapifunc.cpp:238). Mit geklammertem Programm ist das jetzt eindeutiger als vorher.
+- *MAPI* `IsEudoraMapi` hat einen alten Fehler im Zweig mit geklammertem Programm: `strchr(Command, '"')` findet das *erste* Anführungszeichen statt des schließenden (:456-458). `Program` bleibt dann unabgeschlossen, `GetFileVersionInfoSize` scheitert, und die Antwort ist 0xFFFFFFFF („Modus unbekannt“). Vorher kam dieser Zweig nie vor. Ein Programmpfad mit Leerzeichen war aber auch ungeklammert kaputt (`Program` = `C:\Program`). Kein Rückschritt.
+- *EudoraBk* (DirectoryServices/EudoraBk/src/Protocol.cpp:166-171) trennt stumpf an Leerzeichen. Mit Leerzeichen im Pfad war das vorher und nachher falsch, ohne bleibt es gleich.
+
+**Puffer.** `val` hat 3 × 260 + 10 = 790 Byte (:3793). Der längste Inhalt sind drei Teile zu je höchstens 260 Zeichen, 2 Leerzeichen, 6 Anführungszeichen und die Null, zusammen 789. `_sntprintf` mit Restlänge (:3769-3779), abgeschlossen bei Überlauf. Der Test „zu kleiner Puffer“ prüft das Wächterbyte. Belegt und gemessen.
+
+### Gegenproben (in meinem Baum)
+
+Gemessen. `eudora.cpp` habe ich vorübergehend geändert (Treffer je 1), mit `RunTests.cmd` neu gebaut, weil `Extract.ps1` die Funktion schneidet, und danach zurückgeschrieben. Die Prüfsumme gegen die Sicherung war gleich, 18 CRLF und 5863 LF wie vorher, `git status` leer.
+
+| Lauf | Änderung | Ergebnis |
+|---|---|---|
+| 0 | keine | 372/372 |
+| GE1 | `abKlammer[2] = false;`: INI nie geklammert | 371/372, rot `Teile mit Leerzeichen sind nicht geklammert (E-209)` |
+| GE2 | `abKlammer[1]` nur nach dem Verzeichnis: hat nur die INI ein Leerzeichen, bleibt alles ungeklammert | **372/372, grün** (N6) |
+| S0 | `pruefstand-sperre-test.ps1` | 22/22, B wartete 5158 ms, nach dem Abschuss übernahm B nach 86 ms |
+
+### N1: Langformen ohne 8.3 können länger sein als der Leser
+
+(am Quelltext belegt; Reichweite Vermutung)
+
+Der Leser liest `Current` mit `buflen = sizeof(cmdLine)` = 261 Byte (:4197, :4212). Ohne 8.3-Namen ist jeder der drei Teile eine Langform, und das Mailverzeichnis steht zweimal darin. Ab etwa 85 Zeichen je Teil ist die Zeile länger als 260 Zeichen. Die Klammern bringen bis zu 6 Byte dazu. Dann liefert `RegQueryValueEx` `ERROR_MORE_DATA`, `err` ist gesetzt, und der Start endet bei :4679 wie in [E-208](../Intern/BEFUNDE.md#e-208). Schlimmer noch: Nach `ERROR_MORE_DATA` steht in `buflen` die nötige Länge. Die HKCR-Abfrage (:4226) bekommt deshalb einen zu großen Puffer gemeldet. Gibt es den HKCR-Wert, weil Eudora einmal mit Adminrechten lief, schreibt sie über `cmdLine` hinaus. So steht es in der Win32-Beschreibung von `RegQueryValueEx`. Das ist Altbestand, aber [E-209](../Intern/BEFUNDE.md#e-209) zielt genau auf die Laufwerke, auf denen die langen Zeilen entstehen. **Abhilfe:** `cmdLine` auf `3 * MAX_PATH + 10` vergrößern (dann passt `strcpy(buf, c)` nicht mehr ohne Prüfung, `buf` ebenfalls), `buflen` vor der zweiten Abfrage neu setzen, und `cmdLine[0] = 0` vorbelegen ([E-208](../Intern/BEFUNDE.md#e-208)). **Schwere: mittel.** In [E-209](../Intern/BEFUNDE.md#e-209) oder [E-208](../Intern/BEFUNDE.md#e-208) fortschreiben. **Hält das Paket nicht auf.**
+
+### N2: Ein abgeschossener Halter hinterlässt seine Werte, und der nächste hält sie als „vorher“ fest
+
+(am Quelltext belegt)
+
+Wird der Halter von außen beendet, zum Beispiel durch die Zeitschranke eines Agenten, läuft sein `finally` nicht ([PRUEFER-59](PRUEFER-59.md#pruefer-59) K9). Der nächste Läufer übernimmt den verlassenen Mutex und meldet das nur (pruefstand-sperre.ps1:86-91). Danach hält er mit `Registry-Festhalten` die Werte des Abgeschossenen fest, also `Current` auf dessen Prüfstand oder auf `C:\Temp\E133-gibt-es-nicht`, und schreibt sie am Ende zurück. Gregors Wert ist dann dauerhaft weg, dieselbe Folge wie K1. **Abhilfe:** Der Halter schreibt sein Festgehaltenes neben die Halterdatei (`C:\Temp\Eudora72-Pruefstand.reg.json`). Wer einen verlassenen Mutex übernimmt, setzt zuerst danach zurück und löscht die Datei, bevor er selbst festhält. Mindestens sollte er einen „Stand vorher“, der selbst auf einen Prüfstand zeigt, laut melden. **Schwere: mittel.**
+
+### N3: Sechs Arbeitsbäume haben die Sperre noch nicht
+
+(gemessen: `tools/pruefstand-sperre.ps1` je Baum unter `.wt\`)
+
+Ohne Sperre sind `chronist` (wt/chronist-20261102b), `e122` (main), `e194`, `lektor` (wt/lektor-20261102b), `messen` (messungen_vor_7_2_2_132) und `pruefer88`. Dort läuft das alte `pruefstand-lauf.ps1`. Es nimmt keine Sperre und schreibt am Ende *alle* Werte auf seinen Stand vorher zurück, auch die eines gleichzeitigen gesperrten Laufs. Der neue Lauf schützt sich also nur gegen neue Läufe. **Abhilfe:** Bis zum Merge und zum Angleichen aller Bäume keine Prüfstandsläufe aus Bäumen ohne `pruefstand-sperre.ps1`. Danach `Current` und `LaunchManager\DLLPath` einmal nachsehen. **Schwere: mittel.** **Hält das Paket nicht auf**, aber den Abschluss von K1.
+
+### N4: Eine Ausnahme beim Zurücksetzen überspringt die Freigabe und den Rest
+
+(am Quelltext belegt)
+
+Im `finally` stehen `Registry-Zurueck` und dann `Sperre-Freigeben` hintereinander (testlauf.ps1:417-419, pruefstand-lauf.ps1:380-382). `testlauf.ps1` setzt `$ErrorActionPreference = 'Stop'`. Scheitert in `Registry-Zurueck` ein `Remove-ItemProperty` oder `New-ItemProperty`, zum Beispiel am Standardwert aus [PRUEFER-59](PRUEFER-59.md#pruefer-59) K9, bricht die Schleife ab. Die übrigen Werte bleiben stehen, und die Sperre wird erst beim Prozessende als verlassen frei, mit N2 als Folge. Zwischen `Sperre-Nehmen` und `try` liegen in `pruefstand-lauf.ps1` 35 Zeilen (:152-187). Eine Ausnahme dort hat dieselbe Folge, ist aber unwahrscheinlich (nur Funktionsdefinitionen und Zuweisungen). **Abhilfe:** jeden Wert in `Registry-Zurueck` in einem eigenen `try`, `Sperre-Freigeben` in einem inneren `finally`, `try` direkt hinter `Sperre-Nehmen`. **Schwere: gering.**
+
+### N5: Der Gegentest der Sperre sieht die Anbindung nicht
+
+(am Quelltext belegt)
+
+`pruefstand-sperre-test.ps1` lädt nur das Modul. Nimmt man `Sperre-Nehmen` aus `testlauf.ps1` oder `pruefstand-lauf.ps1` heraus, oder stellt man im `finally` die Freigabe vor das Zurücksetzen, bleibt er 22/22. Fall 1 hängt außerdem daran, dass A binnen 2 s startet. Ein langsamer PowerShell-Start macht ihn rot. Das ist ein Fehlalarm, kein blindes Grün. **Abhilfe:** eine Quelltextprüfung, dass beide Werkzeuge `Sperre-Nehmen` vor `Registry-Festhalten` und `Registry-Zurueck` vor `Sperre-Freigeben` im selben `finally` haben, wie `TestE133` am Quelltext prüft. In Fall 1 warten, bis A „A-HAT“ geschrieben hat. **Schwere: gering.**
+
+### N6: Der Testfall „nur die INI mit Leerzeichen“ schützt nichts
+
+(gemessen, GE2)
+
+Hat nur die INI ein Leerzeichen, geht auch die ungeklammerte Zeile richtig durch. Die INI ist der Rest hinter dem ersten Leerzeichen. Der Grund für das gemeinsame Klammern, den der Kommentar nennt (eine Zeile, die auf `"` endet, trennt `GetDirs` gar nicht, fileutil.cpp:446), ist ein anderer Fall: Verzeichnis ungeklammert, INI geklammert. Den baut der Test nicht. **Abhilfe:** genau diese Zeile an `E132AufrufZerlegen` geben und rot erwarten, oder `abKlammer[1]` am Quelltext festhalten. **Schwere: gering.**
+
+### N7: Kleinigkeiten im Zurücksetzen
+
+(am Quelltext belegt)
+
+- **`PathCount` mit fremdem neuem `Path#`:** Die eigenen `Path#N` werden trotzdem entfernt, `PathCount` bleibt. Dann entsteht eine Lücke (im Gegentest so gewollt). `EuShlExt` verträgt das, es protokolliert nur *„The Path, Path#%d is empty“* (EuShlExt/ShellHookImpl.cpp:329), und `CompactRegistryEntries` schließt die Lücke später (EuShlRegEntryMgr.cpp:584-614).
+- **`AlreadyWarned#N`** gehört zu den Begleitwerten (EuShlExt/RegDefines.h:11), fehlt aber in der Liste (pruefstand-sperre.ps1, `Path|WarnExtensions|DoNotWarnExtensions`). Ein eigener neuer Wert würde als FREMD gemeldet und bliebe stehen. Eudora.exe selbst schreibt ihn nicht, nur die Shell-Erweiterung beim Warnen.
+- **Verdichtung während des Laufs:** Verdichtet `CompactRegistryEntries` während des Laufs, verschieben sich vorhandene `Path#k`. Der Vergleich nach Namen meldet die verschobenen fremden als FREMD und schreibt die alten Endwerte zurück. Folge wären doppelte Einträge, kein Verlust (Vermutung).
+- **`Global\` und `Local\`:** Scheitert `Global\Eudora72-Pruefstand` für einen Prozess, etwa weil ein Prozess mit Adminrechten den Mutex mit enger Zugriffsliste angelegt hat, weicht er auf `Local\` aus. Dann schließen sich die beiden nicht mehr aus. Vermutung. Abhilfe: nicht ausweichen, sondern abweisen.
+
+**Schwere: gering.**
+
+### Übersicht Nachtrag
+
+| Fund | Was passiert | Schwere | Hält das Paket auf? |
+|---|---|---|---|
+| N1 | Ohne 8.3 kann `Current` länger als 260 Zeichen werden; der Leser bricht ab ([E-208](../Intern/BEFUNDE.md#e-208)-Weg), die HKCR-Abfrage kann über `cmdLine` schreiben | mittel | nein |
+| N2 | Abgeschossener Halter: seine Prüfstandswerte werden vom nächsten als „vorher“ festgehalten und bleiben | mittel | nein |
+| N3 | Sechs Arbeitsbäume ohne Sperre fahren das alte Zurücksetzen, darunter `.wt\messen` | mittel | nein, aber K1 erst nach Angleichen aller Bäume geschlossen |
+| N4 | Ausnahme in `Registry-Zurueck` überspringt den Rest und die Freigabe | gering | nein |
+| N5 | Gegentest der Sperre bleibt grün ohne Anbindung in `testlauf.ps1`/`pruefstand-lauf.ps1`; Fall 1 zeitabhängig | gering | nein |
+| N6 | `TestE133`-Fall „nur INI mit Leerzeichen“ bleibt grün, wenn das gemeinsame Klammern fehlt (GE2) | gering | nein |
+| N7 | `PathCount`-Lücke (verträglich), `AlreadyWarned#N` fehlt, Verdichtung, Ausweichen auf `Local\` | gering | nein |
