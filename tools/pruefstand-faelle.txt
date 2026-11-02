@@ -361,8 +361,10 @@ E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=
 # Bau 7.2.1.131+522b8bbb* (C:\Temp\E194, E194K); Gegenprobe am Bau
 # 7.2.1.131+a2f29b69* (C:\Temp\E194-alt, E194K-alt): liste-xflowed=2
 # liste-flowed=0 htm-meta=0 rtf=3, mit Kopfzeilen auch lesen-xflowed=2.
-E-194p | C:\Temp\E194 | 90 | messung | E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
-E-194k | C:\Temp\E194K | 90 | messung | E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
+# Seit PRUEFER-86 K9 (02.11.2026) traegt das Urteil auch liste-umbruch,
+# liste-euro und liste-umlaute; gruen am Bau 7.2.1.131+ed7b9d83*.
+E-194p | C:\Temp\E194 | 90 | messung | E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
+E-194k | C:\Temp\E194K | 90 | messung | E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
 
 # -------------------------------------------------------------------------
 # A-5 - Hilfe-Menue (Help -> Keyboard Shortcuts / Settings Reference), 7.2.2

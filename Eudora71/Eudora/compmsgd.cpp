@@ -3355,7 +3355,7 @@ void CCompMessageDoc::OnFileSaveAs()
 							//TRUE, 
 							FALSE,
 							CRString( IDS_TEXT_EXTENSION ), 
-							CRString( IDS_TXT_HTML_FILE_FILTER ), 
+							CRString( IDS_MSG_SAVEAS_FILE_FILTER ),		// E-195: ohne .rtf 
 							NULL );
 		
 	

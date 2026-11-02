@@ -118,6 +118,17 @@ static void Test_E194_AnhangDahinter()
 	CString szE2 = szD2.IsEmpty() ? CString(kZitat) : szD2;
 	TT_CHECK_MSG(Hat(szE2, "Er schrieb </x-flowed> in die Zeile.\r\nNachsatz\r\n"), "zitierter Text verloren (P-19)");
 	TT_CHECK_MSG(!Hat(szE2, "<x-flowed>\r\n"), "die oeffnende Klammer steht noch");
+
+	// PRUEFER-86 K8: zitiertes </x-flowed> am ZeilenENDE (nicht am Anfang) -
+	// prueft die Bedingung "Gegenstueck am Zeilenanfang".
+	const char* const kZitatEnde =
+		"<x-flowed>\r\n"
+		"Er schrieb </x-flowed>\r\n"
+		"Nachsatz\r\n";
+	CString szD3, szS3;
+	UTE101_SpeicherfassungAufbereiten(kZitatEnde, false, szD3, szS3);
+	CString szE3 = szD3.IsEmpty() ? CString(kZitatEnde) : szD3;
+	TT_CHECK_MSG(Hat(szE3, "Er schrieb </x-flowed>\r\nNachsatz\r\n"), "zitiertes </x-flowed> am Zeilenende entfernt (PRUEFER-86 K8)");
 	TT_EndTest();
 }
 
@@ -162,8 +173,43 @@ static void Test_E194_KeinMarker()
 	TT_EndTest();
 }
 
+static void Test_E194_RichtextDelsp()
+{
+	TT_BeginTest("E-194 PRUEFER-86 K5/K6: text/richtext bleibt richtext, delsp=yes bleibt erhalten");
+	const char* const kRich =
+		"From: a@e194.invalid\r\n"
+		"Content-Type: text/richtext; charset=utf-8\r\n"
+		"\r\n"
+		"<x-rich>\r\nGr\xFC\xDF" "e<nl>\r\n</x-rich>\r\n";
+	CString szD, szS;
+	UTE101_SpeicherfassungAufbereiten(kRich, true, szD, szS);
+	if (!Hat(szD, "\r\nContent-Type: text/richtext; charset=\"ISO-8859-1\"\r\n")) TT_Fail("richtext nicht erhalten: [%s]", (LPCTSTR) szD);
+	TT_CHECK_MSG(!Hat(szD, "text/enriched"), "richtext als enriched ausgewiesen (K5)");
+
+	const char* const kDelsp =
+		"From: a@e194.invalid\r\n"
+		"Content-Type: text/plain; charset=utf-8; format=flowed; delsp=yes\r\n"
+		"\r\n"
+		"<x-flowed>\r\nGr\xFC\xDF" "e aus M\xFC \r\nnchen\r\n</x-flowed>\r\n";
+	CString szD2, szS2;
+	UTE101_SpeicherfassungAufbereiten(kDelsp, true, szD2, szS2);
+	if (!Hat(szD2, "\r\nContent-Type: text/plain; charset=\"ISO-8859-1\"; format=flowed; delsp=yes\r\n")) TT_Fail("delsp=yes fehlt: [%s]", (LPCTSTR) szD2);
+
+	// Gegenprobe: ohne delsp in der alten Zeile auch keins in der neuen.
+	const char* const kOhne =
+		"From: a@e194.invalid\r\n"
+		"Content-Type: text/plain; charset=utf-8; format=flowed\r\n"
+		"\r\n"
+		"<x-flowed>\r\n\xFC \r\nb\r\n</x-flowed>\r\n";
+	CString szD3, szS3;
+	UTE101_SpeicherfassungAufbereiten(kOhne, true, szD3, szS3);
+	TT_CHECK_MSG(Hat(szD3, "; format=flowed\r\n") && !Hat(szD3, "Content-Type: text/plain; charset=\"ISO-8859-1\"; format=flowed; delsp"), "delsp erfunden");
+	TT_EndTest();
+}
+
 void RunE194Tests()
 {
+	Test_E194_RichtextDelsp();
 	Test_E194_OhneKopf();
 	Test_E194_MitKopf();
 	Test_E194_AnhangDahinter();

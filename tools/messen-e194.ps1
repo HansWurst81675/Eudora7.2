@@ -35,7 +35,7 @@
 #   E194 MBX xflowed=<n>
 #   E194 FILTER <weg>: <eintrag> | <eintrag> | ...
 #   E194 DATEI <weg> bytes=<n> xflowed=<n> ct=<0|1> flowed=<0|1> charset=<w|-> meta=<w|-> euro=<..> umlaute=<n> umbruch=<weich|zusammen|fehlt>
-#   E194 ERGEBNIS kopf=<0|1> mbx=<0|1> dateien=<0..4> filter=<0..4> liste-xflowed=<n> liste-flowed=<0|1> lesen-xflowed=<n> htm-meta=<0..2> rtf=<n> lebt=<0|1>
+#   E194 ERGEBNIS kopf=<0|1> mbx=<0|1> dateien=<0..4> filter=<0..4> liste-xflowed=<n> liste-flowed=<0|1> liste-umbruch=<weich|zusammen|fehlt> liste-euro=<..> liste-umlaute=<n> lesen-xflowed=<n> htm-meta=<0..2> rtf=<n> lebt=<0|1>
 #   mbx            1 = die Pruefnachricht liegt mit <x-flowed> im Postfach
 #   liste-xflowed  Zahl der Klammern in e194-liste.txt (vor der Behebung 2)
 #   liste-flowed   1 = Content-Type der Datei traegt format=flowed
@@ -281,7 +281,7 @@ function Auswerten([string] $weg) {
     $umbruch = 'fehlt'
     if ($t -match 'so lang, \r?\n') { $umbruch = 'weich' }
     elseif ($t -match 'so lang,\s*(<[^>]*>\s*)*dass') { $umbruch = 'zusammen' }
-    $script:werte[$weg] = @{ xf = $xf; flowed = $flowed }
+    $script:werte[$weg] = @{ xf = $xf; flowed = $flowed; umbruch = $umbruch; euro = $euro; umlaute = $uml }
     Write-Host ("E194 DATEI {0} bytes={1} xflowed={2} ct={3} flowed={4} charset={5} meta={6} euro={7} umlaute={8} umbruch={9}" -f $weg, $b.Length, $xf, $ct, $flowed, $cs, $meta, $euro, $uml, $umbruch)
     $erste = ($t -split "`r?`n" | Select-Object -First 4) -join ' | '
     Write-Host ("E194 ANFANG {0}: {1}" -f $weg, $erste)
@@ -356,6 +356,12 @@ if ((Anzahl $lbIn) -ge 1) {
 # --- Auswertung -------------------------------------------------------------
 foreach ($w in $WEGE.Keys) { Auswerten $w }
 function Wert([string] $weg, [string] $k) { if ($script:werte.ContainsKey($weg)) { return $script:werte[$weg][$k] } else { return '-' } }
-Write-Host ("E194 ERGEBNIS kopf={0} mbx={1} dateien={2} filter={3} liste-xflowed={4} liste-flowed={5} lesen-xflowed={6} htm-meta={7} rtf={8} lebt={9}" -f `
+# PRUEFER-86 K9: Umbruch und Zeichen der Datei aus der Postfachliste gehoeren
+# ins Urteil - sonst bliebe der Fall gruen, wenn die weichen Umbrueche
+# verloren gingen oder das Euro-Zeichen zu '?' wuerde. Erwartet: weich,
+# cp1252 (0x80) und 10 Umlaute (die Pruefnachricht traegt ue, ss, ue, ae, oe,
+# ue, Ae, Oe, Ue, ss).
+Write-Host ("E194 ERGEBNIS kopf={0} mbx={1} dateien={2} filter={3} liste-xflowed={4} liste-flowed={5} liste-umbruch={6} liste-euro={7} liste-umlaute={8} lesen-xflowed={9} htm-meta={10} rtf={11} lebt={12}" -f `
     $kopf, [int]($mbxXf -ge 1), $script:dateien, $script:filter, (Wert 'liste' 'xf'), (Wert 'liste' 'flowed'),
+    (Wert 'liste' 'umbruch'), (Wert 'liste' 'euro'), (Wert 'liste' 'umlaute'),
     (Wert 'lesen' 'xf'), $script:htmMeta, $script:rtf, [int](Lebt $pp))

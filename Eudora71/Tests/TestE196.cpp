@@ -170,7 +170,14 @@ static void Test_E196_Quelltext(const char* szEudoraDir)
 
 static void Test_E195_Filter(const char* szEudoraDir)
 {
-	TT_BeginTest("E-195 (Quelltext): IDS_TXT_HTML_FILE_FILTER bietet kein .rtf mehr an");
+	//
+	// PRUEFER-86 K2: das Textdatei- und das Signaturfenster schreiben .rtf
+	// als ECHTES RTF (TextFileView.cpp, CPaigeEdtView::Serialize). Dort
+	// bleibt "Rtf Files" (IDS_TXT_HTML_FILE_FILTER); die Speicherdialoge fuer
+	// Nachrichten (compmsgd.cpp, saveas.cpp) nehmen IDS_MSG_SAVEAS_FILE_FILTER
+	// ohne .rtf.
+	//
+	TT_BeginTest("E-195 (Quelltext): Speicherdialog fuer Nachrichten ohne .rtf, Textdatei/Signatur mit");
 	char* pRc = QT_LiesNurCode(szEudoraDir, "EudoraRes.rc");
 	if (!pRc)
 	{
@@ -178,17 +185,65 @@ static void Test_E195_Filter(const char* szEudoraDir)
 		TT_EndTest();
 		return;
 	}
-	char* pZeile = QT_Abschnitt(pRc, "IDS_TXT_HTML_FILE_FILTER \"", "||\"");
-	TT_CHECK_MSG(pZeile != NULL, "IDS_TXT_HTML_FILE_FILTER nicht gefunden");
-	if (pZeile)
+	char* pMsg = QT_Abschnitt(pRc, "IDS_MSG_SAVEAS_FILE_FILTER \"", "||\"");
+	TT_CHECK_MSG(pMsg != NULL, "IDS_MSG_SAVEAS_FILE_FILTER nicht gefunden");
+	if (pMsg)
 	{
-		TT_CHECK_MSG(!QT_Enthaelt(pZeile, "rtf") && !QT_Enthaelt(pZeile, "Rtf"), "der Speicherdialog bietet wieder .rtf an - kein Weg schreibt RTF (E-195)");
-		// Gegenprobe: die beiden echten Typen stehen noch da.
-		TT_CHECK_MSG(QT_Enthaelt(pZeile, "Text Files (*.txt)|*.txt|"), "Text Files fehlt");
-		TT_CHECK_MSG(QT_Enthaelt(pZeile, "HTML Files (*.htm)|*.htm|"), "HTML Files fehlt");
-		free(pZeile);
+		TT_CHECK_MSG(!QT_Enthaelt(pMsg, "rtf") && !QT_Enthaelt(pMsg, "Rtf"), "der Speicherdialog fuer Nachrichten bietet wieder .rtf an - kein Nachrichtenweg schreibt RTF (E-195)");
+		TT_CHECK_MSG(QT_Enthaelt(pMsg, "Text Files (*.txt)|*.txt|"), "Text Files fehlt");
+		TT_CHECK_MSG(QT_Enthaelt(pMsg, "HTML Files (*.htm)|*.htm|"), "HTML Files fehlt");
+		free(pMsg);
+	}
+	char* pTxt = QT_Abschnitt(pRc, "IDS_TXT_HTML_FILE_FILTER \"", "||\"");
+	TT_CHECK_MSG(pTxt != NULL, "IDS_TXT_HTML_FILE_FILTER nicht gefunden");
+	if (pTxt)
+	{
+		TT_CHECK_MSG(QT_Enthaelt(pTxt, "Rtf Files (*.rtf)|*.rtf|"), "Textdatei-/Signaturfenster ohne .rtf - dort wird echtes RTF geschrieben (PRUEFER-86 K2)");
+		free(pTxt);
 	}
 	free(pRc);
+
+	// Wer welchen Filter nimmt.
+	struct { const char* szDatei; const char* szSoll; } kWege[] = {
+		{ "compmsgd.cpp", "CRString( IDS_MSG_SAVEAS_FILE_FILTER )" },
+		{ "saveas.cpp",   "CRString Filter(IDS_MSG_SAVEAS_FILE_FILTER);" },
+		{ "textfile.cpp", "CRString(IDS_TXT_HTML_FILE_FILTER)" },
+		{ "signatur.cpp", "CRString(IDS_TXT_HTML_FILE_FILTER)" },
+	};
+	for (int i = 0; i < (int)(sizeof(kWege) / sizeof(kWege[0])); i++)
+	{
+		char* p = QT_LiesNurCode(szEudoraDir, kWege[i].szDatei);
+		if (!p) { TT_Fail("%s nicht lesbar", kWege[i].szDatei); continue; }
+		if (!QT_Enthaelt(p, kWege[i].szSoll))
+			TT_Fail("%s nimmt nicht %s (E-195)", kWege[i].szDatei, kWege[i].szSoll);
+		free(p);
+	}
+	char* pCm = QT_LiesNurCode(szEudoraDir, "compmsgd.cpp");
+	if (pCm)
+	{
+		TT_CHECK_MSG(!QT_Enthaelt(pCm, "IDS_TXT_HTML_FILE_FILTER"), "das Verfassen-Fenster nimmt wieder den Filter mit .rtf (E-195)");
+		free(pCm);
+	}
+	TT_EndTest();
+}
+
+static void Test_E196_K7()
+{
+	TT_BeginTest("E-196 PRUEFER-86 K7: leere Angabe charset=\"\" und <head> im Kommentar");
+	CString szD, szS;
+	UTE196_HtmlZeichensatz("<meta charset=\"\"><p>\xE4</p>", szD, szS);
+	if (szD != "<meta charset=\"windows-1252\"><p>\xE4</p>") TT_Fail("leere Angabe falsch gefuellt: [%s]", (LPCTSTR) szD);
+
+	// Wert am Ende von content="..." ohne eigenes Anfuehrungszeichen.
+	CString szD3, szS3;
+	UTE196_HtmlZeichensatz("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"><p>x</p>", szD3, szS3);
+	if (szD3 != "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"><p>x</p>") TT_Fail("Angabe am Ende von content falsch: [%s]", (LPCTSTR) szD3);
+
+	CString szD2, szS2;
+	UTE196_HtmlZeichensatz("<!-- <head> --><html><body>\xE4</body></html>", szD2, szS2);
+	TT_CHECK_MSG(szD2.Find("<!-- <head> -->") == 0, "Kommentar veraendert");
+	TT_CHECK_MSG(szD2.Find(kMeta) > (int) strlen("<!-- <head> -->"), "Angabe im Kommentar eingesetzt (K7)");
+	TT_CHECK_MSG(Hat(szS2, "ort=html"), "Kommentar-<head> als Kopf genommen");
 	TT_EndTest();
 }
 
@@ -199,6 +254,7 @@ void RunE196Tests(const char* szEudoraDir)
 	Test_E196_Head();
 	Test_E196_Vorhanden();
 	Test_E196_Entitaeten();
+	Test_E196_K7();
 	Test_E196_Quelltext(szEudoraDir);
 	Test_E195_Filter(szEudoraDir);
 }

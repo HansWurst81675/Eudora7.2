@@ -4338,11 +4338,30 @@ bool E101SpeicherfassungAufbereiten(
 	bool		bCtErsetzt = false;
 	bool		bKopfSagtHtml = false;
 
+	//
+	// PRUEFER-86 K5 und K6 (02.11.2026): zwei Angaben der vorgefundenen
+	// Zeile, die die neue tragen muss, wenn sie die alte ersetzt.
+	//   K5  <x-rich> steht beim Empfang fuer text/richtext UND text/enriched
+	//       (TextReader.cpp) - sagt die alte Zeile richtext, bleibt es dabei.
+	//   K6  format=flowed mit delsp=yes: ohne den Parameter fuegt ein Leser
+	//       das Leerzeichen vor dem weichen Umbruch mit ein.
+	//
+	bool		bKopfSagtRichtext = false;
+	bool		bKopfDelSp        = false;
+
 	if ( bHatContentType )
 	{
 		CString		szCt = KopfwertKlein( szKopf, "content-type:" );
 		szCt.TrimLeft();
 		bKopfSagtHtml = ( szCt.Left( 9 ) == "text/html" );
+		bKopfSagtRichtext = ( szCt.Left( 13 ) == "text/richtext" );
+		{
+			CString		szOhne( szCt );
+			szOhne.Remove( ' ' );
+			szOhne.Remove( '\t' );
+			szOhne.Remove( '"' );
+			bKopfDelSp = ( szOhne.Find( "delsp=yes" ) >= 0 );
+		}
 
 		const bool	bMultipart = ( szCt.Left( 10 ) == "multipart/" );
 		const bool	bTypFalsch = ( bWarHtml && !bKopfSagtHtml );
@@ -4464,7 +4483,7 @@ bool E101SpeicherfassungAufbereiten(
 	}
 
 	const char *	pszUntertyp = ( bWarHtml || bKopfSagtHtml ) ? "html"
-								: ( bWarRich ? "enriched" : "plain" );
+								: ( bWarRich ? ( bKopfSagtRichtext ? "richtext" : "enriched" ) : "plain" );
 
 	//
 	// 4b. E-101 (13.10.2026): die Zeichensatzangabe IM HTML.
@@ -4605,6 +4624,8 @@ bool E101SpeicherfassungAufbereiten(
 			szNeu += "\"";
 			if ( bWarFlowed )
 				szNeu += "; format=flowed";		// E-194
+			if ( bWarFlowed && bKopfDelSp )
+				szNeu += "; delsp=yes";			// PRUEFER-86 K6
 			szNeu += "\r\nContent-Transfer-Encoding: 8bit";
 		}
 
@@ -4804,6 +4825,24 @@ bool E196HtmlZeichensatz(
 	CString		szKlein( szText );
 	szKlein.MakeLower();
 
+	//
+	// PRUEFER-86 K7: Kommentare ausblenden. "<!-- <head> -->" ist kein Kopf,
+	// und eine Angabe darin wirkt nicht. szKlein dient nur der Suche; die
+	// Stellen bleiben dieselben, weil mit Leerzeichen gleicher Laenge
+	// ueberschrieben wird.
+	//
+	{
+		int		nK = szKlein.Find( "<!--" );
+		while ( nK >= 0 )
+		{
+			const int	nE   = szKlein.Find( "-->", nK + 4 );
+			const int	nBis = ( nE < 0 ) ? szKlein.GetLength() : nE + 3;
+			for ( int q = nK; q < nBis; q++ )
+				szKlein.SetAt( q, ' ' );
+			nK = szKlein.Find( "<!--", nBis );
+		}
+	}
+
 	const int	nVorher = szText.GetLength();
 	int			nGefunden      = 0;
 	int			nUmgeschrieben = 0;
@@ -4879,8 +4918,22 @@ bool E196HtmlZeichensatz(
 			if ( q < nZu && szKlein[q] == '=' )
 			{
 				q++;
-				while ( q < nZu && ( szKlein[q] == ' ' || szKlein[q] == '\t' || szKlein[q] == '"' || szKlein[q] == '\'' ) )
+				while ( q < nZu && ( szKlein[q] == ' ' || szKlein[q] == '\t' ) )
 					q++;
+				//
+				// PRUEFER-86 K7: genau EIN oeffnendes Anfuehrungszeichen
+				// ueberspringen, und nur, wenn sein Gegenstueck noch im Tag
+				// steht. Vorher fielen bei charset="" beide weg, und der Name
+				// landete dahinter: <meta charset=""windows-1252>. Bei
+				// content="text/html; charset=" ist das naechste Zeichen das
+				// Ende von content - dann wird VOR ihm eingesetzt.
+				//
+				if ( q < nZu && ( szKlein[q] == '"' || szKlein[q] == '\'' ) )
+				{
+					const int	nGegen = szKlein.Find( szKlein[q], q + 1 );
+					if ( nGegen > q && nGegen < nZu )
+						q++;
+				}
 				int		nWertEnde = q;
 				while ( nWertEnde < nZu &&
 						( isalnum( (unsigned char) szKlein[nWertEnde] ) ||
