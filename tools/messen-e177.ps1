@@ -31,9 +31,15 @@
 #   E177 DATEI <n> bytes=<n> ct=<Content-Type-Zeile|-> charset=<wert|-> euro=<cp1252|utf8|fragezeichen|fehlt> umlaute=<n> nachricht=<..> rumpf=<..> urteil=<passt|falsch|fehlt>
 #   E177 ERGEBNIS dateien=<n> pop=<urteil> e118=<urteil> roh=<urteil> falsche-angabe=<n> fehlende-angabe=<n> lebt=<0|1>
 #   "falsch" = charset sagt utf-8, die Bytes sind windows-1252 (oder umgekehrt).
-#   falsche-angabe/fehlende-angabe zaehlen nur [pop] und e118 - die Wege,
-#   auf denen Eudora eine Nachricht wirklich empfaengt. [roh] steht nur zur
-#   Auskunft da: roh eingelegtes UTF-8 gibt es nach einem Empfang nicht.
+#   falsche-angabe/fehlende-angabe zaehlen nur [pop] und e118. [pop] kommt
+#   ueber den echten Empfangsweg. e118 liegt ebenso roh im Postfach wie
+#   [roh] (PRUEFER-81 K4), aber windows-* uebersetzt Eudora beim Empfang
+#   nicht (FindMIMECharset liefert 0) - roh und empfangen sind dort gleich.
+#   [roh] steht nur zur Auskunft da: "charset=utf-8" (mit Bindestrich)
+#   uebersetzt Eudora beim Empfang immer, roh eingelegt gibt es das nach
+#   einem Empfang nicht. Fuer "utf8" OHNE Bindestrich gilt das nicht - die
+#   Schreibweise bleibt unuebersetzt, und der Kern laesst ihre Angabe seit
+#   PRUEFER-81 K1 stehen (msgutils.cpp, bRumpfIstCp1252).
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten

@@ -64,7 +64,7 @@ Nach jedem Lauf zurückkopiert, `cmp` gegen die Sicherung gleich, `git status` l
 **Gemessen am Kern** (Messfall B): `Content-Type: multipart/mixed; boundary="XYZ"` über `C0 E1 E2 20 EF F0 E8 E2 E5 F2` (kyrillisch, CP1251) → `Content-Type: text/plain; charset="ISO-8859-1"`, `ct-ersetzt=1`. Ein Leser zeigt „Àáâ ïðèâåò“.
 
 **Für [E-177](../Intern/BEFUNDE.md#e-177):** vorher trug die Datei `multipart/mixed` ohne Teile (auch unbrauchbar, aber ohne falsche Zeichensatzangabe); jetzt steht eine bestimmte, falsche Angabe da. Kein Byteverlust. Der Teil-Zeichensatz steht in der Postfachdatei nicht mehr; ihn kennt nur der Empfang. Eine Behebung müsste ihn mitschreiben oder auf eine Angabe verzichten, wenn der Kopf multipart ist und die Bytes nicht nachweislich CP1252 sind. Das ist eine Abwägung, kein Einzeiler. Vermutung: selten bei Gregor.
-**Kennung: E-198** (Kern von [E-101](../Intern/BEFUNDE.md#e-101)). **Schwere: klein.**
+**Kennung: [E-198](../Intern/BEFUNDE.md#e-198)** (Kern von [E-101](../Intern/BEFUNDE.md#e-101)). **Schwere: klein.**
 
 ### K3 — ausgehende Nachrichten nehmen einen anderen Weg und schreiben gar keine Angabe
 
@@ -87,7 +87,7 @@ Gegenprobe G2 (oben): den Ausdruck `( bKopfzeilen && !m_Sum->IsSubPart() ) ? tru
 | Fund | Was passiert | Schwere | Hält das Paket auf? |
 |---|---|---|---|
 | K1 (E-197) | `charset=utf8` bleibt beim Empfang UTF-8, die Datei sagt danach „windows-1252“; auf dem Filterweg ein Rückschritt gegenüber vorher | klein | nein |
-| K2 (E-198) | mehrteilige Nachricht mit kyrillischem o. ä. Textteil bekommt einen geratenen Zeichensatz | klein | nein |
+| K2 ([E-198](../Intern/BEFUNDE.md#e-198)) | mehrteilige Nachricht mit kyrillischem o. ä. Textteil bekommt einen geratenen Zeichensatz | klein | nein |
 | K3 | ausgehende Nachrichten gehen ohne jede Zeichensatzangabe an das Programm (anderer Zweig, unverändert) | klein | nein |
 | K4 | Skript begründet e118 falsch; `roh=falsch` steht als Erwartung fest | klein | nein |
 | K5 | Test fängt einen falschen Kopfzeilen-Parameter nicht (G2 grün) | klein | nein |

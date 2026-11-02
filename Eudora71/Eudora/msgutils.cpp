@@ -4317,11 +4317,21 @@ bool E101SpeicherfassungAufbereiten(
 			// wird "Aab". Das war ein Rueckschritt gegenueber 1.0.106, wo
 			// die Kopfzeile unangetastet blieb.
 			//
+			// E-177, PRUEFER-81 K1 (02.11.2026): "utf8" OHNE Bindestrich
+			// stand hier mit in der Liste - Eudora uebersetzt diese
+			// Schreibweise beim Empfang aber NICHT (FindMIMECharset kennt
+			// nur "utf-8", EudoraRes.rc IDS_MIME_UTF_8; mime.cpp). Der Rumpf
+			// liegt dann als echtes UTF-8 im Postfach, und aus der richtigen
+			// Angabe wurde "windows-1252". Seit die Filteraktion "Notify
+			// Application" diesen Kern benutzt, waere das dort ein
+			// Rueckschritt gewesen. "utf8" faellt deshalb heraus; die
+			// vorgefundene Angabe bleibt stehen.
+			//
 			const bool	bRumpfIstCp1252 =
 					  szCs.IsEmpty()            || szCs == "us-ascii"
 					|| szCs == "iso-8859-1"     || szCs == "windows-1252"
 					|| szCs == "iso-8859-15"    || szCs == "utf-8"
-					|| szCs == "utf8"           || szCs == "latin1";
+					|| szCs == "latin1";
 
 			bCharsetFalsch = bRumpfIstCp1252 &&
 							 !( szCs == szUnser ||
