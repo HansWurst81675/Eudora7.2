@@ -228,7 +228,7 @@ aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
 
 Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
 
-**Bestätigt am 01.11.2026, Gregor an 7.2.1.130, nur Schritt 2 (Verfassen-Fenster):** die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. **Schritt 1 bitte noch einmal:** die erste Datei kam laut Protokoll aus der Postfachliste (`E-101 speichern:` ohne `E-140 speichern aus Nachrichtenfenster:`), nicht aus dem geöffneten Fenster. **Am 02.11.2026 nachgeholt, bestanden:** im Protokoll `E-140 speichern aus Nachrichtenfenster:`, die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, € und Umlaute stimmen. **E-140 ist damit an beiden Fenstern bestätigt.** Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus der Postfachliste), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe).
+**Bestätigt am 01.11.2026, Gregor an 7.2.1.130, nur Schritt 2 (Verfassen-Fenster):** die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. **Schritt 1 bitte noch einmal:** die erste Datei kam laut Protokoll aus der Postfachliste (`E-101 speichern:` ohne `E-140 speichern aus Nachrichtenfenster:`), nicht aus dem geöffneten Fenster. **Am 02.11.2026 nachgeholt, bestanden:** im Protokoll `E-140 speichern aus Nachrichtenfenster:`, die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, € und Umlaute stimmen. **E-140 ist damit an beiden Fenstern bestätigt.** Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus der Postfachliste), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe). Alle drei am 02.11.2026 im Quellstand behoben und **am Prüfstand erledigt** (Fälle `E-194p`/`E-194k`) — kein Testschritt für Gregor.
 
 ## <a id="e-165-naechstes"></a>In 7.2.1.129: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
 
@@ -346,6 +346,8 @@ auf dem Bildschirm `??` (gemessen am 02.11.2026 am Bau 7.2.1.128+d3a625fd\*,
 die erste Messung am Programm).
 
 ## <a id="e-170-naechstes"></a>In 7.2.1.130: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
+
+**Bekannt offen — nicht als bestanden erwarten (Stand 02.11.2026).** Am Prüfstand gemessen: mit einem Server, der neue Nummern meldet (UIDPLUS), behielt schon 7.2.1.128 das Label; ohne diese Meldung geht es auch an 7.2.1.131 verloren ([E-170](BEFUNDE.md#e-170)). Schritt 3 tritt bei Gregors Server darum vermutlich **nicht** ein; aussagekräftig ist nur Schritt 4 (welcher `grund=` dort steht). Gregor muss den Abschnitt nicht ausführen.
 
 **Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129.** **IMAP-Konto**,
 zwei Ordner **desselben** Kontos.

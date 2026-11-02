@@ -89,7 +89,15 @@ BOOL CSaveAs::Start(const char* Filename /*= NULL*/, BOOL IsMessage /*= FALSE*/,
 	
 	CRString Extension(IDS_TEXT_EXTENSION);
 	//CRString Filter(Stationery? IDS_STATIONERY_FILE_FILTER32 : IDS_TEXT_FILE_FILTER);
-	CRString Filter(IDS_TXT_HTML_FILE_FILTER);
+	//
+	// BEFUND E-195: ohne "Rtf Files" - CSaveAs schreibt Text (Nachrichten-
+	// fenster, Trnslate.cpp, DSPrintEdit.cpp). IDS_TXT_HTML_FILE_FILTER mit
+	// .rtf bleibt dem Textdatei- und dem Signaturfenster wie im Original. Echtes
+	// RTF schreibt nur das Textdateifenster (TextFileView.cpp, PRUEFER-86 K2);
+	// das Signaturfenster schreibt Text, bei .htm HTML (signatur.cpp, E-207,
+	// PRUEFER-86 N1).
+	//
+	CRString Filter(IDS_MSG_SAVEAS_FILE_FILTER);
 
 	CSaveAsDialog theDlg(Name, IsMessage, Stationery, Extension, Filter, pParent);
 		

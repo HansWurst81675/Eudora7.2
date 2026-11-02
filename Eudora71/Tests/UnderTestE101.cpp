@@ -15,6 +15,7 @@
 //
 #include <afx.h>
 #include <afxwin.h>
+#include <ctype.h>
 #include <string.h>
 
 #include "UnderTestE101.h"
@@ -24,6 +25,9 @@
 
 // --------------------------------------------------------- die Funktion
 #include "generated/msgutils_e101.inc"
+
+// --------------------------------------------------------- E-196
+#include "generated/msgutils_e196.inc"
 
 // --------------------------------------------------------- Schnittstelle
 #line 30 "UnderTestE101.cpp"
@@ -35,4 +39,11 @@ bool UTE101_SpeicherfassungAufbereiten(const char* pszVoll,
 {
 	return E101SpeicherfassungAufbereiten(pszVoll, bHatKopfzeilen,
 										  out_szDatei, out_szSpur);
+}
+
+bool UTE196_HtmlZeichensatz(const char* pszHtml,
+							CString& out_szDatei,
+							CString& out_szSpur)
+{
+	return E196HtmlZeichensatz(pszHtml, out_szDatei, out_szSpur);
 }
