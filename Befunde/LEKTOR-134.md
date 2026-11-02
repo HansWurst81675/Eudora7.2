@@ -169,3 +169,61 @@ Seit `456c95e1` geänderte MDs außerhalb von `Arbeitsweise/` und `Befunde/` (`g
 | [L-134.7](#l-134.7) | **erledigt** | `pruefstand-ergebnis.txt` und `pruefstand-dauer.txt` auf den letzten echten Lauf (`-Nur E-179`, 18:01:00) zurück; Buchzeile `E-141g-alt` entfernt; Kommentar zu `E-170p` berichtigt. Dass `pruefstand-lauf.ps1` bei eigener Fallliste keine `nur=`-Zeile schreibt, ist nicht geändert |
 | [L-134.8](#l-134.8) | **erledigt** | `tocdoc.cpp:3178`, `:3041`, `summary.cpp:562` |
 | [L-134.9](#l-134.9) | **offen** | beim zweiten Merge zu erledigen |
+
+## <a id="nachtrag-1-02-11-2026"></a>Nachtrag 1 (02.11.2026)
+
+Gegengelesen: `git diff be422780..origin/messungen_vor_7_2_2_132` (Stand `f08258c7`, *„BEFUNDE: Pfade aus Gregors Benutzerverzeichnis neutral beschrieben“*, davor `a13be324`, *„[LEKTOR-134](#lektor-134) eingearbeitet ([L-134.1](#l-134.1) bis [L-134.8](#l-134.8))“*). Arbeitsbaum vorgespult mit `tools/arbeitsbaum-angleichen.sh`. Nichts gebaut, nichts gestartet. Die Tabelle *„Nachtrag 02.11.2026 — eingearbeitet …“* direkt über diesem Abschnitt hat der Hauptagent in diesen Bericht geschrieben; sie ist seine Selbstauskunft, das Urteil steht hier.
+
+| Fund | Stand | Stelle (gemessen) |
+|---|---|---|
+| [L-134.1](#l-134.1) E-170-Texte | **erledigt im Repo**, ein Rest ([L-134.12](#l-134.12)) | `Doku/FAQ.md:208-214` *„… ist das Label danach weg, wenn der Server die neuen Nummern der verschobenen Mail nicht meldet (UIDPLUS) … Meldet er sie, bleibt das Label; das war schon vor 7.2.1.130 so“*; `Intern/TESTPLAN.md:350` *„**Bekannt offen — nicht als bestanden erwarten (Stand 02.11.2026).** … Gregor muss den Abschnitt nicht ausführen.“*; `Releases/7.2.1.131/RELEASE-NOTIZEN.md` mit *„Nachtrag 02.11.2026“* an drei Stellen und dem Schlusssatz, dass der Text auf GitHub unverändert ist. Stimmt mit `BEFUNDE.md:419` |
+| [L-134.2](#l-134.2) Marke „Was fehlt“ | **erledigt mit Werkzeug** | `tools/offene-befunde.pl:295-305` sucht nur vor `**Bis … stand hier:**` und nimmt beide Schreibweisen. Gegenprobe selbst gefahren: über alle Urteilszeilen von `BEFUNDE.md` die gezählt, die eine Bis-Marke und eine Fehlt-Marke haben, aber keine Fehlt-Marke vor der Bis-Marke — nur [E-141](../Intern/BEFUNDE.md#e-141) und [E-179](../Intern/BEFUNDE.md#e-179), beide geschlossen; *„nicht aufgeschrieben“* in `WEITERMACHEN.md` vorher 0, nachher 0; `offene-befunde.pl` *„52 offene Befunde, in beiden Listen gleich.“* In den Listen änderten sich nur [E-170](../Intern/BEFUNDE.md#e-170) (*„ein Weg für Server ohne UIDPLUS …“*) und [E-176](../Intern/BEFUNDE.md#e-176) — dazu [L-134.11](#l-134.11). Die vorgeschlagene Warnung bei doppelter Marke gibt es nicht; mit der neuen Regel ist sie entbehrlich |
+| [L-134.3](#l-134.3) [E-179](../Intern/BEFUNDE.md#e-179) Reichweite | **erledigt** | `README.md:192` *„… beim Senden als reiner Text bestätigt; der Textteil neben dem HTML-Teil (Vorgabe) und die Suche rufen dieselbe Umwandlung, gemessen sind sie nicht“*; `CHANGELOG.md:123` *„bestätigt für das Senden als reiner Text: … (Weg *plain only*; der Textteil neben dem HTML-Teil und die Suche sind nicht gemessen)“*; Release-Notizen gleich |
+| [L-134.4](#l-134.4) Nebenfund Zeichensatz | **erledigt als Beobachtung ohne Kennung** | `BEFUNDE.md:412` *„**Beobachtung (02.11.2026, keine eigene Kennung):** … Die Zeichensatzwahl beim Senden (`sendmail.cpp`, `IDS_MIME_ISO_LATIN1`) ist in keinem Befund geführt“* — steht damit weiter in keiner Liste, weil [E-179](../Intern/BEFUNDE.md#e-179) geschlossen ist; so gewollt (Hauptagent) |
+| [L-134.5](#l-134.5) Release-Notizen [E-141](../Intern/BEFUNDE.md#e-141)/[E-179](../Intern/BEFUNDE.md#e-179) | **erledigt im Repo** | wie [L-134.1](#l-134.1); der Satz im CHANGELOG-Abschnitt 7.2.1.131 fehlt, aber `RELEASE-NOTIZEN.md:19` nennt die *„nicht veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130“* schon — genügt |
+| [L-134.6](#l-134.6) Stand-Kopf, Berichtszahl | **erledigt** | `WEITERMACHEN.md:3` *„Gemergt als #208: … Laufend: Zweig `messungen_vor_7_2_2_132` …“*; `README.md:98` *„(215 LEKTOR- und PRÜFER-Berichte …)“* bei 215 (`git ls-files Befunde`). Die Schranke aus [L-128.2](LEKTOR-128.md#l-128.2) fehlt weiter |
+| [L-134.7](#l-134.7) Spuren der Gegenprobe | **erledigt bis auf das Werkzeug** | `pruefstand-ergebnis.txt` *„nur=[E-179](../Intern/BEFUNDE.md#e-179)   (Teillauf, nicht der Gesamtstand)“*, `zeit=2026-11-02 18:01:00`; Buchzeile `E-141g-alt` entfernt; Kommentar in `pruefstand-faelle.txt` *„Der Fall ist am alten Bau rot nur wegen log-grund“*. `pruefstand-lauf.ps1` unverändert, wie der Hauptagent selbst sagt |
+| [L-134.8](#l-134.8) Zeilenangaben | **erledigt** | `BEFUNDE.md:394` *„`tocdoc.cpp:3041` (Stand 02.11.2026; bei der Niederschrift `:3001`)“*, *„`tocdoc.cpp:3178`“*; `:415` *„`summary.cpp:562`“* — treffen den Quelltext |
+| [L-134.9](#l-134.9) Konflikte mit `e194_…` | **offen** | erst beim zweiten Merge |
+
+**Pfade ersetzt (`f08258c7`), auf Sinn und Zitate geprüft** (gemessen, Wortdiff über alle 16 geänderten Zeilen): ersetzt sind 23 Pfade unter Gregors Benutzerverzeichnis durch `<Gregors Testverzeichnis des Pakets 1.0.N>` bzw. `<Gregors Temp-Verzeichnis>`, dazu in [E-128](../Intern/BEFUNDE.md#e-128) ein Dateiname, der der Betreff einer Mail war, durch *„eine Datei `.txt` in seinem Mailverzeichnis des Pakets 1.0.120“*. Paketnummer, Dateiname am Ende (`Eudora.exe`, `eudora.log`, `rootcerts.p7b`, `mfc140d.dll`) und der Satz drumherum bleiben jeweils stehen; die Aussage jedes Satzes trägt weiter. Bei [E-128](../Intern/BEFUNDE.md#e-128) geht es um die Endung, nicht um den Namen — der Betreff fehlt der Aussage nicht. In Zitaten aus Protokoll und Eingabeaufforderung (`rootcerts.p7b geladen aus: <…>\rootcerts.p7b (vorhanden)`, `BEFUNDE.md:6846` `<…1.0.4>>Eudora.exe Mailverzeichnis`) steht jetzt ein Platzhalter mitten im Zitat; die spitzen Klammern zeigen das, verfälscht ist nichts. Zwei Reste: [L-134.10](#l-134.10).
+
+### <a id="l-134.10"></a>L-134.10 — Beim Ersetzen der Pfade ist ein Bereich halb stehengeblieben; ein Pfad in Gregors Benutzerverzeichnis steht noch
+
+**Gewicht: Kleinkram.** (gemessen)
+
+- `BEFUNDE.md:430` *„jedes Paket in `<Gregors Testverzeichnis des Pakets 1.0.110>` bis `-1.0.122-release` liefert 121 Wurzeln aus“* — vorher ergab der zweite Teil nur zusammen mit dem vollen Pfad davor einen Namen; jetzt hängt er in der Luft.
+- `BEFUNDE.md:2354-2356` (eingerückte Ausgabe zu `tools/lehren-spiegeln.pl`) nennt den Pfad des Repos unter Gregors Benutzerverzeichnis und den daraus abgeleiteten Verzeichnisnamen; `grep -c 'Users.Gregor' Intern/BEFUNDE.md` → 1. Dort ist der Pfad Gegenstand der Messung (die Ableitung des Verzeichnisnamens); ein Platzhalter müsste die Ableitung mitnehmen.
+
+**Vorschlag:** *„jedes Paket von 1.0.110 bis 1.0.122 in Gregors Testverzeichnissen liefert …“*; für `:2354-2356` Platzhalter für Wurzel und abgeleiteten Namen mit dem Satz, dass Doppelpunkt, Schrägstrich und Punkt zu `-` werden — oder bewusst stehen lassen und das vermerken.
+
+### <a id="l-134.11"></a>L-134.11 — Die Liste zu E-176 hat die zweite offene Aufgabe verloren
+
+**Gewicht: Kleinkram.** (gemessen)
+
+- `CHANGELOG.md:44` und `WEITERMACHEN.md`, Zeile [E-176](../Intern/BEFUNDE.md#e-176), jetzt *„die Messung unter Page-Heap. **Was es zum Messen braucht:** …“*; vorher *„ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest bisher nur den Quelltext), und die Messung am Programm …“*.
+- Der echte Test ist nicht geschrieben; er steht nur noch im Teil hinter *„Bis 02.11.2026 stand hier“* (`BEFUNDE.md:415` *„echt anlegt (`TestE176.cpp` liest bisher nur den Quelltext)“*), den das Werkzeug seit [L-134.2](#l-134.2) absichtlich nicht mehr liest. Die neue Marke im aktuellen Teil nennt nur die Messung.
+
+**Vorschlag:** im aktuellen Teil *„**Was noch fehlt:** die Messung unter Page-Heap, und ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest nur den Quelltext).“*, dann `offene-befunde.pl -schreiben`. Bei jedem fortgeschriebenen Urteil prüfen: übernimmt die neue Marke alles Offene der alten?
+
+### <a id="l-134.12"></a>L-134.12 — Die FAQ verspricht die Logzeile zu E-170 ohne die Bedingung, unter der sie geschrieben wird
+
+**Gewicht: Kleinkram.** (gemessen an den Texten)
+
+- `Doku/FAQ.md:213-214` *„Ab 7.2.1.131 steht in der `eudora.log`, warum es fehlt“*. `BEFUNDE.md:419` und `TESTPLAN.md` (Schritt 4 im Abschnitt `e-170-naechstes`): die Zeile kommt nur mit dem Protokollbereich *Misc* (0x8000), *„in der Vorgabe 25759 aus“*. Ein Anwender mit der Vorgabe findet sie nicht.
+- *„Ab 7.2.1.131“*: eingebaut seit 7.2.1.130 (`CHANGELOG.md:64`); für Anwender ist 7.2.1.131 das erste Release damit — vertretbar.
+
+**Vorschlag:** *„… steht in der `eudora.log` eine Zeile mit dem Grund, wenn der Protokollbereich *Misc* eingeschaltet ist (`LogLevel` mit 0x8000; in der Vorgabe aus)“*.
+
+**Nachgereicht `b9819cb6`** (*„Release-Notizen 7.2.1.131: GitHub-Text berichtigt ([E-170](../Intern/BEFUNDE.md#e-170), [E-141](../Intern/BEFUNDE.md#e-141), [E-179](../Intern/BEFUNDE.md#e-179), [E-176](../Intern/BEFUNDE.md#e-176))“*), gegengelesen nach erneutem Angleichen: Gregors Frage 1 oben ist entschieden (*„ja, berichtige den text auf github“*, zitiert in der letzten Zeile von `Releases/7.2.1.131/RELEASE-NOTIZEN.md`). Abgleich mit `gh release view v7.2.1.131 --json body` (gemessen): der veröffentlichte Text enthält die drei Stellen *„Nachtrag 02.11.2026“* und ist bis auf die Schlusszeile der Repo-Datei zeilengleich (`diff` → nur Zeile 141); dass die Schlusszeile mit ihrem relativen Verweis auf GitHub fehlt, ist richtig. Meine Angabe in der Tabelle oben (*„Schlusssatz, dass der Text auf GitHub unverändert ist“*) ist damit überholt. Der Rest aus [L-134.12](#l-134.12) betrifft die FAQ, nicht die Release-Notizen — dort steht zur Logzeile nur *„7.2.1.131 schreibt dann nur den Grund ins Protokoll“*, ohne die Bedingung *Misc*; ebenfalls Kleinkram.
+
+### <a id="l-134.13"></a>L-134.13 — Der Merge von `main` hat elf Startzeilen in TESTLAEUFE verdoppelt
+
+**Gewicht: Kleinkram.** Die Zählung der Starts gegen das Protokoll (`pruefe-startwege.pl`) zählt die Zeilen doppelt; ein fehlender Start kann dadurch verdeckt werden (Vermutung über die Zählweise, nicht nachgelesen). (gemessen)
+
+- `grep '^| 20' tools/TESTLAEUFE.md | sort | uniq -d | wc -l` → 11, alle vom 02.11. zwischen 15:50:04 und 16:06:10 (`C:\Temp\E194`, `E194K`, `E194-140`, `E194-177`, `E194-178`, `E194-alt`, `E194K-alt`).
+- Je Stand gezählt: `ae8083b0`, `c3a56169`, `ebb003d7` und `origin/main` (`ee7b5400`) je 0 doppelte Zeilen, der Merge `fc2f9eae` 11 — beide Seiten hatten dieselben fremden Zeilen nachgetragen, an verschiedenen Stellen.
+
+**Vorschlag:** die Dubletten entfernen (eine Zeile je Zeitpunkt und Verzeichnis); `startzeilen-sammeln.pl` oder die Merge-Auflösung von `TESTLAEUFE.md` danach mit `sort | uniq -d` prüfen lassen.
+
+Werkzeuge nach dem Angleichen: `perl tools/doku-pruefen.pl` *„Kein Widerspruch gefunden.“*; `perl tools/offene-befunde.pl` *„52 offene Befunde, in beiden Listen gleich.“* Offen damit: [L-134.9](#l-134.9) bis [L-134.13](#l-134.13).
