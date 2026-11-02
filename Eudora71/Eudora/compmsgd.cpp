@@ -226,8 +226,18 @@ BOOL CCompMessageDoc::InitializeNew
 
 	// Give the new summary the current date/time so that it sorts correctly,
 	// but do it without setting the Date field so it remains empty
-	m_Sum->m_TimeZoneMinutes = -GetGMTOffset() * 60;
-	m_Sum->m_Seconds = time(NULL) - m_Sum->m_TimeZoneMinutes;
+	//
+	// BEFUND E-205 (02.11.2026): die Zone in MINUTEN, wie der Name sagt und
+	// wie CSummary::SetDate sie setzt (summary.cpp). Hier stand
+	// "-GetGMTOffset() * 60" - Sekunden, bei +0100 also 3600. m_Seconds kam
+	// trotzdem richtig heraus (Zeit minus Zone in Sekunden), aber jeder, der
+	// die Zone las, rechnete 60 Stunden: "Speichern unter" mit Kopfzeilen
+	// schrieb "Date: ... +6000", 59 Stunden in der Zukunft (gemessen,
+	// tools/messen-e205.ps1: neu1=59h neu2=119h). Der Wert fuer m_Seconds
+	// bleibt derselbe.
+	//
+	m_Sum->m_TimeZoneMinutes = -GetGMTOffset();
+	m_Sum->m_Seconds = time(NULL) - m_Sum->m_TimeZoneMinutes * 60;
 		
 	PutDebugLog(DEBUG_MASK_MISC, "E-27 InitializeNew: vor OutToc->AddSum (meldet den Suchindex)");
 	OutToc->AddSum(m_Sum);
@@ -3355,7 +3365,7 @@ void CCompMessageDoc::OnFileSaveAs()
 							//TRUE, 
 							FALSE,
 							CRString( IDS_TEXT_EXTENSION ), 
-							CRString( IDS_TXT_HTML_FILE_FILTER ), 
+							CRString( IDS_MSG_SAVEAS_FILE_FILTER ),		// E-195: ohne .rtf 
 							NULL );
 		
 	
@@ -3414,7 +3424,16 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 	*dateMaybe = 0;
 	if ( E104SchalterLesen( IDS_INI_INCLUDE_HEADERS ) )
 	{
-		ComposeDate( dateMaybe, m_Sum );
+		//
+		// BEFUND E-205: nur lesen. Die Ueberladung ComposeDate(buf, Sum)
+		// schreibt m_Seconds, m_TimeZoneMinutes und m_Date der
+		// Zusammenfassung zurueck (sendmail.cpp) - beim Speichern einer
+		// Datei hat das nichts zu suchen. Bei einer gueltigen Zone hebt
+		// FormatDate die Verschiebung wieder auf, bei einer ungueltigen
+		// (die +6000 von oben) nicht: jedes weitere Speichern lag 60 Stunden
+		// spaeter (neu2=119h).
+		//
+		ComposeDate( dateMaybe, m_Sum->m_Seconds, m_Sum->m_TimeZoneMinutes );
 		if (*dateMaybe)
 			strcat( dateMaybe, "\r\n" );
 	}
@@ -3428,6 +3447,9 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 	{
 		view->GetMessageAsHTML(msg, E104SchalterLesen( IDS_INI_INCLUDE_HEADERS ));
 		msg = Text2Html(dateMaybe, TRUE, FALSE) + msg;
+
+		// BEFUND E-196: die .htm-Datei nennt ihren Zeichensatz.
+		msg = E196HtmlFuerDatei( msg, "Verfassen-Fenster" );
 	}
 	else
 	{

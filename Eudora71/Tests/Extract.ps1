@@ -206,6 +206,13 @@ $lStart = Find-Line $mu '^bool E101SpeicherfassungAufbereiten\s*\(' 0
 $lEnd = Find-Line $mu '^\}\s*$' $lStart
 Write-Region $mu $lStart $lEnd (Join-Path $OutDir "msgutils_e101.inc") $msgPath
 
+# Region L2: E196HtmlZeichensatz (Befund E-196). Setzt in eine .htm-Datei aus
+# "Speichern unter" die Zeichensatzangabe ein. Reine Textverarbeitung wie
+# Region L, ohne PutDebugLog - das steht im Aufrufer E196HtmlFuerDatei.
+$l2Start = Find-Line $mu '^bool E196HtmlZeichensatz\s*\(' 0
+$l2End = Find-Line $mu '^\}\s*$' $l2Start
+Write-Region $mu $l2Start $l2End (Join-Path $OutDir "msgutils_e196.inc") $msgPath
+
 
 # ---------------------------------------------------------------- HTMLUtils.cpp (E-110)
 # Region M: resolve_URL und translate_hex (Befund E-110). resolve_URL baut aus

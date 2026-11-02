@@ -54,7 +54,19 @@ param(
     # juengste, die Liste steht also 3,2,1), alle markiert und verschoben; im
     # leeren Ziel muss danach jede neue UID den Betreff ihrer eigenen Mail
     # tragen. Huelle: tools\messen-e184m.ps1.
-    [switch] $Mehrere
+    [switch] $Mehrere,
+    # E-170 (Huellen tools\messen-e170.ps1 und messen-e170o.ps1): drei Mails
+    # in INBOX, Ablage leer. Nach Datum sortiert (aufsteigend, also UID
+    # 1,2,3), die LETZTE Zeile gewaehlt, Label <n> per WM_COMMAND
+    # ID_MESSAGE_LABEL_n (32847+n) an das Postfachfenster, sofort verschoben.
+    # Die alte UID (3) ist so verschieden von der neuen im leeren Ziel (1);
+    # mit einer Mail (1 -> 1) bestand am 02.11.2026 auch der alte Bau, weil
+    # die Vorab-Kopie zufaellig schon die richtige UID trug. Gemessen wird
+    # das Label der Kopie in Ablage.toc; Positivprobe: das Label steht auf
+    # der Quelle in INBOX.toc (dort nur als geloescht markiert), und die
+    # Quelle ist die UID, die der Server kopiert hat ("UID COPY <n>").
+    # Ohne fremde Mail im Ziel - sonst ueberlagert am alten Bau E-184.
+    [int] $Label = 0
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
@@ -196,6 +208,10 @@ if ($Mehrere) {
     $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 3 * $Warten),
                  '--nachrichten', '3', '--datum-absteigend')
 }
+if ($Label -gt 0) {
+    $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 5 * $Warten),
+                 '--nachrichten', '3')
+}
 if ($OhneCopyuid) { $srvArgs += '--ohne-copyuid' }
 $srv = Start-Process $perl -ArgumentList $srvArgs -WorkingDirectory $repo -WindowStyle Hidden -PassThru
 Start-Sleep -Seconds 2
@@ -334,9 +350,10 @@ try {
     if ($script:lb -eq [IntPtr]::Zero) { Write-Host 'E184 FEHLER: keine Liste im INBOX-Fenster'; exit 1 }
     $anzahl = [int](Snd $script:lb 0x018B ([IntPtr]0) ([IntPtr]0))                   # LB_GETCOUNT
     Write-Host "E184 INBOX-Zeilen: $anzahl"
-    $sollZeilen = 1; if ($Mehrere) { $sollZeilen = 3 }
+    $sollZeilen = 1; if ($Mehrere -or $Label -gt 0) { $sollZeilen = 3 }
+    $script:zeile = 0; if ($Label -gt 0) { $script:zeile = 2 }   # E-170: letzte Zeile nach Datum
     if ($anzahl -ne $sollZeilen) { Write-Host "E184 FEHLER: INBOX sollte genau $sollZeilen Zeile(n) haben"; exit 1 }
-    if ($Mehrere) {
+    if ($Mehrere -or $Label -gt 0) {
         # Nach Datum sortieren (Menuebefehl, kein Tastendruck): UID 1 ist die
         # juengste, die Liste steht danach 3,2,1 - nicht aufsteigend nach UID.
         [void][E184]::PostMessageA($aktiv, 0x0111, [IntPtr]33247, [IntPtr]::Zero)   # ID_EDIT_SORT_SORTBYDATE
@@ -344,9 +361,18 @@ try {
     }
     [void](Snd $script:lb 0x0185 ([IntPtr]0) ([IntPtr](-1)))                         # LB_SETSEL FALSE, alle
     if ($Mehrere) { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr](-1))) }       # LB_SETSEL TRUE, alle
-    else          { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]0)) }          # LB_SETSEL TRUE, 0
+    else          { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]$script:zeile)) }   # LB_SETSEL TRUE, eine Zeile
     Write-Host ('E184 markiert: ' + [int](Snd $script:lb 0x0190 ([IntPtr]0) ([IntPtr]0)))   # LB_GETSELCOUNT
-    [void](Snd $script:lb 0x019E ([IntPtr]0) ([IntPtr]0))                            # LB_SETCARETINDEX
+    [void](Snd $script:lb 0x019E ([IntPtr]$script:zeile) ([IntPtr]0))                # LB_SETCARETINDEX
+
+    if ($Label -gt 0) {
+        # E-170: Label auf die gewaehlte Zeile, dann SOFORT verschieben. Kein
+        # Schliessen und Wiederoeffnen dazwischen - danach war die Zeilenfolge
+        # eine andere (gemessen 02.11.2026: Label auf UID 1, verschoben UID 3).
+        [void][E184]::PostMessageA($aktiv, 0x0111, [IntPtr](32847 + $Label), [IntPtr]::Zero)   # ID_MESSAGE_LABEL_n
+        Start-Sleep -Seconds 2
+        Dialoge $pp -Schliessen
+    }
 
     $vorher = TocLesen $ablageToc
     Write-Host ('E184 Ablage.toc vor dem Verschieben: ' + (($vorher | ForEach-Object { 'uid=' + $_.Uid + ' "' + $_.Betreff + '"' }) -join ' ; '))
@@ -405,6 +431,32 @@ if ($Mehrere) {
     $z = $prot | Where-Object { $_ -match 'COPYUID 1 (\S+ \S+)\]' } | Select-Object -First 1
     if ($z -and $z -match 'COPYUID 1 (\S+ \S+)\]') { $antwort = $Matches[1] -replace ' ', '/' }
     Write-Host ("E184M ERGEBNIS richtig={0} falsch={1} eintraege={2} anfrage={3} copyuid={4}" -f $richtig, $falsch, $nachher.Count, $anfrage, $antwort)
+}
+if ($Label -gt 0) {
+    # Quelle: die Zeile mit dem Label in INBOX.toc, und die UID, die der
+    # Server kopiert hat - beide muessen dieselbe Mail sein (Positivprobe).
+    $quelle = TocLesen (Join-Path $konto 'INBOX\INBOX.toc')
+    foreach ($e in $quelle) { Write-Host ('E170 INBOX uid={0} label={1} betreff="{2}"' -f $e.Uid, $e.Label, $e.Betreff) }
+    $markiert = @($quelle | Where-Object { $_.Label -eq $Label })
+    $kopiert = '-'
+    $z = $prot | Where-Object { $_ -match '<- \S+ UID COPY (\S+) ' } | Select-Object -First 1
+    if ($z -and $z -match 'UID COPY (\S+) ') { $kopiert = $Matches[1] }
+    $ua = '-'; $b = '(keins)'
+    if ($markiert.Count -eq 1) { $ua = [string]$markiert[0].Uid; $b = $markiert[0].Betreff }
+    $quelleOk = 0; if ($ua -ne '-' -and $ua -eq $kopiert) { $quelleOk = 1 }
+    $kopien = @($nachher | Where-Object { $_.Betreff -eq $b })
+    $mitLabel = @($kopien | Where-Object { $_.Label -eq $Label }).Count
+    $un = '-'; if ($kopien.Count -gt 0) { $un = (($kopien | ForEach-Object { $_.Uid }) -join ',') }
+    $cu = 'ja'; if ($OhneCopyuid) { $cu = 'nein' }
+    $log = Join-Path $voll 'Mailverzeichnis\eudora.log'
+    $grund = '(keine-logzeile)'
+    if (Test-Path $log) {
+        $z = Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-170 Labels beim Verschieben' } | Select-Object -Last 1
+        if ($z) { Write-Host ('E170 LOG ' + $z); if ($z -match 'grund=(\S+)') { $grund = $Matches[1] } }
+    }
+    $p2 = Get-Process -Id $pp -ErrorAction SilentlyContinue
+    $lebt = 0; if ($p2 -and -not $p2.HasExited) { $lebt = 1 }
+    Write-Host ("E170 ERGEBNIS copyuid={0} label-quelle={1} uid-alt={2} uid-kopiert={3} quelle-passt={4} uid-ziel={5} kopie-mit-label={6} log-grund={7} lebt={8}" -f $cu, $markiert.Count, $ua, $kopiert, $quelleOk, $un, $mitLabel, $grund, $lebt)
 }
 if ($OhneCopyuid) {
     $kopieAlt = @($nachher | Where-Object { $_.Uid -eq 1 -and $_.Betreff -like 'Pruefnachricht 1*' }).Count

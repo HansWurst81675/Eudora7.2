@@ -352,6 +352,36 @@ E-143s | C:\Temp\E143S | 90 | messung | E143S ERGEBNIS treffer=3 hinweise=1 abge
 # fett/kursiv laufen ueber ExecCommand und waren nie betroffen - sie stehen
 # drin, damit eine Umstellung auf eigenes HTML-Umbauen auffaellt.
 E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1 | | | messen=tools\messen-e178.ps1
+# E-194/E-195/E-196 (02.11.2026): Speichern unter bei einer Mail im Format
+# format=flowed (Testdaten/e194-flowed-umlaute.eml, ueber POP empfangen -
+# erst der Empfangsweg setzt <x-flowed>). Postfachliste .txt, Nachrichten-
+# fenster .txt und .htm, Verfassen-Fenster .htm; dazu die Dateityp-Liste
+# jedes Dialogs. E-194p ohne, E-194k mit Kopfzeilen (IncludeHeaders aus dem
+# Verzeichnisnamen, tools/messen-e194.ps1). Gemessen am 02.11.2026: gruen am
+# Bau 7.2.1.131+522b8bbb* (C:\Temp\E194, E194K); Gegenprobe am Bau
+# 7.2.1.131+a2f29b69* (C:\Temp\E194-alt, E194K-alt): liste-xflowed=2
+# liste-flowed=0 htm-meta=0 rtf=3, mit Kopfzeilen auch lesen-xflowed=2.
+# Seit PRUEFER-86 K9 (02.11.2026) traegt das Urteil auch liste-umbruch,
+# liste-euro und liste-umlaute; gruen am Bau 7.2.1.131+ed7b9d83*.
+E-194p | C:\Temp\E194 | 90 | messung | E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
+# E-205 (02.11.2026): Speichern unter mit Kopfzeilen aus einer NEUEN Antwort
+# (zweimal), aus der eingereihten Nachricht in Out und aus der Out-Liste
+# (je zweimal); Date:-Zeile gegen Dateizeit, auf Stunden gerundet
+# (tools/messen-e205.ps1, Pruefstand C:\Temp\E205, Kopie von E194K-alt).
+# Gegenprobe am Bau 7.2.1.131+a2f29b69* (C:\Temp\E205-alt):
+# neu1=59h neu2=119h q1=0h q2=0h liste1=0h liste2=0h zone=+6000.
+# Seit PRUEFER-86 N2 (02.11.2026) vergleicht das Skript die Zone mit der des
+# Rechners zum Zeitpunkt der Datei und meldet zone=passt - vorher stand hier
+# zone=+0100 fest, und der Fall waere ab der Sommerzeit rot geworden.
+E-205p | C:\Temp\E205 | 150 | messung | E205 ERGEBNIS neu1=0h neu2=0h q1=0h q2=0h liste1=0h liste2=0h zone=passt lebt=1 | | | messen=tools\messen-e205.ps1
+E-194k | C:\Temp\E194K | 90 | messung | E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
+# E-207 (02.11.2026): Speichern unter aus dem Signaturfenster. Die Signatur
+# "Standard" bekommt einen bekannten Text, im Fenster wird eine Marke
+# eingetippt (WM_CHAR an die Ansicht), dann Speichern unter als .txt und .htm;
+# beide Dateien muessen Text, Marke und Umlaute tragen, die .htm HTML, die .txt
+# keines; die Signaturdatei selbst bleibt unveraendert (tools/messen-e207.ps1,
+# Pruefstand C:\Temp\E207, Kopie von C:\Temp\E205).
+E-207p | C:\Temp\E207 | 60 | messung | E207 ERGEBNIS fenster=1 geaendert=1 txt=passt htm=passt frage=0 sig=unveraendert lebt=1 | | | messen=tools\messen-e207.ps1
 
 # -------------------------------------------------------------------------
 # E-39 - der INI-Abschnitt einer geloeschten aktuellen Persoenlichkeit
@@ -396,3 +426,26 @@ A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: 
 # Beenden abgeschossen werden wie schon E132 seit dem 20.10.2026.
 E-133p | C:\Temp\E133 | 5 | messung | E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1 | | | ohne-argument,messen=tools\messen-e133.ps1
 E-133q | C:\Temp\E133 | 5 | log | E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\" | | | ohne-argument,messen=tools\messen-e133.ps1
+
+# -------------------------------------------------------------------------
+# Messungen vor 7.2.2.132 (MESSER5, 02.11.2026) - Behebungen, die in
+# 7.2.1.131 ausgeliefert, aber nie am laufenden Programm gemessen waren.
+# Vorher-Bau jeweils 7.2.1.128+640e1a0e (C:\Temp\EM*-alt), nachher
+# 7.2.1.131+f31dbff9 (C:\Temp\EM*, Quellstand gleich main 88142c78).
+# E-170 mit UIDPLUS: das Label bleibt an BEIDEN Bauten - der alte Weg
+# (ImapTransferSummaryData) nahm es schon mit. Der Fall ist am alten Bau rot
+# nur wegen log-grund (dort gibt es die Logzeile nicht); ein Regressionstest, keine
+# Gegenprobe fuer die Behebung (Intern/BEFUNDE.md#e-170).
+E-170p | C:\Temp\EM170 | 30 | messung | kopie-mit-label=1 log-grund=ok lebt=1 | | | messen=tools\messen-e170.ps1
+# E-170 ohne UIDPLUS: das Label geht an BEIDEN Bauten verloren (der Fehler
+# ist offen). Behauptet wird nur, was die Behebung leistet: die Logzeile
+# nennt den Grund. Am alten Bau rot (keine Logzeile).
+E-170o | C:\Temp\EM170 | 30 | messung | log-grund=keine-neuen-uids | | | messen=tools\messen-e170o.ps1
+# E-141: Entwurf aus IMAP nach Out, E-142-Rueckfrage Yes - danach KEINE
+# Meldung "No messages were transferred!". Alter Bau: nicht-uebertragen=1.
+# Gegenprobe IMAP -> lokal und Loeschen in derselben Zeile (lokal, geloescht).
+E-141p | C:\Temp\EM141 | 30 | messung | E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1 | | | messen=tools\messen-e141.ps1
+E-141g | C:\Temp\EM141 | 30 | messung | geloescht=2 lebt=1 | | | messen=tools\messen-e141.ps1
+# E-179: Textteil einer gesendeten HTML-Mail (SMTP-Pruefserver). Alter Bau:
+# emoji=kaputt ("%"), kyr=kaputt (0x16), und nach &#x1F525; endet der Text.
+E-179p | C:\Temp\EM179 | 30 | messung | E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1 | | | messen=tools\messen-e179.ps1

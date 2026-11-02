@@ -206,10 +206,12 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
    am Quelltext gibt es, nachgestellt ist der Fehler noch nicht).
 
 **Bekannte Einschränkung:** wird eine Mail mit Label später zwischen zwei
-Ordnern **desselben IMAP-Kontos** verschoben, ist das Label danach weg — Eudora
-speichert Labels nur bei sich, nicht auf dem Server
-([E-170](../Intern/BEFUNDE.md#e-170); im Quellstand berichtigt für Server, die die neuen
-Nummern der verschobenen Mails melden — im Testpaket 7.2.1.130).
+Ordnern **desselben IMAP-Kontos** verschoben, ist das Label danach weg, wenn der
+Server die neuen Nummern der verschobenen Mail nicht meldet (UIDPLUS) — Eudora
+speichert Labels nur bei sich, nicht auf dem Server. Meldet er sie, bleibt das
+Label; das war schon vor 7.2.1.130 so (am Prüfstand am 02.11.2026 an 7.2.1.128
+und 7.2.1.131 gemessen). Ab 7.2.1.131 steht in der `eudora.log`, warum es fehlt
+([E-170](../Intern/BEFUNDE.md#e-170), offen).
 
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund
@@ -301,8 +303,11 @@ Anhänge der gelöschten Mail aus dem Anhangverzeichnis verschwunden, die
 ## 15. Kann ich eine Mail als Anhang weiterleiten?
 
 Nein — einen solchen Befehl gibt es in Eudora nicht. Wer eine Mail
-unverändert weitergeben will, sichert sie als Datei (*File → Save As…*) und
-hängt diese Datei an eine neue Mail an.
+unverändert weitergeben will, sichert sie als Datei und hängt diese Datei an
+eine neue Mail an — am besten aus der **Postfachliste** (Nachricht markieren,
+*File → Save As…*): dort bleiben die Zitatzeichen `>` stehen (am 02.11.2026 am
+Prüfstand gemessen, `e194-liste.txt`). Aus dem geöffneten Nachrichtenfenster
+ohne *Kopfzeilen einschließen* gehen sie verloren ([E-206](../Intern/BEFUNDE.md#e-206)).
 
 *Am Quelltext nachgesehen* ([EINSTELLUNGEN.md](../Intern/EINSTELLUNGEN.md),
 Abschnitt 4).
