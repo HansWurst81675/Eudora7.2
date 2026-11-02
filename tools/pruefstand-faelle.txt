@@ -365,9 +365,29 @@ E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=
 # "machine name" (IDS_ERR_BAD_POP_ACCT). E-39v/E-39w sind die Positivproben: ohne
 # den Vorlauf ist die geloeschte nicht die aktuelle, und ohne Loeschen ist
 # abschnitt-wieder=0 nichts wert.
-E-39p | C:\Temp\E39 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=1 aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
+# Seit E-203 behoben ist (02.11.2026) schaltet Change Password auch nach der
+# Meldung zurueck - der Vorlauf macht E39Zwei nicht mehr zur aktuellen. Aus
+# E-39p (war-aktuell=1) wird deshalb E-203p: dieselbe Messung, jetzt das
+# Urteil ueber E-203. Am Bau 7.2.1.131+f31dbff9 (ohne E-203) war-aktuell=1.
+# Die E-39-Behebung selbst ist ueber die Oberflaeche nicht mehr erreichbar;
+# sie sichert TestE39.cpp.
+E-203p | C:\Temp\E203 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
 E-39v | C:\Temp\E39 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
 E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
+
+# -------------------------------------------------------------------------
+# E-204 - das Kennwort einer geloeschten Persoenlichkeit im Speicher
+# -------------------------------------------------------------------------
+# E204Zwei ruft mit "e204-alt-kennwort" ab (Kennwort nur im Speicher), wird
+# ueber Personalities > Delete geloescht und ueber den Assistenten mit Konto
+# e204neu gleichnamig neu angelegt; dann Check Mail. Der POP-Pruefserver
+# schreibt mit, welches PASS ankommt. Am 02.11.2026: Bau 7.2.1.131+f31dbff9
+# (ohne die Behebung, C:\Temp\E204-alt) rueckfrage=0 user=e204neu pass=alt -
+# das alte Kennwort ging ohne Rueckfrage an das neue Konto. E-204w ist die
+# Positivprobe: beide Abrufe vorher mit PASS alt (der zweite ohne Frage, das
+# Kennwort steht im Speicher), Loeschen und Neuanlage gelungen.
+E-204p | C:\Temp\E204 | 90 | messung | E204 ERGEBNIS rueckfrage=1 user=e204neu pass=neu lebt=1 | | | messen=tools\messen-e204.ps1
+E-204w | C:\Temp\E204 | 90 | messung | E204 PROBE ok | | | messen=tools\messen-e204.ps1
 
 # -------------------------------------------------------------------------
 # A-5 - Hilfe-Menue (Help -> Keyboard Shortcuts / Settings Reference), 7.2.2

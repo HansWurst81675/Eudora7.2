@@ -452,10 +452,17 @@ BOOL ChangePassword()
 			g_Personalities.SetCurrent( NewPersona );
 	}
 
+	// E-203: auch die beiden fruehen Ausgaenge schalten auf die vorige
+	// Persoenlichkeit zurueck. Sonst blieb die im Dialog gewaehlte bis zum
+	// naechsten Umschalten die aktuelle (gemessen am 02.11.2026 am
+	// Pruefstand C:\Temp\E39: war-aktuell=1 nach der Meldung), und jede
+	// Einstellung las zuerst aus ihrem Abschnitt.
 	const char* POPAccount = GetIniString(IDS_INI_POP_ACCOUNT);
 	if (!POPAccount || !*POPAccount)
 	{
 		ErrorDialog(IDS_ERR_NO_POP_ACCT);
+		if ( bMultiple )
+			g_Personalities.SetCurrent( OrgPersona );
 		return (FALSE);
 	}
 
@@ -464,6 +471,8 @@ BOOL ChangePassword()
 	if (!At || !At[1])
 	{
 		ErrorDialog(IDS_ERR_BAD_POP_ACCT, POPAccount);
+		if ( bMultiple )
+			g_Personalities.SetCurrent( OrgPersona );
 		return (FALSE);
 	}
 

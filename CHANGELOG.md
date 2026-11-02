@@ -27,8 +27,8 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-204](Intern/BEFUNDE.md#e-204)** | Das Kennwort einer gelöschten Persönlichkeit, die nicht die aktuelle war, bleibt im Spei… | 02.11.2026 an 7.2.1.131 (Quelltext) | am Prüfstand nachstellen (Persönlichkeit mit Kennwort abrufen, löschen, gleichnamig neu anlegen, abrufen, am POP-Prüfserver das gesendete `PASS` l… |
-| **[E-203](Intern/BEFUNDE.md#e-203)** | Change Password lässt bei einem POP-Konto ohne „@“ die gewählte Persönlichkeit bis … | 02.11.2026 an 7.2.1.131 (Quelltext) | die Folgen am Prüfstand messen; naheliegende Behebung `if ( bMultiple ) g_Personalities.SetCurrent( OrgPersona );` vor beiden frühen `return`. Nicht… |
+| **[E-204](Intern/BEFUNDE.md#e-204)** | Das Kennwort einer gelöschten Persönlichkeit, die nicht die aktuelle war, bleibt im Spei… | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132; für Gregor nichts zu prüfen — der Prüfstand sieht den Weg vollständig. **Stufe: kritisch** (Sicherheit: ein Kennwort ging u… |
+| **[E-203](Intern/BEFUNDE.md#e-203)** | Change Password lässt bei einem POP-Konto ohne „@“ die gewählte Persönlichkeit bis … | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132; für Gregor nichts zu prüfen. **Stufe: wichtig** |
 | **[E-199](Intern/BEFUNDE.md#e-199)** | Festbreite im Bearbeiten-Modus schreibt t; sichtbar in den Text — wer in einer empfangen… | 02.11.2026 an 7.2.1.130 | nur abschneiden, wenn der Text wirklich auf `"\r\n"` endet, an allen Stellen in `WrapTag` und `SplitTagOff`; dazu ein Regressionstest und im Messskrip… |
 | **[E-198](Intern/BEFUNDE.md#e-198)** | Eine gespeicherte oder an ein Programm übergebene mehrteilige Nachricht mit unübersetzte… | **nie gemessen** | den Zeichensatz des Textteils ermitteln (er steht in Eudoras Zusammenfassung bzw. im Teilkopf) und im multipart-Zweig dieselbe Prüfung wie im einteil… |
 | **[E-196](Intern/BEFUNDE.md#e-196)** | Eine als .htm gespeicherte Nachricht nennt ihren Zeichensatz nicht — die Umlaute stehen … | **nie gemessen** | am Prüfstand nachstellen (Nachrichten- und Verfassen-Fenster, `.htm`), dann im HTML-Zweig ein `<meta http-equiv="Content-Type" content="text/html; ch… |
@@ -114,6 +114,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 ---
 
 ## Im Quellstand, noch in keinem Paket
+
+**Zweig `e203_e204_persona_kennwort`, Quellstand weiter 7.2.1.131 — nur übersetzt, für 7.2.2.132; die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
+
+* **Eine neue Persönlichkeit erbt nicht mehr das Kennwort einer gelöschten gleichen Namens** ([E-204](Intern/BEFUNDE.md#e-204), Sicherheit). Wer eine Persönlichkeit löschte, die gerade nicht die aktuelle war, und in derselben Sitzung eine neue mit demselben Namen anlegte, dessen neue Persönlichkeit schickte beim ersten Abruf ohne Rückfrage das alte Kennwort an ihr eigenes Konto — am Prüfstand gemessen (`PASS e204-alt-kennwort` für den Benutzer `e204neu`). Jetzt vergisst das Löschen das Kennwort immer, gleich in welcher Schreibung es abgelegt ist; der erste Abruf fragt nach dem neuen. Regressionstest `TestE203E204.cpp`, Prüfstandsfälle `E-204p`/`E-204w` (`tools/messen-e204.ps1`).
+* ***Change Password* schaltet auch nach der Meldung über ein unbrauchbares POP-Konto auf die vorige Persönlichkeit zurück** ([E-203](Intern/BEFUNDE.md#e-203)). Vorher blieb die im Dialog gewählte bis zum Programmende die aktuelle (gemessen: `war-aktuell=1`, jetzt `0`). Der Befehl steht ab Werk nicht im Menü. Prüfstandsfall `E-203p` (vorher `E-39p`).
+* Tests: 369 Tests, 369 bestanden.
 
 **Zweig `e39_persona_loeschen` (gemergt als #207), Quellstand weiter 7.2.1.131 — nur übersetzt, die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
 

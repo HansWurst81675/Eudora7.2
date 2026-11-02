@@ -28,8 +28,13 @@
 # Ausgabe:
 #   E39 ERGEBNIS abschnitt-wieder=<0|1> schluessel=<liste|-> war-aktuell=<0|1|-> aktuell-danach=<name|ungemessen> lebt=<0|1>
 # war-aktuell kommt aus der Spurzeile; "-" heisst: der Bau schreibt sie nicht
-# (vor der Behebung). E-39p verlangt war-aktuell=1 - sonst hat der Lauf das
-# Loeschen einer NICHT aktuellen Persoenlichkeit gemessen (PRUEFER-85 K5).
+# (vor der Behebung). Bis zur Behebung von E-203 verlangte E-39p
+# war-aktuell=1 - sonst hatte der Lauf das Loeschen einer NICHT aktuellen
+# Persoenlichkeit gemessen (PRUEFER-85 K5). Seit E-203 behoben ist (02.11.2026,
+# ChangePassword schaltet auch nach der Meldung zurueck), ist der Vorlauf
+# genau die Messung von E-203: Fall E-203p verlangt war-aktuell=0. Damit
+# fuehrt kein Weg ueber die Oberflaeche mehr zur geloeschten "aktuellen"
+# Persoenlichkeit; die E-39-Behebung selbst sichert TestE39.cpp.
 # Positivprobe (E39 PROBE): der Abschnitt stand vorher da, die Rueckfrage kam,
 # und direkt nach Yes fehlten Abschnitt und Listeneintrag - sonst hat das
 # Loeschen nicht stattgefunden, und abschnitt-wieder=0 waere nichts wert.
