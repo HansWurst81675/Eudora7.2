@@ -8,7 +8,7 @@ Die Behebung tut auf dem Weg, für den sie gebaut ist, was sie soll. Zeigt die R
 
 Der wichtigste Fund liegt nicht im Programm, sondern im Prüfstand. Laufen zwei Prüfstandsläufe aus verschiedenen Arbeitsbäumen gleichzeitig, kann `CommandLine\Current` danach auf einen Prüfstand zeigen, auch auf `C:\Temp\E133-gibt-es-nicht`. Dann startet Gregors heutiges Paket per Doppelklick nicht mehr, genau das Bild von [E-133](../Intern/BEFUNDE.md#e-133). `testlauf.ps1` allein sichert gar nichts. [E-157](../Intern/BEFUNDE.md#e-157) ist damit nur für einen einzelnen Lauf geschlossen (K1, am Quelltext belegt).
 
-Dazu zwei Grenzen der Behebung, beide Altbestand. Fehlt `Current` ganz, startet Eudora weiterhin nicht, und die neue Frage hilft dort nicht (K2, Vorschlag E-208). Liegt das Mailverzeichnis mit Leerzeichen auf einem Laufwerk ohne 8.3-Kurznamen, fragt Eudora bei jedem Start neu, obwohl der Text verspricht, sich die Wahl zu merken (K3, Vorschlag E-209). Der Prüfstand `C:\Temp\E133` kann K3 nicht sehen. Dazu kommen drei kleine Funde zur Vorgabe *No*, zum Test und zum Messskript (K4 bis K6) und ein bekannter Rest (K7).
+Dazu zwei Grenzen der Behebung, beide Altbestand. Fehlt `Current` ganz, startet Eudora weiterhin nicht, und die neue Frage hilft dort nicht (K2, Vorschlag [E-208](../Intern/BEFUNDE.md#e-208)). Liegt das Mailverzeichnis mit Leerzeichen auf einem Laufwerk ohne 8.3-Kurznamen, fragt Eudora bei jedem Start neu, obwohl der Text verspricht, sich die Wahl zu merken (K3, Vorschlag [E-209](../Intern/BEFUNDE.md#e-209)). Der Prüfstand `C:\Temp\E133` kann K3 nicht sehen. Dazu kommen drei kleine Funde zur Vorgabe *No*, zum Test und zum Messskript (K4 bis K6) und ein bekannter Rest (K7).
 
 Für das Paket: Keiner der Funde hält 7.2.2.132 auf. Vor Gregors nächstem Test sollte jemand `CommandLine\Current` nachsehen (K1). Über K2 und K4 sollte Gregor entscheiden.
 
@@ -125,8 +125,8 @@ Beim Doppelklick schreibt `InitInstance` denselben Wert ohnehin (:1067). `regist
 | Fund | Was passiert | Schwere | Hält das Paket auf? |
 |---|---|---|---|
 | K1 | Gleichzeitige Prüfstandsläufe aus mehreren Arbeitsbäumen schreiben fremde „Stände vorher“ zurück; `Current` kann auf einen Prüfstand oder `C:\Temp\E133-gibt-es-nicht` zeigen, dann startet Gregors 7.2.1.131 per Doppelklick nicht; `testlauf.ps1` allein sichert nichts ([E-157](../Intern/BEFUNDE.md#e-157) fortschreiben) | mittel | nein; vor Gregors nächstem Test `Current` und `DLLPath` nachsehen |
-| K2 | Fehlt `Current`, endet der Start weiter an `err` (:4622); bei Stapelmüll in `cmdLine` kommt die E-133-Frage umsonst (Vorschlag E-208) | mittel | nein, Altbestand; Entscheidung Gregor |
-| K3 | Leerzeichen ohne 8.3-Kurznamen: `RegisterCommandLine` schreibt ungeklammert, Eudora fragt bei jedem Start (Vorschlag E-209) | gering bis mittel | nein |
+| K2 | Fehlt `Current`, endet der Start weiter an `err` (:4622); bei Stapelmüll in `cmdLine` kommt die E-133-Frage umsonst (Vorschlag [E-208](../Intern/BEFUNDE.md#e-208)) | mittel | nein, Altbestand; Entscheidung Gregor |
+| K3 | Leerzeichen ohne 8.3-Kurznamen: `RegisterCommandLine` schreibt ungeklammert, Eudora fragt bei jedem Start (Vorschlag [E-209](../Intern/BEFUNDE.md#e-209)) | gering bis mittel | nein |
 | K4 | Vorgabe *No* bei abgezogenem Laufwerk biegt den Zeiger dauerhaft auf den Programmordner | gering | nein, Entscheidung Gregor |
 | K5 | `TestE133` bleibt grün bei vertauschtem *Yes*/*No*, fehlender Klammer, falschem Ordnernamen und unterdrückter Registryberichtigung | gering | nein |
 | K6 | `E-133p` wäre auch ohne die eigene Berichtigung grün; Anhang, `mailto:`, *Yes* und *Cancel* ungemessen | gering | nein |

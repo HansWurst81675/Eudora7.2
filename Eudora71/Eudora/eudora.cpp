@@ -3727,13 +3727,70 @@ BOOL CEudoraApp::RegisterMailbox()
 } 
 
 
+//
+// BEFUND E-209 (02.11.2026, PRUEFER-87 K3) - die Befehlszeile, die
+// RegisterCommandLine nach CommandLine\Current schreibt, war nie geklammert:
+// "%s %s %s" aus GetShortPathName. Auf einem Laufwerk ohne 8.3-Kurznamen
+// liefert GetShortPathName die Langform, mit Leerzeichen. Der naechste Start
+// trennte dann am ersten Leerzeichen (StartEudoraWithDefaultLocation,
+// E132AufrufZerlegen, GetDirs), fand ein Verzeichnis, das es nicht gibt, und
+// fragte seit E-133 bei JEDEM Start - obwohl die Rueckfrage verspricht, sich
+// die Wahl zu merken.
+//
+// Geklammert wird nur, was ein Leerzeichen enthaelt. Ohne Leerzeichen bleibt
+// die Zeile Byte fuer Byte, was sie vorher war - auch fuer fremde Leser
+// (Hermes 7.1, EudoraBk, MAPI). Die eigenen Leser verstehen die Klammer
+// schon: StartEudoraWithDefaultLocation ueberspringt ein geklammertes
+// Programm (*cmdLine == '"'), GetDirs und E132AufrufZerlegen trennen an
+// "\" " und nehmen die Klammern mit StripQuotesMT weg. Verzeichnis und INI
+// werden ZUSAMMEN geklammert: steht nur die INI in Klammern, endet die Zeile
+// auf '"', und GetDirs trennt gar nicht mehr (fileutil.cpp:446).
+//
+// Ohne Fenster und ohne Registry, damit der Test sie fahren kann.
+//
+void E209BefehlszeileBauen(LPCTSTR pApp, LPCTSTR pDir, LPCTSTR pIni, LPTSTR pZiel, size_t nZiel)
+{
+	if (!pZiel || nZiel == 0)
+		return;
+	pZiel[0] = 0;
+
+	LPCTSTR apTeil[3];
+	apTeil[0] = pApp ? pApp : _T("");
+	apTeil[1] = pDir ? pDir : _T("");
+	apTeil[2] = pIni ? pIni : _T("");
+
+	bool abKlammer[3];
+	abKlammer[0] = (_tcschr(apTeil[0], ' ') != NULL);
+	abKlammer[1] = (_tcschr(apTeil[1], ' ') != NULL || _tcschr(apTeil[2], ' ') != NULL);
+	abKlammer[2] = abKlammer[1] && apTeil[2][0] != 0;
+
+	size_t nPos = 0;
+	for (int i = 0; i < 3; i++)
+	{
+		LPCTSTR pVor = (i == 0) ? _T("") : _T(" ");
+		LPCTSTR pAuf = abKlammer[i] ? _T("\"") : _T("");
+		const size_t nFrei = nZiel - nPos;
+		const int n = _sntprintf(pZiel + nPos, nFrei, _T("%s%s%s%s"), pVor, pAuf, apTeil[i], pAuf);
+
+		// _sntprintf schliesst bei voller Laenge nicht ab und meldet -1 bei
+		// Ueberlauf. Lieber gekuerzt und abgeschlossen als ueber den Puffer.
+		if (n < 0 || (size_t) n >= nFrei)
+		{
+			pZiel[nZiel - 1] = 0;
+			return;
+		}
+		nPos += (size_t) n;
+	}
+}
+
 BOOL CEudoraApp::RegisterCommandLine(char *cmdLine)
 {
     HKEY  hkResult;
 	DWORD dwDisposition;
 	LONG err = 0;
 
-	char val[_MAX_PATH + _MAX_PATH + _MAX_PATH + 3]; // 3 = 2 spaces and a NULL
+	// E-209: 3 Leerzeichen, bis zu 6 Anfuehrungszeichen und die Null
+	char val[_MAX_PATH + _MAX_PATH + _MAX_PATH + 10];
 	char app[_MAX_PATH + 1];
 	char eDir[_MAX_PATH + 1];
 	char iniPath[_MAX_PATH + 1];
@@ -3749,7 +3806,7 @@ BOOL CEudoraApp::RegisterCommandLine(char *cmdLine)
  	VERIFY(GetShortPathName(app,app, sizeof(app)) > 0);
  	VERIFY(GetShortPathName(eDir,eDir, sizeof(eDir)) > 0);
  	VERIFY(GetShortPathName(INIPath,iniPath, sizeof(iniPath)) > 0);
-	sprintf(val, "%s %s %s", app, eDir, (const char *)iniPath);
+	E209BefehlszeileBauen(app, eDir, iniPath, val, sizeof(val));	// E-209: Teile mit Leerzeichen geklammert
 
 	// register command line in the root
 	AddToRegistry(HKEY_CLASSES_ROOT, CRString(IDS_REG_SOFTWARE), NULL, val);

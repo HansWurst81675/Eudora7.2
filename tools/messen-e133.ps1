@@ -66,7 +66,12 @@ if ($Vorbereiten) {
         if (Test-Path $fehlt) { Remove-Item -LiteralPath $fehlt -Recurse -Force }
         $log = Join-Path (Join-Path $voll 'Mailverzeichnis') 'eudora.log'
         if (Test-Path $log) { Remove-Item -LiteralPath $log -Force }
-        $wert = $exe + ' ' + $fehlt + ' ' + $fehlt + '\Eudora.ini'
+        # Programmpfad mit Leerzeichen geklammert, wie RegisterCommandLine
+        # seit E-209 schreibt - sonst trennt Eudora schon im Programmpfad,
+        # und gemessen wuerde ein anderer Fehler (PRUEFER-87 K3).
+        $prog = $exe
+        if ($prog.Contains(' ')) { $prog = '"' + $prog + '"' }
+        $wert = $prog + ' ' + $fehlt + ' ' + $fehlt + '\Eudora.ini'
         if (-not (Test-Path $regPfad)) { New-Item -Path $regPfad -Force | Out-Null }
         New-ItemProperty -LiteralPath $regPfad -Name 'Current' -Value $wert -PropertyType String -Force | Out-Null
         Write-Host ("E133 vorbereitet: Current=""{0}""" -f (Get-ItemProperty -LiteralPath $regPfad).Current)

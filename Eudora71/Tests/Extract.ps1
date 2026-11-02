@@ -357,6 +357,21 @@ $r2Start = Find-Line $eu '^void E132AufrufZerlegen' 0
 $r2End = Find-Line $eu '^\}\s*$' $r2Start
 Write-Region $eu $r2Start $r2End (Join-Path $OutDir "eudora_e132_zerlegen.inc") $euPath
 
+# Region R3: E209BefehlszeileBauen - was RegisterCommandLine nach
+# CommandLine\Current schreibt. Teile mit Leerzeichen geklammert, sonst trennt
+# der naechste Start mitten im Pfad (Befund E-209, PRUEFER-87 K3). Der Test
+# schickt das Ergebnis durch E132AufrufZerlegen zurueck.
+$r3Start = Find-Line $eu '^void E209BefehlszeileBauen' 0
+$r3End = Find-Line $eu '^\}\s*$' $r3Start
+Write-Region $eu $r3Start $r3End (Join-Path $OutDir "eudora_e209.inc") $euPath
+
+# Region R4: E133InBefehlszeile - legt den nach der E-133-Rueckfrage gewaehlten
+# Ordner geklammert in buf, damit GetDirs ihn als EINEN Pfad nimmt (PRUEFER-87
+# K5: ohne Klammer blieb TestE133 gruen).
+$r4Start = Find-Line $eu '^static void E133InBefehlszeile' 0
+$r4End = Find-Line $eu '^\}\s*$' $r4Start
+Write-Region $eu $r4Start $r4End (Join-Path $OutDir "eudora_e133_klammer.inc") $euPath
+
 Write-Host "Extract.ps1: fertig."
 
 # ---------------------------------------------------------------- ReadMessageDoc.cpp
