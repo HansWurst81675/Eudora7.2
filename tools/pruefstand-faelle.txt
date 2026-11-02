@@ -352,6 +352,36 @@ E-143s | C:\Temp\E143S | 90 | messung | E143S ERGEBNIS treffer=3 hinweise=1 abge
 # fett/kursiv laufen ueber ExecCommand und waren nie betroffen - sie stehen
 # drin, damit eine Umstellung auf eigenes HTML-Umbauen auffaellt.
 E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1 | | | messen=tools\messen-e178.ps1
+# E-194/E-195/E-196 (02.11.2026): Speichern unter bei einer Mail im Format
+# format=flowed (Testdaten/e194-flowed-umlaute.eml, ueber POP empfangen -
+# erst der Empfangsweg setzt <x-flowed>). Postfachliste .txt, Nachrichten-
+# fenster .txt und .htm, Verfassen-Fenster .htm; dazu die Dateityp-Liste
+# jedes Dialogs. E-194p ohne, E-194k mit Kopfzeilen (IncludeHeaders aus dem
+# Verzeichnisnamen, tools/messen-e194.ps1). Gemessen am 02.11.2026: gruen am
+# Bau 7.2.1.131+522b8bbb* (C:\Temp\E194, E194K); Gegenprobe am Bau
+# 7.2.1.131+a2f29b69* (C:\Temp\E194-alt, E194K-alt): liste-xflowed=2
+# liste-flowed=0 htm-meta=0 rtf=3, mit Kopfzeilen auch lesen-xflowed=2.
+# Seit PRUEFER-86 K9 (02.11.2026) traegt das Urteil auch liste-umbruch,
+# liste-euro und liste-umlaute; gruen am Bau 7.2.1.131+ed7b9d83*.
+E-194p | C:\Temp\E194 | 90 | messung | E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
+# E-205 (02.11.2026): Speichern unter mit Kopfzeilen aus einer NEUEN Antwort
+# (zweimal), aus der eingereihten Nachricht in Out und aus der Out-Liste
+# (je zweimal); Date:-Zeile gegen Dateizeit, auf Stunden gerundet
+# (tools/messen-e205.ps1, Pruefstand C:\Temp\E205, Kopie von E194K-alt).
+# Gegenprobe am Bau 7.2.1.131+a2f29b69* (C:\Temp\E205-alt):
+# neu1=59h neu2=119h q1=0h q2=0h liste1=0h liste2=0h zone=+6000.
+# Seit PRUEFER-86 N2 (02.11.2026) vergleicht das Skript die Zone mit der des
+# Rechners zum Zeitpunkt der Datei und meldet zone=passt - vorher stand hier
+# zone=+0100 fest, und der Fall waere ab der Sommerzeit rot geworden.
+E-205p | C:\Temp\E205 | 150 | messung | E205 ERGEBNIS neu1=0h neu2=0h q1=0h q2=0h liste1=0h liste2=0h zone=passt lebt=1 | | | messen=tools\messen-e205.ps1
+E-194k | C:\Temp\E194K | 90 | messung | E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
+# E-207 (02.11.2026): Speichern unter aus dem Signaturfenster. Die Signatur
+# "Standard" bekommt einen bekannten Text, im Fenster wird eine Marke
+# eingetippt (WM_CHAR an die Ansicht), dann Speichern unter als .txt und .htm;
+# beide Dateien muessen Text, Marke und Umlaute tragen, die .htm HTML, die .txt
+# keines; die Signaturdatei selbst bleibt unveraendert (tools/messen-e207.ps1,
+# Pruefstand C:\Temp\E207, Kopie von C:\Temp\E205).
+E-207p | C:\Temp\E207 | 60 | messung | E207 ERGEBNIS fenster=1 geaendert=1 txt=passt htm=passt frage=0 sig=unveraendert lebt=1 | | | messen=tools\messen-e207.ps1
 
 # -------------------------------------------------------------------------
 # E-39 - der INI-Abschnitt einer geloeschten aktuellen Persoenlichkeit

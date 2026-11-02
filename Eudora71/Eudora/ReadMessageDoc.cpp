@@ -634,6 +634,10 @@ BOOL CReadMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 		 CRString(IDS_HTML_EXTENSION).CompareNoCase(Extension + 1) == 0 ) )
 	{
 		view->GetMessageAsHTML(msg, E104SchalterLesen( IDS_INI_INCLUDE_HEADERS ));
+
+		// BEFUND E-196: die .htm-Datei nennt ihren Zeichensatz.
+		msg = E196HtmlFuerDatei( msg, "Nachrichtenfenster" );
+
 		if ( pFile->Put( msg ) != S_OK )
 		{
 			ASSERT( 0 );

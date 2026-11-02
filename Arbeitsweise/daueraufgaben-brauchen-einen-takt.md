@@ -297,3 +297,16 @@ Transkript `25e03584-…jsonl` und Commits, Zeiten MEZ, gemessen ([[CHRONIST-202
 Die Schranke hat getan, was sie soll. Die zweite Runde fand echte Fehler in der Einarbeitung. Teuer war der **erste** Commit: Zwei der acht Funde waren Rückfälle in vorhandene Lehren ([[eingebaute-messung-auslesen]], [[gedaechtnis-ist-oeffentlich]]). Ein Fund nährt sich selbst: Die README-Zahl der Prüfberichte veraltet mit **jedem** LEKTOR-Bericht (L-122.7 *„zum sechsten Mal“*, L-123.5 *„mit diesem Bericht wieder veraltet“*). Den Werkzeugmangel dazu meldet [[CHRONIST-2026-11-01e]] (Nr. 3), und er ist weiter offen.
 
 **How to apply, zusätzlich:** Vor dem ersten Commit eines Doku-Zweigs mit Gregors Testergebnissen zwei Prüfungen von Hand: Markenzeile mit Anzahl je Bestätigung und Herkunftsangaben ohne Pfad. Jede gesparte LEKTOR-Runde spart Gregor etwa zehn Minuten Warten. Eine neue Gedächtnisnotiz bekommt ihre Zeile `Schranke:` beim Schreiben, nicht wenn der Haken eines anderen abweist.
+
+## Nachtrag 02.11.2026 tagsüber (CHRONIST): Nachträge über eine Zeile
+
+Zeiten MEZ, gemessen an `git log --all` und am Transkript `25e03584`. Einzelheiten in [[CHRONIST-2026-11-02b]], Abschnitt 4.
+
+Von 08:28 bis 17:18 gab es 9 LEKTOR-Berichte (124 bis 132) und 16 Nachtrags-Commits der LEKTOR-Zweige. Sechs Nachträge prüften Änderungen von höchstens fünf eingefügten Zeilen, zum Beispiel `c7aece66` (eine Zeile im Stand-Kopf von `WEITERMACHEN`) mit dem eigenen „Nachtrag 3“ `42a8007e` drei Minuten später. Den Grund nannte die Hauptsitzung um 17:12:50 selbst: *„Weil die Zeile nach seinem Bericht kam, gilt der LEKTOR wieder als fällig, und der Haken weist den PR ab.“* Gregor schrieb heute sieben Mal, dass er auf den PR wartet. Am längsten dauerte es bei #206 mit 42 Minuten.
+
+Die Schranke hat richtig gemeldet. Teuer war die **Reihenfolge**: Die Buchführung (Stand-Kopf, Zweigliste, Startzeilen) wurde nach dem LEKTOR-Bericht geschrieben statt vorher.
+
+**How to apply, zusätzlich:**
+- **Buchführung vor dem LEKTOR-Auftrag**, nicht danach. Dazu gehören Stand-Kopf und laufender Zweig in `WEITERMACHEN`, `ZWEIGE.md` und Startzeilen in `TESTLAEUFE.md`. Was erst nach dem Bericht anfällt, wird gesammelt und **einmal** nachgeprüft.
+- **Ein Commit der Hauptsitzung heißt nie „LEKTOR-… Nachtrag“** (`48025bf3`), denn das ist der Name der Rolle.
+- Ob eine Kleinständerung ohne LEKTOR durch den PR-Haken darf, entscheidet allein Gregor. Schranken-Vorschlag 3 in [[CHRONIST-2026-11-02b]] meldet nur, er lockert nichts.
