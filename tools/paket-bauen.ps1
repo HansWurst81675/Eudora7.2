@@ -433,6 +433,15 @@ if (-not $perlP) {
   }
 }
 if (-not $perlP) { Write-Host ''; Write-Host '  KEIN PAKET: perl nicht gefunden, der Pruefbericht konnte nicht entstehen.'; Write-Host ''; exit 1 }
+# pruefbericht.pl ruft seinerseits `perl tools/pruefe-tests-gruen.pl` und die
+# Schranken-Gegenprobe beim NAMEN auf. Aus PowerShell steht perl nicht im
+# Suchpfad; am 02.11.2026 meldete der Bericht deshalb im Paketbau "Bau der
+# Testsammlung gescheitert" und "0 von 19 Proben", waehrend derselbe Aufruf
+# aus der Bash BESTANDEN (362/19/53) schrieb. Das Verzeichnis von perl kommt
+# deshalb HINTEN an den Suchpfad - hinten, damit Windows-Werkzeuge gleichen
+# Namens (find, sort) weiter vor denen aus Git\usr\bin stehen.
+$perlVerz = Split-Path -Parent $perlP
+if (-not (($env:PATH -split ';') -contains $perlVerz)) { $env:PATH = $env:PATH + ';' + $perlVerz }
 Push-Location (Split-Path -Parent $PSScriptRoot)
 & $perlP ($berichtWerkzeug -replace '\\', '/')
 $berichtRc = $LASTEXITCODE

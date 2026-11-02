@@ -2,27 +2,27 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.1.130` (Paketnummer `7.2.1.130`) |
-| **Commit** | `b5693332` — **Arbeitsbaum nicht sauber** (2 Dateien) |
-| **Erstellt** | 2026-11-01 15:44 |
+| **Quellstand** | `7.2.1.131` (Paketnummer `7.2.1.131`) |
+| **Commit** | `f994ca6a` (Arbeitsbaum sauber) |
+| **Erstellt** | 2026-11-02 14:04 |
 | **Gesamturteil** | **BESTANDEN** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 09 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
-| Pruefstand, 46 Faelle, 18 Eudora-Starts | 9 min 17 s | voller Lauf, Ende 2026-11-01 15:44:24 |
-| **zusammen** | **9 min 34 s** | |
+| Unit-Tests bauen und fahren | 0 min 10 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 10 s | dieser Lauf |
+| Pruefstand, 53 Faelle, 25 Eudora-Starts | 16 min 58 s | voller Lauf, Ende 2026-11-02 13:54:36 |
+| **zusammen** | **17 min 18 s** | |
 
-Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
+Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
-| Unit-Tests (`EudoraTests.exe`) | 355 | 355 | 0 |  |
+| Unit-Tests (`EudoraTests.exe`) | 362 | 362 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 46 | 46 | 0 | 0 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 53 | 53 | 0 | 0 an anderem Bau, 0 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
@@ -51,9 +51,9 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-11-01 15:44** gegen den Quelltext von Commit `b5693332*`.
+Gelaufen am **2026-11-02 14:04** gegen den Quelltext von Commit `f994ca6a`.
 
-<details><summary>Alle 355 Unit-Tests einzeln</summary>
+<details><summary>Alle 362 Unit-Tests einzeln</summary>
 
 | Bereich | Test | Ergebnis |
 |---|---|---|
@@ -396,6 +396,10 @@ Gelaufen am **2026-11-01 15:44** gegen den Quelltext von Commit `b5693332*`.
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-140 (Quelltext): Speichern unter aus dem Nachrichtenfenster schreibt Text nur ueber E140TextFuerDatei | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-140 (Quelltext): Speichern unter aus dem Verfassen-Fenster schreibt Text nur ueber E140TextFuerDatei | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-140 (Quelltext): E140TextFuerDatei ruft den Kern aus E-101 und gibt dessen Ergebnis zurueck | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-177 (Quelltext): CReadMessageDoc::SaveAs schreibt nur ueber E140TextFuerDatei | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-177 (Quelltext): die Filteraktion schreibt empfangene Nachrichten weiter ueber CReadMessageDoc::SaveAs | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-177 (Quelltext): der Speicherkern haelt "utf8" ohne Bindestrich nicht fuer uebersetzt | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-122 (Quelltext): ReformatHeader setzt das IMAP-Eingangsdatum aus dem Date:-Kopf als echtes UTC | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-139 (Quelltext): der Rechtschreibhinweis ist dauerhaft abschaltbar (NoteDialog, WarnSpellUnavailable) | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-139 (Ressource): WarnSpellUnavailable hat die Vorgabe 1 und liegt im Bereich der INI-Schalter | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-165 (Quelltext): die Vervollstaendigungsbox misst Zeile und Rahmen, die Spalte die Systembreite der Bildlaufleiste | ok |
@@ -407,6 +411,9 @@ Gelaufen am **2026-11-01 15:44** gegen den Quelltext von Commit `b5693332*`.
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-179 (Quelltext): CHtml2Text::AddText wandelt Zeichenangaben ueber E179ZeichenAusNummer | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-170 (Quelltext): Label wird beim Verschieben im IMAP-Konto gemerkt und im Ziel gesetzt | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-143 (Quelltext): Out wird einem Filter nicht angeboten, und ein Filter mit Ziel Out haelt nichts an | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-143 (Quelltext): Suchfenster zeigt den Out-Hinweis einmal je Uebertragung, nicht je Treffer | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-184 K3: UID-Mengen aus COPYUID werden vollstaendig gelesen (Listen, Bereiche, fallend) | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-184/E-189 (Quelltext): Merkzeichen, Zuordnung ueber die Quellmenge, Entfernen ohne neue UID | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | M-1: der Werkzeugleisten-Verwalter beginnt NICHT im Anpassen-Zustand und kehrt dorthin zurueck | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-145: ein Byte ueber 127 im Base64-Text zaehlt als ungueltig und veraendert die Ausgabe nicht | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-141 (Quelltext): ImapXfer laeuft nur mit gefuellter Liste, und Xfer gibt seine Sperre immer frei | ok |
@@ -421,7 +428,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-11-01 15:44** gegen Commit `b5693332*`.
+Gelaufen am **2026-11-02 14:04** gegen Commit `f994ca6a`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -449,61 +456,68 @@ Gelaufen am **2026-11-01 15:44** gegen Commit `b5693332*`.
 
 Je Fall der **letzte** Lauf. *Bau* ist die Kennung aus der `Eudora.exe` des
 Pruefstands (Fassung, Paket, Commit; ein `*` heisst: mit uncommitteten
-Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.1.130`
+Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.1.131`
 lief, zaehlt fuer diesen Stand nicht als gruen.
 
 | Fall | Ergebnis | gelaufen am | Pruefstand | Bau | erwartet |
 |---|---|---|---|---|---|
-| E-131a | ok | 2026-11-01 15:44:24 | `C:\Temp\E131L` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `ohne MRUFloatXPos=-2147483648` |
-| E-131b | ok | 2026-11-01 15:44:24 | `C:\Temp\E131L` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `ohne MRUFloatYPos=-2147483648` |
-| E-131c | ok | 2026-11-01 15:44:24 | `C:\Temp\E131L` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-131 Leistenposition:` |
-| E-121 | ok | 2026-11-01 15:44:24 | `C:\Temp\E118` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `ablage-dateien=1` |
-| E-118 | ok | 2026-11-01 15:44:24 | `C:\Temp\E118` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-118 Bild:` |
-| E-125a | ok | 2026-11-01 15:44:24 | `C:\Temp\E125` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0` |
-| E-125b | ok | 2026-11-01 15:44:24 | `C:\Temp\E125` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1` |
-| E-125c | ok | 2026-11-01 15:44:24 | `C:\Temp\E125` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out` |
-| E-103p | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64` |
-| E-112p | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-112 Metadatei: angegeben=35x35 Datei=330x327 gemalt=35x35` |
-| E-112f2 | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-112 Metadatei: angegeben=150x0 Datei=985x378 gemalt=150x58` |
-| E-112n1 | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-112 Metadatei: angegeben=600x0 Datei=985x378 gemalt=600x230` |
-| E-112h | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-112 Metadatei: angegeben=0x600 Datei=330x327 gemalt=606x600` |
-| E-106p | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-106 groesser als angegeben: attr=35x35 quelle=330x327` |
-| E-110p | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1` |
-| E-105p | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet` |
-| E-108p | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `Logging shutdown` |
-| BILD-lauf | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8` |
-| E-113p | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `Datei=985x378 gemalt=718x276` |
-| E-113b | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `BILD E113B` |
-| E-113b2 | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `neu=0 lebt=1 probe=ok` |
-| E-119d | ok | 2026-11-01 15:44:24 | `C:\Temp\E119K` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `vollstaendig=1 probe=ok` |
-| E-119a | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `data-db1b9f48.png faden=1 ok=1` |
-| E-119b | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-119 data-Bild als Datei:` |
-| E-119c | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `data-2eaa4a58.png laenge=1574` |
-| E-119e | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `laenge=78519` |
-| E-77a | ok | 2026-11-01 15:44:24 | `C:\Temp\E77` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E77 ERGEBNIS roh=0 dekodiert=2` |
-| E-77b | ok | 2026-11-01 15:44:24 | `C:\Temp\E77` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-77 Ordnername: server="Entw&APw-rfe"` |
-| E-77c | ok | 2026-11-01 15:44:24 | `C:\Temp\E77` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-77 Ordnername: server="Gel&APY-scht"` |
-| E-77d | ok | 2026-11-01 15:44:24 | `C:\Temp\E77U` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0` |
-| E-146 | ok | 2026-11-01 15:44:24 | `C:\Temp\E146` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)` |
-| E-97 | ok | 2026-11-01 15:44:24 | `C:\Temp\E97` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
-| E-100 | ok | 2026-11-01 15:44:24 | `C:\Temp\E97` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
-| E-67 | ok | 2026-11-01 15:44:24 | `C:\Temp\E67` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `verb-gespeichert=14 verb-auswahl=0` |
-| ZIEL24 | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `Logging shutdown` |
-| ZIEL24b | ok | 2026-11-01 15:44:24 | `C:\Temp\EBILD` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `Logging shutdown` |
-| E-137a | ok | 2026-11-01 15:44:24 | `C:\Temp\E137` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1` |
-| E-137b | ok | 2026-11-01 15:44:24 | `C:\Temp\E137` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1` |
-| E-137c | ok | 2026-11-01 15:44:24 | `C:\Temp\E137` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja` |
-| E-166a | ok | 2026-11-01 15:44:24 | `C:\Temp\E166` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `reihenfolge=junk-no,konto-ok` |
-| E-166b | ok | 2026-11-01 15:44:24 | `C:\Temp\E166` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `AskedAboutJunk=6` |
-| E-13p | ok | 2026-11-01 15:44:24 | `C:\Temp\E13` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E13 FORTSCHRITT sichtbar=1` |
-| E-144p | ok | 2026-11-01 15:44:24 | `C:\Temp\E144` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E144 ERGEBNIS probe=ok gleich=1 references=1` |
-| E-140p | ok | 2026-11-01 15:44:24 | `C:\Temp\E140` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3` |
-| E-139p | ok | 2026-11-01 15:44:24 | `C:\Temp\E139` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1` |
-| E-171p | ok | 2026-11-01 15:44:24 | `C:\Temp\E171` | Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15 | `E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1` |
+| E-131a | ok | 2026-11-02 13:54:36 | `C:\Temp\E131L` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `ohne MRUFloatXPos=-2147483648` |
+| E-131b | ok | 2026-11-02 13:54:36 | `C:\Temp\E131L` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `ohne MRUFloatYPos=-2147483648` |
+| E-131c | ok | 2026-11-02 13:54:36 | `C:\Temp\E131L` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-131 Leistenposition:` |
+| E-121 | ok | 2026-11-02 13:54:36 | `C:\Temp\E118` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `ablage-dateien=1` |
+| E-118 | ok | 2026-11-02 13:54:36 | `C:\Temp\E118` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-118 Bild:` |
+| E-125a | ok | 2026-11-02 13:54:36 | `C:\Temp\E125` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0` |
+| E-125b | ok | 2026-11-02 13:54:36 | `C:\Temp\E125` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1` |
+| E-125c | ok | 2026-11-02 13:54:36 | `C:\Temp\E125` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out` |
+| E-103p | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-112 Metadatei: angegeben=0x0 Datei=79x64 gemalt=79x64` |
+| E-112p | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-112 Metadatei: angegeben=35x35 Datei=330x327 gemalt=35x35` |
+| E-112f2 | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-112 Metadatei: angegeben=150x0 Datei=985x378 gemalt=150x58` |
+| E-112n1 | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-112 Metadatei: angegeben=600x0 Datei=985x378 gemalt=600x230` |
+| E-112h | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-112 Metadatei: angegeben=0x600 Datei=330x327 gemalt=606x600` |
+| E-106p | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-106 groesser als angegeben: attr=35x35 quelle=330x327` |
+| E-110p | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-110 Laden: src=cid:punkt-rot@e118.invalid faden=1 ok=1` |
+| E-105p | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-105 versteckter Bereich <p> ohne eigenes Ende-Tag beendet` |
+| E-108p | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `Logging shutdown` |
+| BILD-lauf | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `BILD ERGEBNIS abgeholt=8 geoeffnet=8 weitergeleitet=8` |
+| E-113p | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `Datei=985x378 gemalt=718x276` |
+| E-113b | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `BILD E113B` |
+| E-113b2 | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `neu=0 lebt=1 probe=ok` |
+| E-119d | ok | 2026-11-02 13:54:36 | `C:\Temp\E119K` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `vollstaendig=1 probe=ok` |
+| E-119a | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `data-db1b9f48.png faden=1 ok=1` |
+| E-119b | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-119 data-Bild als Datei:` |
+| E-119c | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `data-2eaa4a58.png laenge=1574` |
+| E-119e | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `laenge=78519` |
+| E-77a | ok | 2026-11-02 13:54:36 | `C:\Temp\E77` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E77 ERGEBNIS roh=0 dekodiert=2` |
+| E-77b | ok | 2026-11-02 13:54:36 | `C:\Temp\E77` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-77 Ordnername: server="Entw&APw-rfe"` |
+| E-77c | ok | 2026-11-02 13:54:36 | `C:\Temp\E77` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-77 Ordnername: server="Gel&APY-scht"` |
+| E-77d | ok | 2026-11-02 13:54:36 | `C:\Temp\E77U` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E77U ERGEBNIS rename=ok liste=Ablage-&AOQ- unbekannt=0` |
+| E-146 | ok | 2026-11-02 13:54:36 | `C:\Temp\E146` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)` |
+| E-184 | ok | 2026-11-02 13:54:36 | `C:\Temp\E184` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E184 ERGEBNIS fremd=1 kopie=1 eintraege=2` |
+| E-189 | ok | 2026-11-02 13:54:36 | `C:\Temp\E184` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2` |
+| E-184m | ok | 2026-11-02 13:54:36 | `C:\Temp\E184` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3` |
+| E-97 | ok | 2026-11-02 13:54:36 | `C:\Temp\E97` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
+| E-100 | ok | 2026-11-02 13:54:36 | `C:\Temp\E97` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
+| E-67 | ok | 2026-11-02 13:54:36 | `C:\Temp\E67` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `verb-gespeichert=14 verb-auswahl=0` |
+| ZIEL24 | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `Logging shutdown` |
+| ZIEL24b | ok | 2026-11-02 13:54:36 | `C:\Temp\EBILD` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `Logging shutdown` |
+| E-137a | ok | 2026-11-02 13:54:36 | `C:\Temp\E137` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1` |
+| E-137b | ok | 2026-11-02 13:54:36 | `C:\Temp\E137` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1` |
+| E-137c | ok | 2026-11-02 13:54:36 | `C:\Temp\E137` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja` |
+| E-166a | ok | 2026-11-02 13:54:36 | `C:\Temp\E166` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `reihenfolge=junk-no,konto-ok` |
+| E-166b | ok | 2026-11-02 13:54:36 | `C:\Temp\E166` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `AskedAboutJunk=6` |
+| E-13p | ok | 2026-11-02 13:54:36 | `C:\Temp\E13` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E13 FORTSCHRITT sichtbar=1` |
+| E-144p | ok | 2026-11-02 13:54:36 | `C:\Temp\E144` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E144 ERGEBNIS probe=ok gleich=1 references=1` |
+| E-140p | ok | 2026-11-02 13:54:36 | `C:\Temp\E140` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3` |
+| E-139p | ok | 2026-11-02 13:54:36 | `C:\Temp\E139` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1` |
+| E-171p | ok | 2026-11-02 13:54:36 | `C:\Temp\E171` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1` |
+| E-177p | ok | 2026-11-02 13:54:36 | `C:\Temp\E177` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1` |
+| E-122p | ok | 2026-11-02 13:54:36 | `C:\Temp\E122` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E122 ERGEBNIS nachrichten=2 passt=2 verschoben=0 lebt=1` |
+| E-143s | ok | 2026-11-02 13:54:36 | `C:\Temp\E143S` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1` |
+| E-178p | ok | 2026-11-02 13:54:36 | `C:\Temp\E178` | Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23 | `E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1` |
 
 ## 4. Deckung der kritischen Befunde
 
-Von **70** kritischen Befunden haben **60** einen Test, **8** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: E-122 E-123 E-124 E-126 E-129 E-172 E-133 E-39.
+Von **70** kritischen Befunden haben **62** einen Test, **6** keinen (gezaehlt von `tools/pruefe-regressionstest.pl`). Ohne Test: E-123 E-124 E-126 E-129 E-133 E-39.
 
 Solange diese Zahl nicht null ist, sagt ein gruener Bericht nicht, dass
 nichts kaputt ist — er sagt, dass nichts von dem kaputt ist, was geprueft

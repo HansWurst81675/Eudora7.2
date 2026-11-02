@@ -86,7 +86,7 @@ beschädigt, steht oben.
 | Vor 7.2.1 beheben (Entscheidung 2) | [E-137](Intern/BEFUNDE.md#e-137) | Strg+W in einer Wazoo-Leiste (Filter, Adressbuch) schloss die Mail dahinter oder beendete Eudora, statt nur die Leiste zu verstecken (angedockt an 1.0.123 und 1.0.124 von Gregor bestätigt; nach einem Klick auf die **schwebende** Leiste an 1.0.125 nicht bestanden; fünfter Anlauf in 7.2.0.126, Korrektur aus PRÜFER-62 K1 in 7.2.0.127; am Prüfstand rot an 1.0.125, grün an 1.0.126 und 1.0.127; **behoben**, von Gregor am 27.10.2026 an Paket 1.0.127 bestätigt — TESTPLAN V1–V3 aus seinem Protokoll auf seine Anweisung, Gegenprobe V6; bekannter Rest [PRÜFER-63](Befunde/PRUEFER-63.md) K1 in [E-137](Intern/BEFUNDE.md#e-137) vermerkt) |
 | Kriterium 3 | [E-148](Intern/BEFUNDE.md#e-148) | Eudora vertraute vier kompromittierten eMudhra-Wurzeln (**behoben**, auf `main`, kommt mit 7.2.0.123 und 7.2.1.x; GMX und freenet mit OpenSSL gegen die neue Liste gemessen, mit Eudora selbst von Gregor am 26.10.2026 an Paket 1.0.123 bestätigt, TESTPLAN K3) |
 | Kriterium 2 | [E-146](Intern/BEFUNDE.md#e-146) | umbenannte IMAP-Ordner hießen in Eudora anders als am Server, auch nach einer Ablehnung (**behoben auf dem Zweig `vor-testpaket-7.2.0.123`**, kommt mit 7.2.0.123; am Prüfstand erst rot, dann grün) |
-| Bekannte Fehler in der README | **keine Voraussetzung, durch Entscheidung** — die Befunde selbst blieben zum Release offen | Von Gregor am 25. und 26.10.2026 entschieden: sie stehen unter „Bekannte Fehler“ in der [README](README.md) und werden nach 7.2.1 angegangen. Darunter der Entwurf aus einem IMAP-Ordner nach `Out` ([E-142](Intern/BEFUNDE.md#e-142); vereinbart ist nur ein Hinweis, eingebaut am 26.10.2026), dazu [E-144](Intern/BEFUNDE.md#e-144) (seit 30.10.2026 im Quellstand behoben), [E-143](Intern/BEFUNDE.md#e-143) (Filterteil in 7.2.1.130 im Quelltext berichtigt, nicht gemessen), [E-139](Intern/BEFUNDE.md#e-139) (seit 31.10.2026 im Quellstand behoben), [E-165](Intern/BEFUNDE.md#e-165) (behoben in 7.2.1.129, von Gregor bestätigt), [E-171](Intern/BEFUNDE.md#e-171) (seit 31.10.2026 im Quellstand behoben), [E-136](Intern/BEFUNDE.md#e-136) (Strg+S in 7.2.1.129, *Speichern unter* als `.htm` in 7.2.1.130 geändert, nicht gemessen), [AN-1](Intern/BEFUNDE.md#an-1), die Nebenwirkung von [E-77](Intern/BEFUNDE.md#e-77) auf ältere Nachrichten mit Ablage, [E-140](Intern/BEFUNDE.md#e-140) (seit 31.10.2026 im Quellstand behoben), [E-141](Intern/BEFUNDE.md#e-141) (im Quellstand berichtigt, nicht gemessen), [E-145](Intern/BEFUNDE.md#e-145) (seit 30.10.2026 im Quellstand behoben), [E-170](Intern/BEFUNDE.md#e-170), [E-178](Intern/BEFUNDE.md#e-178) und [E-179](Intern/BEFUNDE.md#e-179) (in 7.2.1.130 im Quelltext berichtigt, nicht gemessen) |
+| Bekannte Fehler in der README | **keine Voraussetzung, durch Entscheidung** — die Befunde selbst blieben zum Release offen | Von Gregor am 25. und 26.10.2026 entschieden: sie stehen unter „Bekannte Fehler“ in der [README](README.md) und werden nach 7.2.1 angegangen. Darunter der Entwurf aus einem IMAP-Ordner nach `Out` ([E-142](Intern/BEFUNDE.md#e-142); vereinbart ist nur ein Hinweis, eingebaut am 26.10.2026), dazu [E-144](Intern/BEFUNDE.md#e-144) (seit 30.10.2026 im Quellstand behoben), [E-143](Intern/BEFUNDE.md#e-143) (Filterteil in 7.2.1.130 im Quelltext berichtigt, nicht gemessen), [E-139](Intern/BEFUNDE.md#e-139) (seit 31.10.2026 im Quellstand behoben), [E-165](Intern/BEFUNDE.md#e-165) (behoben in 7.2.1.129, von Gregor bestätigt), [E-171](Intern/BEFUNDE.md#e-171) (seit 31.10.2026 im Quellstand behoben), [E-136](Intern/BEFUNDE.md#e-136) (Strg+S in 7.2.1.129, *Speichern unter* als `.htm` in 7.2.1.130 geändert, nicht gemessen), [AN-1](Intern/BEFUNDE.md#an-1), die Nebenwirkung von [E-77](Intern/BEFUNDE.md#e-77) auf ältere Nachrichten mit Ablage, [E-140](Intern/BEFUNDE.md#e-140) (seit 31.10.2026 im Quellstand behoben), [E-141](Intern/BEFUNDE.md#e-141) (im Quellstand berichtigt, nicht gemessen), [E-145](Intern/BEFUNDE.md#e-145) (seit 30.10.2026 im Quellstand behoben), [E-170](Intern/BEFUNDE.md#e-170), [E-178](Intern/BEFUNDE.md#e-178) und [E-179](Intern/BEFUNDE.md#e-179) (in 7.2.1.130 im Quelltext berichtigt, nicht gemessen), [E-177](Intern/BEFUNDE.md#e-177), [E-122](Intern/BEFUNDE.md#e-122), [E-184](Intern/BEFUNDE.md#e-184) und [E-189](Intern/BEFUNDE.md#e-189) sowie der Suchfensterteil von [E-143](Intern/BEFUNDE.md#e-143) (in 7.2.1.131 berichtigt, am Prüfstand gemessen; von Gregor am 02.11.2026 an 7.2.1.131 getestet, alle sieben Schritte [bestanden](Intern/TESTPLAN.md#test-7-2-1-131), darin [E-122](Intern/BEFUNDE.md#e-122) mit der Logzeile bestätigt). Seit dem 02.11.2026 dazu in der README, offen: [E-199](Intern/BEFUNDE.md#e-199), [E-193](Intern/BEFUNDE.md#e-193), [E-192](Intern/BEFUNDE.md#e-192), [E-188](Intern/BEFUNDE.md#e-188), [E-198](Intern/BEFUNDE.md#e-198), [E-194](Intern/BEFUNDE.md#e-194), [E-195](Intern/BEFUNDE.md#e-195), [E-196](Intern/BEFUNDE.md#e-196) |
 | Kriterium 2 | [E-95](Intern/BEFUNDE.md#e-95), [E-96](Intern/BEFUNDE.md#e-96) | zerschnittene/gequetschte Bilder beim Antworten — Gregors Test an der Mail-A- und Mail-B — **am 14.10.2026 an 1.0.87 bestätigt** |
 | Kriterium 4 | [E-111](Intern/BEFUNDE.md#e-111) | `resolve_URL` schreibt ein Byte hinter das Feld (**behoben in 7.2.0.121**, 246 Tests mit Gegenprobe; ausgelöst gesehen wurde es nie) |
 | Kriterium 4 | [E-14](Intern/BEFUNDE.md#e-14) | Zusicherung beim Start auf frischem Mailverzeichnis (**erledigt am 23.10.2026**: aus neun Mailverzeichnissen gemessen, 59 Sitzungen, 9 Erasing-Zeilen — je eine, immer in der ersten Sitzung. Kein Fehler, der normale erste Lauf) |
@@ -104,6 +104,31 @@ alles mehrfach getestet und geprüft, läuft stabil.“*); vor der Marke zählen
 sein Test von [E-166](Intern/BEFUNDE.md#e-166) und der weiteren Punkte, die er
 an 7.2.1.128 prüft, und sein Ja ([TESTPLAN](Intern/TESTPLAN.md)). Das Release heißt `7.2.1.<laufende Buildnummer>` (Gregor am 23.10.2026: *„release wird dann heißen: 7.2.1.123 (bzw. die laufende build nummer, die wird hinten angehängt)."*); die Marke auf GitHub heißt **`v7.2.1.<n>`** (Gregor am 25.10.2026: *„v.7.2.1.<n>, also z.b. 7.2.1.123. haben wir schon mehrfach besprochen, mit beispielen."*). `release-veroeffentlichen.ps1` ist am 29.10.2026 darauf umgestellt (`a5febb70`, [L-53.16](Befunde/LEKTOR-53.md#l-53.16)).
 
+
+## Maßstab für die Fassung 7.2.2
+
+Von Gregor am 02.11.2026 bestätigt (*„ja, da skönnen wir dann in 7.2.2.x
+aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
+
+* **7.2.1.x bleibt die Reihe für Fehlerbehebungen.** Neue Funktionen gehören
+  nicht dazu (Maßstab für 7.2.1 oben).
+* **7.2.2 ist die erste Fassung mit neuen Funktionen.** Für sie gelten
+  dieselben Punkte 1 bis 4 wie für 7.2.1.x, dazu: jede neue Funktion ist im
+  [TESTPLAN](Intern/TESTPLAN.md) mit einem Schritt für Gregor und, wo es geht,
+  mit einem Prüfstandsfall belegt.
+* **Vorgemerkt:** im Hilfe-Menü *Keyboard Shortcuts* und *Settings Reference*
+  — eine HTML-Seite, erzeugt aus der Funktionsübersicht
+  [`Doku/FUNKTIONEN.md`](Doku/FUNKTIONEN.md) (gemergt als #203),
+  angezeigt im Standard-Browser.
+* **Kandidaten:** [E-147](Intern/BEFUNDE.md#e-147) (die Umlaut-Reparatur aus
+  `EudoraUnicodeFix` fest einbauen), [E-90](Intern/BEFUNDE.md#e-90) (Emoji in
+  Betreffzeilen), [E-139](Intern/BEFUNDE.md#e-139) (Rechtschreibprüfung; die
+  wiederkehrende Meldung ist seit 7.2.1.129 behoben),
+  [E-91](Intern/BEFUNDE.md#e-91) und [E-92](Intern/BEFUNDE.md#e-92) (Zitat mit
+  Randbalken, Weiterleitungskopf als Tabelle), [E-128](Intern/BEFUNDE.md#e-128)
+  (gespeicherte HTML-Nachricht als `.txt`; wartet auf Gregors Entscheidung).
+
+Umgesetzt ist davon noch nichts; die Reihenfolge entscheidet Gregor.
 
 ## Regressionstests — Anordnung vom 22.10.2026
 
@@ -188,7 +213,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 01.11.2026.** Quellstand **7.2.1.130** (`VERSION` gleich; Testpaket, geschnürt am 01.11.2026, nicht veröffentlicht; davor 7.2.1.129, geschnürt am 31.10.2026, ebenfalls nicht veröffentlicht). Veröffentlicht zuletzt **7.2.1.128** (erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026. **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 02.11.2026.** Quellstand **7.2.1.131** (`VERSION` gleich; Testpaket, geschnürt am 02.11.2026, nicht veröffentlicht; davor 7.2.1.130, geschnürt am 01.11.2026, und 7.2.1.129, geschnürt am 31.10.2026, beide nicht veröffentlicht). Veröffentlicht zuletzt **7.2.1.128** (erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026. **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 
