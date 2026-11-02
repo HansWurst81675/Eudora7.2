@@ -8539,7 +8539,7 @@ BEGIN
                             "Stationery Files (*.sta)|*.sta|All Files (*.*)|*.*|"
     IDS_SAVE_AS_STATIONERY_TITLE "Save as Stationery"
     IDS_TXT_HTML_FILE_FILTER 
-                            "Text Files (*.txt)|*.txt|HTML Files (*.htm)|*.htm|Rtf Files (*.rtf)|*.rtf|All Files (*.*)|*.*||"
+                            "Text Files (*.txt)|*.txt|HTML Files (*.htm)|*.htm|All Files (*.*)|*.*||"
     IDS_MAIN_OPENFILE_FILTER 
                             "Text Files (*.txt)|*.txt|Stationery Files (*.sta)|*.sta|HTML Files (*.htm*)|*.htm*|RTF Files(*.rtf)|*.rtf|All Files (*.*)|*.*|"
 END

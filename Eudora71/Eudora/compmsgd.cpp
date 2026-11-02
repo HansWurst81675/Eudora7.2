@@ -3428,6 +3428,9 @@ BOOL CCompMessageDoc::SaveAsFile(JJFile* pFile, const char* szPathName)
 	{
 		view->GetMessageAsHTML(msg, E104SchalterLesen( IDS_INI_INCLUDE_HEADERS ));
 		msg = Text2Html(dateMaybe, TRUE, FALSE) + msg;
+
+		// BEFUND E-196: die .htm-Datei nennt ihren Zeichensatz.
+		msg = E196HtmlFuerDatei( msg, "Verfassen-Fenster" );
 	}
 	else
 	{

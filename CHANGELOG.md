@@ -29,9 +29,9 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 |---|---|---|---|
 | **[E-199](Intern/BEFUNDE.md#e-199)** | Festbreite im Bearbeiten-Modus schreibt t; sichtbar in den Text — wer in einer empfangen… | 02.11.2026 an 7.2.1.130 | nur abschneiden, wenn der Text wirklich auf `"\r\n"` endet, an allen Stellen in `WrapTag` und `SplitTagOff`; dazu ein Regressionstest und im Messskrip… |
 | **[E-198](Intern/BEFUNDE.md#e-198)** | Eine gespeicherte oder an ein Programm übergebene mehrteilige Nachricht mit unübersetzte… | **nie gemessen** | den Zeichensatz des Textteils ermitteln (er steht in Eudoras Zusammenfassung bzw. im Teilkopf) und im multipart-Zweig dieselbe Prüfung wie im einteil… |
-| **[E-196](Intern/BEFUNDE.md#e-196)** | Eine als .htm gespeicherte Nachricht nennt ihren Zeichensatz nicht — die Umlaute stehen … | **nie gemessen** | am Prüfstand nachstellen (Nachrichten- und Verfassen-Fenster, `.htm`), dann im HTML-Zweig ein `<meta http-equiv="Content-Type" content="text/html; ch… |
-| **[E-195](Intern/BEFUNDE.md#e-195)** | Der Speicherdialog bietet .rtf an, liefert aber Klartext — die Datei heißt .rtf und ist… | **nie gemessen** | den Eintrag `Rtf Files (*.rtf)\|*.rtf\|` aus `IDS_TXT_HTML_FILE_FILTER` streichen — derselbe Text steht auch in `saveas.cpp:92` (`CSaveAs`: Speicher… |
-| **[E-194](Intern/BEFUNDE.md#e-194)** | Eudoras interne Markierung <x-flowed> steht in der gespeicherten Textdatei — *Speichern … | **nie gemessen** | am Prüfstand mit einer `format=flowed`-Mail nachstellen (Postfachliste, mit und ohne *Kopfzeilen einschließen*; dazu Gegenprobe Nachrichtenfenster),… |
+| **[E-196](Intern/BEFUNDE.md#e-196)** | Eine als .htm gespeicherte Nachricht nennt ihren Zeichensatz nicht — die Umlaute stehen … | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132. **Stufe: unkritisch** (Datei war richtig, nur die Angabe fehlte) |
+| **[E-195](Intern/BEFUNDE.md#e-195)** | Der Speicherdialog bietet .rtf an, liefert aber Klartext — die Datei heißt .rtf und ist… | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132. **Stufe: unkritisch** |
+| **[E-194](Intern/BEFUNDE.md#e-194)** | Eudoras interne Markierung <x-flowed> steht in der gespeicherten Textdatei — *Speichern … | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132; der Hochladeweg (PRUEFER-27 F3) bleibt ein eigener Punkt. **Stufe: unkritisch** (zwei überzählige Zeilen, nichts ging verloren) |
 | **[E-193](Intern/BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | **nie gemessen** | am Prüfstand mit Mails bekannten Inhalts nachstellen (Umlaute und € im Text, in Kopfzeilen, nur im HTML-Quelltext; Latin-1, UTF-8, quoted-printable… |
 | **[E-192](Intern/BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | **nie gemessen** | die Quellmenge an allen drei Stellen durchreichen wie beim Verschieben; Prüfstandsfall für den Papierkorb. **Stufe: wichtig** (wie E-184) |
 | **[E-189](Intern/BEFUNDE.md#e-189)** | Beim Verschieben innerhalb eines IMAP-Kontos OHNE UIDPLUS steht die verschobene Mail im Zi… | 01.11.2026 an 7.2.1.130 | die Löschvermutung messen; mit dem Testpaket 7.2.1.131 an Gregors Server (ohne UIDPLUS) bestätigen. Für den TESTPLAN beim nächsten Paket (K3): die… |
@@ -109,6 +109,16 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## Im Quellstand, noch in keinem Paket
+
+**Zweig `e194_e196_speichern_unter`, Quellstand weiter 7.2.1.131 — nur übersetzt; kommt mit 7.2.2.132.**
+
+* ***Speichern unter* schreibt bei Mails im Format *format=flowed* keine `<x-flowed>`-Zeilen mehr** ([E-194](Intern/BEFUNDE.md#e-194)). Der Kern `E101SpeicherfassungAufbereiten` (`msgutils.cpp`) nimmt neben `<x-html>` auch `<x-flowed>` und `<x-rich>` ab; die Datei sagt `format=flowed` (bzw. `text/enriched`), die Zeilen bleiben, wie sie in der Mail stehen. Betroffen waren die Postfachliste und, mit *Kopfzeilen einschließen*, auch das Nachrichtenfenster. Am Prüfstand vorher `liste-xflowed=2`, nachher `liste-xflowed=0 liste-flowed=1`; Fälle `E-194p`/`E-194k`, `Eudora71/Tests/TestE194.cpp`.
+* **Der Speicherdialog bietet kein *Rtf Files* mehr an** ([E-195](Intern/BEFUNDE.md#e-195)) — kein Speicherweg hat je RTF geschrieben. Vorher `rtf=3`, nachher `rtf=0`.
+* **Eine als `.htm` gespeicherte Nachricht nennt ihren Zeichensatz** ([E-196](Intern/BEFUNDE.md#e-196)): `<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">`, aus Nachrichten- und Verfassen-Fenster, mit Spurzeile `E-196 speichern aus …`. Vorher `htm-meta=0`, nachher `htm-meta=2`; `Eudora71/Tests/TestE196.cpp`.
+
+Für Gregor nichts zu prüfen — der Prüfstand sieht alle drei Wege (Dateityp-Liste über `CB_GETLBTEXT`, Dateien byteweise). Gegenprobe am Bau `7.2.1.131+a2f29b69*`: alle drei Werte rot; `E-140p`, `E-177p`, `E-178p` am neuen Bau grün.
 
 ## 7.2.1.131 — Release (`v7.2.1.131`, veröffentlicht am 02.11.2026): E-177, E-143 (Suchfenster), E-122, E-184, E-189 im Quelltext berichtigt und am Prüfstand gemessen; E-178 und E-136 (Strg+S) gemessen
 
