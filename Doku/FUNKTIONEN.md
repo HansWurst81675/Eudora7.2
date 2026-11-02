@@ -13,6 +13,7 @@ englisch und kursiv, so wie das Programm sie zeigt.
 | Marke | heißt |
 |---|---|
 | Vorlage | aus der Ressourcendatei `Eudora71/Eudora/EudoraRes.rc` oder dem Code gelesen — so **steht** es im Programm; in dieser Portierung hat es noch niemand eigens angeklickt |
+| am Prüfstand gemessen | neu in dieser Portierung; am laufenden Programm auf dem Prüfstand gemessen, von Gregor noch nicht gesehen |
 | **bestätigt** | Gregor hat es am laufenden Programm gesehen; der Verweis führt zum Beleg in [FAQ](FAQ.md), [BEFUNDE](../Intern/BEFUNDE.md) oder [TESTPLAN](../Intern/TESTPLAN.md) |
 
 **Stand:** Release 7.2.1.131 (02.11.2026). Was sich gegenüber älteren
@@ -260,6 +261,8 @@ stehen auf der Registerleiste unten ([E-48](../Intern/BEFUNDE.md#e-48),
 | *Technical Support* | | wie man technische Hilfe bekommt (Angaben von QUALCOMM) | Vorlage |
 | *Report A Bug* | | ohne Statuszeilentext; legt eine neue Nachricht mit dem Fragebogen von QUALCOMM an (`eudora.cpp:564`, `IDS_REPORT_BUG_MSG_TEXT`). Fehler dieser Portierung bitte so melden, wie [ANWENDER.md](ANWENDER.md#einen-fehler-melden) es beschreibt | Vorlage |
 | *Tip of the Day* | | Tipp des Tages | Vorlage |
+| *Keyboard Shortcuts* | | **ab 7.2.2:** zeigt die Übersicht [Tastenkürzel auf einen Blick](#2-tastenkürzel-auf-einen-blick) als Seite im Standard-Browser (Datei `Hilfe\Tastenkuerzel.html` neben `Eudora.exe`; fehlt sie, sagt eine Meldung, wo sie erwartet wird) ([A-5](../Intern/BEFUNDE.md#a-5)) | am Prüfstand gemessen |
+| *Settings Reference* | | **ab 7.2.2:** zeigt [*Tools → Options*](#3-tools--options) mit den `Eudora.ini`-Schlüsseln und die [Schlüssel ohne Optionsseite](#5-eudoraini-schlüssel-ohne-optionsseite) im Standard-Browser (`Hilfe\Einstellungen.html`) ([A-5](../Intern/BEFUNDE.md#a-5)) | am Prüfstand gemessen |
 | *Payment & Registration* | | bezahlen, registrieren, Modus wechseln, nach neuen Fassungen sehen | Vorlage |
 | *Insert System Configuration* | | fügt die Systemangaben in die offene neue Nachricht ein **und hängt eine Kopie der `Eudora.ini` an** (`CCompMessageDoc::ReadSystemInfo`, `compmsgd.cpp:2695`) — mit Servern, Anmeldenamen und Adressen; laut Eudoras eigenem Text „minus any passwords“ (`IDS_REPORT_BUG_MSG_TEXT`), ob die Kennwörter wirklich herausfallen, ist nicht nachgesehen | Vorlage |
 | *About Eudora…* | | Fassung und Pfade; **Copy info** legt sie für einen Fehlerbericht auf die Zwischenablage ([ANWENDER.md](ANWENDER.md#was-in-einen-fehlerbericht-gehört--help--about-eudora)) | Vorlage |
@@ -464,9 +467,13 @@ folgen drei Regeln für die Tabellen:
   `settings.cpp:2084-2088`).
 * **Auswahlknöpfe** einer Gruppe haben **je Knopf einen eigenen Schlüssel**;
   der gewählte steht auf `1`, die anderen auf `0`.
-* Der **Abschnitt** ist überall `[Settings]` — außer bei einem Konto, das
-  nicht das Hauptkonto ist: dort steht der Wert im Abschnitt der
-  Persönlichkeit ([EINSTELLUNGEN.md, Regel 1.2](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
+* Der **Abschnitt** der `Eudora.ini`, in dem der Schlüssel steht, ist in
+  der Spalte *Abschnitt* genannt (aus der Kennung gelesen, `GetSectionID`
+  in `rs.cpp`); auf den Optionsseiten ist es überall `[Settings]` — außer
+  bei einem Konto, das nicht das Hauptkonto ist: dort steht der Wert im
+  Abschnitt der Persönlichkeit
+  ([EINSTELLUNGEN.md, Regel 1.2](../Intern/EINSTELLUNGEN.md#1-fünf-regeln-die-für-jeden-schlüssel-gelten)).
+  Ein Eintrag im falschen Abschnitt wirkt nicht, ohne Meldung.
 
 **Vorgabe** ist der eingebaute Wert aus `EudoraRes.rc`. Wo die `DEudora.ini`
 des Pakets für **neu angelegte** Mailverzeichnisse etwas anderes vorgibt,
@@ -479,168 +486,168 @@ Ein leeres Feld heißt: keine Vorgabe.
 Die wichtigsten Kontoangaben auf einer Seite; dieselben Schlüssel stehen
 auch auf *Checking Mail* und *Sending Mail*.
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Real name* | `RealName` | | Ihr Name im Absender | Vorlage |
-| *Email address* | `ReturnAddress` | | Ihre Absenderadresse | Vorlage |
-| *Mail Server (Incoming)* | `PopServer` | | Server für den Abruf | Vorlage |
-| *User Name* | `LoginName` | | Anmeldename beim Abruf | Vorlage |
-| *SMTP Server (Outgoing)* | `SMTPServer` | | Server für den Versand | Vorlage |
-| *Allow authentication* | `SmtpAuthAllowed` | `1` | Anmeldung beim Versandserver erlauben | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Real name* | `RealName` | `[Settings]` | | Ihr Name im Absender | Vorlage |
+| *Email address* | `ReturnAddress` | `[Settings]` | | Ihre Absenderadresse | Vorlage |
+| *Mail Server (Incoming)* | `PopServer` | `[Settings]` | | Server für den Abruf | Vorlage |
+| *User Name* | `LoginName` | `[Settings]` | | Anmeldename beim Abruf | Vorlage |
+| *SMTP Server (Outgoing)* | `SMTPServer` | `[Settings]` | | Server für den Versand | Vorlage |
+| *Allow authentication* | `SmtpAuthAllowed` | `[Settings]` | `1` | Anmeldung beim Versandserver erlauben | Vorlage |
 
 ### Checking Mail
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Mail Server* | `PopServer` | | Server für den Abruf | Vorlage |
-| *User Name* | `LoginName` | | Anmeldename | Vorlage |
-| *Check for mail every … minute(s)* | `CheckForMailEvery` | `0` | Abstand des automatischen Abrufs; `0` = kein automatischer Abruf (`eudora.cpp:2607-2621`) | Vorlage |
-| *Don't check without a network connection* | `DontCheckUnconnected` | `0` | automatischen Abruf auslassen, solange keine Netzverbindung besteht | Vorlage |
-| *Don't check when using battery* | `DonotCheckWithBattery` | `0` | automatischen Abruf im Akkubetrieb auslassen | Vorlage |
-| *Send on check* | `SendOnCheck` | `1` | beim Abruf die wartende Post mit verschicken | Vorlage |
-| *Secure Sockets when Receiving* | `SSLReceiveUse` | `1` (neu: `2`) | Verschlüsselung beim Abruf: `0` nie, `1` falls verfügbar, `2` erforderlich auf eigenem Port (995), `3` erforderlich über STARTTLS ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich)) | **bestätigt** ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich), 06.09.2026: Port 995, TLSv1.3) |
-| Knopf *Last SSL Info* | — | | zeigt, wie die letzte Abrufverbindung verschlüsselt war ([FAQ 3](FAQ.md#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist)) | **bestätigt** ([FAQ 3](FAQ.md#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist), 06.09.2026) |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Mail Server* | `PopServer` | `[Settings]` | | Server für den Abruf | Vorlage |
+| *User Name* | `LoginName` | `[Settings]` | | Anmeldename | Vorlage |
+| *Check for mail every … minute(s)* | `CheckForMailEvery` | `[Settings]` | `0` | Abstand des automatischen Abrufs; `0` = kein automatischer Abruf (`eudora.cpp:2607-2621`) | Vorlage |
+| *Don't check without a network connection* | `DontCheckUnconnected` | `[Settings]` | `0` | automatischen Abruf auslassen, solange keine Netzverbindung besteht | Vorlage |
+| *Don't check when using battery* | `DonotCheckWithBattery` | `[Settings]` | `0` | automatischen Abruf im Akkubetrieb auslassen | Vorlage |
+| *Send on check* | `SendOnCheck` | `[Settings]` | `1` | beim Abruf die wartende Post mit verschicken | Vorlage |
+| *Secure Sockets when Receiving* | `SSLReceiveUse` | `[Settings]` | `1` (neu: `2`) | Verschlüsselung beim Abruf: `0` nie, `1` falls verfügbar, `2` erforderlich auf eigenem Port (995), `3` erforderlich über STARTTLS ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich)) | **bestätigt** ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich), 06.09.2026: Port 995, TLSv1.3) |
+| Knopf *Last SSL Info* | — | | | zeigt, wie die letzte Abrufverbindung verschlüsselt war ([FAQ 3](FAQ.md#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist)) | **bestätigt** ([FAQ 3](FAQ.md#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist), 06.09.2026) |
 
 ### Incoming Mail
 
 Die Seite zeigt je nach Wahl von *POP* oder *IMAP* andere Felder.
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Server configuration:* *POP* / *IMAP* | `UsesPOP` / `UsesIMAP` | `1` / `0` | Abrufverfahren des Kontos | Vorlage |
-| *Leave mail on server* (POP) | `LeaveMailOnServer` | `0` (neu: `1`) | abgeholte Post auf dem Server lassen | Vorlage |
-| *Delete from server after … day(s)* (POP) | `DeleteMailFromServer`, Tage `LeaveOnServerDays` | `0`, `0` | auf dem Server gelassene Post nach so vielen Tagen löschen | Vorlage |
-| *Delete from server when emptied from Trash* (POP) | `ServerDelete` | `0` | beim Leeren des Papierkorbs auch auf dem Server löschen | Vorlage |
-| *Skip messages over … K in size* (POP) | `SkipBigMessages`, Grenze `BigMessageThreshold` | `0`, `40960` | große Nachrichten nur anlesen | Vorlage |
-| *IMAP Mailbox Location Prefix* (IMAP) | `ImapDirectoryPrefix` | | Wurzel der Ordner auf dem IMAP-Server | Vorlage |
-| *For new mail, download:* *Minimal headers only* / *Full message except attachments over … K* (IMAP) | `IMAPMinDownload` / `IMAPOmitAttachments`, Grenze `IMAPMaxDownloadSize` | `1` / `0`, `0` | wie viel einer neuen IMAP-Nachricht sofort geholt wird | Vorlage |
-| *When I delete a message:* *Mark it as deleted* / *Move it to:* (IMAP) | `MarkAsDeleted` / `TransferToTrashOnDelete`, Ziel `TrashMailboxName` | `1` / `0`, `Trash` | Löschen nur markieren (dann [FAQ 5](FAQ.md#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt)) oder in einen Papierkorbordner verschieben | Vorlage |
-| *Offline* | `Offline` | `0` | ohne Verbindung arbeiten; kein automatischer Abruf | Vorlage |
-| *Authentication style:* *Passwords* / *Kerberos* / *APOP* / *RPA* | `AuthenticatePassword` / `AuthenticateKerberos` / `AuthenticateAPOP` / `AuthenticateRPA` | `1` / `0` / `0` / `0` | Anmeldeverfahren beim Abruf | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Server configuration:* *POP* / *IMAP* | `UsesPOP` / `UsesIMAP` | `[Settings]` | `1` / `0` | Abrufverfahren des Kontos | Vorlage |
+| *Leave mail on server* (POP) | `LeaveMailOnServer` | `[Settings]` | `0` (neu: `1`) | abgeholte Post auf dem Server lassen | Vorlage |
+| *Delete from server after … day(s)* (POP) | `DeleteMailFromServer`, Tage `LeaveOnServerDays` | `[Settings]` | `0`, `0` | auf dem Server gelassene Post nach so vielen Tagen löschen | Vorlage |
+| *Delete from server when emptied from Trash* (POP) | `ServerDelete` | `[Settings]` | `0` | beim Leeren des Papierkorbs auch auf dem Server löschen | Vorlage |
+| *Skip messages over … K in size* (POP) | `SkipBigMessages`, Grenze `BigMessageThreshold` | `[Settings]` | `0`, `40960` | große Nachrichten nur anlesen | Vorlage |
+| *IMAP Mailbox Location Prefix* (IMAP) | `ImapDirectoryPrefix` | `[Settings]` | | Wurzel der Ordner auf dem IMAP-Server | Vorlage |
+| *For new mail, download:* *Minimal headers only* / *Full message except attachments over … K* (IMAP) | `IMAPMinDownload` / `IMAPOmitAttachments`, Grenze `IMAPMaxDownloadSize` | `[Settings]` | `1` / `0`, `0` | wie viel einer neuen IMAP-Nachricht sofort geholt wird | Vorlage |
+| *When I delete a message:* *Mark it as deleted* / *Move it to:* (IMAP) | `MarkAsDeleted` / `TransferToTrashOnDelete`, Ziel `TrashMailboxName` | `[Settings]` | `1` / `0`, `Trash` | Löschen nur markieren (dann [FAQ 5](FAQ.md#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt)) oder in einen Papierkorbordner verschieben | Vorlage |
+| *Offline* | `Offline` | `[Settings]` | `0` | ohne Verbindung arbeiten; kein automatischer Abruf | Vorlage |
+| *Authentication style:* *Passwords* / *Kerberos* / *APOP* / *RPA* | `AuthenticatePassword` / `AuthenticateKerberos` / `AuthenticateAPOP` / `AuthenticateRPA` | `[Settings]` | `1` / `0` / `0` / `0` | Anmeldeverfahren beim Abruf | Vorlage |
 
 ### Sending Mail
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Email address* | `ReturnAddress` | | Absenderadresse | Vorlage |
-| *Domain to add to unqualified addresses* | `DomainQualifier` | | wird an Adressen ohne `@…` angehängt | Vorlage |
-| *SMTP server* | `SMTPServer` | | Versandserver | Vorlage |
-| *SMTP Relay Personality* | `RelayPersona` | | über welches Konto verschickt wird | Vorlage |
-| *Allow authentication* | `SmtpAuthAllowed` | `1` | Anmeldung beim Versandserver erlauben | Vorlage |
-| *Immediate send* | `ImmediateSend` | `1` | *Send* verschickt sofort statt nur nach *Out* zu stellen | Vorlage |
-| *Send on check* | `SendOnCheck` | `1` | wie auf *Checking Mail* | Vorlage |
-| *Use submission port (587)* | `UseSubmissionPort` | `0` | Port 587 statt 25 | Vorlage |
-| *Secure Sockets when Sending* | `SSLSendUse` | `1` (neu: `2`) | Verschlüsselung beim Versand, Werte wie beim Abruf; `2` = eigener Port 465 ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich)) | Vorlage |
-| Knopf *Last SSL Info* | — | | zeigt die Verschlüsselung der letzten Versandverbindung | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Email address* | `ReturnAddress` | `[Settings]` | | Absenderadresse | Vorlage |
+| *Domain to add to unqualified addresses* | `DomainQualifier` | `[Settings]` | | wird an Adressen ohne `@…` angehängt | Vorlage |
+| *SMTP server* | `SMTPServer` | `[Settings]` | | Versandserver | Vorlage |
+| *SMTP Relay Personality* | `RelayPersona` | `[Settings]` | | über welches Konto verschickt wird | Vorlage |
+| *Allow authentication* | `SmtpAuthAllowed` | `[Settings]` | `1` | Anmeldung beim Versandserver erlauben | Vorlage |
+| *Immediate send* | `ImmediateSend` | `[Settings]` | `1` | *Send* verschickt sofort statt nur nach *Out* zu stellen | Vorlage |
+| *Send on check* | `SendOnCheck` | `[Settings]` | `1` | wie auf *Checking Mail* | Vorlage |
+| *Use submission port (587)* | `UseSubmissionPort` | `[Settings]` | `0` | Port 587 statt 25 | Vorlage |
+| *Secure Sockets when Sending* | `SSLSendUse` | `[Settings]` | `1` (neu: `2`) | Verschlüsselung beim Versand, Werte wie beim Abruf; `2` = eigener Port 465 ([FAQ 2](FAQ.md#2-welche-verschlüsselung-und-welchen-port-nehme-ich)) | Vorlage |
+| Knopf *Last SSL Info* | — | | | zeigt die Verschlüsselung der letzten Versandverbindung | Vorlage |
 
 ### Composing Mail
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Default Stationery* | `Stationery` | | Briefpapier für neue Nachrichten | Vorlage |
-| *Signature* | `Signature` | | Standardsignatur | Vorlage |
-| *Word wrap* | `WordWrap` | `1` | Zeilen beim Schreiben umbrechen | Vorlage |
-| *Keep copies* | `KeepCopies` | `1` | verschickte Nachrichten in *Out* behalten | Vorlage |
-| *May use quoted-printable* | `UseQP` | `1` | Kodierung *quoted-printable* erlauben | Vorlage |
-| *Tabs in body of message* | `TabsInBody` | `1` | Tabulatoren im Text erlauben | Vorlage |
-| *Show signature while composing* | `InlineSignature` | `1` | Signatur schon im Verfassen-Fenster zeigen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Default Stationery* | `Stationery` | `[Settings]` | | Briefpapier für neue Nachrichten | Vorlage |
+| *Signature* | `Signature` | `[Settings]` | | Standardsignatur | Vorlage |
+| *Word wrap* | `WordWrap` | `[Settings]` | `1` | Zeilen beim Schreiben umbrechen | Vorlage |
+| *Keep copies* | `KeepCopies` | `[Settings]` | `1` | verschickte Nachrichten in *Out* behalten | Vorlage |
+| *May use quoted-printable* | `UseQP` | `[Settings]` | `1` | Kodierung *quoted-printable* erlauben | Vorlage |
+| *Tabs in body of message* | `TabsInBody` | `[Settings]` | `1` | Tabulatoren im Text erlauben | Vorlage |
+| *Show signature while composing* | `InlineSignature` | `[Settings]` | `1` | Signatur schon im Verfassen-Fenster zeigen | Vorlage |
 
 ### Internet Dialup
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Have Eudora connect using Dial-up networking* | `AutoConnection` | `0` | Wählverbindung selbst aufbauen | Vorlage |
-| *Entry* | `AutoConnectionName` | | welche Wählverbindung; Knöpfe *Edit…* und *New…* | Vorlage |
-| *Hang-up after receiving and sending* | `RasCloseAfterDone` | `1` | nach Abruf und Versand auflegen | Vorlage |
-| *Close connection on Exit* | `RasCloseOnExit` | `1` | beim Beenden auflegen | Vorlage |
-| *Only do automatic mail checks when a network connection is already established* | `DontCheckUnconnected` | `0` | derselbe Schlüssel wie auf *Checking Mail* | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Have Eudora connect using Dial-up networking* | `AutoConnection` | `[Settings]` | `0` | Wählverbindung selbst aufbauen | Vorlage |
+| *Entry* | `AutoConnectionName` | `[Settings]` | | welche Wählverbindung; Knöpfe *Edit…* und *New…* | Vorlage |
+| *Hang-up after receiving and sending* | `RasCloseAfterDone` | `[Settings]` | `1` | nach Abruf und Versand auflegen | Vorlage |
+| *Close connection on Exit* | `RasCloseOnExit` | `[Settings]` | `1` | beim Beenden auflegen | Vorlage |
+| *Only do automatic mail checks when a network connection is already established* | `DontCheckUnconnected` | `[Settings]` | `0` | derselbe Schlüssel wie auf *Checking Mail* | Vorlage |
 
 ### Replying
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Map Ctrl+R to “Reply to All”* | `ReplyToAll` | `0` | Strg+R antwortet allen statt nur dem Absender | Vorlage |
-| *Copy original's priority to reply* | `CopyPriority` | `0` | Antwort übernimmt die Dringlichkeit | Vorlage |
-| *Automatically Fcc to original mailbox* | `AutoFCC` | `0` | Kopie der Antwort in das Postfach des Originals | Vorlage |
-| *Include signature on reply* | `IncludeSigReply` | `1` | Signatur auch in Antworten | Vorlage |
-| *Quote only the selected text on Reply or Forward* | `ReplySelection` | `1` | nur den markierten Text zitieren | Vorlage |
-| *Generate multiple messages on Reply to multiple messages* | `MultipleRepliesForMultipleSelection` | `0` | eine Antwort je markierter Nachricht statt einer gemeinsamen | Vorlage |
-| *Include yourself* | `IncludeSelf` | `0` | bei *Reply to All* sich selbst nicht herausnehmen | Vorlage |
-| *Put original To: recipients in Cc: field* | `ReplyTo:ToCc:` | `0` | bei *Reply to All* die ursprünglichen `To:`-Empfänger nach `Cc:` | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Map Ctrl+R to “Reply to All”* | `ReplyToAll` | `[Settings]` | `0` | Strg+R antwortet allen statt nur dem Absender | Vorlage |
+| *Copy original's priority to reply* | `CopyPriority` | `[Settings]` | `0` | Antwort übernimmt die Dringlichkeit | Vorlage |
+| *Automatically Fcc to original mailbox* | `AutoFCC` | `[Settings]` | `0` | Kopie der Antwort in das Postfach des Originals | Vorlage |
+| *Include signature on reply* | `IncludeSigReply` | `[Settings]` | `1` | Signatur auch in Antworten | Vorlage |
+| *Quote only the selected text on Reply or Forward* | `ReplySelection` | `[Settings]` | `1` | nur den markierten Text zitieren | Vorlage |
+| *Generate multiple messages on Reply to multiple messages* | `MultipleRepliesForMultipleSelection` | `[Settings]` | `0` | eine Antwort je markierter Nachricht statt einer gemeinsamen | Vorlage |
+| *Include yourself* | `IncludeSelf` | `[Settings]` | `0` | bei *Reply to All* sich selbst nicht herausnehmen | Vorlage |
+| *Put original To: recipients in Cc: field* | `ReplyTo:ToCc:` | `[Settings]` | `0` | bei *Reply to All* die ursprünglichen `To:`-Empfänger nach `Cc:` | Vorlage |
 
 ### Attachments
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Encoding method:* *MIME* / *BinHex* / *Uuencode* | `SendMIME` / `SendBinHex` / `SendUuencode` | `1` / `0` / `0` | wie Anhänge verpackt werden | Vorlage |
-| *Attachment directory* | `AutoReceiveAttachmentsDirectory` | | Verzeichnis für empfangene Anhänge (leer: `attach` im Mailverzeichnis, siehe [FAQ 1](FAQ.md#1-wie-nehme-ich-bei-einer-neuen-fassung-post-konten-und-filter-mit)) | Vorlage |
-| *Put text attachments in body of message* | `TextAsDoc`, **umgekehrt** | `1` (Häkchen aus) | Textanhänge in den Nachrichtentext übernehmen statt als Datei | Vorlage |
-| *Receive MIME digest as a mailbox attachment* | `ExplodeMimeDigest` | `0` | eine MIME-Sammelnachricht als Postfach-Anhang ablegen | Vorlage |
-| *Delete attachments when emptying Trash* | `TidyAttach` | `0` | beim Leeren des Papierkorbs die Anhang-Dateien mit löschen ([FAQ 14](FAQ.md#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche)) | **bestätigt** mit `1` ([FAQ 14](FAQ.md#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), 29.10.2026) |
-| *Delete automatic attachments:* *Never* / *After sending message* / *When message emptied from Trash* | `AutoAttachedDeleteNever` / `AutoAttachedDeleteSend` / `AutoAttachedDeleteTrash` | `0` / `0` / `1` | wann Dateien gelöscht werden, die Eudora selbst angehängt hat | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Encoding method:* *MIME* / *BinHex* / *Uuencode* | `SendMIME` / `SendBinHex` / `SendUuencode` | `[Settings]` | `1` / `0` / `0` | wie Anhänge verpackt werden | Vorlage |
+| *Attachment directory* | `AutoReceiveAttachmentsDirectory` | `[Settings]` | | Verzeichnis für empfangene Anhänge (leer: `attach` im Mailverzeichnis, siehe [FAQ 1](FAQ.md#1-wie-nehme-ich-bei-einer-neuen-fassung-post-konten-und-filter-mit)) | Vorlage |
+| *Put text attachments in body of message* | `TextAsDoc`, **umgekehrt** | `[Settings]` | `1` (Häkchen aus) | Textanhänge in den Nachrichtentext übernehmen statt als Datei | Vorlage |
+| *Receive MIME digest as a mailbox attachment* | `ExplodeMimeDigest` | `[Settings]` | `0` | eine MIME-Sammelnachricht als Postfach-Anhang ablegen | Vorlage |
+| *Delete attachments when emptying Trash* | `TidyAttach` | `[Settings]` | `0` | beim Leeren des Papierkorbs die Anhang-Dateien mit löschen ([FAQ 14](FAQ.md#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche)) | **bestätigt** mit `1` ([FAQ 14](FAQ.md#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), 29.10.2026) |
+| *Delete automatic attachments:* *Never* / *After sending message* / *When message emptied from Trash* | `AutoAttachedDeleteNever` / `AutoAttachedDeleteSend` / `AutoAttachedDeleteTrash` | `[Settings]` | `0` / `0` / `1` | wann Dateien gelöscht werden, die Eudora selbst angehängt hat | Vorlage |
 
 ### Fonts
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Proportional* | `MessageFont` | `Arial` | Schrift der Nachrichten | Vorlage |
-| *Fixed-width* | `MessageFixedFont` | `Courier New` | Schrift mit fester Breite | Vorlage |
-| *Use proportional font by default* | `UseProportionalAsDefault` | `1` | Proportionalschrift als Standard | Vorlage |
-| *Size* (Nachrichten) | `MessageFontBaseSize` | `1` | Größenstufe, Liste von *smallest* bis *largest* | Vorlage |
-| Drucker: *Font*, *Size* | `PrinterFont`, `PrinterFontBaseSize` | `Arial`, `2` | Schrift beim Drucken | Vorlage |
-| Bildschirm: *Font*, *Size* | `ScreenFont`, `ScreenFontBaseSize` | `Arial`, `1` | Schrift der Listen und Felder | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Proportional* | `MessageFont` | `[Settings]` | `Arial` | Schrift der Nachrichten | Vorlage |
+| *Fixed-width* | `MessageFixedFont` | `[Settings]` | `Courier New` | Schrift mit fester Breite | Vorlage |
+| *Use proportional font by default* | `UseProportionalAsDefault` | `[Settings]` | `1` | Proportionalschrift als Standard | Vorlage |
+| *Size* (Nachrichten) | `MessageFontBaseSize` | `[Settings]` | `1` | Größenstufe, Liste von *smallest* bis *largest* | Vorlage |
+| Drucker: *Font*, *Size* | `PrinterFont`, `PrinterFontBaseSize` | `[Settings]` | `Arial`, `2` | Schrift beim Drucken | Vorlage |
+| Bildschirm: *Font*, *Size* | `ScreenFont`, `ScreenFontBaseSize` | `[Settings]` | `Arial`, `1` | Schrift der Listen und Felder | Vorlage |
 
 ### Display
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Show toolbar* | `ShowToolBar` | `1` | Werkzeugleiste zeigen | Vorlage |
-| *Show toolbar tips* | `ShowToolTips` | `1` | Hinweise über den Knöpfen | Vorlage |
-| *Show cool bars* | `ShowCoolBars` | `1` | flache Leisten | Vorlage |
-| *Show large buttons* | `ShowLargeButtons` | `1` | große Knöpfe | Vorlage |
-| *Show status bar* | `ShowStatusBar` | `1` | Statuszeile zeigen | Vorlage |
-| *Show category icons* | `ShowCategoryIcons` | `1` | Symbole in der Kategorienliste dieses Dialogs | Vorlage |
-| *Show MDI task bar* | `ShowMDITaskbar` | `1` | Registerleiste der offenen Fenster ([E-48](../Intern/BEFUNDE.md#e-48), *war abgeschaltet, seit 7.2.0.25 da*) | Vorlage |
-| *Automatically download HTML graphics* | `FetchInlineContent` | `1` | Bilder aus dem Netz in HTML-Mails nachladen | Vorlage |
-| *Display attached images inline* | `DisplayImageAttachmentsInMessages` | `1` | Bildanhänge im Text zeigen | Vorlage |
-| *Display emoticons as pictures* | `DisplayEmoticonsAsPictures` | `1` | Emoticons als Bild | Vorlage |
-| *Minimize Eudora to the system tray* | `ShowOnlyInTray` | `0` | beim Verkleinern nur als Symbol in der Taskleiste | Vorlage |
-| *Always show icon in system tray* | `AlwaysShowTrayIcon` | `0` | Symbol in der Taskleiste immer zeigen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Show toolbar* | `ShowToolBar` | `[Settings]` | `1` | Werkzeugleiste zeigen | Vorlage |
+| *Show toolbar tips* | `ShowToolTips` | `[Settings]` | `1` | Hinweise über den Knöpfen | Vorlage |
+| *Show cool bars* | `ShowCoolBars` | `[Settings]` | `1` | flache Leisten | Vorlage |
+| *Show large buttons* | `ShowLargeButtons` | `[Settings]` | `1` | große Knöpfe | Vorlage |
+| *Show status bar* | `ShowStatusBar` | `[Settings]` | `1` | Statuszeile zeigen | Vorlage |
+| *Show category icons* | `ShowCategoryIcons` | `[Settings]` | `1` | Symbole in der Kategorienliste dieses Dialogs | Vorlage |
+| *Show MDI task bar* | `ShowMDITaskbar` | `[Settings]` | `1` | Registerleiste der offenen Fenster ([E-48](../Intern/BEFUNDE.md#e-48), *war abgeschaltet, seit 7.2.0.25 da*) | Vorlage |
+| *Automatically download HTML graphics* | `FetchInlineContent` | `[Settings]` | `1` | Bilder aus dem Netz in HTML-Mails nachladen | Vorlage |
+| *Display attached images inline* | `DisplayImageAttachmentsInMessages` | `[Settings]` | `1` | Bildanhänge im Text zeigen | Vorlage |
+| *Display emoticons as pictures* | `DisplayEmoticonsAsPictures` | `[Settings]` | `1` | Emoticons als Bild | Vorlage |
+| *Minimize Eudora to the system tray* | `ShowOnlyInTray` | `[Settings]` | `0` | beim Verkleinern nur als Symbol in der Taskleiste | Vorlage |
+| *Always show icon in system tray* | `AlwaysShowTrayIcon` | `[Settings]` | `0` | Symbol in der Taskleiste immer zeigen | Vorlage |
 
 ### Viewing Mail
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Use Microsoft's viewer* | `UseBidentAlways` | `1` | HTML mit der Windows-Komponente anzeigen | Vorlage |
-| *Use separate settings from Internet Explorer* | `SeparateMSHTMLSettings` | `0` | eigene Einstellungen statt der des Internet Explorer | Vorlage |
-| *Message window width* / *height* | `MessageWidth` / `MessageLines` | `80` / `20` | Anfangsgröße des Nachrichtenfensters in Zeichen und Zeilen | Vorlage |
-| *Show message preview pane* | `MailboxPreviewPane` | `1` | Vorschau unter der Postfachliste | Vorlage |
-| *Mark previewed messages as read after … second(s)* | `SetPreviewRead`, `SetPreviewReadSeconds` | `0`, `5` | in der Vorschau gezeigte Nachricht nach so vielen Sekunden als gelesen markieren | Vorlage |
-| *Automatically open next message* | `EasyOpen` | `1` | nach Löschen oder Verschieben die nächste öffnen | Vorlage |
-| *Zoom windows when opening* | `ZoomWindows` | `1` | Fenster beim Öffnen vergrößern | Vorlage |
-| *Allow executables in HTML content* | `RunHtmlCode` | `0` | ausführbaren Inhalt im HTML zulassen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Use Microsoft's viewer* | `UseBidentAlways` | `[Settings]` | `1` | HTML mit der Windows-Komponente anzeigen | Vorlage |
+| *Use separate settings from Internet Explorer* | `SeparateMSHTMLSettings` | `[Settings]` | `0` | eigene Einstellungen statt der des Internet Explorer | Vorlage |
+| *Message window width* / *height* | `MessageWidth` / `MessageLines` | `[Settings]` | `80` / `20` | Anfangsgröße des Nachrichtenfensters in Zeichen und Zeilen | Vorlage |
+| *Show message preview pane* | `MailboxPreviewPane` | `[Settings]` | `1` | Vorschau unter der Postfachliste | Vorlage |
+| *Mark previewed messages as read after … second(s)* | `SetPreviewRead`, `SetPreviewReadSeconds` | `[Settings]` | `0`, `5` | in der Vorschau gezeigte Nachricht nach so vielen Sekunden als gelesen markieren | Vorlage |
+| *Automatically open next message* | `EasyOpen` | `[Settings]` | `1` | nach Löschen oder Verschieben die nächste öffnen | Vorlage |
+| *Zoom windows when opening* | `ZoomWindows` | `[Settings]` | `1` | Fenster beim Öffnen vergrößern | Vorlage |
+| *Allow executables in HTML content* | `RunHtmlCode` | `[Settings]` | `0` | ausführbaren Inhalt im HTML zulassen | Vorlage |
 
 ### Mailboxes
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| Spalten *Status*, *Junk*, *Priority*, *Attachment*, *Label*, *Who*, *Date*, *Size*, *Server status*, *Mood Watch*, *Subject* | `MailboxShowStatus`, `MailboxShowJunk`, `MailboxShowPriority`, `MailboxShowAttachment`, `MailboxShowLabel`, `MailboxShowSender`, `MailboxShowDate`, `MailboxShowSize`, `MailboxShowServerStatus`, `MailboxShowMood`, `MailboxShowSubject` | alle `1`, nur *Junk* `0` | welche Spalten die Postfachliste zeigt | Vorlage |
-| *Show mailbox lines* | `ShowMailboxLines` | `0` | Trennlinien zwischen den Zeilen | Vorlage |
-| *Show count of selected messages in size box* | `ShowSelectedSummaryCount` | `0` | Zahl der markierten Nachrichten unten links | Vorlage |
-| *Close messages with mailbox* | `MailboxSuperclose` | `0` | offene Nachrichten mit dem Postfach schließen | Vorlage |
-| *Select newly inserted messages (FUMLUB)* | `Fumlub` | `1` | neu eingefügte Nachrichten markieren | Vorlage |
-| *… items in the Recent mailbox menus* | `MaxRecentMailbox` | `10` | Länge von *Recent* in *Mailbox* und *Transfer*; `0` blendet es aus | Vorlage |
-| *Allow drag and drop transfers* | `AllowDragAndDropTransfers` | `1` | Nachrichten durch Ziehen verschieben | Vorlage |
-| *Allow drag-select of messages* | `DragSelectMessages` | `0` | durch Ziehen mehrere markieren | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| Spalten *Status*, *Junk*, *Priority*, *Attachment*, *Label*, *Who*, *Date*, *Size*, *Server status*, *Mood Watch*, *Subject* | `MailboxShowStatus`, `MailboxShowJunk`, `MailboxShowPriority`, `MailboxShowAttachment`, `MailboxShowLabel`, `MailboxShowSender`, `MailboxShowDate`, `MailboxShowSize`, `MailboxShowServerStatus`, `MailboxShowMood`, `MailboxShowSubject` | `[Settings]` | alle `1`, nur *Junk* `0` | welche Spalten die Postfachliste zeigt | Vorlage |
+| *Show mailbox lines* | `ShowMailboxLines` | `[Settings]` | `0` | Trennlinien zwischen den Zeilen | Vorlage |
+| *Show count of selected messages in size box* | `ShowSelectedSummaryCount` | `[Settings]` | `0` | Zahl der markierten Nachrichten unten links | Vorlage |
+| *Close messages with mailbox* | `MailboxSuperclose` | `[Settings]` | `0` | offene Nachrichten mit dem Postfach schließen | Vorlage |
+| *Select newly inserted messages (FUMLUB)* | `Fumlub` | `[Settings]` | `1` | neu eingefügte Nachrichten markieren | Vorlage |
+| *… items in the Recent mailbox menus* | `MaxRecentMailbox` | `[Settings]` | `10` | Länge von *Recent* in *Mailbox* und *Transfer*; `0` blendet es aus | Vorlage |
+| *Allow drag and drop transfers* | `AllowDragAndDropTransfers` | `[Settings]` | `1` | Nachrichten durch Ziehen verschieben | Vorlage |
+| *Allow drag-select of messages* | `DragSelectMessages` | `[Settings]` | `0` | durch Ziehen mehrere markieren | Vorlage |
 
 ### Styled Text
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Show formatting toolbar* | `ShowStyledTextToolbar` | `1` | Formatleiste im Verfassen-Fenster | Vorlage |
-| *Send both plain and styled* / *Send styled text only* / *Send plain text only* | `SendPlainAndStyled` / `SendStyledOnly` / `SendPlainOnly` | `1` / `0` / `0` | was beim Versand einer formatierten Nachricht hinausgeht | Vorlage |
-| *Ask me each time* | `WarnQueueStyledText` | `1` | vor dem Versand fragen | Vorlage |
-| *Send the signature with styles* | `SendStyledSig` | `0` | Signatur formatiert verschicken | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Show formatting toolbar* | `ShowStyledTextToolbar` | `[Settings]` | `1` | Formatleiste im Verfassen-Fenster | Vorlage |
+| *Send both plain and styled* / *Send styled text only* / *Send plain text only* | `SendPlainAndStyled` / `SendStyledOnly` / `SendPlainOnly` | `[Settings]` | `1` / `0` / `0` | was beim Versand einer formatierten Nachricht hinausgeht | Vorlage |
+| *Ask me each time* | `WarnQueueStyledText` | `[Settings]` | `1` | vor dem Versand fragen | Vorlage |
+| *Send the signature with styles* | `SendStyledSig` | `[Settings]` | `0` | Signatur formatiert verschicken | Vorlage |
 
 ### Spell Checking
 
@@ -649,150 +656,150 @@ Meldung lässt sich seit 7.2.1.129 abschalten ([E-139](../Intern/BEFUNDE.md#e-13
 **bestätigt** am 31.10.2026). Die Einstellungen sind deshalb ohne Wirkung zu
 erwarten (am Programm nicht geprüft).
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Ignore capitalized words* / *with all capitals* / *with numbers* / *with mixed case* | `IgnoreCappedWords` / `IgnoreAllCaps` / `IgnoreMixedDigits` / `IgnoreMixedCase` | `0` / `0` / `1` / `0` | welche Wörter übergangen werden | Vorlage |
-| *Report doubled words* | `ReportDoubledWords` | `1` | doppelte Wörter melden | Vorlage |
-| *Suggest words*, *Phonetic words*, *Split words*, *Typographic words* | `AlwaysSuggest`, `SuggestPhoneticSpellings`, `SuggestSplitWords`, `SuggestTypographicWords` | `1`, `0`, `1`, `1` | welche Vorschläge kommen | Vorlage |
-| *Automatically as you type* / *Only when requested* | — / `ManualSpellCheck` | — / `0` | beim Tippen oder nur auf Anforderung prüfen | Vorlage |
-| *Ignore original text* | `IgnoreOriginalSpell` | `1` | Zitiertes nicht prüfen | Vorlage |
-| *Warn me when sending/queuing message with misspellings* | `SpellOnQueue` | `0` | vor dem Versand warnen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Ignore capitalized words* / *with all capitals* / *with numbers* / *with mixed case* | `IgnoreCappedWords` / `IgnoreAllCaps` / `IgnoreMixedDigits` / `IgnoreMixedCase` | `[Settings]` | `0` / `0` / `1` / `0` | welche Wörter übergangen werden | Vorlage |
+| *Report doubled words* | `ReportDoubledWords` | `[Settings]` | `1` | doppelte Wörter melden | Vorlage |
+| *Suggest words*, *Phonetic words*, *Split words*, *Typographic words* | `AlwaysSuggest`, `SuggestPhoneticSpellings`, `SuggestSplitWords`, `SuggestTypographicWords` | `[Settings]` | `1`, `0`, `1`, `1` | welche Vorschläge kommen | Vorlage |
+| *Automatically as you type* / *Only when requested* | — / `ManualSpellCheck` | `[Settings]` | — / `0` | beim Tippen oder nur auf Anforderung prüfen | Vorlage |
+| *Ignore original text* | `IgnoreOriginalSpell` | `[Settings]` | `1` | Zitiertes nicht prüfen | Vorlage |
+| *Warn me when sending/queuing message with misspellings* | `SpellOnQueue` | `[Settings]` | `0` | vor dem Versand warnen | Vorlage |
 
 ### Auto-completion
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| Quellen *History File*, *Address Book*, *Plug-in Addresses* | `DoHistoryCompletion`, `DoABCompletion`, `DoPluginCompletion` | `1`, `1`, `1` | woraus Adressen beim Tippen ergänzt werden | Vorlage |
-| *Don't auto-complete, just list matches* | `AutoCompListOnly` | `0` | nur Treffer zeigen, nicht einsetzen | Vorlage |
-| *Use drop down list for completion choices* | `PopupNameCompleter` | `1` | Auswahlbox unter dem Feld ([FAQ 8](FAQ.md#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben)) | Vorlage |
-| *Names should appear in alphabetical order* | `ACListInAlphaOrder` | `0` | Treffer alphabetisch | Vorlage |
-| *Add the From: lines of replied-to messages* | `AddFromLinesToHistory` | `1` | Absender beantworteter Nachrichten in die Liste | Vorlage |
-| *Time to wait before popping up Auto-completion box (Milliseconds)* | `AutoCompListboxDelay` | `500` | Wartezeit bis zur Auswahlbox | Vorlage |
-| *Maximum entries to keep in history* | `MaximumHistorySize` | `100` | Länge der Liste | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| Quellen *History File*, *Address Book*, *Plug-in Addresses* | `DoHistoryCompletion`, `DoABCompletion`, `DoPluginCompletion` | `[Settings]` | `1`, `1`, `1` | woraus Adressen beim Tippen ergänzt werden | Vorlage |
+| *Don't auto-complete, just list matches* | `AutoCompListOnly` | `[Settings]` | `0` | nur Treffer zeigen, nicht einsetzen | Vorlage |
+| *Use drop down list for completion choices* | `PopupNameCompleter` | `[Settings]` | `1` | Auswahlbox unter dem Feld ([FAQ 8](FAQ.md#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben)) | Vorlage |
+| *Names should appear in alphabetical order* | `ACListInAlphaOrder` | `[Settings]` | `0` | Treffer alphabetisch | Vorlage |
+| *Add the From: lines of replied-to messages* | `AddFromLinesToHistory` | `[Settings]` | `1` | Absender beantworteter Nachrichten in die Liste | Vorlage |
+| *Time to wait before popping up Auto-completion box (Milliseconds)* | `AutoCompListboxDelay` | `[Settings]` | `500` | Wartezeit bis zur Auswahlbox | Vorlage |
+| *Maximum entries to keep in history* | `MaximumHistorySize` | `[Settings]` | `100` | Länge der Liste | Vorlage |
 
 ### Date Display
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Local timezone* / *Sender's timezone* | `LocalTimeDisplay` / `SenderTimeDisplay` | `1` / `0` | Zeit in Ihrer oder in der Zeitzone des Absenders | Vorlage |
-| *Fixed:* / *Age-sensitive:* | `FixedDateDisplay` / `AgeSensitiveDateDisplay` | `1` / `0` | ein festes Format oder eines nach Alter der Nachricht | Vorlage |
-| Format zu *Fixed* | `FixedDateFormat` | `%1 %2 %4` | Platzhalter: `%1` Uhrzeit, `%2` Datum, `%3` Wochentag, `%4` Zeitzone (`QCUtils/src/services.cpp:172-175`); die Vorgabe zeigt also Uhrzeit, Datum, Zeitzone | Vorlage |
-| *RECENT format*, *Hours to be OLD*, *OLD format*, *Hours to be ANCIENT*, *ANCIENT format* | `RecentDateFormat`, `OldDateHours`, `OldDateFormat`, `AncientDateHours`, `AncientDateFormat` | `%1`, `24`, `%3`, `168`, `%2` | Formate und Altersgrenzen für *Age-sensitive* | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Local timezone* / *Sender's timezone* | `LocalTimeDisplay` / `SenderTimeDisplay` | `[Settings]` | `1` / `0` | Zeit in Ihrer oder in der Zeitzone des Absenders | Vorlage |
+| *Fixed:* / *Age-sensitive:* | `FixedDateDisplay` / `AgeSensitiveDateDisplay` | `[Settings]` | `1` / `0` | ein festes Format oder eines nach Alter der Nachricht | Vorlage |
+| Format zu *Fixed* | `FixedDateFormat` | `[Settings]` | `%1 %2 %4` | Platzhalter: `%1` Uhrzeit, `%2` Datum, `%3` Wochentag, `%4` Zeitzone (`QCUtils/src/services.cpp:172-175`); die Vorgabe zeigt also Uhrzeit, Datum, Zeitzone | Vorlage |
+| *RECENT format*, *Hours to be OLD*, *OLD format*, *Hours to be ANCIENT*, *ANCIENT format* | `RecentDateFormat`, `OldDateHours`, `OldDateFormat`, `AncientDateHours`, `AncientDateFormat` | `[Settings]` | `%1`, `24`, `%3`, `168`, `%2` | Formate und Altersgrenzen für *Age-sensitive* | Vorlage |
 
 ### Labels
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| Farbfeld *1* … *7* | `LabelColor1` … `LabelColor7` | Windows-Farbwerte (`33023`, `255`, `16711935`, `16744448`, `16711680`, `32768`, `4210816`) | Farbe des Labels; Klick öffnet die Farbwahl | **bestätigt** ([FAQ 9](FAQ.md#9-wie-markiere-ich-wichtige-mails-farbig), 29.10.2026) |
-| Name daneben | `LabelText1` … `LabelText7` | `Label 1` … `Label 7` | Name im Menü *Change → Label* und in der Spalte *Label* | **bestätigt** ([FAQ 9](FAQ.md#9-wie-markiere-ich-wichtige-mails-farbig), 29.10.2026) |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| Farbfeld *1* … *7* | `LabelColor1` … `LabelColor7` | `[Settings]` | Windows-Farbwerte (`33023`, `255`, `16711935`, `16744448`, `16711680`, `32768`, `4210816`) | Farbe des Labels; Klick öffnet die Farbwahl | **bestätigt** ([FAQ 9](FAQ.md#9-wie-markiere-ich-wichtige-mails-farbig), 29.10.2026) |
+| Name daneben | `LabelText1` … `LabelText7` | `[Settings]` | `Label 1` … `Label 7` | Name im Menü *Change → Label* und in der Spalte *Label* | **bestätigt** ([FAQ 9](FAQ.md#9-wie-markiere-ich-wichtige-mails-farbig), 29.10.2026) |
 
 ### Getting Attention
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Use an alert dialog box* | `Alert` | `1` | bei neuer Post ein Hinweisfenster | Vorlage |
-| *Open mailbox* | `OpenInMailbox` | `1` | bei neuer Post das Postfach öffnen | Vorlage |
-| *Play a sound* | `Sound` | `1` | bei neuer Post ein Klang | Vorlage |
-| Klangdatei, Knopf *Use Default* | `NewMailSound` | | welche Klangdatei | Vorlage |
-| *Generate filter report* | `FilterReport` | `0` | Filterbericht schreiben ([FILTER.md](../Intern/FILTER.md#der-filterbericht)) | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Use an alert dialog box* | `Alert` | `[Settings]` | `1` | bei neuer Post ein Hinweisfenster | Vorlage |
+| *Open mailbox* | `OpenInMailbox` | `[Settings]` | `1` | bei neuer Post das Postfach öffnen | Vorlage |
+| *Play a sound* | `Sound` | `[Settings]` | `1` | bei neuer Post ein Klang | Vorlage |
+| Klangdatei, Knopf *Use Default* | `NewMailSound` | `[Settings]` | | welche Klangdatei | Vorlage |
+| *Generate filter report* | `FilterReport` | `[Settings]` | `0` | Filterbericht schreiben ([FILTER.md](../Intern/FILTER.md#der-filterbericht)) | Vorlage |
 
 ### Background Tasks
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| Spalten *Task*, *Persona*, *Status*, *Details*, *Progress* | `TaskStatusShowColTask`, `…Persona`, `…Status`, `…Details`, `…Progress` (alle mit `TaskStatusShowCol` davor) | `1`, `1`, `1`, `0`, `1` | Spalten im Fenster *Task Status* | Vorlage |
-| *Wait for … seconds of user inactivity before processing/filtering downloaded messages* | `TaskMgrWaitTime` | `20` | so viele Sekunden ohne Eingabe abwarten, bevor abgeholte Post verarbeitet und gefiltert wird | Vorlage |
-| *Bring error window to front* | `TaskErrorBringToFront` | `1` | Fehlerfenster nach vorn holen | Vorlage |
-| *Bring task status window to front* | `TaskStatusBringToFront` | `0` | Fenster *Task Status* nach vorn holen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| Spalten *Task*, *Persona*, *Status*, *Details*, *Progress* | `TaskStatusShowColTask`, `…Persona`, `…Status`, `…Details`, `…Progress` (alle mit `TaskStatusShowCol` davor) | `[Settings]` | `1`, `1`, `1`, `0`, `1` | Spalten im Fenster *Task Status* | Vorlage |
+| *Wait for … seconds of user inactivity before processing/filtering downloaded messages* | `TaskMgrWaitTime` | `[Settings]` | `20` | so viele Sekunden ohne Eingabe abwarten, bevor abgeholte Post verarbeitet und gefiltert wird | Vorlage |
+| *Bring error window to front* | `TaskErrorBringToFront` | `[Settings]` | `1` | Fehlerfenster nach vorn holen | Vorlage |
+| *Bring task status window to front* | `TaskStatusBringToFront` | `[Settings]` | `0` | Fenster *Task Status* nach vorn holen | Vorlage |
 
 ### Automation
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Automation enabled from this machine* | `AutomationEnabled` | `0` | andere Programme dürfen Eudora fernsteuern | Vorlage |
-| *Warn on Automation auto-send of messages* | `WarnComAutoSend` | `1` | warnen, wenn ein fernsteuerndes Programm Post verschickt | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Automation enabled from this machine* | `AutomationEnabled` | `[Settings]` | `0` | andere Programme dürfen Eudora fernsteuern | Vorlage |
+| *Warn on Automation auto-send of messages* | `WarnComAutoSend` | `[Settings]` | `1` | warnen, wenn ein fernsteuerndes Programm Post verschickt | Vorlage |
 
 ### Extra Warnings
 
 Je Häkchen eine Rückfrage vor der genannten Handlung.
 
-| Einstellung | Schlüssel | Vorgabe | Herkunft |
-|---|---|---|---|
-| *Delete unread mail* | `WarnDeleteUnread` | `1` | Vorlage |
-| *Delete queued mail* | `WarnDeleteQueued` | `1` | Vorlage |
-| *Delete unsent mail* | `WarnDeleteUnsent` | `1` | Vorlage |
-| *Delete … or more messages at a time* | `WarnDeleteManyMessages`, Zahl `WarnDeleteManyMessagesThreshold` | `1`, `50` | Vorlage |
-| *Delete a message from the Search results* | `WarnDeleteSearchResult` | `1` | Vorlage |
-| *Queue a message with no subject* | `WarnQueueNoSubject` | `0` | Vorlage |
-| *Queue a message bigger than … K* | `WarnQueueBigMessage`, Größe `WarnQueueBigMessageSize` | `1`, `500` | Vorlage |
-| *Quit with messages queued to be sent* | `WarnQuitWithQueued` | `1` | Vorlage |
-| *Empty the Trash mailbox* | `WarnEmptyTrash` | `1` | Vorlage |
-| *Start Eudora and it's not the default mailer* | `WarnDefaultMailto` | `1` | Vorlage |
-| *Launch a program from a message* | `WarnLaunchProgram` | `1` | Vorlage |
-| *Launch a program externally* | `WarnExternalLaunchAttach` | `1` | Vorlage |
-| *Forward files that are not in the attachment directory* | `ForwardingFilesNotInAttachDirAction` | `1` | Vorlage |
-| *Enter an invalid server when creating a new personality* | `WarnValidateHost` | `1` | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Herkunft |
+|---|---|---|---|---|
+| *Delete unread mail* | `WarnDeleteUnread` | `[Settings]` | `1` | Vorlage |
+| *Delete queued mail* | `WarnDeleteQueued` | `[Settings]` | `1` | Vorlage |
+| *Delete unsent mail* | `WarnDeleteUnsent` | `[Settings]` | `1` | Vorlage |
+| *Delete … or more messages at a time* | `WarnDeleteManyMessages`, Zahl `WarnDeleteManyMessagesThreshold` | `[Settings]` | `1`, `50` | Vorlage |
+| *Delete a message from the Search results* | `WarnDeleteSearchResult` | `[Settings]` | `1` | Vorlage |
+| *Queue a message with no subject* | `WarnQueueNoSubject` | `[Settings]` | `0` | Vorlage |
+| *Queue a message bigger than … K* | `WarnQueueBigMessage`, Größe `WarnQueueBigMessageSize` | `[Settings]` | `1`, `500` | Vorlage |
+| *Quit with messages queued to be sent* | `WarnQuitWithQueued` | `[Settings]` | `1` | Vorlage |
+| *Empty the Trash mailbox* | `WarnEmptyTrash` | `[Settings]` | `1` | Vorlage |
+| *Start Eudora and it's not the default mailer* | `WarnDefaultMailto` | `[Settings]` | `1` | Vorlage |
+| *Launch a program from a message* | `WarnLaunchProgram` | `[Settings]` | `1` | Vorlage |
+| *Launch a program externally* | `WarnExternalLaunchAttach` | `[Settings]` | `1` | Vorlage |
+| *Forward files that are not in the attachment directory* | `ForwardingFilesNotInAttachDirAction` | `[Settings]` | `1` | Vorlage |
+| *Enter an invalid server when creating a new personality* | `WarnValidateHost` | `[Settings]` | `1` | Vorlage |
 
 ### MAPI
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Never* / *When Eudora is running* / *Always* | `MAPIUseNever` / `MAPIUseEudora` / `MAPIUseAlways` | `1` / `0` / `0` | ob andere Programme über MAPI („Senden an E-Mail-Empfänger“) Eudora benutzen | Vorlage |
-| *Never* / *After sending message* / *When message emptied from Trash* | `MAPIDeleteNever` / `MAPIDeleteSend` / `MAPIDeleteTrash` | `0` / `0` / `1` | wann über MAPI angehängte Dateien gelöscht werden | Vorlage |
-| *Send single MAPI file attachment as inline attachment (TXT and HTML files only)* | `InlineMapiTextAttachment` | `1` | einzelnen Text- oder HTML-Anhang in den Text übernehmen | Vorlage |
-| *Warn on MAPI auto-send of messages* | `WarnMapiAutoSend` | `1` | warnen, wenn ein Programm über MAPI selbst verschickt | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Never* / *When Eudora is running* / *Always* | `MAPIUseNever` / `MAPIUseEudora` / `MAPIUseAlways` | `[Settings]` | `1` / `0` / `0` | ob andere Programme über MAPI („Senden an E-Mail-Empfänger“) Eudora benutzen | Vorlage |
+| *Never* / *After sending message* / *When message emptied from Trash* | `MAPIDeleteNever` / `MAPIDeleteSend` / `MAPIDeleteTrash` | `[Settings]` | `0` / `0` / `1` | wann über MAPI angehängte Dateien gelöscht werden | Vorlage |
+| *Send single MAPI file attachment as inline attachment (TXT and HTML files only)* | `InlineMapiTextAttachment` | `[Settings]` | `1` | einzelnen Text- oder HTML-Anhang in den Text übernehmen | Vorlage |
+| *Warn on MAPI auto-send of messages* | `WarnMapiAutoSend` | `[Settings]` | `1` | warnen, wenn ein Programm über MAPI selbst verschickt | Vorlage |
 
 ### Advanced Network
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Network open timeout* | `NetworkOpenTimeout` | `300` | Wartezeit beim Verbindungsaufbau in Sekunden | Vorlage |
-| *Network timeout after* | `NetworkTimeout` | `300` | Wartezeit auf eine Antwort in Sekunden | Vorlage |
-| *Network buffer size of* | `NetworkBufferSize` | `4096` | Puffergröße in Byte | Vorlage |
-| *Cache network info* | `NetworkCaching` | `0` | Netzangaben zwischenspeichern | Vorlage |
-| *Unload Winsock DLL after closing socket* | `NetImmediateClose` | `0` | Netzbibliothek nach jeder Verbindung entladen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Network open timeout* | `NetworkOpenTimeout` | `[Settings]` | `300` | Wartezeit beim Verbindungsaufbau in Sekunden | Vorlage |
+| *Network timeout after* | `NetworkTimeout` | `[Settings]` | `300` | Wartezeit auf eine Antwort in Sekunden | Vorlage |
+| *Network buffer size of* | `NetworkBufferSize` | `[Settings]` | `4096` | Puffergröße in Byte | Vorlage |
+| *Cache network info* | `NetworkCaching` | `[Settings]` | `0` | Netzangaben zwischenspeichern | Vorlage |
+| *Unload Winsock DLL after closing socket* | `NetImmediateClose` | `[Settings]` | `0` | Netzbibliothek nach jeder Verbindung entladen | Vorlage |
 
 ### Kerberos
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| Kerberos *On* / *Off* | `KerberosOn` / `KerberosOff` | `0` / `1` | Kerberos-Anmeldung | Vorlage |
-| Kerberos 4 *On* / *Off* | `Kerberos4On` / `Kerberos4Off` | `0` / `1` | Kerberos 4 | Vorlage |
-| *Kerberos POP3 port*, *Realm*, *Service name*, *Service format* | `KerberosPort`, `KerberosRealm`, `KerberosService`, `KerberosFormat` | leer, leer, `rcmd`, `%1.%4@%3` | Angaben für den Kerberos-Server | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| Kerberos *On* / *Off* | `KerberosOn` / `KerberosOff` | `[Settings]` | `0` / `1` | Kerberos-Anmeldung | Vorlage |
+| Kerberos 4 *On* / *Off* | `Kerberos4On` / `Kerberos4Off` | `[Settings]` | `0` / `1` | Kerberos 4 | Vorlage |
+| *Kerberos POP3 port*, *Realm*, *Service name*, *Service format* | `KerberosPort`, `KerberosRealm`, `KerberosService`, `KerberosFormat` | `[Settings]` | leer, leer, `rcmd`, `%1.%4@%3` | Angaben für den Kerberos-Server | Vorlage |
 
 ### MoodWatch
 
 Bewertet den Ton einer Nachricht. Ob die Bewertung in diesem Paket arbeitet,
 ist **unklar** (nicht untersucht).
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Enable MoodWatch* | `DoMoodWatchCheck` | `1` | MoodWatch einschalten | Vorlage |
-| Warnen, wenn: *Message seems it might be offensive* / *is probably offensive* / *is on fire* / *Never* | `MoodWatchWarnWhenMightBeOffensive` / `MoodWatchWarnWhenProbablyOffensive` / `MoodWatchWarnFire` / `Never` | `0` / `1` / `0` / `0` | ab welcher Stufe gewarnt wird. Der Schlüssel des letzten Knopfs heißt in der Ressourcendatei wirklich nur `Never` (`IDS_INI_MOOD_MAIL_NEVER`) | Vorlage |
-| Zurückhalten, wenn: dieselben vier Stufen | `MoodWatchDelayWhenMightBeOffensive` / `MoodWatchDelayWhenProbablyOffensive` / `MoodWatchDelayFire` / `MoodWatchDelayNever` | `0` / `0` / `0` / `1` | ab welcher Stufe der Versand verzögert wird | Vorlage |
-| *Scan new mail as it arrives* | `MoodWatchIncomingCheck` | `1` | eingehende Post bewerten | Vorlage |
-| *Scan stored mail in the background* | `MoodCheckBackground` | `1` | vorhandene Post im Hintergrund bewerten | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Enable MoodWatch* | `DoMoodWatchCheck` | `[Settings]` | `1` | MoodWatch einschalten | Vorlage |
+| Warnen, wenn: *Message seems it might be offensive* / *is probably offensive* / *is on fire* / *Never* | `MoodWatchWarnWhenMightBeOffensive` / `MoodWatchWarnWhenProbablyOffensive` / `MoodWatchWarnFire` / `Never` | `[Settings]` | `0` / `1` / `0` / `0` | ab welcher Stufe gewarnt wird. Der Schlüssel des letzten Knopfs heißt in der Ressourcendatei wirklich nur `Never` (`IDS_INI_MOOD_MAIL_NEVER`) | Vorlage |
+| Zurückhalten, wenn: dieselben vier Stufen | `MoodWatchDelayWhenMightBeOffensive` / `MoodWatchDelayWhenProbablyOffensive` / `MoodWatchDelayFire` / `MoodWatchDelayNever` | `[Settings]` | `0` / `0` / `0` / `1` | ab welcher Stufe der Versand verzögert wird | Vorlage |
+| *Scan new mail as it arrives* | `MoodWatchIncomingCheck` | `[Settings]` | `1` | eingehende Post bewerten | Vorlage |
+| *Scan stored mail in the background* | `MoodCheckBackground` | `[Settings]` | `1` | vorhandene Post im Hintergrund bewerten | Vorlage |
 
 ### Statistics
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| Farbe und Art der Kurven *1*, *2*, *3* | `CurrentGraphColor`/`CurrentGraphType`, `PreviousGraphColor`/`PreviousGraphType`, `AverageGraphColor`/`AverageGraphType` | `255`/`1`, `32768`/`0`, `16711680`/`0` | Darstellung im Fenster *Statistics* (aktueller Zeitraum, voriger, Durchschnitt — nach den Schlüsselnamen) | Vorlage |
-| *Count IMAP messages in Inbox only* | `ImapStatisticsForInboxOnly` | `1` | bei IMAP nur den Posteingang zählen | Vorlage |
-| Knopf *Reset Statistics* | — | | Statistik löschen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| Farbe und Art der Kurven *1*, *2*, *3* | `CurrentGraphColor`/`CurrentGraphType`, `PreviousGraphColor`/`PreviousGraphType`, `AverageGraphColor`/`AverageGraphType` | `[Settings]` | `255`/`1`, `32768`/`0`, `16711680`/`0` | Darstellung im Fenster *Statistics* (aktueller Zeitraum, voriger, Durchschnitt — nach den Schlüsselnamen) | Vorlage |
+| *Count IMAP messages in Inbox only* | `ImapStatisticsForInboxOnly` | `[Settings]` | `1` | bei IMAP nur den Posteingang zählen | Vorlage |
+| Knopf *Reset Statistics* | — | | | Statistik löschen | Vorlage |
 
 ### Miscellaneous
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Switch messages with:* *Unmodified arrow keys* / *Ctrl+arrow keys* / *Alt+arrow keys* | `PlainArrows` / `CtrlArrows` / `AltArrows` | `0` / `0` / `1` | mit welchen Pfeiltasten man zur nächsten oder vorigen Nachricht wechselt | Vorlage |
-| *Empty Trash when exiting* | `EmptyTrashOnQuit` | `0` | Papierkorb beim Beenden leeren | Vorlage |
-| *Say OK to alerts after … seconds* | `AutoOK`, `AutoOKTimeout` | `1`, `120` | Hinweisfenster nach so vielen Sekunden selbst schließen (`guiutils.cpp:181`) | Vorlage |
-| *Turbo redirect by default* | `TurboRedirect` | `0` | *Redirect* verschickt ohne Verfassen-Fenster (`summary.cpp:1495`; Wirkung nach Eudora 7.1, hier nicht nachgesehen) | Vorlage |
-| *Include outdated 'Return-Receipt-To'* | `ReturnReceiptFlag` | `0` | die veraltete Kopfzeile für Empfangsbestätigungen mitschicken | Vorlage |
-| *Automatically expand nicknames* | `AutoExpandNicknames` | `0` | Kurznamen beim Tippen auflösen | Vorlage |
-| *Auto-save messages every … minute(s)* | `AutoSaveMessagesEvery` | `10` | offene Nachrichten in diesem Abstand sichern | Vorlage |
-| *Hide address books from simple viruses* | `HideABookFromVirus` | `0` | Adressbücher vor einfachen Schadprogrammen verstecken | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Switch messages with:* *Unmodified arrow keys* / *Ctrl+arrow keys* / *Alt+arrow keys* | `PlainArrows` / `CtrlArrows` / `AltArrows` | `[Settings]` | `0` / `0` / `1` | mit welchen Pfeiltasten man zur nächsten oder vorigen Nachricht wechselt | Vorlage |
+| *Empty Trash when exiting* | `EmptyTrashOnQuit` | `[Settings]` | `0` | Papierkorb beim Beenden leeren | Vorlage |
+| *Say OK to alerts after … seconds* | `AutoOK`, `AutoOKTimeout` | `[Settings]` | `1`, `120` | Hinweisfenster nach so vielen Sekunden selbst schließen (`guiutils.cpp:181`) | Vorlage |
+| *Turbo redirect by default* | `TurboRedirect` | `[Settings]` | `0` | *Redirect* verschickt ohne Verfassen-Fenster (`summary.cpp:1495`; Wirkung nach Eudora 7.1, hier nicht nachgesehen) | Vorlage |
+| *Include outdated 'Return-Receipt-To'* | `ReturnReceiptFlag` | `[Settings]` | `0` | die veraltete Kopfzeile für Empfangsbestätigungen mitschicken | Vorlage |
+| *Automatically expand nicknames* | `AutoExpandNicknames` | `[Settings]` | `0` | Kurznamen beim Tippen auflösen | Vorlage |
+| *Auto-save messages every … minute(s)* | `AutoSaveMessagesEvery` | `[Settings]` | `10` | offene Nachrichten in diesem Abstand sichern | Vorlage |
+| *Hide address books from simple viruses* | `HideABookFromVirus` | `[Settings]` | `0` | Adressbücher vor einfachen Schadprogrammen verstecken | Vorlage |
 
 ### Junk Mail
 
@@ -801,64 +808,64 @@ schon auf dem Rechner liegen; sonst bleibt jede Punktzahl 0
 ([FAQ 13](FAQ.md#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte)).
 Alle Schlüssel mit Bedeutung: [FILTER.md, *Junk*](../Intern/FILTER.md#junk).
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Consider mail junk if score is at least* (Schieberegler) | `MinScoreToJunk` | `50` | Schwelle | Vorlage |
-| *Mail isn't junk if sender is in an address book* | `AddressBookIsWhitelist` | `0` | Absender im Adressbuch nie Junk | Vorlage |
-| *Put Not Junk-ed senders in address book* | `NonJunkToAddressBook` | `1` | *Not Junk* nimmt den Absender ins Adressbuch | Vorlage |
-| *Automatically place junk in Junk mailbox* | `UseJunkMailbox` | `0` | Junk nach *Junk* verschieben (beim ersten Mal fragt Eudora, [E-166](../Intern/BEFUNDE.md#e-166)) | Vorlage |
-| *Junk mailbox is never marked unread* | `JunkNeverUnread` | `0` | *Junk* nie als ungelesen markieren | Vorlage |
-| *Ignore date on junk* | `IgnoreJunkDate` | `1` | Datum von Junk nicht beachten | Vorlage |
-| *Remove mail that is at least … days old* | `AgeJunkOff`, `AgeJunkOffDays` | `1`, `30` | alten Junk entfernen | Vorlage |
-| *Warn before removing* | `WarnBeforeAging` | `1` | vorher fragen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Consider mail junk if score is at least* (Schieberegler) | `MinScoreToJunk` | `[Settings]` | `50` | Schwelle | Vorlage |
+| *Mail isn't junk if sender is in an address book* | `AddressBookIsWhitelist` | `[Settings]` | `0` | Absender im Adressbuch nie Junk | Vorlage |
+| *Put Not Junk-ed senders in address book* | `NonJunkToAddressBook` | `[Settings]` | `1` | *Not Junk* nimmt den Absender ins Adressbuch | Vorlage |
+| *Automatically place junk in Junk mailbox* | `UseJunkMailbox` | `[Settings]` | `0` | Junk nach *Junk* verschieben (beim ersten Mal fragt Eudora, [E-166](../Intern/BEFUNDE.md#e-166)) | Vorlage |
+| *Junk mailbox is never marked unread* | `JunkNeverUnread` | `[Settings]` | `0` | *Junk* nie als ungelesen markieren | Vorlage |
+| *Ignore date on junk* | `IgnoreJunkDate` | `[Settings]` | `1` | Datum von Junk nicht beachten | Vorlage |
+| *Remove mail that is at least … days old* | `AgeJunkOff`, `AgeJunkOffDays` | `[Settings]` | `1`, `30` | alten Junk entfernen | Vorlage |
+| *Warn before removing* | `WarnBeforeAging` | `[Settings]` | `1` | vorher fragen | Vorlage |
 
 ### Junk Mail Extras
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Only remove junk whose score is at least* | `MinAgeOffScore` | `0` | nur Junk ab dieser Punktzahl entfernen | Vorlage |
-| *Junking a message assigns it a score of* | `ManualJunkScore` | `100` | Punktzahl bei *Junk* von Hand | Vorlage |
-| *Trim old junk to mailbox* | `JunkTrimMbox` | `Trash` | wohin alter Junk kommt | Vorlage |
-| *Add 'Not Junk'ed senders to Address Book* | `NonJunkAddressBook` | | welches Adressbuch | Vorlage |
-| *Delete fetched junk from server* | `DeleteFetchedJunk` | `1` (neu: `0`) | als Junk Eingestuftes auf dem Server löschen ([E-74](../Intern/BEFUNDE.md#e-74), *hatte Gregors Serverpostfach geleert*) | Vorlage |
-| *Use Ctrl-J for Junk* | `CtrlJMapping` | `0` | Häkchen gesetzt schreibt `1` (Strg+J = *Junk*), sonst `2` (Strg+J = *Filter Messages*) (`settings.cpp:921-926`; [FAQ 12](FAQ.md#12-filter-messages-strgj-tut-nichts)) | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Only remove junk whose score is at least* | `MinAgeOffScore` | `[Settings]` | `0` | nur Junk ab dieser Punktzahl entfernen | Vorlage |
+| *Junking a message assigns it a score of* | `ManualJunkScore` | `[Settings]` | `100` | Punktzahl bei *Junk* von Hand | Vorlage |
+| *Trim old junk to mailbox* | `JunkTrimMbox` | `[Settings]` | `Trash` | wohin alter Junk kommt | Vorlage |
+| *Add 'Not Junk'ed senders to Address Book* | `NonJunkAddressBook` | `[Settings]` | | welches Adressbuch | Vorlage |
+| *Delete fetched junk from server* | `DeleteFetchedJunk` | `[Settings]` | `1` (neu: `0`) | als Junk Eingestuftes auf dem Server löschen ([E-74](../Intern/BEFUNDE.md#e-74), *hatte Gregors Serverpostfach geleert*) | Vorlage |
+| *Use Ctrl-J for Junk* | `CtrlJMapping` | `[Settings]` | `0` | Häkchen gesetzt schreibt `1` (Strg+J = *Junk*), sonst `2` (Strg+J = *Filter Messages*) (`settings.cpp:921-926`; [FAQ 12](FAQ.md#12-filter-messages-strgj-tut-nichts)) | Vorlage |
 
 ### Content Concentrator
 
 Kürzt angezeigte Nachrichten nach einem Profil.
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Preview Pane* | `ConConPreviewProfile` | `Compact` | Profil für die Vorschau | Vorlage |
-| *Message Window* | `ConConMessageWindowProfile` | `None` | Profil für das Nachrichtenfenster | Vorlage |
-| *Profile* (mehrere Nachrichten) | `ConConMultipleMessagesProfile` | `Terse` | Profil, wenn mehrere markiert sind | Vorlage |
-| *Maximum # to Concentrate* | `ConConMultipleMessageMaxNum` | `20` | höchstens so viele zusammenfassen | Vorlage |
-| *Require matching subjects or senders* | `ConConMultipleMessagesRequireRelated` | `1` | nur zusammengehörige | Vorlage |
-| *Generate multiple messages on Reply* | `MultipleRepliesForMultipleSelection` | `0` | derselbe Schlüssel wie auf *Replying* | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Preview Pane* | `ConConPreviewProfile` | `[Settings]` | `Compact` | Profil für die Vorschau | Vorlage |
+| *Message Window* | `ConConMessageWindowProfile` | `[Settings]` | `None` | Profil für das Nachrichtenfenster | Vorlage |
+| *Profile* (mehrere Nachrichten) | `ConConMultipleMessagesProfile` | `[Settings]` | `Terse` | Profil, wenn mehrere markiert sind | Vorlage |
+| *Maximum # to Concentrate* | `ConConMultipleMessageMaxNum` | `[Settings]` | `20` | höchstens so viele zusammenfassen | Vorlage |
+| *Require matching subjects or senders* | `ConConMultipleMessagesRequireRelated` | `[Settings]` | `1` | nur zusammengehörige | Vorlage |
+| *Generate multiple messages on Reply* | `MultipleRepliesForMultipleSelection` | `[Settings]` | `0` | derselbe Schlüssel wie auf *Replying* | Vorlage |
 
 ### BossWatch
 
 Warnt vor dem Versand an bestimmte Adressen (Liste über das Rechtsklickmenü
 im Adressbuch, *Add to BossWatch List*).
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Warn me additionally with a dialog* | `BPAdditionalWarnDialog` | `0` | zusätzlich ein Hinweisfenster | Vorlage |
-| *When sending to more than … * / *When I do a Reply All* | `BPWarnDialogRecipients`, Zahl `BPWarnDialogNumRecipients` / `BPWarnDialogReplyAll` | `0`, `0` / `0` | wann das Fenster kommt | Vorlage |
-| *Speak addresses* | `BPSpeakHarmfulAddresses` | `0` | Adressen vorlesen | Vorlage |
-| Stimme | `Select Voice` | | welche Stimme (der Schlüssel heißt so, mit Leerzeichen, `IDS_INI_BP_SPEAK`) | Vorlage |
-| Vorlesen *When sending to more than …* / *When I do a Reply All* | `BPSpeakHarmfulAddressesRecipients`, `BPSpeakHarmfulAddressesNumberRecipients` / `BPSpeakHarmfulAddressesReplyAll` | `0`, `0` / `0` | wann vorgelesen wird | Vorlage |
-| *Outside domain* / *Inside domain*, je mit Liste | `BPWarnOutsideDomains`, `BPOutsideDomains` / `BPWarnInsideDomains`, `BPInsideDomains` | `0`, leer / `0`, leer | Warnung bei Versand außerhalb bzw. innerhalb dieser Domains | Vorlage |
-| *Color code BossWatch addresses using this color* | `BPSetColorCodeAddresses`, Farbe `BPColorCode` | `1`, `255,0,255` | BossWatch-Adressen farbig zeigen | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Warn me additionally with a dialog* | `BPAdditionalWarnDialog` | `[Settings]` | `0` | zusätzlich ein Hinweisfenster | Vorlage |
+| *When sending to more than …* / *When I do a Reply All* | `BPWarnDialogRecipients`, Zahl `BPWarnDialogNumRecipients` / `BPWarnDialogReplyAll` | `[Settings]` | `0`, `0` / `0` | wann das Fenster kommt | Vorlage |
+| *Speak addresses* | `BPSpeakHarmfulAddresses` | `[Settings]` | `0` | Adressen vorlesen | Vorlage |
+| Stimme | `Select Voice` | `[Settings]` | | welche Stimme (der Schlüssel heißt so, mit Leerzeichen, `IDS_INI_BP_SPEAK`) | Vorlage |
+| Vorlesen *When sending to more than …* / *When I do a Reply All* | `BPSpeakHarmfulAddressesRecipients`, `BPSpeakHarmfulAddressesNumberRecipients` / `BPSpeakHarmfulAddressesReplyAll` | `[Settings]` | `0`, `0` / `0` | wann vorgelesen wird | Vorlage |
+| *Outside domain* / *Inside domain*, je mit Liste | `BPWarnOutsideDomains`, `BPOutsideDomains` / `BPWarnInsideDomains`, `BPInsideDomains` | `[Settings]` | `0`, leer / `0`, leer | Warnung bei Versand außerhalb bzw. innerhalb dieser Domains | Vorlage |
+| *Color code BossWatch addresses using this color* | `BPSetColorCodeAddresses`, Farbe `BPColorCode` | `[Settings]` | `1`, `255,0,255` | BossWatch-Adressen farbig zeigen | Vorlage |
 
 ### Find Messages
 
-| Einstellung | Schlüssel | Vorgabe | Bedeutung | Herkunft |
-|---|---|---|---|---|
-| *Use fast (indexed) search* | `UseIndexedSearch` | `1` | Suche über einen Index | Vorlage |
-| Knöpfe *Index Email Now*, *Re-Index Email…* | — | | Index jetzt aufbauen bzw. neu aufbauen | Vorlage |
-| *Show index update progress in Task Status Window* … *updates are pending* | `ShowIndexUpdateProgress`, `IndexUpdateMinimumToShowProgress` | `1`, `100` | Fortschritt zeigen, wenn so viele Aktualisierungen anstehen | Vorlage |
-| *Include deleted IMAP messages in search results* | `FindDeletedIMAPMessages` | `1` | als gelöscht markierte IMAP-Nachrichten mitfinden | Vorlage |
+| Einstellung | Schlüssel | Abschnitt | Vorgabe | Bedeutung | Herkunft |
+|---|---|---|---|---|---|
+| *Use fast (indexed) search* | `UseIndexedSearch` | `[Settings]` | `1` | Suche über einen Index | Vorlage |
+| Knöpfe *Index Email Now*, *Re-Index Email…* | — | | | Index jetzt aufbauen bzw. neu aufbauen | Vorlage |
+| *Show index update progress in Task Status Window* … *updates are pending* | `ShowIndexUpdateProgress`, `IndexUpdateMinimumToShowProgress` | `[Settings]` | `1`, `100` | Fortschritt zeigen, wenn so viele Aktualisierungen anstehen | Vorlage |
+| *Include deleted IMAP messages in search results* | `FindDeletedIMAPMessages` | `[Settings]` | `1` | als gelöscht markierte IMAP-Nachrichten mitfinden | Vorlage |
 
 ---
 

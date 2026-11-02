@@ -777,6 +777,7 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-11-02 15:51:05 | `C:\Temp\E194K` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 1312854 - Eudora  Schliesszeit 1 s. |
 | 2026-11-02 16:00:38 | `C:\Temp\E194` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 8847866 - Eudora   [Eudora 7.2.1.131+522b8bbb* 2026-11-02 15:56 - E194]  Schliesszeit 1 s. |
 | 2026-11-02 16:01:11 | `C:\Temp\E194K` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 7931904 - Eudora   [Eudora 7.2.1.131+522b8bbb* 2026-11-02 15:56 - E194K]  Schliesszeit 1 s. |
+| 2026-11-02 16:01:13 | `C:\Temp\EHILFE` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 1310766 - Eudora   [Eudora 7.2.1.131+d3cdc551* 2026-11-02 15:58 - EHILFE]  Schliesszeit 1 s. |
 | 2026-11-02 16:02:24 | `C:\Temp\E194-140` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 1706024 - Eudora  Schliesszeit 1 s. |
 | 2026-11-02 16:02:42 | `C:\Temp\E194-177` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 10945838 - Eudora  Schliesszeit 1 s. |
 | 2026-11-02 16:03:31 | `C:\Temp\E194-178` | Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig. | Hauptfenster 2426150 - Eudora  Schliesszeit 1 s. |

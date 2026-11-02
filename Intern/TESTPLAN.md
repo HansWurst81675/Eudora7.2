@@ -426,6 +426,43 @@ Protokoll des IMAP-Prüfservers, nicht aus einer Anzeige): am 02.11.2026 neuer
 Bau `differenz-min=0` für +0200 und −0500, alter Bau `differenz-min=-60`
 ([PRÜFER-83](../Befunde/PRUEFER-83.md) K4, [LEKTOR-126](../Befunde/LEKTOR-126.md) L-126.1).
 
+## <a id="a-5-naechstes"></a>Mit 7.2.2.132: Help → Keyboard Shortcuts / Settings Reference ([A-5](BEFUNDE.md#a-5))
+
+**Erst mit dem Paket 7.2.2.132 auszuführen** — in 7.2.1.x gibt es die beiden
+Einträge nicht. **Ort: lokal, egal welches Konto**; es wird keine Post
+gebraucht.
+
+1. Eudora starten (mit `Eudora starten.cmd` aus dem Paket), Menü *Help*
+   öffnen. Hinter *Tip of the Day* stehen, durch Trennlinien abgesetzt,
+   *Keyboard Shortcuts* und *Settings Reference*. Mit der Maus darauf zeigen:
+   die Statuszeile unten sagt *Shows all keyboard shortcuts in your web
+   browser* bzw. *Shows Tools > Options and the Eudora.ini keys in your web
+   browser*.
+2. *Help → Keyboard Shortcuts* wählen. **Bestanden:** dein Standard-Browser
+   öffnet eine Seite *Eudora — Tastenkürzel* mit den Tabellen *Strg +
+   Buchstabe*, *Strg + Ziffer* usw.; Umlaute sind richtig, oben stehen die
+   Fassung 7.2.2.132 und der Stand der Vorlage.
+3. *Help → Settings Reference* wählen. **Bestanden:** eine zweite Seite
+   *Eudora — Einstellungen und Eudora.ini-Schlüssel* mit je einer Tabelle pro
+   Seite von *Tools → Options* (*Getting Started* bis *Find Messages*) und am
+   Ende die Tabelle der `Eudora.ini`-Schlüssel ohne Optionsseite.
+4. **Gegenprobe:** Eudora beenden, im Paketordner den Ordner `Hilfe` in
+   `Hilfe-weg` umbenennen, Eudora wieder starten, *Help → Keyboard Shortcuts*
+   wählen. **Bestanden:** eine Meldung *The help page Tastenkuerzel.html could
+   not be found* mit dem vollständigen Pfad, an dem sie erwartet wird; nach
+   *OK* läuft Eudora normal weiter, kein Absturz, kein Browser. Dasselbe mit
+   *Settings Reference* (`Einstellungen.html`). Danach den Ordner wieder in
+   `Hilfe` zurückbenennen.
+5. **Erst nach dem Beenden** von Eudora (vorher steht nichts in der Datei,
+   Eudora schreibt das Protokoll gepuffert) die `eudora.log` im
+   Mailverzeichnis öffnen. Sie zeigt je Wahl eine Zeile — nach einem
+   Durchgang durch Schritt 2 bis 4 also vier (die Gegenprobe läuft in einem
+   eigenen Start; die Zeilen der Schritte 2 und 3 stehen in der Datei vom
+   ersten Start, wenn du sie nicht dazwischen ansiehst): `Hilfe:
+   Tastenkuerzel.html geoeffnet`, `Hilfe: Einstellungen.html geoeffnet`,
+   `Hilfe: Tastenkuerzel.html fehlt`, `Hilfe: Einstellungen.html fehlt`
+   (Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet).
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales

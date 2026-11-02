@@ -116,10 +116,14 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
   dieselben Punkte 1 bis 4 wie für 7.2.1.x, dazu: jede neue Funktion ist im
   [TESTPLAN](Intern/TESTPLAN.md) mit einem Schritt für Gregor und, wo es geht,
   mit einem Prüfstandsfall belegt.
-* **Vorgemerkt:** im Hilfe-Menü *Keyboard Shortcuts* und *Settings Reference*
-  — eine HTML-Seite, erzeugt aus der Funktionsübersicht
-  [`Doku/FUNKTIONEN.md`](Doku/FUNKTIONEN.md) (gemergt als #203),
-  angezeigt im Standard-Browser.
+* **Die Nummer:** das erste Paket 7.2.2 heißt **7.2.2.132** — die letzte
+  Stelle zählt weiter wie bei 7.2.1 (Gregor am 02.11.2026: *„7.2.2.132,
+  ja“*). Die Marke auf GitHub heißt entsprechend `v7.2.2.<n>`.
+* **Umgesetzt im Zweig `hilfe_menue`, am Prüfstand gemessen** (kommt mit
+  7.2.2.132, [A-5](Intern/BEFUNDE.md#a-5)): im Hilfe-Menü *Keyboard
+  Shortcuts* und *Settings Reference* — eine HTML-Seite, erzeugt aus der
+  Funktionsübersicht [`Doku/FUNKTIONEN.md`](Doku/FUNKTIONEN.md) (gemergt
+  als #203), angezeigt im Standard-Browser.
 * **Kandidaten:** [E-147](Intern/BEFUNDE.md#e-147) (die Umlaut-Reparatur aus
   `EudoraUnicodeFix` fest einbauen), [E-90](Intern/BEFUNDE.md#e-90) (Emoji in
   Betreffzeilen), [E-139](Intern/BEFUNDE.md#e-139) (Rechtschreibprüfung; die
@@ -128,7 +132,7 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
   Randbalken, Weiterleitungskopf als Tabelle), [E-128](Intern/BEFUNDE.md#e-128)
   (gespeicherte HTML-Nachricht als `.txt`; wartet auf Gregors Entscheidung).
 
-Umgesetzt ist davon noch nichts; die Reihenfolge entscheidet Gregor.
+Von den Kandidaten ist noch nichts umgesetzt; die Reihenfolge entscheidet Gregor.
 
 ## Regressionstests — Anordnung vom 22.10.2026
 

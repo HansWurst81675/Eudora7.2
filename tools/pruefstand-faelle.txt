@@ -363,3 +363,19 @@ E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=
 # liste-flowed=0 htm-meta=0 rtf=3, mit Kopfzeilen auch lesen-xflowed=2.
 E-194p | C:\Temp\E194 | 90 | messung | E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
 E-194k | C:\Temp\E194K | 90 | messung | E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1 | | | messen=tools\messen-e194.ps1
+
+# -------------------------------------------------------------------------
+# A-5 - Hilfe-Menue (Help -> Keyboard Shortcuts / Settings Reference), 7.2.2
+# -------------------------------------------------------------------------
+# Pruefstand C:\Temp\EHILFE (Kopie von C:\Temp\E140, Hilfe\ erzeugt mit
+# perl tools/hilfe-html.pl C:\Temp\EHILFE\Hilfe; pruefstaende-auffrischen.ps1
+# erneuert Hilfe\ NICHT - nach einer Aenderung an Doku/FUNKTIONEN.md von Hand
+# nachziehen). Der Regressionsfall laeuft OHNE Browser: Menue lesen und die
+# Gegenprobe mit umbenanntem Ordner Hilfe (Meldungsfenster, mit OK zu). Das
+# Oeffnen der Seiten selbst (HILFE_BROWSER=1) steht nicht hier: es haengt am
+# Standard-Browser des Rechners und legt bei laufendem Browser je Lauf zwei
+# Registerkarten in dessen Fenster, die sich ohne Tastendruck nicht
+# schliessen lassen (tools/WERKZEUGE.md, messen-hilfe.ps1). Die Logzeile
+# schreibt Eudora gepuffert - geprueft wird sie nach dem Beenden (A-5p-log).
+A-5p | C:\Temp\EHILFE | 60 | messung | HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1 | | | messen=tools\messen-hilfe.ps1
+A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: Tastenkuerzel.html geoeffnet | | messen=tools\messen-hilfe.ps1

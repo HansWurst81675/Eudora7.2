@@ -612,6 +612,64 @@ Nimm (Join-Path $PSScriptRoot 'Eudora starten.cmd') 'Eudora starten.cmd'
 # ich nicht dran denke."
 Nimm (Join-Path $PSScriptRoot 'DEudora.ini') 'DEudora.ini'
 
+# Hilfeseiten fuer das Menue Help (Keyboard Shortcuts, Settings Reference).
+# Gregor am 02.11.2026: "das dann einfach als HTML im default browser
+# anzeigen". Eudora sucht sie in Hilfe\ neben Eudora.exe
+# (CMainFrame::HilfeSeiteOeffnen, mainfrm.cpp) und meldet, wenn eine fehlt.
+# Sie werden bei JEDEM Paket frisch aus Doku\FUNKTIONEN.md erzeugt
+# (tools\hilfe-html.pl). Ohne perl oder bei einem Fehler des Erzeugers
+# bricht der Bau ab - ein Paket, dessen Menueeintrag nur eine
+# Fehlermeldung zeigt, soll nicht still entstehen.
+Write-Host ''
+Write-Host '5b. Hilfeseiten (Help -> Keyboard Shortcuts / Settings Reference)'
+$perlH = (Get-Command perl -ErrorAction Ignore).Source
+if (-not $perlH) {
+  foreach ($k in @(
+      'C:\Program Files\Git\usr\bin\perl.exe',
+      'C:\Program Files (x86)\Git\usr\bin\perl.exe',
+      'C:\Strawberry\perl\bin\perl.exe')) {
+    if (Test-Path -LiteralPath $k) { $perlH = $k; break }
+  }
+}
+if (-not $perlH) {
+  Write-Host ''
+  Write-Host '  KEIN PAKET: perl nicht gefunden, die Hilfeseiten (Hilfe\*.html)'
+  Write-Host '  konnten nicht erzeugt werden. Ohne sie zeigt Help -> Keyboard'
+  Write-Host '  Shortcuts / Settings Reference nur eine Fehlermeldung.'
+  Write-Host ''
+  exit 1
+}
+$hilfeZiel = Join-Path $Ziel 'Hilfe'
+# --fassung setzt die Nummer im Seitenkopf. Die Verweise auf oeffentliche
+# Doku zeigen auf den Commit der Quelle, nicht auf die Marke v<VERSION> -
+# die gibt es beim Paketbau noch nicht (PRUEFER-84 N2, LEKTOR-130 L-130.9).
+$hilfeArgs = @(((Join-Path $PSScriptRoot 'hilfe-html.pl') -replace '\\', '/'), ($hilfeZiel -replace '\\', '/'))
+$versionDatei = Join-Path $wurzel 'VERSION'
+if (Test-Path -LiteralPath $versionDatei) {
+  $hilfeFassung = ([IO.File]::ReadAllText($versionDatei)).Trim()
+  if ($hilfeFassung -match '^\d+(\.\d+){1,3}$') { $hilfeArgs += @('--fassung', $hilfeFassung) }
+}
+& $perlH @hilfeArgs
+if ($LASTEXITCODE -ne 0) {
+  Write-Host ''
+  Write-Host ("  KEIN PAKET: tools\hilfe-html.pl meldete Rueckgabe {0} - die" -f $LASTEXITCODE)
+  Write-Host '  Hilfeseiten fehlen. Meldung oben lesen; meist fehlt ein Abschnitt'
+  Write-Host '  in Doku\FUNKTIONEN.md oder die Ueberschrift wurde umbenannt.'
+  Write-Host ''
+  exit 1
+}
+foreach ($h in @('Tastenkuerzel.html', 'Einstellungen.html')) {
+  $hp = Join-Path $hilfeZiel $h
+  if (-not (Test-Path -LiteralPath $hp) -or (Get-Item -LiteralPath $hp).Length -lt 2000) {
+    Write-Host ''
+    Write-Host ("  KEIN PAKET: Hilfe\{0} fehlt oder ist zu klein, obwohl der Erzeuger" -f $h)
+    Write-Host '  Rueckgabe 0 meldete.'
+    Write-Host ''
+    exit 1
+  }
+  Write-Host ("  Hilfe\{0,-23} {1} B" -f $h, (Get-Item -LiteralPath $hp).Length)
+}
+
 #
 # BEFUND E-108: der Protokollschalter gehoert INS PAKET.
 #
