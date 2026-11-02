@@ -80,3 +80,18 @@ Persönliche Angaben: im Diff `7564f54e..1f4b54de` und in den beiden Commit-Nach
 ## Was nur Gregor entscheiden kann
 
 Nichts Neues. Das Release ist veröffentlicht; die drei Funde sind Doku-Nachträge, die beim Hauptagenten liegen.
+
+## <a id="nachtrag-02-11-2026"></a>Nachtrag 02.11.2026
+
+Gegengelesen: `git diff 716216fc..b9da9b1e` (8 Dateien, 10 Zeilen hinzu, 10 weg; nach `tools/arbeitsbaum-angleichen.sh`). Keine neue Runde. (gemessen)
+
+| Fund | Stand | Stelle (gemessen) |
+|---|---|---|
+| [L-129.1](#l-129.1) „zuletzt veröffentlicht 7.2.1.128“ | erledigt, Schranke offen | `Intern/WEITERMACHEN.md:3` *„Zuletzt veröffentlicht: **`v7.2.1.131`** (02.11.2026, siehe oben); davor **`v7.2.1.128`**“*; `Releases/PAKETE.md:6` *„veröffentlicht zuletzt also 7.2.1.131; davor 7.2.1.128“*, bei 7.2.1.128 *„damals *Latest*“*; `ZIEL.md:216` *„Veröffentlicht zuletzt **7.2.1.131** …; davor **7.2.1.128**“*. `pruefe-release-buchfuehrung.pl` ist unverändert und hätte den alten Stand weiter durchgelassen |
+| [L-129.2](#l-129.2) „nicht veröffentlicht“ unter „Release“ | erledigt | `CHANGELOG.md:115` *„veröffentlicht am 02.11.2026 als [`v7.2.1.131`]“* und *„nach seinem Ja am selben Tag als Release `v7.2.1.131` veröffentlicht“*; `Releases/PAKETE.md:184` ohne den Satz „Release-Kandidat — veröffentlicht wird nur mit Gregors Ja“; `:189` *„als Anhang von [`v7.2.1.131`], SHA-256 dort gleich“* |
+| [L-129.3](#l-129.3) Kleinkram | erledigt | `Intern/TESTPLAN.md:1` *„Release `v7.2.1.131`, veröffentlicht am 02.11.2026“*; `Intern/AUFGABEN.md:8` *„Eingereicht … (#204) und am 02.11.2026 als [`v7.2.1.131`] veröffentlicht“*; `Doku/FUNKTIONEN.md:908` *„berichtigt in 7.2.1.131“* |
+| [L-128.8](LEKTOR-128.md#l-128.8) Berichtszahl | erledigt | `README.md:98` *„(209 …)“* = `ls Befunde/ \| grep -cE '^(LEKTOR\|PRUEFER)-[0-9]+\.md$'` → 209, mit diesem Bericht. Meine „210“ oben zählte `LEKTOR-51b.md` und `PRUEFER-ZWISCHENSTAND.md` mit — 209 ist richtig |
+
+Werkzeuge am neuen Stand: `pruefe-release-buchfuehrung.pl` grün, `doku-pruefen.pl` *„Kein Widerspruch gefunden.“* Persönliche Angaben im Diff und in der Commit-Nachricht von `b9da9b1e`: keine.
+
+Ergebnis: alle drei Funde erledigt. Offen bleiben nur die Schranken — gegen „zuletzt veröffentlicht“ mit älterer Marke ([L-129.1](#l-129.1)), gegen „PR folgt“ ([L-128.2](LEKTOR-128.md#l-128.2)) und gegen einen Entwurfskopf in der Notizdatei ([L-128.3](LEKTOR-128.md#l-128.3)).

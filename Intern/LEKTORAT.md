@@ -3117,3 +3117,5 @@ Nachtrag 2 LEKTOR-128 (1525b290..cbe9b328 gegengelesen): Der Satz zu [E-188](BEF
 - „Zuletzt veröffentlicht: 7.2.1.128“ steht weiter in WEITERMACHEN, PAKETE und ZIEL.md, im selben Absatz wie „v7.2.1.131 veröffentlicht“; `pruefe-release-buchfuehrung.pl` meldet grün ([L-129.1](../Befunde/LEKTOR-129.md#l-129.1)).
 - Unter der neuen Überschrift „Release“ steht in CHANGELOG und PAKETE noch „nicht veröffentlicht“, „veröffentlicht wird nach seinem Ja“ und beim ZIP „nicht auf GitHub“ ([L-129.2](../Befunde/LEKTOR-129.md#l-129.2)).
 - TESTPLAN-Kopf, AUFGABEN und eine Zeile in FUNKTIONEN nennen 7.2.1.131 weiter Testpaket, Kandidat oder „im Quellstand“ ([L-129.3](../Befunde/LEKTOR-129.md#l-129.3)).
+
+Nachtrag LEKTOR-129 (716216fc..b9da9b1e gegengelesen): [L-129.1](../Befunde/LEKTOR-129.md#l-129.1) bis [L-129.3](../Befunde/LEKTOR-129.md#l-129.3) erledigt, README-Zahl 209 stimmt; offen nur die Schranke in `pruefe-release-buchfuehrung.pl`, die „zuletzt veröffentlicht“ mit einer älteren Marke nicht erkennt ([Nachtrag](../Befunde/LEKTOR-129.md#nachtrag-02-11-2026)).
