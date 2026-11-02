@@ -172,7 +172,7 @@ aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
 
 Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
 
-**Bestätigt am 01.11.2026, Gregor an 7.2.1.130, nur Schritt 2 (Verfassen-Fenster):** die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. **Schritt 1 bitte noch einmal:** die erste Datei kam laut Protokoll aus der Postfachliste (`E-101 speichern:` ohne `E-140 speichern aus Nachrichtenfenster:`), nicht aus dem geöffneten Fenster. Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus dem Nachrichtenfenster), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe).
+**Bestätigt am 01.11.2026, Gregor an 7.2.1.130, nur Schritt 2 (Verfassen-Fenster):** die Datei trägt den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. **Schritt 1 bitte noch einmal:** die erste Datei kam laut Protokoll aus der Postfachliste (`E-101 speichern:` ohne `E-140 speichern aus Nachrichtenfenster:`), nicht aus dem geöffneten Fenster. Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus der Postfachliste), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe).
 
 ## <a id="e-165-naechstes"></a>In 7.2.1.129: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
 
