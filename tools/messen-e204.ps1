@@ -250,6 +250,19 @@ function Protokoll {
     try { $t = (New-Object IO.StreamReader($fs, $ansi)).ReadToEnd() } finally { $fs.Close() }
     return @($t -split "`r?`n" | Where-Object { $_ -ne '' })
 }
+# eudora.log ab einer Byte-Stelle (PRUEFER-88 K9: nur was nach dem Delete
+# dazukam - sonst gaelte die Spurzeile eines frueheren Laufs). Ist die Datei
+# kuerzer als die Stelle, wurde sie neu angelegt: dann ganz.
+$log = Join-Path $md 'eudora.log'
+function LogLaenge { if (Test-Path -LiteralPath $log) { return (Get-Item -LiteralPath $log).Length } else { return 0 } }
+function LogAb([long] $ab) {
+    if (-not (Test-Path -LiteralPath $log)) { return '' }
+    $fs = [IO.File]::Open($log, 'Open', 'Read', 'ReadWrite')
+    try {
+        if ($fs.Length -ge $ab) { [void]$fs.Seek($ab, 'Begin') }
+        return (New-Object IO.StreamReader($fs, $ansi)).ReadToEnd()
+    } finally { $fs.Close() }
+}
 
 # Ein Abruf: Check Mail ans Hauptfenster; jede Kennwortfrage (Dialog mit dem
 # Feld IDC_PASSWORD 1188) bekommt $kennwort; fertig, wenn der Pruefserver
@@ -332,6 +345,7 @@ try {
         [E204W]::Waehle($liste, $pid32, $eintrag)
         Start-Sleep -Milliseconds 500
         $bekannt = Dialoge
+        $logVorDelete = LogLaenge
         [void][E204W]::PostMessage($liste, 0x0111, [IntPtr]33038, [IntPtr]::Zero)   # IDM_DELETE_PERSONALITY
         $dlg = [IntPtr]::Zero
         $frist = (Get-Date).AddSeconds($WarteSekunden)
@@ -357,15 +371,11 @@ try {
     # Die Spurzeile "E-39 Remove E204Zwei: war-aktuell=<0|1>" (persona.cpp)
     # muss war-aktuell=0 melden.
     $warAktuell = '-'
-    $log = Join-Path $md 'eudora.log'
     $frist = (Get-Date).AddSeconds(10)
-    while ((Get-Date) -lt $frist -and $warAktuell -eq '-') {
-        if (Test-Path -LiteralPath $log) {
-            $fs = [IO.File]::Open($log, 'Open', 'Read', 'ReadWrite')
-            try { $lt = (New-Object IO.StreamReader($fs, $ansi)).ReadToEnd() } finally { $fs.Close() }
-            $m = [regex]::Matches($lt, ('E-39 Remove ' + [regex]::Escape($NAME) + ': war-aktuell=(\d)'))
-            if ($m.Count -gt 0) { $warAktuell = $m[$m.Count - 1].Groups[1].Value }
-        }
+    while ((Get-Date) -lt $frist -and $warAktuell -eq '-' -and $null -ne $logVorDelete) {
+        $lt = LogAb $logVorDelete
+        $m = [regex]::Matches($lt, ('E-39 Remove ' + [regex]::Escape($NAME) + ': war-aktuell=(\d)'))
+        if ($m.Count -gt 0) { $warAktuell = $m[$m.Count - 1].Groups[1].Value }
         if ($warAktuell -eq '-') { Start-Sleep -Milliseconds 500 }
     }
     Write-Output ('E204 Spur: war-aktuell=' + $warAktuell)

@@ -20,7 +20,9 @@
 #   vorhandenen einsortiert (vor die erste spaetere); vorhandene Zeilen bleiben,
 #   wo sie sind - nichts wird entfernt oder umgestellt. Danach wird gezaehlt:
 #   alte Zeilen in alter Reihenfolge plus die neuen, sonst wird nicht geschrieben.
-#   Zeilenenden der Zieldatei bleiben (LF).
+#   Zeilenenden der Zieldatei bleiben (LF). Direkt vor dem Schreiben wird neu
+#   gelesen (geaendert -> neu einsortiert), geschrieben ueber Hilfsdatei und
+#   rename (PRUEFER-88 K8); Zeiten ohne Sekunden gelten als :00 (K10).
 #
 # PRUEFER-88 K6 (02.11.2026): vorher wurde unsortiert ans Ende gehaengt - jeder
 # Zweig hing einen anderen Block an, und beim Zusammenfuehren gab es Konflikte am
@@ -41,7 +43,7 @@ my $ziel = 'tools/TESTLAEUFE.md';
 open my $f, '<:raw', $ziel or die "$ziel: $!\n";
 my @eigen = <$f>; close $f;
 my %da = map { (my $z = $_) =~ s/\r?\n\z//; ($z => 1) } @eigen;
-sub schluessel { my ($z) = @_; return $z =~ /^\| (\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) \| ([^|]*)\|/ ? "$1|$2" : undef }
+sub schluessel { my ($z) = @_; return $z =~ /^\| (\d{4}-\d\d-\d\d \d\d:\d\d(?::\d\d)?) \| ([^|]*)\|/ ? "$1|$2" : undef }
 my %schl;
 for (@eigen) { (my $z = $_) =~ s/\r?\n\z//; my $k = schluessel($z); $schl{$k} = $z if defined $k }
 
@@ -86,27 +88,57 @@ printf "startzeilen-sammeln: %d Zeile(n) fehlen hier%s\n", scalar(@neu), $nurzei
 exit 0 if $nurzeigen || !@neu;
 
 # Einsortieren: jede neue Zeile vor die erste vorhandene Datenzeile mit spaeterer
-# Zeit; gibt es keine, hinter die letzte Datenzeile.
-sub zeit { my ($z) = @_; return $z =~ /^\| (\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) / ? $1 : undef }
-my @aus = map { my $z = $_; $z =~ s/\r?\n\z//; { z => $z, alt => 1 } } @eigen;
-my $letzte = -1;
-for my $i (0 .. $#aus) { $letzte = $i if defined zeit($aus[$i]{z}) }
-for my $n (sort { zeit($a) cmp zeit($b) } @neu) {
-    my $t = zeit($n);
-    my $pos;
-    for my $i (0 .. $#aus) {
-        my $ti = zeit($aus[$i]{z});
-        if (defined $ti && $ti gt $t) { $pos = $i; last }
+# Zeit; gibt es keine, hinter die letzte Datenzeile. Eine Zeit ohne Sekunden
+# ("17:23") gilt als ":00" (PRUEFER-88 K10).
+sub zeit { my ($z) = @_; return $z =~ /^\| (\d{4}-\d\d-\d\d \d\d:\d\d)(:\d\d)? / ? $1 . ($2 // ':00') : undef }
+sub einsortieren {
+    my ($alt, $neu) = @_;
+    my @aus = map { my $z = $_; $z =~ s/\r?\n\z//; { z => $z, alt => 1 } } @$alt;
+    for my $n (sort { (zeit($a) // '') cmp (zeit($b) // '') } @$neu) {
+        my $t = zeit($n) // '9999';
+        my $pos;
+        for my $i (0 .. $#aus) {
+            my $ti = zeit($aus[$i]{z});
+            if (defined $ti && $ti gt $t) { $pos = $i; last }
+        }
+        if (!defined $pos) { my $l = -1; for my $i (0 .. $#aus) { $l = $i if defined zeit($aus[$i]{z}) } $pos = $l + 1 }
+        splice @aus, $pos, 0, { z => $n, alt => 0 };
     }
-    if (!defined $pos) { $letzte = -1; for my $i (0 .. $#aus) { $letzte = $i if defined zeit($aus[$i]{z}) } $pos = $letzte + 1 }
-    splice @aus, $pos, 0, { z => $n, alt => 0 };
+    # Zaehlen: die alten Zeilen in alter Reihenfolge, plus genau die neuen
+    my @altWieder = map { $_->{z} } grep { $_->{alt} } @aus;
+    my @altVorher = map { (my $z = $_) =~ s/\r?\n\z//; $z } @$alt;
+    die "startzeilen-sammeln: Reihenfolge der vorhandenen Zeilen waere veraendert - nichts geschrieben\n"
+        unless "@altWieder" eq "@altVorher" && @aus == @$alt + @$neu;
+    return map { "$_->{z}\n" } @aus;
 }
-# Zaehlen: die alten Zeilen in alter Reihenfolge, plus genau die neuen
-my @altWieder = map { $_->{z} } grep { $_->{alt} } @aus;
-my @altVorher = map { (my $z = $_) =~ s/\r?\n\z//; $z } @eigen;
-die "startzeilen-sammeln: Reihenfolge der vorhandenen Zeilen waere veraendert - nichts geschrieben\n"
-    unless "@altWieder" eq "@altVorher" && @aus == @eigen + @neu;
-open my $o, '>:raw', $ziel or die "$ziel: $!\n";
-print $o map { "$_->{z}\n" } @aus;
-close $o;
-print "  einsortiert in $ziel (" . scalar(@eigen) . " + " . scalar(@neu) . " Zeilen) - mitstagen: git add $ziel\n";
+sub lies { open my $h, '<:raw', $ziel or die "$ziel: $!\n"; my @z = <$h>; close $h; return @z }
+
+# PRUEFER-88 K8: zwischen dem ersten Lesen und dem Schreiben vergehen Sekunden
+# (git show ueber alle Zweige). Haengt testlauf.ps1 im selben Baum in der Zeit
+# eine Zeile an, ginge sie beim Neuschreiben verloren. Deshalb direkt vor dem
+# Schreiben neu lesen; ist die Datei anders, mit dem neuen Stand neu
+# einsortieren (die neuen Zeilen noch einmal gegen ihn gefiltert). Geschrieben
+# wird ueber eine Hilfsdatei und rename.
+for my $versuch (1 .. 5) {
+    my @jetzt = lies();
+    if (join('', @jetzt) ne join('', @eigen)) {
+        print "  $ziel hat sich seit dem ersten Lesen geaendert - neu einsortiert\n";
+        @eigen = @jetzt;
+        my %d; my %k;
+        for (@eigen) { (my $z = $_) =~ s/\r?\n\z//; $d{$z} = 1; my $s = schluessel($z); $k{$s} = 1 if defined $s }
+        @neu = grep { my $s = schluessel($_); !$d{$_} && !(defined $s && $k{$s}) } @neu;
+        last unless @neu;
+    }
+    my @aus = einsortieren(\@eigen, \@neu);
+    my $hilf = "$ziel.sammeln.$$";
+    open my $o, '>:raw', $hilf or die "$hilf: $!\n";
+    print $o @aus;
+    close $o or die "$hilf: $!\n";
+    # letzte Kontrolle unmittelbar vor dem Ersetzen
+    if (join('', lies()) ne join('', @eigen)) { unlink $hilf; next }
+    rename $hilf, $ziel or do { unlink $hilf; die "rename $hilf -> $ziel: $!\n" };
+    print "  einsortiert in $ziel (" . scalar(@eigen) . " + " . scalar(@neu) . " Zeilen) - mitstagen: git add $ziel\n";
+    exit 0;
+}
+if (!@neu) { print "  nach dem Neulesen fehlt keine Zeile mehr\n"; exit 0 }
+die "startzeilen-sammeln: $ziel aendert sich laufend - nichts geschrieben\n";

@@ -1,9 +1,10 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 19:23:28
+zeit=2026-11-02 19:36:25
 freigabe=Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig.
-nur=E-204   (Teillauf, nicht der Gesamtstand)
-faelle=2
-bestanden=2
+nur=E-203   (Teillauf, nicht der Gesamtstand)
+faelle=3
+bestanden=3
 fehlgeschlagen=0
-fall=[ ok ] E-204p   E204 ERGEBNIS rueckfrage=1 user=e204neu pass=neu lebt=1
-fall=[ ok ] E-204w   E204 PROBE ok
+fall=[ ok ] E-203p   E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1
+fall=[ ok ] E-203v   E39 Vorlauf: kennwort-meldung,vergessen
+fall=[ ok ] E-203w   E39 PROBE ok
