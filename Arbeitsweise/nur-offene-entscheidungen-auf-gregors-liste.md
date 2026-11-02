@@ -92,3 +92,13 @@ Transkript `25e03584-…jsonl`, Zeiten MEZ, gemessen ([[CHRONIST-2026-11-02]]).
 Um 07:11:10 meldete die Hauptsitzung Gregors Ergebnisse zu E-143 als Tabelle, dann zwei Absätze über Testschritte, dann: *„E-143 bleibt trotzdem offen, weil du über das Suchfenster noch nicht entschieden hast.“* Keine Frage, keine Optionen. Gregor las es als Testauftrag. Um 07:13:53 fragte er mit dem Link auf den Testplan: *„wo steht hier was zum suchfenster?“*, und um 07:23:40 erklärte er: *„ich habe es so verstanden, daß ich hierzu ein testszenario abarbeiten muß.“* Erst um 07:17:37 kam die Entscheidung als Frage mit zwei Möglichkeiten und Empfehlung. Gregor entschied sechs Minuten später (*„ja, ein hinweis reicht, richtig.“*). Um 07:26:40 schrieb die Hauptsitzung selbst: *„Das hatte ich missverständlich geschrieben.“*
 
 **How to apply, zusätzlich:** *„bleibt offen, weil du noch nicht entschieden hast“* ist keine Frage. Eine offene Entscheidung steht in einem eigenen Absatz am Ende, als Frage mit Möglichkeiten, getrennt von allem, was Gregor testen soll. Sonst liest er sie als Teil des Tests ([[einstufung-ist-keine-auskunft]]).
+
+## Nachtrag 02.11.2026 tagsüber (CHRONIST): eine Frage, die Gregor nicht beantworten kann
+
+Zeiten MEZ, Transkript `25e03584`, gemessen. Einzelheiten in [[CHRONIST-2026-11-02b]], Abschnitt 5.
+
+Um 16:56:56, 17:00:43, 17:09:56 und 17:16:09 kam dieselbe Frage zu E-189: *„Ist das Verschieben innerhalb eines IMAP-Kontos ohne UIDPLUS in deinem Test von 7.2.1.131 richtig gelaufen?“* Gregor antwortete nicht. Sein „gut“ (17:09:57) wurde richtig nicht als Ja gelesen. Nur: Ob sein Server UIDPLUS kann, weiß niemand. Der Befund sagt *„vermutlich“*, und seine `eudora.log` hat keine Zeile mit `UIDPLUS` oder `CAPABILITY` (gemessen). Gregor hätte also bestätigen sollen, dass ein Weg lief, den weder er noch das Protokoll sehen.
+
+**How to apply, zusätzlich:**
+- **Eine Frage an Gregor muss er an dem beantworten können, was er sieht.** Dazu gehören sein Bildschirm, sein Log oder eine Entscheidung. Hängt die Antwort an einer inneren Bedingung (Serverfähigkeit, Codeweg), wird zuerst sie gemessen, oder sie wird eine Logzeile ([[eingebaute-messung-auslesen]]).
+- **Bleibt eine Frage unbeantwortet, kommt sie nicht wortgleich ein drittes Mal.** Dann steht sie einmal in `WEITERMACHEN` unter „Gregors Entscheidung“, mit dem, was ohne ihn geht.
