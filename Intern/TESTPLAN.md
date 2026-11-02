@@ -353,16 +353,21 @@ dem der Server und andere Programme „nach Eingang“ sortieren.
    *Date*), z. B. 10:15.
 2. Die Mail markieren und mit *Transfer* in einen Ordner deines IMAP-Kontos
    übertragen (am besten einen Ordner, in dem sonst wenig liegt).
-3. Den Ordner im **Webmailer** öffnen und die Mail ansehen: das angezeigte
-   Datum stimmt mit der Uhrzeit aus Schritt 1 überein.
-   **Nicht bestanden:** die Uhrzeit liegt eine Stunde (Sommerzeit: zwei
-   Stunden) früher.
-4. In der `eudora.log` steht eine Zeile
+3. **Bestanden:** in der `eudora.log` steht danach eine Zeile
    `E-122 IMAP-Eingangsdatum aus Date:-Kopf: … uebernommen`
-   (Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet).
+   (Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet). **Nicht
+   bestanden:** die Zeile fehlt oder sagt `nicht lesbar`.
+4. Zusätzlich, nur wenn dein Webmailer ein **Eingangsdatum** zeigt (manche
+   zeigen nur das Datum aus dem `Date:`-Kopf der Mail, und das war nie
+   falsch — dann sagt dieser Schritt nichts): die Eingangszeit stimmt mit der
+   Uhrzeit aus Schritt 1 überein und liegt nicht eine oder zwei Stunden
+   früher (wie viel, hängt vom Datum der Mail ab: Sommerzeit zwei, Winterzeit
+   eine Stunde).
 
-Am Prüfstand am 02.11.2026 so gefahren (Fall `E-122p`, IMAP-Prüfserver): neuer
-Bau `differenz-min=0` für +0200 und −0500, alter Bau `differenz-min=-60`.
+Der Prüfstand misst das Eingangsdatum direkt am Server (Fall `E-122p`, aus dem
+Protokoll des IMAP-Prüfservers, nicht aus einer Anzeige): am 02.11.2026 neuer
+Bau `differenz-min=0` für +0200 und −0500, alter Bau `differenz-min=-60`
+([PRÜFER-83](../Befunde/PRUEFER-83.md) K4, [LEKTOR-126](../Befunde/LEKTOR-126.md) L-126.1).
 
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
