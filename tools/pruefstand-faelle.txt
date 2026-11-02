@@ -328,3 +328,13 @@ E-177p | C:\Temp\E177 | 60 | messung | E177 ERGEBNIS dateien=3 pop=passt e118=pa
 # Erwartung ist die Behebungszeile; vor der Behebung: hinweise=3
 # abgelehnt-log=- e125-zeilen=3. Beim Eintrag ungetestet.
 E-143s | C:\Temp\E143S | 90 | messung | E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1 | | | messen=tools\messen-e143s.ps1
+# E-178 (02.11.2026): Formatierbefehle im Bearbeiten-Modus der Leseansicht und
+# die Antwort auf markierten Text. Pruefnachricht e136-zeichen-als-entitaet.eml
+# (Emoji und Kyrillisch als Entitaet). Bearbeiten-Modus ueber umsgButtonSetCheck
+# + WM_COMMAND ID_EDIT_MESSAGE, Auswahl und Link-Dialog ueber das Dokument
+# (WM_HTML_GETOBJECT) - kein Tastendruck. Gemessen am Bau 7.2.1.130+a7e05aef:
+# alles passt; Gegenprobe 7.2.1.128+d3a625fd* (E-136-Speicherweg schon
+# behoben, E-178-Stellen nicht): tt, link, gespeichert, antwort kaputt.
+# fett/kursiv laufen ueber ExecCommand und waren nie betroffen - sie stehen
+# drin, damit eine Umstellung auf eigenes HTML-Umbauen auffaellt.
+E-178p | C:\Temp\E178 | 90 | messung | E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1 | | | messen=tools\messen-e178.ps1
