@@ -3014,3 +3014,14 @@ Nachtrag LEKTOR-121 (7b41c8d7 gegengelesen): [E-192](BEFUNDE.md#e-192) nennt fü
 - Der WEITERMACHEN-Kopf steht auf dem 01.11. abends ([L-122.6](../Befunde/LEKTOR-122.md#l-122.6)).
 - Die README-Zahl der Prüfberichte ist veraltet: 196 statt 198, mit diesem Bericht 199 ([L-122.7](../Befunde/LEKTOR-122.md#l-122.7)).
 - In PRÜFER-79 sind nachträglich Verweise auf die inzwischen vergebenen E-194 und E-195 eingesetzt ([L-122.8](../Befunde/LEKTOR-122.md#l-122.8)).
+
+## LEKTOR-123 (02.11.2026) — Nachtrag zu LEKTOR-122, Einarbeitung in 09c39785, Zweig test_1130_ergebnisse
+
+[LEKTOR-123](../Befunde/LEKTOR-123.md): Die acht Funde aus [LEKTOR-122](../Befunde/LEKTOR-122.md) sind in der Sache richtig eingearbeitet: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der gespeicherten Textdatei) nennt die Postfachliste als Weg, [E-140](BEFUNDE.md#e-140) (Speichern unter ohne Zeichensatz) ist nur für das Verfassen-Fenster als bestätigt geführt, im Stand steht kein Pfad oder Dateiname aus Gregors Rechner mehr. Alle vier Werkzeuge grün, 50 offen, E-143 jetzt „aktuell gemessen“. Sechs Reste, keiner am Programm, nach Auftrag keiner berichtigt:
+
+- [E-140](BEFUNDE.md#e-140) nennt die Datei aus der Postfachliste „seine zweite Datei“; nach den Dateizeiten war es die erste, wie im TESTPLAN ([L-123.1](../Befunde/LEKTOR-123.md#l-123.1)).
+- `Intern/TESTPLAN.md:175` nennt [E-194](BEFUNDE.md#e-194) weiter „in der Datei aus dem Nachrichtenfenster“ ([L-123.2](../Befunde/LEKTOR-123.md#l-123.2)).
+- [E-143](BEFUNDE.md#e-143) (Out-Hinweis aus Suchfenster und Filtern): „Offen … nicht Teil der Entscheidung“ und „Was noch fehlt: die Messung am Programm“ stehen noch, ebenso in den erzeugten Listen ([L-123.3](../Befunde/LEKTOR-123.md#l-123.3)).
+- Freigabepfad und Dateinamen stehen weiter in `1c75f5c3`; mit einem Merge-Commit kämen sie in die Geschichte von `main` ([L-123.4](../Befunde/LEKTOR-123.md#l-123.4)).
+- README-Zahl der Prüfberichte von Hand auf 199 gesetzt, Zähldatum nicht; mit diesem Bericht 200 ([L-123.5](../Befunde/LEKTOR-123.md#l-123.5)).
+- [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext) nennt die übrigen Aufrufer von `CSaveAs` nicht ([L-123.6](../Befunde/LEKTOR-123.md#l-123.6)).
