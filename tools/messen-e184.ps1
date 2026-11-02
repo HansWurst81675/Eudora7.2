@@ -66,7 +66,19 @@ param(
     # der Quelle in INBOX.toc (dort nur als geloescht markiert), und die
     # Quelle ist die UID, die der Server kopiert hat ("UID COPY <n>").
     # Ohne fremde Mail im Ziel - sonst ueberlagert am alten Bau E-184.
-    [int] $Label = 0
+    [int] $Label = 0,
+    # E-170 ohne UIDPLUS (Huellen tools\messen-e170m.ps1): drei Mails, nach
+    # Datum sortiert (Liste 3,2,1), jede Zeile bekommt ein EIGENES Label
+    # (Zeile 1 -> Label 1, Zeile 2 -> 2, Zeile 3 -> 3), dann alle verschoben.
+    # Im Ziel muss jede Kopie das Label ihrer eigenen Quelle tragen; mit einer
+    # Mail (UID 1 -> 1) passte die Zuordnung am 02.11.2026 zufaellig.
+    [switch] $MehrereLabels,
+    # E-170 ohne UIDPLUS (Huellen tools\messen-e170f.ps1, messen-e170g.ps1):
+    # der Pruefserver legt beim COPY VOR der Kopie eine fremde neue Mail ins
+    # Ziel (UID 1, die Kopie bekommt UID 2). "anders": anderer Absender und
+    # Betreff - das Label gehoert nur auf UID 2. "gleich": Datum, Absender und
+    # Betreff wie die verschobene - keine darf ein Label bekommen.
+    [string] $FremdeBeiCopy = ''
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
@@ -212,7 +224,12 @@ if ($Label -gt 0) {
     $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 5 * $Warten),
                  '--nachrichten', '3')
 }
+if ($MehrereLabels) {
+    $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 6 * $Warten),
+                 '--nachrichten', '3', '--datum-absteigend')
+}
 if ($OhneCopyuid) { $srvArgs += '--ohne-copyuid' }
+if ($FremdeBeiCopy) { $srvArgs += @('--fremde-bei-copy', $FremdeBeiCopy) }
 $srv = Start-Process $perl -ArgumentList $srvArgs -WorkingDirectory $repo -WindowStyle Hidden -PassThru
 Start-Sleep -Seconds 2
 
@@ -350,17 +367,28 @@ try {
     if ($script:lb -eq [IntPtr]::Zero) { Write-Host 'E184 FEHLER: keine Liste im INBOX-Fenster'; exit 1 }
     $anzahl = [int](Snd $script:lb 0x018B ([IntPtr]0) ([IntPtr]0))                   # LB_GETCOUNT
     Write-Host "E184 INBOX-Zeilen: $anzahl"
-    $sollZeilen = 1; if ($Mehrere -or $Label -gt 0) { $sollZeilen = 3 }
+    $sollZeilen = 1; if ($Mehrere -or $Label -gt 0 -or $MehrereLabels) { $sollZeilen = 3 }
     $script:zeile = 0; if ($Label -gt 0) { $script:zeile = 2 }   # E-170: letzte Zeile nach Datum
     if ($anzahl -ne $sollZeilen) { Write-Host "E184 FEHLER: INBOX sollte genau $sollZeilen Zeile(n) haben"; exit 1 }
-    if ($Mehrere -or $Label -gt 0) {
+    if ($Mehrere -or $Label -gt 0 -or $MehrereLabels) {
         # Nach Datum sortieren (Menuebefehl, kein Tastendruck): UID 1 ist die
         # juengste, die Liste steht danach 3,2,1 - nicht aufsteigend nach UID.
         [void][E184]::PostMessageA($aktiv, 0x0111, [IntPtr]33247, [IntPtr]::Zero)   # ID_EDIT_SORT_SORTBYDATE
         Start-Sleep -Seconds 2
     }
+    if ($MehrereLabels) {
+        # E-170: jede Zeile einzeln waehlen und ihr eigenes Label geben (1, 2, 3).
+        for ($r = 0; $r -lt 3; $r++) {
+            [void](Snd $script:lb 0x0185 ([IntPtr]0) ([IntPtr](-1)))                 # LB_SETSEL FALSE, alle
+            [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]$r))                   # LB_SETSEL TRUE, Zeile r
+            [void](Snd $script:lb 0x019E ([IntPtr]$r) ([IntPtr]0))                   # LB_SETCARETINDEX
+            [void][E184]::PostMessageA($aktiv, 0x0111, [IntPtr](32847 + $r + 1), [IntPtr]::Zero)   # ID_MESSAGE_LABEL_(r+1)
+            Start-Sleep -Seconds 2
+            Dialoge $pp -Schliessen
+        }
+    }
     [void](Snd $script:lb 0x0185 ([IntPtr]0) ([IntPtr](-1)))                         # LB_SETSEL FALSE, alle
-    if ($Mehrere) { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr](-1))) }       # LB_SETSEL TRUE, alle
+    if ($Mehrere -or $MehrereLabels) { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr](-1))) }       # LB_SETSEL TRUE, alle
     else          { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]$script:zeile)) }   # LB_SETSEL TRUE, eine Zeile
     Write-Host ('E184 markiert: ' + [int](Snd $script:lb 0x0190 ([IntPtr]0) ([IntPtr]0)))   # LB_GETSELCOUNT
     [void](Snd $script:lb 0x019E ([IntPtr]$script:zeile) ([IntPtr]0))                # LB_SETCARETINDEX
@@ -457,6 +485,40 @@ if ($Label -gt 0) {
     $p2 = Get-Process -Id $pp -ErrorAction SilentlyContinue
     $lebt = 0; if ($p2 -and -not $p2.HasExited) { $lebt = 1 }
     Write-Host ("E170 ERGEBNIS copyuid={0} label-quelle={1} uid-alt={2} uid-kopiert={3} quelle-passt={4} uid-ziel={5} kopie-mit-label={6} log-grund={7} lebt={8}" -f $cu, $markiert.Count, $ua, $kopiert, $quelleOk, $un, $mitLabel, $grund, $lebt)
+    if ($FremdeBeiCopy) {
+        # Die fremde neue Mail liegt vor der Kopie: UID 1 im leeren Ziel, die
+        # Kopie UID 2 (Positivprobe: Serverprotokoll "FREMDE NEUE NACHRICHT").
+        $gelegt = @($prot | Where-Object { $_ -match 'FREMDE NEUE NACHRICHT .* UID 1$' }).Count
+        $fr = @($nachher | Where-Object { $_.Uid -eq 1 })
+        $ko = @($nachher | Where-Object { $_.Uid -eq 2 })
+        $frL = '-'; if ($fr.Count -eq 1) { $frL = [string]$fr[0].Label }
+        $koL = '-'; if ($ko.Count -eq 1) { $koL = [string]$ko[0].Label }
+        $koB = 0; if ($ko.Count -eq 1 -and $ko[0].Betreff -eq $b) { $koB = 1 }
+        Write-Host ("E170F ERGEBNIS art={0} fremde-gelegt={1} kopie-betreff-passt={2} fremd-label={3} kopie-label={4} eintraege={5} log-grund={6} lebt={7}" -f $FremdeBeiCopy, $gelegt, $koB, $frL, $koL, $nachher.Count, $grund, $lebt)
+    }
+}
+if ($MehrereLabels) {
+    # Jede Kopie (gleicher Betreff wie ihre Quelle) muss das Label ihrer
+    # eigenen Quelle tragen. Positivprobe: in INBOX.toc tragen drei Zeilen drei
+    # verschiedene Labels (dort nur als geloescht markiert).
+    $quelle = TocLesen (Join-Path $konto 'INBOX\INBOX.toc')
+    foreach ($e in $quelle) { Write-Host ('E170M INBOX uid={0} label={1} betreff="{2}"' -f $e.Uid, $e.Label, $e.Betreff) }
+    $verschieden = @($quelle | Where-Object { $_.Label -gt 0 } | ForEach-Object { $_.Label } | Sort-Object -Unique).Count
+    $richtig = 0; $falsch = 0; $ohne = 0
+    foreach ($e in @($nachher | Where-Object { $_.Betreff -like 'Pruefnachricht *' })) {
+        $q = @($quelle | Where-Object { $_.Betreff -eq $e.Betreff }) | Select-Object -First 1
+        if (-not $q -or $q.Label -eq 0) { $ohne++; continue }
+        if ($e.Label -eq $q.Label) { $richtig++ } elseif ($e.Label -eq 0) { $ohne++ } else { $falsch++ }
+    }
+    $log = Join-Path $voll 'Mailverzeichnis\eudora.log'
+    $grund = '(keine-logzeile)'
+    if (Test-Path $log) {
+        $z = Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-170 Labels beim Verschieben' } | Select-Object -Last 1
+        if ($z) { Write-Host ('E170M LOG ' + $z); if ($z -match 'grund=(\S+)') { $grund = $Matches[1] } }
+    }
+    $p2 = Get-Process -Id $pp -ErrorAction SilentlyContinue
+    $lebt = 0; if ($p2 -and -not $p2.HasExited) { $lebt = 1 }
+    Write-Host ("E170M ERGEBNIS labels-quelle={0} richtig={1} falsch={2} ohne={3} eintraege={4} log-grund={5} lebt={6}" -f $verschieden, $richtig, $falsch, $ohne, $nachher.Count, $grund, $lebt)
 }
 if ($OhneCopyuid) {
     $kopieAlt = @($nachher | Where-Object { $_.Uid -eq 1 -and $_.Betreff -like 'Pruefnachricht 1*' }).Count

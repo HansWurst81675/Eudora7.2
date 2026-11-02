@@ -109,8 +109,18 @@ while (@ARGV) {
     elsif ($a eq '--ablage')       { $opt{ablage}       = shift @ARGV }
     elsif ($a eq '--ohne-copyuid') { $opt{ohne_copyuid} = 1 }   # E-184/E-170
     elsif ($a eq '--datum-absteigend') { $opt{datum_absteigend} = 1 }   # E-184 K3
+    elsif ($a eq '--fremde-bei-copy') { $opt{fremde_bei_copy} = shift @ARGV }   # E-170 ohne UIDPLUS
     else { die "unbekannt: $a\n" }
 }
+# E-170 ohne UIDPLUS: beim ersten COPY legt der Server VOR den Kopien eine
+# fremde neue Nachricht ins Ziel - so, als waere sie gleichzeitig eingetroffen.
+# Sie bekommt die kleinere neue UID. "anders": eigener Absender und Betreff;
+# "gleich": Datum, Absender und Betreff wie die erste kopierte Nachricht, nur
+# Message-ID und Text anders (Eudora darf dann KEINER ein Label geben).
+if (defined $opt{fremde_bei_copy} and $opt{fremde_bei_copy} !~ /^(anders|gleich)$/) {
+    die "--fremde-bei-copy anders|gleich\n";
+}
+my $fremde_bei_copy_gelegt = 0;
 
 if ($opt{ablage} ne '' and !-d $opt{ablage}) {
     mkdir $opt{ablage} or die "$opt{ablage}: $!\n";
@@ -524,7 +534,33 @@ while (time < $ende) {
                 # Pruefserver, der in Anfragefolge kopiert, liesse die fehlerhafte
                 # Zuordnung nach Listenposition zufaellig richtig aussehen
                 # (gemessen 01.11.2026).
-                for my $i (sort { uid_von($quelle->[$a - 1], $a) <=> uid_von($quelle->[$b - 1], $b) } keys %gewaehlt_pos) {
+                my @folge = sort { uid_von($quelle->[$a - 1], $a) <=> uid_von($quelle->[$b - 1], $b) } keys %gewaehlt_pos;
+                if ($opt{fremde_bei_copy} and @folge and !$fremde_bei_copy_gelegt) {
+                    my $vorlage = $quelle->[$folge[0] - 1]{text};
+                    my $ftext;
+                    if ($opt{fremde_bei_copy} eq 'gleich') {
+                        ($ftext = $vorlage) =~ s/^Message-ID: .*$/Message-ID: <fremd-gleich\@pruefserver.invalid>/mi;
+                        $ftext =~ s/\r\n\r\n.*\z/\r\n\r\nFremde Nachricht, die genau so aussieht wie die verschobene.\r\n/s;
+                    }
+                    else {
+                        $ftext = join("\r\n",
+                            'From: Fremd <fremd@pruefserver.invalid>',
+                            'To: pruefling@pruefserver.invalid',
+                            'Subject: Fremde neue Nachricht',
+                            'Date: Thu, 10 Sep 2026 12:00:00 +0200',
+                            'Message-ID: <fremd-neu@pruefserver.invalid>',
+                            'MIME-Version: 1.0',
+                            'Content-Type: text/plain; charset=us-ascii',
+                            '',
+                            'Diese Nachricht kam gleichzeitig mit der verschobenen an.',
+                            '');
+                    }
+                    my $fuid = naechste_uid($zliste);
+                    push @$zliste, { text => $ftext, flags => '', geloescht_verlangt => 0, uid => $fuid };
+                    $fremde_bei_copy_gelegt = 1;
+                    notiz(sprintf('  FREMDE NEUE NACHRICHT (%s) nach "%s": UID %d', $opt{fremde_bei_copy}, sichtbar_bytes($zname), $fuid));
+                }
+                for my $i (@folge) {
                     my $m = $quelle->[$i - 1];
                     my $nuid = naechste_uid($zliste);
                     push @$zliste, { text => $m->{text}, flags => ($m->{flags} || ''), geloescht_verlangt => 0, uid => $nuid };

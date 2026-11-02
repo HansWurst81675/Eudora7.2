@@ -41,7 +41,8 @@ veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130.
   Beim Verschieben innerhalb eines IMAP-Kontos bleibt das Label erhalten,
   wenn der Server die neuen Nummern meldet (Nachtrag 02.11.2026, am Prüfstand
   gemessen: das tat schon 7.2.1.128; meldet der Server sie nicht, geht das
-  Label weiter verloren, 7.2.1.131 schreibt dann nur den Grund ins Protokoll)
+  Label weiter verloren, 7.2.1.131 schreibt dann nur den Grund ins Protokoll,
+  wenn der Protokollbereich Misc eingeschaltet ist, `LogLevel` mit 0x8000)
   ([E-170](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-170)),
   und Eudora überschreibt im Zielordner nicht mehr Betreff und Absender einer
   fremden Mail mit derselben Nummer

@@ -205,13 +205,18 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
    anlegen — dann lassen sie sich wählen ([E-173](../Intern/BEFUNDE.md#e-173); eine Spur
    am Quelltext gibt es, nachgestellt ist der Fehler noch nicht).
 
-**Bekannte Einschränkung:** wird eine Mail mit Label später zwischen zwei
-Ordnern **desselben IMAP-Kontos** verschoben, ist das Label danach weg, wenn der
-Server die neuen Nummern der verschobenen Mail nicht meldet (UIDPLUS) — Eudora
-speichert Labels nur bei sich, nicht auf dem Server. Meldet er sie, bleibt das
-Label; das war schon vor 7.2.1.130 so (am Prüfstand am 02.11.2026 an 7.2.1.128
-und 7.2.1.131 gemessen). Ab 7.2.1.131 steht in der `eudora.log`, warum es fehlt
-([E-170](../Intern/BEFUNDE.md#e-170), offen).
+**Bekannte Einschränkung bis einschließlich 7.2.1.131:** wird eine Mail mit
+Label später zwischen zwei Ordnern **desselben IMAP-Kontos** verschoben, ist das
+Label danach weg, wenn der Server die neuen Nummern der verschobenen Mail nicht
+meldet (UIDPLUS) — Eudora speichert Labels nur bei sich, nicht auf dem Server.
+Meldet er sie, bleibt das Label; das war schon vor 7.2.1.130 so (am Prüfstand am
+02.11.2026 an 7.2.1.128 und 7.2.1.131 gemessen). 7.2.1.131 schreibt dann eine
+Zeile mit dem Grund in die `eudora.log` — aber nur, wenn der Protokollbereich
+*Misc* eingeschaltet ist (`LogLevel` mit 0x8000; in der Vorgabe aus). **Im
+Quellstand für 7.2.2.132 berichtigt, noch in keinem Paket:** ohne UIDPLUS erkennt
+Eudora die Mail nach dem Abgleich an Datum, Absender und Betreff wieder und
+setzt ihr Label; sehen zwei neue Mails gleich aus, bekommt keine ein Label
+([E-170](../Intern/BEFUNDE.md#e-170)).
 
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund

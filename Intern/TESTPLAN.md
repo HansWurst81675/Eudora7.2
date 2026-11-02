@@ -345,24 +345,25 @@ Bis 7.2.1.129 machten *Make Hyperlink* und *Festbreite* aus dem Emoji schon
 auf dem Bildschirm `??` (gemessen am 02.11.2026 am Bau 7.2.1.128+d3a625fd\*,
 die erste Messung am Programm).
 
-## <a id="e-170-naechstes"></a>In 7.2.1.130: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
+## <a id="e-170-naechstes"></a>Ab 7.2.2.132: das Label bleibt beim Verschieben im IMAP-Konto, auch ohne UIDPLUS ([E-170](BEFUNDE.md#e-170))
 
-**Bekannt offen — nicht als bestanden erwarten (Stand 02.11.2026).** Am Prüfstand gemessen: mit einem Server, der neue Nummern meldet (UIDPLUS), behielt schon 7.2.1.128 das Label; ohne diese Meldung geht es auch an 7.2.1.131 verloren ([E-170](BEFUNDE.md#e-170)). Schritt 3 tritt bei Gregors Server darum vermutlich **nicht** ein; aussagekräftig ist nur Schritt 4 (welcher `grund=` dort steht). Gregor muss den Abschnitt nicht ausführen.
+**Erst mit dem Paket 7.2.2.132 auszuführen** (Stand 02.11.2026: Behebung im Quellstand, Zweig `e170_label_ohne_uidplus`, noch in keinem Paket). Mit 7.2.1.131 und älter geht das Label ohne UIDPLUS verloren — am Prüfstand gemessen, dort nicht als bestanden erwarten. Am Prüfstand mit der Behebung grün: `E-170o`, `E-170m`, `E-170f`, `E-170g`, `E-170p` ([E-170](BEFUNDE.md#e-170)).
 
-**Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129.** **IMAP-Konto**,
-zwei Ordner **desselben** Kontos.
+**Auf dem Rechner, Paket 7.2.2.132, IMAP-Konto**, zwei Ordner **desselben** Kontos.
 
 1. Eine Mail in einem IMAP-Ordner mit einem Label versehen (z. B. grün), wie
    am 29.10.2026.
 2. Die Mail in einen anderen Ordner desselben IMAP-Kontos verschieben.
 3. Den Zielordner öffnen und warten, bis Eudora ihn abgeglichen hat: die Mail
    trägt ihr Label.
-4. In der `eudora.log` steht eine Zeile (sie wird mit dem Protokollbereich *Misc*,
-   0x8000, geschrieben — in deiner `Eudora.ini` steht `LogLevel=58527`, da ist er an;
-   in der Vorgabe 25759 ist er aus)
-   `E-170 Labels beim Verschieben im Konto: mit-label=1 … gesetzt=…  grund=…`.
-   Steht dort `grund=keine-neuen-uids`, meldet dein Server keine neuen UIDs —
-   dann bleibt das Label weiter aus; bitte die Zeile schicken.
+4. Nur, wenn das Label fehlt: in der `eudora.log` stehen zwei Zeilen (Protokollbereich
+   *Misc*, 0x8000 — in deiner `Eudora.ini` steht `LogLevel=58527`, da ist er an; in der
+   Vorgabe 25759 ist er aus):
+   `E-170 Labels beim Verschieben im Konto: … grund=keine-neuen-uids vorgemerkt=1 schon-da=0`
+   und danach `E-170 Labels beim Verschieben im Konto, nach dem Abgleich: … grund=…`.
+   Steht dort `grund=mehrdeutig`, lag im Ziel gleichzeitig eine gleich aussehende
+   neue Mail — dann bleibt das Label mit Absicht aus. Bei jedem anderen Grund bitte
+   beide Zeilen schicken.
 
 ## <a id="e-143-naechstes"></a>In 7.2.1.130: Out wird einem Filter nicht angeboten ([E-143](BEFUNDE.md#e-143))
 
