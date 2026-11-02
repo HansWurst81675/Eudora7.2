@@ -4193,8 +4193,18 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 			}
 		}
 	}
-	TCHAR buf[MAX_PATH + 1];
-	TCHAR cmdLine[MAX_PATH + 1];
+	//
+	// PRUEFER-87 N1 (E-209): so gross wie das, was RegisterCommandLine
+	// schreibt (val, 3 Pfade + 2 Leerzeichen + 6 Anfuehrungszeichen + Null).
+	// Ohne 8.3-Kurznamen sind alle drei Teile Langformen; mit MAX_PATH + 1
+	// passte die eigene Zeile nicht mehr hinein, RegQueryValueEx meldete
+	// ERROR_MORE_DATA, und der Start endete wie in E-208. buf bekommt
+	// dieselbe Groesse: strcpy(buf, c) unten kopiert den Rest von cmdLine,
+	// und die Application-Data-Zweige rechnen mit sizeof(cmdLine) in buf.
+	//
+	TCHAR buf[3 * MAX_PATH + 10];
+	TCHAR cmdLine[3 * MAX_PATH + 10];
+	cmdLine[0] = 0;		// E-208 / PRUEFER-41 K12: nie Stapelinhalt lesen
 	LONG err = 0;
 
 	// First look for UseAppData in the DEudora.ini file
@@ -4209,7 +4219,8 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 	else
 	{
 		// Next, look in the registry for the last place Eudora started up
-		unsigned long buflen = sizeof(cmdLine);
+		// (PRUEFER-87 N1: Platz fuer die Null freihalten)
+		unsigned long buflen = sizeof(cmdLine) - sizeof(TCHAR);
 
 		// HKEY_CURRENT_USER registry
 		strcpy(buf, CRString(IDS_REG_SOFTWARE_COMMAND));
@@ -4220,12 +4231,26 @@ BOOL CEudoraApp::StartEudoraWithDefaultLocation()
 		
 		if (err)
 		{
+			//
+			// PRUEFER-87 N1: nach ERROR_MORE_DATA steht in buflen die NOETIGE
+			// Laenge, nicht mehr die des Puffers - die zweite Abfrage haette
+			// damit ueber cmdLine hinaus schreiben duerfen. Darum neu setzen,
+			// und was die gescheiterte Abfrage hinterlassen hat, gilt nicht.
+			//
+			cmdLine[0] = 0;
+			buflen = sizeof(cmdLine) - sizeof(TCHAR);
+
 			// root registry
 			strcpy(buf, CRString(IDS_REG_SOFTWARE));
 			err = RegOpenKeyEx(HKEY_CLASSES_ROOT, (LPCTSTR)buf,0,KEY_ALL_ACCESS,&hkResult);
 			err = RegQueryValueEx(hkResult,NULL, NULL, &dwType, (unsigned char*)cmdLine, &buflen);
 			RegCloseKey(hkResult);
+			if (err)
+				cmdLine[0] = 0;
 		}
+
+		// RegQueryValueEx schliesst REG_SZ nicht in jedem Fall ab.
+		cmdLine[sizeof(cmdLine) / sizeof(TCHAR) - 1] = 0;
 
 		buf[0] = 0;
 		char* c;

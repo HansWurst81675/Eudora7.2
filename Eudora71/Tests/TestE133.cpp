@@ -118,6 +118,25 @@ static void Test_E133_Stelle(const char* szEudoraDir)
 		// ueberspringen koennen - sonst nuetzt die Klammer beim Schreiben nichts.
 		TT_CHECK_MSG(QT_Enthaelt(pFn, "if (*cmdLine == '\"')") && QT_Enthaelt(pFn, "c = strchr(cmdLine + 1, '\"');"),
 			"StartEudoraWithDefaultLocation ueberspringt kein geklammertes Programm mehr - dann passt E209BefehlszeileBauen nicht mehr zum Leser (E-209)");
+
+		// PRUEFER-87 N1: der Leser muss so viel aufnehmen, wie
+		// RegisterCommandLine schreibt (val), und nach einer gescheiterten
+		// ersten Abfrage buflen neu setzen - sonst meldet die HKCR-Abfrage
+		// die NOETIGE Laenge aus ERROR_MORE_DATA als Puffergroesse.
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "TCHAR cmdLine[3 * MAX_PATH + 10];"), "cmdLine ist kleiner als die Zeile, die RegisterCommandLine schreibt (E-209, PRUEFER-87 N1)");
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "TCHAR buf[3 * MAX_PATH + 10];"), "buf ist kleiner als cmdLine - strcpy(buf, c) kopiert den Rest von cmdLine (PRUEFER-87 N1)");
+		{
+			const long lVorbelegt = QT_Stelle(pFn, "cmdLine[0] = 0;");
+			const long lErste     = QT_Stelle(pFn, "RegQueryValueEx(hkResult,buf, NULL, &dwType, (unsigned char*)cmdLine, &buflen);");
+			// gesucht HINTER der ersten Abfrage - vor ihr steht dieselbe
+			// Zuweisung in der Deklaration von buflen
+			const char* pNach     = (lErste >= 0) ? pFn + lErste : pFn;
+			const long lNeu       = QT_Stelle(pNach, "buflen = sizeof(cmdLine) - sizeof(TCHAR);");
+			const long lZweite    = QT_Stelle(pNach, "RegQueryValueEx(hkResult,NULL, NULL, &dwType, (unsigned char*)cmdLine, &buflen);");
+			TT_CHECK_MSG(lVorbelegt >= 0 && lErste >= 0 && lVorbelegt < lErste, "cmdLine ist vor der ersten Registryabfrage nicht vorbelegt - ohne Wert wird Stapelinhalt gelesen (E-208, PRUEFER-87 N1)");
+			TT_CHECK_MSG(lErste >= 0 && lNeu >= 0 && lZweite >= 0 && lNeu < lZweite,
+				"buflen wird zwischen den beiden Registryabfragen nicht neu gesetzt - nach ERROR_MORE_DATA darf die zweite ueber cmdLine hinaus schreiben (PRUEFER-87 N1)");
+		}
 		free(pFn);
 	}
 
@@ -245,6 +264,17 @@ static void Test_E209(void)
 		E132AufrufZerlegen(szRest, szDir, MAX_PATH + 1, szIni, MAX_PATH + 1);
 		TT_CHECK_MSG(_tcscmp(szDir, _T("C:\\M")) == 0 && _tcscmp(szIni, _T("C:\\M\\Mein Eudora.ini")) == 0,
 			"hat nur die INI ein Leerzeichen, zerfaellt die Zeile beim Lesen (E-209)");
+
+		// PRUEFER-87 N6 (GE2): Verzeichnis UND INI werden zusammen geklammert,
+		// wenn nur die INI ein Leerzeichen hat. Der Grund ist die naechste
+		// Pruefung: Verzeichnis ungeklammert, INI geklammert endet auf '"',
+		// und dann trennt GetDirs (und E132AufrufZerlegen) gar nicht.
+		E209BefehlszeileBauen(_T("C:\\E.exe"), _T("C:\\M"), _T("C:\\M\\Mein Eudora.ini"), z, sizeof(z) / sizeof(TCHAR));
+		TT_CHECK_MSG(_tcscmp(z, _T("C:\\E.exe \"C:\\M\" \"C:\\M\\Mein Eudora.ini\"")) == 0,
+			"hat nur die INI ein Leerzeichen, werden Verzeichnis und INI nicht zusammen geklammert (E-209, PRUEFER-87 N6)");
+		E132AufrufZerlegen(_T("C:\\M \"C:\\M\\Mein Eudora.ini\""), szDir, MAX_PATH + 1, szIni, MAX_PATH + 1);
+		TT_CHECK_MSG(_tcscmp(szDir, _T("C:\\M")) != 0,
+			"Verzeichnis ungeklammert, INI geklammert wird doch getrennt - dann ist das gemeinsame Klammern unnoetig, Test anpassen (PRUEFER-87 N6)");
 
 		// Der Fehler selbst, als Beleg: ungeklammert zerfaellt die Zeile.
 		E132AufrufZerlegen(_T("D:\\Mail Daten D:\\Mail Daten\\Eudora.ini"), szDir, MAX_PATH + 1, szIni, MAX_PATH + 1);

@@ -39,9 +39,19 @@
 # nur fuer neue). Die Werkzeuge der Registry scheitern am "C:" im
 # Schluesselnamen; dafuer reg.exe.
 #
+# DER ABGESCHOSSENE HALTER (PRUEFER-87 N2, 02.11.2026). Wird der Halter von
+# aussen beendet, laeuft sein finally nicht; seine Pruefstandswerte bleiben
+# stehen, und der naechste hielte sie als "Stand vorher" fest. Darum legt
+# Registry-Festhalten den gesicherten Stand als Datei neben die Halterdatei
+# (C:\Temp\Eudora72-Pruefstand.reg.xml), Registry-Zurueck loescht sie nach
+# getaner Arbeit. Findet Sperre-Nehmen beim Uebernehmen eine solche Datei
+# eines ANDEREN Prozesses, setzt es zuerst danach zurueck - erst dann haelt
+# der neue Laeufer seinen eigenen Stand fest.
+#
 # Kodierung: reines ASCII, kein BOM.
 
 $script:SperreDatei   = 'C:\Temp\Eudora72-Pruefstand.lock'
+$script:StandDatei    = 'C:\Temp\Eudora72-Pruefstand.reg.xml'
 $script:SperreMutex   = $null
 $script:SperreGeerbt  = $false
 $script:SperreUmgebung = 'EUDORA72_SPERRE'
@@ -107,6 +117,21 @@ function Sperre-Nehmen([string] $Wer, [double] $Minuten = 15) {
     try { [IO.File]::WriteAllText($script:SperreDatei, $text) } catch { }
     [Environment]::SetEnvironmentVariable($script:SperreUmgebung, [string]$PID)
     Write-Host ('  Sperre genommen: pid=' + $PID + ' wer=' + $Wer)
+
+    # PRUEFER-87 N2: hat ein frueherer Halter seinen Stand hinterlassen
+    # (abgeschossen, finally nie gelaufen), zuerst danach zuruecksetzen.
+    if (Test-Path -LiteralPath $script:StandDatei) {
+        try {
+            $alt = Import-Clixml -LiteralPath $script:StandDatei
+            if ($alt.Pid -ne $PID) {
+                Write-Host ('  Sperre: Stand eines abgebrochenen Halters gefunden (pid=' + $alt.Pid + ', ' + $alt.Zeit + ') - setze zuerst danach zurueck')
+                [void](Registry-Zurueck $alt)
+            }
+        } catch {
+            Write-Host ('  Sperre: hinterlassener Stand nicht lesbar: ' + $_.Exception.Message)
+        }
+        Remove-Item -LiteralPath $script:StandDatei -Force -ErrorAction SilentlyContinue
+    }
     return $true
 }
 
@@ -135,14 +160,19 @@ function Reg-Unterschluessel([string] $Basis) {
 }
 
 function Registry-Festhalten([string] $Basis = 'HKCU:\Software\Qualcomm\Eudora') {
-    $bild = @{ Basis = $Basis; Werte = @{}; Unter = @(Reg-Unterschluessel $Basis) }
+    $bild = @{ Basis = $Basis; Werte = @{}; Unter = @(Reg-Unterschluessel $Basis); Pid = $PID; Zeit = (Get-Date -Format 'yyyy-MM-dd HH:mm:ss') }
     foreach ($teil in @('CommandLine', 'LaunchManager')) {
         $s = Join-Path $Basis $teil
         $k = Get-Item -LiteralPath $s -ErrorAction SilentlyContinue
         if (-not $k) { $bild.Werte[$s] = $null; continue }
         $w = @{}
-        foreach ($n in $k.GetValueNames()) { $w[$n] = @($k.GetValue($n, $null, 'DoNotExpandEnvironmentNames'), $k.GetValueKind($n)) }
+        # Art als Text: uebersteht Export-Clixml/Import-Clixml unveraendert
+        foreach ($n in $k.GetValueNames()) { $w[$n] = @($k.GetValue($n, $null, 'DoNotExpandEnvironmentNames'), [string]$k.GetValueKind($n)) }
         $bild.Werte[$s] = $w
+    }
+    # N2: nur der Halter selbst legt seinen Stand ab (geerbt: der Aufrufer).
+    if ($null -ne $script:SperreMutex -and -not $script:SperreGeerbt) {
+        try { $bild | Export-Clixml -LiteralPath $script:StandDatei } catch { Write-Host ('  Sperre: Stand nicht abgelegt: ' + $_.Exception.Message) }
     }
     return $bild
 }
@@ -151,6 +181,7 @@ function Registry-Festhalten([string] $Basis = 'HKCU:\Software\Qualcomm\Eudora')
 function Registry-Zurueck($bild) {
     $eigen = 0
     $fremd = @()
+    $fehler = @()
     foreach ($s in @($bild.Werte.Keys)) {
         $vorher = $bild.Werte[$s]
         $k = Get-Item -LiteralPath $s -ErrorAction SilentlyContinue
@@ -177,32 +208,39 @@ function Registry-Zurueck($bild) {
             }
         }
         foreach ($n in $neu) {
-            $istBegleit = $n -match '^(?:Path|WarnExtensions|DoNotWarnExtensions)#(\d+)$'
+            # PRUEFER-87 N7: AlreadyWarned#N gehoert dazu (EuShlExt/RegDefines.h:11)
+            $istBegleit = $n -match '^(?:Path|WarnExtensions|DoNotWarnExtensions|AlreadyWarned)#(\d+)$'
             $nr = if ($istBegleit) { $Matches[1] } else { '' }
-            if ($istBegleit -and $eigeneNr -contains $nr) {
-                Remove-ItemProperty -LiteralPath $s -Name $n; $eigen++
-            } elseif (-not $istBegleit -and (Ist-Pruefstandswert ($k.GetValue($n)))) {
-                Remove-ItemProperty -LiteralPath $s -Name $n; $eigen++
-            } else {
-                $fremd += ($s + '\' + $n + ' (neu)')
-            }
+            # PRUEFER-87 N4: jeder Wert fuer sich - eine Ausnahme bei einem
+            # darf die uebrigen und die Freigabe nicht ueberspringen.
+            try {
+                if ($istBegleit -and $eigeneNr -contains $nr) {
+                    Remove-ItemProperty -LiteralPath $s -Name $n -ErrorAction Stop; $eigen++
+                } elseif (-not $istBegleit -and (Ist-Pruefstandswert ($k.GetValue($n)))) {
+                    Remove-ItemProperty -LiteralPath $s -Name $n -ErrorAction Stop; $eigen++
+                } else {
+                    $fremd += ($s + '\' + $n + ' (neu)')
+                }
+            } catch { $fehler += ($s + '\' + $n + ': ' + $_.Exception.Message) }
         }
 
         foreach ($n in @($vorher.Keys)) {
             $alt = $vorher[$n]
             $jetzt = $k.GetValue($n, $null, 'DoNotExpandEnvironmentNames')
             if ($null -ne $jetzt -and "$jetzt" -eq "$($alt[0])") { continue }
-            if ($n -eq 'PathCount') {
-                if ($fremdeNr.Count -eq 0) {
-                    New-ItemProperty -LiteralPath $s -Name $n -Value $alt[0] -PropertyType $alt[1] -Force | Out-Null; $eigen++
-                } else { $fremd += ($s + '\PathCount (fremde Path#: ' + ($fremdeNr -join ',') + ')') }
-                continue
-            }
-            if ($null -eq $jetzt -or (Ist-Pruefstandswert $jetzt)) {
-                New-ItemProperty -LiteralPath $s -Name $n -Value $alt[0] -PropertyType $alt[1] -Force | Out-Null; $eigen++
-            } else {
-                $fremd += ($s + '\' + $n + ' = ' + $jetzt)
-            }
+            try {
+                if ($n -eq 'PathCount') {
+                    if ($fremdeNr.Count -eq 0) {
+                        New-ItemProperty -LiteralPath $s -Name $n -Value $alt[0] -PropertyType $alt[1] -Force -ErrorAction Stop | Out-Null; $eigen++
+                    } else { $fremd += ($s + '\PathCount (fremde Path#: ' + ($fremdeNr -join ',') + ')') }
+                    continue
+                }
+                if ($null -eq $jetzt -or (Ist-Pruefstandswert $jetzt)) {
+                    New-ItemProperty -LiteralPath $s -Name $n -Value $alt[0] -PropertyType $alt[1] -Force -ErrorAction Stop | Out-Null; $eigen++
+                } else {
+                    $fremd += ($s + '\' + $n + ' = ' + $jetzt)
+                }
+            } catch { $fehler += ($s + '\' + $n + ': ' + $_.Exception.Message) }
         }
     }
 
@@ -215,5 +253,10 @@ function Registry-Zurueck($bild) {
 
     Write-Host ('  Registry: {0} eigene(r) Wert(e)/Schluessel auf den Stand vor dem Lauf zurueckgesetzt' -f $eigen)
     foreach ($f in $fremd) { Write-Host ('  Registry: FREMD, nicht angefasst: ' + $f) }
+    foreach ($f in $fehler) { Write-Host ('  Registry: FEHLER beim Zuruecksetzen: ' + $f) }
+    # N2: der abgelegte Stand ist erledigt - nur der eigene
+    if ($bild.Pid -eq $PID -and (Test-Path -LiteralPath $script:StandDatei)) {
+        Remove-Item -LiteralPath $script:StandDatei -Force -ErrorAction SilentlyContinue
+    }
     return $eigen
 }

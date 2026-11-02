@@ -147,13 +147,9 @@ if ($NurPruefen) {
 # noch EIGENE Werte (die jetzt auf einen Pruefstand zeigen); fremde bleiben
 # stehen und werden gemeldet. Die Sperre wird VOR dem Festhalten genommen
 # und erst NACH dem Zuruecksetzen freigegeben; testlauf.ps1 und die
-# -Vorbereiten-Laeufe erben sie.
+# -Vorbereiten-Laeufe erben sie. Genommen wird sie unmittelbar vor dem try
+# unten (PRUEFER-87 N4), damit zwischen Nehmen und finally nichts liegt.
 . (Join-Path $PSScriptRoot 'pruefstand-sperre.ps1')
-if (-not (Sperre-Nehmen 'pruefstand-lauf.ps1' 15)) {
-    Write-Host '  ABGEWIESEN: die Pruefstandssperre ist belegt (siehe oben). Nichts gestartet.'
-    exit 2
-}
-$regVorher = Registry-Festhalten
 
 # --- E-157: Abstuerze aus dem Windows-Ereignisprotokoll -------------------
 # Ein Fall, dessen Protokollzeile vor einem Absturz geschrieben wurde, blieb
@@ -184,7 +180,13 @@ $meldungen = @()
 # verschiedenen Nachrichten brauchen zwei Laeufe, auch im selben Pruefstand.
 $gruppen = $liste | Group-Object { $_.Verzeichnis + "`t" + $_.Nachricht + "`t" + $_.Schalter }
 
+if (-not (Sperre-Nehmen 'pruefstand-lauf.ps1' 15)) {
+    Write-Host '  ABGEWIESEN: die Pruefstandssperre ist belegt (siehe oben). Nichts gestartet.'
+    exit 2
+}
+$regVorher = $null
 try {
+$regVorher = Registry-Festhalten
 foreach ($g in $gruppen) {
 
     $hier = @($g.Group)
@@ -378,8 +380,12 @@ foreach ($g in $gruppen) {
     }
 }
 } finally {
-    [void](Registry-Zurueck $regVorher)
-    Sperre-Freigeben
+    # PRUEFER-87 N4: die Freigabe auch, wenn das Zuruecksetzen wirft
+    try {
+        if ($null -ne $regVorher) { [void](Registry-Zurueck $regVorher) }
+    } finally {
+        Sperre-Freigeben
+    }
 }
 
 Write-Host '  ------------------------------------------------------------'
