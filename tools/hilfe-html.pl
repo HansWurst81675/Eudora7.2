@@ -5,8 +5,9 @@
 #
 #   Tastenkuerzel.html   Abschnitt "Tastenkuerzel auf einen Blick"
 #                        (Help -> Keyboard Shortcuts)
-#   Einstellungen.html   Abschnitte "Tools -> Options" und "Eudora.ini-
-#                        Schluessel ohne Optionsseite" (Help -> Settings Reference)
+#   Einstellungen.html   Abschnitte "Tools -> Options", "Eudora.ini-
+#                        Schluessel ohne Optionsseite" und "Die Abschnitte
+#                        der Eudora.ini" (Help -> Settings Reference)
 #
 #   perl tools/hilfe-html.pl <zielverzeichnis> [--fassung 7.2.2.N] [--quelle <md>]
 #   perl tools/hilfe-html.pl --selbsttest
@@ -87,7 +88,8 @@ my @SEITEN = (
     { datei => 'Einstellungen.html',
       titel => "Eudora \x{2014} Einstellungen und Eudora.ini-Schl\x{fc}ssel",
       menue => "Help \x{2192} Settings Reference",
-      teile => [ qr/Tools \x{2192} Options/, qr/Eudora\.ini.*ohne Optionsseite/ ] },
+      teile => [ qr/Tools \x{2192} Options/, qr/Eudora\.ini.*ohne Optionsseite/,
+                 qr/Die Abschnitte der `?Eudora\.ini/ ] },
 );
 
 if (@ARGV && $ARGV[0] eq '--selbsttest') { exit selbsttest(); }
@@ -577,6 +579,15 @@ sub selbsttest {
             $pruefe->("echte Quelle: $seite->{datei} hat keinen toten Seitenanker (@tote)", !@tote);
             my @intern = defined $x ? ($x =~ m{href="[^"]*/(?:Intern|Befunde|Arbeitsweise|tools)/[^"]*"}g) : ('?');
             $pruefe->("echte Quelle: $seite->{datei} verlinkt nichts Internes (" . scalar(@intern) . ")", !@intern);
+            if ($seite->{datei} eq 'Einstellungen.html') {
+                # Gregor 02.11.2026: "ist denn alles im abschnitt [settings]?"
+                # - der Abschnitt ueber die Abschnitte muss mit auf die Seite,
+                # samt Sprungziel fuer die Kontoschluessel.
+                $pruefe->('echte Quelle: Einstellungen.html enthaelt "Die Abschnitte der Eudora.ini" mit [Persona-&lt;Name&gt;]',
+                    defined $x && $x =~ /Die Abschnitte der <code>Eudora\.ini<\/code>/ && $x =~ /\[Persona-&lt;Name&gt;\]/
+                    && $x =~ /id="was-ein-zus\x{e4}tzliches-konto-eigens-haben-kann"/
+                    && $x =~ /href="#was-ein-zus\x{e4}tzliches-konto-eigens-haben-kann"/);
+            }
         }
         # N2, Gegenprobe am ganzen Lauf: mit --fassung 7.2.2.132 erzeugte
         # Seiten verlinken NICHT auf die Marke v7.2.2.132 (die es nicht gibt).
