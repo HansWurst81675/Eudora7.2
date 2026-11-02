@@ -292,7 +292,17 @@ for my $zeile (split /\n/, $befunde) {
     # Fehlt sie, schreibt die Tabelle "— nicht aufgeschrieben". Das ist
     # Absicht: die Luecke soll sichtbar und zaehlbar sein, nicht hinter
     # einem "teilweise" verschwinden (Arbeitsweise/ausbleiben-ist-kein-befund.md).
-    if ($urteil =~ /\*\*Was noch fehlt:\*\*\s*(.+?)(?=\s*\*\*Wie zu pruefen:\*\*|\z)/s) {
+    #
+    # NUR DAS AKTUELLE URTEIL (02.11.2026, LEKTOR-134 L-134.2). Wird ein
+    # Urteil fortgeschrieben, steht der alte Text hinter "**Bis <Datum>
+    # stand hier:**" - samt seinem alten "**Was noch fehlt:**". Bei E-170
+    # schrieb der neue Teil "**Was fehlt:**" (ohne "noch"); der erste
+    # Treffer lag deshalb im alten Teil, und die Listen zeigten eine Aufgabe,
+    # die seit der Messung erledigt war. Gesucht wird darum nur VOR der
+    # Marke, und beide Schreibweisen gelten.
+    my $aktuell = $urteil;
+    $aktuell = $1 if $urteil =~ /\A(.*?)\*\*Bis [^*]{0,60}?stand hier:?\*\*/s;
+    if ($aktuell =~ /\*\*Was (?:noch )?fehlt:\*\*\s*(.+?)(?=\s*\*\*Wie zu pruefen:\*\*|\z)/s) {
         my $f = $1;
         $f =~ s/\s+/ /g;
         $f =~ s/\s+\z//;

@@ -347,6 +347,8 @@ die erste Messung am Programm).
 
 ## <a id="e-170-naechstes"></a>In 7.2.1.130: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
 
+**Bekannt offen — nicht als bestanden erwarten (Stand 02.11.2026).** Am Prüfstand gemessen: mit einem Server, der neue Nummern meldet (UIDPLUS), behielt schon 7.2.1.128 das Label; ohne diese Meldung geht es auch an 7.2.1.131 verloren ([E-170](BEFUNDE.md#e-170)). Schritt 3 tritt bei Gregors Server darum vermutlich **nicht** ein; aussagekräftig ist nur Schritt 4 (welcher `grund=` dort steht). Gregor muss den Abschnitt nicht ausführen.
+
 **Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129.** **IMAP-Konto**,
 zwei Ordner **desselben** Kontos.
 
