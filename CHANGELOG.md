@@ -27,6 +27,9 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-196](Intern/BEFUNDE.md#e-196)** | Eine als .htm gespeicherte Nachricht nennt ihren Zeichensatz nicht — die Umlaute stehen … | **nie gemessen** | am Prüfstand nachstellen (Nachrichten- und Verfassen-Fenster, `.htm`), dann im HTML-Zweig ein `<meta http-equiv="Content-Type" content="text/html; ch… |
+| **[E-195](Intern/BEFUNDE.md#e-195)** | Der Speicherdialog bietet .rtf an, liefert aber Klartext — die Datei heißt .rtf und ist… | **nie gemessen** | den Eintrag `Rtf Files (*.rtf)\|*.rtf\|` aus `IDS_TXT_HTML_FILE_FILTER` streichen — derselbe Text steht auch in `saveas.cpp:92` (`CSaveAs`, Speicher… |
+| **[E-194](Intern/BEFUNDE.md#e-194)** | Eudoras interne Markierung <x-flowed> steht in der gespeicherten Textdatei — *Speichern … | **nie gemessen** | am Prüfstand mit einer `format=flowed`-Mail nachstellen (beide Ansichten, mit und ohne *Kopfzeilen einschließen*), dann die Klammern vor dem Schreib… |
 | **[E-193](Intern/BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | **nie gemessen** | am Prüfstand mit Mails bekannten Inhalts nachstellen (Umlaute und € im Text, in Kopfzeilen, nur im HTML-Quelltext; Latin-1, UTF-8, quoted-printable… |
 | **[E-192](Intern/BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | **nie gemessen** | die Quellmenge an allen drei Stellen durchreichen wie beim Verschieben; Prüfstandsfall für den Papierkorb. **Stufe: wichtig** (wie E-184) |
 | **[E-189](Intern/BEFUNDE.md#e-189)** | Beim Verschieben innerhalb eines IMAP-Kontos OHNE UIDPLUS steht die verschobene Mail im Zi… | 01.11.2026 an 7.2.1.130 | die Löschvermutung messen; mit dem nächsten Testpaket an Gregors Server (ohne UIDPLUS) bestätigen. Für den TESTPLAN beim nächsten Paket (K3): die… |

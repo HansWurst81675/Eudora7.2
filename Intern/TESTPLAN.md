@@ -168,6 +168,8 @@ aus dem Verfassen-Fenster nicht. Geprüft wird am **lokalen** Postfach *In*.
 
 Am Prüfstand am 31.10.2026 so gefahren (Fall `E-140p`).
 
+**Bestätigt am 01.11.2026, Gregor an 7.2.1.130:** beide `.txt`-Dateien tragen den MIME-Kopf mit `charset="windows-1252"`, Umlaute und € stimmen. Dabei aufgefallen und als Befunde aufgenommen: [E-194](BEFUNDE.md#e-194) (`<x-flowed>` in der Datei aus dem Nachrichtenfenster), [E-195](BEFUNDE.md#e-195) (`.rtf` liefert Klartext; Gregor: RTF ist nicht nötig) und [E-196](BEFUNDE.md#e-196) (`.htm` ohne Zeichensatzangabe).
+
 ## <a id="e-165-naechstes"></a>In 7.2.1.129: die Vervollständigungsbox im To:-Feld ([E-165](BEFUNDE.md#e-165))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Auf
@@ -267,6 +269,8 @@ Postfach oder IMAP, gleich.
 5. Falls du einen **älteren** Filter mit Ziel Out hast: Post abrufen. Es kommt
    **kein** Hinweisdialog, der Abruf läuft durch, und in der `eudora.log`
    steht `E-143 Filter "<Name>": Ziel ist Out - uebergangen, nichts uebertragen`.
+
+**Bestätigt am 01.11.2026, Gregor an 7.2.1.130, Schritt 4 aus dem Postfachfenster:** im Bildschirmfoto ist Out im Menü von *Make Filter* grau, alle anderen Postfächer sind wählbar. **Am 02.11.2026 ebenso Schritt 1–2 im Filterfenster** (*Tools → Filters*, *Transfer To*): Out grau, alle anderen wählbar. **Ebenso am 02.11.2026 Schritt 3 und 4 vollständig:** im Hauptmenü *Transfer* ist Out wählbar, *Make Filter* aus der geöffneten Nachricht zeigt Out grau. **Schritt 5 entfällt bei Gregor** — er hat keinen alten Filter mit Ziel Out; das Übergehen ist am Programm noch nicht gemessen.
 
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
