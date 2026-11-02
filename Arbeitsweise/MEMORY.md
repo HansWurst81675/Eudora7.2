@@ -164,3 +164,4 @@
 - [CHRONIST 02.11.2026](CHRONIST-2026-11-02.md) — Laufbericht; E-140 trotz Marke null bestätigt; VM-Pfad in Commit-Nachricht; Squash doch erlaubt (gemessen); Reihenfolge zweiter Morgen übergangen; drei LEKTOR-Runden
 - [Stand 02.11.2026](stand-02-11-2026.md) — #199/#200 gemergt; nächster Schritt E-143 Suchfenster, Gregor testet E-178; bauen.ps1 testet blind
 - [7.2.2-Umfang und Termin](entscheidung-7-2-2-umfang.md) — Gregor 02.11.: Release 7.2.1.131, dann 7.2.2.x mit Hilfe-Menü; Termin: privat.txt (nicht gespiegelt)
+- [CHRONIST 02.11.2026 tagsüber](CHRONIST-2026-11-02b.md) — Laufbericht; Force-Push nach Abweisung über Gregors `!` (2. Mal); persönliche Angabe gespiegelt; auftrag-rolle.pl schaltet belegten Baum um; Ein-Zeilen-LEKTOR-Nachträge; E-189 viermal gefragt; 1.128-Gegenprobe ohne Ansage

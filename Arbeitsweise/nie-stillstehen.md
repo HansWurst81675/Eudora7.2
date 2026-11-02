@@ -104,3 +104,7 @@ Das ist das Muster vom 30.10. (*„Ich fange jetzt … an“* ohne Aufruf), nur 
 ## Nachtrag 01.11.2026 abends (CHRONIST): der Nachtrag vom Mittag griff drei Stunden später nicht
 
 Um 15:48:50 MEZ endete ein Zug mit *„Vor dem PR lasse ich LEKTOR und PRÜFER noch kurz laufen.“*, neun Sekunden nachdem `rollen-faellig.pl` beide fällig gemeldet hatte; danach 71 Minuten nichts, bis Gregor schrieb (gemessen). Der Nachtrag direkt hierüber stand seit 12:35 im Repo. Messung, Zählung der vier Fälle seit dem 27.10. und der Vorschlag für einen Stop-Haken stehen in [[daueraufgaben-brauchen-einen-takt]], Nachtrag 01.11.2026 abends.
+
+## Nachtrag 02.11.2026 abends: freie Kapazität nutzen
+
+Gregor am 02.11.2026: *„im hintergrund kann man immer wieder was laufen lassen, wenn gerade kapazitäten frei sind.“* Laufen weniger als vier Agenten, wird der nächste offene Befund aus der vereinbarten Reihenfolge im Hintergrund angefangen — Messung oder Behebung in eigenem Arbeitsbaum. Ein neuer Zweig braucht weiter Gregors Ja zum Namen ([[zweig-vorher-abstimmen]]); bis dahin lesende Vorarbeit (Quelle lesen, Messweg vorbereiten) ins Scratchpad.

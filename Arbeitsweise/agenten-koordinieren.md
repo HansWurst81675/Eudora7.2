@@ -62,3 +62,16 @@ messen, committen **und** pushen, Gregors Testverzeichnis nur lesen).
 Siehe [[agenten-benennen]], [[agenten-trennen-worktrees]],
 [[nie-stillstehen]], [[fehlerklassen-abstellen]] und
 [[main-muss-immer-baubar-sein]].
+
+## Nachtrag 02.11.2026 (CHRONIST): die Kollision vom 05.09., diesmal vom Werkzeug
+
+Zeiten MEZ, Transkript `25e03584`, gemessen. Einzelheiten in [[CHRONIST-2026-11-02b]], Abschnitt 3.
+
+Um 15:48:18 wurde der PRÜFER-84-Agent mit `SendMessage` fortgesetzt, sein Auftrag lautete *„in deinem Baum“*, also in `.wt/pruefer`. Um 15:51:15 lief `perl tools/auftrag-rolle.pl PRUEFER --basis e39_persona_loeschen …`. Das Werkzeug schaltete `.wt/pruefer` mit `git switch -c` auf einen neuen Zweig. Die Hauptsitzung bemerkte es nach 71 Sekunden selbst und leitete den Agenten in einen neuen Baum `.wt/pruefer84` um. Sein Bericht: *„Mein einziger Versuch, dort zu schreiben, ist gescheitert, weil die Datei nach dem Umschalten auf den anderen Zweig nicht mehr da war.“* Verloren ging nichts.
+
+Am Quelltext belegt: `auftrag-rolle.pl` prüft vor dem Umschalten nur, ob der Baum **sauber** ist (`git status --porcelain`). Ein Agent, der gerade liest, hat einen sauberen Baum. `tools/arbeitsbaum-frei.pl`, die Schranke dieser Lehre, kennt Buchungen, aber `auftrag-rolle.pl` ruft sie nicht auf (gemessen). Die Schranke steht also neben dem Weg, auf dem es passiert ([[ausloeser-an-den-anfang]]).
+
+**How to apply, zusätzlich:**
+- **Sauber heißt nicht frei.** Vor jedem `auftrag-rolle.pl` ist zu prüfen, ob ein Agent derselben Rolle läuft oder gerade fortgesetzt wurde. Wenn ja, bekommt der neue Lauf einen eigenen Baum (`.wt/<rolle><n>`).
+- **Ein Agent, der mit `SendMessage` fortgesetzt wird, belegt seinen Baum wieder.** Im Werkzeug ist er dann noch nicht gebucht.
+- Schranken-Vorschlag 2 in [[CHRONIST-2026-11-02b]]: `auftrag-rolle.pl` fragt `arbeitsbaum-frei.pl` und bricht ab, wenn der Baum gebucht ist (nicht gebaut).

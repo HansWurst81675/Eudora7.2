@@ -96,3 +96,16 @@ Zwei Lücken in der Handprüfung von oben:
 - **`tools/anonym-begriffe.lokal` kennt den Freigabeordner nicht** (gemessen: 0 Treffer nach `vmware` und `Shared Folders` in 11 Zeilen). Der Nachtrag vom 30.10. hat die Pfade in die Musterprüfung aufgenommen, die Liste nicht.
 
 **How to apply, zusätzlich:** Die Herkunft von Gregors Testdateien heißt in Commit, Befund und Notiz nur *„Gregors Testdateien vom <Datum>“*. Vor dem Push auch die Nachricht lesen: `git log -1 --format=%B` auf `\`, `C:\Users\` und `Shared Folders`. Die Begriffsprüfung im Commit-Haken hat Gregor am 29.10. abgelehnt; hier steht deshalb kein Haken-Vorschlag, nur der Vorschlag an ihn, den Freigabeordner in seine lokale Liste aufzunehmen.
+
+## Nachtrag 02.11.2026 (CHRONIST): eine Angabe aus Gregors Leben, selbst erfragt
+
+Zeiten MEZ, Transkript `25e03584`, gemessen. Art und Datum der Angabe sind hier bewusst weggelassen. Einzelheiten in [[CHRONIST-2026-11-02b]], Abschnitt 2.
+
+Um 12:52:40 entstand eine Gedächtnisnotiz mit einer persönlichen Angabe Gregors im **Dateinamen**, in der Beschreibung und in der MEMORY-Zeile. Um 12:52:53 fragte die Sitzung **selbst** nach dem Datum dazu, um 12:54:47 stand es als Nachtrag in derselben Notiz. Der Spiegel-Haken trug die Notiz in drei Arbeitszweige, darunter den Zweig von PR #203. Gregor fand es nach 35 Minuten (13:27:29): *„es soll nur nicht auf dem repo sein.“* Bereinigt wurde bis 16:07: Die Angabe steht in `memory/privat.txt`, die nicht gespiegelt wird, und die drei PR-Zweige wurden neu aus einem Commit aufgebaut. `main` war nie betroffen (gemessen).
+
+Die Probe von oben, *„kommt das aus Gregors Rechner?“*, griff hier nicht. Die Angabe kam aus dem Chat, nicht aus seinen Dateien.
+
+**How to apply, zusätzlich:**
+- **Die Probe hat zwei Fragen:** Kommt es aus Gregors Rechner? Und betrifft es Gregor als Person (Abwesenheit, Termine, Gesundheit, Familie, Wohnort)? Wenn eine von beiden zutrifft, gehört es nach `memory/privat.txt`, nie in eine `.md`.
+- **Jede neue Gedächtnisnotiz ist eine Veröffentlichung**, denn der Spiegel-Haken trägt sie beim nächsten Commit in jeden Arbeitszweig. Der Dateiname wird mit veröffentlicht. Er nennt die Sache („7.2.2-Umfang“), nicht den Anlass.
+- **Was ich für die Planung brauche, erfrage ich nicht genauer als nötig.** Für die Planung reicht ein „bis wann“ für die Arbeit; der Grund gehört nicht dazu, und auch das „bis wann“ kommt nach `privat.txt`, wenn es aus Gregors Leben stammt.
