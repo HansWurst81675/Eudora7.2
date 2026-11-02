@@ -113,7 +113,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## Im Quellstand, noch in keinem Paket
 
-**Zweig `e122_imap_datum`** (nach dem Merge von #201; PR folgt). Tests 362/362, am IMAP-Prüfserver gemessen.
+**Zweig `e122_imap_datum`** (gemergt als #202). Tests 362/362, am IMAP-Prüfserver gemessen.
 
 * **Das Eingangsdatum einer in einen IMAP-Ordner übertragenen Nachricht stimmt** ([E-122](Intern/BEFUNDE.md#e-122), Originalfehler): es lag um die Zeitzone des Rechners zu früh. Eudora nimmt es jetzt beim Hochladen aus dem `Date:`-Kopf als echtes UTC (`ImapAppend.cpp`). Gemessen: neuer Bau `differenz-min=0` für +0200 und −0500, alter Bau `−60`. Rest: in der übersprungenen Stunde der Sommerzeitumstellung bleiben 60 Minuten Versatz ([PRÜFER-83](Befunde/PRUEFER-83.md) K1); der Weg IMAP → IMAP ohne `COPY` ist unverändert.
 

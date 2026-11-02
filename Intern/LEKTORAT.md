@@ -3077,3 +3077,18 @@ Nachtrag LEKTOR-125 (964a9447..cb99c5f4 gegengelesen): Von elf Funden sind neun 
 - E-122 nennt `ImapMailbox.cpp:4281`, die Zeile steht in `:4282` ([L-126.6](../Befunde/LEKTOR-126.md#l-126.6)).
 
 Nachtrag LEKTOR-126 (9c5bfbc8..a26b5181 gegengelesen): Vier von sechs Funden erledigt, der TESTPLAN-Schritt zu [E-122](BEFUNDE.md#e-122) prüft jetzt die Logzeile und ist nicht mehr blind, `TestE122.cpp` fängt beide Lücken aus PRÜFER-83 K2. Teilweise: WEITERMACHEN und AUFGABEN tragen neben „PR folgt“ weiter „`e122_imap_datum` in Arbeit“ ([L-126.2](../Befunde/LEKTOR-126.md#l-126.2)); vermerkt: die fehlende Titelzeile des Laufs `E-122p` bleibt bewusst stehen ([L-126.5](../Befunde/LEKTOR-126.md#l-126.5)).
+
+## LEKTOR-127 (02.11.2026) — Bestand nach Doku/FUNKTIONEN.md, Zweig was_eudora_alles_kann nach a2975236
+
+[LEKTOR-127](../Befunde/LEKTOR-127.md): Die neue Anwenderübersicht `Doku/FUNKTIONEN.md` ist in den nachprüfbaren Angaben genau — 88 Stichproben (Kürzel, Vorgaben, Schlüsselnamen, Zeilenangaben, Zählungen) stimmen mit `EudoraRes.rc` und dem Code, jede Marke *bestätigt* hat einen tragenden Beleg, Widersprüche zu FAQ, README und BEFUNDE gibt es keine. Acht Funde, keiner am Programm; von LEKTOR-126 sind die Stand-Köpfe und das CHANGELOG wieder veraltet.
+
+- *Zum Bestätigen* Nr. 9 erwartet Strg+J „im Menü *Special* bei *Junk*“; *Junk* steht im Menü *Message*, *Special → Filter Messages* zeigt dann Strg+Umschalt+L — Gregor müsste einen richtigen Zustand als nicht bestanden melden ([L-127.1](../Befunde/LEKTOR-127.md#l-127.1)).
+- Strg+', Strg+\ und Strg+> sind US-Tasten (`VK_OEM_7`, `VK_OEM_5`, Umschalt+Punkt); auf deutscher Tastatur Strg+Ä, Strg+^, Strg+Umschalt+. ([L-127.2](../Befunde/LEKTOR-127.md#l-127.2)).
+- Stand-Köpfe und CHANGELOG: `e122_imap_datum` „PR folgt“ nach dem Merge von #202, vierte Wiederholung; der laufende Doku-Zweig steht nirgends ([L-127.3](../Befunde/LEKTOR-127.md#l-127.3)).
+- *Help → Insert System Configuration* hängt eine Kopie der `Eudora.ini` an (`compmsgd.cpp:2695`); die Datei sagt nur „fügt Systemangaben ein“ ([L-127.4](../Befunde/LEKTOR-127.md#l-127.4)).
+- Keine Bezugsfassung; die Zeile zum Suchfenster beschreibt 7.2.1.130, nicht den Quellstand ([L-127.5](../Befunde/LEKTOR-127.md#l-127.5)).
+- Drei „unklar“ stehen im Code: Strg+Leertaste, Aufbau von `SelectedTextURL<n>`, Platzhalter von `FixedDateFormat` ([L-127.6](../Befunde/LEKTOR-127.md#l-127.6)).
+- Strg+W und `LogLevel` sind enger belegt als behauptet; fünf TESTPLAN-Verweise ohne Anker ([L-127.7](../Befunde/LEKTOR-127.md#l-127.7)).
+- Kleinkram im Bestand: `EINSTELLUNGEN.md` nennt `filtersd.cpp:1133` (heute `:1155`) und `EudoraRes.rc:8463` (heute `:8465`), README 206 statt 207 Berichte ([L-127.8](../Befunde/LEKTOR-127.md#l-127.8)).
+
+Nachtrag LEKTOR-127 (86e58a79..a46ff55f gegengelesen): Alle acht Funde eingearbeitet, sieben ganz; offen bleiben die Schranke gegen „PR folgt“ nach dem Merge ([L-127.3](../Befunde/LEKTOR-127.md#l-127.3)) und, bewusst, die README-Zahl der Berichte ([L-127.8](../Befunde/LEKTOR-127.md#l-127.8)); Strg+\ und MoodWatch stehen bewusst weiter als „unklar“.
