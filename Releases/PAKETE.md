@@ -179,6 +179,22 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.132 — Testpaket, Zweig `paket_7_2_2_132`
+
+**Geschnürt am 03.11.2026 um 12:41, bereitgestellt neben Gregors letztem Testverzeichnis, ZIP daneben; nicht veröffentlicht.** Nummer am 02.11.2026 vereinbart (Gregor: *„7.2.2.132, ja“*), Zweigname von Gregor am 03.11.2026 bestätigt. Die erste Fassung der Reihe 7.2.2 (neue Funktionen: Hilfe-Menü [A-5](../Intern/BEFUNDE.md#a-5), About-Dialog [E-216](../Intern/BEFUNDE.md#e-216), *Speichern unter* mit passender Endung [E-128](../Intern/BEFUNDE.md#e-128)). Gregor testet damit die Schritte aus dem [TESTPLAN](../Intern/TESTPLAN.md#test-7-2-2-132). Kein Release — veröffentlicht wird nur mit Gregors Ja.
+
+| | |
+|---|---|
+| Testverzeichnis | neben Gregors letztem Testverzeichnis (wie 7.2.1.131). Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` |
+| ZIP | `Releases/Eudora72-7.2.2.132-release.zip` im Arbeitsbaum des Zweigs, byte-gleich daneben neben dem Testverzeichnis; 9.174.979 Byte, SHA-256 `177b5997f8650ebe285ff3d85cda8ecd4a555d88a97f2d0b601a78f7d9115478`; nicht im Repo (`.gitignore`), nicht auf GitHub. Ausgepackt mit dem Testverzeichnis verglichen: 163 Dateien, alle byte-gleich |
+| Gegen den Bau gemessen | `Eudora.exe`, `EudoraRes.dll`, `Imap.dll`, `QCUtils.dll`, `QCSocket.dll`, `QCSSL.dll`, `EuLang.dll`, `plstclnt.dll` im Paket und im ZIP **byte-gleich** mit `Eudora71/Bin/Release` (SHA-256; `Eudora.exe` `1e998bd4d2983ac649e6d53a9c894f6e41dbaa651b1f361f732ec91c8ac9a43c`), Dateiversion 7.2.2.132, Bau `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46` (ohne Sternchen: der Arbeitsbaum war beim Bau sauber). Titelzeile am Prüfstand abgelesen: `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46`. `paket-bauen.ps1` Schritt 8: *„6 ersetzt, 33 schon gleich, keine Debug-Laufzeit“* |
+| `paket-pruefen.ps1` | am ausgepackten ZIP: keine Fehler, Kriterium 0 *„JA“*; vier Warnungen wie bei 7.2.1.131 |
+| Geprüft | 408 Unit-Tests bestanden (`RunTests.cmd`); voller Prüfstandslauf **81 Fälle**, 47 Eudora-Starts (11:49–12:26, Gregor am 03.11.2026: *„Ja, heute erlaubt“*): 77 bestanden, 4 rot (`E-170o`, `E-170m`, `E-170f`, `E-170g`) — Ursache im Messskript, nicht im Programm (siehe CHANGELOG, *Werkzeug beim Schnüren*); nach der Berichtigung von `tools/messen-e184.ps1` die sieben E-170-Fälle am selben Bau 7 von 7 (12:29–12:39). [PRUEFBERICHT](PRUEFBERICHT.md) **BESTANDEN** (408 Unit-Tests, 19 Schranken, 81 Prüfstandsfälle) — derselbe Bericht liegt im Paket |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen`: LEKTOR nur wegen der Paketbuchführung (MD-Dateien) fällig, PRÜFER nur wegen `Version.h` (Versionssprung), CHRONIST betrifft nur Lehren; nichts davon geht in die Programmdateien. LEKTOR läuft vor dem PR |
+| Gebaut im Arbeitsbaum | `.wt/paket`. Wie bei 7.2.1.131: `Plugins\EudoraUnicodeFix*` liegen nur im `Bin/Release` des Hauptbaums — von dort byte-gleich kopiert (die VC++-Laufzeit nimmt `paket-bauen.ps1` aus dem VS-Redist). Neu gemessen: `bauen.ps1` fährt seine Regressionstests über `pruefe-tests-gruen.pl`, und das sucht den Baum im **aktuellen Verzeichnis**; aus dem Hauptordner aufgerufen, lief die alte `EudoraTests.exe` des Hauptbaums (385 Tests, 1 rot) statt der des Arbeitsbaums (408 von 408). Nicht berichtigt, gemeldet |
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.132.
+
 ## 7.2.1.131 — Release `v7.2.1.131`, Zweig `paket_7_2_1_131` (eingereicht als `release_7_2_1_131`, #204)
 
 **Geschnürt am 02.11.2026 um 14:04, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`; veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131)** (Latest, Marke auf dem Merge `7564f54e` von #204) nach Gregors Ja: *„ja, veröffentliche v7.2.1.131“*. Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Nummer am selben Tag vergeben (Gregor: *„ja, paket_7_2_1_131 ist ok“*). Gregor hat damit am 02.11.2026 an seinem echten System den kurzen Durchgang aus dem [TESTPLAN](../Intern/TESTPLAN.md#test-7-2-1-131) getestet: **alle sieben Schritte bestanden** (Belege dort, aus seiner `eudora.log`); die Behebungen selbst ([E-177](../Intern/BEFUNDE.md#e-177), [E-143](../Intern/BEFUNDE.md#e-143) Suchfenster, [E-122](../Intern/BEFUNDE.md#e-122), [E-184](../Intern/BEFUNDE.md#e-184), [E-189](../Intern/BEFUNDE.md#e-189)) sind am Prüfstand gemessen.

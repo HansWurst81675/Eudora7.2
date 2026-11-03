@@ -152,3 +152,9 @@ Zeiten MEZ, Transkript `25e03584`, gemessen. Einzelheiten in [[CHRONIST-2026-11-
 **How to apply, zusätzlich:**
 - **Jeder Testschritt wird gegen die zurückgestellten Befunde gelesen.** Wenn eine Eingabe über einen Weg muss, den ein offener Befund beschädigt, ist der Schritt falsch. Dann kommt die Eingabe über einen Weg, der hält (hier: Entitäten statt Zeichen), oder der Schritt geht an den Prüfstand.
 - **Ein Befehl für Gregor hat absolute Pfade** und lief vorher einmal in genau dieser Form.
+
+## Nachtrag 03.11.2026 (CHRONIST): sechs Befehle, keiner geprobt, eine Ursache behauptet
+
+Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 1). Der Nachtrag vom Vortag hier sagt: *„Ein Befehl für Gregor hat absolute Pfade und lief vorher einmal in genau dieser Form.“* Am 03.11. bekam Gregor zwischen 10:51:51 und 10:56:00 sechs `git push origin --delete …`-Befehle. Jeder scheiterte an etwas, das vorher messbar war: am Serverstand (`git ls-remote origin <zweig>`) und am `pre-push`-Haken, der den Baum prüft und nicht den Push. Um 10:53:11 stand als Tatsache da: *„Weil diese eine Angabe ins Leere ging, hat Git den ganzen Befehl abgelehnt. Die anderen vier stehen noch.“* Um 10:55:10 war das widerlegt (*„offenbar hat dein vorheriger Befehl doch gegriffen“*); gemessen wurde es nie ([[ursache-nur-gemessen-behaupten]]). Der sechste Befehl lief aus dem Baum, in dem gerade ein Agent arbeitete.
+
+**How to apply, zusätzlich:** Ein Befehl, den ich selbst nicht ausführen darf, kann ich auch nicht proben. Dann ist er kein Befehl für Gregor ([[abweisung-ist-eine-antwort]]), sondern eine gemessene Liste für die Oberfläche. Nach einem gescheiterten Befehl Gregors zuerst den Stand messen (`git ls-remote`), dann einen Satz dazu, erst danach etwas Neues.

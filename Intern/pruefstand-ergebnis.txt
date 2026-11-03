@@ -1,13 +1,14 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-03 15:10:35
-freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, Messung E-188/E-193)
-nur=E-193p   (Teillauf, nicht der Gesamtstand)
-faelle=1
-bestanden=0
-fehlgeschlagen=1
-fall=[FEHL] E-193p   fehlt in messung: E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1
-             gemeldet: E193 ERGEBNIS index-falsch=3/11 ohne-falsch=3/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1
-                         Beende per WM_CLOSE an das gemessene Handle.
-                         Zeit vom WM_CLOSE bis zum Ende: 1 s
-                         Beendet: True
-                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\mess\tools\TESTLAEUFE.md
+zeit=2026-11-03 12:39:43
+freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, Paket 7.2.2.132) - E-170 nach Berichtigung von messen-e184.ps1
+nur=E-170   (Teillauf, nicht der Gesamtstand)
+faelle=7
+bestanden=7
+fehlgeschlagen=0
+fall=[ ok ] E-170p   kopie-mit-label=1 log-grund=ok lebt=1
+fall=[ ok ] E-170o   E170 ERGEBNIS copyuid=nein label-quelle=1 uid-alt=3 uid-kopiert=3 quelle-passt=1 uid-ziel=1 kopie-mit-label=1 log-grund=zugeordnet lebt=1
+fall=[ ok ] E-170m   E170M ERGEBNIS labels-quelle=3 richtig=3 falsch=0 ohne=0 eintraege=3 log-grund=zugeordnet lebt=1
+fall=[ ok ] E-170f   E170F ERGEBNIS art=anders fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=6 eintraege=2 log-grund=zugeordnet lebt=1
+fall=[ ok ] E-170g   E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1
+fall=[ ok ] E-170c   E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1
+fall=[ ok ] E-170s   E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1
