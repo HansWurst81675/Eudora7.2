@@ -8550,7 +8550,7 @@ BEGIN
     IDS_MSG_SAVEAS_FILE_FILTER
                             "Text Files (*.txt)|*.txt|HTML Files (*.htm)|*.htm|All Files (*.*)|*.*||"
     IDS_TOC_SAVEAS_FILE_FILTER
-                            "Text Files (*.txt)|*.txt|Mail Files (*.eml)|*.eml|HTML Files (*.htm)|*.htm|All Files (*.*)|*.*||"
+                            "Text Files (*.txt)|*.txt|Mail Files (*.eml)|*.eml|All Files (*.*)|*.*||"
     IDS_MAIN_OPENFILE_FILTER 
                             "Text Files (*.txt)|*.txt|Stationery Files (*.sta)|*.sta|HTML Files (*.htm*)|*.htm*|RTF Files(*.rtf)|*.rtf|All Files (*.*)|*.*|"
 END

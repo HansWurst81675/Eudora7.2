@@ -5189,8 +5189,12 @@ void CEudoraApp::SetExternalCheckMail(BOOL bWaitForIdle)
 
 void CEudoraApp::OnFileOpen()
 {
+	// BEFUND E-214: CFileDialog behaelt nur den Zeiger auf die Vorgabeendung
+	// (MFC dlgfile.cpp:78, gelesen erst in DoModal) - ein Temporaerobjekt waere
+	// dann schon freigegeben. Darum ein benanntes Objekt, das den Dialog ueberlebt.
+	CRString	szE214DefExt(IDS_TEXT_EXTENSION);
 	CFileDialog dlg(TRUE,
-					CRString(IDS_TEXT_EXTENSION),
+					szE214DefExt,
 					NULL,
 					OFN_HIDEREADONLY | OFN_LONGNAMES | OFN_OVERWRITEPROMPT, 
 					//CRString(IDS_STATIONERY_FILE_FILTER32),

@@ -1,10 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-03 08:35:54
-freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-128)
-nur=E-128   (Teillauf, nicht der Gesamtstand)
-faelle=3
-bestanden=3
+zeit=2026-11-03 09:20:47
+freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-128/E-214)
+nur=E-194   (Teillauf, nicht der Gesamtstand)
+faelle=2
+bestanden=2
 fehlgeschlagen=0
-fall=[ ok ] E-128p   E128 ERGEBNIS kopf=0 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1
-fall=[ ok ] E-128k   E128 ERGEBNIS kopf=1 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1
-fall=[ ok ] E-128t   E128 ERGEBNIS kopf=0 mail=text mbx=1 liste=txt lesen=txt verfassen=htm spur=6 rtf=0 lebt=1
+fall=[ ok ] E-194p   E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
+fall=[ ok ] E-194k   E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1

@@ -23,13 +23,14 @@
 #include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <io.h>
 
 #include "TinyTest.h"
 #include "Quelltext.h"
 #include "UnderTestE101.h"
 
 static const char kTocFilter[] =
-	"Text Files (*.txt)|*.txt|Mail Files (*.eml)|*.eml|HTML Files (*.htm)|*.htm|All Files (*.*)|*.*||";
+	"Text Files (*.txt)|*.txt|Mail Files (*.eml)|*.eml|All Files (*.*)|*.*||";	// PRUEFER-90 K1: kein htm
 static const char kMsgFilter[] =
 	"Text Files (*.txt)|*.txt|HTML Files (*.htm)|*.htm|All Files (*.*)|*.*||";
 
@@ -105,9 +106,9 @@ static void Test_E128_FilterIndex()
 	TT_BeginTest("E-128: Eintrag der Dateityp-Liste zur Endung");
 	TT_CHECK_MSG(UTE128_FilterIndex(kTocFilter, "txt") == 1, "txt -> 1");
 	TT_CHECK_MSG(UTE128_FilterIndex(kTocFilter, "eml") == 2, "eml -> 2");
-	TT_CHECK_MSG(UTE128_FilterIndex(kTocFilter, "htm") == 3, "htm -> 3");
-	TT_CHECK_MSG(UTE128_FilterIndex(kTocFilter, "HTM") == 3, "Gross/Klein egal");
-	TT_CHECK_MSG(UTE128_FilterIndex(kTocFilter, "html") == 0, "html ist nicht htm");
+	TT_CHECK_MSG(UTE128_FilterIndex(kTocFilter, "htm") == 0, "Postfachliste hat kein htm (PRUEFER-90 K1)");
+	TT_CHECK_MSG(UTE128_FilterIndex(kTocFilter, "EML") == 2, "Gross/Klein egal");
+	TT_CHECK_MSG(UTE128_FilterIndex(kMsgFilter, "html") == 0, "html ist nicht htm");
 	TT_CHECK_MSG(UTE128_FilterIndex(kTocFilter, "xyz") == 0, "unbekannt -> 0");
 	TT_CHECK_MSG(UTE128_FilterIndex(kMsgFilter, "htm") == 2, "Nachrichtenfilter: htm -> 2");
 	TT_CHECK_MSG(UTE128_FilterIndex(kMsgFilter, "eml") == 0, "Nachrichtenfilter hat kein eml");
@@ -138,6 +139,7 @@ static void Test_E128_Ressourcen(const char* szEudoraDir)
 		TT_CHECK_MSG(UTE128_FilterIndex(pText, "eml") > 0, "Postfachliste: kein Eintrag fuer .eml");
 		TT_CHECK_MSG(UTE128_FilterIndex(pText, "txt") > 0, "Postfachliste: kein Eintrag fuer .txt");
 		TT_CHECK_MSG(!QT_Enthaelt(pToc, "rtf") && !QT_Enthaelt(pToc, "Rtf"), "Postfachliste bietet .rtf an - kein Weg schreibt RTF (E-195)");
+		TT_CHECK_MSG(UTE128_FilterIndex(pText, "htm") == 0, "Postfachliste bietet .htm an - dort geht nie reines HTML hinaus, sondern immer der MIME-Kopf davor (PRUEFER-90 K1)");
 		free(pToc);
 	}
 	char* pMsg = QT_Abschnitt(pRc, "IDS_MSG_SAVEAS_FILE_FILTER \"", "||\"");
@@ -194,7 +196,11 @@ static void Test_E128_Quelltext(const char* szEudoraDir)
 {
 	TT_BeginTest("E-128 (Quelltext): alle drei Wege geben die Vorgabe in den Dialog");
 
+	// PRUEFER-90 K5: auch woraus die Eingaben entstehen - der Rumpf (FindBody)
+	// und die HTML-Erkennung der Fenster; K2: keine IMAP-Abholung vor dem Dialog.
 	static const char* const kToc[] = {
+		"if ( pSumE128->m_TheToc && pSumE128->m_TheToc->IsImapToc() && pSumE128->IsNotIMAPDownloadedAtAll() ) { bE128MitKopf = ( E104SchalterLesen(IDS_INI_INCLUDE_HEADERS) || pSumE128->IsHTML() ) ? true : false; break; }",
+		"const char * pszTextE128 = bKopfE128 ? pszVollE128 : FindBody(pszVollE128);",
 		"bE128MitKopf = E128DateiMitKopf( bKopfE128, pszTextE128, bGeaendertE128 ? (LPCTSTR) szDateiE128 : pszTextE128 );",
 		"E101SpeicherfassungAufbereiten( pszTextE128, bKopfE128, szDateiE128, szSpurE128 );",
 		"const char * pszE128Endung = E128Vorgabeendung( true, SelCount, bE128MitKopf, false );",
@@ -215,6 +221,7 @@ static void Test_E128_Quelltext(const char* szEudoraDir)
 					 kSaveAs, (int)(sizeof(kSaveAs) / sizeof(kSaveAs[0])), NULL);
 
 	static const char* const kRead[] = {
+		"const bool bHtmlE128 = ( m_Sum && m_Sum->IsHTML() ) ? true : false;",
 		"const char * pszE128 = E128Vorgabeendung( false, 1, false, bHtmlE128 );",
 		"SA.Start(m_Sum->m_Subject, TRUE, NULL, FALSE, pszE128)",
 		"E128GewaehltSchreiben( \"Nachrichtenfenster\", SA.GetPathName() );",
@@ -223,6 +230,7 @@ static void Test_E128_Quelltext(const char* szEudoraDir)
 					 kRead, (int)(sizeof(kRead) / sizeof(kRead[0])), NULL);
 
 	static const char* const kComp[] = {
+		"const bool bHtmlE128 = m_Sum->IsHTML() ? true : false;",
 		"const char * pszE128 = E128Vorgabeendung( false, 1, false, bHtmlE128 );",
 		"CSaveAsDialog theDlg( szName, TRUE, FALSE, pszE128, CRString( IDS_MSG_SAVEAS_FILE_FILTER ), NULL );",
 		"theDlg.m_ofn.nFilterIndex = E128FilterIndex( CRString( IDS_MSG_SAVEAS_FILE_FILTER ), pszE128 );",
@@ -234,8 +242,67 @@ static void Test_E128_Quelltext(const char* szEudoraDir)
 	TT_EndTest();
 }
 
+//
+// E-214 (PRUEFER-90 K6): CFileDialog behaelt nur den ZEIGER auf die
+// Vorgabeendung (MFC dlgfile.cpp:78, gelesen erst in DoModal). Ein
+// CRString-Temporaerobjekt als Argument ist dann schon freigegeben. Bis
+// 03.11.2026 an sechs Stellen (SearchDoc, compmsgd Briefpapier, eudora,
+// nickview, signatur, textfile; Original von QUALCOMM). Geprueft wird JEDE
+// .cpp unter Eudora/: in keinem CFileDialog-Aufruf (bis zum ';') darf
+// "CRString(IDS_..._EXTENSION)" stehen.
+//
+static void Test_E214_Vorgabeendung(const char* szEudoraDir)
+{
+	TT_BeginTest("E-214 (Quelltext): kein CFileDialog bekommt die Vorgabeendung als Temporaerobjekt");
+	char szMuster[_MAX_PATH + 8];
+	_snprintf(szMuster, sizeof(szMuster) - 1, "%s\\*.cpp", szEudoraDir);
+	szMuster[sizeof(szMuster) - 1] = 0;
+	struct _finddata_t fd;
+	intptr_t hSuche = _findfirst(szMuster, &fd);
+	int nDateien = 0, nDialoge = 0, nBenannt = 0;
+	if (hSuche == -1)
+	{
+		TT_Fail("keine .cpp unter %s - ungeprueft ist nicht gruen", szEudoraDir);
+		TT_EndTest();
+		return;
+	}
+	do
+	{
+		char* p = QT_LiesNurCode(szEudoraDir, fd.name);
+		if (!p) continue;
+		nDateien++;
+		for (const char* q = strstr(p, "CFileDialog "); q; q = strstr(q + 1, "CFileDialog "))
+		{
+			const char* pAuf = strchr(q, '(');
+			const char* pEnde = strchr(q, ';');
+			if (!pAuf || !pEnde || pAuf > pEnde) continue;	// Klassenname, Vererbung, Kommentar
+			nDialoge++;
+			int nLen = (int)(pEnde - q);
+			char* pAufruf = (char*) malloc(nLen + 1);
+			memcpy(pAufruf, q, nLen); pAufruf[nLen] = 0;
+			const char* c = strstr(pAufruf, "CRString(");
+			if (c && strstr(c, "_EXTENSION"))
+			{
+				const char* cEnde = strchr(c, ')');
+				const char* cExt = strstr(c, "_EXTENSION");
+				if (cEnde && cExt < cEnde)
+					TT_Fail("%s: CFileDialog mit Temporaerobjekt als Vorgabeendung: %.120s (E-214)", fd.name, pAufruf);
+			}
+			if (strstr(pAufruf, "szE214DefExt")) nBenannt++;
+			free(pAufruf);
+		}
+		free(p);
+	} while (_findnext(hSuche, &fd) == 0);
+	_findclose(hSuche);
+	TT_Note("E-214: %d Dateien, %d CFileDialog-Aufrufe, %d mit benannter Endung", nDateien, nDialoge, nBenannt);
+	TT_CHECK_MSG(nDateien > 100, "zu wenige .cpp gelesen - misst der Test den richtigen Baum?");
+	TT_CHECK_MSG(nBenannt == 6, "die sechs berichtigten Stellen tragen szE214DefExt nicht mehr");
+	TT_EndTest();
+}
+
 void RunE128Tests(const char* szEudoraDir)
 {
+	Test_E214_Vorgabeendung(szEudoraDir);
 	Test_E128_Vorgabeendung();
 	Test_E128_DateiMitKopf();
 	Test_E128_KetteMitE101();

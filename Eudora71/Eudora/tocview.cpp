@@ -3085,6 +3085,20 @@ void CTocView::OnFileSaveAs()
 			if ( !pSumE128 )
 				break;
 
+			//
+			// PRUEFER-90 K2: eine IMAP-Nachricht, die noch nicht geholt ist, NICHT
+			// schon fuer die Vorschlagsendung vom Server laden (GetFullMessage ->
+			// DownloadImapMessage, msgdoc.cpp; offline kaeme die Rueckfrage "online
+			// gehen?" vor dem Dialog und nach OK ein zweites Mal). Dann gilt die
+			// Zusammenfassung: mit Kopfzeilen oder als HTML gefuehrt -> Kopf vorn.
+			//
+			if ( pSumE128->m_TheToc && pSumE128->m_TheToc->IsImapToc() &&
+				 pSumE128->IsNotIMAPDownloadedAtAll() )
+			{
+				bE128MitKopf = ( E104SchalterLesen(IDS_INI_INCLUDE_HEADERS) || pSumE128->IsHTML() ) ? true : false;
+				break;
+			}
+
 			bool			bErzeugtE128 = false;
 			CMessageDoc *	pDocE128 = pSumE128->GetMessageDoc(&bErzeugtE128);
 			if ( pDocE128 )
@@ -3115,7 +3129,7 @@ void CTocView::OnFileSaveAs()
 	}
 
 	const char *	pszE128Endung = E128Vorgabeendung( true, SelCount, bE128MitKopf, false );
-	CRString		szE128Filter( IDS_TOC_SAVEAS_FILE_FILTER );
+	CRString		szE128Filter( IDS_TOC_SAVEAS_FILE_FILTER );	// txt, eml, alle (PRUEFER-90 K1: kein htm - hier geht nie reines HTML hinaus)
 
 	CSaveAsDialog theDlg(	szName,
 							TRUE,

@@ -62,7 +62,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 02.11.2026 an 7.2.1.130 | *Speichern unter* als `.htm` am Programm messen; für Gregor entfällt der Test vorerst, der Strg-S-Weg ist am Prüfstand gemessen… |
 | **[E-133](Intern/BEFUNDE.md#e-133)** | Zeigt die Registry auf ein Mailverzeichnis, das es nicht mehr gibt, weigert sich Eudora zu… | 02.11.2026 an 7.2.1.131 | der Merge des Zweigs `e133_mailverzeichnis_fehlt` und das Paket 7.2.2.132; Gregors Entscheidung zu K4; die Messung der Wege *Yes*, *Cancel* und eines… |
 | **[E-129](Intern/BEFUNDE.md#e-129)** | Nach einem Verschieben in einen IMAP-Ordner ohne Verbindung und sofortigem Beenden zeigt d… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | beide Mängel stehen noch — (1) warum beim Beenden ohne Serververbindung nur **ein** statt fünf Verzeichniseinträgen geschrieben wird, ist nicht u… |
-| **[E-128](Intern/BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | 03.11.2026 an 7.2.1.131 | Gregors Blick am Paket 7.2.2.132 ([TESTPLAN](Intern/TESTPLAN.md#e-128-naechstes)). |
+| **[E-128](Intern/BEFUNDE.md#e-128)** | Eine gespeicherte Nachricht heißt .txt und enthält HTML — der Anwender erfährt es nic… | 03.11.2026 an 7.2.1.131 | Gregors Blick am Paket 7.2.2.132 ([TESTPLAN](Intern/TESTPLAN.md#e-128-naechstes)); der IMAP-Schutz (K2) ist am Prüfstand nicht gemessen (die Fälle holen… |
 | **[E-126](Intern/BEFUNDE.md#e-126)** | Eine gesendete Mail, die genau während eines Abgleichs des Ziel-IMAP-Ordners dorthin vers… | 23.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | jede Messung — die Vermutung aus [PRÜFER-33](Befunde/PRUEFER-33.md) Q1 ist nie beobachtet worden, weder bei Gregor noch am Prüfstand, und dort… |
 | **[E-124](Intern/BEFUNDE.md#e-124)** | Microsoft Defender stuft eine Eudora-Fassung als Trojaner ein und beendet das laufende Pro… | 28.10.2026 an 7.2.0.127 | der Vorgang bei Microsoft ist **abgewiesen** (zu viele Dateien im Upload, siehe die Messung unten) — nachzuholen ist eine **neue** Einreichung mit *… |
 | **[E-123](Intern/BEFUNDE.md#e-123)** | Nach einem Neustart mitten in einer Übertragung lokal → IMAP können eingebettete Bilde… | 22.10.2026 an 7.2.0.121 — **veraltet** | der Verlust eingebetteter Bilder nach **Absturz, Defender, Stromausfall oder erzwungenem Herunterfahren**. Abgearbeitet ist nur der ordentliche Beende… |
@@ -120,6 +120,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 ---
 
 ## Im Quellstand, noch in keinem Paket
+
+**Zweig `e128_endung_aus_inhalt`, Quellstand weiter 7.2.1.131 — nur übersetzt, für 7.2.2.132.**
+
+* ***Speichern unter* schlägt die Endung vor, die zum Inhalt passt** ([E-128](Intern/BEFUNDE.md#e-128), Gregors *„ja“* vom 03.11.2026). Aus der Postfachliste `.eml`, wenn die Datei einen Kopf trägt (Kopfzeilen, HTML, Umlaute), sonst `.txt`; aus Nachrichten- und Verfassen-Fenster `.htm` für HTML-Nachrichten, sonst `.txt`. Der Dateityp im Dialog ist vorbelegt. Am Prüfstand gemessen (`E-128p/k/t`, Gegenprobe an 7.2.1.131), Regressionstest `TestE128.cpp`.
+* **Sechs Dialoge bekamen ihre Vorgabeendung als schon freigegebenes Objekt** ([E-214](Intern/BEFUNDE.md#e-214), Originalbestand) — behoben; Schranke über jede `.cpp`.
+* Werkzeug: `testlauf.ps1` beendet Eudora und trägt den Lauf ein, auch wenn das Messskript scheitert ([E-213](Intern/BEFUNDE.md#e-213)).
 
 **Zweig `e203_e204_persona_kennwort`, Quellstand weiter 7.2.1.131 — nur übersetzt, für 7.2.2.132; die Nummer kommt beim Schnüren ([nummer-erst-beim-schnueren](Arbeitsweise/nummer-erst-beim-schnueren.md)).**
 

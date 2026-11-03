@@ -4,7 +4,7 @@ Lauf nach [PRUEFER-89](PRUEFER-89.md). Zweig wt/pruefer-20261103, abgezweigt von
 
 ## Ergebnis vorweg
 
-Die Behebung von [E-128](../Intern/BEFUNDE.md#e-128) tut, was sie verspricht. Der Dialog *Speichern unter* schlägt jetzt eine Endung vor, die zum Inhalt passt, und belegt den Dateityp passend vor. Den Zeiger auf die Vorgabeendung behält MFC 14 nur, statt ihn zu kopieren. Die Behebung übergibt deshalb feste Texte, und das ist richtig. Nebenbei verschwinden damit zwei alte hängende Zeiger in der Postfachliste und im Verfassen-Fenster. Drei weitere solche Stellen bleiben (K6, neu E-214). Die Testsuite läuft mit 391/391. [E-213](../Intern/BEFUNDE.md#e-213) ist richtig gebaut: Ein Fehler im Messskript überspringt das Beenden nicht mehr.
+Die Behebung von [E-128](../Intern/BEFUNDE.md#e-128) tut, was sie verspricht. Der Dialog *Speichern unter* schlägt jetzt eine Endung vor, die zum Inhalt passt, und belegt den Dateityp passend vor. Den Zeiger auf die Vorgabeendung behält MFC 14 nur, statt ihn zu kopieren. Die Behebung übergibt deshalb feste Texte, und das ist richtig. Nebenbei verschwinden damit zwei alte hängende Zeiger in der Postfachliste und im Verfassen-Fenster. Drei weitere solche Stellen bleiben (K6, neu [E-214](../Intern/BEFUNDE.md#e-214)). Die Testsuite läuft mit 391/391. [E-213](../Intern/BEFUNDE.md#e-213) ist richtig gebaut: Ein Fehler im Messskript überspringt das Beenden nicht mehr.
 
 Vier Dinge passen nicht ganz zum Eintrag. Die Postfachliste bietet neu *HTML Files (\*.htm)* an, schreibt aber nie reines HTML (K1). Vor dem Dialog lädt sie bei IMAP eine noch nicht geholte Nachricht vom Server. Das geschieht auch, wenn man danach abbricht, und offline kommt die Rückfrage „online gehen?“ schon vor dem Dialog (K2). Eine deutsche Textmail mit Umlauten bekommt aus der Postfachliste `.eml`, nicht `.txt`, wie der Eintrag sagt (K3). Im Verfassen-Fenster richtet sich die Vorgabe nach dem Stand beim letzten Speichern, nicht nach dem Text im Fenster (K4). Der Regressionstest bleibt grün, wenn man die HTML-Erkennung in beiden Fenstern abschaltet (K5, gemessen).
 
@@ -175,10 +175,25 @@ Bis [E-128](../Intern/BEFUNDE.md#e-128) gehörten auch `tocview.cpp` und `compms
 | K3 | Textmail mit Umlauten aus der Postfachliste → `.eml`, der Eintrag sagt `.txt` | gering | nein; Gregor vor dem Test sagen |
 | K4 | Verfassen-Fenster: Vorgabe nach dem gespeicherten Stand, nicht nach dem Text im Fenster | gering | nein |
 | K5 | Test grün ohne HTML-Erkennung in beiden Fenstern und mit falschem Rumpf in der Vorhersage (gemessen) | gering | nein |
-| K6 (neu E-214) | drei `CFileDialog` bekommen die Vorgabeendung als freigegebenes Temporärobjekt (signatur.cpp, textfile.cpp, eudora.cpp) | gering | nein |
+| K6 (neu [E-214](../Intern/BEFUNDE.md#e-214)) | drei `CFileDialog` bekommen die Vorgabeendung als freigegebenes Temporärobjekt (signatur.cpp, textfile.cpp, eudora.cpp) | gering | nein |
 | K7 | `testlauf.ps1`: Hängen des Messskripts oder ein eigener Abbruch lässt Eudora offen | sehr gering | nein |
 | K8 | [E-170](../Intern/BEFUNDE.md#e-170): der Anstoß fehlt, wenn eine andere Aktion den Abgleich des Ziels auslöst, dann wieder 5 min Frist | gering | nein |
 | K9 | [E-170](../Intern/BEFUNDE.md#e-170): ein laufender, älterer Abgleich verwirft die Vormerkung, dann fehlt das Label (kein falsches) | gering | nein |
 | K10 | [E-170](../Intern/BEFUNDE.md#e-170): neue Logzeilen in MISC (Vorgabe aus), `verfallen=` auch ohne Verfall | sehr gering | nein |
 | Z1 | e133: `GetShortPathName`-Rückgabe nicht gegen den Puffer geprüft (nicht erreichbar) | sehr gering | nein, auch nicht den Merge von e133 |
 | Z2 | alt: zu lange Umgebungsvariable `EUDORA` → still das Programmverzeichnis | sehr gering | nein |
+
+## Eingearbeitet
+
+Hauptsitzung, 03.11.2026, Zweig `e128_endung_aus_inhalt`. K8 bis K10 gehören zu `e170_label_ohne_uidplus` und werden dort abgehakt.
+
+- **K1** erledigt: `IDS_TOC_SAVEAS_FILE_FILTER` (`EudoraRes.rc`) ohne *HTML Files*; `TestE128.cpp` verlangt das (Gegenprobe: Eintrag zurück → 401/402).
+- **K2** erledigt: `tocview.cpp` (`CTocView::OnFileSaveAs`) lädt eine IMAP-Nachricht mit `IsNotIMAPDownloadedAtAll()` nicht; es gilt Kopfzeilen oder `IsHTML()` → `.eml`. Im Test wörtlich verlangt (Gegenprobe: Schutz weg → 401/402). Am Prüfstand nicht gemessen.
+- **K3** entschieden von Gregor (03.11.2026): *„.eml (Recommended)“* — bleibt; im E-128-Eintrag vermerkt.
+- **K4** bleibt, kein Rückschritt; im E-128-Eintrag vermerkt.
+- **K5** erledigt: `bHtmlE128` beider Fenster und die `FindBody`-Zeile wörtlich verlangt (Gegenprobe: Fenster `false` → 401/402).
+- **K6** = [E-214](../Intern/BEFUNDE.md#e-214) erledigt, an **sechs** Stellen statt drei (`SearchDoc.cpp`, `compmsgd.cpp`, `eudora.cpp`, `nickview.cpp`, `signatur.cpp`, `textfile.cpp`); Schranke über jede `.cpp` (Gegenprobe: `signatur.cpp` alt → 401/402).
+- **K7** als Grenze im E-213-Eintrag vermerkt (hängendes Messskript), nicht behoben.
+- **Z1** bleibt (nicht erreichbar). **Z2** (`EUDORA` länger als 260 Zeichen → still das Programmverzeichnis, `fileutil.cpp:515`, Original) bleibt als Hinweis hier; kein eigener Befund, weil kein Anwender eine solche Umgebungsvariable setzt.
+
+Unit-Tests danach 402/402.

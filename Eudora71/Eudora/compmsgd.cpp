@@ -4007,8 +4007,12 @@ void CCompMessageDoc::OnFileSaveAsStationery()
 	CString defExt = CRString(IDS_STATIONERY_EXTENSION);
 	CString dlgTitle = CRString(IDS_SAVE_AS_STATIONERY_TITLE);
 
+	// BEFUND E-214: CFileDialog behaelt nur den Zeiger auf die Vorgabeendung
+	// (MFC dlgfile.cpp:78, gelesen erst in DoModal) - ein Temporaerobjekt waere
+	// dann schon freigegeben. Darum ein benanntes Objekt, das den Dialog ueberlebt.
+	CRString	szE214DefExt(IDS_STATIONERY_EXTENSION);
 	CFileDialog theDlg(	FALSE, 
-						CRString(IDS_STATIONERY_EXTENSION), 
+						szE214DefExt, 
 						szName, 
 						OFN_HIDEREADONLY | OFN_NOREADONLYRETURN | 
 						OFN_OVERWRITEPROMPT | OFN_EXTENSIONDIFFERENT ,
