@@ -16,7 +16,7 @@ Zum Zusatz e133 siehe unten: **nichts hält den Merge auf.**
 
 ## Zusatz: e133
 
-Geprüft: 3c6d988d *„PRUEFER-87 Nachtrag 2 P1: Kurzform-Grenze gegen MAX_PATH, Laengenpruefung in CheckMailDirectory“* (`eudora.cpp`, `fileutil.cpp`, `Tests/TestE133.cpp`, `Tests/Extract.ps1`). Zeilen sind Stand `origin/e133_mailverzeichnis_fehlt`. Nur gelesen, nicht gebaut.
+Geprüft: 3c6d988d *„[PRUEFER-87](PRUEFER-87.md#pruefer-87) Nachtrag 2 P1: Kurzform-Grenze gegen MAX_PATH, Laengenpruefung in CheckMailDirectory“* (`eudora.cpp`, `fileutil.cpp`, `Tests/TestE133.cpp`, `Tests/Extract.ps1`). Zeilen sind Stand `origin/e133_mailverzeichnis_fehlt`. Nur gelesen, nicht gebaut.
 
 **Ergebnis: Nichts hält den Merge von e133 auf.** Die Längenprüfung sitzt an der richtigen Stelle, und ihre Grenze stimmt auf das Byte.
 

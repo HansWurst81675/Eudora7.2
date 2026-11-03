@@ -22,6 +22,15 @@ param(
 
 $ErrorActionPreference = "Stop"
 
+# STILLGELEGT am 02.11.2026 (E-157, PRUEFER-87 K1). Dieses Werkzeug startete
+# Eudora als einziges noch selbst, ohne Freigabe, ohne Protokollzeile in
+# tools/TESTLAEUFE.md, ohne die Pruefstandssperre und ohne Registry zu
+# sichern - jeder Lauf schrieb CommandLine\Current. Gestartet wird nur noch
+# ueber tools\testlauf.ps1 (-MessenSkript fuer das Bedienen). Der Code bleibt
+# stehen, damit die Bedienschritte nachlesbar sind.
+Write-Host 'strg-n-pruefen.ps1 ist stillgelegt: Eudora nur ueber tools\testlauf.ps1 starten (Freigabe, Protokoll, Sperre, Registry). Siehe tools/WERKZEUGE.md.'
+exit 2
+
 $Verzeichnis = (Resolve-Path $Verzeichnis).Path
 $exe = Join-Path $Verzeichnis "Eudora.exe"
 $mail = Join-Path $Verzeichnis "Mailverzeichnis"

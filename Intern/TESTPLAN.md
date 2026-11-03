@@ -1,4 +1,6 @@
-# Testplan für Gregor — Quellstand 7.2.1.131 (Release `v7.2.1.131`, veröffentlicht am 02.11.2026; `VERSION` gleich; geschnürt am 02.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`, ZIP daneben; davor 7.2.1.130, geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`), Stand 03.11.2026 (neu: E-128 für 7.2.2.132, am Prüfstand gemessen; zuletzt getestet am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+# Testplan für Gregor
+
+**Stand:** Quellstand 7.2.1.131 (Release `v7.2.1.131`, veröffentlicht am 02.11.2026; `VERSION` gleich; geschnürt am 02.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`, ZIP daneben; davor 7.2.1.130, geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`), Stand 03.11.2026 (E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 ## <a id="test-7-2-1-131"></a>Dein Test an 7.2.1.131 — ca. 10 Minuten, an deinem echten System
 
@@ -345,11 +347,13 @@ Bis 7.2.1.129 machten *Make Hyperlink* und *Festbreite* aus dem Emoji schon
 auf dem Bildschirm `??` (gemessen am 02.11.2026 am Bau 7.2.1.128+d3a625fd\*,
 die erste Messung am Programm).
 
-## <a id="e-170-naechstes"></a>In 7.2.1.130: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
+## <a id="e-170-naechstes"></a>Erledigt am 03.11.2026: das Label bleibt beim Verschieben im IMAP-Konto ([E-170](BEFUNDE.md#e-170))
 
-**Bekannt offen — nicht als bestanden erwarten (Stand 02.11.2026).** Am Prüfstand gemessen: mit einem Server, der neue Nummern meldet (UIDPLUS), behielt schon 7.2.1.128 das Label; ohne diese Meldung geht es auch an 7.2.1.131 verloren ([E-170](BEFUNDE.md#e-170)). Schritt 3 tritt bei Gregors Server darum vermutlich **nicht** ein; aussagekräftig ist nur Schritt 4 (welcher `grund=` dort steht). Gregor muss den Abschnitt nicht ausführen.
+**Ergebnis 02.11.2026, Gregor an 7.2.1.131 (ausgewertet am 03.11.2026 aus seinem Ergebnis-ZIP): Schritt 3 und 4 bestanden.** Das Bildschirmfoto zeigt die verschobene Mail im Zielordner mit ihrem Label; in der `eudora.log` steht `E-170 Labels beim Verschieben im Konto: mit-label=1 alte-uids=1 neue-uids=1 gesetzt=0 grund=ok`. Gregors Server meldet also neue Nummern (UIDPLUS), und schon der alte Weg nimmt das Label mit. Die Erwartung, die hier vorher stand („Schritt 3 tritt bei Gregors Server vermutlich **nicht** ein“), ist widerlegt. Ungeklärt bleibt, warum das Label am 29.10.2026 an Paket 1.0.127 fehlte ([E-170](BEFUNDE.md#e-170)). Gregor muss den Abschnitt nicht wiederholen.
 
-**Mit dem Paket 7.2.1.130 auszuführen, nicht mit 7.2.1.129.** **IMAP-Konto**,
+**Bis 03.11.2026 stand hier:** Bekannt offen — nicht als bestanden erwarten (Stand 02.11.2026). Am Prüfstand gemessen: mit einem Server, der neue Nummern meldet (UIDPLUS), behielt schon 7.2.1.128 das Label; ohne diese Meldung geht es auch an 7.2.1.131 verloren. Aussagekräftig sei nur Schritt 4 (welcher `grund=` dort steht).
+
+**Die Schritte bleiben zum Nachlesen stehen; auszuführen sind sie nicht mehr.** Ursprünglich: mit dem Paket 7.2.1.130. **IMAP-Konto**,
 zwei Ordner **desselben** Kontos.
 
 1. Eine Mail in einem IMAP-Ordner mit einem Label versehen (z. B. grün), wie

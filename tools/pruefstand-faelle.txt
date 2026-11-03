@@ -395,9 +395,39 @@ E-207p | C:\Temp\E207 | 60 | messung | E207 ERGEBNIS fenster=1 geaendert=1 txt=p
 # "machine name" (IDS_ERR_BAD_POP_ACCT). E-39v/E-39w sind die Positivproben: ohne
 # den Vorlauf ist die geloeschte nicht die aktuelle, und ohne Loeschen ist
 # abschnitt-wieder=0 nichts wert.
-E-39p | C:\Temp\E39 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=1 aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
-E-39v | C:\Temp\E39 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
-E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
+# Seit E-203 behoben ist (02.11.2026) schaltet Change Password auch nach der
+# Meldung zurueck - der Vorlauf macht E39Zwei nicht mehr zur aktuellen. Aus
+# E-39p (war-aktuell=1) wird deshalb E-203p: dieselbe Messung, jetzt das
+# Urteil ueber E-203. Am Bau 7.2.1.131+f31dbff9 (ohne E-203) war-aktuell=1.
+# Ueber die Oberflaeche ist kein Weg mehr BEKANNT, der die E-39-Behebung
+# erreicht (PRUEFER-85: alle 97 SetCurrent-Aufrufe innerhalb je einer Funktion
+# durchgesehen, Wege ueber Funktionsgrenzen nicht; offen bleibt der Fehlerfall
+# in DownloadSingleMessage, LEKTOR-135 L-135.3); sie sichert TestE39.cpp.
+E-203p | C:\Temp\E203 | 40 | messung | E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1 | | | messen=tools\messen-e39.ps1
+# PRUEFER-88 K1: die Positivproben laufen im SELBEN Start wie E-203p.
+# war-aktuell=0 kommt auch heraus, wenn der Vorlauf gar nicht wirkt (keine
+# Meldung, kein Umschalten) - erst E-203v (die Meldung kam) und E-203w
+# (geloescht wurde wirklich) machen E-203p zu einer Aussage ueber E-203.
+E-203v | C:\Temp\E203 | 40 | messung | E39 Vorlauf: kennwort-meldung,vergessen | | | messen=tools\messen-e39.ps1
+E-203w | C:\Temp\E203 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.ps1
+# STILLGELEGT am 02.11.2026 (LEKTOR-135 L-135.2): E-39v und E-39w auf
+# C:\Temp\E39 waren die Positivproben zu E-39p. Seit E-39p zu E-203p wurde,
+# sichern sie keinen Fall mehr; dieselbe Messung machen E-203v/E-203w im
+# selben Start wie E-203p (oben). Die Behebung von E-39 sichert TestE39.cpp.
+
+# -------------------------------------------------------------------------
+# E-204 - das Kennwort einer geloeschten Persoenlichkeit im Speicher
+# -------------------------------------------------------------------------
+# E204Zwei ruft mit "e204-alt-kennwort" ab (Kennwort nur im Speicher), wird
+# ueber Personalities > Delete geloescht und ueber den Assistenten mit Konto
+# e204neu gleichnamig neu angelegt; dann Check Mail. Der POP-Pruefserver
+# schreibt mit, welches PASS ankommt. Am 02.11.2026: Bau 7.2.1.131+f31dbff9
+# (ohne die Behebung, C:\Temp\E204-alt) rueckfrage=0 user=e204neu pass=alt -
+# das alte Kennwort ging ohne Rueckfrage an das neue Konto. E-204w ist die
+# Positivprobe: beide Abrufe vorher mit PASS alt (der zweite ohne Frage, das
+# Kennwort steht im Speicher), Loeschen und Neuanlage gelungen.
+E-204p | C:\Temp\E204 | 90 | messung | E204 ERGEBNIS rueckfrage=1 user=e204neu pass=neu lebt=1 | | | messen=tools\messen-e204.ps1
+E-204w | C:\Temp\E204 | 90 | messung | E204 PROBE ok | | | messen=tools\messen-e204.ps1
 
 # -------------------------------------------------------------------------
 # A-5 - Hilfe-Menue (Help -> Keyboard Shortcuts / Settings Reference), 7.2.2
@@ -414,13 +444,24 @@ E-39w | C:\Temp\E39 | 40 | messung | E39 PROBE ok | | | messen=tools\messen-e39.
 # schreibt Eudora gepuffert - geprueft wird sie nach dem Beenden (A-5p-log).
 A-5p | C:\Temp\EHILFE | 60 | messung | HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1 | | | messen=tools\messen-hilfe.ps1
 A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: Tastenkuerzel.html geoeffnet | | messen=tools\messen-hilfe.ps1
+# E-133 (02.11.2026): zeigt CommandLine\Current auf ein Mailverzeichnis, das
+# es nicht mehr gibt, fragt Eudora beim Start ohne Argument (Doppelklick)
+# statt sich mit zwei Fehlermeldungen zu beenden. messen-e133.ps1 setzt im
+# -Vorbereiten Current auf C:\Temp\E133-gibt-es-nicht, beantwortet die
+# Rueckfrage mit "No" (Ordner neben dem Programm) und liest danach die
+# Registry; pruefstand-lauf.ps1 setzt CommandLine und LaunchManager hinterher
+# zurueck (E-157). Erwartung mit der Behebung (Bau 7.2.1.131+88142c78*);
+# vor der Behebung (456c95e1): meldung=fehlermeldung gestartet=0 lebt=0.
+# Pruefstand C:\Temp\E133 ist eine Kopie von C:\Temp\E132; er muss beim
+# Beenden abgeschossen werden wie schon E132 seit dem 20.10.2026.
+E-133p | C:\Temp\E133 | 5 | messung | E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1 | | | ohne-argument,messen=tools\messen-e133.ps1
+E-133q | C:\Temp\E133 | 5 | log | E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\" | | | ohne-argument,messen=tools\messen-e133.ps1
 
 # -------------------------------------------------------------------------
 # Messungen vor 7.2.2.132 (MESSER5, 02.11.2026) - Behebungen, die in
 # 7.2.1.131 ausgeliefert, aber nie am laufenden Programm gemessen waren.
 # Vorher-Bau jeweils 7.2.1.128+640e1a0e (C:\Temp\EM*-alt), nachher
 # 7.2.1.131+f31dbff9 (C:\Temp\EM*, Quellstand gleich main 88142c78).
-# -------------------------------------------------------------------------
 # E-170 mit UIDPLUS: das Label bleibt an BEIDEN Bauten - der alte Weg
 # (ImapTransferSummaryData) nahm es schon mit. Der Fall ist am alten Bau rot
 # nur wegen log-grund (dort gibt es die Logzeile nicht); ein Regressionstest, keine

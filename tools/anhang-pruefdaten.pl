@@ -68,7 +68,7 @@ my $CR = chr(13);
 my $LF = chr(10);
 my $CRLF = $CR . $LF;
 
-my ($erzeugen, $pop, $port, $nur_eml);
+my ($erzeugen, $pop, $port, $nur_eml, $protokoll);
 my @eml;
 for (my $i = 0; $i < @ARGV; $i++) {
   my $a = $ARGV[$i];
@@ -76,6 +76,7 @@ for (my $i = 0; $i < @ARGV; $i++) {
   elsif ($a eq '--pop')      { $pop = 1; $port = $ARGV[$i+1] if defined $ARGV[$i+1] && $ARGV[$i+1] =~ /^\d+$/; $i++ if defined $port }
   elsif ($a eq '--eml')      { push @eml, $ARGV[++$i] }
   elsif ($a eq '--nur-eml')  { $nur_eml = 1 }
+  elsif ($a eq '--protokoll') { $protokoll = $ARGV[++$i] }
   else                       { die "unbekannte Option: $a\n" }
 }
 $port = 11110 unless $port;
@@ -302,6 +303,17 @@ my $horch = IO::Socket::INET->new(
   Proto => 'tcp', Listen => 5, ReuseAddr => 1)
   or die "Port $port laesst sich nicht oeffnen: $!\n";
 
+# --protokoll <datei> (E-204, 02.11.2026): die Ausgabe geht in diese Datei,
+# ungepuffert - tools\messen-e204.ps1 liest waehrend des Laufs, welche
+# USER/PASS ankommen. Der Server oeffnet die Datei selbst: mit
+# Start-Process -RedirectStandardOutput erbte er die Ausgabe-Pipe des
+# aufrufenden Skripts, und pruefstand-lauf.ps1 ("... -Vorbereiten |
+# Out-Null") wartete, bis er beendet war (am 02.11.2026 so gehangen).
+if (defined $protokoll) {
+  open STDOUT, '>>', $protokoll or die "$protokoll: $!\n";
+  open STDERR, '>&', \*STDOUT or die "STDERR: $!\n";
+}
+$| = 1;
 print "POP3-Pruefstand auf 127.0.0.1:$port, " . scalar(@post) . " Nachrichten.\n";
 print "Konto in Eudora: Server 127.0.0.1, Port $port, Benutzer pruef, SSL AUS.\n";
 print "Beenden mit Strg-C.\n\n";
