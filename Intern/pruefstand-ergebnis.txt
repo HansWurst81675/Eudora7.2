@@ -1,9 +1,14 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-03 10:56:58
-freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, About-Dialog) - Faelle E-216p/E-216l
-nur=E-216   (Teillauf, nicht der Gesamtstand)
-faelle=2
-bestanden=2
+zeit=2026-11-03 12:39:43
+freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, Paket 7.2.2.132) - E-170 nach Berichtigung von messen-e184.ps1
+nur=E-170   (Teillauf, nicht der Gesamtstand)
+faelle=7
+bestanden=7
 fehlgeschlagen=0
-fall=[ ok ] E-216p   ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
-fall=[ ok ] E-216l   ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
+fall=[ ok ] E-170p   kopie-mit-label=1 log-grund=ok lebt=1
+fall=[ ok ] E-170o   E170 ERGEBNIS copyuid=nein label-quelle=1 uid-alt=3 uid-kopiert=3 quelle-passt=1 uid-ziel=1 kopie-mit-label=1 log-grund=zugeordnet lebt=1
+fall=[ ok ] E-170m   E170M ERGEBNIS labels-quelle=3 richtig=3 falsch=0 ohne=0 eintraege=3 log-grund=zugeordnet lebt=1
+fall=[ ok ] E-170f   E170F ERGEBNIS art=anders fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=6 eintraege=2 log-grund=zugeordnet lebt=1
+fall=[ ok ] E-170g   E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1
+fall=[ ok ] E-170c   E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1
+fall=[ ok ] E-170s   E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1

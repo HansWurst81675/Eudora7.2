@@ -1,6 +1,6 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.2.132 (Testpaket, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; nur übersetzt am 03.11.2026, noch nicht geschnürt, nicht veröffentlicht; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 03.11.2026 (E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.132 (Testpaket, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben, nicht veröffentlicht; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 03.11.2026 (E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 ## <a id="test-7-2-2-132"></a>Dein Test an 7.2.2.132 — ca. 15 Minuten, an deinem echten System
 
@@ -33,7 +33,12 @@ ausführlichen Abschnitte weiter unten ([A-5](#a-5-naechstes),
 [E-128](#e-128-naechstes), [E-216](#e-216-naechstes)) sind freiwillig.
 
 > **Am Prüfstand erledigt, nur zur Kenntnis — keine Schritte für dich.**
-> PRUEFSTAND-ERGEBNIS
+> Jede Neuerung in 7.2.2.132 hat einen Prüfstandsfall. Voller Lauf am Bau
+> `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46` (dem Bau im Paket): **81
+> Fälle, 81 bestanden** — vier E-170-Fälle erst nach einer Berichtigung im
+> Messskript, das ein Anführungszeichen mitlas (das Programm war richtig, siehe
+> [CHANGELOG](../CHANGELOG.md)); dazu 408 Unit-Tests und 19 Schranken,
+> [PRUEFBERICHT](../Releases/PRUEFBERICHT.md) **BESTANDEN**.
 >
 > | Befund | Fall | Was der Prüfstand misst |
 > |---|---|---|
