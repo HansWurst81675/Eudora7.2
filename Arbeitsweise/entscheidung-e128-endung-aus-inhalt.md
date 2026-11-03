@@ -16,3 +16,5 @@ Umfang laut Vorschlag in Intern/BEFUNDE.md (E-128): `.html` für eine HTML-Nachr
 
 **Why:** offene Entscheidung seit 20.10.2026; nicht wieder fragen.
 **How to apply:** Einbau auf eigenem Zweig (Name vorher abstimmen, [[zweig-vorher-abstimmen]]); Entscheidung in Intern/WEITERMACHEN.md (Entscheidungsliste) und im E-128-Eintrag vermerken. Achtung: im Chat nannte ich nur `.html`/`.txt`, `.eml` (mit Kopfzeilen) stand im Befund — beim Einbau `.eml` mitnehmen und das Gregor in einem Satz sagen.
+
+**Nachtrag 03.11.2026 (PRÜFER-90 K3):** eine reine Textmail mit Umlauten bekommt aus der Postfachliste einen MIME-Kopf (E-101) und damit `.eml`. Gregor auf die Frage „.eml oder .txt?“: *„.eml (Recommended)“* — bleibt `.eml`.

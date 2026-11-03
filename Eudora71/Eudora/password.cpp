@@ -452,18 +452,39 @@ BOOL ChangePassword()
 			g_Personalities.SetCurrent( NewPersona );
 	}
 
+	// E-203: auch die beiden fruehen Ausgaenge schalten auf die vorige
+	// Persoenlichkeit zurueck. Sonst blieb die im Dialog gewaehlte bis zum
+	// naechsten Umschalten die aktuelle (gemessen am 02.11.2026 am
+	// Pruefstand C:\Temp\E39: war-aktuell=1 nach der Meldung), und jede
+	// Einstellung las zuerst aus ihrem Abschnitt.
 	const char* POPAccount = GetIniString(IDS_INI_POP_ACCOUNT);
 	if (!POPAccount || !*POPAccount)
 	{
 		ErrorDialog(IDS_ERR_NO_POP_ACCT);
+		if ( bMultiple )
+			g_Personalities.SetCurrent( OrgPersona );
 		return (FALSE);
 	}
 
+	// E-210: POPAccount kommt aus GetIniString (Puffer 512 Byte, rs.cpp),
+	// Username hat 128. Ein laengeres Konto lief mit strcpy ueber den Stapel
+	// hinaus (PRUEFER-88 K5, Originalbestand). Jetzt gilt es als unbrauchbar -
+	// dieselbe Meldung wie beim Konto ohne "@", und zurueckgeschaltet wird wie
+	// bei E-203.
+	if (strlen(POPAccount) >= sizeof(Username))
+	{
+		ErrorDialog(IDS_ERR_BAD_POP_ACCT, POPAccount);
+		if ( bMultiple )
+			g_Personalities.SetCurrent( OrgPersona );
+		return (FALSE);
+	}
 	strcpy(Username, POPAccount);
 	char *At = strrchr(Username, '@');
 	if (!At || !At[1])
 	{
 		ErrorDialog(IDS_ERR_BAD_POP_ACCT, POPAccount);
+		if ( bMultiple )
+			g_Personalities.SetCurrent( OrgPersona );
 		return (FALSE);
 	}
 
