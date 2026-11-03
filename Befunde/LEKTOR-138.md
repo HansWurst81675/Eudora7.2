@@ -89,7 +89,7 @@ Arbeitsbaum `.wt/lektor`, Zweig `wt/lektor-20261103c`, abgezweigt von `origin/e1
 **Gewicht: Kleinkram.** (gemessen an `git diff origin/main...origin/about_dialog_github`)
 
 - CHANGELOG (Zweig): *„*Mail folder from* bricht um statt abgeschnitten zu werden“*; FUNKTIONEN (Zweig): *„die Zeile *Mail folder from* bricht um, statt abgeschnitten zu werden“*.
-- E-216 (Zweig; im About-Dialog überdecken sich die Knöpfe, und es fehlt der Weg zum neuesten Release): *„**Nicht gemessen:** der Umbruch selbst — die Herkunft im Prüfstand ist 30 Zeichen kurz und passt in eine Zeile (`noetig=13`)“*. Gemessen ist nur, dass die Zeile zwei Zeilen hoch ist (`herkunft-zeilen=2`). Der TESTPLAN-Abschnitt *e-216-naechstes* prüft den Umbruch bei Gregor (*„ist sie länger als die Dialogbreite, steht der Rest in einer zweiten Zeile“*) — gut.
+- [E-216](../Intern/BEFUNDE.md#e-216) (Zweig; im About-Dialog überdecken sich die Knöpfe, und es fehlt der Weg zum neuesten Release): *„**Nicht gemessen:** der Umbruch selbst — die Herkunft im Prüfstand ist 30 Zeichen kurz und passt in eine Zeile (`noetig=13`)“*. Gemessen ist nur, dass die Zeile zwei Zeilen hoch ist (`herkunft-zeilen=2`). Der TESTPLAN-Abschnitt *e-216-naechstes* prüft den Umbruch bei Gregor (*„ist sie länger als die Dialogbreite, steht der Rest in einer zweiten Zeile“*) — gut.
 - Nebenbei: die neue Logzeile *„About: Latest Release geoeffnet|fehler=…“* schreibt laut Eintrag mit `DEBUG_MASK_MISC`, also in der Vorgabe nicht ins Protokoll — dieselbe Lage, die K10 bei [E-170](../Intern/BEFUNDE.md#e-170) behoben hat. Da ein Fehler zusätzlich eine Meldung zeigt, hier ohne Folgen.
 - *„Zuletzt gemessen … Bau aus `e992d982` mit den Änderungen vor dem Commit“*: gemessen wurde ein Stand ohne Kennung; ob er `70c83b16` gleicht, ist nicht belegt (Vermutung: ja).
 
@@ -119,7 +119,7 @@ Arbeitsbaum `.wt/lektor`, Zweig `wt/lektor-20261103c`, abgezweigt von `origin/e1
 - `tools/ZWEIGE.md:214` beschreibt `e170_label_ohne_uidplus` nur mit dem Anlass vom 02.11.2026 — PRÜFER-89/90 fehlen; Klasse [L-137.4](LEKTOR-137.md#l-137.4), beim Merge mitziehen.
 - `Befunde/PRUEFER-90.md` *Eingearbeitet auf e170* (`:263-291`): K8 gegen Nachtrag 2 (*„Beide verwerfen jetzt mit ihrem eigenen Beginn … K8 erledigt“*), K10 gegen `TestE170.cpp:331` — trifft (belegt).
 - About-Zweig: TESTPLAN-Abschnitt *e-216-naechstes* (drei Schritte, *Ort: lokal*), WERKZEUGE `messen-about` (*„Drückt *Latest Release* nicht“*), Zählung in der Stufentabelle (+1 unkritisch, 61/245) — gelesen, trifft.
-- Die übrigen MD-Dateien ohne `Arbeitsweise/` und `Befunde/` nur über `doku-pruefen.pl` und gezielte Suche nach [E-170](../Intern/BEFUNDE.md#e-170)/E-216 und den Zweignamen geprüft, nicht einzeln gelesen.
+- Die übrigen MD-Dateien ohne `Arbeitsweise/` und `Befunde/` nur über `doku-pruefen.pl` und gezielte Suche nach [E-170](../Intern/BEFUNDE.md#e-170)/[E-216](../Intern/BEFUNDE.md#e-216) und den Zweignamen geprüft, nicht einzeln gelesen.
 
 ## Was nur Gregor entscheiden kann
 
@@ -165,3 +165,40 @@ Unit-Tests vorher 405/405 (Stand a04af7bc), nachher 405/405; Release-Bau ohne Fe
 **Vorschlag:** die beiden E-189-Zeilen ebenso ohne `ziel=` schreiben und die Quelltextprüfung in `TestE170.cpp` (kein `ziel=`) auf den ganzen Block bzw. eine Schranke über alle `szSpur.Format` mit `->Name()` ausdehnen; oder im Eintrag ausdrücklich *„nur [E-170](../Intern/BEFUNDE.md#e-170)“* schreiben.
 
 Neu: ein Fund ([L-138.10](#l-138.10)); [L-138.2](#l-138.2) teilweise. Was nur Gregor entscheiden kann: weiter nichts — die Frage aus dem Hauptteil (Ordnernamen) hat er beantwortet.
+
+## <a id="eingearbeitet-about"></a>Eingearbeitet auf `about_dialog_github` (Dialogbauer, 03.11.2026) — nur L-138.7 und L-138.8
+
+| Fund | was geschah |
+|---|---|
+| [L-138.7](#l-138.7) | CHANGELOG, FUNKTIONEN und WEITERMACHEN sagen nicht mehr „bricht um“, sondern dass *Log* und *Mail folder from* Platz für zwei Zeilen haben. CHANGELOG nennt, was gemessen ist: der Umbruch für *Log* am langen Prüfstandspfad (114 Zeichen, 26 Pixel nötig, 33 Platz), für *Mail folder from* nicht. Der gemessene Stand hat jetzt eine Kennung (`7.2.1.131+f209fd82*`, also die Änderungen auf dem Merge `f209fd82` vor dem Commit). Die Logzeile bleibt bei `DEBUG_MASK_MISC`, ein Fehler zeigt zusätzlich eine Meldung. |
+| [L-138.8](#l-138.8) | `main` (#211–#214) hereingeholt; der E-216-Satz steht als eigener Satz vor dem heutigen Kopf von WEITERMACHEN. |
+
+## Nachtrag 2 (03.11.2026, about_dialog_github nach caf1c0d7)
+
+`origin/about_dialog_github` (Spitze `caf1c0d7` *„[E-216](../Intern/BEFUNDE.md#e-216) nach [PRUEFER-91](PRUEFER-91.md#pruefer-91): Zeile "Log:" zweizeilig (K1), Test und Messung geschaerft (K3), Erfolg aus ShellExecuteEx (K4)“*) in `wt/lektor-20261103c` gemergt. Konflikt nur in diesem Bericht: der Abschnitt *Eingearbeitet auf `about_dialog_github`* des Dialogbauers und mein Nachtrag 1 stehen jetzt beide da. Gelesen gegen den Bestand: [E-216](../Intern/BEFUNDE.md#e-216) (im About-Dialog überdecken sich die Knöpfe, es fehlt der Weg zum neuesten Release), CHANGELOG, FUNKTIONEN, TESTPLAN *e-216-naechstes*, WERKZEUGE `messen-about`, WEITERMACHEN-Kopf, PRÜFER-91 *Eingearbeitet*.
+
+| Fund | Stand | Stelle |
+|---|---|---|
+| [L-138.7](#l-138.7) „bricht um“ als Tatsache | **erledigt in CHANGELOG und FUNKTIONEN, im Eintrag ein Rest** ([L-138.11](#l-138.11)) | `CHANGELOG.md:176` *„haben Platz für zwei Zeilen (am Prüfstand gemessen ist der Platz; dass ein langer Text tatsächlich in die zweite Zeile umbricht, ist für *Log* mit langem Pfad gemessen, für *Mail folder from* nicht)“*; `Doku/FUNKTIONEN.md:269` *„haben Platz für zwei Zeilen“*; gemessener Stand mit Kennung `7.2.1.131+f209fd82*` |
+| [L-138.8](#l-138.8) WEITERMACHEN vor #214 | **erledigt** | `Intern/WEITERMACHEN.md:3` beginnt mit dem E-216-Satz, danach der heutige Kopf *„Laufend: `e170_label_ohne_uidplus`, `about_dialog_github`“*; die ältere Liste mit `e128_…` steht weiter hinten als Rückblick |
+
+Trifft (gelesen): TESTPLAN Schritte 1–3 (*Ort: lokal*, Schritt 2 *„Eudora zeigt dabei keine Meldung“* nach K4); PRÜFER-91 *Eingearbeitet* (`Befunde/PRUEFER-91.md:107-121`) gegen den Eintrag — K1, K3, K4 behoben, K2/K5/K6/K7 unter *Grenze* mit Häufigkeit und Folge (*„sehr selten, *Copy info* hat den vollen Text“*, *„harmlos“*, *„ohne Wirkung“*, *„nur bei einem *Pre-release*“*) — so gewichtet, wie Gregor es will. Interne Angaben: im Eintrag stehen nur Prüfstandspfade unter `C:\Temp` und die öffentliche Release-Adresse (`grep 'Users'` im Eintrag → nichts).
+
+### <a id="l-138.11"></a>L-138.11 — E-216: „Nicht gemessen: der Umbruch selbst“ steht noch allgemein
+
+**Gewicht: Kleinkram.** (gemessen am Text)
+
+- `Intern/BEFUNDE.md` ([E-216](../Intern/BEFUNDE.md#e-216)) *„**Nicht gemessen:** der Umbruch selbst — die Herkunft im Prüfstand ist 30 Zeichen kurz und passt in eine Zeile (`noetig=13`)“*; derselbe Eintrag danach: *„die Zeile *Log* hat 114 Zeichen und braucht 26 Pixel bei 33 Platz“* — für *Log* ist der Umbruch gemessen, und das CHANGELOG sagt es richtig.
+
+**Vorschlag:** *„Nicht gemessen: der Umbruch von *Mail folder from* (die Herkunft im Prüfstand ist 30 Zeichen kurz …)“*.
+
+### <a id="l-138.12"></a>L-138.12 — CHANGELOG nennt nur `E-216p`, WERKZEUGE-Kopfsatz nur *Mail folder from*
+
+**Gewicht: Kleinkram.** (gemessen)
+
+- `CHANGELOG.md:176` endet *„Regressionstest `TestE216.cpp`, Prüfstandsfall `E-216p` (`tools/messen-about.ps1`)“* — der neue Fall `E-216l` (langer Pfad, `LogLevel=25759`), der allein den Umbruch von *Log* misst, fehlt.
+- `tools/WERKZEUGE.md:171` fragt im fetten Kopf *„… und ist die Zeile *Mail folder from* mehr als eine Zeile hoch?“*; das Skript misst seit K3 alle sechs Pfadzeilen (*„Ausgabe `ABOUT ERGEBNIS … log-zeilen= passt= rand= …`; Fälle `E-216p` und `E-216l`“*, dieselbe Zeile).
+
+**Vorschlag:** CHANGELOG *„Prüfstandsfälle `E-216p`, `E-216l`“*; WERKZEUGE-Kopf *„… und passen die Pfadzeilen (*Log*, *Mail folder from* zweizeilig)?“*.
+
+Neu: zwei Funde (Kleinkram). Was nur Gregor entscheiden kann: weiter nichts Neues. (PRÜFER-91 K7 — *Latest Release* zeigt kein *Pre-release* — betrifft nur, wenn 7.2.2.x als Vorabversion erschiene; die Form des Releases entscheidet Gregor ohnehin beim Veröffentlichen, eine Frage ist es erst dann.)
