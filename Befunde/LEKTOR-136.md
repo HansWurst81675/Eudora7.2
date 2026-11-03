@@ -145,8 +145,47 @@ Zu `e133_…` in der Sache (gelesen, nicht gemessen): `README.md` *„**Ab 7.2.2
 
 ## Was nur Gregor entscheiden kann
 
-1. **[E-133](../Intern/BEFUNDE.md#e-133), Zweig `e133_mailverzeichnis_fehlt` — was soll *No* tun, wenn das Mailverzeichnis nur auf einem gerade nicht angeschlossenen Laufwerk liegt?** Im Quellstand nimmt Eudora dann den Ordner neben dem Programm und merkt ihn sich; steckt das Laufwerk beim nächsten Start wieder, fragt es nicht mehr und startet mit den (oft leeren) Postfächern neben dem Programm. Vorschlag aus PRÜFER-87 K4: bei *No* nichts merken, oder ein vierter Knopf *Retry*. Verloren geht nichts. (`e133_…:Intern/BEFUNDE.md:446` *„Zur Entscheidung Gregors“*.)
+**Stand 03.11.2026 (Nachtrag 1):** Frage 1 und 3 sind entschieden, Frage 4 ist an Gregor gestellt; Einzelheiten jeweils am Ende des Punkts.
+
+1. **[E-133](../Intern/BEFUNDE.md#e-133), Zweig `e133_mailverzeichnis_fehlt` — was soll *No* tun, wenn das Mailverzeichnis nur auf einem gerade nicht angeschlossenen Laufwerk liegt?** Im Quellstand nimmt Eudora dann den Ordner neben dem Programm und merkt ihn sich; steckt das Laufwerk beim nächsten Start wieder, fragt es nicht mehr und startet mit den (oft leeren) Postfächern neben dem Programm. Vorschlag aus PRÜFER-87 K4: bei *No* nichts merken, oder ein vierter Knopf *Retry*. Verloren geht nichts. (`e133_…:Intern/BEFUNDE.md:446` *„Zur Entscheidung Gregors“*.) **Entschieden 03.11.2026:** bleibt wie gebaut — Gregor: *„nein. man kann eudora.exe laufwerk:verzeichnis immer noch starten“*.
 2. **`E-208` (nur auf den Zweigen `e133_mailverzeichnis_fehlt` bzw. `e203_e204_persona_kennwort`) — fehlt der Registryeintrag `CommandLine\Current` ganz (frischer Rechner, Doppelklick), soll Eudora dann das Verzeichnis unter Application Data nehmen, statt mit „Cannot start Eudora the first time with attachments“ nicht zu starten?** Das Verhalten ist Original von QUALCOMM; bis zur Antwort bleibt es (`e133_…:Intern/BEFUNDE.md:401` *„Was noch fehlt: Gregors Entscheidung“*).
-3. **Soll der veröffentlichte Release-Text zu 7.2.1.131 auf GitHub zu [E-170](../Intern/BEFUNDE.md#e-170) berichtigt werden?** Er sagt, mit Servern, die die neuen Nummern melden, bleibe das Label — an Gregors Server ging es am 29.10. trotzdem einmal verloren, Ursache offen ([L-136.3](#l-136.3)).
-4. **Sollen die zwei Zweige auf GitHub gelöscht werden, die noch eine Gedächtnisdatei mit einer persönlichen Angabe tragen** (`origin/wt/lektor-20261102k`, `origin/wt/pruefer-20261102d`; [L-130.1](LEKTOR-130.md#l-130.1))? `main` und alle drei hier geprüften Zweige sind frei davon.
+3. **Soll der veröffentlichte Release-Text zu 7.2.1.131 auf GitHub zu [E-170](../Intern/BEFUNDE.md#e-170) berichtigt werden?** Er sagt, mit Servern, die die neuen Nummern melden, bleibe das Label — an Gregors Server ging es am 29.10. trotzdem einmal verloren, Ursache offen ([L-136.3](#l-136.3)). **Entschieden 03.11.2026:** Ergänzung im nächsten PR — in `Releases/7.2.1.131/RELEASE-NOTIZEN.md:41-44` erledigt (`1a9e3ab0`); den Text auf GitHub selbst ändert erst Gregors Ja.
+4. **Sollen die zwei Zweige auf GitHub gelöscht werden, die noch eine Gedächtnisdatei mit einer persönlichen Angabe tragen** (`origin/wt/lektor-20261102k`, `origin/wt/pruefer-20261102d`; [L-130.1](LEKTOR-130.md#l-130.1))? `main` und alle drei hier geprüften Zweige sind frei davon. **Stand 03.11.2026:** die Frage an Gregor läuft.
 5. **Administratorrechte für die Messung von [E-176](../Intern/BEFUNDE.md#e-176)** (Lesen aus schon freigegebenem Speicher beim Schließen einer verworfenen neuen Nachricht) — unverändert offen, `Intern/WEITERMACHEN.md:96` *„eine Sitzung mit Administratorrechten (Gregors Ja)“*.
+
+## <a id="nachtrag-1-03-11-2026"></a>Nachtrag 1 (03.11.2026) — eb83c995 und 1a9e3ab0 gegengelesen
+
+`git merge origin/ergebnisse_1_131b` in `wt/lektor-20261103` (Spitze `cdc06b77`), ohne Konflikt (gemessen). Gelesen: `git diff eb83c995^ 1a9e3ab0` über CHANGELOG, FAQ, README, BEFUNDE, TESTPLAN, WEITERMACHEN und Release-Notizen.
+
+| Fund | Stand | Stelle (gemessen) |
+|---|---|---|
+| [L-136.1](#l-136.1) [E-189](../Intern/BEFUNDE.md#e-189) rechnet mit Gregor-Server ohne UIDPLUS | **erledigt** | `BEFUNDE.md:412` *„(Gregors Server meldet sie, am 02.11.2026 an 7.2.1.131 gemessen, siehe [[E-170](../Intern/BEFUNDE.md#e-170)])“*; *„Was noch fehlt“* jetzt *„bestätigen am Prüfserver ohne `COPYUID` (Fall [`E-189`](../Intern/BEFUNDE.md#e-189)) oder an einem echten Server ohne UIDPLUS“*; erzeugt gleich in `CHANGELOG.md:42`, `WEITERMACHEN.md:91`; `grep -c 'vermutlich Gregors'` → 0 |
+| [L-136.2](#l-136.2) Spur in [E-170](../Intern/BEFUNDE.md#e-170) | **erledigt**, aber mein Fund war falsch begründet ([L-136.10](#l-136.10)) | `BEFUNDE.md:422` *„`CImapSameServerTransferMsgAction::DoWork`, `EuImap/src/ImapActionQueue.cpp:1957`“* |
+| [L-136.3](#l-136.3) README/FAQ „mit UIDPLUS bleibt das Label“ | **erledigt** | `README.md:166` *„mitgenommen wird es meistens, … an einem solchen Server ging es trotzdem einmal verloren (29.10.2026, Ursache offen).“*; `Doku/FAQ.md:212-213` *„bleibt das Label meistens; … an einem solchen Server ging es aber am 29.10.2026 einmal verloren, die Ursache ist offen“*; Release-Notizen siehe [L-136.11](#l-136.11) |
+| [L-136.4](#l-136.4) TESTPLAN-Kopf und Abschnitt | **erledigt** | `TESTPLAN.md:3` *„Stand 03.11.2026 ([E-170](../Intern/BEFUNDE.md#e-170) aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet“*; `:350` *„Erledigt am 03.11.2026: das Label bleibt …“*; `:356` *„Die Schritte bleiben zum Nachlesen stehen; auszuführen sind sie nicht mehr.“* |
+| [L-136.5](#l-136.5) WEITERMACHEN „Laufend: messungen_vor_…“ | **teilweise** ([L-136.12](#l-136.12)) | `WEITERMACHEN.md:3` *„Gemergt als #210: Zweig `messungen_vor_7_2_2_132`“* — erledigt; der Kopf sagt weiter *„**Stand 02.11.2026 abends.**“*, und kein laufender Zweig steht mehr in der Zeile |
+| [L-136.6](#l-136.6) bis [L-136.9](#l-136.9) | unverändert (betreffen `e203_…`/`e133_…` bzw. die Zahl nach dem Merge) | — |
+
+### <a id="l-136.10"></a>L-136.10 — Berichtigung zu L-136.2: die Klasse `CImapTransferMsgAction` gibt es, nur nicht mit eigenem `DoWork`
+
+**Gewicht: Kleinkram, eigener Fehler.** (gemessen am Quelltext)
+
+- `Eudora71/EuImap/src/ImapActionQueue.h:193` *„class CImapTransferMsgAction : public CImapAction“*, `:211` *„virtual HRESULT DoWork() = 0;“*, `:212` `DoPostProcessing`. Ich hatte nur `ImapActionQueue.cpp` nach `::DoWork` durchsucht und daraus „die Klasse gibt es nicht“ gemacht; richtig ist: sie ist die abstrakte Basisklasse, `DoWork` ist dort rein virtuell, der Aufruf mit `m_bAutoExpunge` steht in der abgeleiteten `CImapSameServerTransferMsgAction::DoWork` (`ImapActionQueue.cpp:1957`). Die Berichtigung in `eb83c995` trifft also; die übrigen Erwähnungen (`BEFUNDE.md:386`, `:412`, `:414`, `:422` *„CImapTransferMsgAction::DoPostProcessing“*) sind richtig und bleiben.
+
+### <a id="l-136.11"></a>L-136.11 — In den Release-Notizen bezieht sich „das tat schon 7.2.1.128“ jetzt auf den falschen Satz
+
+**Gewicht: Kleinkram.** (gemessen am Text)
+
+- `Releases/7.2.1.131/RELEASE-NOTIZEN.md:41-46` *„bleibt das Label meistens erhalten, wenn der Server die neuen Nummern meldet — an einem solchen Server ging es am 29.10.2026 trotzdem einmal verloren, die Ursache ist offen (Nachtrag 03.11.2026; Nachtrag 02.11.2026, am Prüfstand gemessen: das tat schon 7.2.1.128; …)“* — durch den Einschub steht die Klammer hinter dem Verlust; „am Prüfstand gemessen: das tat schon 7.2.1.128“ liest sich nun, als sei der Verlust am Prüfstand gemessen. Gemeint ist das Mitnehmen.
+
+**Vorschlag:** die Klammer vor den Gedankenstrich ziehen: *„… wenn der Server die neuen Nummern meldet (am Prüfstand am 02.11.2026 gemessen: das tat schon 7.2.1.128; …) — an einem solchen Server ging es am 29.10.2026 trotzdem einmal verloren, die Ursache ist offen (Nachtrag 03.11.2026)“*. Für den Text auf GitHub gilt Gregors Ja.
+
+### <a id="l-136.12"></a>L-136.12 — WEITERMACHEN: Kopf „Stand 02.11.2026 abends“, laufende Zweige nicht genannt
+
+**Gewicht: Kleinkram** (Rest von [L-136.5](#l-136.5)). (gemessen)
+
+- `Intern/WEITERMACHEN.md:3` *„**Stand 02.11.2026 abends.**“*; `grep -o 'Laufend\|ergebnisse_1_131b\|e133_mailverzeichnis_fehlt\|e203_e204'` auf Zeile 3 → kein Treffer. Wer die Datei als Einstieg liest, erfährt nicht, dass drei Zweige auf den PR warten.
+
+**Vorschlag:** Kopf auf 03.11.2026; *„Laufend: `ergebnisse_1_131b` (Gregors Ergebnis zu 7.2.1.131), `e133_mailverzeichnis_fehlt` ([[E-133](../Intern/BEFUNDE.md#e-133)], für 7.2.2.132), `e203_e204_persona_kennwort` ([[E-203](../Intern/BEFUNDE.md#e-203)]/[[E-204](../Intern/BEFUNDE.md#e-204)], für 7.2.2.132)“*.
+
+Gregors Antworten von heute sind oben unter *„Was nur Gregor entscheiden kann“* eingetragen (Frage 1 und 3 entschieden, Frage 4 läuft).
