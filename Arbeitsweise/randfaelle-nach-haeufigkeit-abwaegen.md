@@ -16,3 +16,5 @@ Schranke: keine - Arbeitsweise; Ausloeser ist der SessionStart-Haken, der MEMORY
 **How to apply:** jede Reihenfolge, die ich Gregor vorschlage, mit den vier Spalten; PRÜFER-Funde mit Schwere „gering/sehr gering“ und seltenem Auslöser nicht sofort beheben, sondern im Befund unter „Grenze“ vermerken; PRÜFER- und LEKTOR-Aufträge bitten, die Häufigkeit je Fund zu nennen ([[entscheidung-reihenfolge-nach-7-2-2-132]]).
 
 **Nachtrag 03.11.2026 (PRÜFER-90 T3):** Ordnernamen gehören nicht in die `eudora.log`-Zeilen — Gregor auf die Frage, ob `ziel="<Ordner>"` in den E-170-Zeilen stehen bleiben soll: *„Weglassen (Recommended)“*. Gilt sinngemäß für neue Spurzeilen: keine Namen aus seinem Mailverzeichnis ins Protokoll, wenn eine Nummer oder Anzahl genügt.
+
+**Nachtrag 03.11.2026 (PRÜFER-92 K5):** die älteren Logzeilen zu E-125 und E-142 (`quelle=<Postfach>`) bleiben, wie sie sind — Gregor: *„ordner namen trash und entwürfe sind ja unkritisch.“* Nicht wieder fragen; nur NEUE Spurzeilen ohne Namen, wo Nummer/Anzahl genügt.

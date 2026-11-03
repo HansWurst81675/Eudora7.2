@@ -32,6 +32,27 @@ bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`. Die
 ausführlichen Abschnitte weiter unten ([A-5](#a-5-naechstes),
 [E-128](#e-128-naechstes), [E-216](#e-216-naechstes)) sind freiwillig.
 
+**Ergebnis 03.11.2026, Gregor an 7.2.2.132 (mit einer Kopie seines
+Mailverzeichnisses): alle zwölf Schritte bestanden** — vom Hauptagenten an
+Gregors Bildschirmfotos und an der `eudora.log` des Laufs nachgelesen (nur
+lokal ausgewertet; aus Gregors Testdaten steht hier nichts — keine
+Betreffzeilen, Namen, Dateinamen oder Inhalte):
+
+| # | Beleg |
+|---|---|
+| 1 | Titelzeile `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46` (Bildschirmfoto) |
+| 2, 3 | Abrufaufgaben POP und IMAP laufen durch, keine Task-Fehler; IMAP-Teile übersetzt (`E-85 imap: …`) |
+| 4 | zweimal `E-88 auf der Leitung`; die Antwort kam mit richtigen Umlauten und `€` an (Bildschirmfoto) |
+| 5 | ein vorhandener Filter greift beim Abruf (`E-64 Match=1`) |
+| 6, 7 | beide Hilfeseiten im Browser, Statuszeilentexte wie beschrieben (Bildschirmfotos) |
+| 8, 9 | fünf Knöpfe ohne Überlappung; *Latest Release* öffnet die Release-Seite (`About: Latest Release geoeffnet …`) |
+| 10 | Endung richtig vorgeschlagen und gespeichert: Postfachliste `endung=eml`, Nachrichtenfenster `endung=htm`; die `.htm` trägt `<meta … charset=windows-1252>` ([E-196](BEFUNDE.md#e-196)). **Neu gefunden:** der vorgeschlagene **Dateiname** verliert Umlaute, ist bei 64 Zeichen abgeschnitten und steht aus der Postfachliste als ganzer Pfad mit doppeltem Rückstrich im Feld — Windows lehnt ihn ab. Eigener Befund `E-220` (Zweig `e220_dateiname_vorschlag`). |
+| 11 | die gespeicherte Signatur ist nicht leer ([E-207](BEFUNDE.md#e-207)) |
+| 12 | `CloseDown … liefere TRUE`, kein Fehlerdialog |
+
+Einzige Fehlerzeile: `Error opening LMOS file … lmos.dat` — die Datei für
+„Leave on Server“ fehlt, seit Wochen so, nicht neu in 7.2.2.132.
+
 > **Am Prüfstand erledigt, nur zur Kenntnis — keine Schritte für dich.**
 > Jede Neuerung in 7.2.2.132 hat einen Prüfstandsfall. Voller Lauf am Bau
 > `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46` (dem Bau im Paket): **81
