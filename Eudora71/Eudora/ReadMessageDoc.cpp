@@ -606,8 +606,21 @@ void CReadMessageDoc::OnFileSaveAs()
 {
 	CSaveAs SA;
 
-	if ( ! (m_Sum && SA.Start(m_Sum->m_Subject, TRUE)) )
+	//
+	// BEFUND E-128: Vorgabeendung aus dem Inhalt (Gregor 03.11.2026, Erlaeuterung
+	// an E128Vorgabeendung in msgutils.cpp). Der Inhalt folgt hier der Endung
+	// (SaveAsFile unten: .htm schreibt HTML) - vorgeschlagen wird die, die eine
+	// HTML-Nachricht vollstaendig erhaelt.
+	//
+	const bool		bHtmlE128 = ( m_Sum && m_Sum->IsHTML() ) ? true : false;
+	const char *	pszE128   = E128Vorgabeendung( false, 1, false, bHtmlE128 );
+	E128SpurSchreiben( "Nachrichtenfenster", 1, false, bHtmlE128, pszE128,
+					   E128FilterIndex( CRString( IDS_MSG_SAVEAS_FILE_FILTER ), pszE128 ) );
+
+	if ( ! (m_Sum && SA.Start(m_Sum->m_Subject, TRUE, NULL, FALSE, pszE128)) )
 		return;
+
+	E128GewaehltSchreiben( "Nachrichtenfenster", SA.GetPathName() );	// E-128
 
 	SaveAsFile(SA.GetFilePtr(), SA.GetPathName());
 }

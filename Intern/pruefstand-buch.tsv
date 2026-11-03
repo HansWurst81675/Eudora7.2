@@ -27,6 +27,12 @@ E-122p	ok	2026-11-02 13:54:36	C:\Temp\E122	Eudora 7.2.1.131+a2f29b69* 2026-11-02
 E-125a	ok	2026-11-02 13:54:36	C:\Temp\E125	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0
 E-125b	ok	2026-11-02 13:54:36	C:\Temp\E125	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1
 E-125c	ok	2026-11-02 13:54:36	C:\Temp\E125	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out
+E-128k	ok	2026-11-03 09:18:46	C:\Temp\E128K	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E128 ERGEBNIS kopf=1 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1
+E-128k-alt	ok	2026-11-03 08:29:31	C:\Temp\E128K-alt	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E128 ERGEBNIS kopf=1 mail=html mbx=1 liste=txt lesen=txt verfassen=txt spur=0
+E-128p	ok	2026-11-03 09:18:46	C:\Temp\E128	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E128 ERGEBNIS kopf=0 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1
+E-128p-alt	ok	2026-11-03 08:29:31	C:\Temp\E128-alt	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E128 ERGEBNIS kopf=0 mail=html mbx=1 liste=txt lesen=txt verfassen=txt spur=0
+E-128t	ok	2026-11-03 09:18:46	C:\Temp\E128T	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E128 ERGEBNIS kopf=0 mail=text mbx=1 liste=txt lesen=txt verfassen=htm spur=6 rtf=0 lebt=1
+E-128t-alt	ok	2026-11-03 08:29:31	C:\Temp\E128T-alt	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E128 ERGEBNIS kopf=0 mail=text mbx=1 liste=txt lesen=txt verfassen=txt spur=0
 E-131a	ok	2026-11-02 13:54:36	C:\Temp\E131L	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	ohne MRUFloatXPos=-2147483648
 E-131b	ok	2026-11-02 13:54:36	C:\Temp\E131L	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	ohne MRUFloatYPos=-2147483648
 E-131c	ok	2026-11-02 13:54:36	C:\Temp\E131L	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-131 Leistenposition:
@@ -59,15 +65,15 @@ E-179p	ok	2026-11-02 18:01:00	C:\Temp\EM179	Eudora 7.2.1.131+f31dbff9 2026-11-02
 E-184	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
 E-184m	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
 E-189	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
-E-194k	ok	2026-11-02 18:05:20	C:\Temp\E194K	Eudora 7.2.1.131+d7a3fa60 2026-11-02 18:01	E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
-E-194p	ok	2026-11-02 18:05:20	C:\Temp\E194	Eudora 7.2.1.131+d7a3fa60 2026-11-02 18:01	E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
+E-194k	ok	2026-11-03 09:20:47	C:\Temp\E194K	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
+E-194p	ok	2026-11-03 09:20:47	C:\Temp\E194	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
 E-203p	ok	2026-11-02 19:36:25	C:\Temp\E203	Eudora 7.2.1.131+2b3a529d* 2026-11-02 19:13	E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1
 E-203v	ok	2026-11-02 19:36:25	C:\Temp\E203	Eudora 7.2.1.131+2b3a529d* 2026-11-02 19:13	E39 Vorlauf: kennwort-meldung,vergessen
 E-203w	ok	2026-11-02 19:36:25	C:\Temp\E203	Eudora 7.2.1.131+2b3a529d* 2026-11-02 19:13	E39 PROBE ok
 E-204p	ok	2026-11-02 19:36:11	C:\Temp\E204	Eudora 7.2.1.131+2b3a529d* 2026-11-02 19:13	E204 ERGEBNIS rueckfrage=1 user=e204neu pass=neu lebt=1
 E-204w	ok	2026-11-02 19:36:11	C:\Temp\E204	Eudora 7.2.1.131+2b3a529d* 2026-11-02 19:13	E204 PROBE ok
 E-205p	ok	2026-11-02 18:05:20	C:\Temp\E205	Eudora 7.2.1.131+d7a3fa60 2026-11-02 18:01	E205 ERGEBNIS neu1=0h neu2=0h q1=0h q2=0h liste1=0h liste2=0h zone=passt lebt=1
-E-207p	ok	2026-11-02 18:05:20	C:\Temp\E207	Eudora 7.2.1.131+d7a3fa60 2026-11-02 18:01	E207 ERGEBNIS fenster=1 geaendert=1 txt=passt htm=passt frage=0 sig=unveraendert lebt=1
+E-207p	ok	2026-11-03 09:19:18	C:\Temp\E207	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E207 ERGEBNIS fenster=1 geaendert=1 txt=passt htm=passt frage=0 sig=unveraendert lebt=1
 E-67	ok	2026-11-02 13:54:36	C:\Temp\E67	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	verb-gespeichert=14 verb-auswahl=0
 E-77a	ok	2026-11-02 13:54:36	C:\Temp\E77	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E77 ERGEBNIS roh=0 dekodiert=2
 E-77b	ok	2026-11-02 13:54:36	C:\Temp\E77	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-77 Ordnername: server="Entw&APw-rfe"

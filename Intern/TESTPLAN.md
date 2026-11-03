@@ -473,6 +473,30 @@ gebraucht.
    `Hilfe: Tastenkuerzel.html fehlt`, `Hilfe: Einstellungen.html fehlt`
    (Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet).
 
+## <a id="e-128-naechstes"></a>Mit 7.2.2.132: Speichern unter schlägt die passende Endung vor ([E-128](BEFUNDE.md#e-128))
+
+**Erst mit dem Paket 7.2.2.132 auszuführen.** **Ort: lokal**, eine HTML-Mail
+in einem lokalen Postfach (etwa *In*). Am Prüfstand gemessen am 03.11.2026
+(Fälle `E-128p`, `E-128k`, `E-128t`); hier geht es nur um deinen Blick an
+deinem System.
+
+1. In der **Postfachliste** eine HTML-Mail markieren, *File → Save As*.
+   Bestanden, wenn als Dateityp **Mail Files (*.eml)** gewählt ist und die
+   gespeicherte Datei auf `.eml` endet. Ein Doppelklick öffnet sie im
+   Mailprogramm.
+2. Dieselbe Mail **öffnen**, *File → Save As*: gewählt ist **HTML Files
+   (*.htm)**; die Datei endet auf `.htm` und zeigt im Browser die Mail.
+3. Eine **Textmail ohne Umlaute** aus der Postfachliste speichern: gewählt
+   ist **Text Files (*.txt)**. Eine Textmail **mit** Umlauten bekommt
+   **Mail Files (*.eml)** — so gewollt (deine Entscheidung vom 03.11.2026):
+   Eudora setzt dann einen Kopf mit dem Zeichensatz davor.
+4. **Ort: IMAP, offline** (freiwillig): *File → Work Offline*, in einem
+   IMAP-Ordner eine Mail markieren, die noch nie geöffnet war, *File → Save
+   As*. Bestanden, wenn **vor** dem Dialog keine Frage „online gehen?“
+   kommt. Am Prüfstand ist dieser Weg nicht gemessen.
+
+Wer eine andere Endung will, wählt sie im Dialog wie bisher.
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales

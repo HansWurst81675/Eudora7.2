@@ -29,6 +29,9 @@
 // --------------------------------------------------------- E-196
 #include "generated/msgutils_e196.inc"
 
+// --------------------------------------------------------- E-128
+#include "generated/msgutils_e128.inc"
+
 // --------------------------------------------------------- Schnittstelle
 #line 30 "UnderTestE101.cpp"
 
@@ -46,4 +49,20 @@ bool UTE196_HtmlZeichensatz(const char* pszHtml,
 							CString& out_szSpur)
 {
 	return E196HtmlZeichensatz(pszHtml, out_szDatei, out_szSpur);
+}
+
+// E-128 (generated/msgutils_e128.inc)
+bool UTE128_DateiMitKopf(bool bKopfzeilen, const char* pszVorher, const char* pszNachher)
+{
+	return E128DateiMitKopf(bKopfzeilen, pszVorher, pszNachher);
+}
+
+const char* UTE128_Vorgabeendung(bool bPostfachliste, int nAnzahl, bool bDateiMitKopf, bool bHtml)
+{
+	return E128Vorgabeendung(bPostfachliste, nAnzahl, bDateiMitKopf, bHtml);
+}
+
+int UTE128_FilterIndex(const char* pszFilter, const char* pszEndung)
+{
+	return E128FilterIndex(pszFilter, pszEndung);
 }

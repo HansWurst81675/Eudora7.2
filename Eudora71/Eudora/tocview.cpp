@@ -3063,12 +3063,84 @@ void CTocView::OnFileSaveAs()
 	// doesn't really make sense to save it as an HTML file anyway for
 	// multiple-selections or when the user wants to include headers.
 	//
-	CSaveAsDialog theDlg(	szName, 
-							TRUE, 
-							FALSE, 
-							CRString( IDS_TEXT_EXTENSION ), 
-							CRString( IDS_TEXT_FILE_FILTER ), 
+	//
+	// BEFUND E-128: die Endung aus dem Inhalt ableiten (Gregor 03.11.2026;
+	// Erlaeuterung an E128Vorgabeendung, msgutils.cpp). Der Inhalt haengt
+	// auf diesem Weg nicht an der Endung - geschrieben wird unten, was
+	// E101SpeicherfassungAufbereiten liefert. Bei genau einer Nachricht wird
+	// sie darum hier schon einmal genauso aufbereitet; steht danach ein Kopf
+	// vorn, ist die Datei eine Mail-Datei (.eml). Bis 7.2.1.131 stand hier
+	// immer "txt" - auch wenn HTML mit MIME-Kopf hineinging.
+	//
+	bool			bE128MitKopf = false;
+
+	if ( SelCount == 1 )
+	{
+		for ( int k = 0; k < TotalCount; k++ )
+		{
+			if ( m_SumListBox.GetSel(k) <= 0 )
+				continue;
+
+			CSummary *	pSumE128 = m_SumListBox.GetItemDataPtr(k);
+			if ( !pSumE128 )
+				break;
+
+			//
+			// PRUEFER-90 K2: eine IMAP-Nachricht, die noch nicht geholt ist, NICHT
+			// schon fuer die Vorschlagsendung vom Server laden (GetFullMessage ->
+			// DownloadImapMessage, msgdoc.cpp; offline kaeme die Rueckfrage "online
+			// gehen?" vor dem Dialog und nach OK ein zweites Mal). Dann gilt die
+			// Zusammenfassung: mit Kopfzeilen oder als HTML gefuehrt -> Kopf vorn.
+			//
+			if ( pSumE128->m_TheToc && pSumE128->m_TheToc->IsImapToc() &&
+				 pSumE128->IsNotIMAPDownloadedAtAll() )
+			{
+				bE128MitKopf = ( E104SchalterLesen(IDS_INI_INCLUDE_HEADERS) || pSumE128->IsHTML() ) ? true : false;
+				break;
+			}
+
+			bool			bErzeugtE128 = false;
+			CMessageDoc *	pDocE128 = pSumE128->GetMessageDoc(&bErzeugtE128);
+			if ( pDocE128 )
+			{
+				char *	pszVollE128 = pDocE128->GetFullMessage();
+				if ( pszVollE128 )
+				{
+					const bool		bKopfE128   = E104SchalterLesen(IDS_INI_INCLUDE_HEADERS) ? true : false;
+					const char *	pszTextE128 = bKopfE128 ? pszVollE128 : FindBody(pszVollE128);
+					CString			szDateiE128;
+					CString			szSpurE128;
+
+					const bool	bGeaendertE128 = pszTextE128 &&
+							E101SpeicherfassungAufbereiten( pszTextE128, bKopfE128,
+															szDateiE128, szSpurE128 );
+
+					bE128MitKopf = E128DateiMitKopf( bKopfE128, pszTextE128,
+								bGeaendertE128 ? (LPCTSTR) szDateiE128 : pszTextE128 );
+
+					delete [] pszVollE128;
+				}
+
+				if ( bErzeugtE128 )
+					pSumE128->NukeMessageDocIfUnused();
+			}
+			break;
+		}
+	}
+
+	const char *	pszE128Endung = E128Vorgabeendung( true, SelCount, bE128MitKopf, false );
+	CRString		szE128Filter( IDS_TOC_SAVEAS_FILE_FILTER );	// txt, eml, alle (PRUEFER-90 K1: kein htm - hier geht nie reines HTML hinaus)
+
+	CSaveAsDialog theDlg(	szName,
+							TRUE,
+							FALSE,
+							pszE128Endung,				// E-128 (war IDS_TEXT_EXTENSION)
+							szE128Filter,				// E-128: txt, eml, htm, alle
 							NULL );
+
+	theDlg.m_ofn.nFilterIndex = E128FilterIndex( szE128Filter, pszE128Endung );
+	E128SpurSchreiben( "Postfachliste", SelCount, bE128MitKopf, false,
+					   pszE128Endung, (int) theDlg.m_ofn.nFilterIndex );
 					
 				
 	if ( theDlg.DoModal() != IDOK )
@@ -3089,6 +3161,7 @@ void CTocView::OnFileSaveAs()
 	}
 
 	szPathName = theDlg.GetPathName();
+	E128GewaehltSchreiben( "Postfachliste", szPathName );	// E-128
 
 	CCursor waitCursor;
 	if (FAILED(theFile.Open( szPathName, O_CREAT | O_TRUNC | O_WRONLY)))

@@ -11,7 +11,7 @@ public:
 	CSaveAs();
 	~CSaveAs();
 	
-	BOOL Start(const char* Filename = NULL, BOOL IsMessage = FALSE, CWnd* pParent = NULL, BOOL stationary = FALSE);
+	BOOL Start(const char* Filename = NULL, BOOL IsMessage = FALSE, CWnd* pParent = NULL, BOOL stationary = FALSE, const char* pszVorgabeendung = NULL);	// E-128: Vorgabeendung, NULL = "txt"
 	BOOL CreateFile(const char* Filename);
 	BOOL PutText(const char* Text);
 	BOOL IsStationery() {return m_Stationery;}
