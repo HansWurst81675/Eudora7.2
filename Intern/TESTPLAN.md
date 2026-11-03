@@ -1,4 +1,4 @@
-# Testplan für Gregor — Quellstand 7.2.1.131 (Release `v7.2.1.131`, veröffentlicht am 02.11.2026; `VERSION` gleich; geschnürt am 02.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`, ZIP daneben; davor 7.2.1.130, geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`), Stand 02.11.2026 (zuletzt getestet am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+# Testplan für Gregor — Quellstand 7.2.1.131 (Release `v7.2.1.131`, veröffentlicht am 02.11.2026; `VERSION` gleich; geschnürt am 02.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`, ZIP daneben; davor 7.2.1.130, geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`), Stand 03.11.2026 (neu: E-128 für 7.2.2.132, am Prüfstand gemessen; zuletzt getestet am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 ## <a id="test-7-2-1-131"></a>Dein Test an 7.2.1.131 — ca. 10 Minuten, an deinem echten System
 
@@ -466,6 +466,24 @@ gebraucht.
    Tastenkuerzel.html geoeffnet`, `Hilfe: Einstellungen.html geoeffnet`,
    `Hilfe: Tastenkuerzel.html fehlt`, `Hilfe: Einstellungen.html fehlt`
    (Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet).
+
+## <a id="e-128-naechstes"></a>Mit 7.2.2.132: Speichern unter schlägt die passende Endung vor ([E-128](BEFUNDE.md#e-128))
+
+**Erst mit dem Paket 7.2.2.132 auszuführen.** **Ort: lokal**, eine HTML-Mail
+in einem lokalen Postfach (etwa *In*). Am Prüfstand gemessen am 03.11.2026
+(Fälle `E-128p`, `E-128k`, `E-128t`); hier geht es nur um deinen Blick an
+deinem System.
+
+1. In der **Postfachliste** eine HTML-Mail markieren, *File → Save As*.
+   Bestanden, wenn als Dateityp **Mail Files (*.eml)** gewählt ist und die
+   gespeicherte Datei auf `.eml` endet. Ein Doppelklick öffnet sie im
+   Mailprogramm.
+2. Dieselbe Mail **öffnen**, *File → Save As*: gewählt ist **HTML Files
+   (*.htm)**; die Datei endet auf `.htm` und zeigt im Browser die Mail.
+3. Eine **reine Textmail** aus der Postfachliste speichern: gewählt ist
+   **Text Files (*.txt)**.
+
+Wer eine andere Endung will, wählt sie im Dialog wie bisher.
 
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 

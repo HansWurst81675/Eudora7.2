@@ -1,8 +1,10 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 18:01:00
-freigabe=Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig.
-nur=E-179   (Teillauf, nicht der Gesamtstand)
-faelle=1
-bestanden=1
+zeit=2026-11-03 08:35:54
+freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-128)
+nur=E-128   (Teillauf, nicht der Gesamtstand)
+faelle=3
+bestanden=3
 fehlgeschlagen=0
-fall=[ ok ] E-179p   E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1
+fall=[ ok ] E-128p   E128 ERGEBNIS kopf=0 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1
+fall=[ ok ] E-128k   E128 ERGEBNIS kopf=1 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1
+fall=[ ok ] E-128t   E128 ERGEBNIS kopf=0 mail=text mbx=1 liste=txt lesen=txt verfassen=htm spur=6 rtf=0 lebt=1

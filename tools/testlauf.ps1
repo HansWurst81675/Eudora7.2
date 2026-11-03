@@ -346,8 +346,22 @@ if ($proz.HasExited) {
 if ($MessenSkript -ne '' -and -not $proz.HasExited) {
     Write-Host ''
     Write-Host ('  --- ' + $MessenSkript + ' ---')
-    & powershell -NoProfile -ExecutionPolicy Bypass -File $MessenSkript -Pfadfilter $voll 2>&1 |
-        ForEach-Object { Write-Host ('  ' + $_) }
+    # Ein Fehler im Messskript darf das Beenden und das Protokoll unten NICHT
+    # ueberspringen. Am 03.11.2026 schrieb messen-e128.ps1 auf stderr (eine
+    # gesperrte eudora.log); mit ErrorActionPreference=Stop wurde das hier zu
+    # einem abbrechenden Fehler, testlauf.ps1 endete mitten im Lauf - drei
+    # Pruefstands-Eudoras blieben rund 40 Minuten offen auf Gregors
+    # Bildschirm, und keiner der drei Starts stand in TESTLAEUFE.md.
+    $eapVorher = $ErrorActionPreference
+    $ErrorActionPreference = 'Continue'
+    try {
+        & powershell -NoProfile -ExecutionPolicy Bypass -File $MessenSkript -Pfadfilter $voll 2>&1 |
+            ForEach-Object { Write-Host ('  ' + $_) }
+    } catch {
+        Write-Host ('  MESSSKRIPT-FEHLER: ' + $_.Exception.Message)
+    } finally {
+        $ErrorActionPreference = $eapVorher
+    }
     Write-Host '  --- Ende der Messung ---'
     Write-Host ''
 }

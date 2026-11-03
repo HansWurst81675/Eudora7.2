@@ -1,0 +1,11 @@
+From: Pruefung <absender@e128.invalid>
+To: empfaenger@e128.invalid
+Subject: Pruefung E-128: reiner Text
+Date: Thu, 15 Oct 2026 10:15:00 +0200
+Message-ID: <e128-text@e128.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+E-128 Pruefnachricht: reiner ASCII-Text ohne Auszeichnung.
+Erwartet aus der Postfachliste ohne Kopfzeilen: Vorgabe .txt.
