@@ -80,7 +80,7 @@ use IO::Select;
 #   --zustand           schreibt nach dem Start und nach jedem Befehl, der den
 #                       Bestand aendert (APPEND, COPY, STORE, EXPUNGE), den
 #                       ganzen Bestand: je Nachricht "ZUSTAND <postfach> uid=
-#                       del= weg= mid= betreff=", abgeschlossen von "ZUSTAND
+#                       del= weg= rumpf= mid= betreff=", abgeschlossen von "ZUSTAND
 #                       ENDE <n>". del=1: \Deleted gesetzt; weg=1: danach kam
 #                       EXPUNGE in diesem Postfach - ein echter Server haette
 #                       die Nachricht endgueltig entfernt. Gefuehrt je
@@ -331,8 +331,10 @@ sub zustand {
             my $m = $liste->[$i - 1];
             my ($mid) = $m->{text} =~ /^Message-ID:\s*(\S+)/mi;
             my ($betr) = $m->{text} =~ /^Subject:\s*(.*?)\r?$/mi;
-            notiz(sprintf('ZUSTAND %s uid=%d del=%d weg=%d mid=%s betreff=%s', $name, uid_von($m, $i),
-                          $m->{del} ? 1 : 0, $m->{weg} ? 1 : 0, defined $mid ? $mid : '-',
+            # rumpf = Bytes nach der Leerzeile: eine Kopie ohne Text faellt so auf.
+            my ($rumpf) = $m->{text} =~ /\r?\n\r?\n(.*)\z/s;
+            notiz(sprintf('ZUSTAND %s uid=%d del=%d weg=%d rumpf=%d mid=%s betreff=%s', $name, uid_von($m, $i),
+                          $m->{del} ? 1 : 0, $m->{weg} ? 1 : 0, length(defined $rumpf ? $rumpf : ''), defined $mid ? $mid : '-',
                           sichtbar_bytes(defined $betr ? $betr : '-')));
         }
     }

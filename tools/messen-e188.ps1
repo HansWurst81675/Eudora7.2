@@ -26,6 +26,11 @@
 #   append   wie konten, aber B lehnt das APPEND ab (--append-ablehnen):
 #            darf A die Mail trotzdem loeschen?
 #   ohneuid  wie konten, B meldet keine APPENDUID (Server ohne UIDPLUS).
+#   loeschen wie konten, danach im Zielfenster die ERSTEN ZWEI Zeilen loeschen
+#            (ID_MESSAGE_DELETE) - so, wie ein Anwender die Doppel wegraeumt, die
+#            der Weg konten in der Anzeige hinterlaesst (drei Zeilen mit dem
+#            Betreff der verschobenen Mail). Trifft das \Deleted auf dem Server
+#            die FREMDE Mail (UID 1 in "Ziel")?
 #   kontentext wie konten, aber A liefert den Text der Mail nicht
 #            (--fetch-text-scheitert; die Mail ist nur als Kopf geladen,
 #            IMAPMinDownload=1): Eudora kann nicht hochladen - und loescht?
@@ -36,6 +41,8 @@
 #            nur als Kopf geladen (IMAPMinDownload=1). Erst Ablage UID 1, dann
 #            INBOX UID 1 ins lokale Postfach "Lokal" - die zweite Suche unter
 #            UID 1 findet die erste Mail.
+#   lokaleins Gegenprobe zu lokal und fetch: nur die INBOX-Mail ins leere
+#            "Lokal", ohne fremde Mail mit gleicher UID, Text kommt.
 #   fetch    wie lokal mit nur der INBOX-Mail, der Server verweigert den Text
 #            (--fetch-text-scheitert): wird die Mail auf dem Server trotzdem
 #            geloescht, obwohl lokal nur der Kopf ankam?
@@ -57,7 +64,7 @@
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten,
-    [ValidateSet('konten', 'append', 'ohneuid', 'kontentext', 'lokal', 'fetch')] [string] $Weg = 'konten',
+    [ValidateSet('konten', 'append', 'ohneuid', 'kontentext', 'loeschen', 'lokal', 'lokaleins', 'fetch')] [string] $Weg = 'konten',
     [int] $Warten = 15
 )
 $ErrorActionPreference = 'Stop'
@@ -65,8 +72,9 @@ $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
 $md = Join-Path $voll 'Mailverzeichnis'
 $kontoA = Join-Path $md 'Imap\pruefimap'
 $kontoB = Join-Path $md 'Imap\pruefimap2'
-$logA = Join-Path $voll 'imap-e188-a.log'
-$logB = Join-Path $voll 'imap-e188-b.log'
+# Je Weg eigene Protokolle: ein Lauf ueberschreibt nur seine eigenen.
+$logA = Join-Path $voll ('imap-e188-' + $Weg + '-a.log')
+$logB = Join-Path $voll ('imap-e188-' + $Weg + '-b.log')
 $cp = [Text.Encoding]::GetEncoding(1252)
 
 function KontoLeeren([string] $konto, [string[]] $bleiben) {
@@ -89,7 +97,6 @@ if ($Vorbereiten) {
     if (-not (Test-Path $kontoA)) { Write-Host "E188 FEHLER: kein IMAP-Konto pruefimap in $voll"; exit 1 }
     KontoLeeren $kontoA @('INBOX', 'Ablage', 'Entw&APw-rfe', 'Gel&APY-scht')
     KontoLeeren $kontoB @('INBOX', 'Ziel', 'Entw&APw-rfe', 'Gel&APY-scht')
-    Remove-Item -LiteralPath $logA, $logB -Force -ErrorAction SilentlyContinue
     # Lokales Postfach "Lokal", leer.
     $desc = Join-Path $md 'descmap.pce'
     $dz = @([IO.File]::ReadAllLines($desc, $cp) | Where-Object { $_ -notmatch '^Lokal,' })
@@ -164,8 +171,8 @@ function Zustand([string] $log, [switch] $Erster) {
     if (-not (Test-Path -LiteralPath $log)) { return ,$aus }
     foreach ($z in (Get-Content -LiteralPath $log)) {
         if ($z -match 'ZUSTAND ENDE') { $aus = $block; $block = @(); if ($Erster) { break }; continue }
-        if ($z -match 'ZUSTAND (\S+) uid=(\d+) del=(\d) weg=(\d) mid=(\S+) betreff=(.*)$') {
-            $block += [pscustomobject]@{ Ordner = $Matches[1]; Uid = [int]$Matches[2]; Del = [int]$Matches[3]; Weg = [int]$Matches[4]; Mid = $Matches[5]; Betreff = $Matches[6] }
+        if ($z -match 'ZUSTAND (\S+) uid=(\d+) del=(\d) weg=(\d) rumpf=(\d+) mid=(\S+) betreff=(.*)$') {
+            $block += [pscustomobject]@{ Ordner = $Matches[1]; Uid = [int]$Matches[2]; Del = [int]$Matches[3]; Weg = [int]$Matches[4]; Rumpf = [int]$Matches[5]; Mid = $Matches[6]; Betreff = $Matches[7] }
         }
     }
     return ,$aus
@@ -230,6 +237,9 @@ function Dialoge($pp) {
 $proz = Get-Process Eudora -ErrorAction SilentlyContinue |
         Where-Object { $_.Path -and [IO.Path]::GetDirectoryName($_.Path).TrimEnd('\') -ieq $voll }
 if (-not $proz) { Write-Host "E188 FEHLER: keine Eudora aus $voll"; exit 1 }
+# Die ganze Ausgabe auch nach <Pruefstand>\messen-e188-<weg>.txt - pruefstand-lauf.ps1
+# behaelt nur die Ergebniszeile.
+try { Start-Transcript -LiteralPath (Join-Path $voll ('messen-e188-' + $Weg + '.txt')) -Force | Out-Null } catch { }
 $pp = $proz[0].Id
 $haupt = Alle $pp | Where-Object { $_.Klasse -eq 'EudoraMainWindow' } | Select-Object -First 1
 if (-not $haupt) { Write-Host 'E188 FEHLER: kein Hauptfenster'; exit 1 }
@@ -238,7 +248,7 @@ $mdi = Alle $pp | Where-Object { $_.Klasse -eq 'MDIClient' } | Select-Object -Fi
 # 1. Pruefserver - A immer, B nur fuer die Wege zwischen Konten.
 $repo = Split-Path -Parent $PSScriptRoot
 $perl = 'C:\Program Files\Git\usr\bin\perl.exe'
-$zwei = @('konten', 'append', 'ohneuid', 'kontentext') -contains $Weg
+$zwei = @('konten', 'append', 'ohneuid', 'kontentext', 'loeschen') -contains $Weg
 $ports = @(1143); if ($zwei) { $ports += 1144 }
 foreach ($p in $ports) {
     $belegt = @(Get-NetTCPConnection -LocalPort $p -State Listen -ErrorAction SilentlyContinue)
@@ -415,7 +425,32 @@ try {
         $ok = ZeileVerschieben 'Ziel' 'INBOX'
         AlleSchliessen
         [void](Oeffnen $kB @('Ziel'))           # Endstand nach Abgleich
+        if ($Weg -eq 'loeschen') {
+            # Zwei Zeilen loeschen, je die erste der Liste; Rueckfragen mit OK.
+            for ($r = 0; $r -lt 2; $r++) {
+                $aktiv = Snd $mdi.H 0x0229 ([IntPtr]::Zero) ([IntPtr]::Zero)
+                $script:lb = [IntPtr]::Zero
+                $cc = [E188+EP]{ param($k, $q); if ($script:lb -eq [IntPtr]::Zero -and (Kl $k) -eq 'ListBox' -and [E188]::IsWindowVisible($k)) { $script:lb = $k }; return $true }
+                [void][E188]::EnumChildWindows($aktiv, $cc, [IntPtr]::Zero)
+                if ($script:lb -eq [IntPtr]::Zero) { Write-Host 'E188 FEHLER: keine Liste im Zielfenster'; break }
+                $anz = [int](Snd $script:lb 0x018B ([IntPtr]0) ([IntPtr]0))
+                Write-Host ("E188 loesche Zeile 1 von {0} in ""{1}""" -f $anz, (Txt $aktiv))
+                [void](Snd $script:lb 0x0185 ([IntPtr]0) ([IntPtr](-1)))
+                [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]0))
+                [void](Snd $script:lb 0x019E ([IntPtr]0) ([IntPtr]0))
+                [void][E188]::PostMessageA($aktiv, 0x0111, [IntPtr]32805, [IntPtr]::Zero)   # ID_MESSAGE_DELETE
+                Start-Sleep -Seconds 3
+                foreach ($d in (Alle $pp | Where-Object { $_.Vis -and $_.Klasse -eq '#32770' -and ([E188]::GetWindowLongA($_.H, -16) -band 0x40000000) -eq 0 })) {
+                    Write-Host ('E188 RUECKFRAGE "' + (Txt $d.H) + '" -> OK')
+                    [void][E188]::PostMessageA($d.H, 0x0111, [IntPtr]1, [IntPtr]::Zero)      # IDOK
+                    Start-Sleep -Seconds 2
+                }
+                Start-Sleep -Seconds $Warten
+                Dialoge $pp
+            }
+        }
         AlleSchliessen
+        if ($Weg -eq 'loeschen') { [void](Oeffnen $kB @('Ziel')); AlleSchliessen }
     }
     else {
         if ($Weg -eq 'lokal') {
@@ -446,15 +481,21 @@ foreach ($pr in @(@('A', $logA), @('B', $logB))) {
     }
 }
 $endA = Zustand $logA; $endB = @(); if ($zwei) { $endB = Zustand $logB }
-Write-Host ('E188 SERVER-NACHHER A: ' + (($endA | ForEach-Object { "$($_.Ordner)/$($_.Uid) del=$($_.Del) weg=$($_.Weg) $($_.Mid)" }) -join ' ; '))
-if ($zwei) { Write-Host ('E188 SERVER-NACHHER B: ' + (($endB | ForEach-Object { "$($_.Ordner)/$($_.Uid) del=$($_.Del) weg=$($_.Weg) $($_.Mid)" }) -join ' ; ')) }
+Write-Host ('E188 SERVER-NACHHER A: ' + (($endA | ForEach-Object { "$($_.Ordner)/$($_.Uid) del=$($_.Del) weg=$($_.Weg) rumpf=$($_.Rumpf) $($_.Mid)" }) -join ' ; '))
+if ($zwei) { Write-Host ('E188 SERVER-NACHHER B: ' + (($endB | ForEach-Object { "$($_.Ordner)/$($_.Uid) del=$($_.Del) weg=$($_.Weg) rumpf=$($_.Rumpf) $($_.Mid)" }) -join ' ; ')) }
 $vorher = @($startA) + @($startB); $nachher = @($endA) + @($endB)
 $verloren = 0; $fremdDel = 0
 if ($zwei) {
     # Zwischen Konten: verloren ist, was am Ende auf KEINEM Server ohne \Deleted steht.
+    # Und: lebt sie nur als Kopie OHNE Text (Rumpf leer, die Quelle hatte einen),
+    # ist ihr Text verloren (gemessen 03.11.2026, Weg kontentext: APPEND mit 300
+    # statt 427 Byte, nur der Kopf).
     foreach ($mid in ($vorher | ForEach-Object { $_.Mid } | Sort-Object -Unique)) {
-        $lebt = @($nachher | Where-Object { $_.Mid -eq $mid -and $_.Del -eq 0 }).Count
-        if ($lebt -eq 0) { $verloren++; Write-Host "E188 SERVER VERLOREN (nirgends ohne \Deleted): $mid" }
+        $lebt = @($nachher | Where-Object { $_.Mid -eq $mid -and $_.Del -eq 0 })
+        $rumpfVorher = (@($vorher | Where-Object { $_.Mid -eq $mid }) | Measure-Object -Property Rumpf -Maximum).Maximum
+        $mitText = @($lebt | Where-Object { $_.Rumpf -ge [Math]::Min(10, $rumpfVorher) })
+        if ($lebt.Count -eq 0) { $verloren++; Write-Host "E188 SERVER VERLOREN (nirgends ohne \Deleted): $mid" }
+        elseif ($mitText.Count -eq 0) { $verloren++; Write-Host ("E188 SERVER VERLOREN (nur ohne Text, Rumpf {0} statt {1} Byte): {2}" -f (($lebt | ForEach-Object { $_.Rumpf }) -join ','), $rumpfVorher, $mid) }
     }
     foreach ($e in @($nachher | Where-Object { $_.Del -eq 1 -and $_.Mid -like '<fremd*' })) { $fremdDel++; Write-Host "E188 SERVER FREMDE GELOESCHT: $($e.Ordner)/$($e.Uid) $($e.Mid)" }
 }
@@ -504,3 +545,4 @@ else {
     Write-Host ("E188 ERGEBNIS weg={0} anzeige={1} eigener-text={2} fremder-text={3} ohne-text={4} eintraege={5} mbx={6} textanfragen-vor-transfer={7} | server quelle-del={8} quelle-weg={9} verloren={10} fremd-geloescht={11} dialoge={12}" -f `
         $Weg, $anzeige, $richtig, $falsch, $nurKopf, $toc.Count, $mbxLaenge, $vt, $quelleDel, $quelleWeg, $verloren, $fremdDel, $script:dialoge.Count)
 }
+try { Stop-Transcript | Out-Null } catch { }
