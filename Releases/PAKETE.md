@@ -179,6 +179,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.132 — Testpaket, Zweig `paket_7_2_2_132`
+
+**Nur übersetzt am 03.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer am 02.11.2026 vereinbart (Gregor: *„7.2.2.132, ja“*), Zweigname von Gregor am 03.11.2026 bestätigt. Die erste Fassung der Reihe 7.2.2 (neue Funktionen: Hilfe-Menü [A-5](../Intern/BEFUNDE.md#a-5), About-Dialog [E-216](../Intern/BEFUNDE.md#e-216), *Speichern unter* mit passender Endung [E-128](../Intern/BEFUNDE.md#e-128)). Gregor testet damit die Schritte aus dem [TESTPLAN](../Intern/TESTPLAN.md#test-7-2-2-132). Kein Release — veröffentlicht wird nur mit Gregors Ja.
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.132.
+
 ## 7.2.1.131 — Release `v7.2.1.131`, Zweig `paket_7_2_1_131` (eingereicht als `release_7_2_1_131`, #204)
 
 **Geschnürt am 02.11.2026 um 14:04, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`; veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131)** (Latest, Marke auf dem Merge `7564f54e` von #204) nach Gregors Ja: *„ja, veröffentliche v7.2.1.131“*. Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Nummer am selben Tag vergeben (Gregor: *„ja, paket_7_2_1_131 ist ok“*). Gregor hat damit am 02.11.2026 an seinem echten System den kurzen Durchgang aus dem [TESTPLAN](../Intern/TESTPLAN.md#test-7-2-1-131) getestet: **alle sieben Schritte bestanden** (Belege dort, aus seiner `eudora.log`); die Behebungen selbst ([E-177](../Intern/BEFUNDE.md#e-177), [E-143](../Intern/BEFUNDE.md#e-143) Suchfenster, [E-122](../Intern/BEFUNDE.md#e-122), [E-184](../Intern/BEFUNDE.md#e-184), [E-189](../Intern/BEFUNDE.md#e-189)) sind am Prüfstand gemessen.
