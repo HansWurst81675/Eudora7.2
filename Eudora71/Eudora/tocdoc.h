@@ -544,6 +544,29 @@ CSummary* E184FindeVorabKopie(CTocDoc* pToc, unsigned long ulHash);
 // alten UIDs aus szAlteUIDs (durch Komma getrennt) - also die, denen
 // ImapTransferSummaryData keine neue UID zuordnen konnte.
 void E189VorabKopienEntfernen(CTocDoc* pZiel, const char* szAlteUIDs);
+// E-170 ohne UIDPLUS (EuImap/src/ImapToc.cpp, E170Zuordnung.h): merkt fuer jede
+// Mail mit Label ihre Merkmale (Datum, Absender, Betreff) am Ziel vor - nur, wenn
+// dort noch keine Zusammenfassung mit denselben Merkmalen steht (*pnSchonDa
+// zaehlt die uebergangenen). Rueckgabe: Zahl der Vormerkungen.
+int E170LabelsVormerken(CTocDoc* pZiel, const CDWordArray& dwaLabels, const CDWordArray& dwaSekunden,
+						const CStringArray& saVon, const CStringArray& saBetreff, int* pnSchonDa);
+// E-170 ohne UIDPLUS: nach dem Abgleich von pToc mit den dabei NEU angelegten
+// Zusammenfassungen (aNeu, CSummary*) gerufen; setzt das vorgemerkte Label nur
+// bei eindeutiger Zuordnung (E170Zuordnen), sonst nichts.
+void E170NachAbgleich(CTocDoc* pToc, const CPtrArray& aNeu);
+// E-170 ohne UIDPLUS (PRUEFER-89 K4): die Nachbearbeitung der Uebertragung
+// stoesst den Abgleich von pZiel an - die Frist seiner Vormerkungen laeuft ab jetzt.
+void E170AbgleichAngestossen(CTocDoc* pZiel);
+// E-170 ohne UIDPLUS (PRUEFER-90 K8, K9): naechster Takt (fadensicher). Jede
+// Vormerkung zieht einen beim Anlegen, jeder Abgleich einen bei seinem Beginn.
+long E170Takt();
+// E-170 ohne UIDPLUS (PRUEFER-89 K1, PRUEFER-90 K8/K9): am Ende eines
+// Abgleichs von pToc, der mit Takt lBeginn begonnen hat - jede Vormerkung
+// ohne Treffer, die VOR diesem Beginn angelegt wurde, wird verworfen, statt
+// bis zu fuenf Minuten auf eine gleich aussehende fremde Mail zu warten.
+void E170AbgleichFertig(CTocDoc* pToc, long lBeginn);
+// E-170 ohne UIDPLUS (PRUEFER-89 K5): beim Beenden alle Vormerkungen freigeben.
+void E170VormerkungenFreigeben();
 // E-121 (PRUEFER-32): eine Kennung, die weder in der Quelle noch im Ziel vorkommt -
 // fuer Nachrichten aus Out, die sonst alle die Kennung 0 tragen.
 unsigned long E121NeueKennung(CTocDoc* pQuelle, CTocDoc* pZiel);

@@ -51,8 +51,13 @@ E-144p	ok	2026-11-02 13:54:36	C:\Temp\E144	Eudora 7.2.1.131+a2f29b69* 2026-11-02
 E-146	ok	2026-11-02 13:54:36	C:\Temp\E146	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)
 E-166a	ok	2026-11-02 13:54:36	C:\Temp\E166	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	reihenfolge=junk-no,konto-ok
 E-166b	ok	2026-11-02 13:54:36	C:\Temp\E166	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	AskedAboutJunk=6
-E-170o	ok	2026-11-02 17:58:10	C:\Temp\EM170	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	log-grund=keine-neuen-uids
-E-170p	ok	2026-11-02 17:58:10	C:\Temp\EM170	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	kopie-mit-label=1 log-grund=ok lebt=1
+E-170c	ok	2026-11-03 09:42:36	C:\Temp\E170	Eudora 7.2.1.131+1b1d6825* 2026-11-03 09:28	E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1
+E-170f	ok	2026-11-03 09:42:36	C:\Temp\E170	Eudora 7.2.1.131+1b1d6825* 2026-11-03 09:28	E170F ERGEBNIS art=anders fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=6 eintraege=2 log-grund=zugeordnet lebt=1
+E-170g	ok	2026-11-03 09:42:36	C:\Temp\E170	Eudora 7.2.1.131+1b1d6825* 2026-11-03 09:28	E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1
+E-170m	ok	2026-11-03 09:42:36	C:\Temp\E170	Eudora 7.2.1.131+1b1d6825* 2026-11-03 09:28	E170M ERGEBNIS labels-quelle=3 richtig=3 falsch=0 ohne=0 eintraege=3 log-grund=zugeordnet lebt=1
+E-170o	ok	2026-11-03 09:42:36	C:\Temp\E170	Eudora 7.2.1.131+1b1d6825* 2026-11-03 09:28	E170 ERGEBNIS copyuid=nein label-quelle=1 uid-alt=3 uid-kopiert=3 quelle-passt=1 uid-ziel=1 kopie-mit-label=1 log-grund=zugeordnet lebt=1
+E-170p	ok	2026-11-03 09:42:36	C:\Temp\E170	Eudora 7.2.1.131+1b1d6825* 2026-11-03 09:28	kopie-mit-label=1 log-grund=ok lebt=1
+E-170s	ok	2026-11-03 09:42:36	C:\Temp\E170	Eudora 7.2.1.131+1b1d6825* 2026-11-03 09:28	E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1
 E-171p	ok	2026-11-02 13:54:36	C:\Temp\E171	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1
 E-177p	ok	2026-11-02 17:04:02	C:\Temp\E194-177	Eudora 7.2.1.131+cecab886* 2026-11-02 16:58	E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1
 E-178p	ok	2026-11-02 17:04:02	C:\Temp\E194-178	Eudora 7.2.1.131+cecab886* 2026-11-02 16:58	E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1

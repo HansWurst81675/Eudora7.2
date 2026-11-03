@@ -1884,6 +1884,7 @@ HRESULT CImapMailbox::GetAndFilterNewMessages (CTocDoc *pTocDoc, BOOL& bWasResyn
 {
 	HRESULT hResult = S_OK;
 	unsigned long NextUid = 0; 
+	const long lE170Beginn = E170Takt();	// E-170 (PRUEFER-90 K9): vor jedem Lesen des Servers
 
 	// Make sure.
 	bWasResynced = FALSE;
@@ -2001,7 +2002,7 @@ HRESULT CImapMailbox::GetAndFilterNewMessages (CTocDoc *pTocDoc, BOOL& bWasResyn
 
 				// Note: THis does the filtering (if it's INBOX)!!
 				// Also: This MUST set the new m_UIDHighest.
-				hResult = DoFetchNewMessages (pTocDoc, NewUidMap, bDoFiltering);
+				hResult = DoFetchNewMessages (pTocDoc, NewUidMap, bDoFiltering, lE170Beginn);
 
 				// Note!! m_UIDHighest would have been updated in "DoFetchMessages".
 				// Don't update it here!!
@@ -2052,6 +2053,7 @@ HRESULT CImapMailbox::ResyncMailbox (CTocDoc *pTocDoc, BOOL bSilent /* = FALSE *
 	HRESULT		hResult = S_OK;
 	BOOL		bWasInProgress = FALSE;
 	unsigned long NewUidvalidity = m_Uidvalidity;
+	const long	lE170Beginn = E170Takt();	// E-170 (PRUEFER-90 K9): vor jedem Lesen des Servers
 
 	// Must be part of a valid account.
 	if (m_AccountID == 0)
@@ -2300,7 +2302,7 @@ HRESULT CImapMailbox::ResyncMailbox (CTocDoc *pTocDoc, BOOL bSilent /* = FALSE *
 		//
 		if (NewUidMap.GetCount() > 0)
 		{
-			hResult = DoFetchNewMessages (pTocDoc, NewUidMap, FALSE);
+			hResult = DoFetchNewMessages (pTocDoc, NewUidMap, FALSE, lE170Beginn);
 
 			/// If we fetched a higher UID than we already knew about, update 
 			// our stored m_UIDHighest.
@@ -2350,7 +2352,7 @@ HRESULT CImapMailbox::ResyncMailbox (CTocDoc *pTocDoc, BOOL bSilent /* = FALSE *
 // NOTE: If bDoFiltering is FALSE, don't filter inbox.
 // END NOTES.
 /////////////////////////////////////////////////////////////////////////////////////
-HRESULT CImapMailbox::DoFetchNewMessages (CTocDoc *pTocDoc, CUidMap& NewUidMap, BOOL bDoFiltering)
+HRESULT CImapMailbox::DoFetchNewMessages (CTocDoc *pTocDoc, CUidMap& NewUidMap, BOOL bDoFiltering, long lE170Beginn)
 {
 	BOOL			bMustCloseProgress = FALSE;
 	HRESULT			hResult = S_OK;
@@ -2478,6 +2480,10 @@ HRESULT CImapMailbox::DoFetchNewMessages (CTocDoc *pTocDoc, CUidMap& NewUidMap, 
 	CTempSumList RefSumList;
 
 	ImapAppendSumList (pTocDoc, &SumList, &RefSumList);
+
+	// E-170 ohne UIDPLUS (PRUEFER-89 K1, PRUEFER-90 K8/K9): auch dieser
+	// Abgleich beendet die Vormerkungen des Ziels von vor seinem Beginn.
+	E170AbgleichFertig(pTocDoc, lE170Beginn);
 
 	// NOTE: If we started the filtering process, we must end it.
 	if (bFiltering)
@@ -4984,6 +4990,7 @@ BOOL CImapMailbox::ImapAppendSumList (CTocDoc* pTocDoc, CImapSumList* pImapSumLi
 	pos = pImapSumList->GetHeadPosition ();
 
 	BOOL bRes;
+	CPtrArray aE170Neu;		// E-170 ohne UIDPLUS: hier neu angelegte Zusammenfassungen
 
 	for (next = pos; pos; pos = next)
 	{
@@ -5040,6 +5047,7 @@ BOOL CImapMailbox::ImapAppendSumList (CTocDoc* pTocDoc, CImapSumList* pImapSumLi
 						pSum->SetNotifySearchManager(true);
 
 						pTocDoc->AddSum(pSum);
+						aE170Neu.Add(pSum);
 
 						// Add to pRefSumList as well.
 						//
@@ -5059,6 +5067,10 @@ BOOL CImapMailbox::ImapAppendSumList (CTocDoc* pTocDoc, CImapSumList* pImapSumLi
 		if (::EscapePressed())
 			break;
 	}
+
+	// E-170 ohne UIDPLUS: vorgemerkte Labels verschobener Mails auf ihre Kopie
+	// setzen, wenn sie eindeutig unter den neuen Zusammenfassungen steht.
+	E170NachAbgleich(pTocDoc, aE170Neu);
 
 	// Whether we succeeded or not, force a save of the TOC when we're exiting.
 	// We don't want the MBX file to have an earlier timespamp than the TOC file.

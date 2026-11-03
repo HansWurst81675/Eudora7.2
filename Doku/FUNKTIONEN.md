@@ -173,7 +173,7 @@ Ordner ist ein Untermenü mit demselben Aufbau.
 | *Change* ▸ *Queuing…* | | wann die Nachricht verschickt wird | Vorlage |
 | *Change* ▸ *Status* ▸ | | setzt den Zustand: *Unread*, *Read*, *Replied*, *Forwarded*, *Redirected*, *Recovered*; bei ausgehender Post *Unsendable*, *Sendable*, *Queued*, *Time Queued*, *Sent*, *Unsent* | Vorlage |
 | *Change* ▸ *Priority* ▸ | | *Highest* bis *Lowest* | Vorlage |
-| *Change* ▸ *Label* ▸ | | *None* oder eines der sieben Labels; die Namen kommen aus [*Labels*](#labels) | **bestätigt** ([FAQ 9](FAQ.md#9-wie-markiere-ich-wichtige-mails-farbig), 29.10.2026: *„labels funktionieren“*). Geht beim Verschieben im selben IMAP-Konto verloren ([E-170](../Intern/BEFUNDE.md#e-170), *Label nur lokal gespeichert*) |
+| *Change* ▸ *Label* ▸ | | *None* oder eines der sieben Labels; die Namen kommen aus [*Labels*](#labels) | **bestätigt** ([FAQ 9](FAQ.md#9-wie-markiere-ich-wichtige-mails-farbig), 29.10.2026: *„labels funktionieren“*). Geht an Servern ohne UIDPLUS (sie melden beim Verschieben keine neuen Nummern) beim Verschieben im selben IMAP-Konto verloren, an Servern mit UIDPLUS bleibt es ([E-170](../Intern/BEFUNDE.md#e-170), *Label nur lokal gespeichert*); im Quellstand für 7.2.2.132 berichtigt |
 | *Change* ▸ *Server Status* ▸ | | merkt eine POP-Nachricht auf dem Server vor: *Leave*, *Fetch*, *Delete*, *Fetch then Delete* | Vorlage |
 | *Change* ▸ *Personality* ▸ | | ordnet die Nachricht einem anderen Konto zu | Vorlage |
 | *Junk* / *Not Junk* | | markiert als Junk bzw. nicht Junk ([FAQ 13](FAQ.md#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte)) | Vorlage |

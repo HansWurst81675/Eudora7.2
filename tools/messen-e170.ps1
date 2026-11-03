@@ -9,7 +9,7 @@
 # WM_COMMAND ID_MESSAGE_LABEL_6 gesetzt, Positivprobe in INBOX.toc
 # (label-quelle=1), dann Transfer -> Ablage; gemessen wird das Label der
 # Kopie in Ablage.toc und die Logzeile "E-170 Labels beim Verschieben im
-# Konto" (Protokollbereich Misc, 0x8000).
+# Konto" (Protokollbereich Dialog, 0x08, seit PRUEFER-90 K10; davor Misc, 0x8000).
 #
 # Ergebniszeile:
 #   E170 ERGEBNIS copyuid=<ja|nein> label-quelle=<n> uid-alt=<n> uid-kopiert=<n> quelle-passt=<0|1> uid-ziel=<n> kopie-mit-label=<n> log-grund=<..> lebt=<0|1>
