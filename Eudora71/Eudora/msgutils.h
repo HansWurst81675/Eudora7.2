@@ -82,6 +82,37 @@ CString E196HtmlFuerDatei(
 				const char *		pszWeg );
 
 //
+// BEFUND E-128: die Vorgabeendung im Dialog "Speichern unter" folgt dem
+// Inhalt (Gregor 03.11.2026). Erlaeuterung am Rumpf in msgutils.cpp.
+//
+bool E128DateiMitKopf(
+				bool				bKopfzeilen,
+				const char *		pszVorher,
+				const char *		pszNachher );
+
+const char * E128Vorgabeendung(
+				bool				bPostfachliste,
+				int					nAnzahl,
+				bool				bDateiMitKopf,
+				bool				bHtml );
+
+int E128FilterIndex(
+				const char *		pszFilter,
+				const char *		pszEndung );
+
+void E128SpurSchreiben(
+				const char *		pszWeg,
+				int					nAnzahl,
+				bool				bDateiMitKopf,
+				bool				bHtml,
+				const char *		pszEndung,
+				int					nFilterIndex );
+
+void E128GewaehltSchreiben(
+				const char *		pszWeg,
+				const char *		pszPfad );
+
+//
 // BEFUND E-89: die Bilder im Verfassenfenster lesbar machen. Ergaenzt in
 // der Fassung, die in den Editor geht, jedem <img> ohne auswertbare
 // Groesse ein width- und ein height-Attribut. Erlaeuterung am Rumpf in

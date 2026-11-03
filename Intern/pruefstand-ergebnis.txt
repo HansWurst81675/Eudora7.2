@@ -1,9 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 19:37:41
-freigabe=Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig.
-nur=E-133   (Teillauf, nicht der Gesamtstand)
+zeit=2026-11-03 09:20:47
+freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-128/E-214)
+nur=E-194   (Teillauf, nicht der Gesamtstand)
 faelle=2
 bestanden=2
 fehlgeschlagen=0
-fall=[ ok ] E-133p   E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1
-fall=[ ok ] E-133q   E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"
+fall=[ ok ] E-194p   E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
+fall=[ ok ] E-194k   E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1

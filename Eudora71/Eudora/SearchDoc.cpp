@@ -155,7 +155,11 @@ void CSearchDoc::OnFileSaveAs()
 				szSuggestedFileName = strSuggestedFileName;
 		}
 		
-		CFileDialog theDlg(	FALSE, CRString(IDS_SAVED_SEARCH_EXTENSION),
+		// BEFUND E-214: CFileDialog behaelt nur den Zeiger auf die Vorgabeendung
+		// (MFC dlgfile.cpp:78, gelesen erst in DoModal) - ein Temporaerobjekt waere
+		// dann schon freigegeben. Darum ein benanntes Objekt, das den Dialog ueberlebt.
+		CRString	szE214DefExt(IDS_SAVED_SEARCH_EXTENSION);
+		CFileDialog theDlg(	FALSE, szE214DefExt,
 							szSuggestedFileName, 
 							OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, 
 							CRString(IDS_XML_FILE_FILTER), NULL );

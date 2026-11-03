@@ -25,4 +25,10 @@ bool UTE196_HtmlZeichensatz(const char* pszHtml,
 							CString& out_szDatei,
 							CString& out_szSpur);
 
+// E-128: Vorgabeendung im Dialog "Speichern unter" (aus msgutils.cpp
+// geschnitten, generated/msgutils_e128.inc). Rueckgaben wie dort.
+bool UTE128_DateiMitKopf(bool bKopfzeilen, const char* pszVorher, const char* pszNachher);
+const char* UTE128_Vorgabeendung(bool bPostfachliste, int nAnzahl, bool bDateiMitKopf, bool bHtml);
+int UTE128_FilterIndex(const char* pszFilter, const char* pszEndung);
+
 #endif
