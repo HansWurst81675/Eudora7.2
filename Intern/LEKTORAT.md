@@ -3213,3 +3213,13 @@ Nachtrag 2 LEKTOR-138 (about_dialog_github nach caf1c0d7 gegen den Bestand): [L-
 
 ## LEKTOR-139 (03.11.2026) — Merge von origin/main (#215) in about_dialog_github, nach 3aaad408
 [LEKTOR-139](../Befunde/LEKTOR-139.md): [E-170](BEFUNDE.md#e-170) und [E-216](BEFUNDE.md#e-216) stehen nach der Zusammenführung in CHANGELOG, FUNKTIONEN, BEFUNDE, WEITERMACHEN und TESTPLAN je einmal und widerspruchsfrei; `offene-befunde.pl` 61 = 61. Ein Fund, Kleinkram, nicht vom Merge: TESTPLAN nennt E-170 „Erledigt“, obwohl offen ([L-139.1](../Befunde/LEKTOR-139.md#l-139.1)). Hält den Merge nicht auf.
+
+## LEKTOR-140 (03.11.2026) — Paket 7.2.2.132 vor dem PR, nach e96dd180
+[LEKTOR-140](../Befunde/LEKTOR-140.md): Paketbuchführung zu 7.2.2.132 in CHANGELOG, PAKETE, README, ZIEL, WEITERMACHEN und TESTPLAN stimmig, keine neuen persönlichen Angaben. Aus LEKTOR-138/139 offen nur die vorgemerkten (Berichtszahl, E-216-Umbruch, `E-216l`, TESTPLAN „Erledigt“) und [L-138.10](../Befunde/LEKTOR-138.md#l-138.10) (E-189-Logzeilen nennen den Zielordner).
+- TESTPLAN Schritte 10 und 11 prüfen, was der Prüfstand schon misst, gegen den eigenen Kopfsatz ([L-140.1](../Befunde/LEKTOR-140.md#l-140.1)).
+- Kleinkram: „81 von 81“ aus zwei Läufen, Prüfbericht mit unsauberem Baum ([L-140.2](../Befunde/LEKTOR-140.md#l-140.2)); „kommt mit 7.2.2.132“ 16-mal in BEFUNDE nach dem Schnüren ([L-140.3](../Befunde/LEKTOR-140.md#l-140.3)).
+
+## LEKTOR-141 (03.11.2026) — Bekannte Fehler E-220/E-221 in README und Release-Notizen 7.2.2.132, nach 230f37fd
+[LEKTOR-141](../Befunde/LEKTOR-141.md): E-221 (langer Umlaut-Betreff in der Liste um sieben Zeichen gekürzt) stimmt mit der Messung an 7.2.1.131 und 7.2.2.132 überein; E-192 „Behebung in Arbeit“ trifft. Aus LEKTOR-140 [L-140.3](../Befunde/LEKTOR-140.md#l-140.3) teilweise erledigt („kommt mit 7.2.2.132“ weg), [L-138.10](../Befunde/LEKTOR-138.md#l-138.10) (E-189-Logzeilen nennen den Zielordner) auf dem E-192-Zweig behoben, hier noch offen.
+- E-220 (vorgeschlagener Dateiname bei *Speichern unter*): „64 Zeichen“ statt 63 und „Windows lehnt ihn ab“, obwohl der E-220-Zweig den Pfad im Feld als Bedienweg einordnet — in README, Release-Notizen und TESTPLAN ([L-141.1](../Befunde/LEKTOR-141.md#l-141.1)).
+- Kleinkram: „Eudora selbst sendet solche Betreffs so“ klingt nach immer, gemessen ist rund jeder fünfte ([L-141.2](../Befunde/LEKTOR-141.md#l-141.2)); Backtick-Kennungen und doppelte E-220-Zeile beim Merge ([L-141.3](../Befunde/LEKTOR-141.md#l-141.3)).
