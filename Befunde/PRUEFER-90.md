@@ -296,3 +296,19 @@ Gelesen habe ich `git diff 40e55024 ce2277a0 -- Eudora71` auf `origin/e170_label
 | T1 | Restlage Doppelzustellung, wenn beim Verschieben ein älterer Abgleich lief | gering | nein |
 | T2 | Abgleich mit UID-Obergrenze verwirft die Vormerkung (Label fehlt, kein falsches) | sehr gering | nein |
 | T3 | Postfachname jetzt in der Vorgabe im Protokoll | sehr gering | nein |
+
+## <a id="nachtrag-3"></a>Nachtrag 3: E-170 ohne Ordnernamen im Protokoll (9bad293a, nur gelesen)
+
+Anlass: Gregor hat am 03.11.2026 zu T3 entschieden, die Ordnernamen wegzulassen. Gelesen habe ich `git show 9bad293a -- Eudora71` (ImapToc.cpp, TestE170.cpp). Nicht gebaut, keine Gegenprobe (fremder Zweig).
+
+**Ergebnis: Nichts hält den Merge von e170 auf.**
+
+- **Richtig.** Die drei E-170-Zeilen in ImapToc.cpp (`Vormerkung verworfen`, `Vormerkung angestossen`, `nach dem Abgleich`) schreiben keinen Namen mehr. `strName` ist aus `E170Vormerkung` entfernt, und es bleibt keine Verwendung übrig: Die örtliche Variable in `E170Verwerfen` (:1890) heißt nur noch so und liest `strZiel`. Die vierte E-170-Zeile in ImapActionQueue.cpp (`Labels beim Verschieben im Konto`) nannte nie einen Namen. Belegt.
+- **Zählung je Pfad.** `E170Verwerfen` fasst jetzt nach `strZiel` zusammen, also nach `GetMBFileName`, statt nach dem Anzeigenamen. Das ist dieselbe Trennung wie in `E170GehoertZu` und eher feiner als vorher. Zwei Ziele mit gleichem Anzeigenamen in verschiedenen Konten werden jetzt getrennt gezählt. Die Pfade bleiben im Speicher (`saName`) und gehen nicht ins Protokoll. Mehrere Ziele ergeben mehrere Zeilen, die man nicht mehr unterscheiden kann. Das ist die gewollte Folge. Belegt.
+- **Speicher.** Ein `CString` weniger je Vormerkung, sonst nichts geändert. Belegt.
+- **Test.** Im Abschnitt von `struct E170Vormerkung` bis `GetSummaryFromUID` dürfen `ziel=` und `->Name()` nicht vorkommen, und die Zeile beim Verwerfen wird wörtlich verlangt. Der Abschnitt enthält alle drei Zeilen. Laut Commit-Nachricht hat der BEHEBER gegengeprobt (je 404/405 rot). Ich habe das nicht nachgefahren.
+
+### Hinweise (halten nichts auf)
+
+- <a id="u1"></a>**U1 (sehr gering):** Der Test sucht nur nach `ziel=` und `->Name()`. Ein Pfad über `strZiel` oder `GetMBFileName()` in einem `Format` bliebe grün, und der Pfad enthält den Ordnernamen ebenso. Wenn man die Lücke schließen will: im Abschnitt auch `strZiel` und `GetMBFileName` als Argumente eines `Format` verbieten. Vermutung aus dem Testtext.
+- <a id="u2"></a>**U2 (sehr gering):** Die beiden Zeilen von [E-189](../Intern/BEFUNDE.md#e-189) in derselben Datei (`Vorab-Kopie bleibt …` und `Vorab-Kopie ohne neue UID entfernt`, ImapToc.cpp:1819 und :1825) nennen weiter den Zielordner. Sie schreiben in den Bereich MISC, und der ist in der Vorgabe aus. Gregors Entscheidung galt den E-170-Zeilen. Ob sie auch für diese gilt, wäre einmal zu sagen. Belegt.
