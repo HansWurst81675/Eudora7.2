@@ -197,3 +197,65 @@ Hauptsitzung, 03.11.2026, Zweig `e128_endung_aus_inhalt`. K8 bis K10 gehören zu
 - **Z1** bleibt (nicht erreichbar). **Z2** (`EUDORA` länger als 260 Zeichen → still das Programmverzeichnis, `fileutil.cpp:515`, Original) bleibt als Hinweis hier; kein eigener Befund, weil kein Anwender eine solche Umgebungsvariable setzt.
 
 Unit-Tests danach 402/402.
+
+## <a id="nachtrag-1"></a>Nachtrag 1: Einarbeitung 4eb93716 geprüft
+
+`origin/e128_endung_aus_inhalt` habe ich in wt/pruefer-20261103 gemergt. Das ging im schnellen Vorlauf, ohne Konflikt. Geprüft wurde 4eb93716 *„[PRUEFER-90](#pruefer-90) in e128 eingearbeitet“* gegen die Quelle. Zeilen sind Stand 4eb93716.
+
+**Ergebnis: Nichts hält den Merge von e128 auf.** K1, K2, K5 und [E-214](../Intern/BEFUNDE.md#e-214) sind richtig eingearbeitet. Drei Hinweise bleiben, alle gering oder kleiner: N1 bis N3 unten.
+
+### Gemessen (in meinem Baum)
+
+- Die Testsuite läuft mit **402/402**.
+- **Gegenprobe zur Schranke `Test_E214_Vorgabeendung`.** Ich habe vorübergehend eine Funktion mit sechs Fällen an `textfile.cpp` angehängt. Die Datei wird für die Tests nicht übersetzt, nur gelesen. Danach habe ich sie byte-genau zurückgeschrieben (`cmp` gleich, `git status` leer, wieder 402/402). Ergebnis 401/402:
+
+| Fall | Form | Schranke |
+|---|---|---|
+| G_A | `CFileDialog dA( FALSE, CRString( IDS_TEXT_EXTENSION ), …)` mit Leerzeichen in der Klammer | **rot**, gefunden |
+| G_B | `CFileDialog* pB = new CFileDialog(FALSE, CRString(IDS_TEXT_EXTENSION), …)` | **grün, übersehen** (N2) |
+| G_C | `CFileDialog dC(FALSE, CRString(IDS_TEXT_EXTENSION), …)` | **rot**, gefunden |
+| G_D | über drei Zeilen, mit Tabulatoren | **rot**, gefunden |
+| G_E | derselbe Aufruf in einem `//`-Kommentar | grün, richtig |
+| G_F | `CSaveAsDialog dF(…, CRString(IDS_TEXT_EXTENSION), …)`, also die alte Form aus tocview/compmsgd vor [E-128](../Intern/BEFUNDE.md#e-128) | **grün, übersehen** (N2) |
+
+Die Schranke trifft also mehrzeilige Aufrufe und Leerzeichen und lässt Kommentare aus. Sie zählt 354 Dateien, 20 Aufrufe und 6 benannte Endungen.
+
+### Am Quelltext belegt
+
+- **K1.** `IDS_TOC_SAVEAS_FILE_FILTER` lautet `Text`, `Mail`, `All` (EudoraRes.rc:8552f.). Der Test verlangt `UTE128_FilterIndex(pText, "htm") == 0` an der echten Ressource. Erledigt.
+- **K2.** Die Bedingung in tocview.cpp:3095 ist genau die Bedingung, unter der `GetFullMessage` lädt. `DownloadImapMessage` holt nur bei `IsNotIMAPDownloadedAtAll()` (summary.cpp:3606ff). Diese Abfrage prüft `IMFLAGS_NOT_DOWNLOADED` (summary.h:433-434). Eine Nachricht, der nur Anhänge fehlen, wird von `GetFullMessage` nicht nachgeladen, und die Bedingung lässt sie zu Recht durch. `m_TheToc`: Eine Zusammenfassung aus der Liste einer `CTocView` gehört immer zu einem Postfach. Die Abfrage auf `NULL` schadet aber nicht, und `GetFullMessage` prüft dasselbe (msgdoc.cpp, `!m_Sum->m_TheToc`). Erledigt. Zum Ersatzwert siehe N1.
+- **K5.** Verlangt werden jetzt beide Zeilen `const bool bHtmlE128 = …IsHTML()…`, die Zeile mit `FindBody` und die IMAP-Schranke (TestE128.cpp, `kToc`/`kRead`/`kComp`). Damit sind meine Gegenproben G1 bis G3 abgedeckt. Die Gegenproben des BEHEBERS (je 401/402) stehen in der Commit-Nachricht. Ich habe sie nicht nachgefahren.
+- **[E-214](../Intern/BEFUNDE.md#e-214), sechs Stellen.** In SearchDoc.cpp:161, compmsgd.cpp:4013, eudora.cpp:5195, nickview.cpp:3195, signatur.cpp:74 und textfile.cpp:111 steht jedes `szE214DefExt` im selben Block wie sein `DoModal`. Es lebt also bis danach. MFC liest `lpstrDefExt` nur einmal, in `ApplyOFNToShellDialog` vor `Show` (dlgfile.cpp:346, :772-773). Der nicht-Vista-Weg liest ihn in `GetSaveFileName` innerhalb von `DoModal`. Erledigt. **Berichtigung zur Zahl:** Die Briefpapier-Stelle in compmsgd.cpp war nie betroffen. Dort überschreibt `theDlg.m_ofn.lpstrDefExt = LPCTSTR(defExt);` (:4022, ein benanntes `CString`) den Zeiger schon vor `DoModal`. Die Änderung schadet nicht. Wirklich hängende Zeiger gab es also an fünf Stellen, nicht an sechs. Das gehört so in den Eintrag zu [E-214](../Intern/BEFUNDE.md#e-214).
+- **Weitere Stellen, alle sauber.**
+  - guiutils.cpp:1463: `ext` zeigt in den Parameter `Filename`, und der lebt bis nach `DoModal`. Der Filter ist ein Feld auf dem Stapel.
+  - CertManagerDlg.cpp:799/813, ImportMailDlog.cpp:64, AccountWizard/WizardImportPage.cpp:497, PaigeEdtView.cpp:7405: Literale.
+  - filtersv.cpp:2281/2301, guiutils.cpp:2350, settings.cpp:2350/2460, ImportAdvDlog.cpp:117/155, CompMessageFrame.cpp:195: `NULL`.
+  - EMSAPI/Plugins/Attach/AttachTran.cpp:225: eine örtliche Variable, `NULL`.
+  - DirectoryServices/LDAP/src/config.cpp:1568: `GetOpenFileName` direkt mit `"txt"`.
+  - `SetDefExt(CRString(…))` in SaveAsDialog.cpp:278/285 ist harmlos, denn MFC reicht den Text sofort weiter (dlgfile.cpp:1173-1190).
+  - Einzig `ToggleStat` setzt `m_ofn.lpstrFilter = CRString(…)` als Temporärobjekt (SaveAsDialog.cpp:276/283). Erreichbar ist das nicht, weil es `IDC_STATIONERY` ohne Dialogvorlage nicht gibt ([E-98](../Intern/BEFUNDE.md#e-98)).
+- **CSaveAsDialog-Aufrufer.** Es gibt drei: saveas.cpp, tocview.cpp, compmsgd.cpp. Alle drei übergeben heute einen benannten oder festen Text. Belegt.
+
+### <a id="n1"></a>N1: Der IMAP-Ersatzwert in K2 erkennt eine HTML-Mail meist nicht
+
+(am Quelltext belegt; Wirkung nicht gemessen)
+
+Für eine noch nicht geholte IMAP-Nachricht gilt jetzt `IncludeHeaders || IsHTML()` (tocview.cpp:3095ff). Beim Holen der Kopfzeilen setzt Eudora `MSFEX_HTML` aber nur, wenn die **oberste** `Content-Type`-Zeile `text/html` nennt (EuImap/src/ImapDownload.cpp:2701-2708). Die übliche HTML-Mail ist `multipart/alternative`. Sie bekommt so `.txt`, und nach OK holt die Schreibschleife die Nachricht und schreibt MIME-Kopf und HTML in diese `.txt`. Das ist der ursprüngliche Fall von [E-128](../Intern/BEFUNDE.md#e-128), für diesen einen Weg. Gegenüber 7.2.1.131 ist es kein Rückschritt. Ein Text mit Umlauten bekommt auf diesem Weg ebenfalls `.txt`, geholt dagegen `.eml` (K3). **Abhilfe**, wenn gewünscht: für eine noch nicht geholte IMAP-Nachricht `eml` vorschlagen, wenn `IsHTML()` gilt oder der Typ unbekannt ist. Oder den Fall im Eintrag nennen. **Schwere: gering.** **Hält den Merge nicht auf.**
+
+### <a id="n2"></a>N2: Die Schranke E-214 sieht `new CFileDialog(` und abgeleitete Dialoge nicht
+
+(gemessen, G_B und G_F)
+
+Gesucht wird nur `"CFileDialog "` mit Leerzeichen. `new CFileDialog(` und `CFileDialog*` fallen durch, ebenso jede abgeleitete Klasse, die die Endung durchreicht (`CSaveAsDialog`, `CAttachDlg`, `CDirDialog`). Gerade `CSaveAsDialog` mit `CRString(IDS_TEXT_EXTENSION)` war die Form in tocview.cpp und compmsgd.cpp vor [E-128](../Intern/BEFUNDE.md#e-128). Dort sichern heute die wörtlichen E-128-Zeilen. Eine neue Stelle in dieser Form fände niemand. Gesucht wird außerdem nur unter `Eudora/`, nicht in `EMSAPI/`, `AccountWizard/`, `DirectoryServices/`. Dort ist heute alles sauber (oben). **Abhilfe:** nach `CFileDialog(` **und** `CFileDialog ` suchen und `CSaveAsDialog` mit aufnehmen. **Schwere: sehr gering.**
+
+### <a id="n3"></a>N3: Die Zahl der Stellen
+
+(am Quelltext belegt)
+
+Siehe oben: Wirklich betroffen waren fünf Stellen, die Briefpapier-Stelle nicht. `TT_CHECK_MSG(nBenannt == 6, …)` schreibt eine Zahl fest. Wer eine siebte Stelle richtig mit `szE214DefExt` berichtigt, bekommt Rot, obwohl alles stimmt. Das ist eine Vermutung aus dem Testtext, nicht gegengeprobt. `>= 6` wäre die Absicht. **Schwere: sehr gering.**
+
+| Fund | Was passiert | Schwere | Hält den Merge von e128 auf? |
+|---|---|---|---|
+| N1 | nicht geholte IMAP-HTML-Mail (multipart) bekommt in der Postfachliste weiter `.txt` | gering | nein |
+| N2 | Schranke [E-214](../Intern/BEFUNDE.md#e-214) übersieht `new CFileDialog(` und `CSaveAsDialog` (gemessen) | sehr gering | nein |
+| N3 | Briefpapier-Stelle war nie betroffen (5 statt 6); `nBenannt == 6` fest | sehr gering | nein |
