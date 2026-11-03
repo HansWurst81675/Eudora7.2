@@ -3213,3 +3213,8 @@ Nachtrag 2 LEKTOR-138 (about_dialog_github nach caf1c0d7 gegen den Bestand): [L-
 
 ## LEKTOR-139 (03.11.2026) — Merge von origin/main (#215) in about_dialog_github, nach 3aaad408
 [LEKTOR-139](../Befunde/LEKTOR-139.md): [E-170](BEFUNDE.md#e-170) und [E-216](BEFUNDE.md#e-216) stehen nach der Zusammenführung in CHANGELOG, FUNKTIONEN, BEFUNDE, WEITERMACHEN und TESTPLAN je einmal und widerspruchsfrei; `offene-befunde.pl` 61 = 61. Ein Fund, Kleinkram, nicht vom Merge: TESTPLAN nennt E-170 „Erledigt“, obwohl offen ([L-139.1](../Befunde/LEKTOR-139.md#l-139.1)). Hält den Merge nicht auf.
+
+## LEKTOR-140 (03.11.2026) — Paket 7.2.2.132 vor dem PR, nach e96dd180
+[LEKTOR-140](../Befunde/LEKTOR-140.md): Paketbuchführung zu 7.2.2.132 in CHANGELOG, PAKETE, README, ZIEL, WEITERMACHEN und TESTPLAN stimmig, keine neuen persönlichen Angaben. Aus LEKTOR-138/139 offen nur die vorgemerkten (Berichtszahl, E-216-Umbruch, `E-216l`, TESTPLAN „Erledigt“) und [L-138.10](../Befunde/LEKTOR-138.md#l-138.10) (E-189-Logzeilen nennen den Zielordner).
+- TESTPLAN Schritte 10 und 11 prüfen, was der Prüfstand schon misst, gegen den eigenen Kopfsatz ([L-140.1](../Befunde/LEKTOR-140.md#l-140.1)).
+- Kleinkram: „81 von 81“ aus zwei Läufen, Prüfbericht mit unsauberem Baum ([L-140.2](../Befunde/LEKTOR-140.md#l-140.2)); „kommt mit 7.2.2.132“ 16-mal in BEFUNDE nach dem Schnüren ([L-140.3](../Befunde/LEKTOR-140.md#l-140.3)).
