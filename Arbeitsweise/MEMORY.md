@@ -167,3 +167,4 @@
 - [CHRONIST 02.11.2026 tagsüber](CHRONIST-2026-11-02b.md) — Laufbericht; Force-Push nach Abweisung über Gregors `!` (2. Mal); persönliche Angabe gespiegelt; auftrag-rolle.pl schaltet belegten Baum um; Ein-Zeilen-LEKTOR-Nachträge; E-189 viermal gefragt; 1.128-Gegenprobe ohne Ansage
 - [E-128 Endung aus Inhalt](entscheidung-e128-endung-aus-inhalt.md) — Gregor 03.11.: ja; .html/.eml/.txt, Dialog vorbelegen
 - [Prüfstand mit Fenster 03.11.](entscheidung-pruefstand-fenster-03-11.md) — erlaubt nur an diesem Tag (E-128, E-170)
+- [E-133 No / Release-Text 03.11.](entscheidung-e133-no-und-release-text-03-11.md) — No bleibt (Befehlszeile genügt); Release-Text E-170 im nächsten PR

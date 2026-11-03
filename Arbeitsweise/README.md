@@ -119,6 +119,7 @@ eine Datei liest, liest diese.
 | [entscheidung-pruefstand-fenster-02-11](entscheidung-pruefstand-fenster-02-11.md) | Gregor erlaubt am 02.11.2026 den Prüfstand mit Fenster (Eudora unter C:\Temp) — nur dieser Tag; er testet außerhalb der VM |
 | [entscheidung-pruefstand-fenster-03-11](entscheidung-pruefstand-fenster-03-11.md) | Gregor erlaubt am 03.11.2026 den Prüfstand mit Fenster (Eudora unter C:Temp) — nur dieser Tag; für E-128 und E-170 |
 | [entscheidung-e128-endung-aus-inhalt](entscheidung-e128-endung-aus-inhalt.md) | Gregor 03.11.2026: E-128 — die Vorgabeendung beim Speichern folgt dem Inhalt; nicht wieder fragen |
+| [entscheidung-e133-no-und-release-text-03-11](entscheidung-e133-no-und-release-text-03-11.md) | Gregor 03.11.2026: E-133 *No* bleibt wie gebaut (die Befehlszeile genügt); Release-Text 7.2.1.131 zu E-170 im nächsten PR ergänzen |
 | [entscheidung-pruefstand-fenster-30-10](entscheidung-pruefstand-fenster-30-10.md) | Gregor 30.10.2026 ~13:10: Prüfstandsläufe mit Fenster ab sofort erlaubt; er hält sich zurück und testet das Release 7.2.1.128 separat |
 | [entscheidung-pruefstand-fenster-31-10](entscheidung-pruefstand-fenster-31-10.md) | Gregor 31.10.2026 ~19:15 - Prüfstandsläufe mit Fenster heute erlaubt: 'ja, starte auf deinem lokalen prüfstand deine testes, ich halte mich zurück'; VM-Uhr ging ~20 h nach |
 | [entscheidung-rootcerts-logzeile](entscheidung-rootcerts-logzeile.md) | Gregor 25.10.2026 - Eudora schreibt eine Zeile in eudora.log, aus welchem Verzeichnis rootcerts.p7b geladen wurde (Mailverzeichnis vor Programmverzeichnis) |

@@ -38,8 +38,10 @@ veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130.
 * **IMAP:** Das Eingangsdatum einer Mail, die man aus einem lokalen Postfach
   in einen IMAP-Ordner überträgt, liegt nicht mehr um die Zeitzone zu früh
   ([E-122](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-122)).
-  Beim Verschieben innerhalb eines IMAP-Kontos bleibt das Label erhalten,
-  wenn der Server die neuen Nummern meldet (Nachtrag 02.11.2026, am Prüfstand
+  Beim Verschieben innerhalb eines IMAP-Kontos bleibt das Label meistens
+  erhalten, wenn der Server die neuen Nummern meldet — an einem solchen Server
+  ging es am 29.10.2026 trotzdem einmal verloren, die Ursache ist offen
+  (Nachtrag 03.11.2026; Nachtrag 02.11.2026, am Prüfstand
   gemessen: das tat schon 7.2.1.128; meldet der Server sie nicht, geht das
   Label weiter verloren, 7.2.1.131 schreibt dann nur den Grund ins Protokoll)
   ([E-170](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-170)),
