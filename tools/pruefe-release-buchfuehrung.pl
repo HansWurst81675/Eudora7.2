@@ -161,11 +161,15 @@ sub lies {
 # Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) heisst
 # ein Release v7.2.1.N; die Endnummer zaehlt ueber v1.0.N hinweg weiter
 # (v1.0.120, dann v7.2.1.128). Sortiert wird deshalb nach ihr allein.
+# Seit dem 03.11.2026 auch die Reihe v7.2.2.N (erste: v7.2.2.132). Bis dahin
+# liess das Muster nur 7.2.0/7.2.1 zu; die Schranke hielt v7.2.1.131 fuer das
+# neueste Tag, obwohl v7.2.2.132 draussen war, und wies die berichtigte
+# Buchfuehrung ab.
 sub neueste_paketnummer {
     my (@tags) = @_;
     my @n;
     for my $t (@tags) {
-        next unless $t =~ /^v(?:1\.0|7\.2\.[01])\.(\d+)$/;
+        next unless $t =~ /^v(?:1\.0|7\.2\.[012])\.(\d+)$/;
         push @n, [ $1, $t ];
     }
     return (undef, undef) unless @n;
@@ -185,7 +189,7 @@ sub nummern_im_text {
     my ($text) = @_;
     my %n;
     $n{$1} = 1 while $text =~ /\bv?1\.0\.(\d+)\b/g;
-    $n{$1} = 1 while $text =~ /\bv?7\.2\.[01]\.(\d+)\b/g;
+    $n{$1} = 1 while $text =~ /\bv?7\.2\.[012]\.(\d+)\b/g;
     return sort { $a <=> $b } keys %n;
 }
 
@@ -404,6 +408,12 @@ if (grep { $_ eq '--tests' } @ARGV) {
     $pruef->('Release-Form im Text',
              join(',', nummern_im_text('veroeffentlicht als v7.2.1.128, Testpaket 7.2.0.129')),
              '128,129');
+    # Reihe 7.2.2 (03.11.2026): v7.2.2.132 folgt auf v7.2.1.131.
+    my ($n4, $tag4) = neueste_paketnummer(qw(v7.2.1.128 v7.2.2.132 v7.2.1.131));
+    $pruef->('Reihe 7.2.2 nach 7.2.1', "$tag4/$n4", 'v7.2.2.132/132');
+    $pruef->('Reihe 7.2.2 im Text',
+             join(',', nummern_im_text('veroeffentlicht als v7.2.2.132, davor 7.2.1.131')),
+             '131,132');
 
     # --- 2. Datumsangaben sind keine Fassungen ----------------------------
     $pruef->('Datum wird nicht fuer eine Fassung gehalten',

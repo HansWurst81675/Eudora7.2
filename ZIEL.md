@@ -132,7 +132,7 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
   Randbalken, Weiterleitungskopf als Tabelle), [E-128](Intern/BEFUNDE.md#e-128)
   (gespeicherte HTML-Nachricht als `.txt`; wartet auf Gregors Entscheidung).
 
-* **Dazu im Testpaket 7.2.2.132:** der About-Dialog mit *Latest Release*
+* **Dazu in 7.2.2.132 (veröffentlicht am 03.11.2026):** der About-Dialog mit *Latest Release*
   ([E-216](Intern/BEFUNDE.md#e-216)), *Speichern unter* mit passender Endung
   ([E-128](Intern/BEFUNDE.md#e-128), damit ist der Kandidat oben umgesetzt)
   und die Behebungen an Persönlichkeiten ([E-203](Intern/BEFUNDE.md#e-203),
@@ -224,7 +224,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 03.11.2026.** Quellstand **7.2.2.132** (`VERSION` gleich; Testpaket, geschnürt am 03.11.2026, nicht veröffentlicht, Prüfbericht BESTANDEN; davor 7.2.1.131, geschnürt am 02.11.2026, von Gregor am selben Tag getestet, alle sieben Schritte bestanden; davor 7.2.1.130, geschnürt am 01.11.2026, und 7.2.1.129, geschnürt am 31.10.2026, beide nicht veröffentlicht). Veröffentlicht zuletzt **7.2.1.131** als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131) am 02.11.2026; davor **7.2.1.128** (erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026. **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 03.11.2026.** Quellstand **7.2.2.132** (`VERSION` gleich; geschnürt am 03.11.2026, Prüfbericht BESTANDEN, von Gregor am selben Tag getestet, alle zwölf Schritte bestanden; davor 7.2.1.131, geschnürt am 02.11.2026, von Gregor am selben Tag getestet, alle sieben Schritte bestanden; davor 7.2.1.130, geschnürt am 01.11.2026, und 7.2.1.129, geschnürt am 31.10.2026, beide nicht veröffentlicht). Veröffentlicht zuletzt **7.2.2.132** als [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132) am 03.11.2026; davor **7.2.1.131** als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131) am 02.11.2026 und **7.2.1.128** (erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026. **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 

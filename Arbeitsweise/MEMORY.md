@@ -172,3 +172,5 @@
 - [Randfälle nach Häufigkeit abwägen](randfaelle-nach-haeufigkeit-abwaegen.md) — wie oft, Schaden, Aufwand; hypothetische Fälle zuletzt
 - [Postfachdateien ohne Umlaute](entscheidung-postfachdateien-umlaute.md) — Gregor 03.11.: StripIllegalMT bleibt; nur Speichern-unter-Vorschlag mit Umlauten
 - [Stand 03.11.2026 abends](stand-03-11-2026-abend.md) — #217 wartet auf Merge, dann Release; danach E-188-Löschbedingung vor E-199 (Gregor: ja)
+- [CHRONIST 03.11.2026](CHRONIST-2026-11-03.md) — Laufbericht; E-188 Mailverlust gemessen ohne DATENVERLUST, Release-Schranke fehlt; Serverzweige nach Abweisung über Gregors `!` (3. Mal, sechs Anläufe); fünf Fragen ohne Antwort; Abfrage hielt Zug 71 min; Release-Text E-170 ungemessen
+- [E-188 und Release 7.2.2.132](entscheidung-e188-release-7-2-2-132.md) — Gregor 03.11. abends: Release bleibt stehen; vor jedem Release nach Freigabe neu gemessene Verluste erfragen

@@ -16,7 +16,7 @@ englisch und kursiv, so wie das Programm sie zeigt.
 | am Prüfstand gemessen | neu in dieser Portierung; am laufenden Programm auf dem Prüfstand gemessen, von Gregor noch nicht gesehen |
 | **bestätigt** | Gregor hat es am laufenden Programm gesehen; der Verweis führt zum Beleg in [FAQ](FAQ.md), [BEFUNDE](../Intern/BEFUNDE.md) oder [TESTPLAN](../Intern/TESTPLAN.md) |
 
-**Stand:** Release 7.2.1.131 (02.11.2026). Was sich gegenüber älteren
+**Stand:** Release 7.2.2.132 (03.11.2026). Was sich gegenüber älteren
 Fassungen geändert hat, steht an der Zeile dabei.
 
 Was nur *Vorlage* ist, kann trotzdem tun, was dasteht — es ist nur nicht
