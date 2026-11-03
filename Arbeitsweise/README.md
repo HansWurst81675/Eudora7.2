@@ -110,6 +110,7 @@ eine Datei liest, liest diese.
 | [einwurf-ist-ein-messwert](einwurf-ist-ein-messwert.md) | 54 Prozent von Gregors Nachrichten kamen mitten in den laufenden Zug - das misst fehlenden Zwischenstand, nicht Beteiligung |
 | [entscheidung-7-2-2-umfang](entscheidung-7-2-2-umfang.md) | Gregor 02.11.2026 — Release 7.2.1.131, danach 7.2.2.x mit neuen Funktionen (Hilfe-Menü Shortcuts/Settings); Termin in privat.txt |
 | [entscheidung-e128-endung-aus-inhalt](entscheidung-e128-endung-aus-inhalt.md) | Gregor 03.11.2026 - E-128 Vorschlag angenommen, Vorgabeendung beim Speichern aus dem Inhalt ableiten |
+| [entscheidung-e133-no-und-release-text-03-11](entscheidung-e133-no-und-release-text-03-11.md) | Gregor 03.11.2026 - E-133 \"No\" bleibt wie gebaut (Befehlszeile genügt); Release-Text 7.2.1.131 zu E-170 beim nächsten PR ergänzen |
 | [entscheidung-e138-erledigt-durch-doku](entscheidung-e138-erledigt-durch-doku.md) | Gregor 31.10.2026: E-138 (Mark of the Web, Eudora.exe startet nach GitHub-Download nicht) ist durch die Doku erledigt; nicht wieder als offen fuehren |
 | [entscheidung-e148-release-7-2-0-123](entscheidung-e148-release-7-2-0-123.md) | Gregor 25.10.2026 - E-148 (eMudhra-Wurzeln) wird mit dem Release 7.2.1.<n> veroeffentlicht, nach seinem lokalen Test; 7.2.0.123 ist nur Testpaket |
 | [entscheidung-e170-e143-01-11](entscheidung-e170-e143-01-11.md) | Gregor 01.11.2026: E-170 Label beim Verschieben im IMAP-Konto mitnehmen (nicht auf den Server); E-143 Out im Transfer-Menue des Filterfensters nicht anbieten - nicht wieder fragen |
