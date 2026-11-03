@@ -138,6 +138,7 @@ private:
 	} WORKERFUNCTIONTYPE;
 
 	WORKERFUNCTIONTYPE	 m_enumWorkerFunctionType;
+	long				 m_lE170Beginn;		// E-170 (PRUEFER-90 K8, K9): Takt bei der Anlage, vor jedem Lesen des Servers
 
 	// We're associated with a single account.
 	CString				 m_strPersona;

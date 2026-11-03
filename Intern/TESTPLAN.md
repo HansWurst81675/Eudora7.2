@@ -361,12 +361,14 @@ zwei Ordner **desselben** Kontos.
 2. Die Mail in einen anderen Ordner desselben IMAP-Kontos verschieben.
 3. Den Zielordner öffnen und warten, bis Eudora ihn abgeglichen hat: die Mail
    trägt ihr Label.
-4. In der `eudora.log` steht eine Zeile (sie wird mit dem Protokollbereich *Misc*,
-   0x8000, geschrieben — in deiner `Eudora.ini` steht `LogLevel=58527`, da ist er an;
-   in der Vorgabe 25759 ist er aus)
-   `E-170 Labels beim Verschieben im Konto: mit-label=1 … gesetzt=…  grund=…`.
-   Steht dort `grund=keine-neuen-uids`, meldet dein Server keine neuen UIDs —
-   dann bleibt das Label weiter aus; bitte die Zeile schicken.
+4. Nur, wenn das Label fehlt: in der `eudora.log` stehen zwei Zeilen (Protokollbereich
+   *Misc*, 0x8000 — in deiner `Eudora.ini` steht `LogLevel=58527`, da ist er an; in der
+   Vorgabe 25759 ist er aus):
+   `E-170 Labels beim Verschieben im Konto: … grund=keine-neuen-uids vorgemerkt=1 schon-da=0`
+   und danach `E-170 Labels beim Verschieben im Konto, nach dem Abgleich: … grund=…`.
+   Steht dort `grund=mehrdeutig`, lag im Ziel gleichzeitig eine gleich aussehende
+   neue Mail — dann bleibt das Label mit Absicht aus. Bei jedem anderen Grund bitte
+   beide Zeilen schicken.
 
 ## <a id="e-143-naechstes"></a>In 7.2.1.130: Out wird einem Filter nicht angeboten ([E-143](BEFUNDE.md#e-143))
 

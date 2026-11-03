@@ -35,6 +35,7 @@ DAMAGE. */
 #include "ImapAccountMgr.h"
 #include "ImapAccount.h"
 #include "ImapActionQueue.h"
+#include "E170Zuordnung.h"	// E-170 ohne UIDPLUS
 
 #include "eudora.h"
 #include "resource.h"	// for filtersd.h
@@ -500,6 +501,9 @@ CSummary* CTocDoc::ImapXferOnSameAccount(CTocDoc *pTargetToc,
 	CImapSameServerTransferMsgAction	*pTransferAction = NULL;
 	CDWordArray							 dwaE170AlteUIDs;	// E-170: Label je alter UID
 	CDWordArray							 dwaE170Labels;
+	CDWordArray							 dwaE170Sekunden;	// E-170 ohne UIDPLUS: Merkmale je Mail
+	CStringArray						 saE170Von;
+	CStringArray						 saE170Betreff;
 
 	if (!m_pImapMailbox || !pTargetToc || !pTargetToc->m_pImapMailbox)
 	{
@@ -537,6 +541,11 @@ CSummary* CTocDoc::ImapXferOnSameAccount(CTocDoc *pTargetToc,
 		// Zusammenfassung, die es sonst nicht kennt.
 		dwaE170AlteUIDs.Add(pSum->m_Hash);
 		dwaE170Labels.Add((DWORD) pSum->GetLabel());
+		// E-170 ohne UIDPLUS: Merkmale, an denen die Kopie nach dem Abgleich
+		// wiedererkannt wird (E170Zuordnung.h)
+		dwaE170Sekunden.Add((DWORD) pSum->m_Seconds);
+		saE170Von.Add(CString(pSum->m_From));
+		saE170Betreff.Add(CString(pSum->m_Subject));
 
 		// This summary is movable: add its UID to the string.
 		if (strUidlist.IsEmpty())
@@ -586,6 +595,9 @@ CSummary* CTocDoc::ImapXferOnSameAccount(CTocDoc *pTargetToc,
 
 	pTransferAction->m_dwaE170AlteUIDs.Copy(dwaE170AlteUIDs);	// E-170
 	pTransferAction->m_dwaE170Labels.Copy(dwaE170Labels);
+	pTransferAction->m_dwaE170Sekunden.Copy(dwaE170Sekunden);
+	pTransferAction->m_saE170Von.Copy(saE170Von);
+	pTransferAction->m_saE170Betreff.Copy(saE170Betreff);
 	pAccount->QueueAction(pTransferAction);
 
 	if (!bCopy)
@@ -1819,6 +1831,267 @@ void E189VorabKopienEntfernen(CTocDoc* pZiel, const char* szAlteUIDs)
 			pZiel->RemoveSum(pSum);
 		}
 	}
+}
+
+// E-170 ohne UIDPLUS: siehe tocdoc.h und E170Zuordnung.h. Die Vormerkungen
+// leben nur im Speicher (wie die gemerkten Labels der Uebertragung). Was mit
+// ihnen geschieht - vormerken, zu welchem Ziel, Anstoss des Abgleichs, Frist,
+// verwerfen -, entscheidet reines C++ in E170Zuordnung.h, das der
+// Regressionstest im Verhalten prueft (PRUEFER-89 K2); hier steht nur die
+// Speicherung. Lieber kein Label als eines auf einer fremden Mail (E-184).
+//
+// PRUEFER-89 K5: CEudoraApp::ExitInstance gibt verbliebene Vormerkungen mit
+// E170VormerkungenFreigeben frei - sonst meldet der Debug-Bau ein Leck, wenn
+// kurz vor dem Beenden verschoben wurde.
+struct E170Vormerkung
+{
+	E170Eintrag	e;			// e.szZiel, e.m.szVon, e.m.szBetreff zeigen in die CStrings unten
+	CString		strZiel;	// Pfad des Ziels: ein wiederverwendeter Zeiger allein reicht nicht
+	CString		strName;	// nur fuer die Logzeilen; e.pZiel wird nie dereferenziert
+	int			nLabel;
+	CString		strVon;
+	CString		strBetreff;
+};
+static CPtrArray s_aE170Vormerkungen;
+
+static void E170MerkmaleVonSum(const CSummary* pSum, E170Merkmale& m)
+{
+	m.lSekunden = pSum->m_Seconds;
+	m.szVon = pSum->m_From;
+	m.szBetreff = pSum->m_Subject;
+}
+
+// Abbild aller Vormerkungen fuer E170Zuordnung.h, Index wie in
+// s_aE170Vormerkungen; der Aufrufer gibt es mit delete [] frei.
+static E170Eintrag* E170Eintraege(int& n)
+{
+	n = (int) s_aE170Vormerkungen.GetSize();
+	if (n == 0)
+		return NULL;
+	E170Eintrag* pE = DEBUG_NEW E170Eintrag[n];
+	for (int i = 0; i < n; i++)
+		pE[i] = ((E170Vormerkung *) s_aE170Vormerkungen.GetAt(i))->e;
+	return pE;
+}
+
+// Entfernt jede Vormerkung mit pbWeg[i]. Fuer jede mit pbMelden[i] steht je
+// Ziel eine Zeile im Protokoll (PRUEFER-89 K4: ein Verfall war vorher still
+// und von einem Fehler der Zuordnung nicht zu unterscheiden).
+static void E170Verwerfen(const bool* pbWeg, const bool* pbMelden, const char* szGrund)
+{
+	const int n = (int) s_aE170Vormerkungen.GetSize();
+	CStringArray saName;
+	CDWordArray dwaZahl;
+	for (int i = 0; i < n; i++)
+	{
+		if (!pbMelden[i])
+			continue;
+		const CString& strName = ((E170Vormerkung *) s_aE170Vormerkungen.GetAt(i))->strName;
+		int j = 0;
+		while (j < (int) saName.GetSize() && saName.GetAt(j) != strName)
+			j++;
+		if (j < (int) saName.GetSize())
+			dwaZahl.SetAt(j, dwaZahl.GetAt(j) + 1);
+		else
+		{
+			saName.Add(strName);
+			dwaZahl.Add(1);
+		}
+	}
+	for (int j = 0; j < (int) saName.GetSize(); j++)
+	{
+		CString szSpur;
+		szSpur.Format("E-170 Vormerkung verworfen: anzahl=%d grund=%s ziel=\"%s\"",
+					  (int) dwaZahl.GetAt(j), szGrund, (LPCTSTR) saName.GetAt(j));
+		PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
+	}
+	for (int i = n - 1; i >= 0; i--)
+	{
+		if (pbWeg[i])
+		{
+			delete (E170Vormerkung *) s_aE170Vormerkungen.GetAt(i);
+			s_aE170Vormerkungen.RemoveAt(i);
+		}
+	}
+}
+
+int E170LabelsVormerken(CTocDoc* pZiel, const CDWordArray& dwaLabels, const CDWordArray& dwaSekunden,
+						const CStringArray& saVon, const CStringArray& saBetreff, int* pnSchonDa)
+{
+	int nVorgemerkt = 0;
+	int nSchonDa = 0;
+	const int n = (int) dwaLabels.GetSize();
+	if (pZiel && n > 0 && (int) dwaSekunden.GetSize() == n && (int) saVon.GetSize() == n && (int) saBetreff.GetSize() == n)
+	{
+		// Merkmale der Zusammenfassungen, die schon im Ziel stehen (E170Vormerkbar)
+		const int nPlatz = (int) pZiel->GetSumList().GetCount();
+		E170Merkmale *pZielM = (nPlatz > 0) ? DEBUG_NEW E170Merkmale[nPlatz] : NULL;
+		int nZiel = 0;
+		POSITION pos = pZiel->GetSumList().GetHeadPosition();
+		while (pos && nZiel < nPlatz)
+		{
+			CSummary *pSum = pZiel->GetSumList().GetNext(pos);
+			if (pSum)
+				E170MerkmaleVonSum(pSum, pZielM[nZiel++]);
+		}
+
+		for (int i = 0; i < n; i++)
+		{
+			const CString strVon(saVon.GetAt(i));
+			const CString strBetreff(saBetreff.GetAt(i));
+			E170Merkmale mQuelle;
+			mQuelle.lSekunden = (long) dwaSekunden.GetAt(i);
+			mQuelle.szVon = strVon;
+			mQuelle.szBetreff = strBetreff;
+
+			const int nArt = E170Vormerkbar((int) dwaLabels.GetAt(i), mQuelle, pZielM, nZiel);
+			if (nArt == E170_VM_SCHON_DA)
+				nSchonDa++;
+			if (nArt != E170_VM_JA)
+				continue;
+
+			E170Vormerkung *p = DEBUG_NEW E170Vormerkung;
+			p->strZiel = pZiel->GetMBFileName();
+			p->strName = pZiel->Name();
+			p->nLabel = (int) dwaLabels.GetAt(i);
+			p->strVon = strVon;
+			p->strBetreff = strBetreff;
+			p->e.pZiel = pZiel;
+			p->e.szZiel = p->strZiel;
+			p->e.m.lSekunden = mQuelle.lSekunden;
+			p->e.m.szVon = p->strVon;
+			p->e.m.szBetreff = p->strBetreff;
+			p->e.dwSeit = ::GetTickCount();
+			p->e.lTakt = E170Takt();
+			s_aE170Vormerkungen.Add(p);
+			nVorgemerkt++;
+		}
+		delete [] pZielM;
+	}
+	if (pnSchonDa)
+		*pnSchonDa = nSchonDa;
+	return nVorgemerkt;
+}
+
+// PRUEFER-90 K8, K9: Takt fuer Vormerkungen und fuer den Beginn eines
+// Abgleichs. Zieht der Abgleich seinen Takt nach dem der Vormerkung, hat er
+// den Serverstand nach dem COPY gelesen.
+static volatile LONG s_lE170Takt = 0;
+
+long E170Takt()
+{
+	return (long) ::InterlockedIncrement(&s_lE170Takt);
+}
+
+void E170AbgleichAngestossen(CTocDoc* pZiel)
+{
+	if (!pZiel || s_aE170Vormerkungen.GetSize() == 0)
+		return;
+	const CString strZiel(pZiel->GetMBFileName());
+	int nE = 0;
+	E170Eintrag *pE = E170Eintraege(nE);
+	const int nAn = E170Anstossen(pE, nE, pZiel, strZiel, ::GetTickCount());
+	for (int i = 0; i < nE; i++)
+		((E170Vormerkung *) s_aE170Vormerkungen.GetAt(i))->e = pE[i];
+	delete [] pE;
+	if (nAn > 0)
+	{
+		CString szSpur;
+		szSpur.Format("E-170 Vormerkung angestossen: vormerkungen=%d ziel=\"%s\"", nAn, (LPCTSTR) pZiel->Name());
+		PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
+	}
+}
+
+void E170NachAbgleich(CTocDoc* pToc, const CPtrArray& aNeu)
+{
+	if (!pToc || s_aE170Vormerkungen.GetSize() == 0)
+		return;
+
+	const CString strZiel(pToc->GetMBFileName());
+	const int nKand = (int) aNeu.GetSize();
+	int nE = 0;
+	E170Eintrag *pE = E170Eintraege(nE);
+	E170Merkmale *pKand = (nKand > 0) ? DEBUG_NEW E170Merkmale[nKand] : NULL;
+	for (int k = 0; k < nKand; k++)
+		E170MerkmaleVonSum((const CSummary *) aNeu.GetAt(k), pKand[k]);
+	int *pnAkt = DEBUG_NEW int[nE];
+	E170AbgleichEntscheiden(pE, nE, pToc, strZiel, pKand, nKand, ::GetTickCount(), E170_FRIST_MS, pnAkt);
+
+	bool *pbWeg = DEBUG_NEW bool[nE];
+	bool *pbVerfallen = DEBUG_NEW bool[nE];
+	int nVor = 0, nGesetzt = 0, nBelegt = 0, nMehrdeutig = 0, nOhne = 0;
+	for (int i = 0; i < nE; i++)
+	{
+		E170Vormerkung *p = (E170Vormerkung *) s_aE170Vormerkungen.GetAt(i);
+		pbVerfallen[i] = (pnAkt[i] == E170_AKT_VERFALLEN);
+		pbWeg[i] = E170NachAktionVerwerfen(pnAkt[i]);
+		if (pbVerfallen[i] || !E170GehoertZu(pE[i], pToc, strZiel))
+			continue;
+		nVor++;
+		if (pnAkt[i] >= 0)
+		{
+			CSummary *pSum = (CSummary *) aNeu.GetAt(pnAkt[i]);
+			if (pSum->GetLabel() == 0)
+			{
+				pSum->SetLabel(p->nLabel);
+				nGesetzt++;
+			}
+			else
+				nBelegt++;
+		}
+		else if (pnAkt[i] == E170_AKT_MEHRDEUTIG)
+		{
+			nMehrdeutig++;
+		}
+		else
+		{
+			// Die Kopie war in diesem Teil des Abgleichs nicht dabei; was am
+			// Ende des Abgleichs noch steht, verwirft E170AbgleichFertig.
+			nOhne++;
+		}
+	}
+	delete [] pKand;
+	delete [] pnAkt;
+	delete [] pE;
+	E170Verwerfen(pbWeg, pbVerfallen, "frist");
+	delete [] pbWeg;
+	delete [] pbVerfallen;
+
+	if (nVor == 0 || nKand == 0)
+		return;
+
+	const char *szGrund = "kein-treffer";
+	if (nMehrdeutig > 0)
+		szGrund = "mehrdeutig";
+	else if (nGesetzt > 0)
+		szGrund = "zugeordnet";
+	else if (nBelegt > 0)
+		szGrund = "ziel-hat-label";
+	CString szSpur;
+	szSpur.Format("E-170 Labels beim Verschieben im Konto, nach dem Abgleich: vorgemerkt=%d neue=%d gesetzt=%d mehrdeutig=%d ohne-treffer=%d grund=%s ziel=\"%s\"",
+				  nVor, nKand, nGesetzt, nMehrdeutig, nOhne, szGrund, (LPCTSTR) pToc->Name());
+	PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
+}
+
+void E170AbgleichFertig(CTocDoc* pToc, long lBeginn)
+{
+	if (!pToc || s_aE170Vormerkungen.GetSize() == 0)
+		return;
+	const CString strZiel(pToc->GetMBFileName());
+	int nE = 0;
+	E170Eintrag *pE = E170Eintraege(nE);
+	bool *pbWeg = DEBUG_NEW bool[nE];
+	if (E170AbgleichEnde(pE, nE, pToc, strZiel, lBeginn, pbWeg) > 0)
+		E170Verwerfen(pbWeg, pbWeg, "ohne-treffer-im-abgleich");
+	delete [] pbWeg;
+	delete [] pE;
+}
+
+void E170VormerkungenFreigeben()
+{
+	for (int i = 0; i < (int) s_aE170Vormerkungen.GetSize(); i++)
+		delete (E170Vormerkung *) s_aE170Vormerkungen.GetAt(i);
+	s_aE170Vormerkungen.RemoveAll();
 }
 
 CSummary *CTocDoc::GetSummaryFromUID(unsigned long lUID)

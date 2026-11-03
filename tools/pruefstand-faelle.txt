@@ -474,11 +474,35 @@ E-133q | C:\Temp\E133 | 5 | log | E-133 Registry berichtigt: Mailverzeichnis="C:
 # (ImapTransferSummaryData) nahm es schon mit. Der Fall ist am alten Bau rot
 # nur wegen log-grund (dort gibt es die Logzeile nicht); ein Regressionstest, keine
 # Gegenprobe fuer die Behebung (Intern/BEFUNDE.md#e-170).
-E-170p | C:\Temp\EM170 | 30 | messung | kopie-mit-label=1 log-grund=ok lebt=1 | | | messen=tools\messen-e170.ps1
-# E-170 ohne UIDPLUS: das Label geht an BEIDEN Bauten verloren (der Fehler
-# ist offen). Behauptet wird nur, was die Behebung leistet: die Logzeile
-# nennt den Grund. Am alten Bau rot (keine Logzeile).
-E-170o | C:\Temp\EM170 | 30 | messung | log-grund=keine-neuen-uids | | | messen=tools\messen-e170o.ps1
+# Seit dem Zweig e170_label_ohne_uidplus (BEHEBER6, 02.11.2026) laufen alle
+# E-170-Faelle in C:\Temp\E170 (EM170 behaelt den Bau 7.2.1.131).
+E-170p | C:\Temp\E170 | 30 | messung | kopie-mit-label=1 log-grund=ok lebt=1 | | | messen=tools\messen-e170.ps1
+# E-170 ohne UIDPLUS: bis 7.2.1.131 ging das Label verloren (gemessen
+# 02.11.2026 an 7.2.1.128 und 7.2.1.131). Jetzt merkt Eudora Datum, Absender
+# und Betreff vor und setzt das Label nach dem Abgleich auf die eindeutig
+# passende neue Zusammenfassung. Gegenprobe an 7.2.1.131+f31dbff9 rot:
+# kopie-mit-label=0 log-grund=keine-neuen-uids.
+E-170o | C:\Temp\E170 | 30 | messung | E170 ERGEBNIS copyuid=nein label-quelle=1 uid-alt=3 uid-kopiert=3 quelle-passt=1 uid-ziel=1 kopie-mit-label=1 log-grund=zugeordnet lebt=1 | | | messen=tools\messen-e170o.ps1
+# E-170 ohne UIDPLUS, drei Mails mit drei verschiedenen Labels, Liste 3,2,1:
+# jede Kopie traegt das Label ihrer eigenen Quelle. Gegenprobe am alten Bau
+# rot: richtig=0 ohne=3.
+E-170m | C:\Temp\E170 | 30 | messung | E170M ERGEBNIS labels-quelle=3 richtig=3 falsch=0 ohne=0 eintraege=3 log-grund=zugeordnet lebt=1 | | | messen=tools\messen-e170m.ps1
+# E-170 ohne UIDPLUS, gleichzeitig eine fremde neue Mail im Ziel (UID 1, die
+# Kopie UID 2): das Label nur auf die Kopie. Gegenprobe am alten Bau rot:
+# kopie-label=0.
+E-170f | C:\Temp\E170 | 30 | messung | E170F ERGEBNIS art=anders fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=6 eintraege=2 log-grund=zugeordnet lebt=1 | | | messen=tools\messen-e170f.ps1
+# E-170 ohne UIDPLUS, die fremde neue Mail sieht genau so aus wie die
+# verschobene (Datum, Absender, Betreff): KEINE bekommt ein Label (lieber
+# keins als ein falsches). Am alten Bau rot nur wegen log-grund - dort setzt
+# ohnehin niemand ein Label; der Fall sichert die Schranke, nicht die Behebung.
+E-170g | C:\Temp\E170 | 30 | messung | E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1 | | | messen=tools\messen-e170g.ps1
+# E-170, PRUEFER-89 K1/K3: das COPY scheitert (Server MIT UIDPLUS antwortet
+# NO), danach liegt eine gleich aussehende fremde Mail im Ziel. Sie darf das
+# Label der nicht kopierten Mail nicht bekommen; nichts wird vorgemerkt.
+E-170c | C:\Temp\E170 | 30 | messung | E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1 | | | messen=tools\messen-e170c.ps1
+# E-170, PRUEFER-89 K3: im Ziel steht schon vor dem Verschieben eine gleich
+# aussehende Mail (ohne UIDPLUS) - nicht vormerken (schon-da=1), keiner ein Label.
+E-170s | C:\Temp\E170 | 30 | messung | E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1 | | | messen=tools\messen-e170s.ps1
 # E-141: Entwurf aus IMAP nach Out, E-142-Rueckfrage Yes - danach KEINE
 # Meldung "No messages were transferred!". Alter Bau: nicht-uebertragen=1.
 # Gegenprobe IMAP -> lokal und Loeschen in derselben Zeile (lokal, geloescht).

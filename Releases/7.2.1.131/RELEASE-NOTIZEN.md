@@ -42,7 +42,8 @@ veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130.
   erhalten, wenn der Server die neuen Nummern meldet (Nachtrag 02.11.2026, am
   Prüfstand gemessen: das tat schon 7.2.1.128; meldet der Server sie nicht,
   geht das Label weiter verloren, 7.2.1.131 schreibt dann nur den Grund ins
-  Protokoll) — auch an einem Server, der die Nummern meldet, ging es am
+  Protokoll, wenn der Protokollbereich Misc eingeschaltet ist, `LogLevel` mit
+  0x8000) — auch an einem Server, der die Nummern meldet, ging es am
   29.10.2026 einmal verloren, die Ursache ist offen (Nachtrag 03.11.2026)
   ([E-170](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-170)),
   und Eudora überschreibt im Zielordner nicht mehr Betreff und Absender einer

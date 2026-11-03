@@ -1,6 +1,6 @@
 # <a id="pruefer-90"></a>PRUEFER-90
 
-Lauf nach [PRUEFER-89](PRUEFER-89.md). Zweig wt/pruefer-20261103, abgezweigt von `origin/e128_endung_aus_inhalt` (Stand c2402a4c). Geprüft wird `origin/main..HEAD -- Eudora71 tools Releases/1.0`: die Commits 23b31352 und c2402a4c ([E-128](../Intern/BEFUNDE.md#e-128), [E-213](../Intern/BEFUNDE.md#e-213)). Danach, nur lesend, die Einarbeitung von PRUEFER-89 auf `origin/e170_label_ohne_uidplus` (01f4c9cd). Auf Zuruf der Hauptsitzung vorgezogen: der Commit 3c6d988d auf `origin/e133_mailverzeichnis_fehlt` (Abschnitt *Zusatz: e133*). Eudora habe ich weder gebaut noch gestartet. Keinen Prüfstand habe ich angefasst.
+Lauf nach [PRUEFER-89](PRUEFER-89.md). Zweig wt/pruefer-20261103, abgezweigt von `origin/e128_endung_aus_inhalt` (Stand c2402a4c). Geprüft wird `origin/main..HEAD -- Eudora71 tools Releases/1.0`: die Commits 23b31352 und c2402a4c ([E-128](../Intern/BEFUNDE.md#e-128), [E-213](../Intern/BEFUNDE.md#e-213)). Danach, nur lesend, die Einarbeitung von [PRUEFER-89](PRUEFER-89.md#pruefer-89) auf `origin/e170_label_ohne_uidplus` (01f4c9cd). Auf Zuruf der Hauptsitzung vorgezogen: der Commit 3c6d988d auf `origin/e133_mailverzeichnis_fehlt` (Abschnitt *Zusatz: e133*). Eudora habe ich weder gebaut noch gestartet. Keinen Prüfstand habe ich angefasst.
 
 ## Ergebnis vorweg
 
@@ -8,7 +8,7 @@ Die Behebung von [E-128](../Intern/BEFUNDE.md#e-128) tut, was sie verspricht. De
 
 Vier Dinge passen nicht ganz zum Eintrag. Die Postfachliste bietet neu *HTML Files (\*.htm)* an, schreibt aber nie reines HTML (K1). Vor dem Dialog lädt sie bei IMAP eine noch nicht geholte Nachricht vom Server. Das geschieht auch, wenn man danach abbricht, und offline kommt die Rückfrage „online gehen?“ schon vor dem Dialog (K2). Eine deutsche Textmail mit Umlauten bekommt aus der Postfachliste `.eml`, nicht `.txt`, wie der Eintrag sagt (K3). Im Verfassen-Fenster richtet sich die Vorgabe nach dem Stand beim letzten Speichern, nicht nach dem Text im Fenster (K4). Der Regressionstest bleibt grün, wenn man die HTML-Erkennung in beiden Fenstern abschaltet (K5, gemessen).
 
-Bei [E-170](../Intern/BEFUNDE.md#e-170) erfüllt die Einarbeitung von PRUEFER-89 die Funde K1 bis K5 am Quelltext. Zwei Lücken bleiben. Der Anstoß, der eine Vormerkung nach dem Abgleich verwirft, sitzt nur an einer der Stellen, die den Abgleich auslösen. In den anderen Fällen gilt wieder die Frist von fünf Minuten (K8). Läuft schon ein Abgleich des Ziels, kann er die Vormerkung verwerfen, bevor die Kopie da ist. Dann fehlt das Label, ein falsches kommt aber nicht (K9). Die neuen Logzeilen stehen in einem Bereich, der in der Vorgabe ausgeschaltet ist (K10).
+Bei [E-170](../Intern/BEFUNDE.md#e-170) erfüllt die Einarbeitung von [PRUEFER-89](PRUEFER-89.md#pruefer-89) die Funde K1 bis K5 am Quelltext. Zwei Lücken bleiben. Der Anstoß, der eine Vormerkung nach dem Abgleich verwirft, sitzt nur an einer der Stellen, die den Abgleich auslösen. In den anderen Fällen gilt wieder die Frist von fünf Minuten (K8). Läuft schon ein Abgleich des Ziels, kann er die Vormerkung verwerfen, bevor die Kopie da ist. Dann fehlt das Label, ein falsches kommt aber nicht (K9). Die neuen Logzeilen stehen in einem Bereich, der in der Vorgabe ausgeschaltet ist (K10).
 
 Zum Zusatz e133 siehe unten: **nichts hält den Merge auf.**
 
@@ -82,7 +82,7 @@ Zu `messen-e128.ps1` am Rand: Die Erwartungszeile prüft nur die angehängte End
 
 Zeilen sind Stand `origin/e170_label_ohne_uidplus`.
 
-| PRUEFER-89 | Eingearbeitet | Urteil |
+| [PRUEFER-89](PRUEFER-89.md#pruefer-89) | Eingearbeitet | Urteil |
 |---|---|---|
 | K1 gescheitertes COPY merkt vor | `E170WegWaehlen(…, m_iState == kActionStateSucceeded, …)`, Grund `fehlgeschlagen` (ImapActionQueue.cpp, `E170LabelsNachtragen`) | erledigt, belegt |
 | K1 Restlage 5 min | `E170AbgleichAngestossen` vor `DoManualResync` (:1643-1645), `E170AbgleichFertig` am Ende von `CImapChecker::DoMergeNewTocs` (ImapChecker.cpp:1292) und nach `ImapAppendSumList` in `DoFetchNewMessages` | erledigt für diesen Weg. Lücken: K8, K9 |
@@ -259,3 +259,62 @@ Siehe oben: Wirklich betroffen waren fünf Stellen, die Briefpapier-Stelle nicht
 | N1 | nicht geholte IMAP-HTML-Mail (multipart) bekommt in der Postfachliste weiter `.txt` | gering | nein |
 | N2 | Schranke [E-214](../Intern/BEFUNDE.md#e-214) übersieht `new CFileDialog(` und `CSaveAsDialog` (gemessen) | sehr gering | nein |
 | N3 | Briefpapier-Stelle war nie betroffen (5 statt 6); `nBenannt == 6` fest | sehr gering | nein |
+
+## <a id="eingearbeitet-e170"></a>Eingearbeitet auf e170 (BEHEBER, 03.11.2026) — nur K8 bis K10 ([E-170](../Intern/BEFUNDE.md#e-170))
+
+Zweig `e170_label_ohne_uidplus`, nach dem Merge von `main` (#211–#213). K1 bis K7 und Z1/Z2 gehören zu [E-128](../Intern/BEFUNDE.md#e-128) bzw. e133 und werden dort eingearbeitet, nicht hier. Testsuite nach dem Merge 398/398, mit der Einarbeitung 398/398 (keine neue Testfunktion, `Test_E170_Verwaltung` und `Test_E170_OhneUidplus_Stelle` geschärft).
+
+| Fund | was geschah |
+|---|---|
+| [K8](#k8) | Der Anstoß entscheidet nicht mehr über das Verwerfen. Jede Vormerkung zieht beim Anlegen einen Takt (`E170Takt`, `InterlockedIncrement`, ImapToc.cpp), jeder Abgleich einen bei seinem Beginn: `CImapChecker` im Konstruktor (vor jedem Lesen des Servers), `GetAndFilterNewMessages` und `ResyncMailbox` am Anfang (an `DoFetchNewMessages` durchgereicht). `E170AbgleichEnde(…, lBeginn, …)` verwirft am Ende jedes Abgleichs des Ziels, der **nach** der Vormerkung begonnen hat, jede Vormerkung ohne Treffer — egal, welche Aktion den Abgleich ausgelöst hat. `E170AbgleichAngestossen` setzt nur noch die Frist neu ([PRÜFER-89](PRUEFER-89.md#k4) K4). Test Lagen 7 und 8, Gegenproben T3, T4, T8 rot |
+| [K9](#k9) | Ein Abgleich, der **vor** der Vormerkung begonnen hat (der laufende, dessentwegen `AddTask` den neuen ablehnt), verwirft nichts; die Vormerkung wartet auf den nächsten Abgleich, der danach beginnt, sonst greift die Frist. Test Lage 7 (`lBeginn` vor dem Takt der Vormerkung, gleicher Takt), Überlauf des Taktes; Gegenproben T1, T2, T5, T6, T7 rot. **Nicht am Prüfstand gemessen:** einen schon laufenden Abgleich des Ziels gleichzeitig mit dem Verschieben stellt der Prüfstand nicht her |
+| [K10](#k10) | Alle E-170-Zeilen (`E-170 Labels beim Verschieben im Konto…`, `…nach dem Abgleich`, `E-170 Vormerkung angestossen`, `E-170 Vormerkung verworfen`) schreiben jetzt mit `DEBUG_MASK_DIALOG` (0x08), der in der Vorgabe `LogLevel=25759`, in Gregors 58527 und im Prüfstand 124063 an ist. `verfallen=` heißt jetzt `anzahl=`. Test am Quelltext (keine `DEBUG_MASK_MISC` mehr im E-170-Block, die Zeilen wörtlich); Gegenproben T9, T10, T11 rot |
+
+Prüfstand: am Bau `7.2.1.131+1b1d6825*` alle sieben Fälle `E-170p/o/m/f/g/c/s` bestanden (Logzeilen jetzt im Bereich *Dialog*; der Prüfstand hat `LogLevel=124063`, *Dialog* an). Gegenprobe: elf Bedingungen einzeln entfernt (T1–T11), Ergebnisse unten; wiederhergestellt byte-gleich, 398/398.
+
+| Lauf | Änderung (vorübergehend) | Ergebnis |
+|---|---|---|
+| 0 | keine | 398/398 |
+| T1 | `E170TaktNach` immer wahr | 397/398, rot |
+| T2 | `E170AbgleichEnde` ohne Takt | 397/398, rot |
+| T3 | `E170AbgleichEnde` verwirft nie | 397/398, rot |
+| T4 | Vormerkung ohne Takt (`lTakt = 0`) | 397/398, rot |
+| T5 | `CImapChecker` ohne Beginn-Takt | 397/398, rot |
+| T6 | Checker zieht den Takt erst am Ende | 397/398, rot |
+| T7 | Vordergrund zieht den Takt erst beim Aufruf von `DoFetchNewMessages` | 397/398, rot |
+| T8 | `DoFetchNewMessages` ohne `E170AbgleichFertig` | 397/398, rot |
+| T9 | Zeile „verworfen“ zurück nach `DEBUG_MASK_MISC` | 397/398, rot |
+| T10 | Zeile „Labels beim Verschieben“ zurück nach `DEBUG_MASK_MISC` | 397/398, rot |
+| T11 | `anzahl=` → `verfallen=` | 397/398, rot |
+| nachher | alles byte-gleich zurück | 398/398 |
+
+In dieser Kopie (Zweig e170) sind die Verweise auf [E-213](../Intern/BEFUNDE.md#e-213) und [E-214](../Intern/BEFUNDE.md#e-214) reiner Text: beide Kennungen gibt es hier noch nicht (sie kommen mit e128), und `befunde-verlinken.pl` weist Verweise ins Leere ab. Sonst ist der Bericht unverändert aus `origin/wt/pruefer-20261103`.
+## <a id="nachtrag-2"></a>Nachtrag 2: e170 K8-K10 (ce2277a0, nur gelesen)
+Gelesen habe ich `git diff 40e55024 ce2277a0 -- Eudora71` auf `origin/e170_label_ohne_uidplus`. Nicht gemergt, nicht gebaut, keine Gegenproben (fremder Zweig). Zeilen sind Stand ce2277a0.
+**Ergebnis: Nichts hält den Merge von e170 auf.** Der Takt trifft K8 und K9 so, wie es gemeint war. Ein falsches Label ist dadurch nicht wahrscheinlicher geworden. Es bleibt die bekannte Restlage einer Doppelzustellung (T1).
+### Gegen die Quelle
+- **Takt und Überlauf.** `E170Takt` ist ein `InterlockedIncrement` auf ein statisches `volatile LONG` (ImapToc.cpp, hinter `E170LabelsVormerken`). Jeder Takt kommt genau einmal vor. Verglichen wird über die Differenz (`E170TaktNach`, E170Zuordnung.h). Ein Überlauf nach 2³¹ Ziehungen dreht also nichts um. Erreichbar ist er ohnehin nicht. Wiederverwendet wird ein Takt nicht: Auch ein Checker, den `AddTask` ablehnt, verbraucht seinen Takt nur. Belegt.
+- **Wann gezogen wird.**
+  - Vormerkung: in `E170LabelsVormerken`, aus `DoPostProcessing` der Übertragung, also nach dem gelungenen `COPY` (`m_iState == kActionStateSucceeded`).
+  - Checker: im einzigen Konstruktor (ImapChecker.cpp:107ff, :140). Das ist der einzige `new CImapChecker` (ImapMailMgr.cpp:303), gerufen aus `CImapResyncAction::DoPostProcessing` (ImapActionQueue.cpp:3665), also im Hauptfaden. Der Server wird erst danach im Nebenfaden gelesen.
+  - Vordergrund: am Anfang von `GetAndFilterNewMessages` (ImapMailbox.cpp:1887) und von `ResyncMailbox` (:2056), jeweils vor jedem Lesen des Servers. Der Takt wird an `DoFetchNewMessages` durchgereicht.
+  - Folgerung: Ein Abgleich mit späterem Takt als eine Vormerkung hat den Server nach dem `COPY` gelesen. Belegt.
+- **Alle Abgleichswege erfasst?** `ImapAppendSumList`, also der einzige Ort, an dem `E170NachAbgleich` Labels setzt, hat genau zwei Aufrufer: `CImapChecker::PostProcessSummaries` (ImapChecker.cpp:1422/1441, endet in `DoMergeNewTocs` → `E170AbgleichFertig(m_pTocDoc, m_lE170Beginn)`, :1298) und `DoFetchNewMessages` (ImapMailbox.cpp:2482 → `E170AbgleichFertig(pTocDoc, lE170Beginn)`). Beide verwerfen jetzt mit ihrem eigenen Beginn. Wer den Abgleich ausgelöst hat, spielt keine Rolle mehr. **K8 erledigt.** Belegt.
+- **K9.** Ein älterer, schon laufender Checker hat einen früheren Takt als die Vormerkung. `E170TaktNach(lBeginn, lTakt)` ist falsch, also verwirft er nichts. **Erledigt.** Belegt.
+- **Fäden und Sperren.** `s_aE170Vormerkungen` wird nur im Hauptfaden angefasst:
+  - Vormerken: in `DoPostProcessing`.
+  - Zuordnen und Verwerfen: in `ImapAppendSumList`. Deren Kopf sagt *„NOT thread safe … done in the main thread“* (ImapMailbox.cpp, vor :4962).
+  - `DoMergeNewTocs` mit `ASSERT(IsMainThreadMT())`.
+  - `DoFetchNewMessages` fragt zwar `IsMainThreadMT()` ab (:2382), aber nur für die Fortschrittsanzeige. Seine Aufrufer sind der Vordergrund-Abgleich und `CheckMail`.
+  - Eine Sperre braucht es nicht. `InterlockedIncrement` ist mehr als nötig, schadet aber nicht. Dass `DoFetchNewMessages` nie im Nebenfaden läuft, habe ich nur an den Aufrufern und am Kommentar gelesen. Vermutung mit starkem Beleg.
+- **K10.** Alle vier Logzeilen von [E-170](../Intern/BEFUNDE.md#e-170) schreiben mit `DEBUG_MASK_DIALOG`: ImapActionQueue.cpp:1782 und ImapToc.cpp:1906, :2001, :2073, nachgezählt über alle E-170-Formate. `anzahl=` statt `verfallen=` (:1904). **Erledigt.** Belegt.
+- **Speicher.** `E170Eintrag` trägt jetzt `long lTakt` statt `bool`. Die Kopien in `E170Eintraege` bleiben flach und werden sofort freigegeben. Neue Zuteilungen gibt es nicht. Belegt.
+### Hinweise (halten nichts auf)
+- <a id="t1"></a>**T1 (gering, Restlage):** Gesetzt wird ein Label weiter in *jedem* Abgleich, der eine einzelne passende neue Mail bringt, unabhängig vom Takt (`E170NachAbgleich`). Mit K9 wartet eine Vormerkung länger, wenn nur ein älterer Abgleich endet. Kommt in dieser Zeit eine Mail, die in Sekunde, Absender und Betreff gleich ist, bekommt sie das Label. Das ist die Doppelzustellung aus [PRUEFER-89](PRUEFER-89.md#k1) K1, jetzt nur in der Lage *„älterer Abgleich lief beim Verschieben“*. Der nächste neuere Abgleich, spätestens die Frist, beendet sie. Am Quelltext belegt, Häufigkeit vermutet: sehr selten.
+- <a id="t2"></a>**T2 (sehr gering):** `ResyncMailbox` mit oberer Grenze `m_UIDHighest` (ImapMailbox.cpp:1833, :1955) liest keine UIDs über dieser Grenze. Ruft ein solcher Abgleich trotzdem `DoFetchNewMessages` (für UIDs innerhalb der Grenze), verwirft er die Vormerkung, obwohl die Kopie mit ihrer höheren UID gar nicht in seinem Bereich lag. Dann fehlt das Label, ein falsches kommt nicht. Vermutung aus dem Aufruf, nicht bis in `ResyncMailbox` nachverfolgt.
+- <a id="t3"></a>**T3 (sehr gering):** Mit K10 steht der **Postfachname** (`ziel="…"`) jetzt in der Vorgabe im Protokoll. Die Zeilen von [E-128](../Intern/BEFUNDE.md#e-128) nennen dagegen bewusst keinen Pfad. Gregor schickt seine `eudora.log`. Ob Postfachnamen darin stehen dürfen, wäre einmal zu entscheiden. Kein Fehler.
+| Fund | Was passiert | Schwere | Hält den Merge von e170 auf? |
+|---|---|---|---|
+| T1 | Restlage Doppelzustellung, wenn beim Verschieben ein älterer Abgleich lief | gering | nein |
+| T2 | Abgleich mit UID-Obergrenze verwirft die Vormerkung (Label fehlt, kein falsches) | sehr gering | nein |
+| T3 | Postfachname jetzt in der Vorgabe im Protokoll | sehr gering | nein |

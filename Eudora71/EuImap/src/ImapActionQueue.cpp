@@ -29,6 +29,7 @@ DAMAGE. */
 #ifdef IMAP4 // Only for IMAP.
 
 #include "ImapActionQueue.h"
+#include "E170Zuordnung.h"		// E-170: Weg nach der Uebertragung (PRUEFER-89 K1)
 #include "msgframe.h"			// PRUEFER-28 P2: Nachrichtenfenster der Quelle schliessen
 
 #include "POPSession.h"
@@ -1481,6 +1482,9 @@ void CImapTransferMsgAction::Copy(CImapAction *pImapAction)
 	{
 		m_dwaE170AlteUIDs.Copy(pQuelle->m_dwaE170AlteUIDs);
 		m_dwaE170Labels.Copy(pQuelle->m_dwaE170Labels);
+		m_dwaE170Sekunden.Copy(pQuelle->m_dwaE170Sekunden);
+		m_saE170Von.Copy(pQuelle->m_saE170Von);
+		m_saE170Betreff.Copy(pQuelle->m_saE170Betreff);
 	}
 }
 
@@ -1634,6 +1638,10 @@ void CImapTransferMsgAction::DoPostProcessing()
 	// any local data placed by the later transfers.
 	if (m_bIsLastOnMailbox && m_pDestTocDoc && m_pDestTocDoc->m_pImapMailbox)
 	{
+		// E-170 ohne UIDPLUS (PRUEFER-89 K1): die Vormerkungen dieses Ziels
+		// gelten nur bis zum Ende des Abgleichs, der jetzt angestossen wird.
+		E170AbgleichAngestossen(m_pDestTocDoc);
+
 		m_pDestTocDoc->m_pImapMailbox->DoManualResync(m_pDestTocDoc, TRUE, FALSE, FALSE);
 
 		// E-121: Spurmarke - steht die Nachricht nach dem Abgleich einmal da?
@@ -1662,8 +1670,16 @@ void CImapTransferMsgAction::DoPostProcessing()
 //	ZUORDNUNG: alte und neue UIDs werden beide AUFSTEIGEND geordnet und dann
 //	paarweise zugeordnet (der Server vergibt die neuen UIDs in der Folge der
 //	alten). Stimmt die Anzahl nicht, wird NICHTS gesetzt - ein Label auf der
-//	falschen Mail waere schlimmer als ein fehlendes. Ohne neue UIDs (Server
-//	ohne UIDPLUS) gibt es keine Zuordnung; das sagt die Logzeile.
+//	falschen Mail waere schlimmer als ein fehlendes.
+//
+//	OHNE UIDPLUS (gemessen 02.11.2026, tools/messen-e170o.ps1: das Label ging
+//	an 7.2.1.128 und 7.2.1.131 verloren): keine neuen UIDs, also keine
+//	Zuordnung hier. Die Vorab-Kopie mit dem Label entfernt E-189, und der
+//	Abgleich holt die Mail als neue Zusammenfassung ohne Label. Darum werden
+//	die Labels mit Datum, Absender und Betreff am Ziel vorgemerkt
+//	(E170LabelsVormerken), und CImapMailbox::ImapAppendSumList setzt sie nach
+//	dem Abgleich auf die neu angelegte Zusammenfassung - nur, wenn genau eine
+//	dazu passt (E170NachAbgleich, E170Zuordnung.h).
 //
 static void E170Aufsteigend(CDWordArray &a)
 {
@@ -1704,29 +1720,29 @@ void CImapTransferMsgAction::E170LabelsNachtragen()
 	const int	nAlt = (int) m_dwaE170AlteUIDs.GetSize();
 	const int	nNeu = (int) m_dwaNewUIDs.GetSize();
 	int			nGesetzt = 0;
-	const char	*szGrund = "ok";
+	int			nVorgemerkt = 0;	// E-170 ohne UIDPLUS
+	int			nSchonDa = 0;
 
-	if (!m_pDestTocDoc)
+	// Der Weg steht in E170Zuordnung.h (E170WegWaehlen) und wird dort im
+	// Verhalten geprueft. PRUEFER-89 K1: ist das Kopieren gescheitert
+	// (DoWork setzt kActionStateFailed und gibt trotzdem S_OK zurueck), gibt
+	// es keine Kopie - nichts vormerken, auch bei Servern mit UIDPLUS; sonst
+	// bekaeme eine spaeter eintreffende gleich aussehende Mail das Label.
+	// PRUEFER-71 K1 (E170_WEG_REIHENFOLGE): ImapTransferSummaryData ordnet in
+	// Listenreihenfolge zu, diese Funktion aufsteigend - nur bei schon
+	// aufsteigender alter Liste sind beide Zuordnungen gleich.
+	const E170Weg	weg = E170WegWaehlen(m_pDestTocDoc != NULL,
+										 m_iState == kActionStateSucceeded,
+										 nNeu, nAlt, (int) m_dwaE170Labels.GetSize(),
+										 E170Aufsteigend_Ist(m_dwaE170AlteUIDs) != FALSE);
+	const char	*szGrund = E170WegGrund(weg);
+
+	if (weg == E170_WEG_VORMERKEN)
 	{
-		szGrund = "kein-ziel";
+		nVorgemerkt = E170LabelsVormerken(m_pDestTocDoc, m_dwaE170Labels, m_dwaE170Sekunden,
+										  m_saE170Von, m_saE170Betreff, &nSchonDa);
 	}
-	else if (nNeu == 0)
-	{
-		szGrund = "keine-neuen-uids";
-	}
-	else if (nNeu != nAlt || (int) m_dwaE170Labels.GetSize() != nAlt)
-	{
-		szGrund = "anzahl-passt-nicht";
-	}
-	else if (!E170Aufsteigend_Ist(m_dwaE170AlteUIDs))
-	{
-		// PRUEFER-71 K1: ImapTransferSummaryData ordnet in Listenreihenfolge zu,
-		// diese Funktion aufsteigend. Nur wenn die alte Liste schon aufsteigend
-		// ist, sind beide Zuordnungen gleich - sonst kaeme ein Label zusaetzlich
-		// auf eine falsche Mail.
-		szGrund = "reihenfolge-unsicher";
-	}
-	else
+	else if (weg == E170_WEG_ZUORDNEN)
 	{
 		// Paare (alte UID, Label) nach der alten UID ordnen, neue UIDs ebenso.
 		CDWordArray		dwaAltSortiert;
@@ -1761,9 +1777,9 @@ void CImapTransferMsgAction::E170LabelsNachtragen()
 	}
 
 	CString		szSpur;
-	szSpur.Format("E-170 Labels beim Verschieben im Konto: mit-label=%d alte-uids=%d neue-uids=%d gesetzt=%d grund=%s",
-				  nMitLabel, nAlt, nNeu, nGesetzt, szGrund);
-	::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	szSpur.Format("E-170 Labels beim Verschieben im Konto: mit-label=%d alte-uids=%d neue-uids=%d gesetzt=%d grund=%s vorgemerkt=%d schon-da=%d",
+				  nMitLabel, nAlt, nNeu, nGesetzt, szGrund, nVorgemerkt, nSchonDa);
+	::PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
 }
 
 void CImapTransferMsgAction::SetDestAccountID(unsigned long lDestAccountID)
