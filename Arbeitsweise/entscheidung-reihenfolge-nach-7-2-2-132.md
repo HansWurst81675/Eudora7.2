@@ -24,3 +24,5 @@ Schranke: keine - Entscheidung Gregors; Ausloeser ist der SessionStart-Haken, de
 **How to apply:** nach dem Paket 7.2.2.132 mit E-192 beginnen; Reihenfolge in Intern/WEITERMACHEN.md eintragen.
 
 **Offen für den E-192-Zweig (LEKTOR-138 L-138.10):** die E-189-Logzeilen in `ImapToc.cpp` (~1819/1825, „Vorab-Kopie …“) schreiben noch `ziel="<Ordner>"` — beim E-192-Zweig mit herausnehmen und im E-189-Eintrag vermerken.
+
+**Ebenfalls für den E-192-Zweig (LEKTOR-138 L-138.11/.12, Kleinkram zu E-216):** im E-216-Eintrag „Nicht gemessen: der Umbruch selbst“ auf *Mail folder from* einschränken (für *Log* gemessen: 26 px nötig bei 33 px Platz); CHANGELOG zu E-216 auch den Fall `E-216l` nennen; WERKZEUGE-Kopfsatz zu `messen-about` auf alle sechs Pfadzeilen.

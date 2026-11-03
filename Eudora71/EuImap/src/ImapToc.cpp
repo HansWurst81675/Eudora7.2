@@ -1847,7 +1847,6 @@ struct E170Vormerkung
 {
 	E170Eintrag	e;			// e.szZiel, e.m.szVon, e.m.szBetreff zeigen in die CStrings unten
 	CString		strZiel;	// Pfad des Ziels: ein wiederverwendeter Zeiger allein reicht nicht
-	CString		strName;	// nur fuer die Logzeilen; e.pZiel wird nie dereferenziert
 	int			nLabel;
 	CString		strVon;
 	CString		strBetreff;
@@ -1876,7 +1875,9 @@ static E170Eintrag* E170Eintraege(int& n)
 
 // Entfernt jede Vormerkung mit pbWeg[i]. Fuer jede mit pbMelden[i] steht je
 // Ziel eine Zeile im Protokoll (PRUEFER-89 K4: ein Verfall war vorher still
-// und von einem Fehler der Zuordnung nicht zu unterscheiden).
+// und von einem Fehler der Zuordnung nicht zu unterscheiden). Ohne den Namen
+// des Ziels: Gregors Entscheidung vom 03.11.2026 (PRUEFER-90 T3) - keine
+// Ordnernamen ins Protokoll, nur Anzahlen.
 static void E170Verwerfen(const bool* pbWeg, const bool* pbMelden, const char* szGrund)
 {
 	const int n = (int) s_aE170Vormerkungen.GetSize();
@@ -1886,7 +1887,7 @@ static void E170Verwerfen(const bool* pbWeg, const bool* pbMelden, const char* s
 	{
 		if (!pbMelden[i])
 			continue;
-		const CString& strName = ((E170Vormerkung *) s_aE170Vormerkungen.GetAt(i))->strName;
+		const CString& strName = ((E170Vormerkung *) s_aE170Vormerkungen.GetAt(i))->strZiel;
 		int j = 0;
 		while (j < (int) saName.GetSize() && saName.GetAt(j) != strName)
 			j++;
@@ -1901,8 +1902,7 @@ static void E170Verwerfen(const bool* pbWeg, const bool* pbMelden, const char* s
 	for (int j = 0; j < (int) saName.GetSize(); j++)
 	{
 		CString szSpur;
-		szSpur.Format("E-170 Vormerkung verworfen: anzahl=%d grund=%s ziel=\"%s\"",
-					  (int) dwaZahl.GetAt(j), szGrund, (LPCTSTR) saName.GetAt(j));
+		szSpur.Format("E-170 Vormerkung verworfen: anzahl=%d grund=%s", (int) dwaZahl.GetAt(j), szGrund);
 		PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
 	}
 	for (int i = n - 1; i >= 0; i--)
@@ -1952,7 +1952,6 @@ int E170LabelsVormerken(CTocDoc* pZiel, const CDWordArray& dwaLabels, const CDWo
 
 			E170Vormerkung *p = DEBUG_NEW E170Vormerkung;
 			p->strZiel = pZiel->GetMBFileName();
-			p->strName = pZiel->Name();
 			p->nLabel = (int) dwaLabels.GetAt(i);
 			p->strVon = strVon;
 			p->strBetreff = strBetreff;
@@ -1997,7 +1996,7 @@ void E170AbgleichAngestossen(CTocDoc* pZiel)
 	if (nAn > 0)
 	{
 		CString szSpur;
-		szSpur.Format("E-170 Vormerkung angestossen: vormerkungen=%d ziel=\"%s\"", nAn, (LPCTSTR) pZiel->Name());
+		szSpur.Format("E-170 Vormerkung angestossen: vormerkungen=%d", nAn);	// ohne Ordnernamen (Gregor, 03.11.2026)
 		PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
 	}
 }
@@ -2068,8 +2067,9 @@ void E170NachAbgleich(CTocDoc* pToc, const CPtrArray& aNeu)
 	else if (nBelegt > 0)
 		szGrund = "ziel-hat-label";
 	CString szSpur;
-	szSpur.Format("E-170 Labels beim Verschieben im Konto, nach dem Abgleich: vorgemerkt=%d neue=%d gesetzt=%d mehrdeutig=%d ohne-treffer=%d grund=%s ziel=\"%s\"",
-				  nVor, nKand, nGesetzt, nMehrdeutig, nOhne, szGrund, (LPCTSTR) pToc->Name());
+	// Ohne den Namen des Ziels (Gregor, 03.11.2026, PRUEFER-90 T3).
+	szSpur.Format("E-170 Labels beim Verschieben im Konto, nach dem Abgleich: vorgemerkt=%d neue=%d gesetzt=%d mehrdeutig=%d ohne-treffer=%d grund=%s",
+				  nVor, nKand, nGesetzt, nMehrdeutig, nOhne, szGrund);
 	PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
 }
 

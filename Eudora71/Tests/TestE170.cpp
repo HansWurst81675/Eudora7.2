@@ -330,9 +330,12 @@ static void Test_E170_OhneUidplus_Stelle(const char* szEudoraDir)
 		char* pBlock = QT_Abschnitt(pToc, "struct E170Vormerkung {", "CSummary *CTocDoc::GetSummaryFromUID(");
 		TT_CHECK_MSG(pBlock && QT_Zaehle(pBlock, "PutDebugLog(DEBUG_MASK_DIALOG, szSpur);") == 3 && QT_Zaehle(pBlock, "DEBUG_MASK_MISC") == 0,
 					 "die E-170-Logzeilen in ImapToc.cpp stehen nicht (alle) im Bereich DIALOG - in der Vorgabe LogLevel=25759 fehlen sie dann (PRUEFER-90 K10)");
+		// Gregor, 03.11.2026 (PRUEFER-90 T3): keine Ordnernamen ins Protokoll, nur Anzahlen.
+		TT_CHECK_MSG(pBlock && QT_Zaehle(pBlock, "ziel=") == 0 && QT_Zaehle(pBlock, "->Name()") == 0,
+					 "eine E-170-Logzeile schreibt den Namen des Zielordners ins Protokoll - Gregor hat am 03.11.2026 entschieden: weglassen (PRUEFER-90 T3)");
 		if (pBlock) free(pBlock);
-		TT_CHECK_MSG(QT_Enthaelt(pToc, "szSpur.Format(\"E-170 Vormerkung verworfen: anzahl=%d grund=%s ziel=\\\"%s\\\"\""),
-					 "beim Verwerfen fehlt die Logzeile 'E-170 Vormerkung verworfen: verfallen=' (PRUEFER-89 K4)");
+		TT_CHECK_MSG(QT_Enthaelt(pToc, "szSpur.Format(\"E-170 Vormerkung verworfen: anzahl=%d grund=%s\", (int) dwaZahl.GetAt(j), szGrund);"),
+					 "beim Verwerfen fehlt die Logzeile 'E-170 Vormerkung verworfen: anzahl=' (PRUEFER-89 K4)");
 		TT_CHECK_MSG(QT_Enthaelt(pToc, "void E170VormerkungenFreigeben() { for (int i = 0; i < (int) s_aE170Vormerkungen.GetSize(); i++) delete (E170Vormerkung *) s_aE170Vormerkungen.GetAt(i); s_aE170Vormerkungen.RemoveAll(); }"),
 					 "E170VormerkungenFreigeben gibt die Vormerkungen nicht frei (PRUEFER-89 K5)");
 	}
