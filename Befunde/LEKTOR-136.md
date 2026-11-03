@@ -189,3 +189,20 @@ Zu `e133_…` in der Sache (gelesen, nicht gemessen): `README.md` *„**Ab 7.2.2
 **Vorschlag:** Kopf auf 03.11.2026; *„Laufend: `ergebnisse_1_131b` (Gregors Ergebnis zu 7.2.1.131), `e133_mailverzeichnis_fehlt` ([[E-133](../Intern/BEFUNDE.md#e-133)], für 7.2.2.132), `e203_e204_persona_kennwort` ([[E-203](../Intern/BEFUNDE.md#e-203)]/[[E-204](../Intern/BEFUNDE.md#e-204)], für 7.2.2.132)“*.
 
 Gregors Antworten von heute sind oben unter *„Was nur Gregor entscheiden kann“* eingetragen (Frage 1 und 3 entschieden, Frage 4 läuft).
+
+## <a id="nachtrag-2-03-11-2026"></a>Nachtrag 2 (03.11.2026) — ce0cf32c gegengelesen
+
+`git merge origin/ergebnisse_1_131b` ohne Konflikt (gemessen). `ce0cf32c` ändert zwei Dateien.
+
+| Fund | Stand | Stelle (gemessen) |
+|---|---|---|
+| [L-136.11](#l-136.11) Klammer in den Release-Notizen | **erledigt**, mit kleinem Rest ([L-136.13](#l-136.13)) | `Releases/7.2.1.131/RELEASE-NOTIZEN.md:41-46` *„bleibt das Label meistens erhalten, wenn der Server die neuen Nummern meldet (Nachtrag 02.11.2026, am Prüfstand gemessen: das tat schon 7.2.1.128; …) — an einem solchen Server ging es am 29.10.2026 trotzdem einmal verloren, die Ursache ist offen (Nachtrag 03.11.2026)“* — das Mitnehmen steht jetzt bei der Prüfstandsmessung |
+| [L-136.12](#l-136.12) WEITERMACHEN-Kopf | **erledigt** | `Intern/WEITERMACHEN.md:3` *„**Stand 03.11.2026:** Zweig `ergebnisse_1_131b` … Laufend: `e128_endung_aus_inhalt` ([[E-128](../Intern/BEFUNDE.md#e-128)]), `e170_label_ohne_uidplus`, `e133_mailverzeichnis_fehlt`, `e203_e204_persona_kennwort`. **Davor, Stand 02.11.2026 abends.**“*; alle vier Zweige gibt es auf `origin` (`git ls-remote --heads` → je 1). In `tools/ZWEIGE.md` dieses Zweigs steht keiner der vier — sie tragen sich auf ihren eigenen Zweigen ein (für `e133_…`/`e203_…` belegt, siehe [L-136.7](#l-136.7); `e128_…`/`e170_…` nicht gelesen) |
+
+### <a id="l-136.13"></a>L-136.13 — „an einem solchen Server“ folgt jetzt auf „meldet der Server sie nicht“
+
+**Gewicht: Kleinkram.** (gemessen am Text)
+
+- Dieselbe Stelle: unmittelbar vor *„— an einem solchen Server ging es … verloren“* endet die Klammer mit *„meldet der Server sie nicht, geht das Label weiter verloren …“*. Gemeint ist ein Server **mit** Meldung (Gregors, [E-170](../Intern/BEFUNDE.md#e-170)); grammatisch liegt der Server ohne Meldung näher.
+
+**Vorschlag:** *„— auch an einem Server, der sie meldet, ging es am 29.10.2026 einmal verloren …“*. Für den Text auf GitHub gilt Gregors Ja.
