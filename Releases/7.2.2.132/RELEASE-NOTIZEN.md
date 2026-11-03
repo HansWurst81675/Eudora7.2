@@ -85,8 +85,14 @@ darunter:
   Filter verschoben, kann der Eintrag im Zielordner Betreff und Absender
   einer anderen Mail zeigen; auf dem Server geht nichts verloren
   ([E-192](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-192);
-  die Behebung ist in Arbeit). Beim Verschieben zwischen zwei IMAP-Konten
-  ist dasselbe möglich
+  die Behebung ist in Arbeit).
+* **Vorsicht beim Verschieben zwischen zwei IMAP-Konten oder aus IMAP in ein
+  lokales Postfach:** lehnt das Ziel die Mail ab oder lässt sich ihr Text
+  nicht laden, markiert Eudora sie in der Quelle trotzdem zum Löschen; nach
+  lokal geschieht das auch, wenn dort schon eine Mail mit derselben Nummer
+  liegt. Die Mail im Ziel prüfen, bevor der Quellordner bereinigt wird
+  (Purge) – bis dahin lässt sie sich zurückholen. Der Fehler stammt aus dem
+  Original und ist noch offen
   ([E-188](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-188)).
 * *Festbreite* im Bearbeiten-Modus schreibt `t;` sichtbar in den Text
   ([E-199](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-199)).
