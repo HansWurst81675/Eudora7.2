@@ -5229,15 +5229,17 @@ int E128FilterIndex(
 // Regeln (reine Zeichenkettenarbeit, ohne Eudora-Welt, Tests/Extract.ps1
 // Region L4):
 //   - behalten: Buchstaben, Ziffern, dieselben Satzzeichen wie StripIllegalMT
-//     ( $%'-_@~`!(){}^#&+,;=[] ), alle Latin-1-Zeichen ab 0xA1 (Umlaute)
+//     ( $%'-_@~`!(){}^#&+,;=[] ), den Punkt (Versionsnummern wie
+//     "7.2.1.128R" - Gregor 03.11.2026), alle Latin-1-Zeichen ab 0xA1 (Umlaute)
 //     und die belegten Zeichen 0x80-0x9F aus windows-1252 (EUR, Anfuehrungs-
 //     zeichen, Gedankenstrich);
-//   - alles andere - die von Windows verbotenen  \ / : * ? " < > |, der
-//     Punkt, Steuerzeichen, Tabulator, das geschuetzte Leerzeichen 0xA0 und
+//   - alles andere - die von Windows verbotenen  \ / : * ? " < > |,
+//     Steuerzeichen, Tabulator, das geschuetzte Leerzeichen 0xA0 und
 //     das Leerzeichen selbst - ist eine LUECKE; jede Folge von Luecken wird
 //     genau EIN Leerzeichen, am Anfang und am Ende keines (Windows schneidet
 //     Leerzeichen und Punkte am Ende ab, und der Name passt dann nicht mehr
-//     zum Vorschlag);
+//     zum Vorschlag); Punkte und Leerzeichen am Ende fallen darum weg, ein
+//     Name nur aus Punkten wird leer;
 //   - hoechstens 120 Zeichen: der ganze Ordnerpfad und die Endung muessen
 //     noch unter MAX_PATH (260) passen;
 //   - ein Geraetename (CON, PRN, AUX, NUL, COM1-9, LPT1-9) bekommt ein "_"
@@ -5276,7 +5278,7 @@ void E220DateinameAusBetreff(
 			bBehalten = ( c != 0x81 && c != 0x8D && c != 0x8F && c != 0x90 && c != 0x9D && c != 0xA0 );
 		else
 			bBehalten = ( ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) ||
-						  ( c > ' ' && strchr( "$%'-_@~`!(){}^#&+,;=[]", c ) != NULL ) );
+						  ( c > ' ' && strchr( "$%'-_@~`!(){}^#&+,;=[].", c ) != NULL ) );
 
 		if ( !bBehalten )
 		{
@@ -5294,6 +5296,11 @@ void E220DateinameAusBetreff(
 
 		pszZiel[n++] = (char) c;
 	}
+
+	// Windows schneidet Punkte und Leerzeichen am Ende ab (Gregor 03.11.2026:
+	// ein Punkt mitten im Namen bleibt).
+	while ( n > 0 && ( pszZiel[n - 1] == '.' || pszZiel[n - 1] == ' ' ) )
+		n--;
 
 	pszZiel[n] = 0;
 

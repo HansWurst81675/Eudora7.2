@@ -125,7 +125,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 **Zweig `e220_dateiname_vorschlag` — nur übersetzt, nach 7.2.2.132.**
 
-* ***Speichern unter* schlägt einen Dateinamen vor, den man ohne Änderung speichern kann** ([E-220](Intern/BEFUNDE.md#e-220), Gregor 03.11.2026). Die Umlaute des Betreffs bleiben (bisher fielen sie alle weg; die Zeile stammt von QUALCOMM), aus ` | `, `:` und anderen verbotenen Zeichen wird genau ein Leerzeichen, und der Name kommt aus dem ganzen Betreff statt aus den ersten 63 Zeichen (höchstens 120). Postfachliste, Nachrichten- und Verfassen-Fenster. Am Prüfstand gemessen (`E-220p`, Gegenprobe an 7.2.1.131), Regressionstest `TestE220.cpp`.
+* ***Speichern unter* schlägt einen Dateinamen vor, den man ohne Änderung speichern kann** ([E-220](Intern/BEFUNDE.md#e-220), Gregor 03.11.2026). Die Umlaute des Betreffs bleiben (bisher fielen sie alle weg; die Zeile stammt von QUALCOMM), aus ` | `, `:` und anderen verbotenen Zeichen wird genau ein Leerzeichen, Punkte bleiben (nur am Ende fallen sie weg), und der Name kommt aus dem ganzen Betreff statt aus den ersten 63 Zeichen (höchstens 120). Postfachliste, Nachrichten- und Verfassen-Fenster. Am Prüfstand gemessen (`E-220p`, Gegenprobe an 7.2.1.131), Regressionstest `TestE220.cpp`.
 
 **Zweig `e128_endung_aus_inhalt`, Quellstand weiter 7.2.1.131 — nur übersetzt, für 7.2.2.132.**
 

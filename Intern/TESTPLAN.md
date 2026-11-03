@@ -528,7 +528,8 @@ Nachricht, deren Betreff Umlaute und ein `|` oder `:` enthält.
 
 1. In der Postfachliste die Nachricht markieren, *File → Save As…*.
    **Bestanden:** im Feld *Dateiname* steht der ganze Betreff mit Umlauten,
-   ohne `|`/`:` und ohne doppelte Leerzeichen, kein Pfad; *Speichern* ohne
+   ohne `|`/`:` und ohne doppelte Leerzeichen, Punkte einer Versionsnummer
+   bleiben stehen, kein Pfad; *Speichern* ohne
    Änderung legt die Datei an.
 2. Dieselbe Nachricht öffnen, im Nachrichtenfenster *File → Save As…*.
    **Bestanden:** wie 1, Endung `.htm` bei einer HTML-Nachricht.

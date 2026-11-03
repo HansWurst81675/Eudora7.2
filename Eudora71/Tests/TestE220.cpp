@@ -54,11 +54,15 @@ static void Test_E220_Umlaute()
 
 static void Test_E220_Luecken()
 {
-	TT_BeginTest("E-220: verbotene Zeichen, Punkt und Leerraum werden genau ein Leerzeichen, an den Enden keines");
+	TT_BeginTest("E-220: verbotene Zeichen und Leerraum werden genau ein Leerzeichen, Punkte nur am Ende weg, an den Enden keines");
 	TT_CHECK_MSG(Gleich("  a   b  ", "a b"), "Leerzeichen am Anfang, in der Mitte und am Ende");
 	TT_CHECK_MSG(Gleich("Re: Termin?", "Re Termin"), "Doppelpunkt und Fragezeichen");
 	TT_CHECK_MSG(Gleich("a/b\\c*d\"e<f>g|h", "a b c d e f g h"), "alle von Windows verbotenen Zeichen");
-	TT_CHECK_MSG(Gleich("Version 7.2.", "Version 7 2"), "Punkt - am Ende keiner, Windows wuerde ihn abschneiden");
+	TT_CHECK_MSG(Gleich("Version 7.2.1.128R", "Version 7.2.1.128R"), "Punkt mitten im Namen bleibt (Gregor 03.11.2026)");
+	TT_CHECK_MSG(Gleich("Ende...", "Ende"), "Punkte am Ende fallen weg, Windows wuerde sie abschneiden");
+	TT_CHECK_MSG(Gleich("Ende . . ", "Ende"), "Punkte und Leerzeichen am Ende gemischt");
+	TT_CHECK_MSG(Gleich("...", ""), "nur Punkte -> leer");
+	TT_CHECK_MSG(Gleich("CON.", "CON_"), "Geraetename mit Punkt am Ende");
 	TT_CHECK_MSG(Gleich("x\t\r\n y", "x y"), "Steuerzeichen");
 	TT_CHECK_MSG(Gleich("\xA0" "a\xA0" "b\xA0", "a b"), "geschuetztes Leerzeichen");
 	TT_CHECK_MSG(Gleich("$%'-_@~`!(){}^#&+,;=[]", "$%'-_@~`!(){}^#&+,;=[]"), "die Satzzeichen von StripIllegalMT bleiben");

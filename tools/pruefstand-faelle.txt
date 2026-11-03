@@ -542,9 +542,9 @@ E-128t | C:\Temp\E128T | 90 | messung | E128 ERGEBNIS kopf=0 mail=text mbx=1 lis
 # vorgeben, dass man auf speichern klicken kann, ohne den namen zu aendern."
 # tools/messen-e220.ps1; Pruefstand C:\Temp\E220 (Kopie von C:\Temp\E128),
 # Pruefmail Testdaten\e220-dateiname-betreff.eml (Betreff mit Umlauten,
-# zweimal "|", Apostroph, 96 Zeichen). Wege: Postfachliste, Nachrichten-
+# zweimal "|", Apostroph, Versionsnummer 7.2.1.128R, 107 Zeichen). Wege: Postfachliste, Nachrichten-
 # fenster (speichert nach ablage\), noch einmal Postfachliste (liste2: der
 # zuletzt benutzte Ordner ist nicht das Mailverzeichnis). Gegenprobe am alten
 # Bau (C:\Temp\E220-alt, 7.2.1.131, direkt ueber testlauf.ps1): umlaute=0
 # doppelleer=1 voll=0 auf allen drei Wegen.
-E-220p | C:\Temp\E220 | 90 | messung | E220 ERGEBNIS mbx=1 probe=1 liste-pfad=0 liste-umlaute=1 liste-doppelleer=0 liste-ende=1 liste-gespeichert=1 liste-voll=1 lesen-pfad=0 lesen-umlaute=1 lesen-doppelleer=0 lesen-ende=1 lesen-gespeichert=1 lesen-voll=1 liste2-pfad=0 liste2-umlaute=1 liste2-doppelleer=0 liste2-ende=1 liste2-gespeichert=1 liste2-voll=1 lebt=1 | | | messen=tools\messen-e220.ps1
+E-220p | C:\Temp\E220 | 90 | messung | E220 ERGEBNIS mbx=1 probe=1 liste-pfad=0 liste-umlaute=1 liste-doppelleer=0 liste-ende=1 liste-gespeichert=1 liste-voll=1 liste-punkte=1 liste-endung=eml lesen-pfad=0 lesen-umlaute=1 lesen-doppelleer=0 lesen-ende=1 lesen-gespeichert=1 lesen-voll=1 lesen-punkte=1 lesen-endung=htm liste2-pfad=0 liste2-umlaute=1 liste2-doppelleer=0 liste2-ende=1 liste2-gespeichert=1 liste2-voll=1 liste2-punkte=1 liste2-endung=eml lebt=1 | | | messen=tools\messen-e220.ps1

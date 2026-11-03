@@ -7,7 +7,8 @@
 #   C:\Temp\E220      neuer Bau
 #   C:\Temp\E220-alt  Gegenprobe, Bau 7.2.1.131
 # Pruefmail: Testdaten\e220-dateiname-betreff.eml - HTML, Betreff mit
-# Umlauten, "|", Apostroph, 96 Zeichen; das 63. Zeichen ist der Apostroph
+# Umlauten, "|", Apostroph, einer Versionsnummer mit Punkten, 107 Zeichen;
+# das 63. Zeichen ist der Apostroph
 # (63 Zeichen fasst die Zusammenfassung m_Subject - wie in Gregors Fall
 # endet der gekuerzte Name auf den Apostroph).
 #
@@ -35,7 +36,8 @@
 #   E220 WEG <weg> feld=<text> ordner=<Ordner des Dialogs> laenge=<n> pfad= umlaute= doppelleer= ende= gespeichert= datei=<name>
 #   E220 ERGEBNIS mbx=<0|1> probe=<0|1> je Weg (liste, lesen, liste2) pfad= umlaute=
 #        doppelleer= ende= gespeichert= voll= (voll: Name laenger als die 63
-#        Zeichen der Zusammenfassung) ... lebt=
+#        Zeichen der Zusammenfassung) punkte= (die Versionsnummer steht mit
+#        Punkten im Feld) endung= (Endung der gespeicherten Datei) ... lebt=
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten
@@ -267,7 +269,7 @@ function SpeichernUnter([string] $weg, [string] $ziel = $md) {
     Write-Host ("E220 WEG {0} feld=[{1}] ordner={2} laenge={3} pfad={4} umlaute={5} doppelleer={6} ende={7} gespeichert={8} datei=[{9}]" -f `
         $weg, $text, $ordner, $stamm.Length, $pfad, $umlaute, $doppel, $ende, $gesp, $dn)
     $script:erg["$weg-pfad"] = $pfad; $script:erg["$weg-umlaute"] = $umlaute; $script:erg["$weg-doppelleer"] = $doppel
-    $script:erg["$weg-ende"] = $ende; $script:erg["$weg-gespeichert"] = $gesp; $script:erg["$weg-voll"] = [int]($stamm.Length -gt 63)
+    $script:erg["$weg-ende"] = $ende; $script:erg["$weg-gespeichert"] = $gesp; $script:erg["$weg-voll"] = [int]($stamm.Length -gt 63); $script:erg["$weg-endung"] = $(if ($neu) { $neu.Extension.TrimStart('.').ToLower() } else { '-' }); $script:erg["$weg-punkte"] = [int]($text.Contains('7.2.1.128R'))
 }
 
 # --- Prozess und Hauptfenster --------------------------------------------
@@ -336,5 +338,5 @@ if ($nIn -ge 1) {
 
 function W([string] $k) { if ($script:erg.Contains($k)) { return $script:erg[$k] } else { return '-' } }
 $teile = @()
-foreach ($w in 'liste','lesen','liste2') { foreach ($a in 'pfad','umlaute','doppelleer','ende','gespeichert','voll') { $teile += ("{0}-{1}={2}" -f $w, $a, (W "$w-$a")) } }
+foreach ($w in 'liste','lesen','liste2') { foreach ($a in 'pfad','umlaute','doppelleer','ende','gespeichert','voll','punkte','endung') { $teile += ("{0}-{1}={2}" -f $w, $a, (W "$w-$a")) } }
 Write-Host ("E220 ERGEBNIS mbx={0} probe={1} {2} lebt={3}" -f $mbx, $script:probe, ($teile -join ' '), [int](Lebt $pp))
