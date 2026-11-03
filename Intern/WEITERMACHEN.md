@@ -76,6 +76,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-220](BEFUNDE.md#e-220)** | Der Dateiname, den *Speichern unter* aus dem Betreff vorschlägt, verliert alle Umlaute, b… | **nie gemessen** | die Behebung in `StripIllegalMT` (`Eudora71/QCUtils/src/services.cpp`, Vergleich `*szSrc > 127` mit vorzeichenbehaftetem `char`) und in den drei Aufru… |
 | **[E-216](BEFUNDE.md#e-216)** | Im Dialog *Help → About* überdecken sich die Knöpfe, die Zeile *Mail folder from* ist … | 03.11.2026 an 7.2.1.131 | Gregors Blick am Paket 7.2.2.132 ([Testplan](TESTPLAN.md#e-216-naechstes)). **Stufe: unkritisch** (Darstellung und neue Funktion, betrifft keine Post) |
 | **[E-212](BEFUNDE.md#e-212)** | Prüfstände tragen noch Debug-Fassungen der Import-Erweiterungen — NSImport.eif, OEImpo… | 02.11.2026 an 7.2.1.131 | die drei `.eif` in die Liste von `pruefstaende-auffrischen.ps1` aufnehmen und einmal über alle Prüfstände fahren; für Gregor nichts zu prüfen (Pa… |
 | **[E-211](BEFUNDE.md#e-211)** | Eine neue Nachricht, die sich nicht anlegen lässt, lässt Eudora auf ihrer Persönlichkei… | 02.11.2026 an 7.2.1.131 (Quelltext) | das Paket 7.2.2.132; am Programm nicht messbar. **Stufe: unkritisch** (nur in einem Fehlerfall, der sich nicht herbeiführen lässt; die Folge wäre d… |
