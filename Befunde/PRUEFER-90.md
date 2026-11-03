@@ -288,11 +288,13 @@ Prüfstand: am Bau `7.2.1.131+1b1d6825*` alle sieben Fälle `E-170p/o/m/f/g/c/s`
 | T11 | `anzahl=` → `verfallen=` | 397/398, rot |
 | nachher | alles byte-gleich zurück | 398/398 |
 
-In dieser Kopie (Zweig e170) sind die Verweise auf [E-213](../Intern/BEFUNDE.md#e-213) und [E-214](../Intern/BEFUNDE.md#e-214) reiner Text: beide Kennungen gibt es hier noch nicht (sie kommen mit e128), und `befunde-verlinken.pl` weist Verweise ins Leere ab. Sonst ist der Bericht unverändert aus `origin/wt/pruefer-20261103`.
 ## <a id="nachtrag-2"></a>Nachtrag 2: e170 K8-K10 (ce2277a0, nur gelesen)
+
 Gelesen habe ich `git diff 40e55024 ce2277a0 -- Eudora71` auf `origin/e170_label_ohne_uidplus`. Nicht gemergt, nicht gebaut, keine Gegenproben (fremder Zweig). Zeilen sind Stand ce2277a0.
 **Ergebnis: Nichts hält den Merge von e170 auf.** Der Takt trifft K8 und K9 so, wie es gemeint war. Ein falsches Label ist dadurch nicht wahrscheinlicher geworden. Es bleibt die bekannte Restlage einer Doppelzustellung (T1).
+
 ### Gegen die Quelle
+
 - **Takt und Überlauf.** `E170Takt` ist ein `InterlockedIncrement` auf ein statisches `volatile LONG` (ImapToc.cpp, hinter `E170LabelsVormerken`). Jeder Takt kommt genau einmal vor. Verglichen wird über die Differenz (`E170TaktNach`, E170Zuordnung.h). Ein Überlauf nach 2³¹ Ziehungen dreht also nichts um. Erreichbar ist er ohnehin nicht. Wiederverwendet wird ein Takt nicht: Auch ein Checker, den `AddTask` ablehnt, verbraucht seinen Takt nur. Belegt.
 - **Wann gezogen wird.**
   - Vormerkung: in `E170LabelsVormerken`, aus `DoPostProcessing` der Übertragung, also nach dem gelungenen `COPY` (`m_iState == kActionStateSucceeded`).
@@ -309,10 +311,13 @@ Gelesen habe ich `git diff 40e55024 ce2277a0 -- Eudora71` auf `origin/e170_label
   - Eine Sperre braucht es nicht. `InterlockedIncrement` ist mehr als nötig, schadet aber nicht. Dass `DoFetchNewMessages` nie im Nebenfaden läuft, habe ich nur an den Aufrufern und am Kommentar gelesen. Vermutung mit starkem Beleg.
 - **K10.** Alle vier Logzeilen von [E-170](../Intern/BEFUNDE.md#e-170) schreiben mit `DEBUG_MASK_DIALOG`: ImapActionQueue.cpp:1782 und ImapToc.cpp:1906, :2001, :2073, nachgezählt über alle E-170-Formate. `anzahl=` statt `verfallen=` (:1904). **Erledigt.** Belegt.
 - **Speicher.** `E170Eintrag` trägt jetzt `long lTakt` statt `bool`. Die Kopien in `E170Eintraege` bleiben flach und werden sofort freigegeben. Neue Zuteilungen gibt es nicht. Belegt.
+
 ### Hinweise (halten nichts auf)
+
 - <a id="t1"></a>**T1 (gering, Restlage):** Gesetzt wird ein Label weiter in *jedem* Abgleich, der eine einzelne passende neue Mail bringt, unabhängig vom Takt (`E170NachAbgleich`). Mit K9 wartet eine Vormerkung länger, wenn nur ein älterer Abgleich endet. Kommt in dieser Zeit eine Mail, die in Sekunde, Absender und Betreff gleich ist, bekommt sie das Label. Das ist die Doppelzustellung aus [PRUEFER-89](PRUEFER-89.md#k1) K1, jetzt nur in der Lage *„älterer Abgleich lief beim Verschieben“*. Der nächste neuere Abgleich, spätestens die Frist, beendet sie. Am Quelltext belegt, Häufigkeit vermutet: sehr selten.
 - <a id="t2"></a>**T2 (sehr gering):** `ResyncMailbox` mit oberer Grenze `m_UIDHighest` (ImapMailbox.cpp:1833, :1955) liest keine UIDs über dieser Grenze. Ruft ein solcher Abgleich trotzdem `DoFetchNewMessages` (für UIDs innerhalb der Grenze), verwirft er die Vormerkung, obwohl die Kopie mit ihrer höheren UID gar nicht in seinem Bereich lag. Dann fehlt das Label, ein falsches kommt nicht. Vermutung aus dem Aufruf, nicht bis in `ResyncMailbox` nachverfolgt.
 - <a id="t3"></a>**T3 (sehr gering):** Mit K10 steht der **Postfachname** (`ziel="…"`) jetzt in der Vorgabe im Protokoll. Die Zeilen von [E-128](../Intern/BEFUNDE.md#e-128) nennen dagegen bewusst keinen Pfad. Gregor schickt seine `eudora.log`. Ob Postfachnamen darin stehen dürfen, wäre einmal zu entscheiden. Kein Fehler.
+
 | Fund | Was passiert | Schwere | Hält den Merge von e170 auf? |
 |---|---|---|---|
 | T1 | Restlage Doppelzustellung, wenn beim Verschieben ein älterer Abgleich lief | gering | nein |

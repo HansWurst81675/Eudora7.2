@@ -124,3 +124,18 @@ Arbeitsbaum `.wt/lektor`, Zweig `wt/lektor-20261103c`, abgezweigt von `origin/e1
 ## Was nur Gregor entscheiden kann
 
 1. **Ordnernamen im Protokoll** (PRÜFER-90 T3): seit K10 steht in der `eudora.log` schon mit der Vorgabe bei jeder E-170-Zeile der Name des Zielordners (`ziel="…"`). Die Zeilen von [E-128](../Intern/BEFUNDE.md#e-128) nennen bewusst keinen Pfad. Du schickst deine `eudora.log` mit den Ergebnis-ZIPs: dürfen Ordnernamen darin stehen, oder soll die Zeile sie weglassen?
+
+## <a id="eingearbeitet"></a>Eingearbeitet (BEHEBER, 03.11.2026) — nur die Funde zu e170
+
+Zweig `e170_label_ohne_uidplus`. [L-138.7](#l-138.7) und [L-138.8](#l-138.8) gehören zum About-Zweig und sind hier nicht angefasst; [L-138.9](#l-138.9) (Berichtszahl in der README) bleibt bis nach dem letzten Merge.
+
+| Fund | was geschah |
+|---|---|
+| [L-138.1](#l-138.1) | `README.md` (Zeile zu [E-170](../Intern/BEFUNDE.md#e-170)) beginnt jetzt mit der Bedingung (*„An einem IMAP-Server, der beim Verschieben keine neuen Nummern meldet …“*), Gregors Server behält das Label; `Doku/FUNKTIONEN.md` (*Change ▸ Label*) ebenso, mit dem Hinweis auf die Berichtigung im Quellstand |
+| [L-138.2](#l-138.2) | Im [E-170](../Intern/BEFUNDE.md#e-170)-Eintrag steht die Zeile *nach dem Abgleich* jetzt im Bereich *Dialog* (0x08, in der Vorgabe an; bis PRÜFER-90 K10 *Misc*); die zweite Stelle mit *Misc* steht im Teil *„Bis 03.11.2026 stand hier“* und beschreibt 7.2.1.131 — bleibt. Kommentare `tools/messen-e170.ps1:12`, `messen-e170o.ps1:12` und die Meldung in `TestE170.cpp` (`anzahl=`) berichtigt |
+| [L-138.3](#l-138.3) | *Zuletzt gemessen* in [E-170](../Intern/BEFUNDE.md#e-170) nennt `1b1d6825*` (mit K8–K10), `tools/WERKZEUGE.md` ebenso; CHANGELOG nennt 388/388 als damaligen Stand und 398/398 bzw. 405/405 als heutigen |
+| [L-138.4](#l-138.4) | Satz *„In dieser Kopie (Zweig e170) …“* in [PRÜFER-90](PRUEFER-90.md#pruefer-90) gestrichen; im Eintrag ist *PRÜFER-90 K8–K10* jetzt ein Link |
+| [L-138.5](#l-138.5) | Leerzeilen vor und nach den Überschriften von Nachtrag 2 und vor der Tabelle |
+| [L-138.6](#l-138.6) | T1 und T2 stehen im Eintrag als **Grenze** (nicht behoben, Gregor 03.11.2026: erst abwägen); T3 ist durch Gregors Entscheidung erledigt: keine E-170-Zeile nennt mehr den Ordnernamen (`ziel="…"` entfernt). Test: Quelltextprüfung (kein `ziel=`, kein `->Name()` im E-170-Block); Gegenprobe Name in jede der drei Zeilen zurück → je 404/405 rot, wiederhergestellt 405/405 |
+
+Unit-Tests vorher 405/405 (Stand a04af7bc), nachher 405/405; Release-Bau ohne Fehler. Prüfstand nicht gefahren: geändert sind nur Logzeilen, die die Messskripte über `grund=` lesen.
