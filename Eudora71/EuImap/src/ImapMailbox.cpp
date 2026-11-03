@@ -2479,6 +2479,10 @@ HRESULT CImapMailbox::DoFetchNewMessages (CTocDoc *pTocDoc, CUidMap& NewUidMap, 
 
 	ImapAppendSumList (pTocDoc, &SumList, &RefSumList);
 
+	// E-170 ohne UIDPLUS (PRUEFER-89 K1): auch dieser Abgleich beendet die
+	// angestossenen Vormerkungen des Ziels.
+	E170AbgleichFertig(pTocDoc);
+
 	// NOTE: If we started the filtering process, we must end it.
 	if (bFiltering)
 	{

@@ -110,8 +110,19 @@ while (@ARGV) {
     elsif ($a eq '--ohne-copyuid') { $opt{ohne_copyuid} = 1 }   # E-184/E-170
     elsif ($a eq '--datum-absteigend') { $opt{datum_absteigend} = 1 }   # E-184 K3
     elsif ($a eq '--fremde-bei-copy') { $opt{fremde_bei_copy} = shift @ARGV }   # E-170 ohne UIDPLUS
+    elsif ($a eq '--copy-scheitert') { $opt{copy_scheitert} = 1 }   # E-170, PRUEFER-89 K3
+    elsif ($a eq '--gleiche-im-ziel') { $opt{gleiche_im_ziel} = shift @ARGV }   # E-170, PRUEFER-89 K3
     else { die "unbekannt: $a\n" }
 }
+# E-170, PRUEFER-89 K3 (03.11.2026):
+# --copy-scheitert   jedes COPY wird mit NO beantwortet, nichts wird kopiert.
+#                    Zusammen mit --fremde-bei-copy gleich liegt danach eine
+#                    gleich aussehende fremde Mail im Ziel - die Lage aus K1:
+#                    Eudora darf ihr das Label der nicht kopierten nicht geben.
+# --gleiche-im-ziel <n>  im Ziel "Ablage" liegt schon VOR dem Lauf eine Mail
+#                    mit Datum, Absender und Betreff von INBOX-Nachricht <n>
+#                    (Message-ID und Text anders) - Eudora darf dann nicht
+#                    vormerken (schon-da=1) und keiner ein Label geben.
 # E-170 ohne UIDPLUS: beim ersten COPY legt der Server VOR den Kopien eine
 # fremde neue Nachricht ins Ziel - so, als waere sie gleichzeitig eingetroffen.
 # Sie bekommt die kleinere neue UID. "anders": eigener Absender und Betreff;
@@ -222,6 +233,15 @@ if ($opt{fremde_uid}) {
         'Diese Nachricht lag schon vor dem Verschieben auf dem Server.',
         '');
     push @ablage, { text => $text, flags => '', geloescht_verlangt => 0, uid => $opt{fremde_uid} };
+}
+if ($opt{gleiche_im_ziel}) {
+    my $n = $opt{gleiche_im_ziel};
+    die "--gleiche-im-ziel $n: keine solche Nachricht\n" unless $n =~ /^\d+$/ and $n >= 1 and $n <= @nachrichten;
+    (my $text = $nachrichten[$n - 1]{text}) =~ s/^Message-ID: .*$/Message-ID: <gleich-im-ziel\@pruefserver.invalid>/mi;
+    $text =~ s/\r\n\r\n.*\z/\r\n\r\nLag schon vor dem Verschieben im Ziel und sieht aus wie Nachricht $n.\r\n/s;
+    my $uid = 1;
+    for my $m (@ablage) { $uid = $m->{uid} + 1 if defined $m->{uid} and $m->{uid} >= $uid }
+    push @ablage, { text => $text, flags => '', geloescht_verlangt => 0, uid => $uid };
 }
 
 # UID einer Nachricht: gespeichert oder ihre Position.
@@ -560,6 +580,12 @@ while (time < $ende) {
                     $fremde_bei_copy_gelegt = 1;
                     notiz(sprintf('  FREMDE NEUE NACHRICHT (%s) nach "%s": UID %d', $opt{fremde_bei_copy}, sichtbar_bytes($zname), $fuid));
                 }
+                if ($opt{copy_scheitert}) {
+                    # PRUEFER-89 K3: Kopieren scheitert - nichts kopiert, NO.
+                    notiz(sprintf('  !! COPY ABGELEHNT (--copy-scheitert) nach "%s": %d Nachricht(en) nicht kopiert',
+                                  sichtbar_bytes($zname), scalar @folge));
+                    @folge = ();
+                }
                 for my $i (@folge) {
                     my $m = $quelle->[$i - 1];
                     my $nuid = naechste_uid($zliste);
@@ -569,7 +595,10 @@ while (time < $ende) {
                 }
                 notiz(sprintf('  COPY nach "%s": UID %s -> %s', sichtbar_bytes($zname),
                               join(',', @alt) || '(keine)', join(',', @neu) || '(keine)'));
-                if (@alt and !$opt{ohne_copyuid}) {
+                if ($opt{copy_scheitert}) {
+                    $antwort = "$marke NO COPY failed";
+                }
+                elsif (@alt and !$opt{ohne_copyuid}) {
                     # PRUEFER-78 K7: wie echte Server zusammenhaengende UIDs als Bereich
                     # melden ("1:3" statt "1,2,3"). Mit Listen mass die rote Gegenprobe
                     # zu E-184m nur den alten Leser, der keine Listen kannte - nicht die

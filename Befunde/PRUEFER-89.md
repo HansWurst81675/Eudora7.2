@@ -122,3 +122,23 @@ Verworfen wird still (ImapToc.cpp:1925-1933). Abgeglichen wird nur nach der *let
 | K3 | Prüfstand ohne Fälle *schon da* und *COPY scheitert, dann gleich aussehende Mail* | gering | nein |
 | K4 | Verfall nach 5 min ohne Logzeile; Frist läuft ab dem Einreihen, nicht ab dem Abgleich | gering | nein |
 | K5 | statische Vormerkungen beim Beenden nicht freigegeben (Debug-Leckmeldung) | sehr gering | nein |
+
+## Eingearbeitet (BEHEBER, 03.11.2026)
+
+Zweig `e170_label_ohne_uidplus`, Bau `7.2.1.131+012feff7*`. Testsuite vorher 387/387 (Stand f6b242a0, Zahl aus Abschnitt 2), nachher 388/388 (neu `Test_E170_Verwaltung`).
+
+| Fund | Punkt (`tools/fund-punkte.pl`) | was geschah |
+|---|---|---|
+| [K1](#k1) | ImapToc.cpp:1983-1987 (ohne Treffer bleibt stehen) | `E170AbgleichFertig` verwirft am Ende des Abgleichs jede angestoßene Vormerkung ohne Treffer; Test Lagen 6 und 7, Gegenproben *Ende verwirft nicht*, *Checker ruft Ende nicht* rot |
+| [K1](#k1) | ImapActionQueue.cpp:1977-1984, :1609-1631 (Zustand ungeprüft) | `E170WegWaehlen(…, m_iState == kActionStateSucceeded, …)`: gescheitert → `grund=fehlgeschlagen`, nichts vorgemerkt; Test Lage 1, Gegenproben *Zustand im Kopf*, *Zustand am Aufruf*, *Grund* rot; Prüfstand `E-170c` |
+| [K1](#k1) | TaskInfo.cpp:485-489 (läuft die Nachbearbeitung nach einem Fehlschlag?) | gemessen, ja: am alten Bau `d2cf569d` schreibt `E-170c` `vorgemerkt=1 log-grund=zugeordnet` nach abgelehntem `COPY` |
+| [K1](#k1) | :1638-1640 (erster Abgleich nach der Übertragung) | `E170AbgleichAngestossen(m_pDestTocDoc)` unmittelbar vor `DoManualResync`; Gegenprobe *Anstoß fehlt* rot |
+| [K1](#k1) | zweiter Fall: auch mit UIDPLUS | `E-170c` läuft gegen einen Server **mit** UIDPLUS; alt `fremd-label=6`, neu `fremd-label=0 vorgemerkt=0 log-grund=fehlgeschlagen` |
+| [K1](#k1) | Satz „nie ein falsches“ | in [E-170](../Intern/BEFUNDE.md#e-170) berichtigt, mit der verbleibenden Restlage |
+| [K2](#k2) | :1943 (Ziel), :1928 (Frist), Verwerfen, Vormerken | Verwaltung als reines C++ nach `E170Zuordnung.h` (`E170GehoertZu`, `E170Abgelaufen`, `E170AbgleichEntscheiden`, `E170NachAktionVerwerfen`, `E170Anstossen`, `E170AbgleichEnde`, `E170Vormerkbar`, `E170WegWaehlen`), im Verhalten getestet; die Aufrufe wörtlich am Quelltext. Gegenproben G1, G2, G3, G4, G6 jetzt rot (je 387/388), dazu elf weitere, zusammen 16 von 16 rot, wiederhergestellt 388/388 |
+| [K3](#k3) | *schon da*, *COPY scheitert* | Prüfserver `--copy-scheitert` und `--gleiche-im-ziel <n>`, `messen-e184.ps1 -CopyScheitert`/`-GleicheImZiel`, Hüllen `messen-e170c.ps1`, `messen-e170s.ps1`, Fälle `E-170c`, `E-170s`. Gemessen (Freigabe Gregors für den 03.11.2026): `E-170c` alt rot (`fremd-label=6 vorgemerkt=1`), neu `fremd-label=0 vorgemerkt=0 log-grund=fehlgeschlagen`; `E-170s` alt und neu grün (die Schranke gab es schon) |
+| [K4](#k4) | ImapToc.cpp:1925-1933 (stiller Verfall) | Logzeile `E-170 Vormerkung verworfen: verfallen=<n> grund=frist\|ohne-treffer-im-abgleich ziel="…"` (*Misc*); Gegenprobe *keine Logzeile* rot |
+| [K4](#k4) | ImapActionQueue.cpp:1638 (Frist ab dem Einreihen) | `E170Anstossen` setzt die Frist beim Anstoß des Abgleichs neu; Test Lage 6, Gegenprobe *Frist ab Einreihen* rot |
+| [K5](#k5) | ImapToc.cpp:1850, :1901 | `E170VormerkungenFreigeben()` in `CEudoraApp::ExitInstance`; Gegenprobe *kein Freigeben* rot. Am Debug-Bau nicht gemessen |
+
+Die Lehre aus Abschnitt 2 (Zeitstempel beim Zurückschreiben) ist beachtet: die Gegenprobe schreibt die Originalbytes neu, also mit neuem Zeitstempel, und prüft danach Byte-Gleichheit.

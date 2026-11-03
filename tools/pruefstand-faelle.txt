@@ -447,6 +447,13 @@ E-170f | C:\Temp\E170 | 30 | messung | E170F ERGEBNIS art=anders fremde-gelegt=1
 # keins als ein falsches). Am alten Bau rot nur wegen log-grund - dort setzt
 # ohnehin niemand ein Label; der Fall sichert die Schranke, nicht die Behebung.
 E-170g | C:\Temp\E170 | 30 | messung | E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1 | | | messen=tools\messen-e170g.ps1
+# E-170, PRUEFER-89 K1/K3: das COPY scheitert (Server MIT UIDPLUS antwortet
+# NO), danach liegt eine gleich aussehende fremde Mail im Ziel. Sie darf das
+# Label der nicht kopierten Mail nicht bekommen; nichts wird vorgemerkt.
+E-170c | C:\Temp\E170 | 30 | messung | E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1 | | | messen=tools\messen-e170c.ps1
+# E-170, PRUEFER-89 K3: im Ziel steht schon vor dem Verschieben eine gleich
+# aussehende Mail (ohne UIDPLUS) - nicht vormerken (schon-da=1), keiner ein Label.
+E-170s | C:\Temp\E170 | 30 | messung | E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1 | | | messen=tools\messen-e170s.ps1
 # E-141: Entwurf aus IMAP nach Out, E-142-Rueckfrage Yes - danach KEINE
 # Meldung "No messages were transferred!". Alter Bau: nicht-uebertragen=1.
 # Gegenprobe IMAP -> lokal und Loeschen in derselben Zeile (lokal, geloescht).

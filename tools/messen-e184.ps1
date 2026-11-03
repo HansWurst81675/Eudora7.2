@@ -78,7 +78,18 @@ param(
     # Ziel (UID 1, die Kopie bekommt UID 2). "anders": anderer Absender und
     # Betreff - das Label gehoert nur auf UID 2. "gleich": Datum, Absender und
     # Betreff wie die verschobene - keine darf ein Label bekommen.
-    [string] $FremdeBeiCopy = ''
+    [string] $FremdeBeiCopy = '',
+    # E-170, PRUEFER-89 K3 (Huelle tools\messen-e170c.ps1): der Pruefserver
+    # beantwortet das COPY mit NO (--copy-scheitert). Mit -FremdeBeiCopy gleich
+    # liegt danach eine gleich aussehende fremde Mail im Ziel - sie darf das
+    # Label der nicht kopierten Mail nicht bekommen (vorher: Vormerkung, und
+    # der naechste Abgleich gab ihr das Label).
+    [switch] $CopyScheitert,
+    # E-170, PRUEFER-89 K3 (Huelle tools\messen-e170s.ps1): im Ziel liegt
+    # schon VOR dem Lauf eine Mail mit Datum, Absender und Betreff der
+    # verschobenen (--gleiche-im-ziel 3, UID 1; die Kopie bekommt UID 2).
+    # Eudora darf nicht vormerken (schon-da=1) und keiner ein Label geben.
+    [switch] $GleicheImZiel
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
@@ -230,6 +241,8 @@ if ($MehrereLabels) {
 }
 if ($OhneCopyuid) { $srvArgs += '--ohne-copyuid' }
 if ($FremdeBeiCopy) { $srvArgs += @('--fremde-bei-copy', $FremdeBeiCopy) }
+if ($CopyScheitert) { $srvArgs += '--copy-scheitert' }
+if ($GleicheImZiel) { $srvArgs += @('--gleiche-im-ziel', '3') }
 $srv = Start-Process $perl -ArgumentList $srvArgs -WorkingDirectory $repo -WindowStyle Hidden -PassThru
 Start-Sleep -Seconds 2
 
@@ -495,6 +508,30 @@ if ($Label -gt 0) {
         $koL = '-'; if ($ko.Count -eq 1) { $koL = [string]$ko[0].Label }
         $koB = 0; if ($ko.Count -eq 1 -and $ko[0].Betreff -eq $b) { $koB = 1 }
         Write-Host ("E170F ERGEBNIS art={0} fremde-gelegt={1} kopie-betreff-passt={2} fremd-label={3} kopie-label={4} eintraege={5} log-grund={6} lebt={7}" -f $FremdeBeiCopy, $gelegt, $koB, $frL, $koL, $nachher.Count, $grund, $lebt)
+    }
+    # PRUEFER-89 K3: vorgemerkt/schon-da aus der Zeile nach der Uebertragung
+    # ("E-170 Labels beim Verschieben im Konto: ..."), nicht aus der nach dem Abgleich.
+    $vorg = '-'; $sda = '-'
+    if (Test-Path $log) {
+        $z = Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-170 Labels beim Verschieben im Konto: ' } | Select-Object -Last 1
+        if ($z -and $z -match 'vorgemerkt=(\d+)') { $vorg = $Matches[1] }
+        if ($z -and $z -match 'schon-da=(\d+)') { $sda = $Matches[1] }
+        foreach ($v in @(Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-170 Vormerkung' })) { Write-Host ('E170 LOG ' + $v) }
+    }
+    if ($CopyScheitert) {
+        # Positivprobe: der Server hat das COPY abgelehnt (Serverprotokoll).
+        $abgelehnt = @($prot | Where-Object { $_ -match '!! COPY ABGELEHNT' }).Count
+        $fr = @($nachher | Where-Object { $_.Uid -eq 1 })
+        $frL = '-'; if ($fr.Count -eq 1) { $frL = [string]$fr[0].Label }
+        Write-Host ("E170C ERGEBNIS abgelehnt={0} fremde-gelegt={1} fremd-label={2} eintraege={3} vorgemerkt={4} log-grund={5} lebt={6}" -f $abgelehnt, $gelegt, $frL, $nachher.Count, $vorg, $grund, $lebt)
+    }
+    if ($GleicheImZiel) {
+        # Die gleich aussehende lag vorher da (UID 1), die Kopie bekommt UID 2.
+        $vd = @($nachher | Where-Object { $_.Uid -eq 1 -and $_.Betreff -eq $b })
+        $ko = @($nachher | Where-Object { $_.Uid -eq 2 -and $_.Betreff -eq $b })
+        $vdL = '-'; if ($vd.Count -eq 1) { $vdL = [string]$vd[0].Label }
+        $koL = '-'; if ($ko.Count -eq 1) { $koL = [string]$ko[0].Label }
+        Write-Host ("E170S ERGEBNIS vorhanden={0} kopie={1} vorhanden-label={2} kopie-label={3} schon-da={4} vorgemerkt={5} log-grund={6} lebt={7}" -f $vd.Count, $ko.Count, $vdL, $koL, $sda, $vorg, $grund, $lebt)
     }
 }
 if ($MehrereLabels) {

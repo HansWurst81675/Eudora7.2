@@ -554,6 +554,16 @@ int E170LabelsVormerken(CTocDoc* pZiel, const CDWordArray& dwaLabels, const CDWo
 // Zusammenfassungen (aNeu, CSummary*) gerufen; setzt das vorgemerkte Label nur
 // bei eindeutiger Zuordnung (E170Zuordnen), sonst nichts.
 void E170NachAbgleich(CTocDoc* pToc, const CPtrArray& aNeu);
+// E-170 ohne UIDPLUS (PRUEFER-89 K1, K4): die Nachbearbeitung der Uebertragung
+// stoesst den Abgleich von pZiel an - dessen Vormerkungen gelten ab jetzt als
+// angestossen, ihre Frist laeuft ab jetzt.
+void E170AbgleichAngestossen(CTocDoc* pZiel);
+// E-170 ohne UIDPLUS (PRUEFER-89 K1): am Ende eines Abgleichs von pToc - jede
+// angestossene Vormerkung ohne Treffer wird verworfen, statt bis zu fuenf
+// Minuten auf eine gleich aussehende fremde Mail zu warten.
+void E170AbgleichFertig(CTocDoc* pToc);
+// E-170 ohne UIDPLUS (PRUEFER-89 K5): beim Beenden alle Vormerkungen freigeben.
+void E170VormerkungenFreigeben();
 // E-121 (PRUEFER-32): eine Kennung, die weder in der Quelle noch im Ziel vorkommt -
 // fuer Nachrichten aus Out, die sonst alle die Kennung 0 tragen.
 unsigned long E121NeueKennung(CTocDoc* pQuelle, CTocDoc* pZiel);

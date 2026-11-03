@@ -35,26 +35,25 @@ E-137b	ok	2026-11-02 13:54:36	C:\Temp\E137	Eudora 7.2.1.131+a2f29b69* 2026-11-02
 E-137c	ok	2026-11-02 13:54:36	C:\Temp\E137	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja
 E-139p	ok	2026-11-02 13:54:36	C:\Temp\E139	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1
 E-13p	ok	2026-11-02 13:54:36	C:\Temp\E13	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E13 FORTSCHRITT sichtbar=1
-E-140p	ok	2026-11-02 13:54:36	C:\Temp\E140	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
+E-140p	ok	2026-11-02 17:04:02	C:\Temp\E194-140	Eudora 7.2.1.131+cecab886* 2026-11-02 16:58	E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
 E-141g	ok	2026-11-02 18:00:23	C:\Temp\EM141	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	geloescht=2 lebt=1
 E-141p	ok	2026-11-02 18:00:23	C:\Temp\EM141	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1
-E-140p	ok	2026-11-02 17:04:02	C:\Temp\E194-140	Eudora 7.2.1.131+cecab886* 2026-11-02 16:58	E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
 E-143s	ok	2026-11-02 13:54:36	C:\Temp\E143S	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1
 E-144p	ok	2026-11-02 13:54:36	C:\Temp\E144	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E144 ERGEBNIS probe=ok gleich=1 references=1
 E-146	ok	2026-11-02 13:54:36	C:\Temp\E146	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)
 E-166a	ok	2026-11-02 13:54:36	C:\Temp\E166	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	reihenfolge=junk-no,konto-ok
 E-166b	ok	2026-11-02 13:54:36	C:\Temp\E166	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	AskedAboutJunk=6
-E-170f	ok	2026-11-02 19:33:59	C:\Temp\E170	Eudora 7.2.1.131+d2cf569d 2026-11-02 19:00	E170F ERGEBNIS art=anders fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=6 eintraege=2 log-grund=zugeordnet lebt=1
-E-170g	ok	2026-11-02 19:33:59	C:\Temp\E170	Eudora 7.2.1.131+d2cf569d 2026-11-02 19:00	E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1
-E-170m	ok	2026-11-02 19:33:59	C:\Temp\E170	Eudora 7.2.1.131+d2cf569d 2026-11-02 19:00	E170M ERGEBNIS labels-quelle=3 richtig=3 falsch=0 ohne=0 eintraege=3 log-grund=zugeordnet lebt=1
-E-170o	ok	2026-11-02 19:33:59	C:\Temp\E170	Eudora 7.2.1.131+d2cf569d 2026-11-02 19:00	E170 ERGEBNIS copyuid=nein label-quelle=1 uid-alt=3 uid-kopiert=3 quelle-passt=1 uid-ziel=1 kopie-mit-label=1 log-grund=zugeordnet lebt=1
-E-170p	ok	2026-11-02 19:33:59	C:\Temp\E170	Eudora 7.2.1.131+d2cf569d 2026-11-02 19:00	kopie-mit-label=1 log-grund=ok lebt=1
+E-170c	ok	2026-11-03 08:19:56	C:\Temp\E170	Eudora 7.2.1.131+012feff7* 2026-11-03 08:07	E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1
+E-170f	ok	2026-11-03 08:19:56	C:\Temp\E170	Eudora 7.2.1.131+012feff7* 2026-11-03 08:07	E170F ERGEBNIS art=anders fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=6 eintraege=2 log-grund=zugeordnet lebt=1
+E-170g	ok	2026-11-03 08:19:56	C:\Temp\E170	Eudora 7.2.1.131+012feff7* 2026-11-03 08:07	E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1
+E-170m	ok	2026-11-03 08:19:56	C:\Temp\E170	Eudora 7.2.1.131+012feff7* 2026-11-03 08:07	E170M ERGEBNIS labels-quelle=3 richtig=3 falsch=0 ohne=0 eintraege=3 log-grund=zugeordnet lebt=1
+E-170o	ok	2026-11-03 08:19:56	C:\Temp\E170	Eudora 7.2.1.131+012feff7* 2026-11-03 08:07	E170 ERGEBNIS copyuid=nein label-quelle=1 uid-alt=3 uid-kopiert=3 quelle-passt=1 uid-ziel=1 kopie-mit-label=1 log-grund=zugeordnet lebt=1
+E-170p	ok	2026-11-03 08:19:56	C:\Temp\E170	Eudora 7.2.1.131+012feff7* 2026-11-03 08:07	kopie-mit-label=1 log-grund=ok lebt=1
+E-170s	ok	2026-11-03 08:19:56	C:\Temp\E170	Eudora 7.2.1.131+012feff7* 2026-11-03 08:07	E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1
 E-171p	ok	2026-11-02 13:54:36	C:\Temp\E171	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1
-E-177p	ok	2026-11-02 13:54:36	C:\Temp\E177	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1
-E-178p	ok	2026-11-02 13:54:36	C:\Temp\E178	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1
-E-179p	ok	2026-11-02 18:01:00	C:\Temp\EM179	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1
 E-177p	ok	2026-11-02 17:04:02	C:\Temp\E194-177	Eudora 7.2.1.131+cecab886* 2026-11-02 16:58	E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1
 E-178p	ok	2026-11-02 17:04:02	C:\Temp\E194-178	Eudora 7.2.1.131+cecab886* 2026-11-02 16:58	E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1
+E-179p	ok	2026-11-02 18:01:00	C:\Temp\EM179	Eudora 7.2.1.131+f31dbff9 2026-11-02 16:38	E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1
 E-184	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
 E-184m	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
 E-189	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2

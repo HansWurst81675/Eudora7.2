@@ -2098,6 +2098,12 @@ int CEudoraApp::ExitInstance()
 	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 ExitInstance: erreicht - das Hauptfenster ist zerstoert");
 
+#ifdef IMAP4
+	// E-170 ohne UIDPLUS (PRUEFER-89 K5): Vormerkungen, die noch auf ihren
+	// Abgleich warten, freigeben - sonst Leckmeldung im Debug-Bau.
+	E170VormerkungenFreigeben();
+#endif
+
 	// Clean up the directors/managers
 	VERIFY(QCLabelDirector::Destroy());
 	VERIFY(QCSharewareManager::Destroy());

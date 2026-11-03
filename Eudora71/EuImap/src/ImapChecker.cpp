@@ -1287,6 +1287,10 @@ HRESULT CImapChecker::DoMergeNewTocs()
 		}
 	}
 
+	// E-170 ohne UIDPLUS (PRUEFER-89 K1): der Abgleich ist durch - was an
+	// angestossenen Vormerkungen fuer dieses Ziel noch steht, hatte keine Kopie.
+	E170AbgleichFertig(m_pTocDoc);
+
 	// Make sure to do this!!!
 	m_slPostFilterSummaries.RemoveAll();
 
