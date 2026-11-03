@@ -76,11 +76,16 @@ darunter:
   und ist auf 64 Zeichen gekürzt; aus der Postfachliste kann er so im Feld
   stehen, dass Windows ihn ablehnt. Den Namen dann von Hand ändern. Die
   Behebung ist in Arbeit.
+* Ein langer **Betreff mit Umlauten** kann in der Postfachliste um seine
+  ersten sieben Zeichen gekürzt erscheinen, wenn der Absender die Kopfzeile
+  gleich hinter `Subject:` umbricht; Eudora selbst sendet solche Betreffs so.
+  Die Nachricht selbst ist vollständig. Das war schon vor 7.2.2 so (Originalfehler); die
+  Behebung ist in Arbeit.
 * Werden mehrere IMAP-Mails auf einmal in den Papierkorb, nach Junk oder per
   Filter verschoben, kann der Eintrag im Zielordner Betreff und Absender
   einer anderen Mail zeigen; auf dem Server geht nichts verloren
-  ([E-192](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-192),
-  behoben im nächsten Paket). Beim Verschieben zwischen zwei IMAP-Konten
+  ([E-192](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-192);
+  die Behebung ist in Arbeit). Beim Verschieben zwischen zwei IMAP-Konten
   ist dasselbe möglich
   ([E-188](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-188)).
 * *Festbreite* im Bearbeiten-Modus schreibt `t;` sichtbar in den Text

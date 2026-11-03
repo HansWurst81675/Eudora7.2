@@ -170,3 +170,4 @@
 - [E-133 No / Release-Text 03.11.](entscheidung-e133-no-und-release-text-03-11.md) — No bleibt (Befehlszeile genügt); Release-Text E-170 im nächsten PR
 - [Reihenfolge nach 7.2.2.132](entscheidung-reihenfolge-nach-7-2-2-132.md) — Gregor 03.11.: E-192, E-199, E-188 messen, E-193 nachstellen; E-129/E-198 nur dokumentiert
 - [Randfälle nach Häufigkeit abwägen](randfaelle-nach-haeufigkeit-abwaegen.md) — wie oft, Schaden, Aufwand; hypothetische Fälle zuletzt
+- [Postfachdateien ohne Umlaute](entscheidung-postfachdateien-umlaute.md) — Gregor 03.11.: StripIllegalMT bleibt; nur Speichern-unter-Vorschlag mit Umlauten
