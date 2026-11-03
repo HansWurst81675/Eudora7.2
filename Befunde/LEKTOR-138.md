@@ -139,3 +139,29 @@ Zweig `e170_label_ohne_uidplus`. [L-138.7](#l-138.7) und [L-138.8](#l-138.8) geh
 | [L-138.6](#l-138.6) | T1 und T2 stehen im Eintrag als **Grenze** (nicht behoben, Gregor 03.11.2026: erst abwägen); T3 ist durch Gregors Entscheidung erledigt: keine E-170-Zeile nennt mehr den Ordnernamen (`ziel="…"` entfernt). Test: Quelltextprüfung (kein `ziel=`, kein `->Name()` im E-170-Block); Gegenprobe Name in jede der drei Zeilen zurück → je 404/405 rot, wiederhergestellt 405/405 |
 
 Unit-Tests vorher 405/405 (Stand a04af7bc), nachher 405/405; Release-Bau ohne Fehler. Prüfstand nicht gefahren: geändert sind nur Logzeilen, die die Messskripte über `grund=` lesen.
+
+## Nachtrag 1 (03.11.2026, nach 9bad293a)
+
+`origin/e170_label_ohne_uidplus` in `wt/lektor-20261103c` gemergt (Spitze `9bad293a` *„[E-170](../Intern/BEFUNDE.md#e-170): keine Ordnernamen im Protokoll (Gregor 03.11.2026, [PRUEFER-90](PRUEFER-90.md#pruefer-90) T3); [LEKTOR-138](#lektor-138) L-138.1-.6 eingearbeitet“*). Gemessen mit `grep`/`awk` am Stand nach dem Merge.
+
+| Fund | Stand | Stelle |
+|---|---|---|
+| [L-138.1](#l-138.1) Randfall als Alltagsfehler | **erledigt** | `README.md:167` *„An einem IMAP-Server, der beim Verschieben **keine neuen Nummern** meldet (ohne UIDPLUS), geht das **Label** … verloren“*; `Doku/FUNKTIONEN.md:176` *„Geht an Servern ohne UIDPLUS …“* |
+| [L-138.2](#l-138.2) *Misc* statt *Dialog* im E-170-Eintrag | **teilweise** | erste Stelle berichtigt: `Intern/BEFUNDE.md:429` *„(Protokollbereich *Dialog*, 0x08, in der Vorgabe an; bis PRÜFER-90 K10 *Misc*, 0x8000)“*. **Zweite Stelle unverändert:** derselbe Eintrag *„`E-170 Labels beim Verschieben im Konto: … grund=keine-neuen-uids` (Protokollbereich *Misc*, 0x8000 — in Gregors `LogLevel=58527` an, in der Vorgabe 25759 aus)“*. Die Skriptkommentare `messen-e170.ps1`/`messen-e170o.ps1` sind geändert (`git diff --stat 07cca482 9bad293a`) |
+| [L-138.3](#l-138.3) alter Bau, alte Testzahl | **erledigt** | `Intern/BEFUNDE.md:429` *„Bau `7.2.1.131+1b1d6825*` mit PRÜFER-90 K8–K10“*; `tools/WERKZEUGE.md:162` *„erneut 7/7 am Bau `7.2.1.131+1b1d6825*`“*; `CHANGELOG.md:157` *„damals 388/388 mit 16 Gegenproben rot, nach …“* |
+| [L-138.4](#l-138.4) „gibt es hier noch nicht“ | **erledigt** | `grep -c 'reiner Text: beide' Befunde/PRUEFER-90.md` → 0; *„daher hier ohne Verweis“* im Eintrag → 0 |
+| [L-138.5](#l-138.5) Leerzeilen Nachtrag 2 | **erledigt** | `awk` über `Befunde/PRUEFER-90.md`: keine Überschrift nach nicht-leerer Zeile, keine Tabelle direkt nach einem Listenpunkt |
+| [L-138.6](#l-138.6) T1–T3 im Eintrag | **erledigt** | `Intern/BEFUNDE.md:429` nennt [T1](PRUEFER-90.md#t1) (*„sehr selten, am Quelltext belegt“*), [T2](PRUEFER-90.md#t2) und *„T3 (Ordnername im Protokoll) ist durch die Entscheidung oben erledigt“* |
+| [L-138.7](#l-138.7)/[L-138.8](#l-138.8) About-Zweig | nicht nachgemessen (gehören zu `about_dialog_github`) | — |
+| [L-138.9](#l-138.9) Berichtszahl | **offen** (vereinbart: nach dem letzten Merge) | — |
+
+### <a id="l-138.10"></a>L-138.10 — Ordnernamen stehen weiter im Protokoll, über die E-189-Zeilen
+
+**Gewicht: mittel** (Gregors Entscheidung vom 03.11.2026 *„Weglassen“*, im Eintrag *„**Keine Ordnernamen im Protokoll**“*). Umgesetzt ist sie nur für [E-170](../Intern/BEFUNDE.md#e-170). (gemessen am Code)
+
+- `Eudora71/EuImap/src/ImapToc.cpp:1819` *„[E-189](../Intern/BEFUNDE.md#e-189) Vorab-Kopie bleibt, Fenster nicht geschlossen: alte-uid=%lu ziel=\"%s\"“* und `:1825` *„[E-189](../Intern/BEFUNDE.md#e-189) Vorab-Kopie ohne neue UID entfernt: … ziel=\"%s\"“*, beide mit `pZiel->Name()`, geschrieben mit `DEBUG_MASK_MISC` — in der Vorgabe aus, in Gregors `LogLevel` (58527, laut E-170-Eintrag) an. [E-189](../Intern/BEFUNDE.md#e-189) ist der Befund, bei dem eine Vorab-Kopie im Ziel bleibt oder entfernt wird.
+- Ob Gregors Entscheidung nur die E-170-Zeilen meint oder alle Logzeilen, sagt der Eintrag nicht; der Wortlaut *„Keine Ordnernamen im Protokoll“* ist allgemein.
+
+**Vorschlag:** die beiden E-189-Zeilen ebenso ohne `ziel=` schreiben und die Quelltextprüfung in `TestE170.cpp` (kein `ziel=`) auf den ganzen Block bzw. eine Schranke über alle `szSpur.Format` mit `->Name()` ausdehnen; oder im Eintrag ausdrücklich *„nur [E-170](../Intern/BEFUNDE.md#e-170)“* schreiben.
+
+Neu: ein Fund ([L-138.10](#l-138.10)); [L-138.2](#l-138.2) teilweise. Was nur Gregor entscheiden kann: weiter nichts — die Frage aus dem Hauptteil (Ordnernamen) hat er beantwortet.
