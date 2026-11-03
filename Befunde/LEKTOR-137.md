@@ -94,3 +94,18 @@ Arbeitsbaum `.wt/lektor`, Zweig `wt/lektor-20261103b`, abgezweigt von `origin/e1
 ## Was nur Gregor entscheiden kann
 
 Nichts Neues. Beide Produktfragen zu [E-128](../Intern/BEFUNDE.md#e-128) hat Gregor am 03.11.2026 entschieden (Vorschlag „ja“; Textmail mit Umlauten bleibt `.eml`); [L-137.1](#l-137.1) zieht nur die Doku nach.
+
+## Nachtrag 1 (03.11.2026, nach 38dc8775)
+
+`origin/e128_endung_aus_inhalt` in `wt/lektor-20261103b` gemergt (Spitze `38dc8775` *„[LEKTOR-137](#lektor-137) eingearbeitet ([L-137.1](#l-137.1) bis .4, .6) …“*). Gemessen mit `grep`/`sed` am Stand nach dem Merge.
+
+| Fund | Stand | Stelle |
+|---|---|---|
+| [L-137.1](#l-137.1) Umlaut-Textmail → `.eml` | **erledigt** | `Intern/TESTPLAN.md:487-490` *„Eine **Textmail ohne Umlaute** … **Text Files (*.txt)**. Eine Textmail **mit** Umlauten bekommt **Mail Files (*.eml)** — so gewollt“*; `Intern/BEFUNDE.md:391` Kurz *„Text ohne Umlaute als `.txt`, Text mit Umlauten als `.eml`“*; `README.md:163` und `Doku/FUNKTIONEN.md:85` *„(Kopfzeilen, HTML oder Umlaute)“* |
+| [L-137.2](#l-137.2) „Gregor muss nichts tun“ | **erledigt** | `Intern/BEFUNDE.md:391` *„Gregor testet es am Paket 7.2.2.132 (siehe *Was noch fehlt*)“* |
+| [L-137.3](#l-137.3) WEITERMACHEN | **erledigt** | `Intern/WEITERMACHEN.md:3` *„PRÜFER-90 … eingearbeitet“*, *„Laufend: `e170_label_ohne_uidplus`, `about_dialog_github` …“*; die ältere Liste mit `e133_…`/`e203_…` steht weiter hinten in derselben Zeile unter *„Davor, ebenfalls 03.11.2026“* — als Rückblick gekennzeichnet, kein Fehler |
+| [L-137.4](#l-137.4) ZWEIGE | **erledigt** | `tools/ZWEIGE.md:217` nennt jetzt [E-213](../Intern/BEFUNDE.md#e-213) und [E-214](../Intern/BEFUNDE.md#e-214) |
+| [L-137.5](#l-137.5) Berichtszahl | **offen** (vereinbart: nach dem letzten Merge) | `README.md:98` *„219 … gezählt am 02.11.2026“*; gezählt 225 |
+| [L-137.6](#l-137.6) IMAP-Weg | **erledigt im TESTPLAN, am Prüfstand weiter ungemessen** | `Intern/TESTPLAN.md:491-494` *„**Ort: IMAP, offline** (freiwillig) … Bestanden, wenn **vor** dem Dialog keine Frage „online gehen?“ kommt. Am Prüfstand ist dieser Weg nicht gemessen.“* |
+
+Kein neuer Fund. Was nur Gregor entscheiden kann: weiter nichts.
