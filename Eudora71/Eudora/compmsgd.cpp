@@ -3359,14 +3359,13 @@ void CCompMessageDoc::OnFileSaveAs()
 		return;
 	}
 
-	strcpy( szName, m_Sum->m_Subject );
-
-	::StripIllegalMT( szName, EudoraDir );
-
-	if( !::LongFileSupportMT( EudoraDir ) )
-	{
-		szName[8] = 0;
-	}
+	// BEFUND E-220: Vorschlag aus dem ganzen Betreff, mit Umlauten (Regeln an
+	// E220DateinameAusBetreff, msgutils.cpp). Bis 7.2.2.132: m_Subject durch
+	// StripIllegalMT, ohne Umlaute und hoechstens 63 Zeichen.
+	const char *	pszBetreffE220 = GetHeaderLine( HEADER_SUBJECT );
+	E220DateinameVorschlag( szName, sizeof( szName ),
+							( pszBetreffE220 && *pszBetreffE220 ) ? pszBetreffE220 : m_Sum->m_Subject,
+							NULL, "Verfassen-Fenster" );
 
 
 	//

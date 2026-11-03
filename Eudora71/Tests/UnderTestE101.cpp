@@ -32,6 +32,9 @@
 // --------------------------------------------------------- E-128
 #include "generated/msgutils_e128.inc"
 
+// --------------------------------------------------------- E-220
+#include "generated/msgutils_e220.inc"
+
 // --------------------------------------------------------- Schnittstelle
 #line 30 "UnderTestE101.cpp"
 
@@ -65,4 +68,10 @@ const char* UTE128_Vorgabeendung(bool bPostfachliste, int nAnzahl, bool bDateiMi
 int UTE128_FilterIndex(const char* pszFilter, const char* pszEndung)
 {
 	return E128FilterIndex(pszFilter, pszEndung);
+}
+
+// E-220 (generated/msgutils_e220.inc)
+void UTE220_DateinameAusBetreff(const char* pszBetreff, char* pszZiel, size_t nZiel)
+{
+	E220DateinameAusBetreff(pszBetreff, pszZiel, nZiel);
 }

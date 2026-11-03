@@ -27,7 +27,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-220](Intern/BEFUNDE.md#e-220)** | Der Dateiname, den *Speichern unter* aus dem Betreff vorschlägt, verliert alle Umlaute, b… | **nie gemessen** | die Behebung in `StripIllegalMT` (`Eudora71/QCUtils/src/services.cpp`, Vergleich `*szSrc > 127` mit vorzeichenbehaftetem `char`) und in den drei Aufru… |
+| **[E-220](Intern/BEFUNDE.md#e-220)** | Der Dateiname, den *Speichern unter* aus dem Betreff vorschlägt, verliert alle Umlaute, b… | **nie gemessen** | Gregors Blick am nächsten Paket ([Testplan](Intern/TESTPLAN.md#e-220-naechstes)). **Stufe: unkritisch** (Komfort; der Name ließ sich ändern, keine Post be… |
 | **[E-216](Intern/BEFUNDE.md#e-216)** | Im Dialog *Help → About* überdecken sich die Knöpfe, die Zeile *Mail folder from* ist … | 03.11.2026 an 7.2.1.131 | Gregors Blick am Paket 7.2.2.132 ([Testplan](Intern/TESTPLAN.md#e-216-naechstes)). **Stufe: unkritisch** (Darstellung und neue Funktion, betrifft keine Post) |
 | **[E-212](Intern/BEFUNDE.md#e-212)** | Prüfstände tragen noch Debug-Fassungen der Import-Erweiterungen — NSImport.eif, OEImpo… | 02.11.2026 an 7.2.1.131 | die drei `.eif` in die Liste von `pruefstaende-auffrischen.ps1` aufnehmen und einmal über alle Prüfstände fahren; für Gregor nichts zu prüfen (Pa… |
 | **[E-211](Intern/BEFUNDE.md#e-211)** | Eine neue Nachricht, die sich nicht anlegen lässt, lässt Eudora auf ihrer Persönlichkei… | 02.11.2026 an 7.2.1.131 (Quelltext) | das Paket 7.2.2.132; am Programm nicht messbar. **Stufe: unkritisch** (nur in einem Fehlerfall, der sich nicht herbeiführen lässt; die Folge wäre d… |
@@ -122,6 +122,10 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 ---
 
 ## Im Quellstand, noch in keinem Paket
+
+**Zweig `e220_dateiname_vorschlag` — nur übersetzt, nach 7.2.2.132.**
+
+* ***Speichern unter* schlägt einen Dateinamen vor, den man ohne Änderung speichern kann** ([E-220](Intern/BEFUNDE.md#e-220), Gregor 03.11.2026). Die Umlaute des Betreffs bleiben (bisher fielen sie alle weg; die Zeile stammt von QUALCOMM), aus ` | `, `:` und anderen verbotenen Zeichen wird genau ein Leerzeichen, und der Name kommt aus dem ganzen Betreff statt aus den ersten 63 Zeichen (höchstens 120). Postfachliste, Nachrichten- und Verfassen-Fenster. Am Prüfstand gemessen (`E-220p`, Gegenprobe an 7.2.1.131), Regressionstest `TestE220.cpp`.
 
 **Zweig `e128_endung_aus_inhalt`, Quellstand weiter 7.2.1.131 — nur übersetzt, für 7.2.2.132.**
 

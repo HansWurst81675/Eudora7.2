@@ -1,9 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-03 10:56:58
-freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, About-Dialog) - Faelle E-216p/E-216l
-nur=E-216   (Teillauf, nicht der Gesamtstand)
-faelle=2
-bestanden=2
+zeit=2026-11-03 14:20:46
+freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-220)
+nur=E-220   (Teillauf, nicht der Gesamtstand)
+faelle=1
+bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] E-216p   ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
-fall=[ ok ] E-216l   ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
+fall=[ ok ] E-220p   E220 ERGEBNIS mbx=1 probe=1 liste-pfad=0 liste-umlaute=1 liste-doppelleer=0 liste-ende=1 liste-gespeichert=1 liste-voll=1 lesen-pfad=0 lesen-umlaute=1 lesen-doppelleer=0 lesen-ende=1 lesen-gespeichert=1 lesen-voll=1 liste2-pfad=0 liste2-umlaute=1 liste2-doppelleer=0 liste2-ende=1 liste2-gespeichert=1 liste2-voll=1 lebt=1

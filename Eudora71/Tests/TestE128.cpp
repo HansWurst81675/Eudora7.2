@@ -223,7 +223,7 @@ static void Test_E128_Quelltext(const char* szEudoraDir)
 	static const char* const kRead[] = {
 		"const bool bHtmlE128 = ( m_Sum && m_Sum->IsHTML() ) ? true : false;",
 		"const char * pszE128 = E128Vorgabeendung( false, 1, false, bHtmlE128 );",
-		"SA.Start(m_Sum->m_Subject, TRUE, NULL, FALSE, pszE128)",
+		"SA.Start(szNameE220, TRUE, NULL, FALSE, pszE128, TRUE)",	// E-220: Name vorher gebildet
 		"E128GewaehltSchreiben( \"Nachrichtenfenster\", SA.GetPathName() );",
 	};
 	Test_E128_Stelle(szEudoraDir, "ReadMessageDoc.cpp", "void CReadMessageDoc::OnFileSaveAs()", "BOOL CReadMessageDoc::SaveAsFile(",

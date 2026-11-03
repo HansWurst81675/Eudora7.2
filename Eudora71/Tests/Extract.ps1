@@ -222,6 +222,14 @@ $l3Fn = Find-Line $mu '^int E128FilterIndex\s*\(' $l3Start
 $l3End = Find-Line $mu '^\}\s*$' $l3Fn
 Write-Region $mu $l3Start $l3End (Join-Path $OutDir "msgutils_e128.inc") $msgPath
 
+# Region L4: E220DateinameAusBetreff (Befund E-220). Der Dateiname, den
+# "Speichern unter" aus dem Betreff vorschlaegt. Reine Zeichenkettenarbeit;
+# der Aufrufer E220DateinameVorschlag (Kopf lesen, Logzeile) gehoert nicht
+# dazu.
+$l4Start = Find-Line $mu '^void E220DateinameAusBetreff\s*\(' 0
+$l4End = Find-Line $mu '^\}\s*$' $l4Start
+Write-Region $mu $l4Start $l4End (Join-Path $OutDir "msgutils_e220.inc") $msgPath
+
 
 # ---------------------------------------------------------------- HTMLUtils.cpp (E-110)
 # Region M: resolve_URL und translate_hex (Befund E-110). resolve_URL baut aus
