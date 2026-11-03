@@ -89,7 +89,15 @@ param(
     # schon VOR dem Lauf eine Mail mit Datum, Absender und Betreff der
     # verschobenen (--gleiche-im-ziel 3, UID 1; die Kopie bekommt UID 2).
     # Eudora darf nicht vormerken (schon-da=1) und keiner ein Label geben.
-    [switch] $GleicheImZiel
+    [switch] $GleicheImZiel,
+    # E-192 (Huelle tools\messen-e192.ps1): wie -Mehrere (drei Mails, nach
+    # Datum sortiert, Liste 3,2,1), aber geloescht statt verschoben - mit
+    # "Beim Loeschen in den Papierkorb verschieben" und "Ablage" als
+    # Papierkorb (der Pruefserver kopiert nur nach INBOX und Ablage). Der Weg
+    # ist CTocDoc::ImapMoveMsgsToTrash, direkt, ohne Warteschlange und ohne
+    # Vorab-Kopie. -Vorbereiten -Papierkorb stellt das im Pruefstand ein,
+    # -Vorbereiten ohne den Schalter stellt es zurueck.
+    [switch] $Papierkorb
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
@@ -117,8 +125,25 @@ if ($Vorbereiten) {
     Remove-Item -LiteralPath $srvlog -Force -ErrorAction SilentlyContinue
     $ini = Join-Path $voll 'Mailverzeichnis\Eudora.ini'
     $z = [IO.File]::ReadAllLines($ini, [Text.Encoding]::GetEncoding(1252))
-    [IO.File]::WriteAllLines($ini, [string[]]($z | Where-Object { $_ -notmatch '^OpenWindow[0-9]+=.*Imap.pruefimap' }), [Text.Encoding]::GetEncoding(1252))
-    Write-Host "E184 vorbereitet: $konto"
+    $z = @($z | Where-Object { $_ -notmatch '^OpenWindow[0-9]+=.*Imap.pruefimap' })
+    # E-192: Papierkorb ein (nach "Ablage") oder zurueck auf die Vorgabe. Ohne
+    # WarnDeleteUnread=0 fragt Eudora vor dem Loeschen ungelesener Mails, und
+    # das Schliessen des Dialogs bricht das Loeschen ab.
+    $tt = '0'; $tn = 'Trash'; if ($Papierkorb) { $tt = '1'; $tn = 'Ablage' }
+    $treffer = 0
+    $z = @($z | ForEach-Object {
+        if ($_ -match '^TransferToTrashOnDelete=') { $treffer++; "TransferToTrashOnDelete=$tt" }
+        elseif ($_ -match '^TrashMailboxName=') { $treffer++; "TrashMailboxName=$tn" }
+        else { $_ } })
+    if ($treffer -ne 2) { Write-Host "E184 FEHLER: TransferToTrashOnDelete/TrashMailboxName nicht genau einmal in $ini ($treffer)"; exit 1 }
+    if ($Papierkorb) {
+        $z = @($z | Where-Object { $_ -notmatch '^WarnDeleteUnread=' })
+        $s = [Array]::IndexOf($z, '[Settings]')
+        if ($s -lt 0) { Write-Host "E184 FEHLER: kein [Settings] in $ini"; exit 1 }
+        $z = @($z[0..$s]) + @('WarnDeleteUnread=0') + @($z[($s + 1)..($z.Count - 1)])
+    }
+    [IO.File]::WriteAllLines($ini, [string[]]$z, [Text.Encoding]::GetEncoding(1252))
+    Write-Host "E184 vorbereitet: $konto papierkorb=$tt"
     exit 0
 }
 
@@ -227,8 +252,8 @@ $belegt = @(Get-NetTCPConnection -LocalPort 1143 -State Listen -ErrorAction Sile
 if ($belegt.Count -gt 0) { Write-Host ('E184 FEHLER: Port 1143 belegt von Prozess ' + (($belegt | ForEach-Object { $_.OwningProcess }) -join ',')); exit 1 }
 $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 3 * $Warten),
              '--nachrichten', '1', '--fremde-uid', '1')
-if ($Mehrere) {
-    $srvArgs = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 3 * $Warten),
+if ($Mehrere -or $Papierkorb) {
+    $srvArgs =@("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $srvlog, '--zeitschranke', [string](60 + 3 * $Warten),
                  '--nachrichten', '3', '--datum-absteigend')
 }
 if ($Label -gt 0) {
@@ -380,10 +405,10 @@ try {
     if ($script:lb -eq [IntPtr]::Zero) { Write-Host 'E184 FEHLER: keine Liste im INBOX-Fenster'; exit 1 }
     $anzahl = [int](Snd $script:lb 0x018B ([IntPtr]0) ([IntPtr]0))                   # LB_GETCOUNT
     Write-Host "E184 INBOX-Zeilen: $anzahl"
-    $sollZeilen = 1; if ($Mehrere -or $Label -gt 0 -or $MehrereLabels) { $sollZeilen = 3 }
+    $sollZeilen = 1; if ($Mehrere -or $Label -gt 0 -or $MehrereLabels -or $Papierkorb) { $sollZeilen = 3 }
     $script:zeile = 0; if ($Label -gt 0) { $script:zeile = 2 }   # E-170: letzte Zeile nach Datum
     if ($anzahl -ne $sollZeilen) { Write-Host "E184 FEHLER: INBOX sollte genau $sollZeilen Zeile(n) haben"; exit 1 }
-    if ($Mehrere -or $Label -gt 0 -or $MehrereLabels) {
+    if ($Mehrere -or $Label -gt 0 -or $MehrereLabels -or $Papierkorb) {
         # Nach Datum sortieren (Menuebefehl, kein Tastendruck): UID 1 ist die
         # juengste, die Liste steht danach 3,2,1 - nicht aufsteigend nach UID.
         [void][E184]::PostMessageA($aktiv, 0x0111, [IntPtr]33247, [IntPtr]::Zero)   # ID_EDIT_SORT_SORTBYDATE
@@ -401,7 +426,7 @@ try {
         }
     }
     [void](Snd $script:lb 0x0185 ([IntPtr]0) ([IntPtr](-1)))                         # LB_SETSEL FALSE, alle
-    if ($Mehrere -or $MehrereLabels) { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr](-1))) }       # LB_SETSEL TRUE, alle
+    if ($Mehrere -or $MehrereLabels -or $Papierkorb) { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr](-1))) }       # LB_SETSEL TRUE, alle
     else          { [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]$script:zeile)) }   # LB_SETSEL TRUE, eine Zeile
     Write-Host ('E184 markiert: ' + [int](Snd $script:lb 0x0190 ([IntPtr]0) ([IntPtr]0)))   # LB_GETSELCOUNT
     [void](Snd $script:lb 0x019E ([IntPtr]$script:zeile) ([IntPtr]0))                # LB_SETCARETINDEX
@@ -418,8 +443,9 @@ try {
     $vorher = TocLesen $ablageToc
     Write-Host ('E184 Ablage.toc vor dem Verschieben: ' + (($vorher | ForEach-Object { 'uid=' + $_.Uid + ' "' + $_.Betreff + '"' }) -join ' ; '))
 
-    # 4. Transfer -> Ablage
-    $id = TransferNach 'Ablage'
+    # 4. Transfer -> Ablage (E-192: Loeschen, der Papierkorb ist "Ablage")
+    if ($Papierkorb) { $id = 32805 }                                                 # ID_MESSAGE_DELETE
+    else { $id = TransferNach 'Ablage' }
     if (-not $id) { Write-Host 'E184 FEHLER: Eintrag "Ablage" im Menue Transfer nicht gefunden'; exit 1 }
     Write-Host "E184 Transfer-Befehl $id"
     [void][E184]::PostMessageA($aktiv, 0x0111, [IntPtr]$id, [IntPtr]::Zero)
@@ -472,6 +498,18 @@ if ($Mehrere) {
     $z = $prot | Where-Object { $_ -match 'COPYUID 1 (\S+ \S+)\]' } | Select-Object -First 1
     if ($z -and $z -match 'COPYUID 1 (\S+ \S+)\]') { $antwort = $Matches[1] -replace ' ', '/' }
     Write-Host ("E184M ERGEBNIS richtig={0} falsch={1} eintraege={2} anfrage={3} copyuid={4}" -f $richtig, $falsch, $nachher.Count, $anfrage, $antwort)
+}
+if ($Papierkorb) {
+    # Wie -Mehrere; das Ziel ist der Papierkorb "Ablage", leer vor dem Lauf.
+    $richtig = @($nachher | Where-Object { $_.Betreff -like ('Pruefnachricht ' + $_.Uid + ' *') }).Count
+    $falsch  = @($nachher | Where-Object { $_.Betreff -like 'Pruefnachricht *' -and $_.Betreff -notlike ('Pruefnachricht ' + $_.Uid + ' *') }).Count
+    $anfrage = '(keine)'
+    $z = $prot | Where-Object { $_ -match '<- \S+ UID COPY (\S+) ' } | Select-Object -First 1
+    if ($z -and $z -match 'UID COPY (\S+) ') { $anfrage = $Matches[1] }
+    $antwort = '(keine)'
+    $z = $prot | Where-Object { $_ -match 'COPYUID 1 (\S+ \S+)\]' } | Select-Object -First 1
+    if ($z -and $z -match 'COPYUID 1 (\S+ \S+)\]') { $antwort = $Matches[1] -replace ' ', '/' }
+    Write-Host ("E192 ERGEBNIS richtig={0} falsch={1} eintraege={2} anfrage={3} copyuid={4}" -f $richtig, $falsch, $nachher.Count, $anfrage, $antwort)
 }
 if ($Label -gt 0) {
     # Quelle: die Zeile mit dem Label in INBOX.toc, und die UID, die der

@@ -262,6 +262,15 @@ E-189 | C:\Temp\E184 | 20 | messung | E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mi
 # nur den alten Leser, PRUEFER-78 K7; seither Bereiche und Pflicht "anfrage".)
 E-184m | C:\Temp\E184 | 20 | messung | E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3 | | | messen=tools\messen-e184m.ps1
 
+# E-192 (03.11.2026, Rest von E-184 K3): drei Mails, nach Datum sortiert
+# (Liste 3,2,1), alle markiert und GELOESCHT - "in den Papierkorb verschieben",
+# Papierkorb "Ablage" (messen-e192.ps1 -Vorbereiten stellt das ein). Weg:
+# CTocDoc::ImapMoveMsgsToTrash, direkt, ohne Warteschlange. Gemessen am Bau
+# 7.2.1.131: richtig=1 falsch=2 (UIDs ueber Kreuz); mit der Behebung gruen.
+# Eigener Pruefstand (Kopie von C:\Temp\E184), damit E-184/E-170 ihren
+# Papierkorb-Schalter nicht erben.
+E-192 | C:\Temp\E192 | 20 | messung | E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3 | | | messen=tools\messen-e192.ps1
+
 # E-97 / E-100 (25.10.2026): "Speichern unter" darf Eudora nicht abstuerzen
 # lassen - einmal aus dem Postfach mit OK und geschriebener Datei, einmal aus
 # einem Verfassen-Fenster mit Abbrechen; dazu die beiden INI-Werte aus E-100.

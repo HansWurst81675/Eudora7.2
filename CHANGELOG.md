@@ -43,7 +43,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-195](Intern/BEFUNDE.md#e-195)** | Der Speicherdialog für Nachrichten bietet .rtf an, liefert aber Klartext — die Datei he… | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132. **Stufe: unkritisch** |
 | **[E-194](Intern/BEFUNDE.md#e-194)** | Eudoras interne Markierung <x-flowed> steht in der gespeicherten Textdatei — *Speichern … | 02.11.2026 an 7.2.1.131 | das Paket 7.2.2.132; K3, K4 und eine Prüfnachricht mit Anhang (K9) als Rest; der Hochladeweg (PRUEFER-27 F3) bleibt ein eigener Punkt. **Stufe: unkri… |
 | **[E-193](Intern/BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | **nie gemessen** | am Prüfstand mit Mails bekannten Inhalts nachstellen (Umlaute und € im Text, in Kopfzeilen, nur im HTML-Quelltext; Latin-1, UTF-8, quoted-printable… |
-| **[E-192](Intern/BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | **nie gemessen** | die Quellmenge an allen drei Stellen durchreichen wie beim Verschieben; Prüfstandsfall für den Papierkorb. **Stufe: wichtig** (wie E-184) |
+| **[E-192](Intern/BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | 03.11.2026 an 7.2.1.131 | PRÜFER über die Behebung; Paket. **Stufe: wichtig** (wie E-184) |
 | **[E-189](Intern/BEFUNDE.md#e-189)** | Beim Verschieben innerhalb eines IMAP-Kontos OHNE UIDPLUS steht die verschobene Mail im Zi… | 01.11.2026 an 7.2.1.130 | die Löschvermutung messen; bestätigen am Prüfserver ohne `COPYUID` (Fall `E-189`) oder an einem echten Server ohne UIDPLUS — Gregors Server melde… |
 | **[E-188](Intern/BEFUNDE.md#e-188)** | Dieselbe Verwechslung wie E-184 an zwei weiteren Stellen: Verschieben zwischen zwei IMAP-K… | **nie gemessen** | am Prüfstand nachstellen (für den Weg zwischen Konten braucht der Prüfserver ein zweites Konto), dann wie E-184 über das Merkzeichen suchen. **Stu… |
 | **[E-184](Intern/BEFUNDE.md#e-184)** | Beim Verschieben zwischen IMAP-Ordnern mit UIDPLUS kann Eudora die Zusammenfassung einer f… | 01.11.2026 an 7.2.1.130 | K4 aus PRÜFER-75 (Warteschlange nach Neustart, klein); PRÜFER-78 K2 (Teilkopie, klein); PRÜFER über die K3-Behebung erledigt… |
@@ -120,6 +120,11 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 ---
 
 ## Im Quellstand, noch in keinem Paket
+
+**Zweig `E-192_multiple_IMAP-Mails`, Quellstand weiter 7.2.1.131 — nur übersetzt, die Nummer kommt beim Schnüren.**
+
+* **Papierkorb, Junk und Filter vertauschen beim Verschieben mehrerer IMAP-Mails die Einträge nicht mehr** ([E-192](Intern/BEFUNDE.md#e-192), Original von QUALCOMM). War die Liste nicht aufsteigend nach Nummer sortiert (etwa nach Datum), trug im Ziel eine Mail den Betreff und Absender einer anderen; jetzt ordnet Eudora über die Nummern zu, die der Server meldet, wie seit [E-184](Intern/BEFUNDE.md#e-184) beim Verschieben. Am Prüfstand gemessen ([`E-192`](Intern/BEFUNDE.md#e-192): an 7.2.1.131 zwei von drei vertauscht, mit der Behebung keine). Auf dem Server ging nichts verloren.
+* Protokoll: die beiden Zeilen zu [E-189](Intern/BEFUNDE.md#e-189) nennen keinen Ordnernamen mehr.
 
 **Zweig `e128_endung_aus_inhalt`, Quellstand weiter 7.2.1.131 — nur übersetzt, für 7.2.2.132.**
 

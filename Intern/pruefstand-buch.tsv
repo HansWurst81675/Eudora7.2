@@ -65,6 +65,7 @@ E-179p	ok	2026-11-02 18:01:00	C:\Temp\EM179	Eudora 7.2.1.131+f31dbff9 2026-11-02
 E-184	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
 E-184m	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
 E-189	ok	2026-11-02 13:54:36	C:\Temp\E184	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
+E-192	ok	2026-11-03 11:31:25	C:\Temp\E192	Eudora 7.2.1.131+4eb36f01* 2026-11-03 11:25	E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
 E-194k	ok	2026-11-03 09:20:47	C:\Temp\E194K	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
 E-194p	ok	2026-11-03 09:20:47	C:\Temp\E194	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
 E-203p	ok	2026-11-02 19:36:25	C:\Temp\E203	Eudora 7.2.1.131+2b3a529d* 2026-11-02 19:13	E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1

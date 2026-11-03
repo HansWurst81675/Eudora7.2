@@ -1282,7 +1282,8 @@ BOOL CImapFilterActions::DoRemoteTransfers(CTocDoc *pTocDoc,
 
 					// Do the transfer on the server.
 					CDWordArray		 dwaNewUIDs;
-					bResult = SUCCEEDED(pImapMailbox->XferMessagesOnServer(szUids, &dwaNewUIDs, szImapName, bCopy));
+					CDWordArray		 dwaQuellUIDs;	// E-192: Quellmenge aus COPYUID
+					bResult = SUCCEEDED(pImapMailbox->XferMessagesOnServer(szUids, &dwaNewUIDs, szImapName, bCopy, FALSE, &dwaQuellUIDs));
 
 					// If we transferred messages into a destination mailbox, update the
 					// command object's UnreadStatus to US_YES.
@@ -1301,7 +1302,7 @@ BOOL CImapFilterActions::DoRemoteTransfers(CTocDoc *pTocDoc,
 						if (pTargetToc)
 						{
 							CString		 strUIDs = szUids;
-							pTocDoc->ImapTransferSummaryData(strUIDs, pTargetToc, &dwaNewUIDs);
+							pTocDoc->ImapTransferSummaryData(strUIDs, pTargetToc, &dwaNewUIDs, NULL, false, &dwaQuellUIDs);	// E-192
 						}
 
 						pCommand->Execute(CA_UPDATE_STATUS, (void*)US_YES);

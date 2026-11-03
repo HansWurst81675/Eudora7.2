@@ -131,14 +131,16 @@ public:
 	HRESULT MoveMsgsToTrash(LPCSTR pUidlist,
 							CDWordArray *pdwaNewUIDs,
 							CUidMap& mapUidsActuallyRemoved,
-							CTocDoc **pTrashToc);
+							CTocDoc **pTrashToc,
+							CDWordArray *pdwaQuellUIDs = NULL);	// E-192
 
 // Junk management.
 	HRESULT MoveMsgsToOrFromJunk(bool bToJunk,
 								 LPCSTR pUidlist,
 								 CDWordArray *dwaNewUIDs,
 								 CUidMap &mapUidsActuallyRemoved,
-								 CTocDoc **pTargetToc);
+								 CTocDoc **pTargetToc,
+								 CDWordArray *pdwaQuellUIDs = NULL);	// E-192
 
 	BOOL ReadyToAutoExpunge();
 

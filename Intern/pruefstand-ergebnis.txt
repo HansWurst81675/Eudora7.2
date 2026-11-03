@@ -1,14 +1,8 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-03 09:42:36
-freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-170)
-nur=E-170   (Teillauf, nicht der Gesamtstand)
-faelle=7
-bestanden=7
+zeit=2026-11-03 11:31:25
+freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-192)
+nur=E-192   (Teillauf, nicht der Gesamtstand)
+faelle=1
+bestanden=1
 fehlgeschlagen=0
-fall=[ ok ] E-170p   kopie-mit-label=1 log-grund=ok lebt=1
-fall=[ ok ] E-170o   E170 ERGEBNIS copyuid=nein label-quelle=1 uid-alt=3 uid-kopiert=3 quelle-passt=1 uid-ziel=1 kopie-mit-label=1 log-grund=zugeordnet lebt=1
-fall=[ ok ] E-170m   E170M ERGEBNIS labels-quelle=3 richtig=3 falsch=0 ohne=0 eintraege=3 log-grund=zugeordnet lebt=1
-fall=[ ok ] E-170f   E170F ERGEBNIS art=anders fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=6 eintraege=2 log-grund=zugeordnet lebt=1
-fall=[ ok ] E-170g   E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1
-fall=[ ok ] E-170c   E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1
-fall=[ ok ] E-170s   E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1
+fall=[ ok ] E-192    E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
