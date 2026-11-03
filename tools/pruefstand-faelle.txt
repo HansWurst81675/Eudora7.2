@@ -278,13 +278,13 @@ E-188f | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=fetch | E188 SERVER VER
 E-188e | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=lokaleins anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188e.ps1
 E-188d | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=loeschen | E188 SERVER FREMDE GELOESCHT | | messen=tools\messen-e188d.ps1
 # E-193 (03.11.2026): Find Messages (mit und ohne Suchindex X1) gegen Edit ->
-# Find im Nachrichtenfenster, mit acht Mails bekannten Inhalts
-# (Testdaten/e193-m0..m7-*.eml: Umlaute und Euro in Latin-1, UTF-8, QP, nur im
+# Find im Nachrichtenfenster, mit neun Mails bekannten Inhalts
+# (Testdaten/e193-m0..m8-*.eml: Umlaute und Euro in Latin-1, UTF-8, QP, nur im
 # Betreff, nur als HTML-Entitaet, windows-1252). tools/messen-e193.ps1 holt sie
-# per POP, sucht 11 Woerter in beiden Suchfenster-Arten und 23 Wort/Mail-Paare
+# per POP, sucht 11 Woerter in beiden Suchfenster-Arten und 24 Wort/Mail-Paare
 # ueber WM_FINDREPLACE im Nachrichtenfenster. Erwartet ohne Fehler: nirgends
 # falsch. Pruefstand C:\Temp\E193 ist eine Kopie von C:\Temp\E128 (7.2.2.132).
-E-193p | C:\Temp\E193 | 20 | messung | E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/23 x1=1 mails=8 lebt=1 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
+E-193p | C:\Temp\E193 | 20 | messung | E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
 
 # E-97 / E-100 (25.10.2026): "Speichern unter" darf Eudora nicht abstuerzen
 # lassen - einmal aus dem Postfach mit OK und geschriebener Datei, einmal aus

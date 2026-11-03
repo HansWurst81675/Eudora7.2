@@ -24,6 +24,8 @@
 #   m5 text/html, Umlaute und EUR NUR als Entitaeten (&auml; &uuml; &euro;)
 #   m6 text/html UTF-8 quoted-printable ("Bruehe")
 #   m7 text/plain windows-1252 8bit (EUR als 0x80, "Aepfel" gross)
+#   m8 nur ASCII mit "oft" - findet die Suche nach "oe"+"ft" auch "oft"?
+#      (Gregors 4 Treffer fuer "oeft", in deren erstem das Wort fehlte)
 # (Umlaute hier als ae/oe/ue, das Skript ist reines ASCII; die Suchwoerter
 # baut es aus Zeichencodes.)
 #
@@ -69,10 +71,10 @@ $md = Join-Path $voll 'Mailverzeichnis'
 $repo = Split-Path -Parent $PSScriptRoot
 $cp = [Text.Encoding]::GetEncoding(1252)
 $pidDatei = Join-Path $voll 'pop-pruefserver.pid'
-$MAILS = @('m0-ascii', 'm1-latin1-8bit', 'm2-utf8-qp', 'm3-utf8-8bit', 'm4-betreff-utf8', 'm5-html-entitaet', 'm6-html-utf8-qp', 'm7-cp1252-euro')
+$MAILS = @('m0-ascii', 'm1-latin1-8bit', 'm2-utf8-qp', 'm3-utf8-8bit', 'm4-betreff-utf8', 'm5-html-entitaet', 'm6-html-utf8-qp', 'm7-cp1252-euro', 'm8-oft-ohne-umlaut')
 
 function C([int[]] $codes) { return -join ($codes | ForEach-Object { [char]$_ }) }
-$ae = C 0xE4; $oe = C 0xF6; $ue = C 0xFC; $sz = C 0xDF; $AE = C 0xC4; $EUR = C 0x20AC
+$ae = C 0xE4; $oe = C 0xF6; $ue = C 0xFC; $sz = C 0xDF; $EUR = C 0x20AC
 # Suchwort -> Mails, die es (ohne Gross/klein) enthalten. Von Hand aus den Testdaten.
 $WOERTER = [ordered]@{
     'Zebrafink'                  = @(0)
@@ -85,7 +87,7 @@ $WOERTER = [ordered]@{
     ('Zwiebel' + $oe + 'l')      = @(4)
     ('Sp' + $ae + 'tzle')        = @(5)
     ('Br' + $ue + 'he')          = @(6)
-    ($ae + 'pfel')               = @(7)
+    ((C 0xC4) + 'pfel')               = @(7)
 }
 # Edit -> Find je Mail: ihre eigenen Woerter, dazu Zebrafink als Gegenprobe.
 function Sichtbar([string] $s) { return -join ($s.ToCharArray() | ForEach-Object { if ([int]$_ -lt 128) { $_ } else { '<' + ('{0:X}' -f [int]$_) + '>' } }) }
@@ -106,6 +108,9 @@ if ($Vorbereiten) {
         Get-ChildItem -LiteralPath $md -File | Where-Object { $_.Name -match ('^' + $n + '\.(mbx|toc)(\.\d{3})?$') } | Remove-Item -Force
     }
     Get-ChildItem -LiteralPath $md -File | Where-Object { $_.Name -match '^(lmos\.dat.*|E86-Anzeige\.htm)$' } | Remove-Item -Force
+    # Sonst kennt das POP-Konto die Mails vom vorigen Lauf (spool\lmos.dat) und holt
+    # nur neue - gemessen 03.11.2026: der zweite Lauf holte 1 von 9.
+    $sp = Join-Path $md 'spool'; if (Test-Path $sp) { Get-ChildItem -LiteralPath $sp -File -Recurse | Remove-Item -Force }
     $fp = Join-Path $md 'Filters.pce'; if (Test-Path $fp) { Remove-Item -LiteralPath $fp -Force }
     $t = $cp.GetString([IO.File]::ReadAllBytes($ini))
     foreach ($kv in @(@('POPPort','11110'), @('SSLReceiveUse','0'), @('SavePassword','1'), @('SavePasswordText','eA=='),
