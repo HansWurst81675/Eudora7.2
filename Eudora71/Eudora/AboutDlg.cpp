@@ -114,6 +114,7 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialog)
 	ON_BN_CLICKED(IDOK, OnClickedOK)
 	ON_BN_CLICKED(IDC_CREDITS, OnClickedCredits)
 	ON_BN_CLICKED(IDC_ABOUT_COPY, OnClickedCopyInfo)
+	ON_BN_CLICKED(IDC_ABOUT_LATEST_RELEASE, OnClickedLatestRelease)
 	ON_WM_TIMER()
 	ON_WM_ACTIVATE()
 	ON_WM_QUERYNEWPALETTE()
@@ -430,6 +431,40 @@ BOOL CAboutDlg::OnInitDialog()
 	}
 
 	//
+	// BEFUND E-216: die Pfadzeilen ueber die ganze Dialogbreite. In der
+	// Ressource sind sie 280 DLU breit - schmaler als der Dialog, der seine
+	// Breite erst oben aus dem Logo bekommt -, und "Mail folder from: ..."
+	// war am 03.11.2026 auf Gregors Bild abgeschnitten. Die Zeile ist in der
+	// Ressource seither zwei Zeilen hoch und bricht um; CenterControl
+	// verschiebt nur und laesst Breite und Hoehe stehen.
+	//
+	{
+		static const UINT nPfadZeilen[] =
+		{
+			IDC_ABOUT_DATA_DIRECTORY,
+			IDC_ABOUT_APP_DIRECTORY,
+			IDC_ABOUT_INI_PATH,
+			IDC_ABOUT_DEFAULT_INI,
+			IDC_ABOUT_LOG_PATH,
+			IDC_ABOUT_MAILDIR_FROM
+		};
+		CRect rcClient;
+		GetClientRect(&rcClient);
+		const int nBreite = rcClient.Width() - 2 * (kInsetPixels + 4);
+		for (int i = 0; i < sizeof(nPfadZeilen) / sizeof(nPfadZeilen[0]); i++)
+		{
+			CWnd* pZeile = GetDlgItem(nPfadZeilen[i]);
+			if (!pZeile || nBreite <= 0)
+				continue;
+			CRect rcZeile;
+			pZeile->GetWindowRect(&rcZeile);
+			ScreenToClient(&rcZeile);
+			pZeile->SetWindowPos(NULL, 0, 0, nBreite, rcZeile.Height(),
+				SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOMOVE | SWP_NOZORDER);
+		}
+	}
+
+	//
 	// Center the static text labels (and while we're
 	// at it, set the labels to use the standard "thin" font.
 	//
@@ -443,66 +478,107 @@ BOOL CAboutDlg::OnInitDialog()
 	CenterControl(GetDlgItem(IDC_ABOUT_MAILDIR_FROM));
 
 	//
-	// Position the buttons.
+	// BEFUND E-216, Gregor am 03.11.2026 (Bild an 7.2.1.130): "hier ist die
+	// darstellung noch nicht sehr optimal". Vorher standen Close auf x=40,
+	// Copy info rechts daneben, Credits rechts und Visit Web Site mit
+	// CenterControl in der Mitte - Visit Web Site lag ueber Copy info, weil
+	// jeder Knopf fuer sich gesetzt wurde und keiner vom anderen wusste.
 	//
-	CWnd* p_button = GetDlgItem(IDOK);
-	if (p_button)
+	// Jetzt werden alle Knoepfe der unteren Reihe EINMAL gemeinsam verteilt:
+	// gleiche Breite, gleiche Abstaende, gerechnet aus der Breite, die der
+	// Dialog oben aus dem Logo bekommen hat. Reicht die Breite nicht (hohe
+	// Bildschirmskalierung: die Knoepfe wachsen mit, das Logo nicht), werden
+	// die Knoepfe schmaler statt sich zu ueberdecken.
+	//
+	// Im Startbild gibt es keine Knoepfe; dort wird der Dialog unter dem
+	// Copyright abgeschnitten (Original).
+	//
+	static const UINT nKnopfReihe[] =
 	{
-		p_button->GetWindowRect(&rect);
-		ScreenToClient(&rect);
-		if (!m_IsSplash)
+		IDOK,
+		IDC_HYPERLINK_BTN,
+		IDC_ABOUT_LATEST_RELEASE,
+		IDC_CREDITS,
+		IDC_ABOUT_COPY
+	};
+	const int nKnopfZahl = sizeof(nKnopfReihe) / sizeof(nKnopfReihe[0]);
+
+	if (m_IsSplash)
+	{
+		int NewHeight = -1;
+		CWnd* p_button = GetDlgItem(IDOK);
+		if (p_button)
 		{
-			p_button->SetWindowPos(NULL, 40, rect.top, 0, 0,
-				SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOSIZE | SWP_NOZORDER);
+			p_button->GetWindowRect(&rect);
+			ScreenToClient(&rect);
+			NewHeight = rect.top - 2;
 		}
-		else
+		CWnd* pCopyrightInfo = GetDlgItem(IDC_COPYRIGHT_INFO);
+		if (pCopyrightInfo)
 		{
-			int NewHeight = rect.top - 2;
-			CWnd* pCopyrightInfo = GetDlgItem(IDC_COPYRIGHT_INFO);
-			if (pCopyrightInfo)
-			{
-				pCopyrightInfo->GetWindowRect(&rect);
-				ScreenToClient(&rect);
-				NewHeight = rect.bottom + 2;
-			}
+			pCopyrightInfo->GetWindowRect(&rect);
+			ScreenToClient(&rect);
+			NewHeight = rect.bottom + 2;
+		}
+		if (NewHeight > 0)
+		{
 			CRect DlgRect;
 			GetWindowRect(&DlgRect);
 			SetWindowPos(NULL, 0, 0, DlgRect.Width(), NewHeight,
 				SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOMOVE | SWP_NOZORDER);
 		}
-	}
-
-	p_button = GetDlgItem(IDC_CREDITS);
-	if (p_button)
-	{
-		p_button->GetWindowRect(&rect);
-		ScreenToClient(&rect);
-		p_button->SetWindowPos(NULL, m_LogoBitmapWidth - (rect.Width() + 40), rect.top, 0, 0,
-			SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOSIZE | SWP_NOZORDER);
-	}
-
-	// "Copy info" rechts neben "Close". Beide Knoepfe werden hier von
-	// Hand gesetzt, weil der Dialog seine Breite erst zur Laufzeit aus dem
-	// Logo bekommt.
-	{
-		CWnd* pOk   = GetDlgItem(IDOK);
-		CWnd* pCopy = GetDlgItem(IDC_ABOUT_COPY);
-		if (pOk && pCopy && !m_IsSplash)
+		for (int i = 0; i < nKnopfZahl; i++)
 		{
-			CRect rcOk;
-			pOk->GetWindowRect(&rcOk);
-			ScreenToClient(&rcOk);
-			pCopy->SetWindowPos(NULL, rcOk.right + 10, rcOk.top, 0, 0,
-				SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOSIZE | SWP_NOZORDER);
-		}
-		else if (pCopy)
-		{
-			// Im Startbild gibt es keine Knoepfe.
-			pCopy->ShowWindow(SW_HIDE);
+			CWnd* pKnopf = GetDlgItem(nKnopfReihe[i]);
+			if (pKnopf)
+				pKnopf->ShowWindow(SW_HIDE);
 		}
 	}
+	else
+	{
+		CWnd* pKnopf[nKnopfZahl];
+		int nDa = 0, nBreite = 0, nHoehe = 0, nOben = 0;
+		for (int i = 0; i < nKnopfZahl; i++)
+		{
+			CWnd* p = GetDlgItem(nKnopfReihe[i]);
+			if (!p)
+				continue;
+			CRect rcKnopf;
+			p->GetWindowRect(&rcKnopf);
+			ScreenToClient(&rcKnopf);
+			if (rcKnopf.Width() > nBreite)
+				nBreite = rcKnopf.Width();
+			if (rcKnopf.Height() > nHoehe)
+				nHoehe = rcKnopf.Height();
+			if (nDa == 0)
+				nOben = rcKnopf.top;
+			pKnopf[nDa++] = p;
+		}
 
-	CenterControl(GetDlgItem(IDC_HYPERLINK_BTN));
+		if (nDa > 0)
+		{
+			CRect rcClient;
+			GetClientRect(&rcClient);
+			const int nPlatz = rcClient.Width();
+			const int kMindestAbstand = 4;
+
+			int nAbstand = (nPlatz - nDa * nBreite) / (nDa + 1);
+			if (nAbstand < kMindestAbstand)
+			{
+				nAbstand = kMindestAbstand;
+				nBreite = (nPlatz - (nDa + 1) * kMindestAbstand) / nDa;
+			}
+			// Der Rest der ganzzahligen Teilung kommt je zur Haelfte an
+			// beide Raender, damit die Reihe in der Mitte steht.
+			int x = (nPlatz - (nDa * nBreite + (nDa - 1) * nAbstand)) / 2;
+			for (int i = 0; i < nDa; i++)
+			{
+				pKnopf[i]->SetWindowPos(NULL, x, nOben, nBreite, nHoehe,
+					SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOZORDER);
+				x += nBreite + nAbstand;
+			}
+		}
+	}
 
 	//
 	// Position the dialog relative to the main Eudora window.
@@ -1194,4 +1270,54 @@ void CAboutDlg::OnSysColorChange()
 void CAboutDlg::OnHyperlinkBtn() 
 {
 	LaunchURLWithQuery(NULL, ACTION_SITE);
+}
+
+/* ------------------------------------------------------------------------ */
+
+//
+// BEFUND E-216, Gregor am 03.11.2026: "ausserdem moechte ich den link zum
+// github repo -> latest release drin haben, damit man sich bei bedarf die
+// neueste version von dort direkt runterladen kann."
+//
+// Fest auf die Seite "latest" des Projekts: GitHub leitet sie auf das
+// neueste Release weiter, ein Eintrag je Fassung ist nicht noetig. Geoeffnet
+// wird wie bei Help -> Keyboard Shortcuts (CMainFrame::HilfeSeiteOeffnen)
+// mit ShellExecuteEx im Standard-Browser, ohne eigenen Windows-Dialog; geht
+// es nicht, kommt genau EINE Meldung mit Adresse und Fehlercode - die
+// Adresse kann man dann von Hand abschreiben.
+//
+static const char kLatestReleaseURL[] = "https://github.com/HansWurst81675/Eudora7.2/releases/latest";
+
+void CAboutDlg::OnClickedLatestRelease()
+{
+	SHELLEXECUTEINFOA sei;
+	memset(&sei, 0, sizeof(sei));
+	sei.cbSize = sizeof(sei);
+	sei.fMask = SEE_MASK_FLAG_NO_UI;
+	sei.hwnd = GetSafeHwnd();
+	sei.lpVerb = "open";
+	sei.lpFile = kLatestReleaseURL;
+	sei.nShow = SW_SHOWNORMAL;
+
+	const BOOL bGut = ::ShellExecuteExA(&sei);
+	const INT_PTR nErgebnis = (INT_PTR) sei.hInstApp;
+	const DWORD dwWinFehler = bGut ? 0 : ::GetLastError();
+
+	CString strLog;
+	if (!bGut || nErgebnis <= 32)
+	{
+		strLog.Format("About: Latest Release fehler=%d winfehler=%lu", (int) nErgebnis, dwWinFehler);
+		PutDebugLog(DEBUG_MASK_MISC, strLog);
+
+		CString strMeldung;
+		strMeldung.Format("The release page could not be opened in the web browser "
+						  "(error %d, system error %lu).\n\n"
+						  "The address is:\n%s",
+						  (int) nErgebnis, dwWinFehler, kLatestReleaseURL);
+		AfxMessageBox(strMeldung, MB_OK | MB_ICONEXCLAMATION);
+		return;
+	}
+
+	strLog.Format("About: Latest Release geoeffnet %s", kLatestReleaseURL);
+	PutDebugLog(DEBUG_MASK_MISC, strLog);
 }

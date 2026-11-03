@@ -471,6 +471,25 @@ gebraucht.
    `Hilfe: Tastenkuerzel.html fehlt`, `Hilfe: Einstellungen.html fehlt`
    (Protokollbereich *Misc*, in deiner `Eudora.ini` eingeschaltet).
 
+## <a id="e-216-naechstes"></a>Mit 7.2.2.132: About-Dialog ([E-216](BEFUNDE.md#e-216))
+
+**Erst mit dem Paket 7.2.2.132 auszuführen** — in 7.2.1.x gibt es den Knopf
+nicht. **Ort: lokal, egal welches Konto**; es wird keine Post gebraucht.
+
+1. Eudora starten (mit `Eudora starten.cmd` aus dem Paket), *Help → About
+   Eudora* wählen. **Bestanden:** unten stehen fünf Knöpfe in einer Reihe —
+   *Close*, *Visit Web Site*, *Latest Release*, *Credits*, *Copy info* —,
+   keiner überdeckt einen anderen, jede Beschriftung ist ganz zu lesen. Die
+   Zeile *Mail folder from: …* ist ganz zu lesen; ist sie länger als die
+   Dialogbreite, steht der Rest in einer zweiten Zeile.
+2. *Latest Release* drücken. **Bestanden:** dein Standard-Browser öffnet die
+   GitHub-Seite des Projekts mit dem neuesten Release (Adresse
+   `https://github.com/HansWurst81675/Eudora7.2/releases/…`), dort lässt sich
+   das ZIP herunterladen. Der About-Dialog bleibt offen und geht mit *Close*
+   zu.
+3. *Copy info* drücken und in einen Editor einfügen. **Bestanden:** dieselben
+   Zeilen wie im Dialog, auch die Herkunftszeile ungekürzt.
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales

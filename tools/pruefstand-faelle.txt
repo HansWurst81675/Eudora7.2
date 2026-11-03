@@ -444,6 +444,14 @@ E-204w | C:\Temp\E204 | 90 | messung | E204 PROBE ok | | | messen=tools\messen-e
 # schreibt Eudora gepuffert - geprueft wird sie nach dem Beenden (A-5p-log).
 A-5p | C:\Temp\EHILFE | 60 | messung | HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1 | | | messen=tools\messen-hilfe.ps1
 A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: Tastenkuerzel.html geoeffnet | | messen=tools\messen-hilfe.ps1
+# E-216 (03.11.2026): Help -> About. Alle Knoepfe in einer Reihe ohne
+# Ueberlappung, der Knopf "Latest Release" ist da, die Zeile "Mail folder
+# from" ist mindestens zwei Zeilen hoch. Der Knopf wird NICHT gedrueckt - das
+# oeffnete den Browser auf dem Bildschirm. Pruefstand C:\Temp\EABOUT (Kopie
+# von C:\Temp\E128, neuer Bau hinein). Gegenprobe am Bau 7.2.1.131 ohne die
+# Behebung (C:\Temp\EABOUT-alt): knoepfe=4 ueberlappt=1 github=0
+# herkunft-zeilen=1 lebt=1.
+E-216p | C:\Temp\EABOUT | 30 | messung | ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 lebt=1 | | | messen=tools\messen-about.ps1
 # E-133 (02.11.2026): zeigt CommandLine\Current auf ein Mailverzeichnis, das
 # es nicht mehr gibt, fragt Eudora beim Start ohne Argument (Doppelklick)
 # statt sich mit zwei Fehlermeldungen zu beenden. messen-e133.ps1 setzt im
