@@ -28,12 +28,16 @@
 //     (E170Vormerkbar);
 //   - eine Vormerkung gehoert zu ihrem Ziel ueber Zeiger UND Pfad
 //     (E170GehoertZu);
-//   - die Nachbearbeitung, die den Abgleich des Ziels anstoesst, macht die
-//     Vormerkungen dieses Ziels "angestossen" und startet die Frist neu
-//     (E170Anstossen);
-//   - am Ende des naechsten Abgleichs dieses Ziels wird jede angestossene
-//     Vormerkung ohne Treffer verworfen (E170AbgleichEnde) - sie wartet nicht
-//     mehr fuenf Minuten auf eine gleich aussehende fremde Mail (K1);
+//   - die Nachbearbeitung, die den Abgleich des Ziels anstoesst, startet die
+//     Frist der Vormerkungen dieses Ziels neu (E170Anstossen, PRUEFER-89 K4);
+//   - jede Vormerkung traegt einen Takt (E170Takt, beim Vormerken gezogen -
+//     also nach dem gelungenen COPY), jeder Abgleich den Takt seines Beginns.
+//     Am Ende eines Abgleichs, der NACH der Vormerkung begonnen hat, wird
+//     jede Vormerkung dieses Ziels ohne Treffer verworfen (E170AbgleichEnde)
+//     - sie wartet nicht mehr fuenf Minuten auf eine gleich aussehende fremde
+//     Mail (PRUEFER-89 K1). Wer den Abgleich ausgeloest hat, ist gleich
+//     (PRUEFER-90 K8); ein aelterer Abgleich, der den Serverstand vor dem
+//     COPY gelesen haben kann, verwirft nichts (PRUEFER-90 K9);
 //   - die Frist (E170_FRIST_MS) bleibt als Rueckfall fuer Vormerkungen, deren
 //     Abgleich nie kommt.
 //
@@ -188,7 +192,7 @@ struct E170Eintrag
 	const char*		szZiel;			// Pfad des Ziels (GetMBFileName)
 	E170Merkmale	m;
 	unsigned long	dwSeit;			// GetTickCount beim Vormerken bzw. beim Anstoss
-	bool			bAngestossen;	// der Abgleich des Ziels ist angestossen
+	long			lTakt;			// E170Takt beim Vormerken (PRUEFER-90 K8, K9)
 };
 
 // Fuenf Minuten - nur noch Rueckfall, siehe oben.
@@ -208,9 +212,16 @@ inline bool E170Abgelaufen(const E170Eintrag& e, unsigned long dwJetzt, unsigned
 	return dwJetzt - e.dwSeit > dwFrist;
 }
 
-// Die Nachbearbeitung stoesst den Abgleich des Ziels an: jede Vormerkung
-// dieses Ziels gilt ab jetzt als angestossen, die Frist laeuft ab jetzt
-// (PRUEFER-89 K4: nicht ab dem Einreihen). Rueckgabe: Zahl der Eintraege.
+// Ist Takt a spaeter gezogen als Takt b? Ueber die Differenz, damit auch ein
+// Ueberlauf des Zaehlers nichts umdreht.
+inline bool E170TaktNach(long a, long b)
+{
+	return (long) ((unsigned long) a - (unsigned long) b) > 0;
+}
+
+// Die Nachbearbeitung stoesst den Abgleich des Ziels an: fuer jede
+// Vormerkung dieses Ziels laeuft die Frist ab jetzt (PRUEFER-89 K4: nicht ab
+// dem Einreihen). Rueckgabe: Zahl der Eintraege.
 inline int E170Anstossen(E170Eintrag* pE, int nE, const void* pZiel, const char* szZiel, unsigned long dwJetzt)
 {
 	int n = 0;
@@ -218,7 +229,6 @@ inline int E170Anstossen(E170Eintrag* pE, int nE, const void* pZiel, const char*
 	{
 		if (E170GehoertZu(pE[i], pZiel, szZiel))
 		{
-			pE[i].bAngestossen = true;
 			pE[i].dwSeit = dwJetzt;
 			n++;
 		}
@@ -294,16 +304,19 @@ inline void E170AbgleichEntscheiden(const E170Eintrag* pE, int nE,
 	delete [] pnZu;
 }
 
-// Am Ende eines Abgleichs von (pZiel, szZiel): pbVerwerfen[i] fuer jede
-// angestossene Vormerkung dieses Ziels - die Kopie war nicht dabei, und eine
-// spaeter eintreffende gleich aussehende Mail ist nicht die Kopie
-// (PRUEFER-89 K1). Rueckgabe: Zahl der zu verwerfenden.
-inline int E170AbgleichEnde(const E170Eintrag* pE, int nE, const void* pZiel, const char* szZiel, bool* pbVerwerfen)
+// Am Ende eines Abgleichs von (pZiel, szZiel), der mit Takt lBeginn begonnen
+// hat: pbVerwerfen[i] fuer jede Vormerkung dieses Ziels, die VOR diesem
+// Beginn angelegt wurde - der Abgleich hat den Serverstand nach dem COPY
+// gelesen, die Kopie war nicht dabei, und eine spaeter eintreffende gleich
+// aussehende Mail ist nicht die Kopie (PRUEFER-89 K1). Eine Vormerkung, die
+// erst waehrend des Abgleichs entstand, bleibt (PRUEFER-90 K9).
+// Rueckgabe: Zahl der zu verwerfenden.
+inline int E170AbgleichEnde(const E170Eintrag* pE, int nE, const void* pZiel, const char* szZiel, long lBeginn, bool* pbVerwerfen)
 {
 	int n = 0;
 	for (int i = 0; i < nE; i++)
 	{
-		pbVerwerfen[i] = pE[i].bAngestossen && E170GehoertZu(pE[i], pZiel, szZiel);
+		pbVerwerfen[i] = E170TaktNach(lBeginn, pE[i].lTakt) && E170GehoertZu(pE[i], pZiel, szZiel);
 		if (pbVerwerfen[i])
 			n++;
 	}

@@ -1901,9 +1901,9 @@ static void E170Verwerfen(const bool* pbWeg, const bool* pbMelden, const char* s
 	for (int j = 0; j < (int) saName.GetSize(); j++)
 	{
 		CString szSpur;
-		szSpur.Format("E-170 Vormerkung verworfen: verfallen=%d grund=%s ziel=\"%s\"",
+		szSpur.Format("E-170 Vormerkung verworfen: anzahl=%d grund=%s ziel=\"%s\"",
 					  (int) dwaZahl.GetAt(j), szGrund, (LPCTSTR) saName.GetAt(j));
-		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
 	}
 	for (int i = n - 1; i >= 0; i--)
 	{
@@ -1962,7 +1962,7 @@ int E170LabelsVormerken(CTocDoc* pZiel, const CDWordArray& dwaLabels, const CDWo
 			p->e.m.szVon = p->strVon;
 			p->e.m.szBetreff = p->strBetreff;
 			p->e.dwSeit = ::GetTickCount();
-			p->e.bAngestossen = false;
+			p->e.lTakt = E170Takt();
 			s_aE170Vormerkungen.Add(p);
 			nVorgemerkt++;
 		}
@@ -1971,6 +1971,16 @@ int E170LabelsVormerken(CTocDoc* pZiel, const CDWordArray& dwaLabels, const CDWo
 	if (pnSchonDa)
 		*pnSchonDa = nSchonDa;
 	return nVorgemerkt;
+}
+
+// PRUEFER-90 K8, K9: Takt fuer Vormerkungen und fuer den Beginn eines
+// Abgleichs. Zieht der Abgleich seinen Takt nach dem der Vormerkung, hat er
+// den Serverstand nach dem COPY gelesen.
+static volatile LONG s_lE170Takt = 0;
+
+long E170Takt()
+{
+	return (long) ::InterlockedIncrement(&s_lE170Takt);
 }
 
 void E170AbgleichAngestossen(CTocDoc* pZiel)
@@ -1988,7 +1998,7 @@ void E170AbgleichAngestossen(CTocDoc* pZiel)
 	{
 		CString szSpur;
 		szSpur.Format("E-170 Vormerkung angestossen: vormerkungen=%d ziel=\"%s\"", nAn, (LPCTSTR) pZiel->Name());
-		PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
 	}
 }
 
@@ -2060,10 +2070,10 @@ void E170NachAbgleich(CTocDoc* pToc, const CPtrArray& aNeu)
 	CString szSpur;
 	szSpur.Format("E-170 Labels beim Verschieben im Konto, nach dem Abgleich: vorgemerkt=%d neue=%d gesetzt=%d mehrdeutig=%d ohne-treffer=%d grund=%s ziel=\"%s\"",
 				  nVor, nKand, nGesetzt, nMehrdeutig, nOhne, szGrund, (LPCTSTR) pToc->Name());
-	PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
 }
 
-void E170AbgleichFertig(CTocDoc* pToc)
+void E170AbgleichFertig(CTocDoc* pToc, long lBeginn)
 {
 	if (!pToc || s_aE170Vormerkungen.GetSize() == 0)
 		return;
@@ -2071,7 +2081,7 @@ void E170AbgleichFertig(CTocDoc* pToc)
 	int nE = 0;
 	E170Eintrag *pE = E170Eintraege(nE);
 	bool *pbWeg = DEBUG_NEW bool[nE];
-	if (E170AbgleichEnde(pE, nE, pToc, strZiel, pbWeg) > 0)
+	if (E170AbgleichEnde(pE, nE, pToc, strZiel, lBeginn, pbWeg) > 0)
 		E170Verwerfen(pbWeg, pbWeg, "ohne-treffer-im-abgleich");
 	delete [] pbWeg;
 	delete [] pE;

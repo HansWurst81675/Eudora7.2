@@ -554,14 +554,17 @@ int E170LabelsVormerken(CTocDoc* pZiel, const CDWordArray& dwaLabels, const CDWo
 // Zusammenfassungen (aNeu, CSummary*) gerufen; setzt das vorgemerkte Label nur
 // bei eindeutiger Zuordnung (E170Zuordnen), sonst nichts.
 void E170NachAbgleich(CTocDoc* pToc, const CPtrArray& aNeu);
-// E-170 ohne UIDPLUS (PRUEFER-89 K1, K4): die Nachbearbeitung der Uebertragung
-// stoesst den Abgleich von pZiel an - dessen Vormerkungen gelten ab jetzt als
-// angestossen, ihre Frist laeuft ab jetzt.
+// E-170 ohne UIDPLUS (PRUEFER-89 K4): die Nachbearbeitung der Uebertragung
+// stoesst den Abgleich von pZiel an - die Frist seiner Vormerkungen laeuft ab jetzt.
 void E170AbgleichAngestossen(CTocDoc* pZiel);
-// E-170 ohne UIDPLUS (PRUEFER-89 K1): am Ende eines Abgleichs von pToc - jede
-// angestossene Vormerkung ohne Treffer wird verworfen, statt bis zu fuenf
-// Minuten auf eine gleich aussehende fremde Mail zu warten.
-void E170AbgleichFertig(CTocDoc* pToc);
+// E-170 ohne UIDPLUS (PRUEFER-90 K8, K9): naechster Takt (fadensicher). Jede
+// Vormerkung zieht einen beim Anlegen, jeder Abgleich einen bei seinem Beginn.
+long E170Takt();
+// E-170 ohne UIDPLUS (PRUEFER-89 K1, PRUEFER-90 K8/K9): am Ende eines
+// Abgleichs von pToc, der mit Takt lBeginn begonnen hat - jede Vormerkung
+// ohne Treffer, die VOR diesem Beginn angelegt wurde, wird verworfen, statt
+// bis zu fuenf Minuten auf eine gleich aussehende fremde Mail zu warten.
+void E170AbgleichFertig(CTocDoc* pToc, long lBeginn);
 // E-170 ohne UIDPLUS (PRUEFER-89 K5): beim Beenden alle Vormerkungen freigeben.
 void E170VormerkungenFreigeben();
 // E-121 (PRUEFER-32): eine Kennung, die weder in der Quelle noch im Ziel vorkommt -

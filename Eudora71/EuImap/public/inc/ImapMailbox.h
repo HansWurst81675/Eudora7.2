@@ -382,7 +382,7 @@ private:
 
 	HRESULT	CheckMail (CTocDoc *pTocDoc, BOOL bSilent = FALSE, BOOL bForceResync = FALSE);
 
-	HRESULT DoFetchNewMessages (CTocDoc *pTocDoc, CUidMap& NewUidMap, BOOL bDoFiltering);
+	HRESULT DoFetchNewMessages (CTocDoc *pTocDoc, CUidMap& NewUidMap, BOOL bDoFiltering, long lE170Beginn);	// E-170: Takt vor dem Lesen von NewUidMap
 
 	HRESULT DownloadRemainingMessages (CTocDoc *pTocDoc, CUidMap& NewUidMap,
 							 CImapSumList *pSumList, BOOL bToTmpMbx = FALSE, CTaskInfoMT* pTaskInfo = NULL);

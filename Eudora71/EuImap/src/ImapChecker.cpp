@@ -134,6 +134,11 @@ CImapChecker::CImapChecker(LPCSTR szPersona, LPCSTR szImapName, unsigned long ul
 {
 	m_bIsInbox = ::IsInbox(m_strImapName);
 
+	// E-170 (PRUEFER-90 K8, K9): Beginn dieses Abgleichs. Gelesen wird der
+	// Server erst danach - ein Abgleich, dessen Takt nach dem einer Vormerkung
+	// liegt, hat den Stand nach dem COPY gesehen.
+	m_lE170Beginn = E170Takt();
+
 	m_pTaskInfo->SetTaskType(TASK_TYPE_RECEIVING);
 	m_pTaskInfo->SetPersona(m_strPersona);
 	m_pTaskInfo->SetTitle(CRString(IDS_POP_LOOKING_FOR_MAIL));
@@ -1287,9 +1292,10 @@ HRESULT CImapChecker::DoMergeNewTocs()
 		}
 	}
 
-	// E-170 ohne UIDPLUS (PRUEFER-89 K1): der Abgleich ist durch - was an
-	// angestossenen Vormerkungen fuer dieses Ziel noch steht, hatte keine Kopie.
-	E170AbgleichFertig(m_pTocDoc);
+	// E-170 ohne UIDPLUS (PRUEFER-89 K1, PRUEFER-90 K8/K9): der Abgleich ist
+	// durch - was an Vormerkungen fuer dieses Ziel von VOR seinem Beginn noch
+	// steht, hatte keine Kopie. Wer den Abgleich ausgeloest hat, ist gleich.
+	E170AbgleichFertig(m_pTocDoc, m_lE170Beginn);
 
 	// Make sure to do this!!!
 	m_slPostFilterSummaries.RemoveAll();

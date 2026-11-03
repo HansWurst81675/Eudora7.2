@@ -1779,7 +1779,7 @@ void CImapTransferMsgAction::E170LabelsNachtragen()
 	CString		szSpur;
 	szSpur.Format("E-170 Labels beim Verschieben im Konto: mit-label=%d alte-uids=%d neue-uids=%d gesetzt=%d grund=%s vorgemerkt=%d schon-da=%d",
 				  nMitLabel, nAlt, nNeu, nGesetzt, szGrund, nVorgemerkt, nSchonDa);
-	::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+	::PutDebugLog(DEBUG_MASK_DIALOG, szSpur);
 }
 
 void CImapTransferMsgAction::SetDestAccountID(unsigned long lDestAccountID)
