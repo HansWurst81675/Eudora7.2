@@ -168,4 +168,5 @@
 - [E-128 Endung aus Inhalt](entscheidung-e128-endung-aus-inhalt.md) — Gregor 03.11.: ja; .html/.eml/.txt, Dialog vorbelegen
 - [Prüfstand mit Fenster 03.11.](entscheidung-pruefstand-fenster-03-11.md) — erlaubt nur an diesem Tag (E-128, E-170)
 - [E-133 No / Release-Text 03.11.](entscheidung-e133-no-und-release-text-03-11.md) — No bleibt (Befehlszeile genügt); Release-Text E-170 im nächsten PR
-- [Reihenfolge nach 7.2.2.132](entscheidung-reihenfolge-nach-7-2-2-132.md) — Gregor 03.11.: erst Paket, dann E-188/192, E-199, E-129, E-193, E-198
+- [Reihenfolge nach 7.2.2.132](entscheidung-reihenfolge-nach-7-2-2-132.md) — Gregor 03.11.: E-192, E-199, E-188 messen, E-193 nachstellen; E-129/E-198 nur dokumentiert
+- [Randfälle nach Häufigkeit abwägen](randfaelle-nach-haeufigkeit-abwaegen.md) — wie oft, Schaden, Aufwand; hypothetische Fälle zuletzt
