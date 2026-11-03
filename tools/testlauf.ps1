@@ -274,8 +274,8 @@ if (-not (Sperre-Nehmen ('testlauf.ps1 ' + $voll) $SperreMinuten)) {
     exit 1
 }
 $regBild = $null
-if (-not $script:SperreGeerbt) { $regBild = Registry-Festhalten }
 try {
+if (-not $script:SperreGeerbt) { $regBild = Registry-Festhalten }
 if ($MitVorbereiten -and $MessenSkript -ne '') {
     & powershell -NoProfile -ExecutionPolicy Bypass -File $MessenSkript -Vorbereiten -Pfadfilter $voll 2>&1 |
         ForEach-Object { Write-Host ('  ' + $_) }
@@ -415,8 +415,12 @@ if ($null -ne $uhr) {
 }
 Write-Host ('  Beendet: ' + $proz.HasExited)
 } finally {
-    if ($null -ne $regBild) { [void](Registry-Zurueck $regBild) }
-    Sperre-Freigeben
+    # PRUEFER-87 N4: die Freigabe auch, wenn das Zuruecksetzen wirft
+    try {
+        if ($null -ne $regBild) { [void](Registry-Zurueck $regBild) }
+    } finally {
+        Sperre-Freigeben
+    }
 }
 
 # --- 6. Protokoll -----------------------------------------------------------

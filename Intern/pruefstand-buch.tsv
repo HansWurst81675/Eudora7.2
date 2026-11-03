@@ -30,6 +30,8 @@ E-125c	ok	2026-11-02 13:54:36	C:\Temp\E125	Eudora 7.2.1.131+a2f29b69* 2026-11-02
 E-131a	ok	2026-11-02 13:54:36	C:\Temp\E131L	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	ohne MRUFloatXPos=-2147483648
 E-131b	ok	2026-11-02 13:54:36	C:\Temp\E131L	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	ohne MRUFloatYPos=-2147483648
 E-131c	ok	2026-11-02 13:54:36	C:\Temp\E131L	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-131 Leistenposition:
+E-133p	ok	2026-11-02 19:37:41	C:\Temp\E133	Eudora 7.2.1.131+7876f242* 2026-11-02 19:28	E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1
+E-133q	ok	2026-11-02 19:37:41	C:\Temp\E133	Eudora 7.2.1.131+7876f242* 2026-11-02 19:28	E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"
 E-137a	ok	2026-11-02 13:54:36	C:\Temp\E137	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1
 E-137b	ok	2026-11-02 13:54:36	C:\Temp\E137	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1
 E-137c	ok	2026-11-02 13:54:36	C:\Temp\E137	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja

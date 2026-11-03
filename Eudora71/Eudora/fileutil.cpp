@@ -319,6 +319,28 @@ CString ExecutableDir;
 CString TempDir;
 CString MailDirHerkunft;	// siehe fileutil.h
 
+//
+// PRUEFER-87 P1 (E-209, 02.11.2026): CheckMailDirectory setzt das
+// Verzeichnis mit strcat in szShortEDir[_MAX_PATH + 1] zusammen (davor
+// gegebenenfalls zwei Zeichen Laufwerk) und haengt spaeter einen
+// Rueckstrich an Edir[_MAX_PATH + 1]. Ein laengerer Name schrieb ueber den
+// Stapel. Seit die Registryzeile laenger sein darf (E-209), kommt er auch
+// ueber StartEudoraWithDefaultLocation herein. Passt er nicht, wird
+// abgewiesen wie ein nicht vorhandenes Verzeichnis.
+//
+// Ohne Fenster, damit der Test sie fahren kann.
+//
+BOOL E209MailDirPasst(const char* dir, BOOL bMitLaufwerk)
+{
+	if (!dir)
+		return FALSE;
+
+	size_t nLaenge = strlen(dir) + (bMitLaufwerk ? 2 : 0);
+
+	// Platz fuer den Rueckstrich, den CheckMailDirectory anhaengt, und die Null
+	return (nLaenge <= (size_t)(_MAX_PATH - 1)) ? TRUE : FALSE;
+}
+
 BOOL CheckMailDirectory(const char* dir, const char* Location)
 {
 	char szShortEDir[_MAX_PATH + 1];
@@ -335,6 +357,14 @@ BOOL CheckMailDirectory(const char* dir, const char* Location)
 	else
 	{
 		szShortEDir[ 0 ] = '\0';
+	}
+
+	// PRUEFER-87 P1: erst messen, dann zusammensetzen.
+	if (!E209MailDirPasst(dir, szShortEDir[0] != '\0'))
+	{
+		MailDirHerkunft.Empty();
+		ErrorDialog(IDS_ERR_BAD_EUDORA_DIR, Location, dir);
+		return (FALSE);
 	}
 
 	strcat(szShortEDir, dir);

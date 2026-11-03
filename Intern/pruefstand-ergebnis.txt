@@ -1,10 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 19:36:25
+zeit=2026-11-02 19:37:41
 freigabe=Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig.
-nur=E-203   (Teillauf, nicht der Gesamtstand)
-faelle=3
-bestanden=3
+nur=E-133   (Teillauf, nicht der Gesamtstand)
+faelle=2
+bestanden=2
 fehlgeschlagen=0
-fall=[ ok ] E-203p   E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1
-fall=[ ok ] E-203v   E39 Vorlauf: kennwort-meldung,vergessen
-fall=[ ok ] E-203w   E39 PROBE ok
+fall=[ ok ] E-133p   E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1
+fall=[ ok ] E-133q   E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"

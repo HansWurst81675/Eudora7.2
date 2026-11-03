@@ -215,7 +215,8 @@ Mit einem **Label**. Es gibt sieben, jedes mit Name und Farbe.
 Ordnern **desselben IMAP-Kontos** verschoben, ist das Label danach weg, wenn der
 Server die neuen Nummern der verschobenen Mail nicht meldet (UIDPLUS) — Eudora
 speichert Labels nur bei sich, nicht auf dem Server. Meldet er sie, bleibt das
-Label; das war schon vor 7.2.1.130 so (am Prüfstand am 02.11.2026 an 7.2.1.128
+Label meistens; das war schon vor 7.2.1.130 so — an einem solchen Server ging es
+aber am 29.10.2026 einmal verloren, die Ursache ist offen (am Prüfstand am 02.11.2026 an 7.2.1.128
 und 7.2.1.131 gemessen). Ab 7.2.1.131 steht in der `eudora.log`, warum es fehlt
 ([E-170](../Intern/BEFUNDE.md#e-170), offen).
 
