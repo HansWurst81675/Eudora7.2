@@ -165,3 +165,5 @@
 - [Stand 02.11.2026](stand-02-11-2026.md) — #199/#200 gemergt; nächster Schritt E-143 Suchfenster, Gregor testet E-178; bauen.ps1 testet blind
 - [7.2.2-Umfang und Termin](entscheidung-7-2-2-umfang.md) — Gregor 02.11.: Release 7.2.1.131, dann 7.2.2.x mit Hilfe-Menü; Termin: privat.txt (nicht gespiegelt)
 - [CHRONIST 02.11.2026 tagsüber](CHRONIST-2026-11-02b.md) — Laufbericht; Force-Push nach Abweisung über Gregors `!` (2. Mal); persönliche Angabe gespiegelt; auftrag-rolle.pl schaltet belegten Baum um; Ein-Zeilen-LEKTOR-Nachträge; E-189 viermal gefragt; 1.128-Gegenprobe ohne Ansage
+- [E-128 Endung aus Inhalt](entscheidung-e128-endung-aus-inhalt.md) — Gregor 03.11.: ja; .html/.eml/.txt, Dialog vorbelegen
+- [Prüfstand mit Fenster 03.11.](entscheidung-pruefstand-fenster-03-11.md) — erlaubt nur an diesem Tag (E-128, E-170)
