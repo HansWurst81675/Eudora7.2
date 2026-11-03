@@ -593,6 +593,30 @@ BOOL CPersonality::Remove( const char* Name )
 			SetCurrent( NULL );
 			m_Passwords.RemoveKey( PersonaID );
 		}
+		// E-204: das Kennwort im Speicher IMMER vergessen, nicht nur bei der
+		// aktuellen. SavePassInfo legt bei jedem Umschalten weg von einer
+		// Persoenlichkeit ihr POPPassword unter m_Passwords["Persona-<Name>"]
+		// ab (auch die Mailpruefung ueber alle Persoenlichkeiten). Blieb der
+		// Eintrag stehen, fand RestorePassInfo ihn fuer eine gleichnamige
+		// neue Persoenlichkeit derselben Sitzung, und GetPOPPassword_ schickte
+		// das alte Kennwort ohne Rueckfrage an deren Server. Am Pruefstand
+		// gemessen am 02.11.2026 (tools\messen-e204.ps1). RemoveKey vergleicht
+		// mit Gross- und Kleinschreibung, die Namen hier ohne - deshalb jeden
+		// Schluessel nehmen, der ohne Ruecksicht auf die Schreibung gleich ist.
+		// Steht hinter SetCurrent( NULL ), weil SavePassInfo beim Umschalten
+		// das Kennwort der aktuellen noch einmal ablegt.
+		{
+			CStringList listVergessen;
+			CString strSchluessel, strWert;
+			for ( POSITION pos = m_Passwords.GetStartPosition(); pos != NULL; )
+			{
+				m_Passwords.GetNextAssoc( pos, strSchluessel, strWert );
+				if ( strSchluessel.CompareNoCase( PersonaID ) == 0 )
+					listVergessen.AddTail( strSchluessel );
+			}
+			while ( ! listVergessen.IsEmpty() )
+				m_Passwords.RemoveKey( listVergessen.RemoveHead() );
+		}
 		CString strSpur;
 		strSpur.Format( "E-39 Remove %s: war-aktuell=%d aktuell=%s", Name, bWarAktuell ? 1 : 0,
 			m_Current.IsEmpty() ? "<Dominant>" : (LPCTSTR) GetCurrent() );

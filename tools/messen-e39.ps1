@@ -28,8 +28,17 @@
 # Ausgabe:
 #   E39 ERGEBNIS abschnitt-wieder=<0|1> schluessel=<liste|-> war-aktuell=<0|1|-> aktuell-danach=<name|ungemessen> lebt=<0|1>
 # war-aktuell kommt aus der Spurzeile; "-" heisst: der Bau schreibt sie nicht
-# (vor der Behebung). E-39p verlangt war-aktuell=1 - sonst hat der Lauf das
-# Loeschen einer NICHT aktuellen Persoenlichkeit gemessen (PRUEFER-85 K5).
+# (vor der Behebung). Bis zur Behebung von E-203 verlangte E-39p
+# war-aktuell=1 - sonst hatte der Lauf das Loeschen einer NICHT aktuellen
+# Persoenlichkeit gemessen (PRUEFER-85 K5). Seit E-203 behoben ist (02.11.2026,
+# ChangePassword schaltet auch nach der Meldung zurueck), ist der Vorlauf
+# genau die Messung von E-203: Fall E-203p verlangt war-aktuell=0, E-203v und
+# E-203w sind seine Positivproben im selben Start (PRUEFER-88 K1). Damit ist
+# der einzige BEKANNTE Weg ueber die Oberflaeche zur geloeschten "aktuellen"
+# Persoenlichkeit zu - PRUEFER-85 hat alle 97 SetCurrent-Aufrufe innerhalb je
+# einer Funktion durchgesehen, Wege ueber Funktionsgrenzen nicht; offen bleibt
+# der Fehlerfall in DownloadSingleMessage (LEKTOR-135 L-135.3). Die
+# E-39-Behebung selbst sichert TestE39.cpp.
 # Positivprobe (E39 PROBE): der Abschnitt stand vorher da, die Rueckfrage kam,
 # und direkt nach Yes fehlten Abschnitt und Listeneintrag - sonst hat das
 # Loeschen nicht stattgefunden, und abschnitt-wieder=0 waere nichts wert.
@@ -280,6 +289,11 @@ if ($eintrag -ge 0) {
     Write-Output ('E39 gewaehlt: ' + [E39W]::Gewaehlt($liste) + ' Eintrag(e)')
 
     $dlgVorher = @([E39W]::Fenster($pid32) | Where-Object { [E39W]::Klasse($_) -eq '#32770' })
+    # PRUEFER-88 K9: Laenge der eudora.log vor Delete - gesucht wird die
+    # Spurzeile nur dahinter, sonst gaelte die eines frueheren Laufs.
+    $logDatei = Join-Path $md 'eudora.log'
+    $logVorDelete = 0
+    if (Test-Path -LiteralPath $logDatei) { $logVorDelete = (Get-Item -LiteralPath $logDatei).Length }
     [void][E39W]::PostMessage($liste, 0x0111, [IntPtr]33038, [IntPtr]::Zero)   # IDM_DELETE_PERSONALITY
     $dlg = [IntPtr]::Zero
     $frist = (Get-Date).AddSeconds($WarteSekunden)
@@ -328,11 +342,17 @@ if ($null -ne $s2) { $schl = (@($s2.Zeilen | ForEach-Object { ($_ -split '=', 2)
 $aktuell = 'ungemessen'
 $warAktuell = '-'
 $log = Join-Path $md 'eudora.log'
-if (Test-Path -LiteralPath $log) {
+if ((Test-Path -LiteralPath $log) -and $null -ne $logVorDelete) {
     # Spurzeile: "E-39 Remove <Name>: war-aktuell=<0|1> aktuell=<name>" -
     # mit Leerzeichen davor, sonst trifft "war-aktuell=" (am 02.11.2026 so
-    # geschehen: aktuell-danach=1).
-    $spur = @(Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-39 .* aktuell=(\S+)' })
+    # geschehen: aktuell-danach=1). Nur hinter der Laenge vor Delete
+    # (PRUEFER-88 K9); ist die Datei kuerzer, wurde sie neu angelegt: ganz.
+    $fs = [IO.File]::Open($log, 'Open', 'Read', 'ReadWrite')
+    try {
+        if ($fs.Length -ge $logVorDelete) { [void]$fs.Seek($logVorDelete, 'Begin') }
+        $lt = (New-Object IO.StreamReader($fs, $ansi)).ReadToEnd()
+    } finally { $fs.Close() }
+    $spur = @($lt -split "`r?`n" | Where-Object { $_ -match 'E-39 .* aktuell=(\S+)' })
     if ($spur.Count -gt 0) {
         [void]($spur[-1] -match ' aktuell=(\S+)'); $aktuell = $Matches[1]
         if ($spur[-1] -match 'war-aktuell=(\d)') { $warAktuell = $Matches[1] }

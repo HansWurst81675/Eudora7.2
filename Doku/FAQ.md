@@ -150,12 +150,18 @@ Verschlüsselung für das Konto einstellen
 Post getrennt liegen soll, einen Filter anlegen
 ([FAQ 6](#6-wie-trenne-ich-die-post-verschiedener-konten)).
 
-**Löschen:** das gewöhnliche Löschen über *Personalities → Delete* ist
-unbedenklich (am Prüfstand gemessen). Nur wer vorher *Change Password* für
-diese Persönlichkeit aufgerufen und die Fehlermeldung *„I can't tell where the
-machine name is …“* bekommen hat, sollte Eudora vor dem Löschen einmal beenden
-und neu starten — sonst bleibt ein leerer Rest in der `Eudora.ini` (bekannter
-Fehler [E-39](../Intern/BEFUNDE.md#e-39) in der README, behoben ab 7.2.2.132).
+**Löschen:** wer eine Persönlichkeit löscht und in derselben Sitzung eine
+neue **mit demselben Namen** anlegt, sollte dazwischen Eudora einmal beenden
+und neu starten — bis 7.2.1.131 bekommt die neue sonst das Kennwort der
+gelöschten und schickt es beim ersten Abruf ungefragt an ihr Konto (am
+Prüfstand gemessen; bekannter Fehler [E-204](../Intern/BEFUNDE.md#e-204) in
+der README, behoben ab 7.2.2.132). Für die `Eudora.ini` ist das gewöhnliche
+Löschen über *Personalities → Delete* unbedenklich (am Prüfstand gemessen).
+Nur wer vorher *Change Password* für diese Persönlichkeit aufgerufen und die
+Fehlermeldung *„I can't tell where the machine name is …“* bekommen hat,
+sollte Eudora vor dem Löschen einmal beenden und neu starten — sonst bleibt
+ein leerer Rest in der `Eudora.ini` (bekannter Fehler
+[E-39](../Intern/BEFUNDE.md#e-39) in der README, behoben ab 7.2.2.132).
 
 *Belegt:* dass der Assistent ohne Windows-Meldung aufgeht, hat Gregor am
 27.10.2026 an 1.0.127 geprüft ([E-160](../Intern/BEFUNDE.md#e-160)); den
