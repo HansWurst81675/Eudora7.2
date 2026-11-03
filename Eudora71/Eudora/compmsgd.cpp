@@ -3360,13 +3360,24 @@ void CCompMessageDoc::OnFileSaveAs()
 	}
 
 
+	//
+	// BEFUND E-128: Vorgabeendung aus dem Inhalt (Gregor 03.11.2026, Erlaeuterung
+	// an E128Vorgabeendung in msgutils.cpp). Der Inhalt folgt hier der Endung
+	// (SaveAsFile unten: .htm schreibt HTML).
+	//
+	const bool		bHtmlE128 = m_Sum->IsHTML() ? true : false;
+	const char *	pszE128   = E128Vorgabeendung( false, 1, false, bHtmlE128 );
+
 	CSaveAsDialog theDlg(	szName, 
 							TRUE, 
 							//TRUE, 
 							FALSE,
-							CRString( IDS_TEXT_EXTENSION ), 
+							pszE128,					// E-128 (war IDS_TEXT_EXTENSION)
 							CRString( IDS_MSG_SAVEAS_FILE_FILTER ),		// E-195: ohne .rtf 
 							NULL );
+
+	theDlg.m_ofn.nFilterIndex = E128FilterIndex( CRString( IDS_MSG_SAVEAS_FILE_FILTER ), pszE128 );
+	E128SpurSchreiben( "Verfassen-Fenster", 1, false, bHtmlE128, pszE128, (int) theDlg.m_ofn.nFilterIndex );
 		
 	
 	if ( theDlg.DoModal() != IDOK )
@@ -3387,6 +3398,7 @@ void CCompMessageDoc::OnFileSaveAs()
 	}
 
 	szPathName = theDlg.GetPathName();
+	E128GewaehltSchreiben( "Verfassen-Fenster", szPathName );	// E-128
 	
 	//bIsStationery = theDlg.m_IsStat;
 
