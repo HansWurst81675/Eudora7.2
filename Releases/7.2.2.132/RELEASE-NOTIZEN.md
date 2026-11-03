@@ -73,12 +73,12 @@ Was noch nicht geht, steht in der
 darunter:
 
 * Der **vorgeschlagene Dateiname** bei *Speichern unter* verliert Umlaute
-  und ist auf 64 Zeichen gekürzt; aus der Postfachliste kann er so im Feld
-  stehen, dass Windows ihn ablehnt. Den Namen dann von Hand ändern. Die
+  und ist auf 63 Zeichen gekürzt. Den Namen bei Bedarf von Hand ändern. Die
   Behebung ist in Arbeit.
 * Ein langer **Betreff mit Umlauten** kann in der Postfachliste um seine
   ersten sieben Zeichen gekürzt erscheinen, wenn der Absender die Kopfzeile
-  gleich hinter `Subject:` umbricht; Eudora selbst sendet solche Betreffs so.
+  gleich hinter `Subject:` umbricht; Eudora selbst tut das bei etwa jedem
+  fünften Umlaut-Betreff von 40 bis 60 Zeichen.
   Die Nachricht selbst ist vollständig. Das war schon vor 7.2.2 so (Originalfehler); die
   Behebung ist in Arbeit.
 * Werden mehrere IMAP-Mails auf einmal in den Papierkorb, nach Junk oder per

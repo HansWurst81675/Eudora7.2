@@ -46,7 +46,7 @@ Betreffzeilen, Namen, Dateinamen oder Inhalte):
 | 5 | ein vorhandener Filter greift beim Abruf (`E-64 Match=1`) |
 | 6, 7 | beide Hilfeseiten im Browser, Statuszeilentexte wie beschrieben (Bildschirmfotos) |
 | 8, 9 | fünf Knöpfe ohne Überlappung; *Latest Release* öffnet die Release-Seite (`About: Latest Release geoeffnet …`) |
-| 10 | Endung richtig vorgeschlagen und gespeichert: Postfachliste `endung=eml`, Nachrichtenfenster `endung=htm`; die `.htm` trägt `<meta … charset=windows-1252>` ([E-196](BEFUNDE.md#e-196)). **Neu gefunden:** der vorgeschlagene **Dateiname** verliert Umlaute, ist bei 64 Zeichen abgeschnitten und steht aus der Postfachliste als ganzer Pfad mit doppeltem Rückstrich im Feld — Windows lehnt ihn ab. Eigener Befund `E-220` (Zweig `e220_dateiname_vorschlag`). |
+| 10 | Endung richtig vorgeschlagen und gespeichert: Postfachliste `endung=eml`, Nachrichtenfenster `endung=htm`; die `.htm` trägt `<meta … charset=windows-1252>` ([E-196](BEFUNDE.md#e-196)). **Neu gefunden:** der vorgeschlagene **Dateiname** verliert Umlaute, ist bei 63 Zeichen abgeschnitten. Der ganze Pfad mit doppeltem Rückstrich im Feld, den Windows ablehnte, kam nach Gregors eigener Einschätzung aus dem Explorer hineinkopiert; am Prüfstand ließ er sich nicht nachstellen. Eigener Befund `E-220` (Zweig `e220_dateiname_vorschlag`). |
 | 11 | die gespeicherte Signatur ist nicht leer ([E-207](BEFUNDE.md#e-207)) |
 | 12 | `CloseDown … liefere TRUE`, kein Fehlerdialog |
 
