@@ -1,9 +1,13 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-03 10:56:58
-freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, About-Dialog) - Faelle E-216p/E-216l
-nur=E-216   (Teillauf, nicht der Gesamtstand)
-faelle=2
-bestanden=2
-fehlgeschlagen=0
-fall=[ ok ] E-216p   ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
-fall=[ ok ] E-216l   ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
+zeit=2026-11-03 14:32:49
+freigabe=Gregor am 03.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, Messung E-188/E-193)
+nur=E-188k   (Teillauf, nicht der Gesamtstand)
+faelle=1
+bestanden=0
+fehlgeschlagen=1
+fall=[FEHL] E-188k   fehlt in messung: E188 ERGEBNIS weg=konten anzeige=richtig
+             gemeldet: E188 ERGEBNIS weg=konten anzeige=FALSCH ziel-fremd=1 ziel-kopie=0 eintraege=2 | server quelle-del=1 quelle-weg=0 kopie-im-ziel=0 verloren=1 fremd-geloescht=0 dialoge=2
+                         Beende per WM_CLOSE an das gemessene Handle.
+                         Zeit vom WM_CLOSE bis zum Ende: 1 s
+                         Beendet: True
+                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\mess\tools\TESTLAEUFE.md

@@ -112,3 +112,5 @@ Die Probe von oben, *„kommt das aus Gregors Rechner?“*, griff hier nicht. Di
 
 **Nachtrag 03.11.2026, Gregor:** *„grundsätzlich sollten interne infos nichts ins repo“* — über Namen aus dem Mailverzeichnis hinaus: keine Ordner- und Kontonamen, nicht den Namen seines Mailanbieters, keine Pfade seiner Testverzeichnisse, auch nicht in Logzeilen, Berichten der Agenten oder Commit-Nachrichten. Stattdessen „Gregors Server“, „ein Ordner seines IMAP-Kontos“. In jedem Agentenauftrag mitgeben.
 **Gregor zur Bereinigung (03.11.2026):** die schon vorhandenen Nennungen seines Mailanbieters (rund 150, seit Oktober) bleiben stehen — *„Nein, nur ab jetzt“*. Nicht wieder vorschlagen.
+
+**Nachtrag 03.11.2026, Gregor:** *„keine daten aus den test ins github repo.“* — aus seinen Testergebnissen (Logs, Bildschirmfotos, gespeicherte Dateien) kommt nichts ins Repo: keine Betreffzeilen, Dateinamen, Inhalte, Adressen, Ordnernamen. Testdaten für Nachstellungen immer erfinden (gleiche Eigenschaften, anderer Text). In Agentenaufträge nie seinen echten Text als Muster geben, sondern beschreiben.
