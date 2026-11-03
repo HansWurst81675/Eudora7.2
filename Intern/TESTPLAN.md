@@ -484,8 +484,14 @@ deinem System.
    Mailprogramm.
 2. Dieselbe Mail **öffnen**, *File → Save As*: gewählt ist **HTML Files
    (*.htm)**; die Datei endet auf `.htm` und zeigt im Browser die Mail.
-3. Eine **reine Textmail** aus der Postfachliste speichern: gewählt ist
-   **Text Files (*.txt)**.
+3. Eine **Textmail ohne Umlaute** aus der Postfachliste speichern: gewählt
+   ist **Text Files (*.txt)**. Eine Textmail **mit** Umlauten bekommt
+   **Mail Files (*.eml)** — so gewollt (deine Entscheidung vom 03.11.2026):
+   Eudora setzt dann einen Kopf mit dem Zeichensatz davor.
+4. **Ort: IMAP, offline** (freiwillig): *File → Work Offline*, in einem
+   IMAP-Ordner eine Mail markieren, die noch nie geöffnet war, *File → Save
+   As*. Bestanden, wenn **vor** dem Dialog keine Frage „online gehen?“
+   kommt. Am Prüfstand ist dieser Weg nicht gemessen.
 
 Wer eine andere Endung will, wählt sie im Dialog wie bisher.
 
