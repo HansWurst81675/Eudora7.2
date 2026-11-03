@@ -125,9 +125,80 @@ Arbeitsbaum `.wt/lektor`, Zweig `wt/lektor-20261103c`, abgezweigt von `origin/e1
 
 1. **Ordnernamen im Protokoll** (PRÜFER-90 T3): seit K10 steht in der `eudora.log` schon mit der Vorgabe bei jeder E-170-Zeile der Name des Zielordners (`ziel="…"`). Die Zeilen von [E-128](../Intern/BEFUNDE.md#e-128) nennen bewusst keinen Pfad. Du schickst deine `eudora.log` mit den Ergebnis-ZIPs: dürfen Ordnernamen darin stehen, oder soll die Zeile sie weglassen?
 
+## <a id="eingearbeitet"></a>Eingearbeitet (BEHEBER, 03.11.2026) — nur die Funde zu e170
+
+Zweig `e170_label_ohne_uidplus`. [L-138.7](#l-138.7) und [L-138.8](#l-138.8) gehören zum About-Zweig und sind hier nicht angefasst; [L-138.9](#l-138.9) (Berichtszahl in der README) bleibt bis nach dem letzten Merge.
+
+| Fund | was geschah |
+|---|---|
+| [L-138.1](#l-138.1) | `README.md` (Zeile zu [E-170](../Intern/BEFUNDE.md#e-170)) beginnt jetzt mit der Bedingung (*„An einem IMAP-Server, der beim Verschieben keine neuen Nummern meldet …“*), Gregors Server behält das Label; `Doku/FUNKTIONEN.md` (*Change ▸ Label*) ebenso, mit dem Hinweis auf die Berichtigung im Quellstand |
+| [L-138.2](#l-138.2) | Im [E-170](../Intern/BEFUNDE.md#e-170)-Eintrag steht die Zeile *nach dem Abgleich* jetzt im Bereich *Dialog* (0x08, in der Vorgabe an; bis PRÜFER-90 K10 *Misc*); die zweite Stelle mit *Misc* steht im Teil *„Bis 03.11.2026 stand hier“* und beschreibt 7.2.1.131 — bleibt. Kommentare `tools/messen-e170.ps1:12`, `messen-e170o.ps1:12` und die Meldung in `TestE170.cpp` (`anzahl=`) berichtigt |
+| [L-138.3](#l-138.3) | *Zuletzt gemessen* in [E-170](../Intern/BEFUNDE.md#e-170) nennt `1b1d6825*` (mit K8–K10), `tools/WERKZEUGE.md` ebenso; CHANGELOG nennt 388/388 als damaligen Stand und 398/398 bzw. 405/405 als heutigen |
+| [L-138.4](#l-138.4) | Satz *„In dieser Kopie (Zweig e170) …“* in [PRÜFER-90](PRUEFER-90.md#pruefer-90) gestrichen; im Eintrag ist *PRÜFER-90 K8–K10* jetzt ein Link |
+| [L-138.5](#l-138.5) | Leerzeilen vor und nach den Überschriften von Nachtrag 2 und vor der Tabelle |
+| [L-138.6](#l-138.6) | T1 und T2 stehen im Eintrag als **Grenze** (nicht behoben, Gregor 03.11.2026: erst abwägen); T3 ist durch Gregors Entscheidung erledigt: keine E-170-Zeile nennt mehr den Ordnernamen (`ziel="…"` entfernt). Test: Quelltextprüfung (kein `ziel=`, kein `->Name()` im E-170-Block); Gegenprobe Name in jede der drei Zeilen zurück → je 404/405 rot, wiederhergestellt 405/405 |
+
+Unit-Tests vorher 405/405 (Stand a04af7bc), nachher 405/405; Release-Bau ohne Fehler. Prüfstand nicht gefahren: geändert sind nur Logzeilen, die die Messskripte über `grund=` lesen.
+
+## Nachtrag 1 (03.11.2026, nach 9bad293a)
+
+`origin/e170_label_ohne_uidplus` in `wt/lektor-20261103c` gemergt (Spitze `9bad293a` *„[E-170](../Intern/BEFUNDE.md#e-170): keine Ordnernamen im Protokoll (Gregor 03.11.2026, [PRUEFER-90](PRUEFER-90.md#pruefer-90) T3); [LEKTOR-138](#lektor-138) L-138.1-.6 eingearbeitet“*). Gemessen mit `grep`/`awk` am Stand nach dem Merge.
+
+| Fund | Stand | Stelle |
+|---|---|---|
+| [L-138.1](#l-138.1) Randfall als Alltagsfehler | **erledigt** | `README.md:167` *„An einem IMAP-Server, der beim Verschieben **keine neuen Nummern** meldet (ohne UIDPLUS), geht das **Label** … verloren“*; `Doku/FUNKTIONEN.md:176` *„Geht an Servern ohne UIDPLUS …“* |
+| [L-138.2](#l-138.2) *Misc* statt *Dialog* im E-170-Eintrag | **teilweise** | erste Stelle berichtigt: `Intern/BEFUNDE.md:429` *„(Protokollbereich *Dialog*, 0x08, in der Vorgabe an; bis PRÜFER-90 K10 *Misc*, 0x8000)“*. **Zweite Stelle unverändert:** derselbe Eintrag *„`E-170 Labels beim Verschieben im Konto: … grund=keine-neuen-uids` (Protokollbereich *Misc*, 0x8000 — in Gregors `LogLevel=58527` an, in der Vorgabe 25759 aus)“*. Die Skriptkommentare `messen-e170.ps1`/`messen-e170o.ps1` sind geändert (`git diff --stat 07cca482 9bad293a`) |
+| [L-138.3](#l-138.3) alter Bau, alte Testzahl | **erledigt** | `Intern/BEFUNDE.md:429` *„Bau `7.2.1.131+1b1d6825*` mit PRÜFER-90 K8–K10“*; `tools/WERKZEUGE.md:162` *„erneut 7/7 am Bau `7.2.1.131+1b1d6825*`“*; `CHANGELOG.md:157` *„damals 388/388 mit 16 Gegenproben rot, nach …“* |
+| [L-138.4](#l-138.4) „gibt es hier noch nicht“ | **erledigt** | `grep -c 'reiner Text: beide' Befunde/PRUEFER-90.md` → 0; *„daher hier ohne Verweis“* im Eintrag → 0 |
+| [L-138.5](#l-138.5) Leerzeilen Nachtrag 2 | **erledigt** | `awk` über `Befunde/PRUEFER-90.md`: keine Überschrift nach nicht-leerer Zeile, keine Tabelle direkt nach einem Listenpunkt |
+| [L-138.6](#l-138.6) T1–T3 im Eintrag | **erledigt** | `Intern/BEFUNDE.md:429` nennt [T1](PRUEFER-90.md#t1) (*„sehr selten, am Quelltext belegt“*), [T2](PRUEFER-90.md#t2) und *„T3 (Ordnername im Protokoll) ist durch die Entscheidung oben erledigt“* |
+| [L-138.7](#l-138.7)/[L-138.8](#l-138.8) About-Zweig | nicht nachgemessen (gehören zu `about_dialog_github`) | — |
+| [L-138.9](#l-138.9) Berichtszahl | **offen** (vereinbart: nach dem letzten Merge) | — |
+
+### <a id="l-138.10"></a>L-138.10 — Ordnernamen stehen weiter im Protokoll, über die E-189-Zeilen
+
+**Gewicht: mittel** (Gregors Entscheidung vom 03.11.2026 *„Weglassen“*, im Eintrag *„**Keine Ordnernamen im Protokoll**“*). Umgesetzt ist sie nur für [E-170](../Intern/BEFUNDE.md#e-170). (gemessen am Code)
+
+- `Eudora71/EuImap/src/ImapToc.cpp:1819` *„[E-189](../Intern/BEFUNDE.md#e-189) Vorab-Kopie bleibt, Fenster nicht geschlossen: alte-uid=%lu ziel=\"%s\"“* und `:1825` *„[E-189](../Intern/BEFUNDE.md#e-189) Vorab-Kopie ohne neue UID entfernt: … ziel=\"%s\"“*, beide mit `pZiel->Name()`, geschrieben mit `DEBUG_MASK_MISC` — in der Vorgabe aus, in Gregors `LogLevel` (58527, laut E-170-Eintrag) an. [E-189](../Intern/BEFUNDE.md#e-189) ist der Befund, bei dem eine Vorab-Kopie im Ziel bleibt oder entfernt wird.
+- Ob Gregors Entscheidung nur die E-170-Zeilen meint oder alle Logzeilen, sagt der Eintrag nicht; der Wortlaut *„Keine Ordnernamen im Protokoll“* ist allgemein.
+
+**Vorschlag:** die beiden E-189-Zeilen ebenso ohne `ziel=` schreiben und die Quelltextprüfung in `TestE170.cpp` (kein `ziel=`) auf den ganzen Block bzw. eine Schranke über alle `szSpur.Format` mit `->Name()` ausdehnen; oder im Eintrag ausdrücklich *„nur [E-170](../Intern/BEFUNDE.md#e-170)“* schreiben.
+
+Neu: ein Fund ([L-138.10](#l-138.10)); [L-138.2](#l-138.2) teilweise. Was nur Gregor entscheiden kann: weiter nichts — die Frage aus dem Hauptteil (Ordnernamen) hat er beantwortet.
+
 ## <a id="eingearbeitet-about"></a>Eingearbeitet auf `about_dialog_github` (Dialogbauer, 03.11.2026) — nur L-138.7 und L-138.8
 
 | Fund | was geschah |
 |---|---|
 | [L-138.7](#l-138.7) | CHANGELOG, FUNKTIONEN und WEITERMACHEN sagen nicht mehr „bricht um“, sondern dass *Log* und *Mail folder from* Platz für zwei Zeilen haben. CHANGELOG nennt, was gemessen ist: der Umbruch für *Log* am langen Prüfstandspfad (114 Zeichen, 26 Pixel nötig, 33 Platz), für *Mail folder from* nicht. Der gemessene Stand hat jetzt eine Kennung (`7.2.1.131+f209fd82*`, also die Änderungen auf dem Merge `f209fd82` vor dem Commit). Die Logzeile bleibt bei `DEBUG_MASK_MISC`, ein Fehler zeigt zusätzlich eine Meldung. |
 | [L-138.8](#l-138.8) | `main` (#211–#214) hereingeholt; der E-216-Satz steht als eigener Satz vor dem heutigen Kopf von WEITERMACHEN. |
+
+## Nachtrag 2 (03.11.2026, about_dialog_github nach caf1c0d7)
+
+`origin/about_dialog_github` (Spitze `caf1c0d7` *„[E-216](../Intern/BEFUNDE.md#e-216) nach [PRUEFER-91](PRUEFER-91.md#pruefer-91): Zeile "Log:" zweizeilig (K1), Test und Messung geschaerft (K3), Erfolg aus ShellExecuteEx (K4)“*) in `wt/lektor-20261103c` gemergt. Konflikt nur in diesem Bericht: der Abschnitt *Eingearbeitet auf `about_dialog_github`* des Dialogbauers und mein Nachtrag 1 stehen jetzt beide da. Gelesen gegen den Bestand: [E-216](../Intern/BEFUNDE.md#e-216) (im About-Dialog überdecken sich die Knöpfe, es fehlt der Weg zum neuesten Release), CHANGELOG, FUNKTIONEN, TESTPLAN *e-216-naechstes*, WERKZEUGE `messen-about`, WEITERMACHEN-Kopf, PRÜFER-91 *Eingearbeitet*.
+
+| Fund | Stand | Stelle |
+|---|---|---|
+| [L-138.7](#l-138.7) „bricht um“ als Tatsache | **erledigt in CHANGELOG und FUNKTIONEN, im Eintrag ein Rest** ([L-138.11](#l-138.11)) | `CHANGELOG.md:176` *„haben Platz für zwei Zeilen (am Prüfstand gemessen ist der Platz; dass ein langer Text tatsächlich in die zweite Zeile umbricht, ist für *Log* mit langem Pfad gemessen, für *Mail folder from* nicht)“*; `Doku/FUNKTIONEN.md:269` *„haben Platz für zwei Zeilen“*; gemessener Stand mit Kennung `7.2.1.131+f209fd82*` |
+| [L-138.8](#l-138.8) WEITERMACHEN vor #214 | **erledigt** | `Intern/WEITERMACHEN.md:3` beginnt mit dem E-216-Satz, danach der heutige Kopf *„Laufend: `e170_label_ohne_uidplus`, `about_dialog_github`“*; die ältere Liste mit `e128_…` steht weiter hinten als Rückblick |
+
+Trifft (gelesen): TESTPLAN Schritte 1–3 (*Ort: lokal*, Schritt 2 *„Eudora zeigt dabei keine Meldung“* nach K4); PRÜFER-91 *Eingearbeitet* (`Befunde/PRUEFER-91.md:107-121`) gegen den Eintrag — K1, K3, K4 behoben, K2/K5/K6/K7 unter *Grenze* mit Häufigkeit und Folge (*„sehr selten, *Copy info* hat den vollen Text“*, *„harmlos“*, *„ohne Wirkung“*, *„nur bei einem *Pre-release*“*) — so gewichtet, wie Gregor es will. Interne Angaben: im Eintrag stehen nur Prüfstandspfade unter `C:\Temp` und die öffentliche Release-Adresse (`grep 'Users'` im Eintrag → nichts).
+
+### <a id="l-138.11"></a>L-138.11 — E-216: „Nicht gemessen: der Umbruch selbst“ steht noch allgemein
+
+**Gewicht: Kleinkram.** (gemessen am Text)
+
+- `Intern/BEFUNDE.md` ([E-216](../Intern/BEFUNDE.md#e-216)) *„**Nicht gemessen:** der Umbruch selbst — die Herkunft im Prüfstand ist 30 Zeichen kurz und passt in eine Zeile (`noetig=13`)“*; derselbe Eintrag danach: *„die Zeile *Log* hat 114 Zeichen und braucht 26 Pixel bei 33 Platz“* — für *Log* ist der Umbruch gemessen, und das CHANGELOG sagt es richtig.
+
+**Vorschlag:** *„Nicht gemessen: der Umbruch von *Mail folder from* (die Herkunft im Prüfstand ist 30 Zeichen kurz …)“*.
+
+### <a id="l-138.12"></a>L-138.12 — CHANGELOG nennt nur `E-216p`, WERKZEUGE-Kopfsatz nur *Mail folder from*
+
+**Gewicht: Kleinkram.** (gemessen)
+
+- `CHANGELOG.md:176` endet *„Regressionstest `TestE216.cpp`, Prüfstandsfall `E-216p` (`tools/messen-about.ps1`)“* — der neue Fall `E-216l` (langer Pfad, `LogLevel=25759`), der allein den Umbruch von *Log* misst, fehlt.
+- `tools/WERKZEUGE.md:171` fragt im fetten Kopf *„… und ist die Zeile *Mail folder from* mehr als eine Zeile hoch?“*; das Skript misst seit K3 alle sechs Pfadzeilen (*„Ausgabe `ABOUT ERGEBNIS … log-zeilen= passt= rand= …`; Fälle `E-216p` und `E-216l`“*, dieselbe Zeile).
+
+**Vorschlag:** CHANGELOG *„Prüfstandsfälle `E-216p`, `E-216l`“*; WERKZEUGE-Kopf *„… und passen die Pfadzeilen (*Log*, *Mail folder from* zweizeilig)?“*.
+
+Neu: zwei Funde (Kleinkram). Was nur Gregor entscheiden kann: weiter nichts Neues. (PRÜFER-91 K7 — *Latest Release* zeigt kein *Pre-release* — betrifft nur, wenn 7.2.2.x als Vorabversion erschiene; die Form des Releases entscheidet Gregor ohnehin beim Veröffentlichen, eine Frage ist es erst dann.)
