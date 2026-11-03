@@ -124,3 +124,10 @@ Arbeitsbaum `.wt/lektor`, Zweig `wt/lektor-20261103c`, abgezweigt von `origin/e1
 ## Was nur Gregor entscheiden kann
 
 1. **Ordnernamen im Protokoll** (PRÜFER-90 T3): seit K10 steht in der `eudora.log` schon mit der Vorgabe bei jeder E-170-Zeile der Name des Zielordners (`ziel="…"`). Die Zeilen von [E-128](../Intern/BEFUNDE.md#e-128) nennen bewusst keinen Pfad. Du schickst deine `eudora.log` mit den Ergebnis-ZIPs: dürfen Ordnernamen darin stehen, oder soll die Zeile sie weglassen?
+
+## <a id="eingearbeitet-about"></a>Eingearbeitet auf `about_dialog_github` (Dialogbauer, 03.11.2026) — nur L-138.7 und L-138.8
+
+| Fund | was geschah |
+|---|---|
+| [L-138.7](#l-138.7) | CHANGELOG, FUNKTIONEN und WEITERMACHEN sagen nicht mehr „bricht um“, sondern dass *Log* und *Mail folder from* Platz für zwei Zeilen haben. CHANGELOG nennt, was gemessen ist: der Umbruch für *Log* am langen Prüfstandspfad (114 Zeichen, 26 Pixel nötig, 33 Platz), für *Mail folder from* nicht. Der gemessene Stand hat jetzt eine Kennung (`7.2.1.131+f209fd82*`, also die Änderungen auf dem Merge `f209fd82` vor dem Commit). Die Logzeile bleibt bei `DEBUG_MASK_MISC`, ein Fehler zeigt zusätzlich eine Meldung. |
+| [L-138.8](#l-138.8) | `main` (#211–#214) hereingeholt; der E-216-Satz steht als eigener Satz vor dem heutigen Kopf von WEITERMACHEN. |

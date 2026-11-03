@@ -22,3 +22,5 @@ Schranke: keine - Entscheidung Gregors; Ausloeser ist der SessionStart-Haken, de
 
 **Why:** Reihenfolge nicht wieder fragen; Grundsatz siehe [[randfaelle-nach-haeufigkeit-abwaegen]].
 **How to apply:** nach dem Paket 7.2.2.132 mit E-192 beginnen; Reihenfolge in Intern/WEITERMACHEN.md eintragen.
+
+**Offen für den E-192-Zweig (LEKTOR-138 L-138.10):** die E-189-Logzeilen in `ImapToc.cpp` (~1819/1825, „Vorab-Kopie …“) schreiben noch `ziel="<Ordner>"` — beim E-192-Zweig mit herausnehmen und im E-189-Eintrag vermerken.

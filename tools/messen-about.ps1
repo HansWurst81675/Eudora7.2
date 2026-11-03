@@ -24,24 +24,31 @@
 #       IDC_ABOUT_LATEST_RELEASE (aus resource.h dieses Baums) den Text
 #       "Latest Release" traegt. Der Knopf wird NICHT gedrueckt - das
 #       oeffnete den Browser auf Gregors Bildschirm.
-#   (4) herkunft-zeilen: Hoehe von IDC_ABOUT_MAILDIR_FROM (8316) durch die
-#       Zeilenhoehe der Schrift, die das Steuerelement traegt (WM_GETFONT;
-#       CenterControl setzt ANSI_VAR_FONT, ein Systemobjekt - der Griff gilt
-#       auch in diesem Prozess). Dazu herkunft-passt: DrawText mit
-#       DT_CALCRECT | DT_WORDBREAK in der Breite des Steuerelements - passt
-#       der Text in dessen Hoehe?
+#   (4) Pfadzeilen (PRUEFER-91 K1/K3): je Zeile Data, Application, INI,
+#       Default INI, Log, Mail folder from Breite und Hoehe, die Zeilenhoehe
+#       ihrer Schrift (WM_GETFONT; CenterControl setzt ANSI_VAR_FONT, ein
+#       Systemobjekt - der Griff gilt auch in diesem Prozess) und die noetige
+#       Hoehe aus DrawText mit DT_CALCRECT | DT_WORDBREAK in ihrer Breite.
+#       passt=1 nur, wenn JEDE Zeile ihren Text fasst und die Dialogbreite
+#       (Client minus 2 x 7) hat. herkunft-zeilen und log-zeilen: Hoehe
+#       durch Zeilenhoehe, also wie viele Zeilen Platz haben. Die Texte
+#       werden nicht ausgegeben (Pfade, Herkunft).
 #   (5) Schliessen mit BM_CLICK an den Knopf IDOK (Close), dann lebt:
 #       Prozess und Hauptfenster da, kein offenes Meldungsfenster.
 #
 # Ausgabe:
 #   ABOUT KNOPF <id> [<text>] l,o,r,u
 #   ABOUT RAND ausserhalb=<n> client=<b>x<h>
-#   ABOUT HERKUNFT [<text>] hoehe=<n> zeile=<n> noetig=<n> passt=<0|1>
-#   ABOUT ERGEBNIS knoepfe=<n> ueberlappt=<0|1> github=<0|1> herkunft-zeilen=<n> lebt=<0|1>
+#   ABOUT ZEILE <kennung> laenge= breite= soll= hoehe= zeile= platz= noetig= passt=
+#   ABOUT ERGEBNIS knoepfe=<n> ueberlappt=<0|1> github=<0|1> herkunft-zeilen=<n>
+#                  log-zeilen=<n> passt=<0|1> rand=<n> lebt=<0|1>
 # Erwartet am Bau mit der Behebung:
-#   knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 lebt=1
+#   knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
 # Am Bau 7.2.1.131 ohne Behebung (Gegenprobe):
-#   knoepfe=4 ueberlappt=1 github=0 herkunft-zeilen=1 lebt=1
+#   knoepfe=4 ueberlappt=1 github=0 herkunft-zeilen=1 log-zeilen=1 passt=0 rand=0 lebt=1
+#   (passt=0 schon, weil die Zeilen 420 statt 482 Pixel breit sind; dass
+#   der Text von "Log:" nicht passt, zeigt erst ein Pruefstand mit langem
+#   Pfad und LogLevel ohne 32768, siehe Fall E-216l)
 # Kodierung: reines ASCII, kein BOM.
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
@@ -73,6 +80,14 @@ $ID_APP_ABOUT = 0xE140
 $ID_CREDITS   = Kennung 'IDC_CREDITS'
 $ID_LATEST    = Kennung 'IDC_ABOUT_LATEST_RELEASE'
 $ID_HERKUNFT  = Kennung 'IDC_ABOUT_MAILDIR_FROM'
+$ID_LOG       = Kennung 'IDC_ABOUT_LOG_PATH'
+$pfadZeilen = @()
+foreach ($n in 'IDC_ABOUT_DATA_DIRECTORY', 'IDC_ABOUT_APP_DIRECTORY', 'IDC_ABOUT_INI_PATH',
+               'IDC_ABOUT_DEFAULT_INI', 'IDC_ABOUT_LOG_PATH', 'IDC_ABOUT_MAILDIR_FROM') {
+    $v = Kennung $n
+    if ($v -le 0) { Write-Host "ABOUT FEHLER: $n nicht in resource.h"; exit 1 }
+    $pfadZeilen += [pscustomobject]@{ Name = $n; Id = $v }
+}
 if ($ID_APP_ABOUT -le 0 -or $ID_CREDITS -le 0 -or $ID_LATEST -le 0 -or $ID_HERKUNFT -le 0) {
     Write-Host "ABOUT FEHLER: Kennungen nicht aus resource.h: about=$ID_APP_ABOUT credits=$ID_CREDITS latest=$ID_LATEST herkunft=$ID_HERKUNFT"
     exit 1
@@ -156,7 +171,7 @@ for ($i = 0; $i -lt 50 -and -not $about; $i++) {
     Start-Sleep -Milliseconds 100
     $about = Dialoge $pp | Where-Object { IstAbout $_ } | Select-Object -First 1
 }
-$knoepfe = 0; $ueber = 0; $github = 0; $zeilen = 0; $lebt = 0
+$knoepfe = 0; $ueber = 0; $github = 0; $zeilen = 0; $logZeilen = 0; $passtAlle = 0; $rand = -1; $lebt = 0
 if (-not $about) {
     Write-Host 'ABOUT FEHLER: kein About-Fenster innerhalb von 5 s'
 } else {
@@ -188,14 +203,26 @@ if (-not $about) {
     }
     $raus = @($liste | Where-Object { $_.L -lt 0 -or $_.T -lt 0 -or $_.R -gt $cr.R -or $_.B -gt $cr.B })
     Write-Host ("ABOUT RAND ausserhalb={0} client={1}x{2}" -f $raus.Count, $cr.R, $cr.B)
+    $rand = $raus.Count
 
-    # --- (4) Herkunftszeile ------------------------------------------------
-    $hk = Kinder $about | Where-Object { [ABT]::GetDlgCtrlID($_) -eq $ID_HERKUNFT } | Select-Object -First 1
-    if ($hk) {
-        $r = [ABT]::ImDialog($about, $hk)
+    # --- (4) Pfadzeilen ----------------------------------------------------
+    # Je Zeile: Breite, Hoehe, Zeilenhoehe ihrer Schrift (WM_GETFONT,
+    # GetTextMetrics) und die noetige Hoehe aus DrawText mit DT_CALCRECT |
+    # DT_WORDBREAK in ihrer Breite (PRUEFER-91 K1/K3). Passt eine Zeile, wenn
+    # der Text in ihr Rechteck passt UND sie die Dialogbreite hat (Client
+    # minus 2 x 7 Pixel, wie OnInitDialog sie setzt). Den Text NICHT
+    # ausgeben: er nennt Pfade und die Herkunft des Mailverzeichnisses, und
+    # die Ausgabe landet in TESTLAEUFE.md (Gregor 03.11.2026: keine internen
+    # Angaben ins Repo).
+    $sollBreite = $cr.R - 2 * 7
+    $alleGut = $true
+    foreach ($z in $pfadZeilen) {
+        $hz = Kinder $about | Where-Object { [ABT]::GetDlgCtrlID($_) -eq $z.Id } | Select-Object -First 1
+        if (-not $hz) { Write-Host ("ABOUT ZEILE {0} nicht gefunden" -f $z.Name); $alleGut = $false; continue }
+        $r = [ABT]::ImDialog($about, $hz)
         $hoehe = $r.B - $r.T; $breite = $r.R - $r.L
-        $text = Tx $hk
-        $font = [ABT]::SendMessageW($hk, 0x0031, [IntPtr]::Zero, [IntPtr]::Zero)   # WM_GETFONT
+        $text = Tx $hz
+        $font = [ABT]::SendMessageW($hz, 0x0031, [IntPtr]::Zero, [IntPtr]::Zero)   # WM_GETFONT
         if ($font -eq [IntPtr]::Zero) { $font = [ABT]::GetStockObject(17) }       # DEFAULT_GUI_FONT
         $dc = [ABT]::GetDC([IntPtr]::Zero)
         try {
@@ -210,14 +237,16 @@ if (-not $about) {
             $noetig = $calc.B - $calc.T
             [void][ABT]::SelectObject($dc, $alt)
         } finally { [void][ABT]::ReleaseDC([IntPtr]::Zero, $dc) }
-        if ($zeile -gt 0) { $zeilen = [int][Math]::Floor($hoehe / $zeile) }
-        $passt = [int]($noetig -le $hoehe)
-        # Den Text NICHT ausgeben: er nennt die Herkunft des Mailverzeichnisses
-        # - im Pruefstand harmlos, aber die Zeile landet in TESTLAEUFE.md.
-        Write-Host ("ABOUT HERKUNFT laenge={0} breite={1} hoehe={2} zeile={3} noetig={4} passt={5}" -f $text.Length, $breite, $hoehe, $zeile, $noetig, $passt)
-    } else {
-        Write-Host 'ABOUT HERKUNFT Steuerelement nicht gefunden'
+        $platz = 0
+        if ($zeile -gt 0) { $platz = [int][Math]::Floor($hoehe / $zeile) }
+        $gut = ($noetig -le $hoehe) -and ($breite -ge $sollBreite)
+        if (-not $gut) { $alleGut = $false }
+        if ($z.Id -eq $ID_HERKUNFT) { $zeilen = $platz }
+        if ($z.Id -eq $ID_LOG) { $logZeilen = $platz }
+        Write-Host ("ABOUT ZEILE {0} laenge={1} breite={2} soll={3} hoehe={4} zeile={5} platz={6} noetig={7} passt={8}" -f `
+            $z.Name, $text.Length, $breite, $sollBreite, $hoehe, $zeile, $platz, $noetig, [int]$gut)
     }
+    $passtAlle = [int]$alleGut
 
     # --- (5) Schliessen ----------------------------------------------------
     if ($okKnopf) { [void][ABT]::PostMessageW($okKnopf, 0x00F5, [IntPtr]::Zero, [IntPtr]::Zero) }   # BM_CLICK
@@ -234,4 +263,5 @@ foreach ($d in $offen) {
 }
 $lebt = [int]([bool](Get-Process -Id $pp -ErrorAction SilentlyContinue) -and [ABT]::IsWindow($haupt) -and $offen.Count -eq 0)
 
-Write-Host ("ABOUT ERGEBNIS knoepfe={0} ueberlappt={1} github={2} herkunft-zeilen={3} lebt={4}" -f $knoepfe, $ueber, $github, $zeilen, $lebt)
+Write-Host ("ABOUT ERGEBNIS knoepfe={0} ueberlappt={1} github={2} herkunft-zeilen={3} log-zeilen={4} passt={5} rand={6} lebt={7}" -f `
+    $knoepfe, $ueber, $github, $zeilen, $logZeilen, $passtAlle, $rand, $lebt)

@@ -73,8 +73,9 @@ E-203w	ok	2026-11-02 19:36:25	C:\Temp\E203	Eudora 7.2.1.131+2b3a529d* 2026-11-02
 E-204p	ok	2026-11-02 19:36:11	C:\Temp\E204	Eudora 7.2.1.131+2b3a529d* 2026-11-02 19:13	E204 ERGEBNIS rueckfrage=1 user=e204neu pass=neu lebt=1
 E-204w	ok	2026-11-02 19:36:11	C:\Temp\E204	Eudora 7.2.1.131+2b3a529d* 2026-11-02 19:13	E204 PROBE ok
 E-205p	ok	2026-11-02 18:05:20	C:\Temp\E205	Eudora 7.2.1.131+d7a3fa60 2026-11-02 18:01	E205 ERGEBNIS neu1=0h neu2=0h q1=0h q2=0h liste1=0h liste2=0h zone=passt lebt=1
-E-216p	ok	2026-11-03 10:02:09	C:\Temp\EABOUT	Eudora 7.2.1.131+e992d982* 2026-11-03 09:53	ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 lebt=1
 E-207p	ok	2026-11-03 09:19:18	C:\Temp\E207	Eudora 7.2.1.131+78705ea5* 2026-11-03 09:15	E207 ERGEBNIS fenster=1 geaendert=1 txt=passt htm=passt frage=0 sig=unveraendert lebt=1
+E-216l	ok	2026-11-03 10:56:58	C:\Temp\EABOUT-langer-pfad-fuer-die-log-zeile	Eudora 7.2.1.131+f209fd82* 2026-11-03 10:50	ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
+E-216p	ok	2026-11-03 10:56:58	C:\Temp\EABOUT	Eudora 7.2.1.131+f209fd82* 2026-11-03 10:50	ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
 E-67	ok	2026-11-02 13:54:36	C:\Temp\E67	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	verb-gespeichert=14 verb-auswahl=0
 E-77a	ok	2026-11-02 13:54:36	C:\Temp\E77	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E77 ERGEBNIS roh=0 dekodiert=2
 E-77b	ok	2026-11-02 13:54:36	C:\Temp\E77	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E-77 Ordnername: server="Entw&APw-rfe"

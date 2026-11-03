@@ -434,9 +434,11 @@ BOOL CAboutDlg::OnInitDialog()
 	// BEFUND E-216: die Pfadzeilen ueber die ganze Dialogbreite. In der
 	// Ressource sind sie 280 DLU breit - schmaler als der Dialog, der seine
 	// Breite erst oben aus dem Logo bekommt -, und "Mail folder from: ..."
-	// war am 03.11.2026 auf Gregors Bild abgeschnitten. Die Zeile ist in der
-	// Ressource seither zwei Zeilen hoch und bricht um; CenterControl
-	// verschiebt nur und laesst Breite und Hoehe stehen.
+	// war am 03.11.2026 auf Gregors Bild abgeschnitten. Diese Zeile und
+	// "Log:" sind in der Ressource seither zwei Zeilen hoch (PRUEFER-91 K1:
+	// mit LogLevel aus der Vorgabe haengt "keine E-nn-Marken" an, und die
+	// Zeile wird breiter als der Dialog); CenterControl verschiebt nur und
+	// laesst Breite und Hoehe stehen.
 	//
 	{
 		static const UINT nPfadZeilen[] =
@@ -1303,8 +1305,14 @@ void CAboutDlg::OnClickedLatestRelease()
 	const INT_PTR nErgebnis = (INT_PTR) sei.hInstApp;
 	const DWORD dwWinFehler = bGut ? 0 : ::GetLastError();
 
+	// PRUEFER-91 K4: der Erfolg ist die Rueckgabe von ShellExecuteEx selbst.
+	// hInstApp ist laut Schnittstelle ohne SEE_MASK_NOCLOSEPROCESS nur bei
+	// einem Fehler verlaesslich; fuer eine https:-Adresse (Protokoll-Handler
+	// statt Dateizuordnung) ist ein Wert <= 32 bei geoeffnetem Browser nicht
+	// ausgeschlossen - dann kaeme neben dem Browser eine falsche Meldung.
+	// hInstApp steht nur noch als Fehlercode in Meldung und Logzeile.
 	CString strLog;
-	if (!bGut || nErgebnis <= 32)
+	if (!bGut)
 	{
 		strLog.Format("About: Latest Release fehler=%d winfehler=%lu", (int) nErgebnis, dwWinFehler);
 		PutDebugLog(DEBUG_MASK_MISC, strLog);

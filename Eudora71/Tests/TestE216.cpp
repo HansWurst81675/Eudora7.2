@@ -157,13 +157,29 @@ static void Test_E216_Ressource(const char* szEudoraDir)
 			if (aL[i] < aR[j] && aL[j] < aR[i] && aO[i] < aU[j] && aO[j] < aU[i])
 				TT_Fail("zwei Knoepfe ueberlappen in der Ressource (Nr. %d und %d)", i + 1, j + 1);
 
-	if (!E216_Rechteck(pDlg, "IDC_ABOUT_MAILDIR_FROM", &x, &y, &b, &h))
-		TT_Fail("IDC_ABOUT_MAILDIR_FROM nicht in IDD_ABOUTBOX");
-	else
+	// Die Pfadzeilen von oben nach unten. "Log:" und "Mail folder from"
+	// mindestens zwei Zeilen hoch (PRUEFER-91 K1: "Log:" ist mit LogLevel
+	// aus der Vorgabe breiter als der Dialog). Keine Zeile darf in die
+	// naechste ragen - die Ressource hatte schon im Original 9 DLU Abstand
+	// bei 10 DLU Hoehe, also 1 DLU geduldet -, und die letzte nicht in die
+	// Knopfreihe.
+	static const char* aZeilen[] = { "IDC_ABOUT_DATA_DIRECTORY", "IDC_ABOUT_APP_DIRECTORY", "IDC_ABOUT_INI_PATH",
+									 "IDC_ABOUT_DEFAULT_INI", "IDC_ABOUT_LOG_PATH", "IDC_ABOUT_MAILDIR_FROM" };
+	long lUnterkante = -1;
+	for (int i = 0; i < 6; i++)
 	{
-		TT_CHECK_MSG(h >= 20, "IDC_ABOUT_MAILDIR_FROM ist niedriger als zwei Zeilen (20 DLU) - die Herkunft wird abgeschnitten");
-		TT_CHECK_MSG(lKnopfOben < 0 || y + h <= lKnopfOben, "IDC_ABOUT_MAILDIR_FROM reicht in die Knopfreihe");
+		if (!E216_Rechteck(pDlg, aZeilen[i], &x, &y, &b, &h))
+		{
+			TT_Fail("%s nicht in IDD_ABOUTBOX", aZeilen[i]);
+			continue;
+		}
+		if (i >= 4 && h < 20)
+			TT_Fail("%s ist niedriger als zwei Zeilen (20 DLU) - der Text wird abgeschnitten", aZeilen[i]);
+		if (lUnterkante >= 0 && y + 1 < lUnterkante)
+			TT_Fail("%s beginnt bei %ld, die Zeile darueber endet bei %ld - sie ueberdecken sich", aZeilen[i], y, lUnterkante);
+		lUnterkante = y + h;
 	}
+	TT_CHECK_MSG(lKnopfOben < 0 || (lUnterkante >= 0 && lUnterkante <= lKnopfOben), "die letzte Pfadzeile reicht in die Knopfreihe");
 	free(pDlg);
 	free(pRc);
 	TT_EndTest();
@@ -193,7 +209,10 @@ static void Test_E216_Code(const char* szEudoraDir)
 		TT_CHECK_MSG(QT_Enthaelt(pFn, "sei.lpFile = kLatestReleaseURL;"), "der Handler oeffnet nicht die Release-Adresse");
 		TT_CHECK_MSG(QT_Enthaelt(pFn, "sei.fMask = SEE_MASK_FLAG_NO_UI;"), "ohne SEE_MASK_FLAG_NO_UI zeigt Windows einen eigenen Dialog und danach Eudora noch einen");
 		TT_CHECK_MSG(QT_Enthaelt(pFn, "::ShellExecuteExA(&sei)"), "kein ShellExecuteEx - die Seite geht nicht an den Standard-Browser");
-		TT_CHECK_MSG(QT_Enthaelt(pFn, "if (!bGut || nErgebnis <= 32)"), "die Rueckgabe von ShellExecuteEx wird nicht ausgewertet");
+		TT_CHECK_MSG(QT_Enthaelt(pFn, "const BOOL bGut = ::ShellExecuteExA(&sei);") && QT_Enthaelt(pFn, "if (!bGut) {"), "die Rueckgabe von ShellExecuteEx wird nicht ausgewertet");
+		// PRUEFER-91 K4: hInstApp ist ohne SEE_MASK_NOCLOSEPROCESS kein
+		// verlaesslicher Erfolgswert - er darf nicht ueber die Meldung entscheiden.
+		TT_CHECK_MSG(!QT_Enthaelt(pFn, "nErgebnis <= 32"), "hInstApp entscheidet ueber Erfolg - bei einer https:-Adresse droht eine Meldung neben dem geoeffneten Browser (PRUEFER-91 K4)");
 		TT_CHECK_MSG(QT_Zaehle(pFn, "AfxMessageBox(") == 1, "im Fehlerzweig nicht genau EINE Meldung");
 		TT_CHECK_MSG(QT_Enthaelt(pFn, "AfxMessageBox(strMeldung, MB_OK | MB_ICONEXCLAMATION); return; }"), "Fehlerzweig endet nicht mit return - die Erfolgs-Logzeile kaeme trotzdem");
 		free(pFn);
@@ -212,6 +231,22 @@ static void Test_E216_Code(const char* szEudoraDir)
 		if (pSplash) free(pSplash);
 		TT_CHECK_MSG(QT_Enthaelt(pInit, "GetClientRect(&rcClient); const int nPlatz = rcClient.Width();"), "die Knopfreihe rechnet nicht aus der Dialogbreite zur Laufzeit");
 		TT_CHECK_MSG(QT_Enthaelt(pInit, "nBreite = (nPlatz - (nDa + 1) * kMindestAbstand) / nDa;"), "zu schmaler Dialog: die Knoepfe werden nicht schmaler - sie ueberdeckten sich wieder");
+		// PRUEFER-91 K3 G1: jeder Knopf um Breite PLUS Abstand weiter. Mit
+		// "x += nAbstand;" laegen alle fuenf uebereinander - der gemeldete Fehler.
+		char* pReihe = QT_Abschnitt(pInit, "int x = (nPlatz - (nDa * nBreite + (nDa - 1) * nAbstand)) / 2;", "x += nBreite + nAbstand; }");
+		TT_CHECK_MSG(pReihe && QT_Enthaelt(pReihe, "pKnopf[i]->SetWindowPos(NULL, x, nOben, nBreite, nHoehe, SWP_NOACTIVATE | SWP_NOREDRAW | SWP_NOZORDER);"),
+					 "die Knoepfe werden nicht nebeneinander gesetzt (Start mittig, je Breite plus Abstand weiter) - sie ueberdeckten sich (PRUEFER-91 G1)");
+		if (pReihe) free(pReihe);
+		// PRUEFER-91 K3 G2: die Pfadzeilen werden verbreitert, und zwar VOR
+		// dem Zentrieren (CenterControl rechnet mit der Breite).
+		TT_CHECK_MSG(QT_Enthaelt(pInit, "static const UINT nPfadZeilen[] = { IDC_ABOUT_DATA_DIRECTORY, IDC_ABOUT_APP_DIRECTORY, IDC_ABOUT_INI_PATH, IDC_ABOUT_DEFAULT_INI, IDC_ABOUT_LOG_PATH, IDC_ABOUT_MAILDIR_FROM };"),
+					 "die Liste der zu verbreiternden Pfadzeilen ist nicht vollstaendig");
+		TT_CHECK_MSG(QT_Enthaelt(pInit, "const int nBreite = rcClient.Width() - 2 * (kInsetPixels + 4);"), "die Pfadzeilen bekommen nicht die Dialogbreite");
+		TT_CHECK_MSG(QT_Enthaelt(pInit, "if (!pZeile || nBreite <= 0) continue; CRect rcZeile; pZeile->GetWindowRect(&rcZeile); ScreenToClient(&rcZeile); pZeile->SetWindowPos(NULL, 0, 0, nBreite, rcZeile.Height(),"),
+					 "die Pfadzeilen werden nicht verbreitert - lange Pfade sind wieder abgeschnitten (PRUEFER-91 G2)");
+		const long lBreiter = QT_Stelle(pInit, "pZeile->SetWindowPos(NULL, 0, 0, nBreite, rcZeile.Height(),");
+		const long lZentriert = QT_Stelle(pInit, "CenterControl(GetDlgItem(IDC_ABOUT_LOG_PATH));");
+		TT_CHECK_MSG(lBreiter >= 0 && lZentriert >= 0 && lBreiter < lZentriert, "die Pfadzeilen werden erst nach dem Zentrieren verbreitert - sie stuenden dann nicht mittig");
 		// Der alte Einzelsatz: jeder Knopf fuer sich, Visit Web Site mittig.
 		TT_CHECK_MSG(!QT_Enthaelt(pInit, "CenterControl(GetDlgItem(IDC_HYPERLINK_BTN));"), "Visit Web Site wird wieder fuer sich mittig gesetzt - lag am 03.11.2026 ueber Copy info");
 		TT_CHECK_MSG(!QT_Enthaelt(pInit, "p_button->SetWindowPos(NULL, 40, rect.top,"), "Close wieder fest auf x=40 (alter Einzelsatz)");

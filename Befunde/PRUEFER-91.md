@@ -103,3 +103,17 @@ Siehe Abschnitt 2. Das betrifft nur den Fall, dass ein Paket als *Pre-release* a
 | K5 | Pfadzeilen *Data*/*Application* auf breiterer Fläche anklickbar | gelegentlich, harmlos | sehr gering | nein |
 | K6 | Startbild versteckt drei Knöpfe doppelt | immer, ohne Wirkung | sehr gering | nein |
 | K7 | `releases/latest` überspringt Vorabversionen | nur bei Pre-release | sehr gering | nein |
+
+## <a id="eingearbeitet"></a>Eingearbeitet (Dialogbauer, 03.11.2026, Zweig `about_dialog_github`)
+
+Nach dem Merge von `main` (#211–#214), `wt/pruefer-20261103b` und `wt/lektor-20261103c`. Testsuite 408 von 408. Am Prüfstand gemessen an 7.2.1.131+f209fd82\*, Gegenprobe an 7.2.1.131+a2f29b69\*. Einzelheiten im Eintrag [E-216](../Intern/BEFUNDE.md#e-216).
+
+| Fund | was geschah |
+|---|---|
+| [K1](#k1) | **Behoben (Abhilfe B):** `IDC_ABOUT_LOG_PATH` 20 DLU hoch, *Mail folder from* auf 226, Knöpfe auf 254, Dialog 279 DLU. Abhilfe A gemessen und verworfen: der kürzere Zusatz spart nur 53 Pixel (Application-Data-Pfad 511 → 458 px, Prüfstandspfad 570 → 517 px bei 482 Platz). Am langen Prüfstandspfad mit `LogLevel=25759` braucht *Log* 26 Pixel: neu 33 Platz (`passt=1`), alt 16 (`passt=0`). Test: *Log* unter 20 DLU → rot (407/408). |
+| [K2](#k2) | Nicht behoben, unter *Grenze* im E-216-Eintrag: sehr selten, *Copy info* hat den vollen Text. |
+| [K3](#k3) | **Behoben:** `TestE216.cpp` verlangt die Knopfschritte und das Verbreitern der sechs Pfadzeilen vor dem Zentrieren; Gegenproben G1 und G2 je rot (407/408). `messen-about.ps1` misst alle sechs Pfadzeilen, die Ergebniszeile hat `log-zeilen=`, `passt=`, `rand=`; Fall `E-216p` erweitert, neu `E-216l`. Am alten Bau `passt=0` (Zeilen 420 statt 482 Pixel). |
+| [K4](#k4) | **Behoben:** Erfolg ist die Rückgabe von `ShellExecuteExA`; `hInstApp` steht nur noch als Fehlercode in Meldung und Logzeile. Test verbietet `nErgebnis <= 32` (Gegenprobe rot, 407/408). TESTPLAN Schritt 2: „Eudora zeigt dabei keine Meldung“. `mainfrm.cpp` (`HilfeSeiteOeffnen`) ist nicht angefasst. Gedrückt hat den Knopf weiter niemand, das ist Gregors Testschritt. |
+| [K5](#k5) | Nicht behoben, unter *Grenze*: harmlos. |
+| [K6](#k6) | Nicht behoben, unter *Grenze*: ohne Wirkung. |
+| [K7](#k7) | Nicht behoben, unter *Grenze*: nur bei einem *Pre-release*. |
