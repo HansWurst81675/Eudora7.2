@@ -537,3 +537,12 @@ E-179p | C:\Temp\EM179 | 30 | messung | E179 ERGEBNIS gesendet=1 form=plain emoj
 E-128p | C:\Temp\E128 | 90 | messung | E128 ERGEBNIS kopf=0 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1
 E-128k | C:\Temp\E128K | 90 | messung | E128 ERGEBNIS kopf=1 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1
 E-128t | C:\Temp\E128T | 90 | messung | E128 ERGEBNIS kopf=0 mail=text mbx=1 liste=txt lesen=txt verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1
+# E-221 (03.11.2026): ein Betreff mit Umlauten, den Eudora direkt hinter
+# "Subject: " faltete, verlor in der Postfachliste 7 Zeichen (Gregor an
+# 7.2.2.132). tools/messen-e221.ps1 sendet einen Entwurf an den
+# SMTP-Pruefserver, holt die gesendete Nachricht und zwei fertige (kurz;
+# "Subject:" + Umbruch) ueber POP und liest den Betreff in In.toc.
+# Pruefstand C:\Temp\E221, Kopie von C:\Temp\E128. Alter Bau (7.2.1.131 und
+# 7.2.2.132, C:\Temp\E221-alt): faltung=doppelpunkt gefaltet=fehlen7
+# gesendet-betreff=fehlen7, kurz=heil.
+E-221p | C:\Temp\E221 | 90 | messung | E221 ERGEBNIS gesendet=1 faltung=wort kurz=heil gefaltet=heil gesendet-betreff=heil lebt=1 | | | messen=tools\messen-e221.ps1

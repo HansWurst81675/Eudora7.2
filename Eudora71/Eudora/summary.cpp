@@ -2128,6 +2128,21 @@ void CSummary::GetStatus(const char *Line)
 // See VI# 6242 for more detailed information
 static char sBuffer[8192];	//8192 should do it for now ...
 
+//	E-221: wo in einer Zeile der Kopfzeile "Subject:" der Betreff beginnt.
+//	bFortsetzung heisst: die Zeile ist eine Folgezeile (beginnt mit Leerraum)
+//	derselben Kopfzeile, deren erste Zeile leer war ("Subject:" und direkt
+//	danach der Zeilenumbruch - so faltet Encode2047 beim Senden, und so
+//	falten andere Programme). Dort steht der Betreff ab dem Zeilenanfang;
+//	das Original schnitt auch hier die 8 Zeichen von "Subject:" ab, und aus
+//	" test mit ..." wurde "t mit ..." (Leerzeichen plus 7 Zeichen fehlten).
+//	Den Leerraum am Anfang nimmt danach TrimWhitespaceMT weg.
+char* E221BetreffAnfang(char* szZeile, BOOL bFortsetzung)
+{
+	if (bFortsetzung)
+		return szZeile;
+	return szZeile + 8;		// strlen("Subject:")
+}
+
 long CSummary::m_lLastTime = 0L;
 long CSummary::m_lBegin = 0L;
 
@@ -2275,8 +2290,11 @@ int CSummary::Build(JJFile* in, BOOL Rebuild)
 			}
 			else if (!*m_Subject && bInSubject || !strnicmp(sBuffer, HeaderSubject, 8))
 			{
-				::TrimWhitespaceMT(sBuffer + 8);
-				SetSubject(sBuffer + 8);
+				//	E-221: bInSubject steht hier nur bei einer Folgezeile auf
+				//	TRUE (jede andere Zeile setzt es oben zurueck).
+				char* pBetreff = E221BetreffAnfang(sBuffer, bInSubject);
+				::TrimWhitespaceMT(pBetreff);
+				SetSubject(pBetreff);
 				bInSubject = TRUE;
 			}
 			else if (!strnicmp(sBuffer, HeaderStatus, 7))

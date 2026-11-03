@@ -396,6 +396,30 @@ $r5Start = Find-Line $fu '^BOOL E209MailDirPasst' 0
 $r5End = Find-Line $fu '^\}\s*$' $r5Start
 Write-Region $fu $r5Start $r5End (Join-Path $OutDir "fileutil_e209.inc") $fuPath
 
+# ------------------------------------------------- sendmail.cpp (E-221)
+# Region Y: die ganze RFC-2047-Kette des Sendewegs - Token-Typen, RingNext,
+# AnyHighBits, Next2047Word, Encode2047String, Encode2047. Encode2047 faltete
+# einen Betreff mit Umlauten direkt hinter "Subject: ", wenn das erste
+# kodierte Stueck die Zeile genau fuellte (Befund E-221).
+$smPath = Join-Path $SrcDir "sendmail.cpp"
+$sm = Read-Lines $smPath
+$yEnum = Find-Line $sm '^\s*k2047LWSP,' 0
+$yStart = $yEnum - 1
+if ($sm[$yStart] -notmatch '^typedef enum') { throw "sendmail.cpp: vor k2047LWSP steht kein 'typedef enum' (Zeile $($yStart + 1))" }
+$yFn = Find-Line $sm '^CString Encode2047\s*\(' $yStart
+$yEnd = Find-Line $sm '^\}\s*$' $yFn
+Write-Region $sm $yStart $yEnd (Join-Path $OutDir "sendmail_e221.inc") $smPath
+
+# ------------------------------------------------- summary.cpp (E-221)
+# Region Y2: E221BetreffAnfang - wo in einer Zeile der Subject-Kopfzeile der
+# Betreff beginnt. CSummary::Build schnitt auch bei einer Folgezeile die 8
+# Zeichen von "Subject:" ab (Befund E-221).
+$suPath = Join-Path $SrcDir "summary.cpp"
+$su = Read-Lines $suPath
+$y2Start = Find-Line $su '^char\* E221BetreffAnfang\s*\(' 0
+$y2End = Find-Line $su '^\}\s*$' $y2Start
+Write-Region $su $y2Start $y2End (Join-Path $OutDir "summary_e221.inc") $suPath
+
 Write-Host "Extract.ps1: fertig."
 
 # ---------------------------------------------------------------- ReadMessageDoc.cpp

@@ -27,6 +27,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-221](Intern/BEFUNDE.md#e-221)** | Ein langer Betreff mit Umlauten verliert in der Postfachliste seine ersten sieben Zeichen … | 03.11.2026 an 7.2.1.131 | Gregors Test am nächsten Paket (eine Nachricht mit langem Umlaut-Betreff an sich selbst, über POP abholen; der Betreff steht vollständig in der Lis… |
 | **[E-216](Intern/BEFUNDE.md#e-216)** | Im Dialog *Help → About* überdecken sich die Knöpfe, die Zeile *Mail folder from* ist … | 03.11.2026 an 7.2.1.131 | Gregors Blick am Paket 7.2.2.132 ([Testplan](Intern/TESTPLAN.md#e-216-naechstes)). **Stufe: unkritisch** (Darstellung und neue Funktion, betrifft keine Post) |
 | **[E-212](Intern/BEFUNDE.md#e-212)** | Prüfstände tragen noch Debug-Fassungen der Import-Erweiterungen — NSImport.eif, OEImpo… | 02.11.2026 an 7.2.1.131 | die drei `.eif` in die Liste von `pruefstaende-auffrischen.ps1` aufnehmen und einmal über alle Prüfstände fahren; für Gregor nichts zu prüfen (Pa… |
 | **[E-211](Intern/BEFUNDE.md#e-211)** | Eine neue Nachricht, die sich nicht anlegen lässt, lässt Eudora auf ihrer Persönlichkei… | 02.11.2026 an 7.2.1.131 (Quelltext) | das Paket 7.2.2.132; am Programm nicht messbar. **Stufe: unkritisch** (nur in einem Fehlerfall, der sich nicht herbeiführen lässt; die Folge wäre d… |
@@ -121,6 +122,10 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 ---
 
 ## Im Quellstand, noch in keinem Paket
+
+**Zweig `e221_betreff_gefaltet`, Quellstand weiter 7.2.1.131 — nur übersetzt, für das nächste Paket.**
+
+* **Ein langer Betreff mit Umlauten behält in der Postfachliste seine ersten sieben Zeichen** ([E-221](Intern/BEFUNDE.md#e-221), Originalbestand). Eudora faltete die Kopfzeile beim Senden manchmal direkt hinter `Subject: ` (etwa jeder fünfte Betreff von 40 bis 60 Zeichen mit Umlauten), und beim Empfang schnitt die Zusammenfassung auch in der Folgezeile die 8 Zeichen von `Subject:` ab. Beides behoben; eine so gefaltete Nachricht eines anderen Programms kommt jetzt ebenfalls mit vollem Betreff in die Liste. Am Prüfstand gemessen (`E-221p`, Gegenprobe an 7.2.1.131 und 7.2.2.132), Regressionstest `TestE221.cpp`.
 
 **Zweig `e128_endung_aus_inhalt`, Quellstand weiter 7.2.1.131 — nur übersetzt, für 7.2.2.132.**
 
