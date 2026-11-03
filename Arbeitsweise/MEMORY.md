@@ -171,3 +171,4 @@
 - [Reihenfolge nach 7.2.2.132](entscheidung-reihenfolge-nach-7-2-2-132.md) — Gregor 03.11.: E-192, E-199, E-188 messen, E-193 nachstellen; E-129/E-198 nur dokumentiert
 - [Randfälle nach Häufigkeit abwägen](randfaelle-nach-haeufigkeit-abwaegen.md) — wie oft, Schaden, Aufwand; hypothetische Fälle zuletzt
 - [Postfachdateien ohne Umlaute](entscheidung-postfachdateien-umlaute.md) — Gregor 03.11.: StripIllegalMT bleibt; nur Speichern-unter-Vorschlag mit Umlauten
+- [Stand 03.11.2026 abends](stand-03-11-2026-abend.md) — #217 wartet auf Merge, dann Release; danach E-188-Löschbedingung vor E-199 (Gregor: ja)
