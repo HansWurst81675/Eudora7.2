@@ -109,6 +109,7 @@ eine Datei liest, liest diese.
 | [einstufung-ist-keine-auskunft](einstufung-ist-keine-auskunft.md) | \"teilweise, Wirkung belegt\" sagt nicht, was noch zu tun ist - am 22.10.2026 nannten 23 von 40 offenen Befunden nur ihre Einstufung, acht davon mit einem einzigen Wort |
 | [einwurf-ist-ein-messwert](einwurf-ist-ein-messwert.md) | 54 Prozent von Gregors Nachrichten kamen mitten in den laufenden Zug - das misst fehlenden Zwischenstand, nicht Beteiligung |
 | [entscheidung-7-2-2-umfang](entscheidung-7-2-2-umfang.md) | Gregor 02.11.2026 — Release 7.2.1.131, danach 7.2.2.x mit neuen Funktionen (Hilfe-Menü Shortcuts/Settings); Termin in privat.txt |
+| [entscheidung-e128-endung-aus-inhalt](entscheidung-e128-endung-aus-inhalt.md) | Gregor 03.11.2026 - E-128 Vorschlag angenommen, Vorgabeendung beim Speichern aus dem Inhalt ableiten |
 | [entscheidung-e138-erledigt-durch-doku](entscheidung-e138-erledigt-durch-doku.md) | Gregor 31.10.2026: E-138 (Mark of the Web, Eudora.exe startet nach GitHub-Download nicht) ist durch die Doku erledigt; nicht wieder als offen fuehren |
 | [entscheidung-e148-release-7-2-0-123](entscheidung-e148-release-7-2-0-123.md) | Gregor 25.10.2026 - E-148 (eMudhra-Wurzeln) wird mit dem Release 7.2.1.<n> veroeffentlicht, nach seinem lokalen Test; 7.2.0.123 ist nur Testpaket |
 | [entscheidung-e170-e143-01-11](entscheidung-e170-e143-01-11.md) | Gregor 01.11.2026: E-170 Label beim Verschieben im IMAP-Konto mitnehmen (nicht auf den Server); E-143 Out im Transfer-Menue des Filterfensters nicht anbieten - nicht wieder fragen |
@@ -117,6 +118,7 @@ eine Datei liest, liest diese.
 | [entscheidung-message-id-kein-befund](entscheidung-message-id-kein-befund.md) | Gregor 25.10.2026 - die Message-ID-Frage (HermesMail-Faden, RFC 5322) bekommt keinen Befund; zwei Randfälle in AssignMessageId stehen nur hier, dazu ein ungeprüfter Puffer-Hinweis |
 | [entscheidung-pruefstand-fenster-01-11](entscheidung-pruefstand-fenster-01-11.md) | Gregor erlaubt am 01.11.2026 den vollen Prüfstandslauf (Eudora-Fenster unter C:\Temp) — nur dieser Tag |
 | [entscheidung-pruefstand-fenster-02-11](entscheidung-pruefstand-fenster-02-11.md) | Gregor erlaubt am 02.11.2026 den Prüfstand mit Fenster (Eudora unter C:\Temp) — nur dieser Tag; er testet außerhalb der VM |
+| [entscheidung-pruefstand-fenster-03-11](entscheidung-pruefstand-fenster-03-11.md) | Gregor 03.11.2026 - Prüfstand mit Eudora-Fenster nur an diesem Tag erlaubt (E-128, E-170) |
 | [entscheidung-pruefstand-fenster-30-10](entscheidung-pruefstand-fenster-30-10.md) | Gregor 30.10.2026 ~13:10: Prüfstandsläufe mit Fenster ab sofort erlaubt; er hält sich zurück und testet das Release 7.2.1.128 separat |
 | [entscheidung-pruefstand-fenster-31-10](entscheidung-pruefstand-fenster-31-10.md) | Gregor 31.10.2026 ~19:15 - Prüfstandsläufe mit Fenster heute erlaubt: 'ja, starte auf deinem lokalen prüfstand deine testes, ich halte mich zurück'; VM-Uhr ging ~20 h nach |
 | [entscheidung-rootcerts-logzeile](entscheidung-rootcerts-logzeile.md) | Gregor 25.10.2026 - Eudora schreibt eine Zeile in eudora.log, aus welchem Verzeichnis rootcerts.p7b geladen wurde (Mailverzeichnis vor Programmverzeichnis) |
