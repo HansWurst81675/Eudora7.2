@@ -42,6 +42,7 @@ DAMAGE. */
 #include "tocdoc.h"
 #include "eudora.h"
 #include "SaveAsDialog.h"
+#include "msgutils.h"		// E-128: E128FilterIndex
 
 
 #include "DebugNewHelpers.h"
@@ -58,7 +59,7 @@ CSaveAs::~CSaveAs()
 	delete m_File;
 }
 
-BOOL CSaveAs::Start(const char* Filename /*= NULL*/, BOOL IsMessage /*= FALSE*/, CWnd* pParent /*= NULL*/, BOOL Stationery /*= FALSE*/)
+BOOL CSaveAs::Start(const char* Filename /*= NULL*/, BOOL IsMessage /*= FALSE*/, CWnd* pParent /*= NULL*/, BOOL Stationery /*= FALSE*/, const char* pszVorgabeendung /*= NULL*/)
 {
 	char Name[_MAX_PATH + 1];
 	CString	szPathName;
@@ -87,7 +88,10 @@ BOOL CSaveAs::Start(const char* Filename /*= NULL*/, BOOL IsMessage /*= FALSE*/,
 	//m_Stationery = Stationery;
 	m_Stationery = FALSE;
 	
-	CRString Extension(IDS_TEXT_EXTENSION);
+	// BEFUND E-128: der Aufrufer nennt die Vorgabeendung (Nachrichtenfenster:
+	// "htm" fuer eine HTML-Nachricht). Ohne Angabe bleibt es "txt" wie bisher.
+	CRString ExtensionText(IDS_TEXT_EXTENSION);
+	const char* Extension = pszVorgabeendung ? pszVorgabeendung : (const char*) ExtensionText;
 	//CRString Filter(Stationery? IDS_STATIONERY_FILE_FILTER32 : IDS_TEXT_FILE_FILTER);
 	//
 	// BEFUND E-195: ohne "Rtf Files" - CSaveAs schreibt Text (Nachrichten-
@@ -100,6 +104,11 @@ BOOL CSaveAs::Start(const char* Filename /*= NULL*/, BOOL IsMessage /*= FALSE*/,
 	CRString Filter(IDS_MSG_SAVEAS_FILE_FILTER);
 
 	CSaveAsDialog theDlg(Name, IsMessage, Stationery, Extension, Filter, pParent);
+
+	if (pszVorgabeendung)
+	{
+		theDlg.m_ofn.nFilterIndex = E128FilterIndex(Filter, pszVorgabeendung);	// E-128
+	}
 		
 	if ( theDlg.DoModal() == IDOK)
 	{

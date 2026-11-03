@@ -487,3 +487,20 @@ E-141g | C:\Temp\EM141 | 30 | messung | geloescht=2 lebt=1 | | | messen=tools\me
 # E-179: Textteil einer gesendeten HTML-Mail (SMTP-Pruefserver). Alter Bau:
 # emoji=kaputt ("%"), kyr=kaputt (0x16), und nach &#x1F525; endet der Text.
 E-179p | C:\Temp\EM179 | 30 | messung | E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1 | | | messen=tools\messen-e179.ps1
+# E-128 (03.11.2026): welche Endung schlaegt "Speichern unter" vor, und
+# welche bekommt die Datei, wenn man nur den Namen tippt (der Dialog haengt
+# sie an)? Postfachliste, Nachrichtenfenster, Antwort. Gregor 03.11.2026 auf
+# den Vorschlag "Endung aus dem Inhalt": "ja". tools/messen-e128.ps1;
+# Pruefstaende C:\Temp\E128 (HTML-Mail, ohne Kopfzeilen), E128K (mit),
+# E128T (reiner ASCII-Text), Kopien von E194/E194K. Postfachliste: steht
+# nach der Aufbereitung (E-101) ein Kopf vorn, .eml - bei HTML auch ohne
+# Kopfzeilen, weil E-101 dort MIME-Version/Content-Type ergaenzt. Fenster:
+# .htm fuer HTML (dort folgt der Inhalt der Endung). rtf=0 seit E-195.
+# Die ANTWORT auf die Textmail ist selbst HTML: das Verfassen-Fenster setzt
+# MSFEX_HTML ueber IsFancy(Body) (compmsgd.cpp:275-281), der zitierte Text
+# steht mit Zitatbalken als HTML im Rumpf - darum auch bei E-128t .htm
+# (gemessen 03.11.2026, Spur html=1). Als .txt gingen die Zitatzeichen
+# verloren (E-206).
+E-128p | C:\Temp\E128 | 90 | messung | E128 ERGEBNIS kopf=0 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1
+E-128k | C:\Temp\E128K | 90 | messung | E128 ERGEBNIS kopf=1 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1
+E-128t | C:\Temp\E128T | 90 | messung | E128 ERGEBNIS kopf=0 mail=text mbx=1 liste=txt lesen=txt verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1

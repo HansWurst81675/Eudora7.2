@@ -122,7 +122,7 @@ eine Datei liest, liest diese.
 | [entscheidung-pruefstand-fenster-03-11](entscheidung-pruefstand-fenster-03-11.md) | Gregor 03.11.2026 - Prüfstand mit Eudora-Fenster nur an diesem Tag erlaubt (E-128, E-170) |
 | [entscheidung-pruefstand-fenster-30-10](entscheidung-pruefstand-fenster-30-10.md) | Gregor 30.10.2026 ~13:10: Prüfstandsläufe mit Fenster ab sofort erlaubt; er hält sich zurück und testet das Release 7.2.1.128 separat |
 | [entscheidung-pruefstand-fenster-31-10](entscheidung-pruefstand-fenster-31-10.md) | Gregor 31.10.2026 ~19:15 - Prüfstandsläufe mit Fenster heute erlaubt: 'ja, starte auf deinem lokalen prüfstand deine testes, ich halte mich zurück'; VM-Uhr ging ~20 h nach |
-| [entscheidung-reihenfolge-nach-7-2-2-132](entscheidung-reihenfolge-nach-7-2-2-132.md) | Gregor 03.11.2026 - erst 7.2.2.132 mit dem Fertigen schnüren, danach E-188/E-192, E-199, E-129, E-193, E-198 |
+| [entscheidung-reihenfolge-nach-7-2-2-132](entscheidung-reihenfolge-nach-7-2-2-132.md) | Gregor 03.11.2026 - erst 7.2.2.132 mit dem Fertigen; danach E-192, E-199, E-188 (erst messen), E-193 (erst nachstellen); E-129, E-198 nur dokumentiert |
 | [entscheidung-rootcerts-logzeile](entscheidung-rootcerts-logzeile.md) | Gregor 25.10.2026 - Eudora schreibt eine Zeile in eudora.log, aus welchem Verzeichnis rootcerts.p7b geladen wurde (Mailverzeichnis vor Programmverzeichnis) |
 | [entscheidung-vor-7-2-1-beheben](entscheidung-vor-7-2-1-beheben.md) | Gregor 25.10.2026 - vor 7.2.1 beheben E-137, E-142 (Hinweis), E-146; in die README als bekannte Fehler E-144, E-143, E-139, E-136, AN-1 (IMAP-Endung) |
 | [erfolg-aus-anwendersicht](erfolg-aus-anwendersicht.md) | Erfolg wird daran gemessen, was Gregor danach tun kann; kein Crash ist keine Verbesserung |
@@ -179,6 +179,7 @@ eine Datei liest, liest diese.
 | [pruefung-legt-nichts-ab](pruefung-legt-nichts-ab.md) | Eine Pruefung, die zum Messen etwas Ausfuehrbares auspackt, misst am Ende den Virenscanner mit - am 20.10.2026 zog Defender die von unserer eigenen Schranke ausgepackte Eudora.exe ein, und die Schranke meldete danach eine falsche Fassung fuer ein richtiges Paket |
 | [quelldateien-nur-byte-erhaltend-aendern](quelldateien-nur-byte-erhaltend-aendern.md) | Eudora-Quellen sind Latin-1 mit gemischten Zeilenenden - nur byte-erhaltend aendern, nie mit dem Edit-Werkzeug |
 | [quelle-muss-im-bau-stehen](quelle-muss-im-bau-stehen.md) | Vor dem Ändern einer Quelldatei prüfen, ob ein Projekt der Mappe sie überhaupt baut (tools/wer-baut.pl) - die F1-Behebung saß in PGEMBED.C, Paige32.dll wird nicht aus dem Quelltext gebaut |
+| [randfaelle-nach-haeufigkeit-abwaegen](randfaelle-nach-haeufigkeit-abwaegen.md) | Vor jeder Behebung abwägen - wie oft, wie wahrscheinlich, welcher Schaden, welcher Aufwand; hypothetische Randfälle zuletzt |
 | [reihenfolge-nach-1083](reihenfolge-nach-1083.md) | Gregors Reihenfolge der Befunde - Stand 14.10.2026: nach PR e-112-skalierung zuerst E-105, dann E-118, E-113, E-77 |
 | [release-erst-nach-gregors-test](release-erst-nach-gregors-test.md) | Ein GitHub-Release entsteht erst, nachdem Gregor die Fassung lokal geprüft und für gut befunden hat |
 | [review-sieht-nur-den-diff](review-sieht-nur-den-diff.md) | Ein Diff-Review kann eine veraltete unveraenderte Datei nicht sehen; vor dem Merge wird der Bestand geprueft, nicht die Aenderung |

@@ -68,7 +68,11 @@ void CSignatureDoc::SetTitle(const char* pszTitle)
 
 void CSignatureDoc::OnFileSaveAs()
 {
-	CFileDialog theDlg(	FALSE, CRString(IDS_TEXT_EXTENSION), NULL, 
+	// BEFUND E-214: CFileDialog behaelt nur den Zeiger auf die Vorgabeendung
+	// (MFC dlgfile.cpp:78, gelesen erst in DoModal) - ein Temporaerobjekt waere
+	// dann schon freigegeben. Darum ein benanntes Objekt, das den Dialog ueberlebt.
+	CRString	szE214DefExt(IDS_TEXT_EXTENSION);
+	CFileDialog theDlg(	FALSE, szE214DefExt, NULL, 
 						OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, 
 						CRString(IDS_TXT_HTML_FILE_FILTER), NULL );
 

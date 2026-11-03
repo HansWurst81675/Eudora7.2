@@ -213,6 +213,15 @@ $l2Start = Find-Line $mu '^bool E196HtmlZeichensatz\s*\(' 0
 $l2End = Find-Line $mu '^\}\s*$' $l2Start
 Write-Region $mu $l2Start $l2End (Join-Path $OutDir "msgutils_e196.inc") $msgPath
 
+# Region L3: E128DateiMitKopf, E128Vorgabeendung, E128FilterIndex (Befund E-128).
+# Die Vorgabeendung im Dialog "Speichern unter" aus dem Inhalt. Reine
+# Textverarbeitung; die Logzeilen (E128SpurSchreiben) stehen dahinter und
+# gehoeren nicht zur Region.
+$l3Start = Find-Line $mu '^bool E128DateiMitKopf\s*\(' 0
+$l3Fn = Find-Line $mu '^int E128FilterIndex\s*\(' $l3Start
+$l3End = Find-Line $mu '^\}\s*$' $l3Fn
+Write-Region $mu $l3Start $l3End (Join-Path $OutDir "msgutils_e128.inc") $msgPath
+
 
 # ---------------------------------------------------------------- HTMLUtils.cpp (E-110)
 # Region M: resolve_URL und translate_hex (Befund E-110). resolve_URL baut aus

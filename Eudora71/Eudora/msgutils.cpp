@@ -5064,6 +5064,188 @@ CString E196HtmlFuerDatei(
 }
 
 
+// ---------------------------------------------------------------------------
+// E128DateiMitKopf, E128Vorgabeendung, E128FilterIndex
+// ---------------------------------------------------------------------------
+//
+// BEFUND E-128: eine gespeicherte Nachricht hiess .txt und enthielt HTML -
+// der Anwender erfuhr es nicht. Der Dialog bot immer "txt" an, gleich was
+// danach in der Datei stand. Gregor am 03.11.2026 auf den Vorschlag, die
+// Endung aus dem Inhalt abzuleiten: "ja".
+//
+// Zwei Arten von Speicherwegen, darum zwei Regeln:
+//
+//   Postfachliste (tocview.cpp, bPostfachliste): der Inhalt haengt NICHT an
+//     der Endung. Geschrieben wird die Nachricht so, wie
+//     E101SpeicherfassungAufbereiten sie aufbereitet - mit Kopfzeilen, und
+//     bei HTML oder Hochbytes auch OHNE sie mit "MIME-Version:" und
+//     "Content-Type:" davor (E-101, zweiter Teil). Eine solche Datei IST eine
+//     Mail-Datei; ein Browser zeigte die Kopfzeilen als Text, ein Editor
+//     zeigte HTML-Quelltext. Darum: steht ein Kopf vorn, "eml", sonst "txt".
+//     Bei mehreren Nachrichten stehen sie hintereinander in EINER Datei -
+//     das ist keine einzelne Mail, es bleibt "txt".
+//
+//   Nachrichten- und Verfassen-Fenster: der Inhalt FOLGT der Endung
+//     (SaveAsFile in ReadMessageDoc.cpp und compmsgd.cpp: .htm/.html
+//     schreibt HTML, alles andere Text). Dort ist jede Vorgabe ehrlich;
+//     vorgeschlagen wird die, die die Nachricht vollstaendig erhaelt: "htm"
+//     fuer eine HTML-Nachricht, sonst "txt". "htm" und nicht "html", weil
+//     der Dateityp im Dialog "HTML Files (*.htm)" heisst
+//     (IDS_MSG_SAVEAS_FILE_FILTER) und E128FilterIndex ihn sonst nicht
+//     vorbelegen koennte.
+//
+// Reine Textverarbeitung, ohne Ressourcen und ohne Fenster - so steht sie in
+// der Testsammlung (TestE128.cpp, aus dieser Datei geschnitten).
+//
+
+//
+// Bekommt die Datei einen Kopf? Mit Kopfzeilen immer. Ohne sie nur, wenn
+// E101SpeicherfassungAufbereiten einen ergaenzt hat - dann beginnt die
+// aufbereitete Fassung mit "MIME-Version:", der Eingang aber nicht. Gemessen
+// wird also das Ergebnis der Aufbereitung, nicht der Rumpf erraten: ein
+// Text, der zufaellig mit "Hinweis: ..." beginnt, ist keine Kopfzeile.
+//
+bool E128DateiMitKopf(
+		bool				bKopfzeilen,
+		const char *		pszVorher,
+		const char *		pszNachher )
+{
+	if ( bKopfzeilen )
+		return true;
+
+	static const char	kMime[] = "MIME-Version:";
+	const size_t		nMime   = sizeof( kMime ) - 1;
+
+	const bool	bNachher = pszNachher && strncmp( pszNachher, kMime, nMime ) == 0;
+	const bool	bVorher  = pszVorher  && strncmp( pszVorher,  kMime, nMime ) == 0;
+
+	return ( bNachher && !bVorher );
+}
+
+//
+// Die Vorgabeendung, ohne Punkt. Rueckgabe ist ein fester Text (kein
+// Puffer): CFileDialog behaelt den Zeiger (m_ofn.lpstrDefExt).
+//
+const char * E128Vorgabeendung(
+		bool				bPostfachliste,
+		int					nAnzahl,
+		bool				bDateiMitKopf,
+		bool				bHtml )
+{
+	if ( bPostfachliste )
+	{
+		if ( nAnzahl != 1 )
+			return "txt";
+
+		return bDateiMitKopf ? "eml" : "txt";
+	}
+
+	return bHtml ? "htm" : "txt";
+}
+
+//
+// Welcher Eintrag der Dateityp-Liste gehoert zu dieser Endung? Die Liste hat
+// die Form der Ressourcen: "Text Files (*.txt)|*.txt|HTML Files (*.htm)|*.htm|
+// All Files (*.*)|*.*||" - Beschreibung und Muster abwechselnd, ein Muster
+// darf mehrere mit ';' tragen. Rueckgabe 1-basiert wie m_ofn.nFilterIndex,
+// 0 heisst: nicht gefunden, nichts vorbelegen.
+//
+int E128FilterIndex(
+		const char *		pszFilter,
+		const char *		pszEndung )
+{
+	if ( !pszFilter || !pszEndung || !*pszEndung )
+		return 0;
+
+	char			szMuster[32];
+	if ( strlen( pszEndung ) > sizeof( szMuster ) - 3 )
+		return 0;
+	strcpy( szMuster, "*." );
+	strcat( szMuster, pszEndung );
+	const size_t	nMuster = strlen( szMuster );
+
+	int				nPaar = 0;
+	const char *	p     = pszFilter;
+
+	while ( *p )
+	{
+		const char *	pTrenner = strchr( p, '|' );		// Ende der Beschreibung
+		if ( !pTrenner )
+			break;
+
+		const char *	pMuster = pTrenner + 1;
+		const char *	pEnde   = strchr( pMuster, '|' );
+		if ( !pEnde )
+			pEnde = pMuster + strlen( pMuster );
+
+		nPaar++;
+
+		const char *	q = pMuster;
+		while ( q < pEnde )
+		{
+			const char *	r = q;
+			while ( r < pEnde && *r != ';' )
+				r++;
+
+			if ( (size_t)( r - q ) == nMuster && _strnicmp( q, szMuster, nMuster ) == 0 )
+				return nPaar;
+
+			q = ( r < pEnde ) ? r + 1 : r;
+		}
+
+		if ( !*pEnde )
+			break;
+
+		p = pEnde + 1;
+		if ( *p == '|' )				// "||" schliesst die Liste
+			break;
+	}
+
+	return 0;
+}
+
+//
+// E128SpurSchreiben - die Logzeile zu E-128, fuer alle drei Wege gleich.
+// DEBUG_MASK_DIALOG wie E-101/E-140/E-196: in der Vorgabe AN, der Weg laeuft
+// ueber den Speichern-Dialog. Nennt nur Endungen, keinen Pfad und keinen
+// Betreff.
+//
+void E128SpurSchreiben(
+		const char *		pszWeg,
+		int					nAnzahl,
+		bool				bDateiMitKopf,
+		bool				bHtml,
+		const char *		pszEndung,
+		int					nFilterIndex )
+{
+	CString		szZeile;
+	szZeile.Format( "E-128 Vorgabeendung aus %s: anzahl=%d mit-kopf=%d html=%d endung=%s filter=%d",
+					pszWeg ? pszWeg : "?", nAnzahl, bDateiMitKopf ? 1 : 0, bHtml ? 1 : 0,
+					pszEndung ? pszEndung : "?", nFilterIndex );
+	PutDebugLog( DEBUG_MASK_DIALOG, szZeile );
+}
+
+//
+// E128GewaehltSchreiben - welche Endung der Anwender am Ende genommen hat
+// (aus dem Pfad, den der Dialog liefert; geschrieben wird nur die Endung).
+// Damit ist am Protokoll ablesbar, ob die Vorgabe im Dialog ankam.
+//
+void E128GewaehltSchreiben(
+		const char *		pszWeg,
+		const char *		pszPfad )
+{
+	const char *	pszPunkt = pszPfad ? strrchr( pszPfad, '.' ) : NULL;
+	const char *	pszStrich = pszPfad ? strrchr( pszPfad, '\\' ) : NULL;
+	if ( pszPunkt && pszStrich && pszPunkt < pszStrich )
+		pszPunkt = NULL;
+
+	CString		szZeile;
+	szZeile.Format( "E-128 gespeichert aus %s: endung=%s",
+					pszWeg ? pszWeg : "?", pszPunkt ? pszPunkt + 1 : "(keine)" );
+	PutDebugLog( DEBUG_MASK_DIALOG, szZeile );
+}
+
+
 //
 // ---------------------------------------------------------------------------
 // E104SchalterLesen
