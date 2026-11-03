@@ -1,8 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-02 18:01:00
+zeit=2026-11-02 19:37:41
 freigabe=Gregor am 02.11.2026: ich teste nichts mehr. du kannst jetzt wider, wen notwendig.
-nur=E-179   (Teillauf, nicht der Gesamtstand)
-faelle=1
-bestanden=1
+nur=E-133   (Teillauf, nicht der Gesamtstand)
+faelle=2
+bestanden=2
 fehlgeschlagen=0
-fall=[ ok ] E-179p   E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1
+fall=[ ok ] E-133p   E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1
+fall=[ ok ] E-133q   E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"

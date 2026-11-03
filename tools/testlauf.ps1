@@ -46,6 +46,17 @@
 #   -NurPruefen        prueft alles und startet NICHT (fuer Gegentests)
 #   -OhneArgument      startet Eudora OHNE Mailverzeichnis-Argument; nur so
 #                      sucht Eudora sich eines selbst (Registry, Befund E-132)
+#   -MitVorbereiten    faehrt "<MessenSkript> -Vorbereiten" UNTER der Sperre,
+#                      nach dem Sichern der Registry (ein -Vorbereiten, das
+#                      selbst in die Registry schreibt, gehoert hinein -
+#                      messen-e133.ps1 verweigert es sonst)
+#   -SperreMinuten     wie lange auf die Sperre gewartet wird (Vorgabe 15)
+#
+# SPERRE UND REGISTRY (seit 02.11.2026, E-157 / PRUEFER-87 K1): jeder Lauf
+# nimmt vor dem Start die Sperre aus tools\pruefstand-sperre.ps1, haelt
+# CommandLine und LaunchManager fest und setzt nach dem Ende die EIGENEN
+# Werte zurueck - auch bei Abbruch (finally). Ruft pruefstand-lauf.ps1 auf,
+# erbt der Lauf dessen Sperre, und das Zuruecksetzen macht der Aufrufer.
 #   -ErlaubtePfade     Standard C:\Temp
 #
 # Kodierung: reines ASCII, kein BOM. Umlaute als ae/oe/ue.
@@ -67,7 +78,9 @@ param(
     [switch]   $NurPruefen,
     # Startet Eudora OHNE das Mailverzeichnis als Argument - der einzige Weg,
     # auf dem Eudora sich sein Verzeichnis selbst sucht (Befund E-132).
-    [switch]   $OhneArgument
+    [switch]   $OhneArgument,
+    [switch]   $MitVorbereiten,
+    [double]   $SperreMinuten = 15
 )
 
 $ErrorActionPreference = 'Stop'
@@ -248,6 +261,27 @@ if ($NurPruefen) {
     exit 0
 }
 
+# --- 4b. Sperre und Registry (E-157, PRUEFER-87 K1) -----------------------
+# Vor dem Sichern nehmen, erst nach dem Zurueckschreiben freigeben. Ohne die
+# Sperre hielt ein zweiter gleichzeitiger Lauf den Wert des ersten fest und
+# schrieb ihn am Ende zurueck - danach zeigte Gregors Current auf einen
+# Pruefstand (02.11.2026).
+. (Join-Path $PSScriptRoot 'pruefstand-sperre.ps1')
+if (-not (Sperre-Nehmen ('testlauf.ps1 ' + $voll) $SperreMinuten)) {
+    Write-Host ''
+    Write-Host '  TESTLAUF ABGEWIESEN: die Pruefstandssperre ist belegt (siehe oben). Nichts gestartet.'
+    Write-Host ''
+    exit 1
+}
+$regBild = $null
+try {
+if (-not $script:SperreGeerbt) { $regBild = Registry-Festhalten }
+if ($MitVorbereiten -and $MessenSkript -ne '') {
+    & powershell -NoProfile -ExecutionPolicy Bypass -File $MessenSkript -Vorbereiten -Pfadfilter $voll 2>&1 |
+        ForEach-Object { Write-Host ('  ' + $_) }
+    if ($LASTEXITCODE -ne 0) { throw ('Vorbereiten mit ' + $MessenSkript + ' gescheitert, rc=' + $LASTEXITCODE) }
+}
+
 # --- 5. Starten, messen, beenden -------------------------------------------
 
 $hilfe = @'
@@ -380,6 +414,14 @@ if ($null -ne $uhr) {
     $ergebnis = $ergebnis + '  Schliesszeit ' + [math]::Round($uhr.Elapsed.TotalSeconds, 1) + ' s.'
 }
 Write-Host ('  Beendet: ' + $proz.HasExited)
+} finally {
+    # PRUEFER-87 N4: die Freigabe auch, wenn das Zuruecksetzen wirft
+    try {
+        if ($null -ne $regBild) { [void](Registry-Zurueck $regBild) }
+    } finally {
+        Sperre-Freigeben
+    }
+}
 
 # --- 6. Protokoll -----------------------------------------------------------
 

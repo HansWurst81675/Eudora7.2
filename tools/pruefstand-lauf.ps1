@@ -78,8 +78,11 @@ foreach ($zeile in (Get-Content -LiteralPath $Faelle)) {
         Nachricht   = $f[6].Trim()
         Schalter    = $f[7].Trim().ToLower()
     }
-    if ($fall.Schalter -ne '' -and $fall.Schalter -ne 'ohne-argument' -and $fall.Schalter -notmatch '^messen=tools[\\/]messen-[a-z0-9-]+\.ps1$') {
-        Write-Host ("  Zeile {0}: Schalter '{1}' - erlaubt sind ohne-argument und messen=tools\messen-<name>.ps1" -f $zeilennr, $fall.Schalter)
+    # E-133 (02.11.2026): beide Schalter zusammen, "ohne-argument,messen=..." -
+    # die Rueckfrage zum fehlenden Mailverzeichnis kommt nur ohne Argument,
+    # und beantworten muss sie ein Messskript.
+    if ($fall.Schalter -ne '' -and $fall.Schalter -notmatch '^(ohne-argument|messen=tools[\\/]messen-[a-z0-9-]+\.ps1|ohne-argument,messen=tools[\\/]messen-[a-z0-9-]+\.ps1)$') {
+        Write-Host ("  Zeile {0}: Schalter '{1}' - erlaubt sind ohne-argument, messen=tools\messen-<name>.ps1 und ohne-argument,messen=tools\messen-<name>.ps1" -f $zeilennr, $fall.Schalter)
         exit 2
     }
     if ($fall.Schalter -ne '' -and $fall.Nachricht -ne '') {
@@ -137,44 +140,16 @@ if ($NurPruefen) {
 # Scratchpad, die danach JEDES Eudora auf dem Rechner lud. Festgehalten
 # werden beide Schluessel mit Namen, Wert und Art; nach dem Lauf werden neue
 # Werte entfernt und geaenderte zurueckgeschrieben - auch bei Abbruch
-# (finally unten).
-$regSchluessel = @('HKCU:\Software\Qualcomm\Eudora\CommandLine', 'HKCU:\Software\Qualcomm\Eudora\LaunchManager')
-function RegistryFesthalten {
-    $bild = @{}
-    foreach ($s in $regSchluessel) {
-        $k = Get-Item -LiteralPath $s -ErrorAction SilentlyContinue
-        if (-not $k) { $bild[$s] = $null; continue }
-        $werte = @{}
-        foreach ($n in $k.GetValueNames()) { $werte[$n] = @($k.GetValue($n, $null, 'DoNotExpandEnvironmentNames'), $k.GetValueKind($n)) }
-        $bild[$s] = $werte
-    }
-    return $bild
-}
-function RegistryZurueck($bild) {
-    $geaendert = 0
-    foreach ($s in $regSchluessel) {
-        $vorher = $bild[$s]
-        $k = Get-Item -LiteralPath $s -ErrorAction SilentlyContinue
-        if ($null -eq $vorher) {
-            if ($k) { Remove-Item -LiteralPath $s -Recurse -Force; $geaendert++ }
-            continue
-        }
-        if (-not $k) { $k = New-Item -Path $s -Force }
-        foreach ($n in @($k.GetValueNames())) {
-            if (-not $vorher.ContainsKey($n)) { Remove-ItemProperty -LiteralPath $s -Name $n; $geaendert++ }
-        }
-        foreach ($n in $vorher.Keys) {
-            $alt = $vorher[$n]
-            $jetzt = $k.GetValue($n, $null, 'DoNotExpandEnvironmentNames')
-            if ($null -eq $jetzt -or "$jetzt" -ne "$($alt[0])") {
-                New-ItemProperty -LiteralPath $s -Name $n -Value $alt[0] -PropertyType $alt[1] -Force | Out-Null
-                $geaendert++
-            }
-        }
-    }
-    Write-Host ("  Registry (CommandLine, LaunchManager): {0} Wert(e) auf den Stand vor dem Lauf zurueckgesetzt" -f $geaendert)
-}
-$regVorher = RegistryFesthalten
+#
+# Seit 02.11.2026 (PRUEFER-87 K1): Festhalten und Zuruecksetzen stehen in
+# tools\pruefstand-sperre.ps1, zusammen mit der Sperre, die gleichzeitige
+# Laeufe aus anderen Arbeitsbaeumen ausschliesst. Zurueckgesetzt werden nur
+# noch EIGENE Werte (die jetzt auf einen Pruefstand zeigen); fremde bleiben
+# stehen und werden gemeldet. Die Sperre wird VOR dem Festhalten genommen
+# und erst NACH dem Zuruecksetzen freigegeben; testlauf.ps1 und die
+# -Vorbereiten-Laeufe erben sie. Genommen wird sie unmittelbar vor dem try
+# unten (PRUEFER-87 N4), damit zwischen Nehmen und finally nichts liegt.
+. (Join-Path $PSScriptRoot 'pruefstand-sperre.ps1')
 
 # --- E-157: Abstuerze aus dem Windows-Ereignisprotokoll -------------------
 # Ein Fall, dessen Protokollzeile vor einem Absturz geschrieben wurde, blieb
@@ -205,7 +180,13 @@ $meldungen = @()
 # verschiedenen Nachrichten brauchen zwei Laeufe, auch im selben Pruefstand.
 $gruppen = $liste | Group-Object { $_.Verzeichnis + "`t" + $_.Nachricht + "`t" + $_.Schalter }
 
+if (-not (Sperre-Nehmen 'pruefstand-lauf.ps1' 15)) {
+    Write-Host '  ABGEWIESEN: die Pruefstandssperre ist belegt (siehe oben). Nichts gestartet.'
+    exit 2
+}
+$regVorher = $null
 try {
+$regVorher = Registry-Festhalten
 foreach ($g in $gruppen) {
 
     $hier = @($g.Group)
@@ -261,14 +242,18 @@ foreach ($g in $gruppen) {
         # Funktion nie erreicht; ein Fall ohne diesen Schalter misst dort
         # nichts (Arbeitsweise/messung-muss-den-weg-treffen.md).
         $tlArgs = @('-Verzeichnis', $verz, '-Freigabe', $Freigabe, '-Sekunden', $sek)
-        if ($sch -eq 'ohne-argument') { $tlArgs += '-OhneArgument' }
+        $ohneArg = ($sch -eq 'ohne-argument' -or $sch -like 'ohne-argument,*')
+        $messenTeil = ''
+        if ($sch -like 'messen=*') { $messenTeil = $sch }
+        elseif ($sch -like 'ohne-argument,messen=*') { $messenTeil = $sch.Substring(14) }
+        if ($ohneArg) { $tlArgs += '-OhneArgument' }
         # messen=<skript>: ein Messskript bedient das Fenster, solange es
         # steht (E-125, 23.10.2026). Seine Ausgabe wird als Quelle "messung"
         # geprueft. Vor dem Start legt das Skript mit -Vorbereiten die Lage
         # im Pruefstand frisch an - sonst misst der zweite Lauf, was der
         # erste hinterlassen hat.
-        if ($sch -like 'messen=*') {
-            $skript = Join-Path $wurzel ($sch.Substring(7))
+        if ($messenTeil -ne '') {
+            $skript = Join-Path $wurzel ($messenTeil.Substring(7))
             & powershell -NoProfile -ExecutionPolicy Bypass -File $skript -Vorbereiten -Pfadfilter $verz | Out-Null
             if ($LASTEXITCODE -ne 0) {
                 foreach ($f in $hier) {
@@ -293,7 +278,7 @@ foreach ($g in $gruppen) {
     # das ist der Gegenstand von E-132, also wird es dort gesucht, wo es
     # wirklich ist, statt den Fall an der falschen Stelle gruen oder rot
     # zu melden.
-    if ($sch -eq 'ohne-argument' -and -not (Test-Path $log)) {
+    if (($sch -eq 'ohne-argument' -or $sch -like 'ohne-argument,*') -and -not (Test-Path $log)) {
         $neueste = Get-ChildItem 'C:\Temp' -Recurse -Depth 2 -Filter 'eudora.log' -ErrorAction SilentlyContinue |
                    Where-Object { $_.LastWriteTime -gt $beginn } |
                    Sort-Object LastWriteTime -Descending | Select-Object -First 1
@@ -367,7 +352,13 @@ foreach ($g in $gruppen) {
             # Messweg nicht griff (gemessen 25.10.2026 an der E-97-Gegenprobe:
             # nur "fehlt in messung", der Absturz stand erst in Exception.log).
             if ($f.Quelle -eq 'messung' -and $messtext) {
-                $letzte = @($messtext -split "`n" | Where-Object { $_.Trim() } | Select-Object -Last 4)
+                # Dazu die Zeilen, die mit denselben zwei Woertern beginnen wie
+                # die erwartete (etwa "E133 ERGEBNIS") - am 02.11.2026 stand die
+                # abweichende Ergebniszeile vor den letzten vier und fehlte im
+                # Bericht.
+                $kopf = (($f.Muss -split ' ') | Select-Object -First 2) -join ' '
+                $gleicherKopf = @($messtext -split "`n" | Where-Object { $_.Trim().StartsWith($kopf) } | ForEach-Object { $_.Trim() })
+                $letzte = @($gleicherKopf + @($messtext -split "`n" | Where-Object { $_.Trim() } | Select-Object -Last 4))
                 $was += "`n             gemeldet: " + ($letzte -join "`n                       ")
             }
         }
@@ -389,7 +380,12 @@ foreach ($g in $gruppen) {
     }
 }
 } finally {
-    RegistryZurueck $regVorher
+    # PRUEFER-87 N4: die Freigabe auch, wenn das Zuruecksetzen wirft
+    try {
+        if ($null -ne $regVorher) { [void](Registry-Zurueck $regVorher) }
+    } finally {
+        Sperre-Freigeben
+    }
 }
 
 Write-Host '  ------------------------------------------------------------'
