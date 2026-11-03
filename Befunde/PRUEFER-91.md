@@ -117,3 +117,40 @@ Nach dem Merge von `main` (#211–#214), `wt/pruefer-20261103b` und `wt/lektor-2
 | [K5](#k5) | Nicht behoben, unter *Grenze*: harmlos. |
 | [K6](#k6) | Nicht behoben, unter *Grenze*: ohne Wirkung. |
 | [K7](#k7) | Nicht behoben, unter *Grenze*: nur bei einem *Pre-release*. |
+
+## <a id="nachtrag-1"></a>Nachtrag 1: Einarbeitung caf1c0d7 gegen die Quelle
+
+Ich habe `origin/about_dialog_github` (Spitze caf1c0d7) in meinen Baum gemergt. Geprüft habe ich den Diff von caf1c0d7 in `AboutDlg.cpp`, `EudoraRes.rc`, `TestE216.cpp`, `messen-about.ps1` und `pruefstand-faelle.txt`. Eudora habe ich nicht gebaut und nicht gestartet, und keinen Prüfstand angefasst.
+
+**Ergebnis: Nichts hält den Merge auf.** K1, K3 und K4 sind richtig eingearbeitet. Der Test fängt jetzt G1, G2, K1 und K4 je mit einer eigenen Meldung (gemessen). Das Startbild und die Tab-Reihenfolge bleiben unverändert. Der Dialog ist 16 Pixel höher und passt auf jeden üblichen Bildschirm.
+
+### Gegen die Quelle
+
+- **Startbild.** Die Höhe ist weiter Unterkante von `IDC_COPYRIGHT_INFO` + 2 (AboutDlg.cpp, Zweig `if (m_IsSplash)`). Das Copyright steht unverändert bei 140 DLU mit 29 DLU Höhe (EudoraRes.rc). Das Verschieben von *Log*, *Mail folder from* und der Knöpfe ändert das Startbild also nicht. Belegt.
+- **Lage der Zeilen.** Die Zeilen liegen so: Data 170–180, Application 179–189, INI 188–198, Default INI 197–207, Log 206–226, Mail folder from 226–246, Knöpfe 254–268, Dialog 279 DLU. Die Überdeckung von 1 DLU zwischen den alten Zeilen stammt aus dem Original, und der Test duldet genau diese. Zwischen *Log* und *Mail folder from* gibt es keine Überdeckung. Bis zur Knopfreihe bleiben 8 DLU, unter den Knöpfen 11 DLU. Belegt.
+- **Kleine Bildschirme.** 279 DLU sind bei einer Grundeinheit von 13 Pixeln 453 Pixel Clientbereich, mit Rand 455. Vorher waren es 437 Pixel. Eudora ist nicht DPI-bewusst (siehe Abschnitt 2), Windows rechnet also mit 96 dpi in logischen Pixeln. Bei 1366 × 768 sind es mit 100 % rund 728 Pixel Arbeitsfläche und mit 125 % rund 582, beides passt. Knapp wird es nur bei 1280 × 720 mit 150 %, dort sind es rund 453 logische Pixel Arbeitsfläche. Dann verschwinden etwa 2 Pixel des unteren Rands unter der Taskleiste, die Knöpfe bleiben sichtbar. Das ist aus Auflösung und Taskleistenhöhe gerechnet, nicht gemessen. **Wie oft:** sehr selten, denn Windows schlägt für 720p meist 125 % vor. **Was schiefgeht:** nichts, was man bedienen müsste. **Behebung:** keine nötig.
+- **Tab-Reihenfolge.** Die Reihenfolge in `IDD_ABOUTBOX` ist unverändert Close, Visit Web Site, Latest Release, Credits, Copy info. Nur die y-Werte haben sich geändert. Belegt.
+- **K4-Logik.** `if (!bGut)` entscheidet allein, `hInstApp` steht nur noch in Meldung und Logzeile. `GetLastError` wird direkt nach `ShellExecuteExA` gelesen, dazwischen liegt nur eine Zuweisung, also kein API-Aufruf. `SEE_MASK_FLAG_NO_UI` unterdrückt nur die eigenen Fehlerdialoge von Windows. Bei einem Fehler liefert die Funktion weiter `FALSE` mit `GetLastError`, und dann kommt genau eine Meldung von Eudora. Belegt am Quelltext und an der Schnittstelle. **Rest (sehr gering, nicht im Diff):** `CMainFrame::HilfeSeiteOeffnen` (mainfrm.cpp) entscheidet weiter über `nErgebnis <= 32`. Dort wird aber eine `.html`-Datei über eine Dateizuordnung geöffnet und keine `https:`-Adresse. Ein Fehlalarm ist dort noch unwahrscheinlicher. Das ist eine Vermutung, und ich empfehle keine Änderung.
+- **messen-about.ps1.** `passt=1` verlangt für **jede** der sechs Pfadzeilen, dass der Text in die Höhe passt **und** die Zeile die Sollbreite (Client − 14) hat. Damit fängt der Prüfstand G2 jetzt auch. `rand` beginnt mit −1 und wird erst gesetzt, wenn das About-Fenster gefunden ist. Wird es nicht gefunden, steht also `rand=-1` in der Ergebniszeile, und die passt nicht zur Erwartung. Die Messung schlägt dann fehl, statt still grün zu sein. Die Texte werden nicht ausgegeben. Belegt am Skripttext, nicht gefahren.
+
+### Testsuite und Gegenproben (in meinem Baum)
+
+Gemessen mit `RunTests.cmd` aus PowerShell. Die Änderungen habe ich mit Perl `:raw` gemacht, jeder Anker traf genau einmal. Danach habe ich beide Dateien aus der Sicherung im Scratchpad zurückgeholt. `cmp` meldete byte-gleich, und `git status` war leer.
+
+| Lauf | Änderung (vorübergehend) | Ergebnis |
+|---|---|---|
+| 0 | keine | 408/408 |
+| G1 + G2 + K1 + K4 in einem Lauf | AboutDlg.cpp: `x += nAbstand;`, `if (pZeile …)`, `if (!bGut \|\| nErgebnis <= 32)`; EudoraRes.rc: *Log* wieder 10 DLU | 406/408. Rot sind die beiden E-216-Tests mit **fünf eigenen Meldungen**: *Log* unter 20 DLU (K1), Rückgabe nicht ausgewertet und `hInstApp` entscheidet (K4, zwei Prüfungen), Knöpfe nicht nebeneinander (G1), Pfadzeilen nicht verbreitert (G2) |
+| 0' | alles zurück | byte-gleich (cmp) |
+
+Jede der vier Abweichungen hat ihre eigene Meldung. Damit ist jede für sich rot. Das habe ich aus den Meldungen geschlossen und nicht einzeln gefahren. Der Dialogbauer hat die vier einzeln gefahren (je 407/408).
+
+### Hinweis (hält nichts auf)
+
+- <a id="n1-t1"></a>**T1 (sehr gering):** Der Test prüft, dass die letzte Pfadzeile über der Knopfreihe endet. Dass die Knopfreihe im Dialog liegt (y + h ≤ Dialoghöhe), prüft er nicht. Das fängt aber `rand=` am Prüfstand. Belegt.
+
+| Fund | Was passiert | Wie oft | Schwere | Hält den Merge auf? |
+|---|---|---|---|---|
+| Rand 720p/150 % | etwa 2 Pixel des unteren Dialograndes unter der Taskleiste, die Knöpfe bleiben sichtbar | sehr selten | sehr gering | nein |
+| Hilfe-Seite | `HilfeSeiteOeffnen` entscheidet weiter über `hInstApp` (Datei statt Adresse) | kaum | sehr gering | nein |
+| T1 | Test prüft die Knopfreihe nicht gegen die Dialoghöhe (der Prüfstand schon) | nur bei künftigen Änderungen | sehr gering | nein |
