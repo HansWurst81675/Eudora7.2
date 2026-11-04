@@ -3006,6 +3006,12 @@ CSummary* CTocDoc::Xfer(CTocDoc* TargetToc, CSummary* SingleSum /*= NULL*/,
 				// Zusammenfassung. Das Merkzeichen macht die Kopie eindeutig.
 				if (IsImapToc() && TargetToc->IsImapToc())
 					CopySum->SetE184Vorab(TRUE);
+				// E-188: ebenso von IMAP nach lokal, wenn die Mail noch nicht ganz
+				// geladen ist - dann holt CImapToLocalTransferMsgAction den Text nach
+				// und sucht diese Kopie (ImapCopyMsgFromImapToLocal). Eine ganz
+				// geladene Mail ist hier schon fertig und braucht kein Merkzeichen.
+				else if (IsImapToc() && !TargetToc->IsImapToc() && Sum->IsNotFullyIMAPDownloaded())
+					CopySum->SetE184Vorab(TRUE);
 				// E-121: die lokale Vorab-Kopie im IMAP-Zielordner teilt sich die
 				// eingebetteten Bilddateien mit der Nachricht in der Quelle. Verwirft
 				// ein Abgleich die Kopie, bevor sie hochgeladen ist, darf er diese

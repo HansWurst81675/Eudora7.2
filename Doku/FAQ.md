@@ -14,7 +14,7 @@ niemand angeklickt). Auf eine Frage verweist man mit ihrer Nummer, etwa
 |---|---|
 | Neue Fassung, Start | [1](#1-wie-nehme-ich-bei-einer-neuen-fassung-post-konten-und-filter-mit) |
 | Abruf und Verschlüsselung | [2](#2-welche-verschlüsselung-und-welchen-port-nehme-ich), [3](#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist), [4](#4-es-kommt-ein-zertifikatsdialog-oder-ssl-negotiation-failed--was-tun) |
-| IMAP | [5](#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt) |
+| IMAP | [5](#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt), [20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu) |
 | Konten und Adressen | [6](#6-wie-trenne-ich-die-post-verschiedener-konten), [7](#7-wie-lege-ich-ein-zweites-konto-an), [8](#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben) |
 | Markieren und Filtern | [9](#9-wie-markiere-ich-wichtige-mails-farbig), [10](#10-wie-baue-ich-schnell-einen-filter-aus-einer-mail), [11](#11-wie-speichere-ich-einen-filter), [12](#12-filter-messages-strgj-tut-nichts), [13](#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte) |
 | Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus) |
@@ -220,10 +220,11 @@ Prüfstand am 02.11.2026 an 7.2.1.128 und 7.2.1.131 gemessen) — an einem solch
 Server ging es aber am 29.10.2026 einmal verloren, die Ursache ist offen.
 7.2.1.131 schreibt dann eine Zeile mit dem Grund in die `eudora.log` — aber nur,
 wenn der Protokollbereich *Misc* eingeschaltet ist (`LogLevel` mit 0x8000; in
-der Vorgabe aus). **Im Quellstand für 7.2.2.132 berichtigt, noch in keinem
-Paket:** ohne UIDPLUS erkennt Eudora die Mail nach dem Abgleich an Datum,
-Absender und Betreff wieder und setzt ihr Label; sehen zwei neue Mails gleich
-aus, bekommt keine ein Label ([E-170](../Intern/BEFUNDE.md#e-170), offen).
+der Vorgabe aus). **Behoben in 7.2.2.132:** ohne UIDPLUS erkennt Eudora die
+Mail nach dem Abgleich an Datum, Absender und Betreff wieder und setzt ihr
+Label; sehen zwei neue Mails gleich aus, bekommt keine ein Label (am Prüfstand
+gemessen; [E-170](../Intern/BEFUNDE.md#e-170) bleibt offen, weil ungeklärt ist,
+warum das Label am 29.10.2026 an einem Server mit UIDPLUS verloren ging).
 
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund
@@ -304,6 +305,11 @@ bleiben die Anhang-Dateien nach dem Leeren des Papierkorbs liegen.
 Auf derselben Seite regelt *„Delete automatic attachments“*, was mit Dateien
 geschieht, die Eudora selbst anhängt (*Never*, *After sending message*,
 *When message emptied from Trash* — ab Werk das letzte).
+
+Eine Ausnahme gilt ab der nächsten Fassung: Bei einer IMAP-Mail, die nie ganz
+geladen wurde, bleiben die dabei gesammelten Anhangdateien nach dem Löschen
+liegen (am Quelltext belegt), siehe
+[Frage 20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu).
 
 *Am Programm geprüft* von Gregor am 29.10.2026 an Paket 1.0.127
 (*„funktioniert“*): mit `TidyAttach=1` waren nach *Empty Trash* die fünf
@@ -407,3 +413,56 @@ Jede Zeile lässt sich zurückdrehen, indem man den Original-Wert in die eigene
 
 *Belegt:* Werte am 29.10.2026 in `tools/DEudora.ini` und `EudoraRes.rc` gegen
 das Original (erster Commit des Repos) nachgesehen.
+
+## 20. Warum holt Eudora eine IMAP-Mail bei jedem Öffnen neu?
+
+Weil ein Teil der Mail fehlt und Eudora ihn nicht aufgibt. Verweigert ein
+IMAP-Server **dauerhaft** einen Teil einer Mail (etwa einen Anhang oder ein
+eingebettetes Bild), zeigt Eudora, was
+angekommen ist, und merkt sich die Mail als *nicht ganz geladen*. Bei jedem
+Anzeigen versucht es den Rest erneut. Dabei kann die Postfachdatei wachsen,
+und der Anhangordner bekommt die angekommenen Anhänge jedes Mal als neue
+Dateien.
+
+Der Preis ist Platz, nicht Post. Verschieben Sie so eine Mail in ein anderes
+IMAP-Konto oder in ein lokales Postfach, **bleibt sie in der Quelle stehen**,
+statt dort gelöscht zu werden — sonst ginge auf dem Server verloren, was nie
+vollständig angekommen ist. Gregor hat das am 04.11.2026 so entschieden:
+*„Sicherheit vor Platz“*.
+
+Drei Folgen, die Sie kennen sollten (die ersten beiden *am Quelltext
+belegt*, nicht am Programm gemessen; die dritte *am Prüfstand gemessen*
+beim Verschieben nach lokal, zwischen zwei Konten am Quelltext belegt):
+
+* Löschen Sie die Mail, **bleiben die gesammelten Anhangdateien** im
+  Anhangordner liegen; Eudora räumt sie dabei nicht weg.
+* Die Suche (*Find Messages*) nimmt eine solche Mail ohne Text auf; sie
+  findet sie nur über Kopfangaben.
+* Nach dem Verschieben steht im Ziel ein leerer Eintrag (nach lokal) oder
+  nichts, und es kommt keine Meldung. Löschen Sie die Mail in der Quelle
+  nicht von Hand, und halten Sie den leeren Eintrag nicht für die
+  verschobene Mail.
+
+Steckt der verweigerte Teil in einer **weitergeleiteten Mail** (als Anhang
+eingebettet), bricht die Anzeige dort ab: die Teile der äußeren Mail dahinter
+erscheinen in dieser Ladung nicht. Die Mail bleibt „nicht geladen“ und wird
+beim nächsten Öffnen neu geholt; verloren geht nichts
+([PRÜFER-97](../Befunde/PRUEFER-97.md#k1) K1, am Quelltext belegt).
+
+Verweigert der Server den Teil nur einmal, holt das nächste Öffnen die Mail
+vollständig, und das Neuholen hört auf. Ob *Compact* die gewachsene
+Postfachdatei bei IMAP-Ordnern wieder verkleinert, ist **nicht gemessen**.
+
+Das gilt **ab der nächsten Fassung** (im Quellstand, noch in keinem Paket).
+
+*Am Quelltext belegt* ([PRÜFER-95](../Befunde/PRUEFER-95.md#k3) K3,
+[E-188](../Intern/BEFUNDE.md#e-188)): dass die Mail bei jedem Anzeigen neu
+geholt wird, dass Datei und Anhangordner wachsen, die ersten beiden Folgen
+oben und der Abbruch der Anzeige hinter einer fehlerhaften weitergeleiteten
+Mail;
+die Beispiele (Anhang, eingebettetes Bild) sind nicht gemessen. *Am Prüfstand
+gemessen* sind nur zwei Dinge: dass die Mail beim Verschieben in der Quelle
+bleibt, und zwar für eine HTML-Mail, deren Teile alle verweigert werden
+(Fälle `E-188tm` und `E-188fm`), und der leere Eintrag beim Verschieben nach
+lokal (Fälle `E-188f` und `E-188fm`). Die Entscheidung steht in
+`Arbeitsweise/entscheidung-e188-k3-sicherheit-vor-platz.md`.

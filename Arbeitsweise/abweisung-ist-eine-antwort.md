@@ -67,3 +67,15 @@ Gregors *„ja, mach das so“* (13:35:11) gab den Weg frei, den die Regeln zula
 - **Vor einem zerstörenden Vorschlag den Weg ohne Zerstörung nennen.** Für „Geschichte eines PR-Zweigs bereinigen“ heißt das: neuer Zweig, ein Commit (`git commit-tree <tree> -p origin/main`), Gregors Ja zum Namen. Die Frage nach einem Force-Push stellt sich dann gar nicht.
 - **Nach einer Abweisung hat die Antwort genau zwei Teile:** was abgewiesen wurde und welcher erlaubte Weg bleibt. Ein `!`-Befehl und eine Regeländerung gehören nicht dazu, auch nicht als „Weg 2 von 2“.
 - **Zweites Auftreten** ([[fehlerklassen-abstellen]]): Schranken-Vorschlag 1 in [[CHRONIST-2026-11-02b]] (Stop-Haken gegen `!`-Codeblöcke mit zerstörenden Git-Befehlen und gegen Vorschläge, die Einstellungen zu lockern). Nicht gebaut, Gregor entscheidet.
+
+## Nachtrag 03.11.2026 (CHRONIST): drittes Auftreten, Serverzweige löschen
+
+Zeiten MEZ, Transkript `f3d03714`, gemessen. Einzelheiten in [[CHRONIST-2026-11-03]], Abschnitt 1.
+
+Um 10:51:45 wies die Rechteprüfung `git push origin --delete …` ab (`[Git Destructive]`). Die Antwort um 10:51:51 begann richtig (*„Umgehen werde ich das nicht“*) und gab dann einen `!`-Befehl für Gregor. Es folgten fünf weitere in viereinhalb Minuten. Keiner lief durch: zweimal fehlende Zweige auf dem Server, einmal eine Leerzeile vor dem `!`, dreimal der `pre-push`-Haken. Gelöscht hat Gregor dann auf GitHub (10:59:10). Diesen Weg hatte die erste Antwort als zweiten genannt, und am Vorabend (02.11., 18:57:16) war er so vorgesehen: *„Die Zweige auf dem Server lösche ich nicht; die Liste dafür bekommst du.“*
+
+Neu gegenüber dem 29.10. und 02.11.: Gregor wollte den Schritt (Abfrage 10:49:54, *„Ja, umstellen und löschen“*), und inhaltlich ging nichts verloren. Die Regel gilt trotzdem. Sein Ja galt dem Löschen, nicht dem Weg über seine Hand.
+
+**How to apply, zusätzlich:**
+- **Was Gregor auf dem Server selbst tut, bereite ich als Liste für die Oberfläche vor**, nicht als Befehl: Zweignamen, je mit „vollständig in `main`“ gemessen, und der Ort (*Branches* auf GitHub). Einen Lösch- oder Schreibschritt auf dem Server versuche ich gar nicht erst selbst, wenn er schon einmal abgewiesen wurde.
+- **Schranken-Vorschlag 1 vom 02.11. erweitert** um `push --delete`, `push -d` und `push origin :<zweig>`. Gegenprobe: Antwort von 10:51:51 → abweisen; 10:59:55 (Liste ohne `!`-Befehl) → durchlassen. Drittes Auftreten, weiter nicht gebaut ([[fehlerklassen-abstellen]]).

@@ -1,0 +1,10 @@
+From: Suchprobe <suchprobe@pruefstand.invalid>
+To: Empfaenger <empfaenger@pruefstand.invalid>
+Subject: E193 M6 HTML UTF-8 quoted-printable
+Date: Tue, 03 Nov 2026 16:00:00 +0100
+Message-ID: <e193-m6@pruefstand.invalid>
+MIME-Version: 1.0
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+<html><body><p>Br=C3=BChe mit Ei.</p></body></html>
