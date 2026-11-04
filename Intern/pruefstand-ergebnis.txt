@@ -1,12 +1,12 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 08:34:24
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-188d welche Zeile)
+zeit=2026-11-04 08:57:54
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-188d Gegenprobe am alten Bau 7.2.2.132)
 nur=E-188d   (Teillauf, nicht der Gesamtstand)
 faelle=1
 bestanden=0
 fehlgeschlagen=1
 fall=[FEHL] E-188d   fehlt in messung: E188 GELOESCHT ALLE
              gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
-                         Zeit vom WM_CLOSE bis zum Ende: 2 s
+                         Zeit vom WM_CLOSE bis zum Ende: 1 s
                          Beendet: True
                          Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\e188\tools\TESTLAEUFE.md
