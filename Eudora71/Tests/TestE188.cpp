@@ -64,6 +64,9 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 					 "nach lokal wird nicht nur die Liste der angekommenen Mails geloescht (E-188f)");
 		TT_CHECK_MSG(QT_Enthaelt(pL, "if (m_pTocDoc->ImapCopyMsgFromImapToLocal("),
 					 "nach lokal wird das Ergebnis des Kopierens nicht ausgewertet (E-188)");
+		// PRUEFER-94 K5: ohne diese Zeile blieb der Test gruen - der Kern fuer E-188f.
+		TT_CHECK_MSG(QT_Enthaelt(pL, "bAngekommen = false; if (!pSum->IsNotFullyIMAPDownloaded())"),
+					 "nach lokal gilt eine Mail, deren Text nicht zu holen war, als angekommen (E-188f)");
 		TT_CHECK_MSG(QT_Enthaelt(pL, "if (!strAngekommen.IsEmpty())"),
 					 "nach lokal wird auch geloescht, wenn nichts angekommen ist (E-188f)");
 		free(pL);
@@ -135,7 +138,9 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 		{
 			TT_CHECK_MSG(QT_Enthaelt(pK2, "E189VorabKopienEntfernen(m_pDestTocDoc, szAlt);"),
 						 "zwischen Konten bleibt die Vorab-Kopie ohne Gegenstueck im Ziel stehen (E-188a/t/u)");
-			long lReset = QT_Stelle(pK2, "pCopySum = NULL;");
+			// PRUEFER-94 K5: "pCopySum = NULL;" traf die Deklaration - jetzt die Folge
+			// im Schleifenrumpf (Kommentare sind weg, Leerraum ist zusammengezogen).
+			long lReset = QT_Stelle(pK2, "bool bAngekommen = false; pCopySum = NULL;");
 			long lAufruf = QT_Stelle(pK2, "m_pTocDoc->ImapCopyMsgBetweenAccounts(");
 			TT_CHECK_MSG(lReset >= 0 && lReset < lAufruf,
 						 "pCopySum wird nicht je Mail zurueckgesetzt - die Kopie der vorigen Mail gilt fuer die naechste");
