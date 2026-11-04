@@ -1,8 +1,17 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 09:39:03
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-188fm rot vor K1)
-nur=E-188fm   (Teillauf, nicht der Gesamtstand)
-faelle=1
-bestanden=0
-fehlgeschlagen=1
-fall=[FEHL] E-188fm  steht in messung, darf nicht: E188 SERVER VERLOREN
+zeit=2026-11-04 10:01:29
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-188 K1/K2)
+nur=E-188   (Teillauf, nicht der Gesamtstand)
+faelle=10
+bestanden=10
+fehlgeschlagen=0
+fall=[ ok ] E-188k   E188 ERGEBNIS weg=konten anzeige=richtig
+fall=[ ok ] E-188a   E188 ERGEBNIS weg=append
+fall=[ ok ] E-188u   E188 ERGEBNIS weg=ohneuid anzeige=richtig
+fall=[ ok ] E-188t   E188 ERGEBNIS weg=kontentext anzeige=richtig
+fall=[ ok ] E-188l   E188 ERGEBNIS weg=lokal anzeige=richtig
+fall=[ ok ] E-188f   E188 ERGEBNIS weg=fetch
+fall=[ ok ] E-188tm  E188 ERGEBNIS weg=kontenmehr
+fall=[ ok ] E-188fm  E188 ERGEBNIS weg=fetchmehr
+fall=[ ok ] E-188e   E188 ERGEBNIS weg=lokaleins anzeige=richtig
+fall=[ ok ] E-188d   E188 LOESCHEN GEMESSEN fremd-lebt=1
