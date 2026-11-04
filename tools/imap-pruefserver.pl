@@ -73,6 +73,38 @@ use IO::Select;
 # echter Server (RFC 3501 7.3.1). Ohne das glich Eudora nur bis zur alten
 # Zahl ab und sah eine neue UID nie.
 #
+# ZWEI KONTEN UND SERVERZUSTAND (seit 03.11.2026, Befund E-188):
+#   --ablage-name <n>   das Postfach "Ablage" heisst <n> (etwa "Ziel"), damit
+#                       ein zweiter Server auf anderem Port ein Zielpostfach
+#                       mit eigenem Namen fuehrt - zwei Instanzen = zwei Konten.
+#   --zustand           schreibt nach dem Start und nach jedem Befehl, der den
+#                       Bestand aendert (APPEND, COPY, STORE, EXPUNGE), den
+#                       ganzen Bestand: je Nachricht "ZUSTAND <postfach> uid=
+#                       del= weg= rumpf= mid= betreff=", abgeschlossen von "ZUSTAND
+#                       ENDE <n>". del=1: \Deleted gesetzt; weg=1: danach kam
+#                       EXPUNGE in diesem Postfach - ein echter Server haette
+#                       die Nachricht endgueltig entfernt. Gefuehrt je
+#                       Postfach und nach UID (die alte Zaehlung oben kennt nur
+#                       Positionen in INBOX). Der Pruefserver loescht nichts.
+#   --bodystructure     beantwortet BODYSTRUCTURE wie ein echter Server (ein
+#                       Teil text/plain) und BODY[TEXT]/BODY[1] mit dem Text
+#                       allein, unter dem verlangten Abschnittsnamen. Ohne
+#                       den Schalter kommt auf BODYSTRUCTURE die ganze
+#                       Nachricht als BODY[] - Eudora laedt dann den Text nie
+#                       nach (gemessen 03.11.2026, E-188: "Attempt to add the
+#                       message ... failed", kein APPEND). Opt-in, damit die
+#                       aelteren Faelle unveraendert messen.
+#   --mehrteilig        die Pruefnachrichten sind multipart/alternative (ein
+#                       Teil text/plain, ein Teil text/html), wie praktisch
+#                       jede HTML-Mail; mit --bodystructure kommt die
+#                       passende BODYSTRUCTURE, BODY[1]/BODY[2] liefern die
+#                       Teile, BODY[n.MIME] ihre Koepfe (PRUEFER-94 K1: der
+#                       verweigerte Rumpf bei mehrteiligen Mails war
+#                       ungemessen).
+#   --fetch-text-scheitert  jede Anfrage nach dem TEXT einer Nachricht (BODY[],
+#                       BODY.PEEK[], [TEXT], [1], RFC822) bekommt NO - so wie
+#                       ein Abbruch mitten im Herunterladen.
+#
 # Er hoert NUR auf 127.0.0.1. Von aussen ist er nicht erreichbar.
 #
 # WAS ER NICHT IST: eine vollstaendige IMAP-Umsetzung. Er kann genau so
@@ -112,6 +144,11 @@ while (@ARGV) {
     elsif ($a eq '--fremde-bei-copy') { $opt{fremde_bei_copy} = shift @ARGV }   # E-170 ohne UIDPLUS
     elsif ($a eq '--copy-scheitert') { $opt{copy_scheitert} = 1 }   # E-170, PRUEFER-89 K3
     elsif ($a eq '--gleiche-im-ziel') { $opt{gleiche_im_ziel} = shift @ARGV }   # E-170, PRUEFER-89 K3
+    elsif ($a eq '--ablage-name') { $opt{ablage_name} = shift @ARGV }   # E-188
+    elsif ($a eq '--zustand') { $opt{zustand} = 1 }   # E-188
+    elsif ($a eq '--bodystructure') { $opt{bodystructure} = 1 }   # E-188
+    elsif ($a eq '--fetch-text-scheitert') { $opt{fetch_text_scheitert} = 1 }   # E-188
+    elsif ($a eq '--mehrteilig') { $opt{mehrteilig} = 1 }   # E-188 K1
     else { die "unbekannt: $a\n" }
 }
 # E-170, PRUEFER-89 K3 (03.11.2026):
@@ -163,10 +200,23 @@ for my $i (1 .. $opt{nachrichten}) {
             : 'Date: Thu, 10 Sep 2026 12:00:00 +0200'),
         "Message-ID: <pruef-$i\@pruefserver.invalid>",
         'MIME-Version: 1.0',
-        'Content-Type: text/plain; charset=us-ascii',
-        '',
-        "Dies ist Pruefnachricht $i. Sie existiert nur im Arbeitsspeicher",
-        'dieses Servers und wird nie geloescht, egal was verlangt wird.',
+        ($opt{mehrteilig}
+            ? ('Content-Type: multipart/alternative; boundary="pruefgrenze"',
+               '',
+               '--pruefgrenze',
+               'Content-Type: text/plain; charset=us-ascii',
+               '',
+               "Dies ist Pruefnachricht $i. Sie existiert nur im Arbeitsspeicher",
+               'dieses Servers und wird nie geloescht, egal was verlangt wird.',
+               '--pruefgrenze',
+               'Content-Type: text/html; charset=us-ascii',
+               '',
+               "<html><body><p>Dies ist Pruefnachricht $i (HTML-Teil).</p></body></html>",
+               '--pruefgrenze--')
+            : ('Content-Type: text/plain; charset=us-ascii',
+               '',
+               "Dies ist Pruefnachricht $i. Sie existiert nur im Arbeitsspeicher",
+               'dieses Servers und wird nie geloescht, egal was verlangt wird.')),
         '');
     push @nachrichten, { text => $text, flags => '', geloescht_verlangt => 0 };
 }
@@ -215,7 +265,9 @@ my %bekannt;            # Verbindung -> Nachrichtenzahl, die sie zuletzt gemelde
 my $append_nr = 0;      # laufende Nummer der Ablagedateien
 my $unbekannt = 0;      # Zugriffe auf ein Postfach, das es nicht gibt
 # Ordnerliste, wie der Server sie fuehrt (modifiziertes UTF-7, RFC 3501 5.1.3).
-my @ordner = ('INBOX', 'Entw&APw-rfe', 'Gel&APY-scht', 'Ablage');
+my $ablage_name = defined $opt{ablage_name} ? $opt{ablage_name} : 'Ablage';   # E-188
+die "--ablage-name: nur Buchstaben und Ziffern\n" unless $ablage_name =~ /^[A-Za-z0-9]+$/;
+my @ordner = ('INBOX', 'Entw&APw-rfe', 'Gel&APY-scht', $ablage_name);
 
 # E-121 (Gregor an 1.0.95): im Ordner "Ablage" liegt schon eine FREMDE Nachricht,
 # deren UID gleich der lokalen Kennung der zu verschiebenden Mail ist (bei Gregor
@@ -262,7 +314,7 @@ sub postfach_name {
 }
 sub liste_fuer {
     my ($name) = @_;
-    return ($name =~ /^Ablage$/i) ? \@ablage : \@nachrichten;
+    return (lc $name eq lc $ablage_name) ? \@ablage : \@nachrichten;
 }
 # Steht das Postfach in der Ordnerliste? INBOX ohne Ruecksicht auf Gross/klein.
 sub ordner_index {
@@ -272,9 +324,47 @@ sub ordner_index {
     }
     return -1;
 }
+# E-188: Positionen (1-basiert) der Nachrichten in $liste, die eine IMAP-Menge
+# ("3,2,1", "1:3", "2:*") trifft - nach UID oder nach Position.
+sub menge_treffer {
+    my ($liste, $menge, $nach_uid) = @_;
+    my %pos;
+    for my $teil (split /,/, $menge) {
+        my ($von, $bis) = $teil =~ /^(\d+|\*)(?::(\d+|\*))?$/ or next;
+        $bis = $von unless defined $bis;
+        for my $i (1 .. @$liste) {
+            my $s = $nach_uid ? uid_von($liste->[$i - 1], $i) : $i;
+            my $lo = ($von eq '*') ? $s : $von;
+            my $hi = ($bis eq '*') ? 4294967295 : $bis;
+            ($lo, $hi) = ($hi, $lo) if $lo > $hi;
+            $pos{$i} = 1 if $s >= $lo && $s <= $hi;
+        }
+    }
+    return sort { $a <=> $b } keys %pos;
+}
+my $zustand_nr = 0;
+sub zustand {
+    return unless $opt{zustand};
+    $zustand_nr++;
+    for my $name ('INBOX', $ablage_name) {
+        my $liste = liste_fuer($name);
+        for my $i (1 .. @$liste) {
+            my $m = $liste->[$i - 1];
+            my ($mid) = $m->{text} =~ /^Message-ID:\s*(\S+)/mi;
+            my ($betr) = $m->{text} =~ /^Subject:\s*(.*?)\r?$/mi;
+            # rumpf = Bytes nach der Leerzeile: eine Kopie ohne Text faellt so auf.
+            my ($rumpf) = $m->{text} =~ /\r?\n\r?\n(.*)\z/s;
+            notiz(sprintf('ZUSTAND %s uid=%d del=%d weg=%d rumpf=%d mid=%s betreff=%s', $name, uid_von($m, $i),
+                          $m->{del} ? 1 : 0, $m->{weg} ? 1 : 0, length(defined $rumpf ? $rumpf : ''), defined $mid ? $mid : '-',
+                          sichtbar_bytes(defined $betr ? $betr : '-')));
+        }
+    }
+    notiz("ZUSTAND ENDE $zustand_nr");
+}
 # Bytes ueber 127 sichtbar machen, damit das Protokoll ASCII bleibt.
 sub sichtbar_bytes { my ($s) = @_; $s =~ s/([\x80-\xff])/sprintf('\\x%02X', ord $1)/ge; return $s }
 
+zustand();   # E-188: Ausgangsbestand
 while (time < $ende) {
     my @bereit = $sel->can_read(2);
     next unless @bereit;
@@ -325,6 +415,7 @@ while (time < $ende) {
         $gesehen{$B}++;
 
         my $antwort;
+        my $zustand_jetzt = 0;   # E-188
 
         if ($B eq 'CAPABILITY') {
             print $h "* CAPABILITY IMAP4rev1 UIDPLUS\r\n";
@@ -463,8 +554,15 @@ while (time < $ende) {
                 close $af;
             }
             notiz(sprintf('  APPEND nach "%s": %d Bytes -> %s', $name, length($daten), $wohin));
+            $zustand_jetzt = 1;
             # E-121: wie ein Server ohne UIDPLUS (vermutlich GMX) - keine neue UID melden.
             $antwort = $opt{ohne_appenduid} ? "$marke OK APPEND completed" : "$marke OK [APPENDUID 1 $uid] APPEND completed";
+        }
+        elsif ($opt{fetch_text_scheitert} and ($B eq 'FETCH' or ($B eq 'UID' and $rest =~ /^FETCH/i))
+               and $rest =~ /BODY(?:\.PEEK)?\[(?:TEXT|\d[^\]]*)?\]|RFC822(?![.]SIZE|[.]HEADER)/i) {
+            # E-188: der Text kommt nicht - wie ein Abbruch beim Herunterladen.
+            notiz('  !! FETCH TEXT ABGELEHNT (--fetch-text-scheitert)');
+            $antwort = "$marke NO FETCH failed (Pruefstand)";
         }
         elsif ($B eq 'FETCH' or ($B eq 'UID' and $rest =~ /^FETCH/i)) {
             my $liste = liste_fuer($gewaehlt{$h} || 'INBOX');
@@ -491,7 +589,51 @@ while (time < $ende) {
                 my $uid = uid_von($m, $i);
                 my $laenge = length $m->{text};
                 my $flags = $m->{flags} || '';
-                if ($r =~ /BODY\.PEEK\[HEADER|BODY\[HEADER|RFC822\.HEADER/i) {
+                my ($tkopf, $trumpf) = $m->{text} =~ /^(.*?\r\n\r\n)(.*)\z/s;
+                $trumpf = '' unless defined $trumpf;
+                # E-188 K1: Teile einer mehrteiligen Nachricht (Grenze "pruefgrenze").
+                my @mteile;
+                if ($trumpf =~ /--pruefgrenze\r\n/) {
+                    for my $s (split /\r\n--pruefgrenze(?:--)?\r\n?/, "\r\n" . $trumpf) {
+                        next unless $s =~ /^(.*?\r\n\r\n)(.*)\z/s;
+                        push @mteile, { kopf => $1, rumpf => $2 };
+                    }
+                }
+                if ($opt{bodystructure} and @mteile and $r =~ /BODYSTRUCTURE/i) {
+                    my @bs;
+                    for my $t (@mteile) {
+                        my ($sub) = $t->{kopf} =~ m{Content-Type:\s*text/(\w+)}i; $sub = 'plain' unless defined $sub;
+                        my $z = () = $t->{rumpf} =~ /\n/g;
+                        push @bs, sprintf('("TEXT" "%s" ("CHARSET" "us-ascii") NIL NIL "7BIT" %d %d NIL NIL NIL)', uc $sub, length($t->{rumpf}), $z);
+                    }
+                    my @teile = ("UID $uid");
+                    push @teile, "FLAGS ($flags)" if $r =~ /FLAGS/i;
+                    push @teile, 'BODYSTRUCTURE (' . join('', @bs) . ' "ALTERNATIVE" ("BOUNDARY" "pruefgrenze") NIL NIL NIL)';
+                    printf $h "* %d FETCH (%s)\r\n", $i, join(' ', @teile);
+                }
+                elsif ($opt{bodystructure} and @mteile and $r =~ /BODY(?:\.PEEK)?\[(\d+)(\.MIME)?\]/i) {
+                    my ($nr, $mime) = ($1, $2);
+                    my $t = $mteile[$nr - 1];
+                    my $inhalt = $t ? ($mime ? $t->{kopf} : $t->{rumpf}) : '';
+                    my $name = $nr . ($mime ? '.MIME' : '');
+                    printf $h "* %d FETCH (UID %d FLAGS (%s) BODY[%s] {%d}\r\n%s)\r\n",
+                        $i, $uid, $flags, $name, length($inhalt), $inhalt;
+                }
+                elsif ($opt{bodystructure} and $r =~ /BODYSTRUCTURE/i) {
+                    # E-188: ein Teil text/plain, wie ein echter Server ihn meldet.
+                    my ($cs) = $m->{text} =~ /charset="?([A-Za-z0-9_.-]+)/i; $cs = 'us-ascii' unless defined $cs;
+                    my $zeilen = () = $trumpf =~ /\n/g;
+                    my @teile = ("UID $uid");
+                    push @teile, "FLAGS ($flags)" if $r =~ /FLAGS/i;
+                    push @teile, sprintf('BODYSTRUCTURE ("TEXT" "PLAIN" ("CHARSET" "%s") NIL NIL "7BIT" %d %d NIL NIL NIL)', $cs, length($trumpf), $zeilen);
+                    printf $h "* %d FETCH (%s)\r\n", $i, join(' ', @teile);
+                }
+                elsif ($opt{bodystructure} and $r =~ /BODY(?:\.PEEK)?\[(TEXT|1)\]/i) {
+                    my $abschnitt = uc $1;
+                    printf $h "* %d FETCH (UID %d FLAGS (%s) BODY[%s] {%d}\r\n%s)\r\n",
+                        $i, $uid, $flags, $abschnitt, length($trumpf), $trumpf;
+                }
+                elsif ($r =~ /BODY\.PEEK\[HEADER|BODY\[HEADER|RFC822\.HEADER/i) {
                     # Mit der Leerzeile, die den Kopf abschliesst (RFC 3501 6.4.5:
                     # HEADER und HEADER.FIELDS enden mit ihr). Ohne sie las Eudora von
                     # drei Koepfen nur den ersten (gemessen 01.11.2026, E-184 K3).
@@ -593,6 +735,7 @@ while (time < $ende) {
                     push @alt, uid_von($m, $i);
                     push @neu, $nuid;
                 }
+                $zustand_jetzt = 1;
                 notiz(sprintf('  COPY nach "%s": UID %s -> %s', sichtbar_bytes($zname),
                               join(',', @alt) || '(keine)', join(',', @neu) || '(keine)'));
                 if ($opt{copy_scheitert}) {
@@ -629,11 +772,23 @@ while (time < $ende) {
                 my $m = ($num =~ /^\d+$/) ? $nachrichten[$num - 1] : undef;
                 $m->{geloescht_verlangt} = 1 if $m;
             }
+            # E-188: \Deleted je Postfach und nach UID (bzw. Position) fuehren.
+            if ($zeile =~ /\\Deleted/i) {
+                my $r = ($B eq 'UID') ? do { my $x = $rest; $x =~ s/^STORE\s*//i; $x } : $rest;
+                my ($menge, $art) = $r =~ /^(\S+)\s+([+-]?)FLAGS/i;
+                if (defined $menge) {
+                    my $liste = liste_fuer($gewaehlt{$h} || 'INBOX');
+                    for my $i (menge_treffer($liste, $menge, $B eq 'UID')) { $liste->[$i - 1]{del} = ($art eq '-') ? 0 : 1 }
+                }
+            }
             $antwort = "$marke OK STORE";
+            $zustand_jetzt = 1;
         }
         elsif ($B eq 'EXPUNGE' or ($B eq 'UID' and $rest =~ /^EXPUNGE/i)) {
             $expunge++;
             notiz('  !! EXPUNGE VERLANGT - hier wuerde endgueltig geloescht');
+            for my $m (@{ liste_fuer($gewaehlt{$h} || 'INBOX') }) { $m->{weg} = 1 if $m->{del} }   # E-188
+            $zustand_jetzt = 1;
             $antwort = "$marke OK EXPUNGE (der Pruefserver loescht nichts)";
         }
         elsif ($B eq 'CLOSE') { $antwort = "$marke OK CLOSE" }
@@ -662,6 +817,7 @@ while (time < $ende) {
         }
         print $h "$antwort\r\n";
         notiz("  -> $antwort");
+        zustand() if $zustand_jetzt;
     }
 }
 
