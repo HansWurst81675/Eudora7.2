@@ -69,6 +69,9 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 					 "nach lokal gilt eine Mail, deren Text nicht zu holen war, als angekommen (E-188f)");
 		TT_CHECK_MSG(QT_Enthaelt(pL, "if (!strAngekommen.IsEmpty())"),
 					 "nach lokal wird auch geloescht, wenn nichts angekommen ist (E-188f)");
+		// PRUEFER-94 K2: inzwischen ganz geladen, aber im Ziel liegt noch die Vorab-Kopie.
+		TT_CHECK_MSG(QT_Enthaelt(pL, "if (pSum->IsNotFullyIMAPDownloaded() || (m_pDestTocDoc && E184FindeVorabKopie(m_pDestTocDoc, pSum->GetHash())))"),
+					 "nach lokal gilt eine erst spaeter ganz geladene Mail als angekommen, obwohl nur der Kopf kopiert ist (K2)");
 		free(pL);
 	}
 
@@ -89,8 +92,17 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 		long lFreigeb = lRumpf >= 0 ? QT_Stelle(pDs + lRumpf, "m_pImap->FreeBodyStructure") : -1;
 		TT_CHECK_MSG(lKopf >= 0 && lRumpf > lKopf && lFehler >= 0 && lFehler < lFreigeb,
 					 "ein gescheiterter einfacher Rumpf setzt hResult nicht auf E_FAIL - die Mail gilt als geladen (E-188t/f)");
+		// PRUEFER-94 K1: mehrteilige Mail - ein fehlender Teil laesst "nicht geladen" stehen.
+		TT_CHECK_MSG(QT_Enthaelt(pDs, "m_bE188TeilFehlt = FALSE;") &&
+					 QT_Enthaelt(pDs, "if (m_bE188TeilFehlt) {") &&
+					 QT_Enthaelt(pDs, "else pSum->m_Imflags &= ~IMFLAGS_NOT_DOWNLOADED;"),
+					 "eine mehrteilige Mail mit fehlendem Teil gilt als geladen (E-188tm/fm)");
 		free(pDs);
 	}
+	// K1: jede Abrufstelle eines Teils merkt sich das Scheitern.
+	if (pD)
+		TT_CHECK_MSG(QT_Zaehle(pD, "if (!bResult) m_bE188TeilFehlt = TRUE;") == 4,
+					 "nicht jede Abrufstelle eines Teils merkt sich das Scheitern (E-188tm/fm)");
 	if (pD) free(pD);
 
 	// 4. Die Vorab-Kopie im Ziel wird ueber ihr Merkzeichen gesucht, nicht ueber

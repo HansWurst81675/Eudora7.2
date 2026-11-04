@@ -2420,7 +2420,12 @@ void CImapToLocalTransferMsgAction::DoPostProcessing()
 			// Only proceed if the message is not fully downloaded.  If the message is already
 			// downloaded, then the local transfer we did before this action was queued already
 			// did all the work.
-			if (pSum->IsNotFullyIMAPDownloaded())
+			// E-188 K2 (PRUEFER-94): ausser, die Mail wurde erst NACH dem Verschieben ganz
+			// geladen - dann hat Xfer nur den Kopf kopiert, und im Ziel liegt noch die
+			// markierte Vorab-Kopie (Xfer markiert nach lokal nur nicht ganz geladene).
+			// Bis hierher galt sie als angekommen, und die Quelle wurde geloescht.
+			if (pSum->IsNotFullyIMAPDownloaded() ||
+				(m_pDestTocDoc && E184FindeVorabKopie(m_pDestTocDoc, pSum->GetHash())))
 			{
 				CSumList		sumList;
 				sumList.AddHead(pSum);

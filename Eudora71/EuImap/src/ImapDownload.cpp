@@ -211,6 +211,7 @@ CImapDownloader::CImapDownloader(unsigned long AccountID, CImapConnection* pImap
 
 	// We haven't seen any CRLF's yet
 	m_bEndedWithCRLF = FALSE;
+	m_bE188TeilFehlt = FALSE;
 
 	// The buffer is allocated during the Write.
 	m_nBufferSize	= 0;
@@ -729,6 +730,7 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 	long			MStart = 0, MEnd = 0;
 	IMAPUID			Uid = 0;
 	BOOL			bWeOpenedMbxFile = FALSE;
+	m_bE188TeilFehlt = FALSE;		// E-188 K1: je Nachricht neu
 
 	// SAnity:
 	if (! pSum )
@@ -1081,7 +1083,19 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 			pSum->m_MsgSize = (unsigned short) max (pSum->m_Length/1024, 1);
 
 		// Now signal to the summary that this message is now fully downloaded.
-		pSum->m_Imflags &= ~IMFLAGS_NOT_DOWNLOADED;
+		// E-188 K1 (PRUEFER-94): fehlte ein Teil (Server-NO, Abbruch), bleibt die
+		// Mail "nicht geladen" - das Angekommene wird gezeigt, der Rest beim naechsten
+		// Oeffnen erneut geholt, und die Loeschschranke beim Verschieben greift. Bis
+		// 7.2.2.132 galt eine mehrteilige Mail mit verweigertem Rumpf als geladen
+		// (gemessen: E-188tm/fm, nur der Kopf kam an, die Quelle wurde geloescht).
+		if (m_bE188TeilFehlt)
+		{
+			CString szSpur;
+			szSpur.Format("E-188 Teil des Rumpfs nicht geladen, Mail bleibt ungeladen: uid=%lu", (unsigned long) Uid);
+			::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		}
+		else
+			pSum->m_Imflags &= ~IMFLAGS_NOT_DOWNLOADED;
 
 		// If any data writers found a "fancy" part, tell summary.
 		if (m_bIsMhtml)
@@ -3608,6 +3622,7 @@ BOOL CImapDownloader::BreakoutBodyToFile (IMAPUID uid, BODY *pBody, LPSTR pSecti
 			// Route the body's contents into the external file.
 			//
 			bResult = SUCCEEDED (m_pImap->FetchAttachmentContentsToFile (uid, pSection, (LPCSTR)ExternalPathname, pBody->encoding, pBody->subtype));
+			if (!bResult) m_bE188TeilFehlt = TRUE;	// E-188 K1
 		}
 		// It is now safe to cast lMaxsize to an unsigned long.
 		//
@@ -3617,6 +3632,7 @@ BOOL CImapDownloader::BreakoutBodyToFile (IMAPUID uid, BODY *pBody, LPSTR pSecti
 			// Route the body's contents into the external file.
 			//
 			bResult = SUCCEEDED (m_pImap->FetchAttachmentContentsToFile (uid, pSection, (LPCSTR)ExternalPathname, pBody->encoding, pBody->subtype));
+			if (!bResult) m_bE188TeilFehlt = TRUE;	// E-188 K1
 		}
 		else
 		{
@@ -3772,6 +3788,7 @@ BOOL CImapDownloader::BreakoutBodyToEmbeddedFile (IMAPUID uid, BODY *pParentBody
 
 	// Go write the contents to the file.
 	bResult = SUCCEEDED (m_pImap->FetchAttachmentContentsToFile (uid, pSection, strFilename, pBody->encoding, pBody->subtype));
+	if (!bResult) m_bE188TeilFehlt = TRUE;	// E-188 K1
 
 	// Set some members of the headerdesc so we can pass it to the EmbeddedElement creation 
 	// routine.
@@ -3906,6 +3923,7 @@ BOOL CImapDownloader::AppendBodyTextToMbxFile (IMAPUID uid, LPSTR pSection, BODY
 	SetDecoder (BodyEncoding);
 
 	bResult = SUCCEEDED (m_pImap->DownloadAttachmentContents (uid, pSection, this));
+	if (!bResult) m_bE188TeilFehlt = TRUE;	// E-188 K1
 
 	ResetDecoder();
 
