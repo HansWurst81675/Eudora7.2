@@ -123,6 +123,7 @@ eine Datei liest, liest diese.
 | [entscheidung-pruefstand-fenster-01-11](entscheidung-pruefstand-fenster-01-11.md) | Gregor erlaubt am 01.11.2026 den vollen Prüfstandslauf (Eudora-Fenster unter C:\Temp) — nur dieser Tag |
 | [entscheidung-pruefstand-fenster-02-11](entscheidung-pruefstand-fenster-02-11.md) | Gregor erlaubt am 02.11.2026 den Prüfstand mit Fenster (Eudora unter C:\Temp) — nur dieser Tag; er testet außerhalb der VM |
 | [entscheidung-pruefstand-fenster-03-11](entscheidung-pruefstand-fenster-03-11.md) | Gregor 03.11.2026 - Prüfstand mit Eudora-Fenster nur an diesem Tag erlaubt (E-128, E-170) |
+| [entscheidung-pruefstand-fenster-04-11](entscheidung-pruefstand-fenster-04-11.md) | Gregor 04.11.2026: Prüfstand mit Eudora-Fenstern heute erlaubt (E-188 unter C:\Temp\E188) |
 | [entscheidung-pruefstand-fenster-30-10](entscheidung-pruefstand-fenster-30-10.md) | Gregor 30.10.2026 ~13:10: Prüfstandsläufe mit Fenster ab sofort erlaubt; er hält sich zurück und testet das Release 7.2.1.128 separat |
 | [entscheidung-pruefstand-fenster-31-10](entscheidung-pruefstand-fenster-31-10.md) | Gregor 31.10.2026 ~19:15 - Prüfstandsläufe mit Fenster heute erlaubt: 'ja, starte auf deinem lokalen prüfstand deine testes, ich halte mich zurück'; VM-Uhr ging ~20 h nach |
 | [entscheidung-reihenfolge-nach-7-2-2-132](entscheidung-reihenfolge-nach-7-2-2-132.md) | Gregor 03.11.2026 - erst 7.2.2.132 mit dem Fertigen; danach E-192, E-199, E-188 (erst messen), E-193 (erst nachstellen); E-129, E-198 nur dokumentiert |
@@ -195,6 +196,7 @@ eine Datei liest, liest diese.
 | [stand-01-11-2026](stand-01-11-2026.md) | Stand 01.11.2026 18:00 - #196 (7.2.1.130) gemergt; Zweig e184_imap_zusammenfassung: E-184 nachgestellt (rot) und behoben (gruen, e23da6be), LEKTOR-118 eingeholt, PRUEFER-75 laeuft; danach PR; K2 als kein Fehler begruenden; Gregor: E-170-Logzeile und E-172-Quelltext erbeten |
 | [stand-02-11-2026](stand-02-11-2026.md) | Stand 02.11.2026 mittags — #199 und #200 gemergt; E-177 behoben (nächstes Paket); nächster Schritt E-143 Suchfenster, Gregor testet E-178 |
 | [stand-03-11-2026-abend](stand-03-11-2026-abend.md) | Stand 03.11.2026 abends — #217 (Paket 7.2.2.132) wartet auf Merge, dann Release; danach E-188-Löschbedingung vor E-199 |
+| [stand-04-11-2026](stand-04-11-2026.md) | Stand 04.11.2026 früh — v7.2.2.132 veröffentlicht; release_7_2_2_132 wartet auf BUCHHALTER, dann PR; E-188 Schritt 1 gesichert, Rest-Ursache im Downloader gefunden |
 | [stand-22-10-2026-abend](stand-22-10-2026-abend.md) | Was am Abend des 22.10.2026 nach dem letzten Merge offen blieb und NICHT im Repo steht - vier Berichtigungen, ein Sicherheitspunkt, das E-124-Ergebnis |
 | [stand-23-10-2026-abend](stand-23-10-2026-abend.md) | Was am 23.10.2026 beim Abschalten offen blieb und in KEINER Repo-Datei steht - die fertige Berichtigung des Testplan-Kopfes, der Zweigname, und was Gregor als naechstes erwartet |
 | [stand-23-10-2026-spaet](stand-23-10-2026-spaet.md) | Stand beim Abschalten am 23.10.2026 spaet - PR 156 offen, BILDBREITE (E-116) mitten in der Arbeit abgebrochen, Regressionstest-Rueckstand ist der erste Schritt |

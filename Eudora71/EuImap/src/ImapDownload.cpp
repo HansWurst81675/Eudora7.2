@@ -993,6 +993,23 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 				{
 					hResult = S_OK;
 				}
+				else
+				{
+					// E-188: hResult stammt hier noch vom gelungenen Kopfabruf
+					// (UIDFetchHeaderFull oben). Bis 7.2.2.132 blieb es S_OK, wenn der
+					// Server den Rumpf verweigerte (NO) oder die Verbindung riss: die
+					// Mail galt als vollstaendig geladen, mit leerem Rumpf, und beim
+					// Verschieben in ein anderes Konto oder nach lokal wurde nur der
+					// Kopf uebertragen und die Quelle geloescht (gemessen, E-188t/f).
+					// Jetzt schneidet der Weg unten die Datei zurueck, und die Mail
+					// bleibt "nicht geladen". Mehrteilige Mails sind hier bewusst nicht
+					// erfasst - dort meldet schon ein einzelner gescheiterter Anhang
+					// FALSE.
+					hResult = E_FAIL;
+					CString szSpur;
+					szSpur.Format("E-188 Rumpf nicht geladen, Mail bleibt ungeladen: uid=%lu", (unsigned long) Uid);
+					::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+				}
 			}
 
 			// Important!! We now have to free the body!!

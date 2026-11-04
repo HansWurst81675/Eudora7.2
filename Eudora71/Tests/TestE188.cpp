@@ -70,6 +70,26 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 	}
 
 	free(pQ);
+
+	// 3. Der Downloader: ein verweigerter Rumpf darf nicht als "geladen" gelten
+	// (E-188t/f: Server antwortet NO auf BODY.PEEK[1]; vorher blieb hResult vom
+	// Kopfabruf S_OK, die Mail galt als vollstaendig geladen).
+	char* pD = QT_LiesNurCode(szEudoraDir, "..\\EuImap\\src\\ImapDownload.cpp");
+	char* pDs = pD ? QT_Abschnitt(pD, "HRESULT CImapDownloader::DownloadSingleMessage (", "void CImapDownloader::CheckMoodScore(") : NULL;
+	if (!pDs)
+		TT_Fail("CImapDownloader::DownloadSingleMessage nicht gefunden - ungeprueft ist nicht gruen");
+	else
+	{
+		long lKopf    = QT_Stelle(pDs, "hResult = m_pImap->UIDFetchHeaderFull (Uid, this);");
+		long lRumpf   = QT_Stelle(pDs, "if ( DownloadSimpleBody (Uid, pBody, \"1\") )");
+		long lFehler  = lRumpf >= 0 ? QT_Stelle(pDs + lRumpf, "hResult = E_FAIL;") : -1;
+		long lFreigeb = lRumpf >= 0 ? QT_Stelle(pDs + lRumpf, "m_pImap->FreeBodyStructure") : -1;
+		TT_CHECK_MSG(lKopf >= 0 && lRumpf > lKopf && lFehler >= 0 && lFehler < lFreigeb,
+					 "ein gescheiterter einfacher Rumpf setzt hResult nicht auf E_FAIL - die Mail gilt als geladen (E-188t/f)");
+		free(pDs);
+	}
+	if (pD) free(pD);
+
 	TT_EndTest();
 }
 
