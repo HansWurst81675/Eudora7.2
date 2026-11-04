@@ -48,10 +48,13 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > **Seit dem 29.10.2026 gibt es keine eigene Paketnummer `1.0.x` mehr**
 > (Gregors Entscheidungen 10 und 20 in [WEITERMACHEN.md](../Intern/WEITERMACHEN.md#entscheidungen)).
 > `VERSION` trägt dieselbe vierteilige Nummer wie `Eudora71/Version.h`.
-> **Seit dem Release 7.2.1.128 heißt jede Fassung `7.2.1.N`**, Testpaket wie
-> Release (Entscheidung 20, 30.10.2026); davor hießen Testpakete `7.2.0.N`. ZIP
-> (`Eudora72-7.2.1.N-release.zip`), Marke (`v7.2.1.N`) und Titelzeile
-> (`Eudora 7.2.1.N+<commit> <Zeit>`) heißen genauso. Die **Endnummer zählt
+> **Seit dem Release 7.2.1.128 heißt jede Fassung `7.2.1.N` für
+> Fehlerbehebungen, `7.2.2.N` mit neuen Funktionen** (Gregor 02.11.2026,
+> Entscheidung 25), Testpaket wie Release (Entscheidung 20, 30.10.2026); davor
+> hießen Testpakete `7.2.0.N`. ZIP (`Eudora72-7.2.1.N-release.zip` bzw.
+> `Eudora72-7.2.2.N-release.zip`), Marke (`v7.2.1.N` bzw. `v7.2.2.N`) und
+> Titelzeile (`Eudora 7.2.1.N+<commit> <Zeit>` bzw. `Eudora 7.2.2.N+…`) heißen
+> genauso. Die **Endnummer zählt
 > über beide Formen weiter**, auch über die alte: auf 1.0.127 folgt 128. Zwei
 > Stände tragen also nie dieselbe Endnummer, und die Werkzeuge, die nur die
 > letzte Stelle vergleichen, bleiben eindeutig. Alles unterhalb dieses Kastens
@@ -91,9 +94,11 @@ Für die nächste Nummer sind es **fünf Zeilen in zwei Dateien**. Beispiel: von
 
 **Ab der Endnummer 128** steht in `VERSION` die ganze Nummer (etwa
 `7.2.1.128` statt `1.0.128`). Für ein Release ändert sich außerdem die dritte Stelle:
-`EUDORA_VERSION3` von `0` auf `1`, und in `EUDORA_BUILD_NUMBER`,
-`EUDORA_BUILD_DESC` und `EUDORA_BUILD_VERSION` entsprechend `7,2,1,N` bzw.
-`7.2.1.N` — **sechs Zeilen**.
+`EUDORA_VERSION3` von `0` auf `1` (7.2.1.N, Fehlerbehebungen) bzw. auf `2`
+(7.2.2.N, mit neuen Funktionen, Gregor 02.11.2026), und in
+`EUDORA_BUILD_NUMBER`, `EUDORA_BUILD_DESC` und `EUDORA_BUILD_VERSION`
+entsprechend `7,2,1,N` bzw. `7.2.1.N` (oder `7,2,2,N` bzw. `7.2.2.N`) —
+**sechs Zeilen**.
 
 > **`EUDORA_BUILD_NUMBER` ist seit 7.2.0.13 nicht mitgezogen worden** und steht
 > am 07.09.2026 auf `7,2,0,12`, während die drei anderen Angaben auf `18`

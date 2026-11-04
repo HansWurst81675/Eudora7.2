@@ -1,8 +1,9 @@
 # Was sich geändert hat
 
-Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **`7.2.1.N`**
-(seit dem Release 7.2.1.128 für Testpaket wie Release, davor `7.2.0.N` für
-ein Testpaket) steht gleich in `Eudora71/Version.h`
+Neueste Fassung zuerst. Jede Nummer gehört genau einem Bau: **`7.2.1.N`** für
+Fehlerbehebungen, **`7.2.2.N`** mit neuen Funktionen (Gregor 02.11.2026;
+beide seit dem Release 7.2.1.128 für Testpaket wie Release, davor `7.2.0.N`
+für ein Testpaket) steht gleich in `Eudora71/Version.h`
 und `VERSION`; die Bau-Kennung im Fenstertitel nennt sie plus den Commit.
 Bis 1.0.127 trug `VERSION` eine eigene Zählung `1.0.N` mit derselben
 Endnummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).
