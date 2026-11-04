@@ -1,7 +1,7 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 13:59:42
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-199 nach der Behebung)
-nur=E-178   (Teillauf, nicht der Gesamtstand)
+zeit=2026-11-04 14:17:22
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-199 geschaerfte Wirkprobe)
+nur=E-178p   (Teillauf, nicht der Gesamtstand)
 faelle=1
 bestanden=1
 fehlgeschlagen=0
