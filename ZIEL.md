@@ -112,8 +112,10 @@ an 7.2.1.128 prüft, und sein Ja ([TESTPLAN](Intern/TESTPLAN.md)). Das Release h
 Von Gregor am 02.11.2026 bestätigt (*„ja, da skönnen wir dann in 7.2.2.x
 aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
 
-* **7.2.1.x bleibt die Reihe für Fehlerbehebungen.** Neue Funktionen gehören
-  nicht dazu (Maßstab für 7.2.1 oben).
+* **7.2.1.x war die Reihe für Fehlerbehebungen** bis 7.2.1.131. Neue
+  Funktionen gehörten nicht dazu (Maßstab für 7.2.1 oben). Seit 7.2.2.132
+  heißt jede Fassung 7.2.2.N, auch eine, die nur Fehler behebt (Gregor
+  04.11.2026, Entscheidung 26 in [WEITERMACHEN](Intern/WEITERMACHEN.md)).
 * **7.2.2 ist die erste Fassung mit neuen Funktionen.** Für sie gelten
   dieselben Punkte 1 bis 4 wie für 7.2.1.x, dazu: jede neue Funktion ist im
   [TESTPLAN](Intern/TESTPLAN.md) mit einem Schritt für Gregor und, wo es geht,
