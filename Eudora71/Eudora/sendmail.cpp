@@ -1285,10 +1285,15 @@ CString Encode2047(const char* source, int len, int lineLimit, int& charsOnLine,
 			Encode2047String(curr->word, StructuredHeader);
 		
 		// worry about line wrapping
+		//	E-221: ">" wie bei der Pruefung oben, ob ein Wort noch dazupasst. Mit
+		//	">=" wurde ein Stueck, das die Zeile GENAU fuellt, erst angenommen
+		//	und dann doch umbrochen - beim ersten Stueck direkt hinter
+		//	"Subject: ", die erste Zeile blieb leer (am herausgezogenen
+		//	Encode2047 gemessen: 201 von 1025 Betreffs mit Umlauten).
 		if (!wrapped)
 		{
 			wrapped = (prev->wordType != k2047Plain || curr->wordType != k2047Plain) &&
-				(lineLimit && (short)(charsOnLine + strlen(curr->word)) >= lineLimit);
+				(lineLimit && (short)(charsOnLine + strlen(curr->word)) > lineLimit);
 		}
 		if (wrapped)
 		{
