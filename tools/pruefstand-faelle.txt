@@ -552,8 +552,12 @@ E-170s | C:\Temp\E170 | 30 | messung | E170S ERGEBNIS vorhanden=1 kopie=1 vorhan
 # E-141: Entwurf aus IMAP nach Out, E-142-Rueckfrage Yes - danach KEINE
 # Meldung "No messages were transferred!". Alter Bau: nicht-uebertragen=1.
 # Gegenprobe IMAP -> lokal und Loeschen in derselben Zeile (lokal, geloescht).
+# Seit E-188 (#220, 04.11.2026) bleibt die nach lokal uebertragene Quelle
+# stehen, weil der Pruefserver den Rumpf nicht liefert ("E-188 Text nicht
+# geladen, Quelle bleibt") - der Server sieht nur noch das ausdrueckliche
+# Loeschen: geloescht=1 (an 7.2.2.132 vor E-188: 2; gemessen 04.11.2026).
 E-141p | C:\Temp\EM141 | 30 | messung | E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1 | | | messen=tools\messen-e141.ps1
-E-141g | C:\Temp\EM141 | 30 | messung | geloescht=2 lebt=1 | | | messen=tools\messen-e141.ps1
+E-141g | C:\Temp\EM141 | 30 | messung | geloescht=1 lebt=1 | | | messen=tools\messen-e141.ps1
 # E-179: Textteil einer gesendeten HTML-Mail (SMTP-Pruefserver). Alter Bau:
 # emoji=kaputt ("%"), kyr=kaputt (0x16), und nach &#x1F525; endet der Text.
 E-179p | C:\Temp\EM179 | 30 | messung | E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1 | | | messen=tools\messen-e179.ps1

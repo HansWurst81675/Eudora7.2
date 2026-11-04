@@ -23,7 +23,9 @@
 # Nachrichten vom Pruefserver) oeffnen, die erste nach dem lokalen "In"
 # uebertragen, die zweite loeschen (ID_MESSAGE_DELETE, die Warnung "You
 # haven't read all those messages" mit OK). Gemessen: das lokale In (In.toc)
-# hat danach einen Eintrag, der Server sah \Deleted fuer beide.
+# hat danach einen Eintrag, der Server sah \Deleted fuer beide (bis E-188; seit
+# E-188, #220, nur fuer die zweite - die erste kam ohne Rumpf an und bleibt
+# in der Quelle stehen, "E-188 Text nicht geladen, Quelle bleibt").
 # lokal-mbx-byte ist die Groesse von In.mbx: der Pruefserver beantwortet
 # "UID FETCH n (UID BODYSTRUCTURE)" ohne Daten, der Rumpf kommt also nicht
 # an (Grenze des Pruefservers, gemessen 02.11.2026 an beiden Bauten gleich -
@@ -32,7 +34,7 @@
 # Ausgabe: Zeilen "E141 ...", darunter
 #   E141 ERGEBNIS hochgeladen=<n> rueckfrage=<n> nicht-uebertragen=<n> expunge=<n> lokal=<n> lokal-mbx-byte=<n> geloescht=<n> lebt=<0|1>
 # Erwartet mit der Behebung: hochgeladen=1 rueckfrage=1 nicht-uebertragen=0
-# lokal=1 geloescht=2 lebt=1; am alten Bau nicht-uebertragen=1.
+# lokal=1 geloescht=1 lebt=1; am alten Bau nicht-uebertragen=1.
 # hochgeladen und rueckfrage sind die Positivprobe: ohne sie ist
 # nicht-uebertragen=0 kein Befund (Arbeitsweise/ausbleiben-ist-kein-befund.md).
 #
