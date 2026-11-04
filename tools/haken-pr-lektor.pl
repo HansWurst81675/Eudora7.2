@@ -20,7 +20,19 @@
 # Ausweg: den LEKTOR ueber den Zweig laufen lassen und seinen Bericht in den
 # Zweig holen. Danach ist er nicht mehr faellig.
 #
-# Gegenprobe: perl tools/haken-pr-lektor.pl --selbsttest (13 Faelle, beide Richtungen).
+# WELCHER BAUM (seit 04.11.2026). Gemessen wird im Arbeitsbaum des Zweigs,
+# der eingereicht wird - nicht im Hauptordner. Bis dahin fuhr der Haken
+# rollen-faellig.pl immer im Hauptordner, und der steht auf main: nach dem
+# Merge von #217 lagen dort Doku-Aenderungen ohne LEKTOR-Bericht, die
+# Berichte LEKTOR-142/143 lagen auf dem einzureichenden Zweig und kamen erst
+# mit dessen Merge nach main. Der Haken sperrte damit jeden PR, bis etwas
+# gemergt war - Gregor legte #218 deshalb selbst an. Der Zweig kommt aus
+# "--head <zweig>" (auch -H), sonst aus "cd <ordner> &&" vor dem Befehl,
+# sonst aus dem Arbeitsordner, den Claude Code mitgibt ("cwd"). Liegt der
+# Zweig in keinem Arbeitsbaum, haelt der Haken auf.
+#
+# Gegenprobe: perl tools/haken-pr-lektor.pl --selbsttest (13 Faelle fuer das
+# Erkennen des Befehls, 7 fuer das Erkennen des Zweigs, beide Richtungen).
 #
 # Kodierung: reines ASCII.
 use strict;
@@ -47,7 +59,16 @@ exit 0 unless $kommando =~ /\bgh[ \t]+pr[ \t]+create\b/;
 # beauftragt" heisst: sein Bericht liegt noch nicht im Zweig. Was sich nicht
 # lesen laesst, haelt auf.
 my $wurzel = "$FindBin::Bin/..";
-my $aus = `cd "$wurzel" && perl tools/rollen-faellig.pl --nur-melden 2>&1`;
+my ($art, $wert) = eingereichter_zweig($kommando, $j->{cwd});
+my $zweig = $art eq 'zweig' ? $wert : aktueller_zweig($wert);
+my $baum = baum_des_zweigs($wurzel, $zweig);
+unless (defined $baum) {
+    print STDERR "KEIN PR: der eingereichte Zweig" . (defined $zweig ? " '$zweig'" : '')
+               . " liegt in keinem Arbeitsbaum - ob sein LEKTOR aktuell ist, laesst sich nicht messen.\n"
+               . "Den Zweig mit \"--head <zweig>\" nennen oder \"gh pr create\" in seinem Arbeitsbaum aufrufen.\n";
+    exit 2;
+}
+my $aus = `cd "$baum" && perl tools/rollen-faellig.pl --nur-melden 2>&1`;
 # Zwei Formen: in der Tabelle ("LEKTOR    aktuell ..." / "faellig, aber
 # beauftragt ...") oder als Punkt unter FAELLIG ("- LEKTOR ist faellig: ...").
 my ($lektor) = $aus =~ /^\s*LEKTOR\s+(\S[^\n]*)/m;
@@ -63,7 +84,8 @@ if ($laufen =~ /^\|\s*LEKTOR\s*\|\s*([^|]+?)\s*\|/m) {
     $lektor = "laeuft noch (eingetragen seit $1, tools/AGENTEN-LAUFEN.md) - erst den Bericht einholen und --fertig LEKTOR";
 }
 if (!defined $lektor or $lektor !~ /^aktuell\b/) {
-    print STDERR "KEIN PR: LEKTOR " . ($lektor // "- Stand nicht lesbar:\n$aus") . "\n\n"
+    print STDERR "KEIN PR: LEKTOR " . ($lektor // "- Stand nicht lesbar:\n$aus") . "\n"
+               . "(gemessen im Arbeitsbaum von '$zweig': $baum)\n\n"
                . "Regel seit 06.09.2026 (Arbeitsweise/daueraufgaben-brauchen-einen-takt.md):\n"
                . "LEKTOR laeuft VOR jedem PR, den Gregor mergen soll. Erst den LEKTOR ueber den\n"
                . "Zweig laufen lassen und seinen Bericht in den Zweig holen, dann den PR anlegen.\n";
@@ -93,6 +115,38 @@ sub nur_befehle {
     $t =~ s/'[^']*'//g;
     $t =~ s/"(?:\\.|[^"\\])*"//g;
     return join("\n", $t, @ausgefuehrt);
+}
+
+# Welcher Zweig wird eingereicht? ('zweig', <name>) aus --head/-H, sonst
+# ('ordner', <pfad>) aus "cd <pfad> &&" vor dem Befehl oder aus dem cwd.
+sub eingereichter_zweig {
+    my ($k, $cwd) = @_;
+    return ('zweig', $1) if $k =~ /\bgh[ \t]+pr[ \t]+create\b[^\n]*?(?:--head|-H)(?:[ \t]+|=)([^\s;&|]+)/;
+    my $ordner = $cwd;
+    while ($k =~ /(?:^|(?<=[;&|\n]))\s*cd[ \t]+([^\s;&|]+)[ \t]*(?:&&|;)/g) { $ordner = $1; }
+    return ('ordner', $ordner);
+}
+
+sub aktueller_zweig {
+    my ($ordner) = @_;
+    return undef unless defined $ordner && length $ordner;
+    my $b = `git -C "$ordner" rev-parse --abbrev-ref HEAD 2>&1`;
+    return undef if $?;
+    $b =~ s/\s+\z//;
+    return length $b ? $b : undef;
+}
+
+sub baum_des_zweigs {
+    my ($wurzel, $zweig) = @_;
+    return undef unless defined $zweig;
+    my $liste = `git -C "$wurzel" worktree list --porcelain 2>&1`;
+    return undef if $?;
+    my $pfad;
+    for my $z (split /\n/, $liste) {
+        $pfad = $1 if $z =~ /^worktree (.+?)\s*$/;
+        return $pfad if defined $pfad && $z =~ m{^branch refs/heads/\Q$zweig\E\s*$};
+    }
+    return undef;
 }
 
 sub lies_datei {
@@ -129,6 +183,23 @@ sub selbsttest {
         printf "  %s Fall %d: soll %s, ist %s\n", ($ist == $soll ? 'ok ' : 'ROT'), $i + 1,
                ($soll ? 'pruefen' : 'durchlassen'), ($ist ? 'pruefen' : 'durchlassen');
     }
-    printf "  Selbsttest: %d Faelle, %d rot.\n", scalar @f, $rot;
+    # Zweig-Erkennung (seit 04.11.2026): [erwartete Art, erwarteter Wert, Befehl, cwd]
+    my @z = (
+        ['zweig',  'e188_x',  "$w --base main --head e188_x --title t", '/c/haupt'],
+        ['zweig',  'e188_x',  "$w -H e188_x", '/c/haupt'],
+        ['zweig',  'e188_x',  "$w --head=e188_x", '/c/haupt'],
+        ['ordner', '.wt/rel', "cd .wt/rel && $w --title t", '/c/haupt'],
+        ['ordner', '/c/haupt', "$w --title t", '/c/haupt'],
+        ['ordner', '/c/b',    "cd /c/a && cd /c/b && $w", '/c/haupt'],
+        ['zweig',  'k',       "cd /c/a && $w --head k", '/c/haupt'],
+    );
+    for my $i (0 .. $#z) {
+        my ($sa, $sw, $k, $cwd) = @{ $z[$i] };
+        my ($ia, $iw) = eingereichter_zweig(nur_befehle($k), $cwd);
+        my $ok = ($ia eq $sa && ($iw // '') eq $sw);
+        $rot++ unless $ok;
+        printf "  %s Zweig %d: soll %s=%s, ist %s=%s\n", ($ok ? 'ok ' : 'ROT'), $i + 1, $sa, $sw, $ia, $iw // '-';
+    }
+    printf "  Selbsttest: %d Faelle, %d rot.\n", scalar(@f) + scalar(@z), $rot;
     exit($rot ? 1 : 0);
 }
