@@ -91,8 +91,13 @@ darunter:
   nicht laden, markiert Eudora sie in der Quelle trotzdem zum Löschen; nach
   lokal geschieht das auch, wenn dort schon eine Mail mit derselben Nummer
   liegt. Die Mail im Ziel prüfen, bevor der Quellordner bereinigt wird
-  (Purge) – bis dahin lässt sie sich zurückholen. Der Fehler stammt aus dem
-  Original und ist noch offen
+  (Purge) – bis dahin lässt sie sich zurückholen. Nach dem Verschieben
+  zwischen zwei IMAP-Konten zeigt der Zielordner manchmal **scheinbar doppelte
+  Einträge** mit dem Betreff der verschobenen Mail: diese **nicht löschen** –
+  einer davon trägt die Nummer einer anderen Mail, die schon vorher im Ordner
+  lag, und das Löschen trifft auf dem Server diese andere Mail (gemessen;
+  nachgetragen am 04.11.2026). Der Fehler stammt aus dem Original, ist im
+  Quellstand behoben und kommt mit der nächsten Fassung
   ([E-188](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-188)).
 * *Festbreite* im Bearbeiten-Modus schreibt `t;` sichtbar in den Text
   ([E-199](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-199)).
