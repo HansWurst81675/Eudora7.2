@@ -90,6 +90,54 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 	}
 	if (pD) free(pD);
 
+	// 4. Die Vorab-Kopie im Ziel wird ueber ihr Merkzeichen gesucht, nicht ueber
+	// die Nummer (E-188k/l/d), und ohne Gegenstueck auf dem Server entfernt
+	// (E-188a/t/u).
+	char* pT = QT_LiesNurCode(szEudoraDir, "..\\EuImap\\src\\ImapToc.cpp");
+	char* pX = QT_LiesNurCode(szEudoraDir, "tocdoc.cpp");
+	char* pQ2 = QT_LiesNurCode(szEudoraDir, "..\\EuImap\\src\\ImapActionQueue.cpp");
+	if (!pT || !pX || !pQ2)
+		TT_Fail("ImapToc.cpp, tocdoc.cpp oder ImapActionQueue.cpp nicht lesbar - ungeprueft ist nicht gruen");
+	else
+	{
+		char* pLok = QT_Abschnitt(pT, "BOOL CTocDoc::ImapCopyMsgFromImapToLocal (", "BOOL CTocDoc::ImapCopyMsgBetweenAccounts (");
+		char* pKon = QT_Abschnitt(pT, "BOOL CTocDoc::ImapCopyMsgBetweenAccounts (", "CSummary *CTocDoc::ImapTransferSummaryData(");
+		if (!pLok || !pKon)
+			TT_Fail("ImapCopyMsgFromImapToLocal oder ImapCopyMsgBetweenAccounts nicht gefunden - ungeprueft ist nicht gruen");
+		else
+		{
+			TT_CHECK_MSG(QT_Enthaelt(pLok, "E184FindeVorabKopie(pTargetToc, pSum->GetHash())") &&
+						 !QT_Enthaelt(pLok, "pTargetToc->GetSummaryFromUID(pSum->GetHash())"),
+						 "nach lokal wird die Vorab-Kopie wieder ueber die Nummer gesucht - trifft eine fremde Mail (E-188l)");
+			TT_CHECK_MSG(QT_Enthaelt(pKon, "E184FindeVorabKopie(pTargetToc, pSum->GetHash())") &&
+						 !QT_Enthaelt(pKon, "pTargetToc->GetSummaryFromUID(pSum->GetHash())"),
+						 "zwischen Konten wird die Vorab-Kopie wieder ueber die Nummer gesucht - ueberschreibt eine fremde Mail (E-188k)");
+		}
+		if (pLok) free(pLok);
+		if (pKon) free(pKon);
+
+		TT_CHECK_MSG(QT_Enthaelt(pX, "else if (IsImapToc() && !TargetToc->IsImapToc() && Sum->IsNotFullyIMAPDownloaded())"),
+					 "CTocDoc::Xfer markiert die Vorab-Kopie nach lokal nicht - die Suche findet sie nicht (E-188l)");
+
+		char* pK2 = QT_Abschnitt(pQ2, "void CImapCrossServerTransferMsgAction::DoPostProcessing()",
+								 "CImapToLocalTransferMsgAction::CImapToLocalTransferMsgAction(");
+		if (!pK2)
+			TT_Fail("CImapCrossServerTransferMsgAction::DoPostProcessing nicht gefunden - ungeprueft ist nicht gruen");
+		else
+		{
+			TT_CHECK_MSG(QT_Enthaelt(pK2, "E189VorabKopienEntfernen(m_pDestTocDoc, szAlt);"),
+						 "zwischen Konten bleibt die Vorab-Kopie ohne Gegenstueck im Ziel stehen (E-188a/t/u)");
+			long lReset = QT_Stelle(pK2, "pCopySum = NULL;");
+			long lAufruf = QT_Stelle(pK2, "m_pTocDoc->ImapCopyMsgBetweenAccounts(");
+			TT_CHECK_MSG(lReset >= 0 && lReset < lAufruf,
+						 "pCopySum wird nicht je Mail zurueckgesetzt - die Kopie der vorigen Mail gilt fuer die naechste");
+			free(pK2);
+		}
+	}
+	if (pT) free(pT);
+	if (pX) free(pX);
+	if (pQ2) free(pQ2);
+
 	TT_EndTest();
 }
 

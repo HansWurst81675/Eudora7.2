@@ -1205,7 +1205,13 @@ BOOL CTocDoc::ImapCopyMsgFromImapToLocal (CSummary *pSum, CTocDoc *pTargetToc, C
 			// transfer that was done earlier did all the work already.)  We expect to find a
 			// summary for this message in the target toc (since we did a local copy) but in some
 			// failure cases there is no copy.  We handle both of those cases below.
-			CSummary		*pCopySum = pTargetToc->GetSummaryFromUID(pSum->GetHash());
+			// E-188: die Vorab-Kopie aus CTocDoc::Xfer ueber ihr Merkzeichen suchen, nicht
+			// ueber die Nummer - die gilt je Ordner, und bis 7.2.2.132 traf die Suche eine
+			// Mail, die im Ziel schon dieselbe Nummer trug: deren Eintrag zeigte danach
+			// auf den neuen Text, der neue Eintrag blieb ohne Text (Fall E-188l).
+			CSummary		*pCopySum = E184FindeVorabKopie(pTargetToc, pSum->GetHash());
+			if (pCopySum)
+				pCopySum->SetE184Vorab(FALSE);
 			if (pCopySum)
 			{
 				// We found the summary in the target toc so subtract the summary from the target toc,
@@ -1311,9 +1317,14 @@ BOOL CTocDoc::ImapCopyMsgBetweenAccounts (CSummary *pSum, CTocDoc *pTargetToc, C
 		bResult = RewriteMbxStub (pSum, this, pTargetToc, NewUid, MStart, NewLength);
 		if (bResult)
 		{ 
-			CSummary		*pCopySum = pTargetToc->GetSummaryFromUID(pSum->GetHash());
+			// E-188: wie E-184 innerhalb eines Kontos - nur die markierte Vorab-Kopie,
+			// nie eine fremde Mail mit derselben Nummer (bis 7.2.2.132 ueberschrieben,
+			// Fall E-188k; wer die scheinbaren Doppel loeschte, loeschte die fremde
+			// Mail auf dem Server, Fall E-188d).
+			CSummary		*pCopySum = E184FindeVorabKopie(pTargetToc, pSum->GetHash());
 			if (pCopySum)
 			{
+				pCopySum->SetE184Vorab(FALSE);
 				pTargetToc->SubtractSum(pCopySum);
 			}
 			else

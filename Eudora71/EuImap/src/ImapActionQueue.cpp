@@ -2154,6 +2154,7 @@ void CImapCrossServerTransferMsgAction::DoPostProcessing()
 			// Kopf an - bis 7.2.2.132 geschah das, und die Quelle wurde trotzdem
 			// geloescht (gemessen, Fall E-188t). Dann lieber gar nicht hochladen.
 			bool bAngekommen = false;
+			pCopySum = NULL;	// E-188: sonst bliebe die Kopie der vorigen Mail stehen
 			if (!pSum->HasAttachment() && pSum->IsNotFullyIMAPDownloaded())
 			{
 				CString szSpur;
@@ -2163,6 +2164,17 @@ void CImapCrossServerTransferMsgAction::DoPostProcessing()
 			else if (m_pTocDoc->ImapCopyMsgBetweenAccounts(pSum, m_pDestTocDoc, &pCopySum))
 			{
 				bAngekommen = true;
+			}
+			// E-188: bleibt die Vorab-Kopie im Ziel ohne Gegenstueck auf dem Server -
+			// nicht angekommen (E-188a/t) oder ohne APPENDUID keine neue Nummer
+			// (E-188u) -, traegt sie die alte Nummer, die im Ziel einer fremden Mail
+			// gehoeren kann. Wie bei E-189 entfernen; ohne APPENDUID kommt die Kopie
+			// mit dem naechsten Abgleich unter ihrer richtigen Nummer.
+			if (!pCopySum && m_pDestTocDoc)
+			{
+				CString szAlt;
+				szAlt.Format("%lu", pSum->GetHash());
+				E189VorabKopienEntfernen(m_pDestTocDoc, szAlt);
 			}
 			if (bAngekommen)
 			{
