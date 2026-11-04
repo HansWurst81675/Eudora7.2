@@ -975,6 +975,13 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 				{
 					hResult = S_OK;
 				}
+				else
+				{
+					// E-188 (PRUEFER-95 K1): auch ein Scheitern ohne markierte Abrufstelle -
+					// etwa der Kopf einer eingebetteten Mail (message/rfc822,
+					// UIDFetchRFC822Header) - laesst die Mail "nicht geladen".
+					m_bE188TeilFehlt = TRUE;
+				}
 
 				// If we saved embedded content lines, go write those out.
 				WriteEmbeddedElements( m_pHd->m_isMHTML );
@@ -987,6 +994,10 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 				if ( DownloadSubMessage (Uid, pBody, "1") )
 				{
 					hResult = S_OK;
+				}
+				else
+				{
+					m_bE188TeilFehlt = TRUE;	// E-188 (PRUEFER-95 K1), wie oben
 				}
 			}
 			else
@@ -1091,6 +1102,9 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 		// (gemessen: E-188tm/fm, nur der Kopf kam an, die Quelle wurde geloescht).
 		if (m_bE188TeilFehlt)
 		{
+			// Setzen, nicht nur stehen lassen: auf den Wegen DownloadRemainingMessages(MT)
+			// ist die Zusammenfassung neu und das Merkzeichen sonst leer (PRUEFER-95 K2).
+			pSum->m_Imflags |= IMFLAGS_NOT_DOWNLOADED;
 			CString szSpur;
 			szSpur.Format("E-188 Teil des Rumpfs nicht geladen, Mail bleibt ungeladen: uid=%lu", (unsigned long) Uid);
 			::PutDebugLog(DEBUG_MASK_MISC, szSpur);

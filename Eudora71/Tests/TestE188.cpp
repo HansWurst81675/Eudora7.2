@@ -103,7 +103,29 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 	if (pD)
 		TT_CHECK_MSG(QT_Zaehle(pD, "if (!bResult) m_bE188TeilFehlt = TRUE;") == 4,
 					 "nicht jede Abrufstelle eines Teils merkt sich das Scheitern (E-188tm/fm)");
+	// PRUEFER-95 K1/K2: auch ein Scheitern der mehrteiligen bzw. eingebetteten Mail
+	// als Ganzes zaehlt, und das Merkzeichen wird GESETZT, nicht nur stehen gelassen.
+	if (pD)
+	{
+		TT_CHECK_MSG(QT_Zaehle(pD, "else { m_bE188TeilFehlt = TRUE; }") == 2,
+					 "ein Scheitern von DownloadMultipartBody/DownloadSubMessage als Ganzes zaehlt nicht als fehlender Teil (PRUEFER-95 K1)");
+		TT_CHECK_MSG(QT_Enthaelt(pD, "if (m_bE188TeilFehlt) { pSum->m_Imflags |= IMFLAGS_NOT_DOWNLOADED;"),
+					 "fehlt ein Teil, wird \"nicht geladen\" nicht gesetzt - bei einer neuen Zusammenfassung bleibt es leer (PRUEFER-95 K2)");
+	}
 	if (pD) free(pD);
+
+	// PRUEFER-95 K2: die Wege DownloadRemainingMessages(MT) loeschen "nicht geladen" nicht mehr selbst.
+	{
+		char* pC = QT_LiesNurCode(szEudoraDir, "..\\EuImap\\src\\ImapChecker.cpp");
+		char* pM = QT_LiesNurCode(szEudoraDir, "..\\EuImap\\src\\ImapMailbox.cpp");
+		if (!pC || !pM)
+			TT_Fail("ImapChecker.cpp oder ImapMailbox.cpp nicht lesbar - ungeprueft ist nicht gruen");
+		else
+			TT_CHECK_MSG(!QT_Enthaelt(pC, "&= ~IMFLAGS_NOT_DOWNLOADED") && !QT_Enthaelt(pM, "&= ~IMFLAGS_NOT_DOWNLOADED"),
+						 "DownloadRemainingMessages(MT) loescht \"nicht geladen\" wieder ohne Bedingung (PRUEFER-95 K2)");
+		if (pC) free(pC);
+		if (pM) free(pM);
+	}
 
 	// 4. Die Vorab-Kopie im Ziel wird ueber ihr Merkzeichen gesucht, nicht ueber
 	// die Nummer (E-188k/l/d), und ohne Gegenstueck auf dem Server entfernt
