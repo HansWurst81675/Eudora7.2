@@ -1,17 +1,13 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 11:36:47
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-188 nach PRUEFER-96)
-nur=E-188   (Teillauf, nicht der Gesamtstand)
-faelle=10
-bestanden=10
-fehlgeschlagen=0
-fall=[ ok ] E-188k   E188 ERGEBNIS weg=konten anzeige=richtig
-fall=[ ok ] E-188a   E188 ERGEBNIS weg=append
-fall=[ ok ] E-188u   E188 ERGEBNIS weg=ohneuid anzeige=richtig
-fall=[ ok ] E-188t   E188 ERGEBNIS weg=kontentext anzeige=richtig
-fall=[ ok ] E-188l   E188 ERGEBNIS weg=lokal anzeige=richtig
-fall=[ ok ] E-188f   E188 ERGEBNIS weg=fetch
-fall=[ ok ] E-188tm  E188 ERGEBNIS weg=kontenmehr
-fall=[ ok ] E-188fm  E188 ERGEBNIS weg=fetchmehr
-fall=[ ok ] E-188e   E188 ERGEBNIS weg=lokaleins anzeige=richtig
-fall=[ ok ] E-188d   E188 LOESCHEN GEMESSEN fremd-lebt=1
+zeit=2026-11-04 13:52:51
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-199 rot vor der Behebung)
+nur=E-178p   (Teillauf, nicht der Gesamtstand)
+faelle=1
+bestanden=0
+fehlgeschlagen=1
+fall=[FEHL] E-178p   fehlt in messung: E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1
+             gemeldet: E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=kaputt antwort=passt lebt=1
+                         Beende per WM_CLOSE an das gemessene Handle.
+                         Zeit vom WM_CLOSE bis zum Ende: 1 s
+                         Beendet: True
+                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\e199\tools\TESTLAEUFE.md

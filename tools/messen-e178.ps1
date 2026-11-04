@@ -408,8 +408,18 @@ foreach ($zl in ($teil -split "`r?`n")) { if ($zl) { Write-Host ("E178 MBX {0}" 
 $vier = $teil.Contains('&#128293;') -or $teil.Contains(([string][char]0xF0) + [char]0x9F + [char]0x94 + [char]0xA5)
 $kyr  = $teil.Contains('&#1046;') -or $teil.Contains(([string][char]0xD0) + [char]0x96)
 $frage = ([regex]::Matches($teil, '\?')).Count
+# E-199: Zeichenmuell "t;" (der Rest von "&gt;", den WrapTag/SplitTagOff
+# abschnitten) - in der ganzen zuletzt gespeicherten Fassung, nicht nur im
+# Abschnitt oben: am 02.11.2026 stand er als "<TT>t;Vierbyte" VOR dem
+# Abschnitt und als "<LI>t; <BR>" dahinter. Gezaehlt wird "t;" ohne
+# Buchstabe, Ziffer, "#" oder "&" davor - "&gt;", "&quot;" zaehlen nicht.
+$letzte = $t.LastIndexOf('From ???@???')
+$ganz = if ($letzte -ge 0) { $t.Substring($letzte) } else { $t }
+$muell = ([regex]::Matches($ganz, '(?<![A-Za-z0-9#&])t;')).Count
+foreach ($m in [regex]::Matches($ganz, '.{0,20}(?<![A-Za-z0-9#&])t;.{0,20}')) { Write-Host ("E178 MUELL {0}" -f ($m.Value -replace "`r?`n", ' ')) }
 Write-Host ("E178 GESPEICHERT geschrieben={0} vierbyte={1} kyrillisch={2} fragezeichen={3} fassungen={4}" -f [int]$geschrieben, [int]$vier, [int]$kyr, $frage, ([regex]::Matches($t, 'Vierbyte')).Count)
-if ($geschrieben) { $erg.gespeichert = $(if ($vier -and $kyr -and $frage -eq 0) { 'passt' } else { 'kaputt' }) }
+Write-Host ("E178 MUELL anzahl={0}" -f $muell)
+if ($geschrieben) { $erg.gespeichert = $(if ($vier -and $kyr -and $frage -eq 0 -and $muell -eq 0) { 'passt' } else { 'kaputt' }) }
 
 # --- Antwort auf markierten Text ---------------------------------------------
 # CReadMessageDoc -> CMessageDoc::GetSelectedText -> CTridentView::
