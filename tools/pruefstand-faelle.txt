@@ -267,8 +267,9 @@ E-184m | C:\Temp\E184 | 20 | messung | E184M ERGEBNIS richtig=3 falsch=0 eintrae
 # Serverbestand aus deren Protokoll (--zustand), nicht aus der Anzeige.
 # Erwartet ohne Fehler: Anzeige richtig und keine Mail, die am Ende auf
 # keinem Server ohne \Deleted steht (bzw. nach lokal: deren Text lokal fehlt).
-# Pruefstand C:\Temp\E188: Programm aus C:\Temp\E128 (7.2.2.132),
-# Mailverzeichnis aus C:\Temp\E184; -Vorbereiten legt das zweite Konto an.
+# Pruefstand C:\Temp\E188: Programm = der zu messende Bau, nach C:\Temp\E188
+# kopiert (Gegenprobe: 7.2.2.132 aus C:\Temp\E128); Mailverzeichnis aus
+# C:\Temp\E184; -Vorbereiten legt das zweite Konto an.
 E-188k | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=konten anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188k.ps1
 E-188a | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=append | E188 SERVER VERLOREN | | messen=tools\messen-e188a.ps1
 E-188u | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=ohneuid anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188u.ps1

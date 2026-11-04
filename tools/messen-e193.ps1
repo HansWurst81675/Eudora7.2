@@ -14,7 +14,7 @@
 # das Wort nicht. Welche Suche falsch ist, war offen. Gregor am 03.11.2026:
 # "erst nachstellen, dann entscheiden".
 #
-# TESTDATEN (Testdaten/e193-m0..m7-*.eml, anonym, Adressen auf .invalid),
+# TESTDATEN (Testdaten/e193-m0..m8-*.eml, anonym, Adressen auf .invalid),
 # je Mail ein eigenes Wort, damit jeder Treffer zuzuordnen ist:
 #   m0 nur ASCII ("Zebrafink")                 - Gegenprobe
 #   m1 text/plain ISO-8859-1 8bit ("Gruesse", "Kraeuterkueche")
@@ -32,7 +32,7 @@
 # ABLAUF
 #   -Vorbereiten: Postfaecher In/Out/Trash weg, UseIndexedSearch=1,
 #     FindMsgsCriteria1=Anywhere;contains;, POP-Pruefserver
-#     (tools/anhang-pruefdaten.pl --pop --nur-eml) mit den acht Mails.
+#     (tools/anhang-pruefdaten.pl --pop --nur-eml) mit den neun Mails.
 #   Messen:
 #     1. Post holen (32772), POP-Server beenden, In.mbx lesen: in welcher
 #        Form steht jedes Wort dort (latin1 / utf8 / qp / entitaet / fehlt)?
