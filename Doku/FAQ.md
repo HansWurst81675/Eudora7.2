@@ -14,7 +14,7 @@ niemand angeklickt). Auf eine Frage verweist man mit ihrer Nummer, etwa
 |---|---|
 | Neue Fassung, Start | [1](#1-wie-nehme-ich-bei-einer-neuen-fassung-post-konten-und-filter-mit) |
 | Abruf und Verschlüsselung | [2](#2-welche-verschlüsselung-und-welchen-port-nehme-ich), [3](#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist), [4](#4-es-kommt-ein-zertifikatsdialog-oder-ssl-negotiation-failed--was-tun) |
-| IMAP | [5](#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt) |
+| IMAP | [5](#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt), [20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu) |
 | Konten und Adressen | [6](#6-wie-trenne-ich-die-post-verschiedener-konten), [7](#7-wie-lege-ich-ein-zweites-konto-an), [8](#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben) |
 | Markieren und Filtern | [9](#9-wie-markiere-ich-wichtige-mails-farbig), [10](#10-wie-baue-ich-schnell-einen-filter-aus-einer-mail), [11](#11-wie-speichere-ich-einen-filter), [12](#12-filter-messages-strgj-tut-nichts), [13](#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte) |
 | Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus) |
@@ -408,3 +408,29 @@ Jede Zeile lässt sich zurückdrehen, indem man den Original-Wert in die eigene
 
 *Belegt:* Werte am 29.10.2026 in `tools/DEudora.ini` und `EudoraRes.rc` gegen
 das Original (erster Commit des Repos) nachgesehen.
+
+## 20. Warum holt Eudora eine IMAP-Mail bei jedem Öffnen neu?
+
+Weil ein Teil der Mail fehlt und Eudora ihn nicht aufgibt. Verweigert ein
+IMAP-Server **dauerhaft** einen Teil einer Mail (einen Anhang, ein
+eingebettetes Bild, eine weitergeleitete Mail), zeigt Eudora, was
+angekommen ist, und merkt sich die Mail als *nicht ganz geladen*. Bei jedem
+Anzeigen versucht es den Rest erneut. Dabei kann die Postfachdatei wachsen,
+und der Anhangordner bekommt die angekommenen Anhänge jedes Mal als neue
+Dateien.
+
+Der Preis ist Platz, nicht Post. Verschieben Sie so eine Mail in ein anderes
+IMAP-Konto oder in ein lokales Postfach, **bleibt sie in der Quelle stehen**,
+statt dort gelöscht zu werden — sonst ginge auf dem Server verloren, was nie
+vollständig angekommen ist. Gregor hat das am 04.11.2026 so entschieden:
+*„Sicherheit vor Platz“*.
+
+Verweigert der Server den Teil nur einmal, holt das nächste Öffnen die Mail
+vollständig, und das Neuholen hört auf. Ob *Compact* die gewachsene
+Postfachdatei bei IMAP-Ordnern wieder verkleinert, ist **nicht gemessen**.
+
+Das gilt **ab der nächsten Fassung** (im Quellstand, noch in keinem Paket).
+
+*Am Quelltext nachgesehen* und für Kopf und Text am Prüfstand gemessen
+([E-188](../Intern/BEFUNDE.md#e-188)); die Entscheidung steht in
+`Arbeitsweise/entscheidung-e188-k3-sicherheit-vor-platz.md`.
