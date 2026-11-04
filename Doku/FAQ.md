@@ -306,6 +306,11 @@ Auf derselben Seite regelt *„Delete automatic attachments“*, was mit Dateien
 geschieht, die Eudora selbst anhängt (*Never*, *After sending message*,
 *When message emptied from Trash* — ab Werk das letzte).
 
+Eine Ausnahme gilt ab der nächsten Fassung: Bei einer IMAP-Mail, die nie ganz
+geladen wurde, bleiben die dabei gesammelten Anhangdateien nach dem Löschen
+liegen (am Quelltext belegt), siehe
+[Frage 20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu).
+
 *Am Programm geprüft* von Gregor am 29.10.2026 an Paket 1.0.127
 (*„funktioniert“*): mit `TidyAttach=1` waren nach *Empty Trash* die fünf
 Anhänge der gelöschten Mail aus dem Anhangverzeichnis verschwunden, die
@@ -425,8 +430,9 @@ statt dort gelöscht zu werden — sonst ginge auf dem Server verloren, was nie
 vollständig angekommen ist. Gregor hat das am 04.11.2026 so entschieden:
 *„Sicherheit vor Platz“*.
 
-Drei Folgen, die Sie kennen sollten (je *am Quelltext belegt*, nicht am
-Programm gemessen):
+Drei Folgen, die Sie kennen sollten (die ersten beiden *am Quelltext
+belegt*, nicht am Programm gemessen; die dritte *am Prüfstand gemessen*
+beim Verschieben nach lokal, zwischen zwei Konten am Quelltext belegt):
 
 * Löschen Sie die Mail, **bleiben die gesammelten Anhangdateien** im
   Anhangordner liegen; Eudora räumt sie dabei nicht weg.
@@ -437,6 +443,12 @@ Programm gemessen):
   nicht von Hand, und halten Sie den leeren Eintrag nicht für die
   verschobene Mail.
 
+Steckt der verweigerte Teil in einer **weitergeleiteten Mail** (als Anhang
+eingebettet), bricht die Anzeige dort ab: die Teile der äußeren Mail dahinter
+erscheinen in dieser Ladung nicht. Die Mail bleibt „nicht geladen“ und wird
+beim nächsten Öffnen neu geholt; verloren geht nichts
+([PRÜFER-97](../Befunde/PRUEFER-97.md#k1) K1, am Quelltext belegt).
+
 Verweigert der Server den Teil nur einmal, holt das nächste Öffnen die Mail
 vollständig, und das Neuholen hört auf. Ob *Compact* die gewachsene
 Postfachdatei bei IMAP-Ordnern wieder verkleinert, ist **nicht gemessen**.
@@ -445,9 +457,12 @@ Das gilt **ab der nächsten Fassung** (im Quellstand, noch in keinem Paket).
 
 *Am Quelltext belegt* ([PRÜFER-95](../Befunde/PRUEFER-95.md#k3) K3,
 [E-188](../Intern/BEFUNDE.md#e-188)): dass die Mail bei jedem Anzeigen neu
-geholt wird, dass Datei und Anhangordner wachsen und die drei Folgen oben;
+geholt wird, dass Datei und Anhangordner wachsen, die ersten beiden Folgen
+oben und der Abbruch der Anzeige hinter einer fehlerhaften weitergeleiteten
+Mail;
 die Beispiele (Anhang, eingebettetes Bild) sind nicht gemessen. *Am Prüfstand
-gemessen* ist nur, dass die Mail beim Verschieben in der Quelle bleibt, und
-zwar für eine HTML-Mail, deren Teile alle verweigert werden (Fälle `E-188tm`
-und `E-188fm`). Die Entscheidung steht in
+gemessen* sind nur zwei Dinge: dass die Mail beim Verschieben in der Quelle
+bleibt, und zwar für eine HTML-Mail, deren Teile alle verweigert werden
+(Fälle `E-188tm` und `E-188fm`), und der leere Eintrag beim Verschieben nach
+lokal (Fälle `E-188f` und `E-188fm`). Die Entscheidung steht in
 `Arbeitsweise/entscheidung-e188-k3-sicherheit-vor-platz.md`.

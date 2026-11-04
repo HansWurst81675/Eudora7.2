@@ -413,8 +413,10 @@ lokalen *In*.
 
 **Bestanden** heißt `passt` bei `tt`, `link` und `gespeichert` — und bei
 `antwort` erst, wenn die Antwort nachweislich nur die Markierung zitiert.
-Das Urteil sieht nur die beiden Zeichen: einen leeren Link, den `t;`-Rest aus
-[E-199](BEFUNDE.md#e-199) oder ein Vollzitat erkennt es nicht.
+Das Urteil sieht nur die beiden Zeichen: einen leeren Link oder ein Vollzitat
+erkennt es nicht. Den `t;`-Rest aus [E-199](BEFUNDE.md#e-199) erkennt seit
+`4ae1c87e` die Wirkprobe (Zeile `E178 MUELL`; nicht hinter einem Buchstaben
+oder einer Ziffer).
 
 Bis 7.2.1.129 machten *Make Hyperlink* und *Festbreite* aus dem Emoji schon
 auf dem Bildschirm `??` (gemessen am 02.11.2026 am Bau 7.2.1.128+d3a625fd\*,
