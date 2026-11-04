@@ -184,6 +184,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.133 — Testpaket, Zweig `paket_7_2_2_133`
+
+**Nur übersetzt am 04.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer nach Entscheidung 26 (Gregor 04.11.2026: *„7.2.2.133“*, auch eine Fassung, die nur Fehler behebt, trägt 7.2.2.N); Zweigname von Gregor am 04.11.2026 bestätigt (Sammelzweig mit [E-192](../Intern/BEFUNDE.md#e-192), [E-193](../Intern/BEFUNDE.md#e-193), [E-220](../Intern/BEFUNDE.md#e-220), [E-221](../Intern/BEFUNDE.md#e-221), dazu aus `main` [E-188](../Intern/BEFUNDE.md#e-188) und [E-199](../Intern/BEFUNDE.md#e-199)). Gregor wünscht es sich neben seinem letzten Testverzeichnis, um vor allem die Suche an seinen großen Postfächern zu prüfen ([TESTPLAN](../Intern/TESTPLAN.md#test-7-2-2-133)). Kein Release — veröffentlicht wird nur mit Gregors Ja.
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.133.
+
 ## 7.2.2.132 — Release `v7.2.2.132`, Zweig `paket_7_2_2_132` (gemergt als #217)
 
 **Geschnürt am 03.11.2026 um 12:41, bereitgestellt neben Gregors letztem Testverzeichnis, ZIP daneben; veröffentlicht am 03.11.2026 als [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132)** (Latest, 17:38:35 UTC, Marke auf `7a8118e5` = Merge `7de75dcf` von #217 plus die Berichtigung von `tools/release-veroeffentlichen.ps1`, die die Reihe 7.2.2.N zulässt) nach Gregors Ja: *„ja, wir können es auf github releasen, dann mit den anderen punkten fortfahren.“* Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Gregors Ja kam vor der Messung des Mailverlusts aus [E-188](../Intern/BEFUNDE.md#e-188); danach gefragt, entschied er am selben Abend: *„Stehen lassen“* — die Warnung steht in den Release-Notizen, E-188 wird als Nächstes behoben. Nummer am 02.11.2026 vereinbart (Gregor: *„7.2.2.132, ja“*), Zweigname von Gregor am 03.11.2026 bestätigt. Die erste Fassung der Reihe 7.2.2 (neue Funktionen: Hilfe-Menü [A-5](../Intern/BEFUNDE.md#a-5), About-Dialog [E-216](../Intern/BEFUNDE.md#e-216), *Speichern unter* mit passender Endung [E-128](../Intern/BEFUNDE.md#e-128)). Gregor hat damit am 03.11.2026 die Schritte aus dem [TESTPLAN](../Intern/TESTPLAN.md#test-7-2-2-132) getestet: **alle zwölf Schritte bestanden**.

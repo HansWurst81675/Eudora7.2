@@ -1,6 +1,30 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.2.132 (Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 04.11.2026 (auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.133 (Testpaket, nur übersetzt am 04.11.2026, noch nicht geschnürt, nicht veröffentlicht; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 04.11.2026 (auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+
+## <a id="test-7-2-2-133"></a>Dein Test an 7.2.2.133 — ca. 15 Minuten, an deinem echten System
+
+**Hier steht nur, was der Prüfstand nicht kann:** deine echten Konten und
+Server, deine großen Postfächer, deine Einstellungen und Filter. 7.2.2.133 ist
+ein **Testpaket** mit Fehlerbehebungen, keine neue Funktion. Wichtigster
+Punkt ist die Suche (Schritt 4); bei ihr misst nur dein Bestand, ob sie schnell
+genug ist. Für die Schritte 6 und 7 bitte nur Mails nehmen, die du dir selbst
+geschickt hast.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.133+` beginnt. |
+| 2 | POP | Post abrufen (*File → Check Mail*). | neue Post im lokalen *In* ankommt und *Task Errors* nichts meldet. |
+| 3 | SMTP | Eine Mail an dich selbst senden, Betreff mit Umlauten, 40 bis 60 Zeichen lang ([E-221](BEFUNDE.md#e-221)). | sie beim nächsten Abruf in der Postfachliste mit dem **ganzen** Betreff steht, die ersten Zeichen eingeschlossen. |
+| 4 | lokal | *Tools → Find Messages* mit einem Wort ohne Umlaut, dann mit „€“, mit „ä“, mit „öft“ und mit einem Umlaut-Wort aus einer HTML-Mail ([E-193](BEFUNDE.md#e-193), ausführlich [unten](#e-193-naechstes)). | ohne Umlaut alles wie bisher; mit Umlaut oder € nur Mails, in denen das Zeichen wirklich steht, die HTML-Mail ist dabei, und die Dauer ist für dich in Ordnung — wenn nicht: ungefähr wie lange, bei wie vielen Mails. |
+| 5 | lokal | Die Mail aus Schritt 3 markieren, *File → Save As* ([E-220](BEFUNDE.md#e-220)). | im Feld *Dateiname* der ganze Betreff mit Umlauten steht und *Speichern* ohne Änderung die Datei anlegt. |
+| 6 | IMAP | In einem IMAP-Ordner zwei oder drei eigene Mails markieren, die Liste vorher nach **Datum** sortiert, und mit *Entf* in den Papierkorb — nur wenn Löschen bei dir in den IMAP-Papierkorb verschiebt, sonst überspringen ([E-192](BEFUNDE.md#e-192)). | im Papierkorb jede Mail mit ihrem eigenen Betreff steht und beim Öffnen ihren eigenen Text zeigt. |
+| 7 | IMAP | Eine eigene Mail aus einem IMAP-Ordner in ein **lokales** Postfach ziehen ([E-188](BEFUNDE.md#e-188)). | sie im lokalen Postfach vollständig ist (öffnen) und erst danach im IMAP-Ordner verschwindet. |
+| 8 | lokal | Eine empfangene Mail öffnen, in den Bearbeiten-Modus schalten (Knopf mit dem Hinweistext *Edit the message*), ein Wort markieren, *Festbreite* ([E-199](BEFUNDE.md#e-199)). | das Wort in fester Breite erscheint und **kein** `t;` im Text steht. |
+| 9 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
+bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
 ## <a id="test-7-2-2-132"></a>Dein Test an 7.2.2.132 — ca. 15 Minuten, an deinem echten System
 
