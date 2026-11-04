@@ -34,7 +34,9 @@ static void Test_E199_Abschneiden(const char* szEudoraDir)
 	}
 
 	const char* szPruefung = ".Right(2) == \"\\r\\n\")";
-	const char* szSchnitt  = ".GetLength() - 2 );";
+	// PRUEFER-98 K2: jedes "GetLength() - 2" zaehlt, nicht nur die Schreibweise
+	// mit Left( ... ) - ein zusaetzliches Delete(x.GetLength() - 2, 2) blieb sonst gruen.
+	const char* szSchnitt  = "GetLength() - 2";
 
 	char* pSplit = QT_Abschnitt(pT, "BOOL CTridentReadMessageView::SplitTagOff(", "void CTridentReadMessageView::OnUpdateSize(");
 	long  lWrap  = QT_Stelle(pT, "BOOL CTridentReadMessageView::WrapTag(");

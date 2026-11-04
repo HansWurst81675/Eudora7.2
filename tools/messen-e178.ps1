@@ -418,8 +418,15 @@ $ganz = if ($letzte -ge 0) { $t.Substring($letzte) } else { $t }
 $muell = ([regex]::Matches($ganz, '(?<![A-Za-z0-9#&])t;')).Count
 foreach ($m in [regex]::Matches($ganz, '.{0,20}(?<![A-Za-z0-9#&])t;.{0,20}')) { Write-Host ("E178 MUELL {0}" -f ($m.Value -replace "`r?`n", ' ')) }
 Write-Host ("E178 GESPEICHERT geschrieben={0} vierbyte={1} kyrillisch={2} fragezeichen={3} fassungen={4}" -f [int]$geschrieben, [int]$vier, [int]$kyr, $frage, ([regex]::Matches($t, 'Vierbyte')).Count)
-Write-Host ("E178 MUELL anzahl={0}" -f $muell)
-if ($geschrieben) { $erg.gespeichert = $(if ($vier -and $kyr -and $frage -eq 0 -and $muell -eq 0) { 'passt' } else { 'kaputt' }) }
+# PRUEFER-98 K1: auch ein stehengebliebener Platzhalter (<x-eudoratempON> usw.,
+# als Text oder als &lt;...&gt;) und ein "T>"-Rest der Loeschwege zaehlen; und
+# die Festbreite muss wirklich angewendet sein (mindestens ein <TT>), sonst
+# waere ein Weg, der gar nichts tut, gruen.
+$platz = ([regex]::Matches($ganz, 'eudoratemp|eudoradelete', 'IgnoreCase')).Count
+$restT = ([regex]::Matches($ganz, '(?<![A-Za-z0-9#&<])T>')).Count
+$ttAnz = ([regex]::Matches($ganz, '<TT\b', 'IgnoreCase')).Count
+Write-Host ("E178 MUELL anzahl={0} platzhalter={1} rest-T={2} tt={3}" -f $muell, $platz, $restT, $ttAnz)
+if ($geschrieben) { $erg.gespeichert = $(if ($vier -and $kyr -and $frage -eq 0 -and $muell -eq 0 -and $platz -eq 0 -and $restT -eq 0 -and $ttAnz -gt 0) { 'passt' } else { 'kaputt' }) }
 
 # --- Antwort auf markierten Text ---------------------------------------------
 # CReadMessageDoc -> CMessageDoc::GetSelectedText -> CTridentView::
