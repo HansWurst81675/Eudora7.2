@@ -112,6 +112,23 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 		TT_CHECK_MSG(QT_Enthaelt(pD, "if (m_bE188TeilFehlt) { pSum->m_Imflags |= IMFLAGS_NOT_DOWNLOADED;"),
 					 "fehlt ein Teil, wird \"nicht geladen\" nicht gesetzt - bei einer neuen Zusammenfassung bleibt es leer (PRUEFER-95 K2)");
 	}
+	// PRUEFER-96 K1/K2: DownloadSubMessage - ein verweigerter Kopf ohne eingebettete Mail
+	// (Unzustellbarkeitsbericht, Lesebestaetigung) zaehlt nicht, tiefer Liegendes schon.
+	if (pD)
+	{
+		char* pSub = QT_Abschnitt(pD, "BOOL CImapDownloader::DownloadSubMessage (", "BOOL CImapDownloader::CreateAttachFile (");
+		if (!pSub)
+			TT_Fail("CImapDownloader::DownloadSubMessage nicht gefunden - ungeprueft ist nicht gruen");
+		else
+		{
+			TT_CHECK_MSG(QT_Enthaelt(pSub, "if (!bResult && !(pBody->nested.msg && (pBody->nested.msg)->body)) bResult = TRUE;"),
+						 "ein verweigerter Kopf eines Unzustellbarkeitsberichts laesst die Mail dauerhaft \"nicht geladen\" (PRUEFER-96 K1)");
+			TT_CHECK_MSG(QT_Enthaelt(pSub, "bResult = DownloadSimpleBody (uid, l_body, sequence);") &&
+						 QT_Enthaelt(pSub, "bResult = DownloadMultipartBody (uid, l_body, pParentSection);"),
+						 "DownloadSubMessage wertet das Ergebnis der eingebetteten Teile nicht aus (PRUEFER-96 K2)");
+			free(pSub);
+		}
+	}
 	if (pD) free(pD);
 
 	// PRUEFER-95 K2: die Wege DownloadRemainingMessages(MT) loeschen "nicht geladen" nicht mehr selbst.
@@ -121,8 +138,16 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 		if (!pC || !pM)
 			TT_Fail("ImapChecker.cpp oder ImapMailbox.cpp nicht lesbar - ungeprueft ist nicht gruen");
 		else
-			TT_CHECK_MSG(!QT_Enthaelt(pC, "&= ~IMFLAGS_NOT_DOWNLOADED") && !QT_Enthaelt(pM, "&= ~IMFLAGS_NOT_DOWNLOADED"),
+		{
+			// PRUEFER-96 K3: auch in anderer Schreibweise (Klammern, ohne Leerzeichen).
+			const char* aLoeschen[] = { "&= ~IMFLAGS_NOT_DOWNLOADED", "&= ~(IMFLAGS_NOT_DOWNLOADED", "&=~IMFLAGS_NOT_DOWNLOADED", "&=~(IMFLAGS_NOT_DOWNLOADED" };
+			bool bGeloescht = false;
+			for (int i = 0; i < (int) (sizeof(aLoeschen) / sizeof(aLoeschen[0])); i++)
+				if (QT_Enthaelt(pC, aLoeschen[i]) || QT_Enthaelt(pM, aLoeschen[i]))
+					bGeloescht = true;
+			TT_CHECK_MSG(!bGeloescht,
 						 "DownloadRemainingMessages(MT) loescht \"nicht geladen\" wieder ohne Bedingung (PRUEFER-95 K2)");
+		}
 		if (pC) free(pC);
 		if (pM) free(pM);
 	}

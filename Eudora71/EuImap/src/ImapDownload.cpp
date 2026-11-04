@@ -4027,6 +4027,16 @@ BOOL CImapDownloader::DownloadSubMessage (IMAPUID uid, BODY *pBody, LPSTR pParen
 	// Make sure to reset the header desc. object.
 	m_pHd = pOldHeaderDesc;
 
+	// E-188 (PRUEFER-96 K1): ohne eingebettete Mail (message/delivery-status,
+	// message/disposition-notification - Unzustellbarkeitsberichte, Lesebestaetigungen)
+	// ist BODY[n.HEADER] laut RFC 3501 gar nicht vorgesehen; ein Server darf mit NO
+	// antworten. Dann weitermachen - den Inhalt holt AppendBodyTextToMbxFile unten,
+	// und erst wenn DER scheitert, fehlt wirklich etwas. Seit 9c9d9ffc zaehlt ein
+	// FALSE hier als fehlender Teil; ohne diese Ausnahme blieben solche Berichte
+	// dauerhaft "nicht geladen".
+	if (!bResult && !(pBody->nested.msg && (pBody->nested.msg)->body))
+		bResult = TRUE;
+
 	if (!bResult)
 		return FALSE;
 
@@ -4089,7 +4099,7 @@ BOOL CImapDownloader::DownloadSubMessage (IMAPUID uid, BODY *pBody, LPSTR pParen
 				else
 				{
 					// Simple body type. Treat as first part of this message.
-					DownloadSimpleBody (uid, l_body, sequence);
+					bResult = DownloadSimpleBody (uid, l_body, sequence);	// E-188 (PRUEFER-96 K2): Ergebnis zaehlt
 				}
 
 				break;
@@ -4100,7 +4110,7 @@ BOOL CImapDownloader::DownloadSubMessage (IMAPUID uid, BODY *pBody, LPSTR pParen
 				// as the message/rfc822 part.
 				//
 
-				DownloadMultipartBody (uid, l_body, pParentSection);
+				bResult = DownloadMultipartBody (uid, l_body, pParentSection);	// E-188 (PRUEFER-96 K2): Ergebnis zaehlt
 				break;
 		} // switch
 	}
