@@ -231,6 +231,7 @@ function Alle($pp) {
 $script:dialoge = @()
 $script:loeschenUngemessen = $false
 $script:geloescht = 0
+$script:geloeschtAlle = $false
 function Dialoge($pp) {
     foreach ($d in (Alle $pp | Where-Object { $_.Vis -and $_.Klasse -eq '#32770' -and ([E188]::GetWindowLongA($_.H, -16) -band 0x40000000) -eq 0 })) {
         $script:inhalt = @(); $cc = [E188+EP]{ param($k, $q); $t = Txt $k; if ($t) { $script:inhalt += $t }; return $true }
@@ -490,7 +491,7 @@ try {
                 $script:geloescht++
             }
             # Nur wer alles geloescht hat, was er loeschen sollte, hat gemessen.
-            if (-not $script:loeschenUngemessen -and $nLoeschen -gt 0 -and $script:geloescht -eq $nLoeschen) { Write-Host ("E188 GELOESCHT ALLE ({0})" -f $nLoeschen) }
+            if (-not $script:loeschenUngemessen -and $nLoeschen -gt 0 -and $script:geloescht -eq $nLoeschen) { $script:geloeschtAlle = $true; Write-Host ("E188 GELOESCHT ALLE ({0})" -f $nLoeschen) }
         }
         AlleSchliessen
         if ($Weg -eq 'loeschen') { [void](Oeffnen $kB @('Ziel')); AlleSchliessen }
@@ -541,6 +542,14 @@ if ($zwei) {
         elseif ($mitText.Count -eq 0) { $verloren++; Write-Host ("E188 SERVER VERLOREN (nur ohne Text, Rumpf {0} statt {1} Byte): {2}" -f (($lebt | ForEach-Object { $_.Rumpf }) -join ','), $rumpfVorher, $mid) }
     }
     foreach ($e in @($nachher | Where-Object { $_.Del -eq 1 -and $_.Mid -like '<fremd*' })) { $fremdDel++; Write-Host "E188 SERVER FREMDE GELOESCHT: $($e.Ordner)/$($e.Uid) $($e.Mid)" }
+    # PRUEFER-94 K8: "GELOESCHT ALLE" stand VOR der Serverauswertung - lieferte
+    # Server B keinen Endstand, fehlte die fremde Mail in $nachher, das zaehlte
+    # als "VERLOREN", nicht als "FREMDE GELOESCHT", und der Fall war gruen ohne
+    # Messung. Jetzt erst hier, und nur mit Endstand B und lebender fremder Mail.
+    if ($Weg -eq 'loeschen' -and $script:geloeschtAlle -and @($endB).Count -gt 0) {
+        $fremdLebt = @($endB | Where-Object { $_.Mid -like '<fremd*' -and $_.Del -eq 0 }).Count
+        Write-Host ("E188 LOESCHEN GEMESSEN fremd-lebt={0} endstand-b={1}" -f $fremdLebt, @($endB).Count)
+    }
 }
 else {
     # Nach lokal: verloren ist, was auf dem Server \Deleted traegt, dessen TEXT
