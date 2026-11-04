@@ -1,20 +1,12 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 07:50:50
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-188 Schritt 2)
-nur=E-188   (Teillauf, nicht der Gesamtstand)
-faelle=8
-bestanden=6
-fehlgeschlagen=2
-fall=[FEHL] E-188k   fehlt in messung: E188 ERGEBNIS weg=konten anzeige=richtig
-             gemeldet: E188 ERGEBNIS weg=konten anzeige=FALSCH ziel-fremd=1 ziel-kopie=1 eintraege=3 | server quelle-del=1 quelle-weg=0 kopie-im-ziel=1 verloren=0 fremd-geloescht=0 dialoge=0
-                         Beende per WM_CLOSE an das gemessene Handle.
+zeit=2026-11-04 08:34:24
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-188d welche Zeile)
+nur=E-188d   (Teillauf, nicht der Gesamtstand)
+faelle=1
+bestanden=0
+fehlgeschlagen=1
+fall=[FEHL] E-188d   fehlt in messung: E188 GELOESCHT ALLE
+             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
                          Zeit vom WM_CLOSE bis zum Ende: 2 s
                          Beendet: True
                          Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\e188\tools\TESTLAEUFE.md
-fall=[ ok ] E-188a   E188 ERGEBNIS weg=append
-fall=[ ok ] E-188u   E188 ERGEBNIS weg=ohneuid anzeige=richtig
-fall=[ ok ] E-188t   E188 ERGEBNIS weg=kontentext anzeige=richtig
-fall=[ ok ] E-188l   E188 ERGEBNIS weg=lokal anzeige=richtig
-fall=[ ok ] E-188f   E188 ERGEBNIS weg=fetch
-fall=[ ok ] E-188e   E188 ERGEBNIS weg=lokaleins anzeige=richtig
-fall=[FEHL] E-188d   steht in messung, darf nicht: E188 SERVER FREMDE GELOESCHT

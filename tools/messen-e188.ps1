@@ -26,11 +26,17 @@
 #   append   wie konten, aber B lehnt das APPEND ab (--append-ablehnen):
 #            darf A die Mail trotzdem loeschen?
 #   ohneuid  wie konten, B meldet keine APPENDUID (Server ohne UIDPLUS).
-#   loeschen wie konten, danach im Zielfenster die ERSTEN ZWEI Zeilen loeschen
-#            (ID_MESSAGE_DELETE) - so, wie ein Anwender die Doppel wegraeumt, die
-#            der Weg konten in der Anzeige hinterlaesst (drei Zeilen mit dem
-#            Betreff der verschobenen Mail). Trifft das \Deleted auf dem Server
-#            die FREMDE Mail (UID 1 in "Ziel")?
+#   loeschen wie konten, danach im Zielfenster JEDEN Eintrag mit dem Betreff der
+#            verschobenen Mail loeschen (ID_MESSAGE_DELETE) - so, wie ein
+#            Anwender die verschobene Mail samt ihren scheinbaren Doppeln
+#            wegraeumt. Wie viele es sind, steht vorher in Ziel.toc (N); geloescht
+#            wird N-mal die LETZTE Zeile. Trifft das \Deleted auf dem Server die
+#            FREMDE Mail (UID 1 in "Ziel")? Bis 7.2.2.132 trugen alle drei
+#            Eintraege den Betreff der verschobenen Mail (die fremde war
+#            ueberschrieben), also traf es sie. Bis 04.11.2026 loeschte der Fall
+#            fest die ersten zwei Zeilen; nach der Behebung von E-188 gab es keine
+#            Doppel mehr, und er loeschte die fremde Mail absichtlich mit.
+#            Stimmt die Anzeigereihenfolge nicht mit Ziel.toc, wird der Fall rot.
 #   kontentext wie konten, aber A liefert den Text der Mail nicht
 #            (--fetch-text-scheitert; die Mail ist nur als Kopf geladen,
 #            IMAPMinDownload=1): Eudora kann nicht hochladen - und loescht?
@@ -223,6 +229,8 @@ function Alle($pp) {
     [void][E188]::EnumWindows($cb, [IntPtr]::Zero); return $r
 }
 $script:dialoge = @()
+$script:loeschenUngemessen = $false
+$script:geloescht = 0
 function Dialoge($pp) {
     foreach ($d in (Alle $pp | Where-Object { $_.Vis -and $_.Klasse -eq '#32770' -and ([E188]::GetWindowLongA($_.H, -16) -band 0x40000000) -eq 0 })) {
         $script:inhalt = @(); $cc = [E188+EP]{ param($k, $q); $t = Txt $k; if ($t) { $script:inhalt += $t }; return $true }
@@ -426,18 +434,50 @@ try {
         AlleSchliessen
         [void](Oeffnen $kB @('Ziel'))           # Endstand nach Abgleich
         if ($Weg -eq 'loeschen') {
-            # Zwei Zeilen loeschen, je die erste der Liste; Rueckfragen mit OK.
-            for ($r = 0; $r -lt 2; $r++) {
+            # Jeden Eintrag der verschobenen Mail loeschen, je die letzte Zeile der
+            # Liste; Rueckfragen mit OK. N aus Ziel.toc (beim Schliessen geschrieben).
+            $vorToc = TocLesen (Join-Path $kontoB 'Ziel\Ziel.toc')	# gibt die Liste schon als Ganzes zurueck (return ,$aus) - kein @() darum
+            $nLoeschen = @($vorToc | Where-Object { $_.Betreff -like 'Pruefnachricht 1*' }).Count
+            Write-Host ("E188 vor dem Loeschen: {0} Eintraege, davon {1} mit dem Betreff der verschobenen Mail" -f $vorToc.Count, $nLoeschen)
+            foreach ($e in $vorToc) { Write-Host ('E188 VOR-TOC Ziel uid={0} offset={1} laenge={2} betreff="{3}"' -f $e.Uid, $e.Offset, $e.Laenge, $e.Betreff) }
+            for ($r = 0; $r -lt $nLoeschen; $r++) {
                 $aktiv = Snd $mdi.H 0x0229 ([IntPtr]::Zero) ([IntPtr]::Zero)
                 $script:lb = [IntPtr]::Zero
                 $cc = [E188+EP]{ param($k, $q); if ($script:lb -eq [IntPtr]::Zero -and (Kl $k) -eq 'ListBox' -and [E188]::IsWindowVisible($k)) { $script:lb = $k }; return $true }
                 [void][E188]::EnumChildWindows($aktiv, $cc, [IntPtr]::Zero)
                 if ($script:lb -eq [IntPtr]::Zero) { Write-Host 'E188 FEHLER: keine Liste im Zielfenster'; break }
+                # Welche Listen hat das Fenster? (zur Pruefung, ob die gefundene die Nachrichtenliste ist)
+                $alleLb = [E188+EP]{ param($k, $q); $kk = Kl $k; if ($kk -like '*List*') { Write-Host ('E188 LISTE {0} klasse={1} sichtbar={2} zeilen={3}' -f $k, $kk, [E188]::IsWindowVisible($k), [int](Snd $k 0x018B ([IntPtr]0) ([IntPtr]0))) }; return $true }
+                [void][E188]::EnumChildWindows($aktiv, $alleLb, [IntPtr]::Zero)
+                Write-Host ('E188 gewaehlt: {0}' -f $script:lb)
                 $anz = [int](Snd $script:lb 0x018B ([IntPtr]0) ([IntPtr]0))
-                Write-Host ("E188 loesche Zeile 1 von {0} in ""{1}""" -f $anz, (Txt $aktiv))
+                # Die Liste muss so viele Zeilen haben wie Ziel.toc (minus schon
+                # geloeschte) - kurz nach dem Oeffnen ist sie noch nicht aufgebaut
+                # (gemessen 04.11.2026: "Zeile 1 von 1" bei 2 Eintraegen in Ziel.toc;
+                # geloescht wurde so die fremde Mail, ein Fehler dieses Skripts).
+                $sollZeilen = $vorToc.Count - $r
+                for ($w = 0; $w -lt 60 -and $anz -ne $sollZeilen; $w++) {
+                    if ($w % 5 -eq 0) { Write-Host ("E188 warte auf Liste: {0} s, {1} Zeilen, soll {2}" -f $w, $anz, $sollZeilen) }
+                    Start-Sleep -Seconds 1; $anz = [int](Snd $script:lb 0x018B ([IntPtr]0) ([IntPtr]0))
+                }
+                if ($anz -ne $sollZeilen) {
+                    Write-Host ("E188 FEHLER: Liste hat {0} Zeilen, Ziel.toc {1} - nicht geloescht" -f $anz, $sollZeilen)
+                    # Welche Mail ist die eine sichtbare Zeile? Doppelklick an das gemessene
+                    # Handle der Liste (CTocListBox::OnLButtonDblClk -> OpenMessages), Titel des
+                    # neuen Fensters lesen, Fenster schliessen.
+                    [void](Snd $script:lb 0x0185 ([IntPtr]0) ([IntPtr](-1)))
+                    [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]0))
+                    [void][E188]::PostMessageA($script:lb, 0x0203, [IntPtr]1, [IntPtr]((8 -shl 16) -bor 10))
+                    Start-Sleep -Seconds 3
+                    $offen = Snd $mdi.H 0x0229 ([IntPtr]::Zero) ([IntPtr]::Zero)
+                    Write-Host ('E188 SICHTBARE ZEILE oeffnet: "{0}"' -f (Txt $offen))
+                    if ($offen -ne $aktiv) { [void][E188]::PostMessageA($offen, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero); Start-Sleep -Seconds 2 }
+                    $script:loeschenUngemessen = $true; break
+                }
+                Write-Host ("E188 loesche Zeile {0} von {0} in ""{1}""" -f $anz, (Txt $aktiv))
                 [void](Snd $script:lb 0x0185 ([IntPtr]0) ([IntPtr](-1)))
-                [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]0))
-                [void](Snd $script:lb 0x019E ([IntPtr]0) ([IntPtr]0))
+                [void](Snd $script:lb 0x0185 ([IntPtr]1) ([IntPtr]($anz - 1)))
+                [void](Snd $script:lb 0x019E ([IntPtr]($anz - 1)) ([IntPtr]0))
                 [void][E188]::PostMessageA($aktiv, 0x0111, [IntPtr]32805, [IntPtr]::Zero)   # ID_MESSAGE_DELETE
                 Start-Sleep -Seconds 3
                 foreach ($d in (Alle $pp | Where-Object { $_.Vis -and $_.Klasse -eq '#32770' -and ([E188]::GetWindowLongA($_.H, -16) -band 0x40000000) -eq 0 })) {
@@ -447,7 +487,10 @@ try {
                 }
                 Start-Sleep -Seconds $Warten
                 Dialoge $pp
+                $script:geloescht++
             }
+            # Nur wer alles geloescht hat, was er loeschen sollte, hat gemessen.
+            if (-not $script:loeschenUngemessen -and $nLoeschen -gt 0 -and $script:geloescht -eq $nLoeschen) { Write-Host ("E188 GELOESCHT ALLE ({0})" -f $nLoeschen) }
         }
         AlleSchliessen
         if ($Weg -eq 'loeschen') { [void](Oeffnen $kB @('Ziel')); AlleSchliessen }
@@ -520,6 +563,9 @@ if ($zwei) {
     $anzeige = 'FALSCH'
     if ($Weg -eq 'append' -or $Weg -eq 'kontentext') { if ($fremd -eq 1 -and $toc.Count -eq 1) { $anzeige = 'richtig' } }
     elseif ($fremd -eq 1 -and $kopie -eq 1 -and $toc.Count -eq 2) { $anzeige = 'richtig' }
+    # Nichts geloescht heisst nichts gemessen - sonst waere der Fall blind gruen
+    # (gemessen 04.11.2026: abgebrochen, "fremd-geloescht=0", bestanden).
+    if ($script:loeschenUngemessen) { $anzeige = 'UNGEMESSEN' }
     Write-Host ("E188 ERGEBNIS weg={0} anzeige={1} ziel-fremd={2} ziel-kopie={3} eintraege={4} | server quelle-del={5} quelle-weg={6} kopie-im-ziel={7} verloren={8} fremd-geloescht={9} dialoge={10}" -f `
         $Weg, $anzeige, $fremd, $kopie, $toc.Count, $quelleDel, $quelleWeg, $kopieServer, $verloren, $fremdDel, $script:dialoge.Count)
 }
