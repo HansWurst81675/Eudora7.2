@@ -39,7 +39,7 @@ JSON `{tool_input:{command:…}, cwd:"C:\Users\Gregor\Documents\github\Eudora7.2
 | [L-142.5](LEKTOR-142.md#l-142.5) [E-188](../Intern/BEFUNDE.md#e-188) (Mail geht beim Verschieben verloren): BEFUNDE „nie gemessen“ | **offen auf diesem Zweig**, auf `e188_loeschschranke` fortgeschrieben (`9188426e` *„im Quellstand behoben, Pruefstand 8/8“*) | `Intern/WEITERMACHEN.md:92` |
 | [L-142.6](LEKTOR-142.md#l-142.6) `main` sagt „Testpaket … nicht veröffentlicht“ | **erledigt** mit #218 | `git show origin/main:README.md` Zeile 104 *„Stand **7.2.2.132** — die erste Fassung der Reihe 7.2.2 …“* (gemessen) |
 | [L-142.7](LEKTOR-142.md#l-142.7) Release-Notizen ohne Satz zum Rückstand an Regressionstests | **offen**, die Frage an Gregor steht | `Releases/7.2.2.132/RELEASE-NOTIZEN.md` zuletzt `61e94e4f` |
-| [L-141.3](LEKTOR-141.md#l-141.3) Kennungen `E-220`/`E-221` nur in Backticks | **offen, Merkposten** | `grep -c 'id="e-22[01]"' Intern/BEFUNDE.md` → 0 |
+| [L-141.3](LEKTOR-141.md#l-141.3) Kennungen [`E-220`](../Intern/BEFUNDE.md#e-220)/`E-221` nur in Backticks | **offen, Merkposten** | `grep -c 'id="e-22[01]"' Intern/BEFUNDE.md` → 0 |
 | [L-138.9](LEKTOR-138.md#l-138.9) Zahl der Berichte in der README | **offen** | `README.md:98` *„219 LEKTOR- und PRÜFER-Berichte“*; gezählt 234, mit diesem 235 |
 | [L-140.2](LEKTOR-140.md#l-140.2), [L-138.12](LEKTOR-138.md#l-138.12), [L-139.1](LEKTOR-139.md#l-139.1) | **unverändert** | `Intern/TESTPLAN.md:58-60`; `Intern/TESTPLAN.md:423` *„Erledigt am 03.11.2026: das Label bleibt …“* bei offenem [E-170](../Intern/BEFUNDE.md#e-170) (Label beim Verschieben im IMAP-Konto) |
 

@@ -31,4 +31,8 @@ bool UTE128_DateiMitKopf(bool bKopfzeilen, const char* pszVorher, const char* ps
 const char* UTE128_Vorgabeendung(bool bPostfachliste, int nAnzahl, bool bDateiMitKopf, bool bHtml);
 int UTE128_FilterIndex(const char* pszFilter, const char* pszEndung);
 
+// E-220: Dateiname aus dem Betreff (aus msgutils.cpp geschnitten,
+// generated/msgutils_e220.inc).
+void UTE220_DateinameAusBetreff(const char* pszBetreff, char* pszZiel, size_t nZiel);
+
 #endif

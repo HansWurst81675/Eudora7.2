@@ -3022,11 +3022,15 @@ void CTocView::OnFileSaveAs()
 	int				TotalCount = m_SumListBox.GetCount();
 	int				FoundOne = FALSE;
 	char			szName[_MAX_PATH + 1];
+	CSummary		*pSumE220 = NULL;	// E-220
+	CString			szE220Kopf;			// E-220: Kopf der Nachricht, wenn sie vorliegt
 	CString			szPathName;
 	JJFile			theFile;
 	CSummary		*pSummary;
 
 	//Get the Filename to save the multiple messages
+
+	*szName = 0;	// E-220: nie uninitialisiert in den Dialog
 
 	for (int i = 0, j = SelCount; j && i < TotalCount && !FoundOne; i++)
 	{
@@ -3042,17 +3046,13 @@ void CTocView::OnFileSaveAs()
 		if ( !pSummary )
 			continue;
 
-		strcpy( szName, pSummary->m_Subject );
-
-		if (! *szName )
+		if (! *pSummary->m_Subject )
 			continue;
 
-		::StripIllegalMT( szName, EudoraDir );
-
-		if( !::LongFileSupportMT( EudoraDir ) )
-		{
-			szName[8] = 0;
-		}
+		// BEFUND E-220: der Name wird unten gebildet (E220DateinameVorschlag,
+		// msgutils.cpp) - bei genau einer Nachricht aus dem ganzen Betreff.
+		// Bis 7.2.2.132 ging m_Subject durch StripIllegalMT: ohne Umlaute.
+		pSumE220 = pSummary;
 
 		FoundOne = TRUE;
 	}
@@ -3118,6 +3118,10 @@ void CTocView::OnFileSaveAs()
 					bE128MitKopf = E128DateiMitKopf( bKopfE128, pszTextE128,
 								bGeaendertE128 ? (LPCTSTR) szDateiE128 : pszTextE128 );
 
+					// E-220: nur der Kopf, fuer den ganzen Betreff
+					const char *	pszKopfEnde = strstr( pszVollE128, "\r\n\r\n" );
+					szE220Kopf = pszKopfEnde ? CString( pszVollE128, (int) ( pszKopfEnde - pszVollE128 ) + 4 ) : CString( pszVollE128 );
+
 					delete [] pszVollE128;
 				}
 
@@ -3127,6 +3131,10 @@ void CTocView::OnFileSaveAs()
 			break;
 		}
 	}
+
+	if ( pSumE220 )
+		E220DateinameVorschlag( szName, sizeof( szName ), pSumE220->m_Subject,
+								szE220Kopf.IsEmpty() ? NULL : (LPCTSTR) szE220Kopf, "Postfachliste" );
 
 	const char *	pszE128Endung = E128Vorgabeendung( true, SelCount, bE128MitKopf, false );
 	CRString		szE128Filter( IDS_TOC_SAVEAS_FILE_FILTER );	// txt, eml, alle (PRUEFER-90 K1: kein htm - hier geht nie reines HTML hinaus)

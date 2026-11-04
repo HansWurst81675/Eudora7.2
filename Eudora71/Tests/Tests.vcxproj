@@ -173,6 +173,7 @@
     <ClCompile Include="TestHilfeMenue.cpp" />
     <ClCompile Include="TestE133.cpp" />
     <ClCompile Include="TestE216.cpp" />
+    <ClCompile Include="TestE220.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />
     <ClCompile Include="TestE118.cpp" />
     <ClCompile Include="Quelltext.cpp" />

@@ -113,6 +113,24 @@ void E128GewaehltSchreiben(
 				const char *		pszPfad );
 
 //
+// BEFUND E-220: der Dateiname, den "Speichern unter" aus dem Betreff
+// vorschlaegt - mit Umlauten, ohne doppelte Leerzeichen, ohne verbotene
+// Zeichen, wenn moeglich aus dem ganzen Betreff. Erlaeuterung am Rumpf in
+// msgutils.cpp. pszZiel darf nicht mit den Eingaben ueberlappen.
+//
+void E220DateinameAusBetreff(
+				const char *		pszBetreff,
+				char *				pszZiel,
+				size_t				nZiel );
+
+void E220DateinameVorschlag(
+				char *				pszZiel,
+				size_t				nZiel,
+				const char *		pszSummenBetreff,
+				const char *		pszVoll,
+				const char *		pszWeg );
+
+//
 // BEFUND E-89: die Bilder im Verfassenfenster lesbar machen. Ergaenzt in
 // der Fassung, die in den Editor geht, jedem <img> ohne auswertbare
 // Groesse ein width- und ein height-Attribut. Erlaeuterung am Rumpf in

@@ -619,6 +619,20 @@ Suche nur, was Eudora schon geladen hat). *Tools → Find Messages* (Strg+Umscha
    0,4 s, an deinem Bestand weiß es niemand. Ist es zu langsam, sag mir
    ungefähr wie lange und wie viele Mails.
 
+## <a id="e-220-naechstes"></a>Im nächsten Paket nach 7.2.2.132: Speichern unter schlägt einen speicherbaren Namen vor ([E-220](BEFUNDE.md#e-220))
+
+**Erst mit dem nächsten Paket nach 7.2.2.132 auszuführen** — in 7.2.2.132
+fehlen die Umlaute noch. **Ort: lokal, ein POP-Postfach** (z. B. *In*); eine
+Nachricht, deren Betreff Umlaute und ein `|` oder `:` enthält.
+
+1. In der Postfachliste die Nachricht markieren, *File → Save As…*.
+   **Bestanden:** im Feld *Dateiname* steht der ganze Betreff mit Umlauten,
+   ohne `|`/`:` und ohne doppelte Leerzeichen, Punkte einer Versionsnummer
+   bleiben stehen, kein Pfad; *Speichern* ohne
+   Änderung legt die Datei an.
+2. Dieselbe Nachricht öffnen, im Nachrichtenfenster *File → Save As…*.
+   **Bestanden:** wie 1, Endung `.htm` bei einer HTML-Nachricht.
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales

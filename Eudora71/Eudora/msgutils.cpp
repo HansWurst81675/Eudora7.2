@@ -5205,6 +5205,191 @@ int E128FilterIndex(
 }
 
 //
+// ---------------------------------------------------------------------------
+// E220DateinameAusBetreff
+// ---------------------------------------------------------------------------
+//
+// BEFUND E-220: der Name, den "Speichern unter" aus dem Betreff vorschlaegt,
+// soll sich OHNE Aenderung speichern lassen. Gregor am 03.11.2026 an
+// 7.2.2.132: "dateinamen so vorgeben, dass man auf speichern klicken kann,
+// ohne den namen zu aendern."
+//
+// Bis dahin ging der Betreff durch StripIllegalMT (QCUtils, services.cpp).
+// Dort steht  *szSrc > 127  mit einem vorzeichenbehafteten char - Bytes ab
+// 0x80 sind negativ, die Bedingung trifft nie, und JEDER Umlaut fiel weg
+// (Originalfehler von QUALCOMM; gemessen in 7.2.1.131 und 7.2.2.132 gleich).
+// Aus "a | b" wurde "a  b", und der Betreff kam nur mit den 63 Zeichen der
+// Zusammenfassung (CSummary::m_Subject) an.
+//
+// StripIllegalMT selbst bleibt, wie es ist: es macht auch die Dateinamen
+// neuer Postfaecher (QCMailboxDirector::LegalizeFilename), und deren
+// Benennung zu aendern ist eine andere Entscheidung als ein Vorschlag im
+// Dialog, den der Anwender noch sieht.
+//
+// Regeln (reine Zeichenkettenarbeit, ohne Eudora-Welt, Tests/Extract.ps1
+// Region L4):
+//   - behalten: Buchstaben, Ziffern, dieselben Satzzeichen wie StripIllegalMT
+//     ( $%'-_@~`!(){}^#&+,;=[] ), den Punkt (Versionsnummern wie
+//     "7.2.1.128R" - Gregor 03.11.2026), alle Latin-1-Zeichen ab 0xA1 (Umlaute)
+//     und die belegten Zeichen 0x80-0x9F aus windows-1252 (EUR, Anfuehrungs-
+//     zeichen, Gedankenstrich);
+//   - alles andere - die von Windows verbotenen  \ / : * ? " < > |,
+//     Steuerzeichen, Tabulator, das geschuetzte Leerzeichen 0xA0 und
+//     das Leerzeichen selbst - ist eine LUECKE; jede Folge von Luecken wird
+//     genau EIN Leerzeichen, am Anfang und am Ende keines (Windows schneidet
+//     Leerzeichen und Punkte am Ende ab, und der Name passt dann nicht mehr
+//     zum Vorschlag); Punkte und Leerzeichen am Ende fallen darum weg, ein
+//     Name nur aus Punkten wird leer;
+//   - hoechstens 120 Zeichen: der ganze Ordnerpfad und die Endung muessen
+//     noch unter MAX_PATH (260) passen;
+//   - ein Geraetename (CON, PRN, AUX, NUL, COM1-9, LPT1-9) bekommt ein "_"
+//     angehaengt, sonst lehnt Windows ihn ab.
+// Leerer Betreff -> leerer Name; das Feld bleibt dann leer wie bisher.
+//
+void E220DateinameAusBetreff(
+		const char *		pszBetreff,
+		char *				pszZiel,
+		size_t				nZiel )
+{
+	if ( !pszZiel || nZiel == 0 )
+		return;
+
+	*pszZiel = 0;
+
+	if ( !pszBetreff )
+		return;
+
+	const size_t	nHoechst = 120;
+	size_t			nMax     = nZiel - 1;
+	if ( nMax > nHoechst )
+		nMax = nHoechst;
+
+	size_t			n       = 0;
+	bool			bLuecke = false;
+
+	for ( const unsigned char * p = (const unsigned char *) pszBetreff; *p && n < nMax; p++ )
+	{
+		const unsigned char	c = *p;
+		bool				bBehalten;
+
+		if ( c >= 0xA1 )
+			bBehalten = true;
+		else if ( c >= 0x80 )
+			bBehalten = ( c != 0x81 && c != 0x8D && c != 0x8F && c != 0x90 && c != 0x9D && c != 0xA0 );
+		else
+			bBehalten = ( ( c >= 'a' && c <= 'z' ) || ( c >= 'A' && c <= 'Z' ) || ( c >= '0' && c <= '9' ) ||
+						  ( c > ' ' && strchr( "$%'-_@~`!(){}^#&+,;=[].", c ) != NULL ) );
+
+		if ( !bBehalten )
+		{
+			bLuecke = ( n > 0 );
+			continue;
+		}
+
+		if ( bLuecke )
+		{
+			if ( n + 1 >= nMax )
+				break;
+			pszZiel[n++] = ' ';
+			bLuecke = false;
+		}
+
+		pszZiel[n++] = (char) c;
+	}
+
+	// Windows schneidet Punkte und Leerzeichen am Ende ab (Gregor 03.11.2026:
+	// ein Punkt mitten im Namen bleibt).
+	while ( n > 0 && ( pszZiel[n - 1] == '.' || pszZiel[n - 1] == ' ' ) )
+		n--;
+
+	pszZiel[n] = 0;
+
+	static const char * const	kGeraete[] = {
+		"CON", "PRN", "AUX", "NUL",
+		"COM1", "COM2", "COM3", "COM4", "COM5", "COM6", "COM7", "COM8", "COM9",
+		"LPT1", "LPT2", "LPT3", "LPT4", "LPT5", "LPT6", "LPT7", "LPT8", "LPT9" };
+
+	for ( size_t i = 0; i < sizeof( kGeraete ) / sizeof( kGeraete[0] ); i++ )
+	{
+		if ( _stricmp( pszZiel, kGeraete[i] ) == 0 )
+		{
+			if ( n < nMax )
+			{
+				pszZiel[n++] = '_';
+				pszZiel[n] = 0;
+			}
+			else
+				*pszZiel = 0;
+			break;
+		}
+	}
+}
+
+//
+// E220DateinameVorschlag - der Vorschlag fuer "Speichern unter" aus
+// Postfachliste, Nachrichtenfenster und Verfassen-Fenster (Befund E-220,
+// Regeln an E220DateinameAusBetreff).
+//
+// pszSummenBetreff ist der Betreff der Zusammenfassung, hoechstens 63
+// Zeichen. Liegt die Nachricht vor (pszVoll), wird der ganze Betreff aus
+// ihrem Kopf genommen - aber NUR, wenn er mit dem der Zusammenfassung
+// beginnt und nicht mehr kodiert ist ("=?"): sonst hat der Anwender den
+// Betreff in der Liste geaendert, oder der Kopf ist roh, und dann gilt die
+// Zusammenfassung wie bisher.
+//
+// Auf einem Dateisystem ohne lange Namen bleibt alles wie bisher
+// (StripIllegalMT, 8 Zeichen).
+//
+void E220DateinameVorschlag(
+		char *				pszZiel,
+		size_t				nZiel,
+		const char *		pszSummenBetreff,
+		const char *		pszVoll,
+		const char *		pszWeg )
+{
+	if ( !pszZiel || nZiel == 0 )
+		return;
+
+	*pszZiel = 0;
+
+	if ( !pszSummenBetreff )
+		return;
+
+	if ( !::LongFileSupportMT( EudoraDir ) )
+	{
+		strncpy( pszZiel, pszSummenBetreff, nZiel - 1 );
+		pszZiel[nZiel - 1] = 0;
+		::StripIllegalMT( pszZiel, EudoraDir );
+		if ( strlen( pszZiel ) >= 8 )
+			pszZiel[8] = 0;
+		return;
+	}
+
+	const char *	pszBetreff = pszSummenBetreff;
+	char *			pszKopf    = pszVoll ? HeaderContents( IDS_HEADER_SUBJECT, pszVoll ) : NULL;
+	const size_t	nSumme     = strlen( pszSummenBetreff );
+	bool			bVoll      = false;
+
+	if ( pszKopf && nSumme > 0 && strstr( pszKopf, "=?" ) == NULL &&
+		 strlen( pszKopf ) > nSumme && strncmp( pszKopf, pszSummenBetreff, nSumme ) == 0 )
+	{
+		pszBetreff = pszKopf;
+		bVoll      = true;
+	}
+
+	E220DateinameAusBetreff( pszBetreff, pszZiel, nZiel );
+
+	// Nennt nur Laengen, keinen Betreff.
+	CString		szZeile;
+	szZeile.Format( "E-220 Dateiname aus %s: betreff=%d voll=%d name=%d",
+					pszWeg ? pszWeg : "?", (int) strlen( pszBetreff ), bVoll ? 1 : 0, (int) strlen( pszZiel ) );
+	PutDebugLog( DEBUG_MASK_DIALOG, szZeile );
+
+	delete [] pszKopf;
+}
+
+
+//
 // E128SpurSchreiben - die Logzeile zu E-128, fuer alle drei Wege gleich.
 // DEBUG_MASK_DIALOG wie E-101/E-140/E-196: in der Vorgabe AN, der Weg laeuft
 // ueber den Speichern-Dialog. Nennt nur Endungen, keinen Pfad und keinen
