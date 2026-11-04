@@ -1437,6 +1437,12 @@ void CHtml2Text::AddText(LPCTSTR szText, ULONG ulTotalLength)
 					{
 						m_szDest += 'ß';
 					}
+					// E-193: &euro; als Name - bis 7.2.2.132 kannte Html2Text nur &#8364;; die Suche
+					// fand in HTML-Mails mit &euro; kein Euro-Zeichen (gemessen, Testmail m5).
+					else if ( ul == 5 && (strnicmp(szText, "&euro", 5) == 0))
+					{
+						m_szDest += '\x80';	// Euro in windows-1252
+					}
 					else if ( ul == 7 && (strncmp(szText, s_szAacuteLOWER, 7) == 0))
 					{
 						m_szDest += 'á';

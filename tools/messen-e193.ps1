@@ -218,6 +218,7 @@ function I32([int] $v) { return [BitConverter]::GetBytes([int32]$v) }
 $lebt = 1
 $x1 = 0
 $falsch = @{ 'index' = 0; 'ohne' = 0; 'fenster' = 0 }; $gesamt = @{ 'index' = 0; 'ohne' = 0; 'fenster' = 0 }
+$ergebnis = @{}; $zuviel = @{ 'index' = 0; 'ohne' = 0 }   # E-193 Weiche
 try {
     # --- 1. Post holen ----------------------------------------------------------
     Befehl $haupt 32792                                   # ID_MAILBOX_IN
@@ -302,14 +303,19 @@ try {
         $bytes = $cp.GetBytes($wort + [char]0)
         [void][E193]::SendText($feld, 0x000C, [IntPtr]::Zero, $bytes)   # WM_SETTEXT
         Start-Sleep -Milliseconds 400
+        # E-193 (Weiche, 04.11.2026): Zeit vom Klick bis zur letzten Aenderung der
+        # Trefferzahl, auf 400 ms genau. Mit neun Testmails nur ein Anhalt - ob die
+        # genaue Suche zu langsam ist, zeigt erst ein grosses Postfach.
+        $uhr = [Diagnostics.Stopwatch]::StartNew(); $zuletzt = 0
         [void][E193]::PostMessageA($ansicht, 0x0111, [IntPtr]1017, $knopf)
         $treffer = -1; $gleich = 0
         for ($i = 0; $i -lt 40 -and $gleich -lt 4; $i++) {
             Start-Sleep -Milliseconds 400
             $n = [int][E193]::SendMessageA($liste, 0x1004, [IntPtr]::Zero, [IntPtr]::Zero)
-            if ($n -eq $treffer -and [E193]::IsWindowEnabled($knopf)) { $gleich++ } else { $gleich = 0 }
+            if ($n -eq $treffer -and [E193]::IsWindowEnabled($knopf)) { $gleich++ } else { $gleich = 0; $zuletzt = $uhr.ElapsedMilliseconds }
             $treffer = $n
         }
+        Write-Host ("E193 ZEIT {0} {1} ms={2}" -f $art, (Sichtbar $wort), $zuletzt)
         [void](Dialoge $pp)
         $gef = TrefferLesen
         $ist = @($gef | Where-Object { $_ -ge 0 } | Sort-Object -Unique)
@@ -317,6 +323,11 @@ try {
         $soll = @($WOERTER[$wort] | Sort-Object)
         $ok = (($ist -join ',') -eq ($soll -join ',')) -and $fremd -eq 0
         $script:gesamt[$art]++; if (-not $ok) { $script:falsch[$art]++ }
+        # E-193 (Weiche): Treffer je Art und Wort merken, um "mit Index" und "ohne"
+        # zu vergleichen; "zu viel" = Treffer, die nicht im Soll stehen.
+        $script:ergebnis["$art|$wort"] = ($ist -join ',')
+        $zuviel = @($ist | Where-Object { $soll -notcontains $_ }).Count + $fremd
+        if ($zuviel -gt 0) { $script:zuviel[$art]++ }
         Write-Host ("E193 SUCHE {0} {1} soll={2} ist={3} andere={4} treffer={5} -> {6}" -f $art, (Sichtbar $wort), ($soll -join ','), ($(if ($ist.Count) { $ist -join ',' } else { '-' })), $fremd, $gef.Count, $(if ($ok) { 'richtig' } else { 'FALSCH' }))
     }
     $x1 = [int]($x1st -and [E193]::IsWindowVisible($x1st))
@@ -327,6 +338,12 @@ try {
     $x1b = [int]($x1st -and [E193]::IsWindowVisible($x1st))
     Write-Host "E193 Suchfenster ohne Index: X1 sichtbar=$x1b"
     foreach ($w in $WOERTER.Keys) { Suche 'ohne' $w }
+    # E-193 (Weiche, 04.11.2026): mit Umlaut oder EUR-Zeichen nimmt Eudora auch
+    # "mit Index" die genaue Suche - dann muessen beide Laeufe je Wort dasselbe
+    # liefern, und "mit Index" darf keine falschen Treffer mehr haben.
+    $gleich = 0
+    foreach ($w in $WOERTER.Keys) { if ($script:ergebnis["index|$w"] -eq $script:ergebnis["ohne|$w"]) { $gleich++ } }
+    Write-Host ("E193 WEICHE gleich={0}/{1} index-zu-viel={2} ohne-zu-viel={3}" -f $gleich, $WOERTER.Count, [int]$script:zuviel['index'], [int]$script:zuviel['ohne'])
     [void][E193]::PostMessageA($such, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero)
     Start-Sleep -Seconds 1
     [void](Dialoge $pp)

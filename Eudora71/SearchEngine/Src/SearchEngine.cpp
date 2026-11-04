@@ -596,6 +596,20 @@ bool SearchEngine::SearchMessage(CSummary *pSum, SearchCriteria Sct, char *szMes
 
 
 #define USE_OFFSETS 1
+// E-193: enthaelt der Text dieses Suchbegriffs ein Byte ab 0x80 (Umlaut, Euro)?
+bool E193TextMitUmlaut(SearchCriteria& Sct)
+{
+	CriteriaValueText text;
+	if (!Sct.GetCurValueText(text))
+		return false;
+	for (int i = 0; i < text.GetLength(); i++)
+	{
+		if ((unsigned char) text[i] >= 0x80)
+			return true;
+	}
+	return false;
+}
+
 bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int nFreq /* = 1000 */)
 {
 	DWORD nLastCallbackTick = GetTickCount();
@@ -604,6 +618,21 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 	int nStartHits = 0;
 
 	const SearchCriteriaList* pList = m_pMSC->GetCriteriaList();
+
+	// E-193: mit Umlaut oder Euro im Suchbegriff darf ein Postfach nicht schon nach der ersten
+	// Mail aufgegeben werden, nur weil der rohe Text nirgends passt (USE_OFFSETS unten) - eine
+	// HTML-Mail kann den Begriff als Entitaet tragen (Sp&auml;tzle). Gemessen 04.11.2026: ohne
+	// das fand die Suche "Spaetzle" mit Umlaut nicht, "ae" allein schon (stand roh in anderen Mails).
+	bool bE193Weiter = false;
+	if (m_CorrectResults > 0)
+	{
+		for (SearchCriteriaIter it = pList->begin(); it != pList->end(); ++it)
+		{
+			SearchCriteria sc = *it;
+			if (E193TextMitUmlaut(sc))
+				bE193Weiter = true;
+		}
+	}
 	if(pList == NULL)
 	{
 		ASSERT(0);
@@ -890,6 +919,12 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 						}
 
 						
+						// E-193: steht im Suchbegriff ein Umlaut oder Euro (Byte ab 0x80), kann eine HTML-Mail
+						// ihn als Entitaet tragen (&auml;, &euro;, &#228;) - die rohe Suche oben findet ihn dann
+						// nicht. Dann die Mail oeffnen und den Text nach Html2Text pruefen (GetTextToSearch).
+						// Bis 7.2.2.132 fehlte so jede HTML-Mail mit Entitaeten (gemessen, Testmail m5).
+						if (!bOpenMessage && m_CorrectResults > 0 && pSum->IsHTML() && E193TextMitUmlaut(srchCriteria))
+							bOpenMessage = true;
 						if(!bOpenMessage && (bMatched == true) && m_CorrectResults > 0 && pSum->IsHTML())
 						{
 							//user wants correct results even if the search is slower;
@@ -993,7 +1028,7 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 				pMsgDoc->OnCloseDocument();
 		
 #ifdef USE_OFFSETS
-			if(m_pMSC->NonSummarySearch() && !m_pMSC->HasNegationSearch() && !bFoundMatches)
+			if(m_pMSC->NonSummarySearch() && !m_pMSC->HasNegationSearch() && !bFoundMatches && !bE193Weiter)
 				break;
 #endif
 
