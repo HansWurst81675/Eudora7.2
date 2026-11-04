@@ -1,8 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 15:37:25
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-193 Weiche neuer Bau)
-nur=E-193w   (Teillauf, nicht der Gesamtstand)
-faelle=1
-bestanden=1
+zeit=2026-11-04 16:29:27
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (E-193 dritter Schritt, Postfach nicht aufgeben)
+nur=E-193   (Teillauf, nicht der Gesamtstand)
+faelle=2
+bestanden=2
 fehlgeschlagen=0
+fall=[ ok ] E-193p   E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1
 fall=[ ok ] E-193w   E193 WEICHE gleich=11/11 index-zu-viel=0

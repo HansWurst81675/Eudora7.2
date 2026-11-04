@@ -38,7 +38,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-198](Intern/BEFUNDE.md#e-198)** | Eine gespeicherte oder an ein Programm übergebene mehrteilige Nachricht mit unübersetzte… | **nie gemessen** | den Zeichensatz des Textteils ermitteln (er steht in Eudoras Zusammenfassung bzw. im Teilkopf) und im multipart-Zweig dieselbe Prüfung wie im einteil… |
 | **[E-195](Intern/BEFUNDE.md#e-195)** | Der Speicherdialog für Nachrichten bietet .rtf an, liefert aber Klartext — die Datei he… | 03.11.2026 an 7.2.2.132 | das Signaturfenster — es bietet weiter *Rtf Files* an und schreibt dort Text (siehe oben); die Behebung für die Nachrichten- und Verfassen-Fenster… |
 | **[E-194](Intern/BEFUNDE.md#e-194)** | Eudoras interne Markierung <x-flowed> steht in der gespeicherten Textdatei — *Speichern … | 03.11.2026 an 7.2.2.132 | K3, K4 und eine Prüfnachricht mit Anhang (K9) als Rest (das Paket 7.2.2.132 ist seit dem 03.11.2026 draußen); der Hochladeweg (PRUEFER-27 F3) bleibt… |
-| **[E-193](Intern/BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | 03.11.2026 an 7.2.2.132 | die Umsetzung (Index, bei Umlaut oder € jeden Treffer nachprüfen); alte gegen neue Fassung messen (Treffer und Zeit, die neun Testmails) und Gregor… |
+| **[E-193](Intern/BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | 04.11.2026 an 7.2.2.132 | die Umsetzung (Index, bei Umlaut oder € jeden Treffer nachprüfen); alte gegen neue Fassung messen (Treffer und Zeit, die neun Testmails) und Gregor… |
 | **[E-192](Intern/BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | **nie gemessen** | die Quellmenge an allen drei Stellen durchreichen wie beim Verschieben; Prüfstandsfall für den Papierkorb. **Stufe: wichtig** (wie E-184) |
 | **[E-189](Intern/BEFUNDE.md#e-189)** | Beim Verschieben innerhalb eines IMAP-Kontos OHNE UIDPLUS steht die verschobene Mail im Zi… | 01.11.2026 an 7.2.1.130 | die Löschvermutung messen; bestätigen am Prüfserver ohne `COPYUID` (Fall `E-189`) oder an einem echten Server ohne UIDPLUS — Gregors Server melde… |
 | **[E-188](Intern/BEFUNDE.md#e-188)** | Beim Verschieben in ein anderes IMAP-Konto oder in ein lokales Postfach kann die Mail auf … | 04.11.2026 an 7.2.2.132 | das Paket ([LEKTOR-146](Befunde/LEKTOR-146.md#lektor-146) und [LEKTOR-147](Befunde/LEKTOR-147.md#lektor-147) sind eingearbeitet, #220 ist gemerg… |
@@ -113,6 +113,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## Nach 7.2.2.132 — im Quellstand, noch in keinem Paket
+
+Die Nummer des nächsten Pakets kommt beim Schnüren (seit Entscheidung 26: 7.2.2.N).
+
+* ***Find Messages* findet Wörter mit Umlauten und € richtig** ([E-193](Intern/BEFUNDE.md#e-193), Gregor 04.11.2026: zweistufig). Ohne Umlaut im Suchbegriff bleibt es beim schnellen Suchindex; mit Umlaut oder € nimmt Eudora die genaue Suche, die jetzt auch Umlaute in HTML-Mails findet, die dort nur als HTML-Entität stehen (`&auml;`, `&euro;`). Bisher fand der Index mit „€“ jede Mail, mit „ä“ jede Mail mit einem Wort auf a und mit „öft“ auch „oft“. Am Prüfstand gemessen (`E-193p`: 11 von 11 Wörtern richtig auf beiden Wegen, vorher 8 von 11; Gegenprobe an 7.2.2.132), Regressionstest `TestE193.cpp`. Wie schnell die genaue Suche in einem großen Postfach ist, zeigt erst der Test am echten Bestand.
 
 ## 7.2.2.132 — Release (`v7.2.2.132`, veröffentlicht am 03.11.2026): Hilfe-Menü (A-5), About-Dialog mit *Latest Release* (E-216), *Speichern unter* mit passender Endung (E-128) und fünf Speicherfehler weniger, fehlendes Mailverzeichnis fragt statt zu beenden (E-133), Persönlichkeiten (E-39, E-203, E-204), Label ohne UIDPLUS (E-170)
 

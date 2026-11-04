@@ -45,6 +45,11 @@ static void Test_E193_Suche(const char* szEudoraDir)
 		// 2. Genaue Suche: HTML-Mail auch ohne rohen Treffer oeffnen.
 		TT_CHECK_MSG(QT_Enthaelt(pS, "if (!bOpenMessage && m_CorrectResults > 0 && pSum->IsHTML() && E193TextMitUmlaut(srchCriteria)) bOpenMessage = true;"),
 					 "die genaue Suche oeffnet HTML-Mails mit Entitaeten nicht - &auml; wird nicht gefunden (E-193)");
+		// 2b. ... und gibt das Postfach nicht nach der ersten Mail auf, nur weil der rohe Text
+		//     nirgends passt (gemessen 04.11.2026: "Spaetzle" nur als Sp&auml;tzle fehlte).
+		TT_CHECK_MSG(QT_Enthaelt(pS, "!m_pMSC->HasNegationSearch() && !bFoundMatches && !bE193Weiter)") &&
+					 QT_Enthaelt(pS, "if (E193TextMitUmlaut(sc)) bE193Weiter = true;"),
+					 "die genaue Suche bricht ein Postfach ohne rohen Treffer ab - ein Wort nur als Entitaet wird nie gefunden (E-193)");
 		long lHilfe = QT_Stelle(pS, "bool E193TextMitUmlaut(SearchCriteria& Sct)");
 		long lStart = QT_Stelle(pS, "bool SearchEngine::Start(");
 		TT_CHECK_MSG(lHilfe >= 0 && lHilfe < lStart,

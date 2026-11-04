@@ -595,6 +595,30 @@ nicht. **Ort: lokal, egal welches Konto**; es wird keine Post gebraucht.
 3. *Copy info* drücken und in einen Editor einfügen. **Bestanden:** dieselben
    Zeilen wie im Dialog, auch die Herkunftszeile ungekürzt.
 
+## <a id="e-193-naechstes"></a>Im nächsten Paket nach 7.2.2.132: Find Messages mit Umlauten und € ([E-193](BEFUNDE.md#e-193))
+
+**Erst mit dem nächsten Paket nach 7.2.2.132 auszuführen.** **Ort: lokal,
+deine großen Postfächer** (am besten lokale POP-Postfächer; bei IMAP findet die
+Suche nur, was Eudora schon geladen hat). *Tools → Find Messages* (Strg+Umschalt+F),
+*Anywhere*, *contains*.
+
+1. Ein Wort **ohne** Umlaut suchen (etwa ein Name).
+   **Bestanden:** Treffer wie bisher, so schnell wie bisher (unten steht
+   *Powered by X1*).
+2. „€“ suchen.
+   **Bestanden:** nur Mails, in denen wirklich ein € steht — nicht mehr
+   fast alle Mails wie in 7.2.2.132 (dort 110).
+3. „ä“ suchen, danach „öft“.
+   **Bestanden:** nur Mails mit „ä“ bzw. „öft“; eine Mail, in der nur „oft“
+   steht, kommt bei „öft“ nicht mehr.
+4. Ein Wort mit Umlaut suchen, das du aus einer **HTML-Mail** kennst.
+   **Bestanden:** die Mail ist unter den Treffern.
+5. Bei 2 bis 4 auf die **Dauer** achten.
+   **Bestanden:** du kannst damit leben. Mit Umlaut sucht Eudora jetzt
+   ohne Index, Mail für Mail; am Prüfstand mit neun Mails dauerte das
+   0,4 s, an deinem Bestand weiß es niemand. Ist es zu langsam, sag mir
+   ungefähr wie lange und wie viele Mails.
+
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 
 **Mit dem Paket 7.2.1.129 auszuführen.** Lokales

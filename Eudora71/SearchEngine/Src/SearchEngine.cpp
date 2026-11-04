@@ -618,6 +618,21 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 	int nStartHits = 0;
 
 	const SearchCriteriaList* pList = m_pMSC->GetCriteriaList();
+
+	// E-193: mit Umlaut oder Euro im Suchbegriff darf ein Postfach nicht schon nach der ersten
+	// Mail aufgegeben werden, nur weil der rohe Text nirgends passt (USE_OFFSETS unten) - eine
+	// HTML-Mail kann den Begriff als Entitaet tragen (Sp&auml;tzle). Gemessen 04.11.2026: ohne
+	// das fand die Suche "Spaetzle" mit Umlaut nicht, "ae" allein schon (stand roh in anderen Mails).
+	bool bE193Weiter = false;
+	if (m_CorrectResults > 0)
+	{
+		for (SearchCriteriaIter it = pList->begin(); it != pList->end(); ++it)
+		{
+			SearchCriteria sc = *it;
+			if (E193TextMitUmlaut(sc))
+				bE193Weiter = true;
+		}
+	}
 	if(pList == NULL)
 	{
 		ASSERT(0);
@@ -1013,7 +1028,7 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 				pMsgDoc->OnCloseDocument();
 		
 #ifdef USE_OFFSETS
-			if(m_pMSC->NonSummarySearch() && !m_pMSC->HasNegationSearch() && !bFoundMatches)
+			if(m_pMSC->NonSummarySearch() && !m_pMSC->HasNegationSearch() && !bFoundMatches && !bE193Weiter)
 				break;
 #endif
 
