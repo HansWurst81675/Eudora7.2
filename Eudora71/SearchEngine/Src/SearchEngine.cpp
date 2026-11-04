@@ -44,6 +44,7 @@ DAMAGE. */
 extern QCMailboxDirector	g_theMailboxDirector;
 
 #include "guiutils.h"
+#include "debug.h"		// E-193: PutDebugLog
 
 #include <list>
 #include <vector>
@@ -610,6 +611,13 @@ bool E193TextMitUmlaut(SearchCriteria& Sct)
 	return false;
 }
 
+// E-193: sucht dieser Suchbegriff im Text der Nachricht (Body/Anywhere)? Nur dort wandelt
+// GetTextToSearch HTML mit Html2Text um; bei From, To, Headers hilft das Oeffnen nicht.
+bool E193ImText(SearchCriteria& Sct)
+{
+	return (Sct.GetCriteria() == CRITERIA_OBJECT_BODY) || (Sct.GetCriteria() == CRITERIA_OBJECT_ANYWHERE);
+}
+
 bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int nFreq /* = 1000 */)
 {
 	DWORD nLastCallbackTick = GetTickCount();
@@ -629,7 +637,7 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 		for (SearchCriteriaIter it = pList->begin(); it != pList->end(); ++it)
 		{
 			SearchCriteria sc = *it;
-			if (E193TextMitUmlaut(sc))
+			if (E193TextMitUmlaut(sc) && E193ImText(sc))
 				bE193Weiter = true;
 		}
 	}
@@ -778,7 +786,11 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 			for(SearchCriteriaIter iter = pList->begin(); iter != pList->end(); ++iter)
 			{
 				SearchCriteria Sct = *iter;
-				if(CTocDoc::ImapServerCanSearch(&Sct) )
+				// E-193 (PRUEFER-99 K1): mit Umlaut oder Euro nicht auf dem Server suchen - die
+				// Anfrage ginge als rohe Latin-1-Bytes ohne CHARSET hinaus (ImapConnection.cpp,
+				// proto.cpp). Bis 7.2.2.132 suchte der Index auch in IMAP-Postfaechern lokal;
+				// so bleibt es lokal, in dem, was Eudora schon geladen hat.
+				if(CTocDoc::ImapServerCanSearch(&Sct) && !E193TextMitUmlaut(Sct))
 					bDoImapServerSearch = true;
 				else
 				{
@@ -923,7 +935,9 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 						// ihn als Entitaet tragen (&auml;, &euro;, &#228;) - die rohe Suche oben findet ihn dann
 						// nicht. Dann die Mail oeffnen und den Text nach Html2Text pruefen (GetTextToSearch).
 						// Bis 7.2.2.132 fehlte so jede HTML-Mail mit Entitaeten (gemessen, Testmail m5).
-						if (!bOpenMessage && m_CorrectResults > 0 && pSum->IsHTML() && E193TextMitUmlaut(srchCriteria))
+						// PRUEFER-99 K2: nur fuer Body/Anywhere (nur dort laeuft Html2Text) und nicht fuer
+						// IMAP-Mails, deren Text noch gar nicht geladen ist (sonst holte die Suche sie).
+						if (!bOpenMessage && m_CorrectResults > 0 && pSum->IsHTML() && E193TextMitUmlaut(srchCriteria) && E193ImText(srchCriteria) && !pSum->IsNotIMAPDownloadedAtAll())
 							bOpenMessage = true;
 						if(!bOpenMessage && (bMatched == true) && m_CorrectResults > 0 && pSum->IsHTML())
 						{
@@ -1110,6 +1124,16 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 			pToc->OnCloseDocument();
 
 	} //for each mailbox
+
+	// E-193 (PRUEFER-99 K2): wie viel die genaue Suche mit Umlaut oder Euro geoeffnet hat und
+	// wie lange sie brauchte - fuer die Messung an grossen Postfaechern.
+	if (bE193Weiter)
+	{
+		char szE193[160];
+		sprintf(szE193, "E-193 genaue Suche: %d Mails geoeffnet, davon %d HTML, %d ms",
+				nOpenedMsgs, nHTMLMsgs, (int)(GetTickCount() - nStart));
+		PutDebugLog(DEBUG_MASK_MISC, szE193);
+	}
 
 #ifdef _DEBUG
 	{

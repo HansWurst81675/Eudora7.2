@@ -38,17 +38,26 @@ static void Test_E193_Suche(const char* szEudoraDir)
 		TT_CHECK_MSG(QT_Enthaelt(pV, "if ( ShouldUseIndexedSearch() && !bE193Genau )") &&
 					 QT_Enthaelt(pV, "bool bE193Genau = ShouldUseIndexedSearch() && E193BrauchtGenaueSuche(m_MSC);"),
 					 "DoSearch nimmt bei Umlaut oder Euro wieder den X1-Index (E-193)");
-		TT_CHECK_MSG(QT_Enthaelt(pV, "verb == CRITERIA_TEXT_COMPARE_MATCHESX1QUERY") &&
+		TT_CHECK_MSG(QT_Enthaelt(pV, "verb == CRITERIA_TEXT_COMPARE_MATCHESX1QUERY)) return false;") &&
 					 QT_Enthaelt(pV, "(unsigned char) text[i] >= 0x80"),
 					 "E193BrauchtGenaueSuche erkennt Umlaut/Euro oder die X1-Abfrage nicht mehr (E-193)");
 
 		// 2. Genaue Suche: HTML-Mail auch ohne rohen Treffer oeffnen.
-		TT_CHECK_MSG(QT_Enthaelt(pS, "if (!bOpenMessage && m_CorrectResults > 0 && pSum->IsHTML() && E193TextMitUmlaut(srchCriteria)) bOpenMessage = true;"),
-					 "die genaue Suche oeffnet HTML-Mails mit Entitaeten nicht - &auml; wird nicht gefunden (E-193)");
+		TT_CHECK_MSG(QT_Enthaelt(pS, "if (!bOpenMessage && m_CorrectResults > 0 && pSum->IsHTML() && E193TextMitUmlaut(srchCriteria) && E193ImText(srchCriteria) && !pSum->IsNotIMAPDownloadedAtAll()) bOpenMessage = true;"),
+					 "die genaue Suche oeffnet HTML-Mails mit Entitaeten nicht (&auml; nicht gefunden), oder auch bei From/To oder ungeladenen IMAP-Mails (E-193, PRUEFER-99 K2)");
+		TT_CHECK_MSG(QT_Enthaelt(pS, "if ((unsigned char) text[i] >= 0x80) return true;"),
+					 "E193TextMitUmlaut vergleicht nicht als unsigned char ab 0x80 - der ganze Weg waere tot (E-193, PRUEFER-99 K4)");
+		TT_CHECK_MSG(QT_Enthaelt(pS, "return (Sct.GetCriteria() == CRITERIA_OBJECT_BODY) || (Sct.GetCriteria() == CRITERIA_OBJECT_ANYWHERE);"),
+					 "E193ImText beschraenkt das Oeffnen nicht auf Body/Anywhere (E-193, PRUEFER-99 K2)");
+		// PRUEFER-99 K1: mit Umlaut nicht auf dem IMAP-Server suchen (rohe Latin-1-Bytes ohne CHARSET).
+		TT_CHECK_MSG(QT_Enthaelt(pS, "if(CTocDoc::ImapServerCanSearch(&Sct) && !E193TextMitUmlaut(Sct))"),
+					 "eine Suche mit Umlaut geht wieder an den IMAP-Server statt lokal (E-193, PRUEFER-99 K1)");
+		TT_CHECK_MSG(QT_Enthaelt(pS, "E-193 genaue Suche: %d Mails geoeffnet, davon %d HTML, %d ms"),
+					 "die Logzeile mit geoeffneten Mails und Dauer fehlt (E-193, PRUEFER-99 K2)");
 		// 2b. ... und gibt das Postfach nicht nach der ersten Mail auf, nur weil der rohe Text
 		//     nirgends passt (gemessen 04.11.2026: "Spaetzle" nur als Sp&auml;tzle fehlte).
 		TT_CHECK_MSG(QT_Enthaelt(pS, "!m_pMSC->HasNegationSearch() && !bFoundMatches && !bE193Weiter)") &&
-					 QT_Enthaelt(pS, "if (E193TextMitUmlaut(sc)) bE193Weiter = true;"),
+					 QT_Enthaelt(pS, "if (E193TextMitUmlaut(sc) && E193ImText(sc)) bE193Weiter = true;"),
 					 "die genaue Suche bricht ein Postfach ohne rohen Treffer ab - ein Wort nur als Entitaet wird nie gefunden (E-193)");
 		long lHilfe = QT_Stelle(pS, "bool E193TextMitUmlaut(SearchCriteria& Sct)");
 		long lStart = QT_Stelle(pS, "bool SearchEngine::Start(");
@@ -56,7 +65,7 @@ static void Test_E193_Suche(const char* szEudoraDir)
 					 "E193TextMitUmlaut steht nicht vor SearchEngine::Start (E-193)");
 
 		// 3. Html2Text kennt &euro;.
-		TT_CHECK_MSG(QT_Enthaelt(pH, "strnicmp(szText, \"&euro\", 5) == 0)) { m_szDest += '\\x80';"),
+		TT_CHECK_MSG(QT_Enthaelt(pH, "else if ( ul == 5 && (strnicmp(szText, \"&euro\", 5) == 0)) { m_szDest += '\\x80';"),
 					 "Html2Text uebersetzt &euro; nicht - das Euro-Zeichen fehlt in HTML-Mails (E-193)");
 	}
 	if (pV) free(pV);
