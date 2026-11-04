@@ -224,6 +224,7 @@ private:
 	Decoder*	m_Decoder;
 	BOOL		m_bMustReadSingleLines;
 	BOOL		m_bEndedWithCRLF;
+	BOOL		m_bE188TeilFehlt;		// E-188 K1: ein Teil des Rumpfs kam nicht (Server-NO, Abbruch) - die Mail bleibt "nicht geladen"
 
 	// Allocated buffer.
 	// When m_pReadBuffer is created, set the buffer size also.

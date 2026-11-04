@@ -38,7 +38,9 @@ Daraus folgt für jedes 7.2.1.x:
    ([L-101.1](Befunde/LEKTOR-101.md#l-101.1)).
 
 Testpakete sind für Gregors lokalen Test, keine Releases; veröffentlicht
-wird ein Stand erst nach seinem Test, mit der Marke `v7.2.1.<n>`. Bis zum
+wird ein Stand erst nach seinem Test, seit 7.2.2.132 mit der Marke `v7.2.2.<n>`,
+auch wenn er nur Fehler behebt (Gregor 04.11.2026: das nächste Paket ist
+7.2.2.133); bis 7.2.1.131 hieß sie `v7.2.1.<n>` ([Maßstab für 7.2.2](#maßstab-für-die-fassung-722)). Bis zum
 Release 7.2.1.128 hießen Testpakete 7.2.0.\<n\> (z. B. **7.2.0.123**), seither
 heißen sie wie das Release 7.2.1.\<n\> (Gregors Entscheidung 20 in
 [WEITERMACHEN.md](Intern/WEITERMACHEN.md#entscheidungen)).
@@ -65,7 +67,7 @@ beschädigt, steht oben.
 | Gruppe | Befund | Worum es geht |
 |---|---|---|
 | Fremde Installation | **Anforderung — ERLEDIGT durch Entscheidung** | **Wir bauen nichts für Hermes nach.** Von Gregor am 22.10.2026 entschieden: *„wir fixen nichts für hermes, der hinweis, daß man es separieren soll, reicht."* Damit ist diese Zeile **keine Voraussetzung für 7.2.1** mehr. Was bleibt und schon steht: die Warnung ganz oben in [README.md](README.md) (vor dem ersten Start sichern, getrennte Verzeichnisse benutzen, Parallelbetrieb auf eigene Gefahr) und der Abschnitt *What we do not take on* in [MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md). Was **nicht** entfällt, weil es etwas anderes ist: dass **vorsichtige Benutzung nichts zerstört** — genau das war [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)-1, und dafür sind [E-131](Intern/BEFUNDE.md#e-131) (Schreibweg, 7.2.0.113) und [E-132](Intern/BEFUNDE.md#e-132) (fremdes Mailverzeichnis, 7.2.0.117/.118) behoben. **Offen bleibt allein der Leseweg von [E-131](Intern/BEFUNDE.md#e-131)** — eine INI, die den kaputten Wert schon trägt, wird erst beim nächsten Speichern berichtigt. Die vorher hier verlangte Bestandsaufnahme *„welche Schlüssel schreiben wir, die 7.1 nicht kennt"* ist mit dieser Entscheidung **gestrichen** |
-| Sechs kritische Randfälle | **keine Voraussetzung, durch Entscheidung** — die Befunde selbst bleiben offen | **Keine Voraussetzung für 7.2.1.** Von Gregor am 23.10.2026 entschieden, auf die Frage, ob die sechs offenen, als kritisch eingestuften Befunde außerhalb dieses Maßstabs das Release aufhalten: *„ich sehe die ganzen dinge unkritisch. sind randfälle."* Gemeint sind [E-122](Intern/BEFUNDE.md#e-122) (Datum beim Hochladen nach IMAP verschoben), [E-123](Intern/BEFUNDE.md#e-123) (Absturz mitten im Verschieben), [E-124](Intern/BEFUNDE.md#e-124) (Defender), [E-126](Intern/BEFUNDE.md#e-126) (gesendete Mail beim Abgleich), [E-129](Intern/BEFUNDE.md#e-129) (Beenden ohne Verbindung), [E-136](Intern/BEFUNDE.md#e-136) (Emoji wird beim Speichern zu „??"; seit 31.10.2026 auf Gregors Entscheidung *unkritisch*). **Ebenfalls entschieden am 23.10.2026:** [AN-1](Intern/BEFUNDE.md#an-1) später (*„aufschreiben, jetzt nicht"*; seit 01.11.2026 auf Gregors Entscheidung *unkritisch*), [E-133](Intern/BEFUNDE.md#e-133) bleibt offen mit der Umgehung über `Eudora starten.cmd` in der README, [E-130](Intern/BEFUNDE.md#e-130) ist behoben. Bis zum 24.10.2026 stand hier „noch nicht entschieden" ([L-54.3](Befunde/LEKTOR-54.md#l-54.3)). |
+| Sechs Randfälle (am 23.10.2026 als „kritisch“ gefragt; heute ist nur [E-122](Intern/BEFUNDE.md#e-122) *kritisch*, behoben, die anderen fünf sind *unkritisch*) | **keine Voraussetzung, durch Entscheidung** — die Befunde selbst bleiben offen | **Keine Voraussetzung für 7.2.1.** Von Gregor am 23.10.2026 entschieden, auf die Frage, ob die sechs offenen, als kritisch eingestuften Befunde außerhalb dieses Maßstabs das Release aufhalten: *„ich sehe die ganzen dinge unkritisch. sind randfälle."* Gemeint sind [E-122](Intern/BEFUNDE.md#e-122) (Datum beim Hochladen nach IMAP verschoben), [E-123](Intern/BEFUNDE.md#e-123) (Absturz mitten im Verschieben), [E-124](Intern/BEFUNDE.md#e-124) (Defender), [E-126](Intern/BEFUNDE.md#e-126) (gesendete Mail beim Abgleich), [E-129](Intern/BEFUNDE.md#e-129) (Beenden ohne Verbindung), [E-136](Intern/BEFUNDE.md#e-136) (Emoji wird beim Speichern zu „??"; seit 31.10.2026 auf Gregors Entscheidung *unkritisch*). **Ebenfalls entschieden am 23.10.2026:** [AN-1](Intern/BEFUNDE.md#an-1) später (*„aufschreiben, jetzt nicht"*; seit 01.11.2026 auf Gregors Entscheidung *unkritisch*), [E-133](Intern/BEFUNDE.md#e-133) bleibt offen mit der Umgehung über `Eudora starten.cmd` in der README, [E-130](Intern/BEFUNDE.md#e-130) ist behoben. Bis zum 24.10.2026 stand hier „noch nicht entschieden" ([L-54.3](Befunde/LEKTOR-54.md#l-54.3)). **Nachgezogen am 04.11.2026:** [E-123](Intern/BEFUNDE.md#e-123), [E-124](Intern/BEFUNDE.md#e-124), [E-126](Intern/BEFUNDE.md#e-126) und [E-129](Intern/BEFUNDE.md#e-129) tragen jetzt auch in `Intern/BEFUNDE.md` die Stufe *unkritisch* (bis dahin standen sie dort weiter als *kritisch* und zählten als „kritisch ohne jede Prüfung“); die Befunde bleiben offen. [E-122](Intern/BEFUNDE.md#e-122) ist nicht davon berührt, [E-136](Intern/BEFUNDE.md#e-136) war schon am 31.10.2026 herabgestuft. |
 | Fremde Installation | [E-131](Intern/BEFUNDE.md#e-131) | unsere Fassung schrieb eine ungültige Fensterposition in die gemeinsam benutzte `Eudora.ini`; danach startete eine **daneben installierte** Eudora/Hermes 7.1 nicht mehr (**behoben in 7.2.0.113**, nachgestellt und gemessen; der Leseweg bleibt offen). **Von Gregor am 20.10.2026 in den Maßstab aufgenommen** — der erste Fehlerbericht von außen ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102)), und der einzige Befund, der etwas **außerhalb** von Eudora unbrauchbar macht |
 | Adressbuch benutzbar | **Anforderung — ERFÜLLT** (Gregor am 23.10.2026: *„die Adressbuch-Taste Strg+Umschalt+, damit kann ich gut leben, also hier nichts mehr zu tun. markiere als erledigt."* — die vorher verlangte Doku entfällt damit) | **Nach *Strg+Umschalt+,* steht im `To:`-Feld die Mailadresse, nicht der eingetippte Kurzname.** Von Gregor am 21.10.2026 gesetzt und am 22.10.2026 entschieden: *„wenn es mit ctrl-shif-, geht, dann ist es auch erfüllt, muß nur dokumentiert werden."* **Am Quelltext belegt (22.10.2026), nicht am laufenden Programm gemessen:** `EudoraRes.rc:267-268` legt **beide** Tasten auf `ID_EDIT_FINISHNICKNAME` — `Strg+,` und `Strg+Umschalt+,`. In `FinishNickname` (`nickdoc.cpp:4103`) entscheidet `BOOL DoExpand = ShiftDown();`: **ohne** Umschalt wird der Kurzname nur **vervollständigt**, **mit** Umschalt durch `ExpandAliases` ersetzt (`:4213-4228`). **Ein gemessener Vorbehalt:** `:4208` setzt `DoExpand = DoExpand && (NumFound == 1)` — passen **mehrere** Kurznamen auf das Getippte, wird nicht expandiert, sondern vervollständigt. *Überholt am 23.10.2026* (Gregor: nichts mehr zu tun): hier stand, die Taste sei noch in der README aufzuschreiben und am laufenden Programm nachzumessen ([L-54.4](Befunde/LEKTOR-54.md#l-54.4)). *Tab* bleibt davon unberührt und ist **nicht** mehr verlangt |
 | Eingaben gehen verloren | [E-135](Intern/BEFUNDE.md#e-135) | die Auswahlbox im `To:`-Feld wurde bei jedem Cursor-Schritt kleiner und war nach fünf Schritten nicht mehr zu sehen — `ReCalcACListBoxPos` las das Innenmaß und setzte daraus das Außenmaß (**behoben in 7.2.0.120**, rot und grün am laufenden Programm gemessen: 100×62 bis 20×14 gegen konstant 108×70). **Quelltext original, Verhalten in Hermes nicht gemessen** |
@@ -110,8 +112,10 @@ an 7.2.1.128 prüft, und sein Ja ([TESTPLAN](Intern/TESTPLAN.md)). Das Release h
 Von Gregor am 02.11.2026 bestätigt (*„ja, da skönnen wir dann in 7.2.2.x
 aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
 
-* **7.2.1.x bleibt die Reihe für Fehlerbehebungen.** Neue Funktionen gehören
-  nicht dazu (Maßstab für 7.2.1 oben).
+* **7.2.1.x war die Reihe für Fehlerbehebungen** bis 7.2.1.131. Neue
+  Funktionen gehörten nicht dazu (Maßstab für 7.2.1 oben). Seit 7.2.2.132
+  heißt jede Fassung 7.2.2.N, auch eine, die nur Fehler behebt (Gregor
+  04.11.2026, Entscheidung 26 in [WEITERMACHEN](Intern/WEITERMACHEN.md)).
 * **7.2.2 ist die erste Fassung mit neuen Funktionen.** Für sie gelten
   dieselben Punkte 1 bis 4 wie für 7.2.1.x, dazu: jede neue Funktion ist im
   [TESTPLAN](Intern/TESTPLAN.md) mit einem Schritt für Gregor und, wo es geht,
@@ -119,7 +123,7 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
 * **Die Nummer:** das erste Paket 7.2.2 heißt **7.2.2.132** — die letzte
   Stelle zählt weiter wie bei 7.2.1 (Gregor am 02.11.2026: *„7.2.2.132,
   ja“*). Die Marke auf GitHub heißt entsprechend `v7.2.2.<n>`.
-* **Umgesetzt, am Prüfstand gemessen, auf `main` seit #206** (kommt mit
+* **Umgesetzt, am Prüfstand gemessen, auf `main` seit #206** (im Testpaket
   7.2.2.132, [A-5](Intern/BEFUNDE.md#a-5)): im Hilfe-Menü *Keyboard
   Shortcuts* und *Settings Reference* — eine HTML-Seite, erzeugt aus der
   Funktionsübersicht [`Doku/FUNKTIONEN.md`](Doku/FUNKTIONEN.md) (gemergt
@@ -132,7 +136,16 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
   Randbalken, Weiterleitungskopf als Tabelle), [E-128](Intern/BEFUNDE.md#e-128)
   (gespeicherte HTML-Nachricht als `.txt`; wartet auf Gregors Entscheidung).
 
-Von den Kandidaten ist noch nichts umgesetzt; die Reihenfolge entscheidet Gregor.
+* **Dazu in 7.2.2.132 (veröffentlicht am 03.11.2026):** der About-Dialog mit *Latest Release*
+  ([E-216](Intern/BEFUNDE.md#e-216)), *Speichern unter* mit passender Endung
+  ([E-128](Intern/BEFUNDE.md#e-128), damit ist der Kandidat oben umgesetzt),
+  die Behebungen an Persönlichkeiten ([E-203](Intern/BEFUNDE.md#e-203),
+  [E-204](Intern/BEFUNDE.md#e-204)) und beim Speichern
+  ([E-196](Intern/BEFUNDE.md#e-196), [E-205](Intern/BEFUNDE.md#e-205),
+  [E-207](Intern/BEFUNDE.md#e-207)); Einzelheiten im
+  [CHANGELOG](CHANGELOG.md) unter 7.2.2.132.
+
+Von den übrigen Kandidaten ist noch nichts umgesetzt; die Reihenfolge entscheidet Gregor.
 
 ## Regressionstests — Anordnung vom 22.10.2026
 
@@ -217,7 +230,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 02.11.2026.** Quellstand **7.2.1.131** (`VERSION` gleich; geschnürt am 02.11.2026, von Gregor am selben Tag getestet, alle sieben Schritte bestanden; davor 7.2.1.130, geschnürt am 01.11.2026, und 7.2.1.129, geschnürt am 31.10.2026, beide nicht veröffentlicht). Veröffentlicht zuletzt **7.2.1.131** als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131) am 02.11.2026; davor **7.2.1.128** (erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026. **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 03.11.2026.** Quellstand **7.2.2.132** (`VERSION` gleich; geschnürt am 03.11.2026, Prüfbericht BESTANDEN, von Gregor am selben Tag getestet, alle zwölf Schritte bestanden; davor 7.2.1.131, geschnürt am 02.11.2026, von Gregor am selben Tag getestet, alle sieben Schritte bestanden; davor 7.2.1.130, geschnürt am 01.11.2026, und 7.2.1.129, geschnürt am 31.10.2026, beide nicht veröffentlicht). Veröffentlicht zuletzt **7.2.2.132** als [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132) am 03.11.2026; davor **7.2.1.131** als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131) am 02.11.2026 und **7.2.1.128** (erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026. **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 

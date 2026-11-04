@@ -1024,7 +1024,10 @@ HRESULT CImapChecker::DownloadRemainingMessagesMT(CUidMap &uidmap,
 			if (SUCCEEDED(hResult))
 			{			
 				// Indicate that this was more than a minimal download.
-				pImapSum->m_Imflags &= ~IMFLAGS_NOT_DOWNLOADED;
+				// E-188 (PRUEFER-95 K2): hier nicht mehr loeschen - pImapSum ist neu, das
+				// Merkzeichen steht nur, wenn der Downloader es gesetzt hat, weil ein Teil
+				// des Rumpfs fehlte. Bis 7.2.2.132 loeschte diese Zeile es ohne Bedingung,
+				// die Mail galt als geladen, und beim Verschieben wurde die Quelle geloescht.
 
 				// If this our highest UID so far?
 				if (uid > m_ulNewUIDHighest)

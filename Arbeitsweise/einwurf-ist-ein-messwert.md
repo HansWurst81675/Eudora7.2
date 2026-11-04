@@ -214,3 +214,11 @@ Die Regel *„Jeder Einwurf Gregors bekommt eine Antwort, auch wenn ein zweiter 
 2. **17:24:31** *„es kam wieder die start meldung …“* Um 17:24:43 und 17:24:54 gemessen: kein Prozess, keine neue Spur. Der nächste Text (17:25:26) antwortete schon auf die dritte Nachricht.
 
 Neu gegenüber dem 15.10. und 30.10.: Die Messung war jedes Mal da und schnell, es fehlte nur der Satz an Gregor. Viertes gemessenes Auftreten (15.10., 28.10., 30.10., 01.11.). **How to apply, zusätzlich:** Eine Messung, die eine Frage Gregors beantwortet, endet mit einem Satz an ihn, bevor der nächste Werkzeugaufruf kommt. `verlauf-messen.pl --offen` (Vorschlag oben) bleibt ungebaut; Gegenprobe heute: 17:23:40 und 17:24:31 erscheinen, 17:25:11 (beantwortet 17:25:26) nicht.
+
+## Nachtrag 03.11.2026 (CHRONIST): fünf Fragen ohne Antwort, eine wortgleich mit der vom 01.11.
+
+`verlauf-messen.pl` über `f3d03714` (03.11., 07:19 bis 15:45 MEZ): **115 Nachrichten, 57 Einwürfe (49 %)**, 568 Werkzeugaufrufe, größter Block 65. Fünf Fragen in sechs Nachrichten blieben ohne Antwort (gemessen: kein Text bis zur nächsten Nachricht Gregors greift sie auf; Liste in [[CHRONIST-2026-11-03]], Abschnitt 2): 08:09:59 (*„welche angaben sind es?“*), 08:14:42 und 08:15:00 (E-128 schon geprüft, RTF entschieden?), 09:06:14, 09:11:21 und 09:58:25 (*„welcher aufruf? wovon sprichst du?“*).
+
+Die Frage von 09:06:14, *„alle gemergten fixes sind dann auch im changelog, befunde, weitermachen, testplan usw. nachgezogen?“*, ist fast dieselbe wie am 01.11. um 17:23:40. Beide Male wurde in den nächsten 30 Sekunden gemessen, und beide Male fehlte der Satz an Gregor. Bei 08:14 ebenso: drei Suchen nach Gregors früherer RTF-Entscheidung, dann ging es mit dem Prüfstand weiter. Fünftes gemessenes Auftreten (15.10., 28.10., 30.10., 01.11., 03.11.). Die Einwurfquote stieg von 27 % (02.11. tagsüber) auf 49 %.
+
+**How to apply, zusätzlich:** Kommen mehrere Einwürfe kurz hintereinander, beantwortet die nächste Meldung jeden einzeln, mit Uhrzeit oder Zitat, bevor sie den eigenen Stand nennt. `verlauf-messen.pl --offen` (Vorschlag vom 30.10.) bleibt ungebaut. Gegenprobe heute: 09:06:14 und 09:58:25 erscheinen, 13:36:00 (beantwortet 13:36:11) nicht.

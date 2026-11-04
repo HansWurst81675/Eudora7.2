@@ -55,13 +55,13 @@ for my $a (@ARGV) {
 my $VEROEFFENTLICHT = qr/
     \bver (?:\xc3\xb6|oe) ffentlicht \s+ ist \s+
     (?: inzwischen \s+ | weiterhin \s+ | jetzt \s+ )?
-    \**\s* `? (v?(?:1\.0|7\.2\.[01])\.\d+) `?
+    \**\s* `? (v?(?:1\.0|7\.2\.[012])\.\d+) `?
 /xi;
 # Seit dem 29.10.2026 (Gregors Entscheidung 10, Intern/WEITERMACHEN.md) heisst
 # ein Release v7.2.1.N, ein Testpaket bis 7.2.1.128 7.2.0.N und danach ebenfalls
 # 7.2.1.N (Entscheidung 20); bis 1.0.127 hiess beides 1.0.N.
 # Die Endnummer zaehlt ueber alle Formen weiter, verglichen wird deshalb sie.
-my $NUMMER = qr/(?:1\.0|7\.2\.[01])\.\d+/;
+my $NUMMER = qr/(?:1\.0|7\.2\.[012])\.\d+/;
 
 # "noch nicht", "nie" und "nicht geschnuert" behaupten alle KEIN Paket.
 # 1.0.107 bis 1.0.109 stehen als "nie geschnuert" in der Buchfuehrung - der

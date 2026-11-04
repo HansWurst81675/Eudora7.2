@@ -47,3 +47,14 @@ Verwandt: [[erst-pruefen-dann-anweisen]] — dieselbe Wurzel, eine Stufe
 früher: keine Handlungsanweisung, deren Folgen ich nicht selbst geprüft
 habe. Und [[fehlerklassen-abstellen]]: beim zweiten Auftreten Werkzeug und
 Schranke bauen. Hier hat einmal genügt.
+
+## Nachtrag 03.11.2026 (CHRONIST): E-188 gemessen, nicht gekennzeichnet, und das Release steht bevor
+
+Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 4). Um 15:20:55: *„E-188 ist schlimmer als gedacht: Dabei kann auf dem Server eine Mail verloren gehen.“* Das Paket 7.2.2.132 war um 12:43 geschnürt, PR #217 stand seit 14:54:53, Gregors *„ja, wir können es auf github releasen“* kam um 14:00:43, also vor der Messung. Die Warnung kam in README und Release-Notizen (Punkt 4 hier). Dann: *„#217 ist bereit zum Mergen. Danach lege ich das Release an.“*
+
+Gemessen beim CHRONIST-Lauf am 03.11. abends: Die E-188-Zeile in `BEFUNDE.md` trägt auf dem Messzweig *„kann die Mail auf dem Server verloren gehen“*, aber **nicht** `DATENVERLUST` (Punkt 1 hier). `pruefe-datenverlust.pl` sieht sie also nicht, und es ist nur in `paket-bauen.ps1` angeschlossen, nicht in `release-veroeffentlichen.ps1`. Gregors Entscheidung vom 23.10. ([[entscheidung-kritische-nicht-release-blocker]]) nennt sechs Kennungen, E-188 nicht.
+
+**How to apply, zusätzlich:**
+- **Eine Messung, die einen Verlustweg zeigt, setzt im selben Commit `DATENVERLUST`** in die Urteilszeile, auch auf einem reinen Messzweig.
+- **Ein Ja zum Release, das vor der Messung fiel, gilt nicht für den neuen Stand.** Die Frage an Gregor lautet ausdrücklich: „7.2.2.132 veröffentlichen, obwohl E-188 Mails auf dem Server verlieren kann, mit der Warnung in den Notizen?“ Seine Antwort kommt wörtlich in die Begründung von `-TrotzDatenverlust`.
+- **Schranken-Vorschlag (nicht gebaut):** `release-veroeffentlichen.ps1` fährt `pruefe-datenverlust.pl` wie der Paketbau; das Werkzeug meldet zusätzlich Urteilszeilen mit *„auf dem Server verloren“*, *„geht verloren“* oder *„Mailverlust“* ohne `DATENVERLUST`. Gegenprobe: E-188-Zeile des Messzweigs → gemeldet; mit `DATENVERLUST` und `**offen**` → Release abgewiesen; mit `**behoben**` → durch.

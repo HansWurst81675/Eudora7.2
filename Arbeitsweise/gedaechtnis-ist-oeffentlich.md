@@ -114,3 +114,7 @@ Die Probe von oben, *„kommt das aus Gregors Rechner?“*, griff hier nicht. Di
 **Gregor zur Bereinigung (03.11.2026):** die schon vorhandenen Nennungen seines Mailanbieters (rund 150, seit Oktober) bleiben stehen — *„Nein, nur ab jetzt“*. Nicht wieder vorschlagen.
 
 **Nachtrag 03.11.2026, Gregor:** *„keine daten aus den test ins github repo.“* — aus seinen Testergebnissen (Logs, Bildschirmfotos, gespeicherte Dateien) kommt nichts ins Repo: keine Betreffzeilen, Dateinamen, Inhalte, Adressen, Ordnernamen. Testdaten für Nachstellungen immer erfinden (gleiche Eigenschaften, anderer Text). In Agentenaufträge nie seinen echten Text als Muster geben, sondern beschreiben.
+
+## Nachtrag 03.11.2026 (CHRONIST): eine Veranschaulichung ist kein Zitat für die Notiz
+
+Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 8). Gregors ausgedachter Extremfall zur Abwägung von Randfällen (10:20:48) stand um 10:22:15 in einer neuen Gedächtnisnotiz. Gregor um 10:22:33: *„das war nur als beispiel zur veranschauung, nicht zum notieren auf github.“* Herausgenommen um 10:23:02. Kein Zweig und keine Commit-Nachricht enthält es (gemessen beim CHRONIST-Lauf). **How to apply, zusätzlich:** In eine Notiz kommt Gregors Regel, nicht sein Beispiel. Ein wörtliches Zitat nur, wenn es die Regel selbst ist, und vorher die Probe von oben.
