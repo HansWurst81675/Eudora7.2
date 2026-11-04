@@ -39,7 +39,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-195](Intern/BEFUNDE.md#e-195)** | Der Speicherdialog für Nachrichten bietet .rtf an, liefert aber Klartext — die Datei he… | 03.11.2026 an 7.2.2.132 | das Signaturfenster — es bietet weiter *Rtf Files* an und schreibt dort Text (siehe oben); die Behebung für die Nachrichten- und Verfassen-Fenster… |
 | **[E-194](Intern/BEFUNDE.md#e-194)** | Eudoras interne Markierung <x-flowed> steht in der gespeicherten Textdatei — *Speichern … | 03.11.2026 an 7.2.2.132 | K3, K4 und eine Prüfnachricht mit Anhang (K9) als Rest (das Paket 7.2.2.132 ist seit dem 03.11.2026 draußen); der Hochladeweg (PRUEFER-27 F3) bleibt… |
 | **[E-193](Intern/BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | 03.11.2026 an 7.2.2.132 | die Umsetzung (Index, bei Umlaut oder € jeden Treffer nachprüfen); alte gegen neue Fassung messen (Treffer und Zeit, die neun Testmails) und Gregor… |
-| **[E-192](Intern/BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | **nie gemessen** | die Quellmenge an allen drei Stellen durchreichen wie beim Verschieben; Prüfstandsfall für den Papierkorb. **Stufe: wichtig** (wie E-184) |
+| **[E-192](Intern/BEFUNDE.md#e-192)** | Papierkorb, Junk und Filter ordnen beim Verschieben mehrerer IMAP-Mails die neuen Nummern … | 03.11.2026 an 7.2.1.131 | PRÜFER über die Behebung; Paket. **Stufe: wichtig** (wie E-184) |
 | **[E-189](Intern/BEFUNDE.md#e-189)** | Beim Verschieben innerhalb eines IMAP-Kontos OHNE UIDPLUS steht die verschobene Mail im Zi… | 01.11.2026 an 7.2.1.130 | die Löschvermutung messen; bestätigen am Prüfserver ohne `COPYUID` (Fall `E-189`) oder an einem echten Server ohne UIDPLUS — Gregors Server melde… |
 | **[E-188](Intern/BEFUNDE.md#e-188)** | Beim Verschieben in ein anderes IMAP-Konto oder in ein lokales Postfach kann die Mail auf … | 04.11.2026 an 7.2.2.132 | das Paket ([LEKTOR-146](Befunde/LEKTOR-146.md#lektor-146) und [LEKTOR-147](Befunde/LEKTOR-147.md#lektor-147) sind eingearbeitet, #220 ist gemerg… |
 | **[E-184](Intern/BEFUNDE.md#e-184)** | Beim Verschieben zwischen IMAP-Ordnern mit UIDPLUS kann Eudora die Zusammenfassung einer f… | 01.11.2026 an 7.2.1.130 | K4 aus PRÜFER-75 (Warteschlange nach Neustart, klein); PRÜFER-78 K2 (Teilkopie, klein); PRÜFER über die K3-Behebung erledigt… |
@@ -113,6 +113,15 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## Nach 7.2.2.132 — im Quellstand, noch in keinem Paket
+
+Die Nummer des nächsten Pakets kommt beim Schnüren (seit Entscheidung 26: 7.2.2.N).
+
+* **Beim Verschieben zwischen IMAP-Konten und nach lokal geht keine Mail mehr auf dem Server verloren** ([E-188](Intern/BEFUNDE.md#e-188), Original von QUALCOMM; gemergt als #220, Prüfstand 10/10).
+* ***Festbreite* im Bearbeiten-Modus schreibt kein `t;` mehr in den Text** ([E-199](Intern/BEFUNDE.md#e-199), Original von QUALCOMM; gemergt als #221, Prüfstand `E-178p` rot an `main`, grün mit der Behebung).
+* **Papierkorb, Junk und Filter vertauschen beim Verschieben mehrerer IMAP-Mails die Einträge nicht mehr** ([E-192](Intern/BEFUNDE.md#e-192), Original von QUALCOMM). War die Liste nicht aufsteigend nach Nummer sortiert (etwa nach Datum), trug im Ziel eine Mail den Betreff und Absender einer anderen; jetzt ordnet Eudora über die Nummern zu, die der Server meldet, wie seit [E-184](Intern/BEFUNDE.md#e-184) beim Verschieben. Am Prüfstand gemessen ([`E-192`](Intern/BEFUNDE.md#e-192): an 7.2.1.131 zwei von drei vertauscht, mit der Behebung keine). Auf dem Server ging nichts verloren.
+* Protokoll: die beiden Zeilen zu [E-189](Intern/BEFUNDE.md#e-189) nennen keinen Ordnernamen mehr.
 
 ## 7.2.2.132 — Release (`v7.2.2.132`, veröffentlicht am 03.11.2026): Hilfe-Menü (A-5), About-Dialog mit *Latest Release* (E-216), *Speichern unter* mit passender Endung (E-128) und fünf Speicherfehler weniger, fehlendes Mailverzeichnis fragt statt zu beenden (E-133), Persönlichkeiten (E-39, E-203, E-204), Label ohne UIDPLUS (E-170)
 

@@ -289,6 +289,15 @@ E-188d | C:\Temp\E188 | 20 | messung | E188 LOESCHEN GEMESSEN fremd-lebt=1 | E18
 # falsch. Pruefstand C:\Temp\E193 ist eine Kopie von C:\Temp\E128 (7.2.2.132).
 E-193p | C:\Temp\E193 | 20 | messung | E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
 
+# E-192 (03.11.2026, Rest von E-184 K3): drei Mails, nach Datum sortiert
+# (Liste 3,2,1), alle markiert und GELOESCHT - "in den Papierkorb verschieben",
+# Papierkorb "Ablage" (messen-e192.ps1 -Vorbereiten stellt das ein). Weg:
+# CTocDoc::ImapMoveMsgsToTrash, direkt, ohne Warteschlange. Gemessen am Bau
+# 7.2.1.131: richtig=1 falsch=2 (UIDs ueber Kreuz); mit der Behebung gruen.
+# Eigener Pruefstand (Kopie von C:\Temp\E184), damit E-184/E-170 ihren
+# Papierkorb-Schalter nicht erben.
+E-192 | C:\Temp\E192 | 20 | messung | E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3 | | | messen=tools\messen-e192.ps1
+
 # E-97 / E-100 (25.10.2026): "Speichern unter" darf Eudora nicht abstuerzen
 # lassen - einmal aus dem Postfach mit OK und geschriebener Datei, einmal aus
 # einem Verfassen-Fenster mit Abbrechen; dazu die beiden INI-Werte aus E-100.

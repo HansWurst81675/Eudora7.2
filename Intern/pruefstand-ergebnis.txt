@@ -1,8 +1,20 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 14:17:22
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-199 geschaerfte Wirkprobe)
-nur=E-178p   (Teillauf, nicht der Gesamtstand)
-faelle=1
-bestanden=1
+zeit=2026-11-04 16:11:37
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-192 nach Merge mit main)
+nur=E-18   (Teillauf, nicht der Gesamtstand)
+faelle=13
+bestanden=13
 fehlgeschlagen=0
-fall=[ ok ] E-178p   E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1
+fall=[ ok ] E-184    E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
+fall=[ ok ] E-189    E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
+fall=[ ok ] E-184m   E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
+fall=[ ok ] E-188k   E188 ERGEBNIS weg=konten anzeige=richtig
+fall=[ ok ] E-188a   E188 ERGEBNIS weg=append
+fall=[ ok ] E-188u   E188 ERGEBNIS weg=ohneuid anzeige=richtig
+fall=[ ok ] E-188t   E188 ERGEBNIS weg=kontentext anzeige=richtig
+fall=[ ok ] E-188l   E188 ERGEBNIS weg=lokal anzeige=richtig
+fall=[ ok ] E-188f   E188 ERGEBNIS weg=fetch
+fall=[ ok ] E-188tm  E188 ERGEBNIS weg=kontenmehr
+fall=[ ok ] E-188fm  E188 ERGEBNIS weg=fetchmehr
+fall=[ ok ] E-188e   E188 ERGEBNIS weg=lokaleins anzeige=richtig
+fall=[ ok ] E-188d   E188 LOESCHEN GEMESSEN fremd-lebt=1

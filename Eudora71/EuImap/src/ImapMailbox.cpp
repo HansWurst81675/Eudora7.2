@@ -3304,7 +3304,8 @@ BOOL CImapMailbox::IsImapTrashMailbox (LPCSTR pPathname)
 HRESULT CImapMailbox::MoveMsgsToTrash(LPCSTR pUidlist,
 									  CDWordArray *pdwaNewUIDs,
 									  CUidMap& mapUidsActuallyRemoved,
-									  CTocDoc **pTrashToc)
+									  CTocDoc **pTrashToc,
+									  CDWordArray *pdwaQuellUIDs/*=NULL*/)	// E-192
 {
 	// Sanity:
 	//
@@ -3419,7 +3420,8 @@ HRESULT CImapMailbox::MoveMsgsToTrash(LPCSTR pUidlist,
 										pdwaNewUIDs,
 										strFullName,
 										TRUE/*Copy*/,
-										TRUE/*bSilent*/);
+										TRUE/*bSilent*/,
+										pdwaQuellUIDs);	// E-192: Quellmenge aus COPYUID
 	}
 	else
 	{
@@ -3484,7 +3486,8 @@ HRESULT CImapMailbox::MoveMsgsToOrFromJunk(bool bToJunk,
 										   LPCSTR pUidlist,
 										   CDWordArray *pdwaNewUIDs,
 										   CUidMap &mapUidsActuallyRemoved,
-										   CTocDoc **pTargetToc)
+										   CTocDoc **pTargetToc,
+										   CDWordArray *pdwaQuellUIDs/*=NULL*/)	// E-192
 {
 	if (!pUidlist || !*pUidlist)
 	{
@@ -3560,7 +3563,8 @@ HRESULT CImapMailbox::MoveMsgsToOrFromJunk(bool bToJunk,
 										pdwaNewUIDs,
 										strImapName,
 										TRUE,				// Do a COPY only.
-										TRUE);				// bSilent.
+										TRUE,				// bSilent.
+										pdwaQuellUIDs);		// E-192: Quellmenge aus COPYUID
 	}
 	else
 	{

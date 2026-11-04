@@ -62,19 +62,20 @@ E-171p	ok	2026-11-03 12:26:42	C:\Temp\E171	Eudora 7.2.2.132+561f3ebf 2026-11-03 
 E-177p	ok	2026-11-03 12:26:42	C:\Temp\E177	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1
 E-178p	ok	2026-11-04 14:17:22	C:\Temp\E178	Eudora 7.2.2.132+4ae1c87e* 2026-11-04 13:56	E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1
 E-179p	ok	2026-11-03 12:26:42	C:\Temp\EM179	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1
-E-184	ok	2026-11-03 12:26:42	C:\Temp\E184	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
-E-184m	ok	2026-11-03 12:26:42	C:\Temp\E184	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
-E-188a	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=append
-E-188d	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 LOESCHEN GEMESSEN fremd-lebt=1
-E-188e	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=lokaleins anzeige=richtig
-E-188f	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=fetch
-E-188fm	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=fetchmehr
-E-188k	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=konten anzeige=richtig
-E-188l	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=lokal anzeige=richtig
-E-188t	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=kontentext anzeige=richtig
-E-188tm	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=kontenmehr
-E-188u	ok	2026-11-04 11:36:47	C:\Temp\E188	Eudora 7.2.2.132+ea323d31* 2026-11-04 11:18	E188 ERGEBNIS weg=ohneuid anzeige=richtig
-E-189	ok	2026-11-03 12:26:42	C:\Temp\E184	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
+E-184	ok	2026-11-04 16:11:37	C:\Temp\E184	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E184 ERGEBNIS fremd=1 kopie=1 eintraege=2
+E-184m	ok	2026-11-04 16:11:37	C:\Temp\E184	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
+E-188a	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=append
+E-188d	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 LOESCHEN GEMESSEN fremd-lebt=1
+E-188e	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=lokaleins anzeige=richtig
+E-188f	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=fetch
+E-188fm	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=fetchmehr
+E-188k	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=konten anzeige=richtig
+E-188l	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=lokal anzeige=richtig
+E-188t	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=kontentext anzeige=richtig
+E-188tm	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=kontenmehr
+E-188u	ok	2026-11-04 16:11:37	C:\Temp\E188	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E188 ERGEBNIS weg=ohneuid anzeige=richtig
+E-189	ok	2026-11-04 16:11:37	C:\Temp\E184	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
+E-192	ok	2026-11-04 15:51:21	C:\Temp\E192	Eudora 7.2.2.132+8331e071 2026-11-04 15:43	E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
 E-194k	ok	2026-11-03 12:26:42	C:\Temp\E194K	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
 E-194p	ok	2026-11-03 12:26:42	C:\Temp\E194	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
 E-203p	ok	2026-11-03 12:26:42	C:\Temp\E203	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1
