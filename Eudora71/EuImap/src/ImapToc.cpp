@@ -1322,6 +1322,7 @@ BOOL CTocDoc::ImapCopyMsgBetweenAccounts (CSummary *pSum, CTocDoc *pTargetToc, C
 			// Fall E-188k; wer die scheinbaren Doppel loeschte, loeschte die fremde
 			// Mail auf dem Server, Fall E-188d).
 			CSummary		*pCopySum = E184FindeVorabKopie(pTargetToc, pSum->GetHash());
+			bool			 bVorab = (pCopySum != NULL);
 			if (pCopySum)
 			{
 				pCopySum->SetE184Vorab(FALSE);
@@ -1333,7 +1334,25 @@ BOOL CTocDoc::ImapCopyMsgBetweenAccounts (CSummary *pSum, CTocDoc *pTargetToc, C
 			}
 			if (pCopySum)
 			{
+				// E-188: Copy() uebernimmt auch m_Imflags und m_State der Quelle - und die
+				// ist hier schon als geloescht markiert (der lokale Teil von Xfer lief
+				// vorher). Die Kopie im Ziel trug dann IMFLAGS_DELETED und war in der Liste
+				// ausgeblendet (gemessen 04.11.2026: sichtbar nur die fremde Mail, Ziel.toc
+				// hatte beide). Wie ImapTransferSummaryData (E-184): Merkzeichen und Status
+				// der Vorab-Kopie sichern und zuruecksetzen; ohne Vorab-Kopie nur das
+				// Geloescht-Merkzeichen entfernen.
+				unsigned long	ulFlagsVorab = pCopySum->m_Imflags;
+				short			sStateVorab  = pCopySum->m_State;
 				pCopySum->Copy(pSum);
+				if (bVorab)
+				{
+					pCopySum->m_Imflags = ulFlagsVorab;
+					pCopySum->m_State   = sStateVorab;
+				}
+				else
+				{
+					pCopySum->m_Imflags &= ~IMFLAGS_DELETED;
+				}
 				// E-188: Copy() uebernimmt die ALTE Nummer der Quelle. Bis 7.2.2.132 blieb
 				// die Kopie im Ziel unter ihr stehen, und der naechste Abgleich holte die
 				// Mail unter NewUid ein zweites Mal - ein scheinbares Doppel mit der Nummer

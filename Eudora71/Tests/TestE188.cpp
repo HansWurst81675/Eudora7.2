@@ -117,6 +117,9 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 			long lAdd  = QT_Stelle(pKon, "pTargetToc->AddSum(pCopySum);");
 			TT_CHECK_MSG(lCopy >= 0 && lNeu > lCopy && lAdd > lNeu,
 						 "zwischen Konten behaelt die Kopie im Ziel die alte Nummer - der Abgleich holt sie ein zweites Mal (E-188k/d)");
+			TT_CHECK_MSG(QT_Enthaelt(pKon, "pCopySum->m_Imflags = ulFlagsVorab;") &&
+						 QT_Enthaelt(pKon, "pCopySum->m_Imflags &= ~IMFLAGS_DELETED;"),
+						 "zwischen Konten erbt die Kopie im Ziel das Geloescht-Merkzeichen der Quelle - sie ist ausgeblendet (E-188d)");
 		}
 		if (pLok) free(pLok);
 		if (pKon) free(pKon);
