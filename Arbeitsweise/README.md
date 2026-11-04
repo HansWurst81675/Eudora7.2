@@ -78,6 +78,7 @@ eine Datei liest, liest diese.
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
 | [agenten-koordinieren](agenten-koordinieren.md) | Fünf Kollisionsarten paralleler Agenten und das Verfahren gegen jede; die Zuteilung ist meine Aufgabe, nicht die der Agenten |
+| [agenten-modell-nach-auftrag](agenten-modell-nach-auftrag.md) | Gregor 04.11.2026: mechanische Agentenaufträge mit günstigerem Modell, LEKTOR und PRÜFER wie bisher |
 | [agenten-trennen-worktrees](agenten-trennen-worktrees.md) | Parallele Agenten teilen sich Arbeitsverzeichnis und git-Index — mit Worktrees trennen, sonst mit Pfadangabe committen |
 | [anforderung-gehoert-in-den-massstab](anforderung-gehoert-in-den-massstab.md) | Eine Anforderung, die nur in der Umsetzung steht, ist keine; sie gehoert nach ZIEL.md und braucht eine Schranke, die beide Seiten gegeneinander haelt |
 | [anweisungen-abarbeiten](anweisungen-abarbeiten.md) | Gregors Nachrichten sind Arbeitsaufträge — Material sofort auswerten, Absprachen festhalten, nichts Neues erfinden |

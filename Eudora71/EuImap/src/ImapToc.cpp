@@ -1334,6 +1334,15 @@ BOOL CTocDoc::ImapCopyMsgBetweenAccounts (CSummary *pSum, CTocDoc *pTargetToc, C
 			if (pCopySum)
 			{
 				pCopySum->Copy(pSum);
+				// E-188: Copy() uebernimmt die ALTE Nummer der Quelle. Bis 7.2.2.132 blieb
+				// die Kopie im Ziel unter ihr stehen, und der naechste Abgleich holte die
+				// Mail unter NewUid ein zweites Mal - ein scheinbares Doppel mit der Nummer
+				// einer fremden Mail (gemessen, Fall E-188k; wer es loeschte, loeschte die
+				// fremde Mail auf dem Server, E-188d). Wie ImapTransferSummaryData
+				// (m_Hash = lNewUID) und wie der Weg nach lokal oben (Kennung zuruecksetzen,
+				// sie gehoert zur Quelle).
+				pCopySum->m_Hash = NewUid;
+				pCopySum->m_UniqueMessageId = 0;
 
 				pTargetToc->AddSum(pCopySum);
 				pCopySum->SetOffset(MStart);

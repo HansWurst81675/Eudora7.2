@@ -112,6 +112,11 @@ static void Test_E188_Loeschschranke(const char* szEudoraDir)
 			TT_CHECK_MSG(QT_Enthaelt(pKon, "E184FindeVorabKopie(pTargetToc, pSum->GetHash())") &&
 						 !QT_Enthaelt(pKon, "pTargetToc->GetSummaryFromUID(pSum->GetHash())"),
 						 "zwischen Konten wird die Vorab-Kopie wieder ueber die Nummer gesucht - ueberschreibt eine fremde Mail (E-188k)");
+			long lCopy = QT_Stelle(pKon, "pCopySum->Copy(pSum);");
+			long lNeu  = QT_Stelle(pKon, "pCopySum->m_Hash = NewUid;");
+			long lAdd  = QT_Stelle(pKon, "pTargetToc->AddSum(pCopySum);");
+			TT_CHECK_MSG(lCopy >= 0 && lNeu > lCopy && lAdd > lNeu,
+						 "zwischen Konten behaelt die Kopie im Ziel die alte Nummer - der Abgleich holt sie ein zweites Mal (E-188k/d)");
 		}
 		if (pLok) free(pLok);
 		if (pKon) free(pKon);

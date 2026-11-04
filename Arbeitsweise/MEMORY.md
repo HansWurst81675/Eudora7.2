@@ -177,3 +177,4 @@
 - [Stand 04.11.2026](stand-04-11-2026.md) — v7.2.2.132 draußen; release-Zweig wartet auf BUCHHALTER, dann PR; E-188 Rest-Ursache im Downloader (:859)
 - [Prüfstand mit Fenster 04.11.](entscheidung-pruefstand-fenster-04-11.md) — erlaubt nur an diesem Tag (E-188)
 - [Nummer 7.2.2.N fortlaufend](entscheidung-nummer-7-2-2-fortlaufend.md) — Gregor 04.11.: nächstes Paket 7.2.2.133, auch nur Fehlerbehebungen; 7.2.1 abgeschlossen
+- [Agentenmodell nach Auftrag](agenten-modell-nach-auftrag.md) — Gregor 04.11.: mechanische Aufträge günstiger, LEKTOR/PRÜFER/CHRONIST wie bisher
