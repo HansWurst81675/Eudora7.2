@@ -134,9 +134,11 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
 
 * **Dazu in 7.2.2.132 (veröffentlicht am 03.11.2026):** der About-Dialog mit *Latest Release*
   ([E-216](Intern/BEFUNDE.md#e-216)), *Speichern unter* mit passender Endung
-  ([E-128](Intern/BEFUNDE.md#e-128), damit ist der Kandidat oben umgesetzt)
-  und die Behebungen an Persönlichkeiten ([E-203](Intern/BEFUNDE.md#e-203),
-  [E-204](Intern/BEFUNDE.md#e-204)); Einzelheiten im
+  ([E-128](Intern/BEFUNDE.md#e-128), damit ist der Kandidat oben umgesetzt),
+  die Behebungen an Persönlichkeiten ([E-203](Intern/BEFUNDE.md#e-203),
+  [E-204](Intern/BEFUNDE.md#e-204)) und beim Speichern
+  ([E-196](Intern/BEFUNDE.md#e-196), [E-205](Intern/BEFUNDE.md#e-205),
+  [E-207](Intern/BEFUNDE.md#e-207)); Einzelheiten im
   [CHANGELOG](CHANGELOG.md) unter 7.2.2.132.
 
 Von den übrigen Kandidaten ist noch nichts umgesetzt; die Reihenfolge entscheidet Gregor.
