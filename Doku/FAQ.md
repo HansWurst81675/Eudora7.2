@@ -412,8 +412,8 @@ das Original (erster Commit des Repos) nachgesehen.
 ## 20. Warum holt Eudora eine IMAP-Mail bei jedem Öffnen neu?
 
 Weil ein Teil der Mail fehlt und Eudora ihn nicht aufgibt. Verweigert ein
-IMAP-Server **dauerhaft** einen Teil einer Mail (einen Anhang, ein
-eingebettetes Bild, eine weitergeleitete Mail), zeigt Eudora, was
+IMAP-Server **dauerhaft** einen Teil einer Mail (etwa einen Anhang oder ein
+eingebettetes Bild), zeigt Eudora, was
 angekommen ist, und merkt sich die Mail als *nicht ganz geladen*. Bei jedem
 Anzeigen versucht es den Rest erneut. Dabei kann die Postfachdatei wachsen,
 und der Anhangordner bekommt die angekommenen Anhänge jedes Mal als neue
@@ -425,12 +425,29 @@ statt dort gelöscht zu werden — sonst ginge auf dem Server verloren, was nie
 vollständig angekommen ist. Gregor hat das am 04.11.2026 so entschieden:
 *„Sicherheit vor Platz“*.
 
+Drei Folgen, die Sie kennen sollten (je *am Quelltext belegt*, nicht am
+Programm gemessen):
+
+* Löschen Sie die Mail, **bleiben die gesammelten Anhangdateien** im
+  Anhangordner liegen; Eudora räumt sie dabei nicht weg.
+* Die Suche (*Find Messages*) nimmt eine solche Mail ohne Text auf; sie
+  findet sie nur über Kopfangaben.
+* Nach dem Verschieben steht im Ziel ein leerer Eintrag (nach lokal) oder
+  nichts, und es kommt keine Meldung. Löschen Sie die Mail in der Quelle
+  nicht von Hand, und halten Sie den leeren Eintrag nicht für die
+  verschobene Mail.
+
 Verweigert der Server den Teil nur einmal, holt das nächste Öffnen die Mail
 vollständig, und das Neuholen hört auf. Ob *Compact* die gewachsene
 Postfachdatei bei IMAP-Ordnern wieder verkleinert, ist **nicht gemessen**.
 
 Das gilt **ab der nächsten Fassung** (im Quellstand, noch in keinem Paket).
 
-*Am Quelltext nachgesehen* und für Kopf und Text am Prüfstand gemessen
-([E-188](../Intern/BEFUNDE.md#e-188)); die Entscheidung steht in
+*Am Quelltext belegt* ([PRÜFER-95](../Befunde/PRUEFER-95.md#k3) K3,
+[E-188](../Intern/BEFUNDE.md#e-188)): dass die Mail bei jedem Anzeigen neu
+geholt wird, dass Datei und Anhangordner wachsen und die drei Folgen oben;
+die Beispiele (Anhang, eingebettetes Bild) sind nicht gemessen. *Am Prüfstand
+gemessen* ist nur, dass die Mail beim Verschieben in der Quelle bleibt, und
+zwar für eine HTML-Mail, deren Teile alle verweigert werden (Fälle `E-188tm`
+und `E-188fm`). Die Entscheidung steht in
 `Arbeitsweise/entscheidung-e188-k3-sicherheit-vor-platz.md`.
