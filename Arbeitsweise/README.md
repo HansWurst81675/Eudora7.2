@@ -123,6 +123,7 @@ eine Datei liest, liest diese.
 | [entscheidung-pruefstand-fenster-01-11](entscheidung-pruefstand-fenster-01-11.md) | Gregor erlaubt am 01.11.2026 den vollen Prüfstandslauf (Eudora-Fenster unter C:\Temp) — nur dieser Tag |
 | [entscheidung-pruefstand-fenster-02-11](entscheidung-pruefstand-fenster-02-11.md) | Gregor erlaubt am 02.11.2026 den Prüfstand mit Fenster (Eudora unter C:\Temp) — nur dieser Tag; er testet außerhalb der VM |
 | [entscheidung-pruefstand-fenster-03-11](entscheidung-pruefstand-fenster-03-11.md) | Gregor 03.11.2026 - Prüfstand mit Eudora-Fenster nur an diesem Tag erlaubt (E-128, E-170) |
+| [entscheidung-pruefstand-fenster-04-11](entscheidung-pruefstand-fenster-04-11.md) | Gregor 04.11.2026: Prüfstand mit Eudora-Fenstern heute erlaubt (E-188 unter C:\Temp\E188) |
 | [entscheidung-pruefstand-fenster-30-10](entscheidung-pruefstand-fenster-30-10.md) | Gregor 30.10.2026 ~13:10: Prüfstandsläufe mit Fenster ab sofort erlaubt; er hält sich zurück und testet das Release 7.2.1.128 separat |
 | [entscheidung-pruefstand-fenster-31-10](entscheidung-pruefstand-fenster-31-10.md) | Gregor 31.10.2026 ~19:15 - Prüfstandsläufe mit Fenster heute erlaubt: 'ja, starte auf deinem lokalen prüfstand deine testes, ich halte mich zurück'; VM-Uhr ging ~20 h nach |
 | [entscheidung-reihenfolge-nach-7-2-2-132](entscheidung-reihenfolge-nach-7-2-2-132.md) | Gregor 03.11.2026 - erst 7.2.2.132 mit dem Fertigen; danach E-192, E-199, E-188 (erst messen), E-193 (erst nachstellen); E-129, E-198 nur dokumentiert |
