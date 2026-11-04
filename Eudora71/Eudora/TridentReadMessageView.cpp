@@ -3633,13 +3633,17 @@ UINT			uStringID )
 	
 	// first we're dealing with html now so convert the temporary tags
 	szTempDeleteEndTag = Text2Html( szTempDeleteEndTag, FALSE, FALSE );
-	szTempDeleteEndTag = szTempDeleteEndTag.Left( szTempDeleteEndTag.GetLength() - 2 ); // strip "\r\n"
+	if (szTempDeleteEndTag.Right(2) == "\r\n")	// E-199: Text2Html haengt "\r\n" nur an, wenn die Zeile auf \r endet - sonst fiel "t;" von "&gt;" weg
+		szTempDeleteEndTag = szTempDeleteEndTag.Left( szTempDeleteEndTag.GetLength() - 2 ); // strip "\r\n"
 	szTempDeleteStartTag = Text2Html( szTempDeleteStartTag, FALSE, FALSE );
-	szTempDeleteStartTag = szTempDeleteStartTag.Left( szTempDeleteStartTag.GetLength() - 2 ); // strip "\r\n"
+	if (szTempDeleteStartTag.Right(2) == "\r\n")	// E-199: Text2Html haengt "\r\n" nur an, wenn die Zeile auf \r endet - sonst fiel "t;" von "&gt;" weg
+		szTempDeleteStartTag = szTempDeleteStartTag.Left( szTempDeleteStartTag.GetLength() - 2 ); // strip "\r\n"
 	szTempOnTag = Text2Html( szTempOnTag, FALSE, FALSE );
-	szTempOnTag = szTempOnTag.Left( szTempOnTag.GetLength() - 2 ); // strip "\r\n"
+	if (szTempOnTag.Right(2) == "\r\n")	// E-199: Text2Html haengt "\r\n" nur an, wenn die Zeile auf \r endet - sonst fiel "t;" von "&gt;" weg
+		szTempOnTag = szTempOnTag.Left( szTempOnTag.GetLength() - 2 ); // strip "\r\n"
 	szTempOffTag = Text2Html( szTempOffTag, FALSE, FALSE );
-	szTempOffTag = szTempOffTag.Left( szTempOffTag.GetLength() - 2 ); // strip "\r\n"
+	if (szTempOffTag.Right(2) == "\r\n")	// E-199: Text2Html haengt "\r\n" nur an, wenn die Zeile auf \r endet - sonst fiel "t;" von "&gt;" weg
+		szTempOffTag = szTempOffTag.Left( szTempOffTag.GetLength() - 2 ); // strip "\r\n"
 
 	
 	// remove the start and end tags if necessary	
@@ -4072,9 +4076,11 @@ LPCSTR	szOffTag )
 
 	// first we're dealing with html now so convert the temporary tags
 	szTempOnTag = Text2Html( szTempOnTag, FALSE, FALSE );
-	szTempOnTag = szTempOnTag.Left( szTempOnTag.GetLength() - 2 ); // strip "\r\n"
+	if (szTempOnTag.Right(2) == "\r\n")	// E-199: Text2Html haengt "\r\n" nur an, wenn die Zeile auf \r endet - sonst fiel "t;" von "&gt;" weg
+		szTempOnTag = szTempOnTag.Left( szTempOnTag.GetLength() - 2 ); // strip "\r\n"
 	szTempOffTag = Text2Html( szTempOffTag, FALSE, FALSE );
-	szTempOffTag = szTempOffTag.Left( szTempOffTag.GetLength() - 2 ); // strip "\r\n"
+	if (szTempOffTag.Right(2) == "\r\n")	// E-199: Text2Html haengt "\r\n" nur an, wenn die Zeile auf \r endet - sonst fiel "t;" von "&gt;" weg
+		szTempOffTag = szTempOffTag.Left( szTempOffTag.GetLength() - 2 ); // strip "\r\n"
 
 	szPasteHTML = "";
 
