@@ -220,10 +220,11 @@ Prüfstand am 02.11.2026 an 7.2.1.128 und 7.2.1.131 gemessen) — an einem solch
 Server ging es aber am 29.10.2026 einmal verloren, die Ursache ist offen.
 7.2.1.131 schreibt dann eine Zeile mit dem Grund in die `eudora.log` — aber nur,
 wenn der Protokollbereich *Misc* eingeschaltet ist (`LogLevel` mit 0x8000; in
-der Vorgabe aus). **Im Quellstand für 7.2.2.132 berichtigt, noch in keinem
-Paket:** ohne UIDPLUS erkennt Eudora die Mail nach dem Abgleich an Datum,
-Absender und Betreff wieder und setzt ihr Label; sehen zwei neue Mails gleich
-aus, bekommt keine ein Label ([E-170](../Intern/BEFUNDE.md#e-170), offen).
+der Vorgabe aus). **Behoben in 7.2.2.132:** ohne UIDPLUS erkennt Eudora die
+Mail nach dem Abgleich an Datum, Absender und Betreff wieder und setzt ihr
+Label; sehen zwei neue Mails gleich aus, bekommt keine ein Label (am Prüfstand
+gemessen; [E-170](../Intern/BEFUNDE.md#e-170) bleibt offen, weil ungeklärt ist,
+warum das Label am 29.10.2026 an einem Server mit UIDPLUS verloren ging).
 
 Wie die Zeile aussieht: ab Werk (`WholeSummaryLabelColor=1`) wird die
 **Schrift der ganzen Zeile** in der Label-Farbe gezeichnet; der Hintergrund

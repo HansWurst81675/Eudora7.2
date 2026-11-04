@@ -23,7 +23,7 @@
 #      nicht veroeffentlicht.
 #   3. Quellstand und Paketnummer muessen zur verlangten Fassung passen
 #      (Version.h mit vier Mustern, und VERSION); ein Release traegt
-#      die Nummer 7.2.1.N, eine 7.2.0.N wird abgewiesen (Entscheidung 20).
+#      die Nummer 7.2.1.N oder 7.2.2.N, eine 7.2.0.N wird abgewiesen.
 #   4. Das ZIP muss vorhanden sein; Groesse und Pruefsumme werden ausgegeben.
 #
 # Aufruf:
@@ -70,12 +70,18 @@ if ([string]::IsNullOrWhiteSpace($Freigabe) -or $Freigabe.Trim().Length -lt 10) 
 # Release (Entscheidung 20); eine 7.2.0.N gibt es nicht mehr. Bis zum
 # 30.10.2026 wurde nur die Form a.b.c.d verlangt; ein Baum auf 7.2.0.129
 # waere als Release v7.2.0.129 durchgegangen (PRUEFER-65 K2).
+#
+# Seit dem 02.11.2026 (Gregor) ist 7.2.2.N die Reihe mit neuen Funktionen,
+# 7.2.1.N bleibt die fuer Fehlerbehebungen. Bis zum 03.11.2026 liess diese
+# Pruefung nur 7.2.1.N durch und wies das getestete und freigegebene
+# 7.2.2.132 ab - die Entscheidung war hier nicht nachgezogen.
 if ($Fassung -notmatch '^\d+\.\d+\.\d+\.\d+$') {
     Melde ('Fassung muss die Form 7.2.1.128 haben, war: ' + $Fassung)
-} elseif ($Fassung.Split('.')[2] -ne '1') {
-    Melde ('Fassung ' + $Fassung + ' ist keine 7.2.1.N: seit dem Release ' +
-           '7.2.1.128 heisst jede Fassung 7.2.1.N (Entscheidung 20, ' +
-           'Intern/WEITERMACHEN.md). VERSION und Version.h darauf setzen.')
+} elseif ($Fassung -notmatch '^7\.2\.[12]\.\d+$') {
+    Melde ('Fassung ' + $Fassung + ' ist weder 7.2.1.N noch 7.2.2.N: seit ' +
+           'dem Release 7.2.1.128 heisst jede Fehlerbehebungsfassung 7.2.1.N ' +
+           '(Entscheidung 20), seit 7.2.2.132 die mit neuen Funktionen 7.2.2.N ' +
+           '(Gregor 02.11.2026). VERSION und Version.h darauf setzen.')
 } else {
     $paketDatei = Join-Path $wurzel 'VERSION'
     $paket = ''

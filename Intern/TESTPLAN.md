@@ -1,15 +1,15 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.2.132 (Testpaket, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben, nicht veröffentlicht; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 03.11.2026 (E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.132 (Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 04.11.2026 (auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 ## <a id="test-7-2-2-132"></a>Dein Test an 7.2.2.132 — ca. 15 Minuten, an deinem echten System
 
 **Hier steht nur, was der Prüfstand nicht kann:** deine echten Konten und
 Server, dein Mailverzeichnis, dein Browser, deine Einstellungen und Filter.
 Was der Prüfstand selbst misst, steht im Kasten darunter und braucht dich
-nicht. 7.2.2.132 ist ein **Testpaket**, die erste Fassung mit neuen
-Funktionen (Hilfe-Menü, About-Dialog, *Speichern unter*); veröffentlicht wird
-es nur nach deinem Ja. Das Paket liegt neben deinem letzten
+nicht. 7.2.2.132 war ein **Testpaket**, die erste Fassung mit neuen
+Funktionen (Hilfe-Menü, About-Dialog, *Speichern unter*); nach deinem Ja ist
+es am 03.11.2026 als `v7.2.2.132` veröffentlicht. Das Paket liegt neben deinem letzten
 Testverzeichnis, das ZIP daneben.
 
 | # | Ort | Schritt | Bestanden, wenn … |
@@ -22,7 +22,7 @@ Testverzeichnis, das ZIP daneben.
 | 6 | lokal | *Help → Keyboard Shortcuts* ([A-5](BEFUNDE.md#a-5)). | dein Standard-Browser eine Seite *Eudora — Tastenkürzel* öffnet, mit richtigen Umlauten und oben der Fassung 7.2.2.132; Eudora zeigt keine Meldung. |
 | 7 | lokal | *Help → Settings Reference* ([A-5](BEFUNDE.md#a-5)). | der Browser eine zweite Seite *Eudora — Einstellungen und Eudora.ini-Schlüssel* öffnet, mit einer Tabelle je Seite von *Tools → Options*. |
 | 8 | lokal | *Help → About Eudora* ([E-216](BEFUNDE.md#e-216)), ansehen, noch nichts drücken. | unten fünf Knöpfe in einer Reihe stehen — *Close*, *Visit Web Site*, *Latest Release*, *Credits*, *Copy info* —, keiner einen anderen überdeckt und die Zeilen *Log* und *Mail folder from* ganz zu lesen sind. |
-| 9 | lokal | Im selben Dialog **nur** *Latest Release* drücken — der einzige Klick in diesem Dialog, der einen Browser öffnet —, danach *Close*. | der Browser die GitHub-Seite des neuesten Releases öffnet (`…/Eudora7.2/releases/…`; das ist noch 7.2.1.131, denn 7.2.2.132 ist nicht veröffentlicht) und Eudora **keine** Meldung *„The release page could not be opened …“* zeigt. |
+| 9 | lokal | Im selben Dialog **nur** *Latest Release* drücken — der einzige Klick in diesem Dialog, der einen Browser öffnet —, danach *Close*. | der Browser die GitHub-Seite des neuesten Releases öffnet (`…/Eudora7.2/releases/…`; seit dem 03.11.2026 ist das 7.2.2.132 selbst, bei deinem Test war es noch 7.2.1.131) und Eudora **keine** Meldung *„The release page could not be opened …“* zeigt. |
 | 10 | lokal | In der **Postfachliste** eines lokalen Postfachs eine HTML-Mail markieren, *File → Save As*; dann dieselbe Mail öffnen und noch einmal *File → Save As* ([E-128](BEFUNDE.md#e-128)). | aus der Liste der Dateityp **Mail Files (*.eml)** vorgewählt ist, aus dem geöffneten Fenster **HTML Files (*.htm)**; beide Dialoge mit *Cancel* schließen genügt. |
 | 11 | lokal | *Tools → Signatures*, eine Signatur per Doppelklick öffnen, **nichts ändern**, *File → Save As*, als `.txt` an einen Ort deiner Wahl speichern, das Fenster schließen ([E-207](BEFUNDE.md#e-207)). | die gespeicherte Datei nicht leer ist, sondern den Text der Signatur enthält. |
 | 12 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
