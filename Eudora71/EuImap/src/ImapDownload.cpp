@@ -1004,9 +1004,10 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 					// Verschieben in ein anderes Konto oder nach lokal wurde nur der
 					// Kopf uebertragen und die Quelle geloescht (gemessen, E-188t/f).
 					// Jetzt schneidet der Weg unten die Datei zurueck, und die Mail
-					// bleibt "nicht geladen". Mehrteilige Mails sind hier bewusst nicht
-					// erfasst - dort meldet schon ein einzelner gescheiterter Anhang
-					// FALSE.
+					// bleibt "nicht geladen". Mehrteilige Mails laufen nicht hier durch,
+					// sondern ueber m_bE188TeilFehlt (PRUEFER-94 K1): dort meldet schon
+					// ein einzelner gescheiterter Anhang FALSE, und die Mail soll das
+					// Angekommene zeigen, also kein E_FAIL.
 					hResult = E_FAIL;
 					CString szSpur;
 					szSpur.Format("E-188 Rumpf nicht geladen, Mail bleibt ungeladen: uid=%lu", (unsigned long) Uid);
