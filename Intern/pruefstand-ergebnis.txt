@@ -1,13 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 17:57:20
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (E-141 einzeln wiederholt, Testpaket 7.2.2.133)
+zeit=2026-11-04 18:09:50
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Testpaket 7.2.2.133, Suchfaelle am endgueltigen Bau)
 nur=E-141   (Teillauf, nicht der Gesamtstand)
 faelle=2
-bestanden=1
-fehlgeschlagen=1
+bestanden=2
+fehlgeschlagen=0
 fall=[ ok ] E-141p   E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1
-fall=[FEHL] E-141g   fehlt in messung: geloescht=2 lebt=1
-             gemeldet:   Beende per WM_CLOSE an das gemessene Handle.
-                         Zeit vom WM_CLOSE bis zum Ende: 1 s
-                         Beendet: True
-                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\paket133\tools\TESTLAEUFE.md
+fall=[ ok ] E-141g   geloescht=1 lebt=1

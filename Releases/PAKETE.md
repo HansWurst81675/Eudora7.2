@@ -186,7 +186,18 @@ haben.
 
 ## 7.2.2.133 — Testpaket, Zweig `paket_7_2_2_133`
 
-**Nur übersetzt am 04.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer nach Entscheidung 26 (Gregor 04.11.2026: *„7.2.2.133“*, auch eine Fassung, die nur Fehler behebt, trägt 7.2.2.N); Zweigname von Gregor am 04.11.2026 bestätigt (Sammelzweig mit [E-192](../Intern/BEFUNDE.md#e-192), [E-193](../Intern/BEFUNDE.md#e-193), [E-220](../Intern/BEFUNDE.md#e-220), [E-221](../Intern/BEFUNDE.md#e-221), dazu aus `main` [E-188](../Intern/BEFUNDE.md#e-188) und [E-199](../Intern/BEFUNDE.md#e-199)). Gregor wünscht es sich neben seinem letzten Testverzeichnis, um vor allem die Suche an seinen großen Postfächern zu prüfen ([TESTPLAN](../Intern/TESTPLAN.md#test-7-2-2-133)). Kein Release — veröffentlicht wird nur mit Gregors Ja.
+**Geschnürt am 04.11.2026 um 18:20, bereitgestellt neben Gregors letztem Testverzeichnis, ZIP daneben; nicht veröffentlicht.**
+
+| | |
+|---|---|
+| Bau | `Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02`, 0 Fehler, Unit-Tests 421/421 |
+| Prüfstand | voller Lauf am Bau `7818338c` (vor PRÜFER-99 K1/K2/K4): 96 Fälle, 95 bestanden; rot nur `E-141g`, Erwartung seit [E-188](../Intern/BEFUNDE.md#e-188) veraltet (gemessen: „E-188 Text nicht geladen, Quelle bleibt“, der Prüfserver liefert keinen Rumpf), berichtigt. Am endgültigen Bau `3d3789d3` (danach nur `SearchEngine.cpp` geändert): `E-193p`, `E-193w`, `E-171p`, `E-143s`, `E-141p`, `E-141g` grün; Gegenprobe E-193 an 7.2.2.132 rot (3 von 11 falsch). **Der volle Lauf am endgültigen Bau fehlt — vor einem Release nachholen.** |
+| Prüfbericht | NICHT VOLLSTÄNDIG (90 Fälle am Bau `7818338c`); gebaut mit `-OhnePruefbericht` und `-RollenSindGelaufen` (Gregor 04.11.2026: *„Jetzt schnüren“*; LEKTOR über die Doku steht noch aus, vor PR und Release) |
+| ZIP | `Releases/Eudora72-7.2.2.133-release.zip`, byte-gleich daneben neben dem Testverzeichnis; 9.178.720 Byte, SHA-256 `fe440fca29008ee9985e8ff9c970c076c0d6952b5f530dcaef53e08cbb0d41b6`; nicht im Repo |
+| Gegen den Bau gemessen | die acht eigenen Dateien (`Eudora.exe` … `plstclnt.dll`) im Paket und im ZIP byte-gleich mit `Eudora71/Bin/Release` (`Eudora.exe` SHA-256 beginnt `4b7d23c3115b4c04`) |
+| `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„JA“*, Defender 35 Dateien 0 Funde; vier Warnungen wie bisher |
+
+Nummer nach Entscheidung 26 (Gregor 04.11.2026: *„7.2.2.133“*, auch eine Fassung, die nur Fehler behebt, trägt 7.2.2.N); Zweigname von Gregor am 04.11.2026 bestätigt (Sammelzweig mit [E-192](../Intern/BEFUNDE.md#e-192), [E-193](../Intern/BEFUNDE.md#e-193), [E-220](../Intern/BEFUNDE.md#e-220), [E-221](../Intern/BEFUNDE.md#e-221), dazu aus `main` [E-188](../Intern/BEFUNDE.md#e-188) und [E-199](../Intern/BEFUNDE.md#e-199)). Gregor wünscht es sich neben seinem letzten Testverzeichnis, um vor allem die Suche an seinen großen Postfächern zu prüfen ([TESTPLAN](../Intern/TESTPLAN.md#test-7-2-2-133)). Kein Release — veröffentlicht wird nur mit Gregors Ja.
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.133.
 

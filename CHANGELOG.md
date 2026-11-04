@@ -116,9 +116,9 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## 7.2.2.133 — Testpaket (nur übersetzt, noch nicht geschnürt): Suche mit Umlauten und € (E-193), kein Mailverlust beim Verschieben zwischen IMAP-Konten (E-188), Papierkorb mit mehreren IMAP-Mails (E-192), Festbreite (E-199), Dateiname beim Speichern (E-220), gekürzter Betreff (E-221)
+## 7.2.2.133 — Testpaket (geschnürt am 04.11.2026, nicht veröffentlicht): Suche mit Umlauten und € (E-193), kein Mailverlust beim Verschieben zwischen IMAP-Konten (E-188), Papierkorb mit mehreren IMAP-Mails (E-192), Festbreite (E-199), Dateiname beim Speichern (E-220), gekürzter Betreff (E-221)
 
-Nummer nach Entscheidung 26 (Gregor 04.11.2026: *„7.2.2.133“*), Zweig `paket_7_2_2_133` (Name von Gregor am 04.11.2026 bestätigt). **Nur übersetzt am 04.11.2026, noch nicht geschnürt, nicht veröffentlicht.** Nur Fehlerbehebungen, keine neue Funktion.
+Nummer nach Entscheidung 26 (Gregor 04.11.2026: *„7.2.2.133“*), Zweig `paket_7_2_2_133` (Name von Gregor am 04.11.2026 bestätigt). **Geschnürt am 04.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt, nicht veröffentlicht.** Nur Fehlerbehebungen, keine neue Funktion.
 
 * **Beim Verschieben zwischen IMAP-Konten und nach lokal geht keine Mail mehr auf dem Server verloren** ([E-188](Intern/BEFUNDE.md#e-188), Original von QUALCOMM; gemergt als #220, Prüfstand 10/10).
 * ***Festbreite* im Bearbeiten-Modus schreibt kein `t;` mehr in den Text** ([E-199](Intern/BEFUNDE.md#e-199), Original von QUALCOMM; gemergt als #221, Prüfstand `E-178p` rot an `main`, grün mit der Behebung).

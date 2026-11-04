@@ -44,9 +44,9 @@ E-137c	ok	2026-11-04 17:53:26	C:\Temp\E137	Eudora 7.2.2.133+7818338c 2026-11-04 
 E-139p	ok	2026-11-04 17:53:26	C:\Temp\E139	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1
 E-13p	ok	2026-11-04 17:53:26	C:\Temp\E13	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E13 FORTSCHRITT sichtbar=1
 E-140p	ok	2026-11-04 17:53:26	C:\Temp\E140	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3
-E-141g	ok	2026-11-03 12:26:42	C:\Temp\EM141	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	geloescht=2 lebt=1
-E-141p	ok	2026-11-04 17:57:20	C:\Temp\EM141	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1
-E-143s	ok	2026-11-04 17:53:26	C:\Temp\E143S	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1
+E-141g	ok	2026-11-04 18:09:50	C:\Temp\EM141	Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02	geloescht=1 lebt=1
+E-141p	ok	2026-11-04 18:09:50	C:\Temp\EM141	Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02	E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1
+E-143s	ok	2026-11-04 18:07:54	C:\Temp\E143S	Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02	E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1
 E-144p	ok	2026-11-04 17:53:26	C:\Temp\E144	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E144 ERGEBNIS probe=ok gleich=1 references=1
 E-146	ok	2026-11-04 17:53:26	C:\Temp\E146	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)
 E-166a	ok	2026-11-04 17:53:26	C:\Temp\E166	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	reihenfolge=junk-no,konto-ok
@@ -58,7 +58,7 @@ E-170m	ok	2026-11-04 17:53:26	C:\Temp\E170	Eudora 7.2.2.133+7818338c 2026-11-04 
 E-170o	ok	2026-11-04 17:53:26	C:\Temp\E170	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E170 ERGEBNIS copyuid=nein label-quelle=1 uid-alt=3 uid-kopiert=3 quelle-passt=1 uid-ziel=1 kopie-mit-label=1 log-grund=zugeordnet lebt=1
 E-170p	ok	2026-11-04 17:53:26	C:\Temp\E170	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	kopie-mit-label=1 log-grund=ok lebt=1
 E-170s	ok	2026-11-04 17:53:26	C:\Temp\E170	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1
-E-171p	ok	2026-11-04 17:53:26	C:\Temp\E171	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1
+E-171p	ok	2026-11-04 18:07:26	C:\Temp\E171	Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02	E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1
 E-177p	ok	2026-11-04 17:53:26	C:\Temp\E177	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1
 E-178p	ok	2026-11-04 17:53:26	C:\Temp\E178	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1
 E-179p	ok	2026-11-04 17:53:26	C:\Temp\EM179	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1
@@ -76,8 +76,8 @@ E-188tm	ok	2026-11-04 17:53:26	C:\Temp\E188	Eudora 7.2.2.133+7818338c 2026-11-04
 E-188u	ok	2026-11-04 17:53:26	C:\Temp\E188	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E188 ERGEBNIS weg=ohneuid anzeige=richtig
 E-189	ok	2026-11-04 17:53:26	C:\Temp\E184	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
 E-192	ok	2026-11-04 17:53:26	C:\Temp\E192	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3
-E-193p	ok	2026-11-04 17:53:26	C:\Temp\E193	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1
-E-193w	ok	2026-11-04 17:53:26	C:\Temp\E193	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E193 WEICHE gleich=11/11 index-zu-viel=0
+E-193p	ok	2026-11-04 18:07:05	C:\Temp\E193	Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02	E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1
+E-193w	ok	2026-11-04 18:07:05	C:\Temp\E193	Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02	E193 WEICHE gleich=11/11 index-zu-viel=0
 E-194k	ok	2026-11-04 17:53:26	C:\Temp\E194K	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
 E-194p	ok	2026-11-04 17:53:26	C:\Temp\E194	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
 E-203p	ok	2026-11-04 17:53:26	C:\Temp\E203	Eudora 7.2.2.133+7818338c 2026-11-04 16:51	E39 ERGEBNIS abschnitt-wieder=0 schluessel=- war-aktuell=0 aktuell-danach=<Dominant> lebt=1
