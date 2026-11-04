@@ -108,7 +108,7 @@ if (opendir(my $dh, $heim)) {
         next unless -f $exe;
         my $d = roh($exe);
         next unless defined $d;
-        my ($ver)     = $d =~ /(7\.2\.[01]\.\d+)/;
+        my ($ver)     = $d =~ /(7\.2\.[012]\.\d+)/;
         my ($kennung) = $d =~ /(\d+\.\d+\.\d+(?:\.\d+)?\+[0-9a-f]+\*?)/;
         $ver     = '?' unless defined $ver;
         $kennung = '?' unless defined $kennung;

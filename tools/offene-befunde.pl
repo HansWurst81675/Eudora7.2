@@ -207,7 +207,7 @@ for my $zeile (split /\n/, $befunde) {
     # 7.2.0.N (Testpaket bis zum Release 7.2.1.128) und 7.2.1.N (Release, seit 03.11.2026 auch 7.2.2.N - vorher fiel jede Messung an 7.2.2.132 als "nie gemessen" heraus;
     # seit dem 30.10.2026 auch Testpaket, Entscheidung 20);
     # die Endnummer zaehlt ueber beide weiter.
-    if ($urteil =~ /\*\*Zuletzt gemessen:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7.2.[012]\.\d+)\*\*/) {
+    if ($urteil =~ /\*\*Zuletzt gemessen:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.[012]\.\d+)\*\*/) {
         $gemessen{$k} = "$1 an $2";
         my ($nr) = $2 =~ /\.(\d+)$/;
         $messnummer{$k} = $nr;
@@ -225,7 +225,7 @@ for my $zeile (split /\n/, $befunde) {
     # gemessen / belegt am Quelltext / Vermutung. Die Uebersicht kannte
     # nur eines. Jetzt zwei - die Vermutung bleibt draussen, sie gehoert
     # nicht in eine Spalte, die Glaubwuerdigkeit behauptet.
-    elsif ($urteil =~ /\*\*Zuletzt belegt am Quelltext:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7.2.[012]\.\d+)\*\*/) {
+    elsif ($urteil =~ /\*\*Zuletzt belegt am Quelltext:\s*(\d{2}\.\d{2}\.\d{4})\s+an\s+(7\.2\.[012]\.\d+)\*\*/) {
         $gemessen{$k}   = "$1 an $2 (Quelltext)";
         $quelltext{$k}  = 1;
         my ($nr) = $2 =~ /\.(\d+)$/;
