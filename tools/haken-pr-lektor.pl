@@ -28,11 +28,19 @@
 # mit dessen Merge nach main. Der Haken sperrte damit jeden PR, bis etwas
 # gemergt war - Gregor legte #218 deshalb selbst an. Der Zweig kommt aus
 # "--head <zweig>" (auch -H), sonst aus "cd <ordner> &&" vor dem Befehl,
-# sonst aus dem Arbeitsordner, den Claude Code mitgibt ("cwd"). Liegt der
-# Zweig in keinem Arbeitsbaum, haelt der Haken auf.
+# sonst aus dem Arbeitsordner, den Claude Code mitgibt ("cwd"). Pfade nach
+# cd/Set-Location duerfen in Anfuehrungszeichen stehen, relative gelten gegen
+# den cwd (LEKTOR-144 L-144.1: die erste Fassung warf die Anfuehrungszeichen
+# samt Pfad weg und mass still main). Liegt der Zweig in keinem Arbeitsbaum,
+# haelt der Haken auf.
+#
+# Ausnahme mit Absicht (L-144.2): ob ein LEKTOR noch laeuft, steht in
+# tools/AGENTEN-LAUFEN.md im HAUPTORDNER, und die Eintraege nennen keinen
+# Zweig - ein laufender LEKTOR sperrt deshalb jeden PR, auch den eines
+# anderen Zweigs.
 #
 # Gegenprobe: perl tools/haken-pr-lektor.pl --selbsttest (13 Faelle fuer das
-# Erkennen des Befehls, 7 fuer das Erkennen des Zweigs, beide Richtungen).
+# Erkennen des Befehls, 11 fuer das Erkennen des Zweigs, beide Richtungen).
 #
 # Kodierung: reines ASCII.
 use strict;
@@ -59,7 +67,10 @@ exit 0 unless $kommando =~ /\bgh[ \t]+pr[ \t]+create\b/;
 # beauftragt" heisst: sein Bericht liegt noch nicht im Zweig. Was sich nicht
 # lesen laesst, haelt auf.
 my $wurzel = "$FindBin::Bin/..";
-my ($art, $wert) = eingereichter_zweig($kommando, $j->{cwd});
+# Der Zweig wird im Befehl OHNE Text-Ruempfe gesucht, aber MIT Anfuehrungs-
+# zeichen: nur_befehle wirft Zeichenketten weg, und mit ihnen den Pfad in
+# cd "..." (LEKTOR-144 L-144.1, gemessen: still main gemessen).
+my ($art, $wert) = eingereichter_zweig($roh ? $ein : ohne_textruempfe($j->{tool_input}{command}), $j->{cwd});
 my $zweig = $art eq 'zweig' ? $wert : aktueller_zweig($wert);
 my $baum = baum_des_zweigs($wurzel, $zweig);
 unless (defined $baum) {
@@ -117,13 +128,31 @@ sub nur_befehle {
     return join("\n", $t, @ausgefuehrt);
 }
 
+# Nur die Ruempfe von Heredocs und PowerShell-Here-Strings weg - die
+# Anfuehrungszeichen bleiben stehen (fuer Pfade in cd "...").
+sub ohne_textruempfe {
+    my ($t) = @_;
+    $t //= '';
+    $t =~ s/<<-?[ \t]*(['"]?)(\w+)\1([^\n]*)\n.*?^[ \t]*\2[ \t]*$/$3/msg;
+    $t =~ s/@(['"])[ \t]*\n.*?^\1@//msg;
+    return $t;
+}
+
 # Welcher Zweig wird eingereicht? ('zweig', <name>) aus --head/-H, sonst
-# ('ordner', <pfad>) aus "cd <pfad> &&" vor dem Befehl oder aus dem cwd.
+# ('ordner', <pfad>) aus "cd <pfad> &&" bzw. "Set-Location <pfad>;" vor dem
+# Befehl oder aus dem cwd. Pfade duerfen in Anfuehrungszeichen stehen; ein
+# relativer Pfad gilt gegen den cwd der Hook-Eingabe (LEKTOR-144 L-144.1).
 sub eingereichter_zweig {
     my ($k, $cwd) = @_;
-    return ('zweig', $1) if $k =~ /\bgh[ \t]+pr[ \t]+create\b[^\n]*?(?:--head|-H)(?:[ \t]+|=)([^\s;&|]+)/;
+    my $wort = qr/(?:"([^"]*)"|'([^']*)'|([^\s;&|"']+))/;
+    if ($k =~ /\bgh[ \t]+pr[ \t]+create\b[^\n]*?(?:--head|-H)(?:[ \t]+|=)$wort/) {
+        return ('zweig', defined $1 ? $1 : defined $2 ? $2 : $3);
+    }
     my $ordner = $cwd;
-    while ($k =~ /(?:^|(?<=[;&|\n]))\s*cd[ \t]+([^\s;&|]+)[ \t]*(?:&&|;)/g) { $ordner = $1; }
+    while ($k =~ /(?:^|(?<=[;&|\n]))\s*(?:cd|Set-Location|sl|chdir)(?:[ \t]+-(?:Literal)?Path)?[ \t]+$wort[ \t]*(?:&&|;|\n)/gi) {
+        my $p = defined $1 ? $1 : defined $2 ? $2 : $3;
+        $ordner = (defined $cwd && length $cwd && $p !~ m{^(?:[A-Za-z]:|/|\\|~)}) ? "$cwd/$p" : $p;
+    }
     return ('ordner', $ordner);
 }
 
@@ -188,14 +217,19 @@ sub selbsttest {
         ['zweig',  'e188_x',  "$w --base main --head e188_x --title t", '/c/haupt'],
         ['zweig',  'e188_x',  "$w -H e188_x", '/c/haupt'],
         ['zweig',  'e188_x',  "$w --head=e188_x", '/c/haupt'],
-        ['ordner', '.wt/rel', "cd .wt/rel && $w --title t", '/c/haupt'],
+        ['ordner', '/c/haupt/.wt/rel', "cd .wt/rel && $w --title t", '/c/haupt'],
+        # L-144.1: Pfad in Anfuehrungszeichen, Set-Location, --head in Anfuehrungszeichen
+        ['ordner', '/c/a b/.wt/e188', "cd \"/c/a b/.wt/e188\" && $w --title t", '/c/haupt'],
+        ['ordner', 'C:\\x\\.wt\\e188', "Set-Location 'C:\\x\\.wt\\e188'; $w --title t", '/c/haupt'],
+        ['zweig',  'e188_x',  "$w --head \"e188_x\" --title t", '/c/haupt'],
+        ['ordner', '/c/haupt', "git commit -F - <<'EOF'\ncd /c/falsch && x\nEOF\n$w --title t", '/c/haupt'],
         ['ordner', '/c/haupt', "$w --title t", '/c/haupt'],
         ['ordner', '/c/b',    "cd /c/a && cd /c/b && $w", '/c/haupt'],
         ['zweig',  'k',       "cd /c/a && $w --head k", '/c/haupt'],
     );
     for my $i (0 .. $#z) {
         my ($sa, $sw, $k, $cwd) = @{ $z[$i] };
-        my ($ia, $iw) = eingereichter_zweig(nur_befehle($k), $cwd);
+        my ($ia, $iw) = eingereichter_zweig(ohne_textruempfe($k), $cwd);
         my $ok = ($ia eq $sa && ($iw // '') eq $sw);
         $rot++ unless $ok;
         printf "  %s Zweig %d: soll %s=%s, ist %s=%s\n", ($ok ? 'ok ' : 'ROT'), $i + 1, $sa, $sw, $ia, $iw // '-';
