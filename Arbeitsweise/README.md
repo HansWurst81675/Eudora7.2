@@ -78,6 +78,7 @@ eine Datei liest, liest diese.
 | [agent-vor-dem-ende-nicht-starten](agent-vor-dem-ende-nicht-starten.md) | Ein Agent, der beim Sitzungsende noch laeuft, verliert seine ganze Arbeit - vor einer angekuendigten Pause keinen mehr starten |
 | [agenten-benennen](agenten-benennen.md) | Jedem Agenten einen kurzen deutschen Namen geben und den Stand als Tabelle zeigen |
 | [agenten-koordinieren](agenten-koordinieren.md) | Fünf Kollisionsarten paralleler Agenten und das Verfahren gegen jede; die Zuteilung ist meine Aufgabe, nicht die der Agenten |
+| [agenten-modell-nach-auftrag](agenten-modell-nach-auftrag.md) | Gregor 04.11.2026: mechanische Agentenaufträge mit günstigerem Modell, LEKTOR und PRÜFER wie bisher |
 | [agenten-trennen-worktrees](agenten-trennen-worktrees.md) | Parallele Agenten teilen sich Arbeitsverzeichnis und git-Index — mit Worktrees trennen, sonst mit Pfadangabe committen |
 | [anforderung-gehoert-in-den-massstab](anforderung-gehoert-in-den-massstab.md) | Eine Anforderung, die nur in der Umsetzung steht, ist keine; sie gehoert nach ZIEL.md und braucht eine Schranke, die beide Seiten gegeneinander haelt |
 | [anweisungen-abarbeiten](anweisungen-abarbeiten.md) | Gregors Nachrichten sind Arbeitsaufträge — Material sofort auswerten, Absprachen festhalten, nichts Neues erfinden |
@@ -119,6 +120,7 @@ eine Datei liest, liest diese.
 | [entscheidung-kritische-nicht-release-blocker](entscheidung-kritische-nicht-release-blocker.md) | Gregor 23.10.2026 - die sechs offenen \"kritischen\" Befunde E-122, E-123, E-124, E-126, E-129, E-136 halten 7.2.1.0 NICHT auf (\"unkritisch, randfaelle\"); noch nicht im Repo eingetragen |
 | [entscheidung-marke-v7-2-1](entscheidung-marke-v7-2-1.md) | Die GitHub-Marke fuer Releases heisst v7.2.1.<n> (z. B. v7.2.1.123), nicht v1.0.<n> - entschieden, nicht wieder fragen |
 | [entscheidung-message-id-kein-befund](entscheidung-message-id-kein-befund.md) | Gregor 25.10.2026 - die Message-ID-Frage (HermesMail-Faden, RFC 5322) bekommt keinen Befund; zwei Randfälle in AssignMessageId stehen nur hier, dazu ein ungeprüfter Puffer-Hinweis |
+| [entscheidung-nummer-7-2-2-fortlaufend](entscheidung-nummer-7-2-2-fortlaufend.md) | Gregor 04.11.2026: seit 7.2.2.132 heißt jede Fassung 7.2.2.N, auch reine Fehlerbehebungen (nächstes Paket 7.2.2.133); 7.2.1 ist abgeschlossen |
 | [entscheidung-postfachdateien-umlaute](entscheidung-postfachdateien-umlaute.md) | Gregor 03.11.2026 - neue Postfachdateien behalten den bisherigen Dateinamen ohne Umlaute; StripIllegalMT bleibt |
 | [entscheidung-pruefstand-fenster-01-11](entscheidung-pruefstand-fenster-01-11.md) | Gregor erlaubt am 01.11.2026 den vollen Prüfstandslauf (Eudora-Fenster unter C:\Temp) — nur dieser Tag |
 | [entscheidung-pruefstand-fenster-02-11](entscheidung-pruefstand-fenster-02-11.md) | Gregor erlaubt am 02.11.2026 den Prüfstand mit Fenster (Eudora unter C:\Temp) — nur dieser Tag; er testet außerhalb der VM |

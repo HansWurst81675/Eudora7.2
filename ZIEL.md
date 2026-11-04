@@ -38,9 +38,9 @@ Daraus folgt für jedes 7.2.1.x:
    ([L-101.1](Befunde/LEKTOR-101.md#l-101.1)).
 
 Testpakete sind für Gregors lokalen Test, keine Releases; veröffentlicht
-wird ein Stand erst nach seinem Test, mit der Marke `v7.2.1.<n>` — 7.2.1.N für
-Fehlerbehebungen, 7.2.2.N mit neuen Funktionen (Gregor 02.11.2026), dort mit
-der Marke `v7.2.2.<n>` ([Maßstab für 7.2.2](#maßstab-für-die-fassung-722)). Bis zum
+wird ein Stand erst nach seinem Test, seit 7.2.2.132 mit der Marke `v7.2.2.<n>`,
+auch wenn er nur Fehler behebt (Gregor 04.11.2026: das nächste Paket ist
+7.2.2.133); bis 7.2.1.131 hieß sie `v7.2.1.<n>` ([Maßstab für 7.2.2](#maßstab-für-die-fassung-722)). Bis zum
 Release 7.2.1.128 hießen Testpakete 7.2.0.\<n\> (z. B. **7.2.0.123**), seither
 heißen sie wie das Release 7.2.1.\<n\> (Gregors Entscheidung 20 in
 [WEITERMACHEN.md](Intern/WEITERMACHEN.md#entscheidungen)).
