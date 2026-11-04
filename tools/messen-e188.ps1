@@ -37,6 +37,9 @@
 #            fest die ersten zwei Zeilen; nach der Behebung von E-188 gab es keine
 #            Doppel mehr, und er loeschte die fremde Mail absichtlich mit.
 #            Stimmt die Anzeigereihenfolge nicht mit Ziel.toc, wird der Fall rot.
+#   kontenmehr wie kontentext, aber die Mail ist mehrteilig (multipart/
+#            alternative, Pruefserver --mehrteilig; PRUEFER-94 K1).
+#   fetchmehr  wie fetch, aber die Mail ist mehrteilig (PRUEFER-94 K1).
 #   kontentext wie konten, aber A liefert den Text der Mail nicht
 #            (--fetch-text-scheitert; die Mail ist nur als Kopf geladen,
 #            IMAPMinDownload=1): Eudora kann nicht hochladen - und loescht?
@@ -70,7 +73,7 @@
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten,
-    [ValidateSet('konten', 'append', 'ohneuid', 'kontentext', 'loeschen', 'lokal', 'lokaleins', 'fetch')] [string] $Weg = 'konten',
+    [ValidateSet('konten', 'append', 'ohneuid', 'kontentext', 'kontenmehr', 'loeschen', 'lokal', 'lokaleins', 'fetch', 'fetchmehr')] [string] $Weg = 'konten',
     [int] $Warten = 15
 )
 $ErrorActionPreference = 'Stop'
@@ -257,7 +260,7 @@ $mdi = Alle $pp | Where-Object { $_.Klasse -eq 'MDIClient' } | Select-Object -Fi
 # 1. Pruefserver - A immer, B nur fuer die Wege zwischen Konten.
 $repo = Split-Path -Parent $PSScriptRoot
 $perl = 'C:\Program Files\Git\usr\bin\perl.exe'
-$zwei = @('konten', 'append', 'ohneuid', 'kontentext', 'loeschen') -contains $Weg
+$zwei = @('konten', 'append', 'ohneuid', 'kontentext', 'kontenmehr', 'loeschen') -contains $Weg
 $ports = @(1143); if ($zwei) { $ports += 1144 }
 foreach ($p in $ports) {
     $belegt = @(Get-NetTCPConnection -LocalPort $p -State Listen -ErrorAction SilentlyContinue)
@@ -266,7 +269,8 @@ foreach ($p in $ports) {
 $zs = [string](120 + 8 * $Warten)
 $argsA = @("$repo\tools\imap-pruefserver.pl", '--port', '1143', '--protokoll', $logA, '--zeitschranke', $zs, '--zustand', '--bodystructure', '--nachrichten', '1')
 if ($Weg -eq 'lokal') { $argsA += @('--fremde-uid', '1') }
-if ($Weg -eq 'fetch' -or $Weg -eq 'kontentext') { $argsA += '--fetch-text-scheitert' }
+if (@('fetch', 'kontentext', 'fetchmehr', 'kontenmehr') -contains $Weg) { $argsA += '--fetch-text-scheitert' }
+if (@('fetchmehr', 'kontenmehr') -contains $Weg) { $argsA += '--mehrteilig' }
 $srvA = Start-Process $perl -ArgumentList $argsA -WorkingDirectory $repo -WindowStyle Hidden -PassThru
 $srvB = $null
 if ($zwei) {
@@ -570,7 +574,7 @@ if ($zwei) {
     $kopie = @($toc | Where-Object { $_.Uid -eq 2 -and $_.Betreff -like 'Pruefnachricht 1*' }).Count
     $kopieServer = @($endB | Where-Object { $_.Ordner -eq 'Ziel' -and $_.Mid -eq '<pruef-1@pruefserver.invalid>' -and $_.Del -eq 0 }).Count
     $anzeige = 'FALSCH'
-    if ($Weg -eq 'append' -or $Weg -eq 'kontentext') { if ($fremd -eq 1 -and $toc.Count -eq 1) { $anzeige = 'richtig' } }
+    if (@('append', 'kontentext', 'kontenmehr') -contains $Weg) { if ($fremd -eq 1 -and $toc.Count -eq 1) { $anzeige = 'richtig' } }
     elseif ($fremd -eq 1 -and $kopie -eq 1 -and $toc.Count -eq 2) { $anzeige = 'richtig' }
     # Nichts geloescht heisst nichts gemessen - sonst waere der Fall blind gruen
     # (gemessen 04.11.2026: abgebrochen, "fremd-geloescht=0", bestanden).

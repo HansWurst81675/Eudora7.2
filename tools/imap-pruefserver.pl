@@ -94,6 +94,13 @@ use IO::Select;
 #                       nach (gemessen 03.11.2026, E-188: "Attempt to add the
 #                       message ... failed", kein APPEND). Opt-in, damit die
 #                       aelteren Faelle unveraendert messen.
+#   --mehrteilig        die Pruefnachrichten sind multipart/alternative (ein
+#                       Teil text/plain, ein Teil text/html), wie praktisch
+#                       jede HTML-Mail; mit --bodystructure kommt die
+#                       passende BODYSTRUCTURE, BODY[1]/BODY[2] liefern die
+#                       Teile, BODY[n.MIME] ihre Koepfe (PRUEFER-94 K1: der
+#                       verweigerte Rumpf bei mehrteiligen Mails war
+#                       ungemessen).
 #   --fetch-text-scheitert  jede Anfrage nach dem TEXT einer Nachricht (BODY[],
 #                       BODY.PEEK[], [TEXT], [1], RFC822) bekommt NO - so wie
 #                       ein Abbruch mitten im Herunterladen.
@@ -141,6 +148,7 @@ while (@ARGV) {
     elsif ($a eq '--zustand') { $opt{zustand} = 1 }   # E-188
     elsif ($a eq '--bodystructure') { $opt{bodystructure} = 1 }   # E-188
     elsif ($a eq '--fetch-text-scheitert') { $opt{fetch_text_scheitert} = 1 }   # E-188
+    elsif ($a eq '--mehrteilig') { $opt{mehrteilig} = 1 }   # E-188 K1
     else { die "unbekannt: $a\n" }
 }
 # E-170, PRUEFER-89 K3 (03.11.2026):
@@ -192,10 +200,23 @@ for my $i (1 .. $opt{nachrichten}) {
             : 'Date: Thu, 10 Sep 2026 12:00:00 +0200'),
         "Message-ID: <pruef-$i\@pruefserver.invalid>",
         'MIME-Version: 1.0',
-        'Content-Type: text/plain; charset=us-ascii',
-        '',
-        "Dies ist Pruefnachricht $i. Sie existiert nur im Arbeitsspeicher",
-        'dieses Servers und wird nie geloescht, egal was verlangt wird.',
+        ($opt{mehrteilig}
+            ? ('Content-Type: multipart/alternative; boundary="pruefgrenze"',
+               '',
+               '--pruefgrenze',
+               'Content-Type: text/plain; charset=us-ascii',
+               '',
+               "Dies ist Pruefnachricht $i. Sie existiert nur im Arbeitsspeicher",
+               'dieses Servers und wird nie geloescht, egal was verlangt wird.',
+               '--pruefgrenze',
+               'Content-Type: text/html; charset=us-ascii',
+               '',
+               "<html><body><p>Dies ist Pruefnachricht $i (HTML-Teil).</p></body></html>",
+               '--pruefgrenze--')
+            : ('Content-Type: text/plain; charset=us-ascii',
+               '',
+               "Dies ist Pruefnachricht $i. Sie existiert nur im Arbeitsspeicher",
+               'dieses Servers und wird nie geloescht, egal was verlangt wird.')),
         '');
     push @nachrichten, { text => $text, flags => '', geloescht_verlangt => 0 };
 }
@@ -570,7 +591,35 @@ while (time < $ende) {
                 my $flags = $m->{flags} || '';
                 my ($tkopf, $trumpf) = $m->{text} =~ /^(.*?\r\n\r\n)(.*)\z/s;
                 $trumpf = '' unless defined $trumpf;
-                if ($opt{bodystructure} and $r =~ /BODYSTRUCTURE/i) {
+                # E-188 K1: Teile einer mehrteiligen Nachricht (Grenze "pruefgrenze").
+                my @mteile;
+                if ($trumpf =~ /--pruefgrenze\r\n/) {
+                    for my $s (split /\r\n--pruefgrenze(?:--)?\r\n?/, "\r\n" . $trumpf) {
+                        next unless $s =~ /^(.*?\r\n\r\n)(.*)\z/s;
+                        push @mteile, { kopf => $1, rumpf => $2 };
+                    }
+                }
+                if ($opt{bodystructure} and @mteile and $r =~ /BODYSTRUCTURE/i) {
+                    my @bs;
+                    for my $t (@mteile) {
+                        my ($sub) = $t->{kopf} =~ m{Content-Type:\s*text/(\w+)}i; $sub = 'plain' unless defined $sub;
+                        my $z = () = $t->{rumpf} =~ /\n/g;
+                        push @bs, sprintf('("TEXT" "%s" ("CHARSET" "us-ascii") NIL NIL "7BIT" %d %d NIL NIL NIL)', uc $sub, length($t->{rumpf}), $z);
+                    }
+                    my @teile = ("UID $uid");
+                    push @teile, "FLAGS ($flags)" if $r =~ /FLAGS/i;
+                    push @teile, 'BODYSTRUCTURE (' . join('', @bs) . ' "ALTERNATIVE" ("BOUNDARY" "pruefgrenze") NIL NIL NIL)';
+                    printf $h "* %d FETCH (%s)\r\n", $i, join(' ', @teile);
+                }
+                elsif ($opt{bodystructure} and @mteile and $r =~ /BODY(?:\.PEEK)?\[(\d+)(\.MIME)?\]/i) {
+                    my ($nr, $mime) = ($1, $2);
+                    my $t = $mteile[$nr - 1];
+                    my $inhalt = $t ? ($mime ? $t->{kopf} : $t->{rumpf}) : '';
+                    my $name = $nr . ($mime ? '.MIME' : '');
+                    printf $h "* %d FETCH (UID %d FLAGS (%s) BODY[%s] {%d}\r\n%s)\r\n",
+                        $i, $uid, $flags, $name, length($inhalt), $inhalt;
+                }
+                elsif ($opt{bodystructure} and $r =~ /BODYSTRUCTURE/i) {
                     # E-188: ein Teil text/plain, wie ein echter Server ihn meldet.
                     my ($cs) = $m->{text} =~ /charset="?([A-Za-z0-9_.-]+)/i; $cs = 'us-ascii' unless defined $cs;
                     my $zeilen = () = $trumpf =~ /\n/g;

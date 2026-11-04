@@ -275,6 +275,8 @@ E-188u | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=ohneuid anzeige=richtig
 E-188t | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=kontentext anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188t.ps1
 E-188l | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=lokal anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188l.ps1
 E-188f | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=fetch | E188 SERVER VERLOREN | | messen=tools\messen-e188f.ps1
+E-188tm | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=kontenmehr | E188 SERVER VERLOREN | | messen=tools\messen-e188tm.ps1
+E-188fm | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=fetchmehr | E188 SERVER VERLOREN | | messen=tools\messen-e188fm.ps1
 E-188e | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=lokaleins anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188e.ps1
 E-188d | C:\Temp\E188 | 20 | messung | E188 LOESCHEN GEMESSEN fremd-lebt=1 | E188 SERVER FREMDE GELOESCHT | | messen=tools\messen-e188d.ps1
 # E-193 (03.11.2026): Find Messages (mit und ohne Suchindex X1) gegen Edit ->

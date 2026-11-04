@@ -68,9 +68,11 @@ E-188a	ok	2026-11-04 08:54:22	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04
 E-188d	ok	2026-11-04 09:32:38	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	E188 LOESCHEN GEMESSEN fremd-lebt=1
 E-188e	ok	2026-11-04 08:54:22	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	E188 ERGEBNIS weg=lokaleins anzeige=richtig
 E-188f	ok	2026-11-04 08:54:22	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	E188 ERGEBNIS weg=fetch
+E-188fm	FEHL	2026-11-04 09:39:03	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	steht in messung, darf nicht: E188 SERVER VERLOREN
 E-188k	ok	2026-11-04 08:54:22	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	E188 ERGEBNIS weg=konten anzeige=richtig
 E-188l	ok	2026-11-04 08:54:22	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	E188 ERGEBNIS weg=lokal anzeige=richtig
 E-188t	ok	2026-11-04 08:54:22	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	E188 ERGEBNIS weg=kontentext anzeige=richtig
+E-188tm	FEHL	2026-11-04 09:37:53	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	steht in messung, darf nicht: E188 SERVER VERLOREN
 E-188u	ok	2026-11-04 08:54:22	C:\Temp\E188	Eudora 7.2.2.132+ed60ee09* 2026-11-04 08:37	E188 ERGEBNIS weg=ohneuid anzeige=richtig
 E-189	ok	2026-11-03 12:26:42	C:\Temp\E184	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mit-alter-uid=0 eintraege=2
 E-194k	ok	2026-11-03 12:26:42	C:\Temp\E194K	Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46	E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
