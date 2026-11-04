@@ -288,6 +288,7 @@ E-188d | C:\Temp\E188 | 20 | messung | E188 LOESCHEN GEMESSEN fremd-lebt=1 | E18
 # ueber WM_FINDREPLACE im Nachrichtenfenster. Erwartet ohne Fehler: nirgends
 # falsch. Pruefstand C:\Temp\E193 ist eine Kopie von C:\Temp\E128 (7.2.2.132).
 E-193p | C:\Temp\E193 | 20 | messung | E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
+E-193w | C:\Temp\E193 | 20 | messung | E193 WEICHE gleich=11/11 index-zu-viel=0 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
 
 # E-97 / E-100 (25.10.2026): "Speichern unter" darf Eudora nicht abstuerzen
 # lassen - einmal aus dem Postfach mit OK und geschriebener Datei, einmal aus
