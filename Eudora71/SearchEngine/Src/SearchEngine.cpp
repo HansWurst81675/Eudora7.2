@@ -596,6 +596,20 @@ bool SearchEngine::SearchMessage(CSummary *pSum, SearchCriteria Sct, char *szMes
 
 
 #define USE_OFFSETS 1
+// E-193: enthaelt der Text dieses Suchbegriffs ein Byte ab 0x80 (Umlaut, Euro)?
+bool E193TextMitUmlaut(SearchCriteria& Sct)
+{
+	CriteriaValueText text;
+	if (!Sct.GetCurValueText(text))
+		return false;
+	for (int i = 0; i < text.GetLength(); i++)
+	{
+		if ((unsigned char) text[i] >= 0x80)
+			return true;
+	}
+	return false;
+}
+
 bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int nFreq /* = 1000 */)
 {
 	DWORD nLastCallbackTick = GetTickCount();
@@ -890,6 +904,12 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 						}
 
 						
+						// E-193: steht im Suchbegriff ein Umlaut oder Euro (Byte ab 0x80), kann eine HTML-Mail
+						// ihn als Entitaet tragen (&auml;, &euro;, &#228;) - die rohe Suche oben findet ihn dann
+						// nicht. Dann die Mail oeffnen und den Text nach Html2Text pruefen (GetTextToSearch).
+						// Bis 7.2.2.132 fehlte so jede HTML-Mail mit Entitaeten (gemessen, Testmail m5).
+						if (!bOpenMessage && m_CorrectResults > 0 && pSum->IsHTML() && E193TextMitUmlaut(srchCriteria))
+							bOpenMessage = true;
 						if(!bOpenMessage && (bMatched == true) && m_CorrectResults > 0 && pSum->IsHTML())
 						{
 							//user wants correct results even if the search is slower;

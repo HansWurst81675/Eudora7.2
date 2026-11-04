@@ -2557,6 +2557,42 @@ void CSearchView::OnDestroy()
 
 // --------------------------------------------------------------------------
 
+// E-193: Braucht diese Suche die genaue Suche statt des X1-Index?
+// Der Index (x1lib.dll) laesst "EUR-Zeichen" weg, behandelt "ae" wie "a" am Wortanfang und
+// findet mit "oeft" (oe als Umlaut) auch "oft" (gemessen 03.11.2026, tools/messen-e193.ps1: 8 von 11
+// richtig); die genaue Suche (SearchEngine) findet 8 von 11 und irrt nur bei
+// HTML-Entitaeten, Edit -> Find 24 von 24. Gregor 04.11.2026: enthaelt ein
+// Suchbegriff Umlaut oder EUR-Zeichen (ein Byte ab 0x80), nimmt Eudora fuer diese Suche die
+// genaue Suche - ohne Umlaut bleibt es beim schnellen Index. Ausnahme: eine
+// "X1-Abfrage" (CRITERIA_TEXT_COMPARE_MATCHESX1QUERY) gibt es nur im Index.
+static bool E193BrauchtGenaueSuche(MultSearchCriteria & msc)
+{
+	SearchCriteriaList *	pListe = msc.GetCriteriaList();
+	bool					bUmlaut = false;
+
+	if (!pListe)
+		return false;
+
+	for (SearchCriteriaIter it = pListe->begin(); it != pListe->end(); ++it)
+	{
+		CriteriaVerbTextCompare		verb;
+		if (it->GetCurVerbTextCmp(verb) && (verb == CRITERIA_TEXT_COMPARE_MATCHESX1QUERY))
+			return false;
+
+		CriteriaValueText			text;
+		if (it->GetCurValueText(text))
+		{
+			for (int i = 0; i < text.GetLength(); i++)
+			{
+				if ((unsigned char) text[i] >= 0x80)
+					bUmlaut = true;
+			}
+		}
+	}
+
+	return bUmlaut;
+}
+
 bool CSearchView::DoSearch()
 {
 	// Build the list of criteria
@@ -2595,7 +2631,12 @@ bool CSearchView::DoSearch()
 	// Get the list of checked mailbox names from the tree control
 	std::deque<CString>		strlstCheckedMailboxes;
 
-	if ( ShouldUseIndexedSearch() )
+	// E-193: mit Umlaut oder EUR-Zeichen im Suchbegriff die genaue Suche (siehe oben).
+	bool	bE193Genau = ShouldUseIndexedSearch() && E193BrauchtGenaueSuche(m_MSC);
+	if (bE193Genau)
+		PutDebugLog(DEBUG_MASK_MISC, "E-193 Suchbegriff mit Umlaut oder Euro: genaue Suche statt Index");
+
+	if ( ShouldUseIndexedSearch() && !bE193Genau )
 	{
 		std::deque<CString>		strlstUncheckMailboxes;
 		
