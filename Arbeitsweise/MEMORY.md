@@ -170,3 +170,15 @@
 - [E-133 No / Release-Text 03.11.](entscheidung-e133-no-und-release-text-03-11.md) — No bleibt (Befehlszeile genügt); Release-Text E-170 im nächsten PR
 - [Reihenfolge nach 7.2.2.132](entscheidung-reihenfolge-nach-7-2-2-132.md) — Gregor 03.11.: E-192, E-199, E-188 messen, E-193 nachstellen; E-129/E-198 nur dokumentiert
 - [Randfälle nach Häufigkeit abwägen](randfaelle-nach-haeufigkeit-abwaegen.md) — wie oft, Schaden, Aufwand; hypothetische Fälle zuletzt
+- [Postfachdateien ohne Umlaute](entscheidung-postfachdateien-umlaute.md) — Gregor 03.11.: StripIllegalMT bleibt; nur Speichern-unter-Vorschlag mit Umlauten
+- [Stand 03.11.2026 abends](stand-03-11-2026-abend.md) — #217 wartet auf Merge, dann Release; danach E-188-Löschbedingung vor E-199 (Gregor: ja)
+- [CHRONIST 03.11.2026](CHRONIST-2026-11-03.md) — Laufbericht; E-188 Mailverlust gemessen ohne DATENVERLUST, Release-Schranke fehlt; Serverzweige nach Abweisung über Gregors `!` (3. Mal, sechs Anläufe); fünf Fragen ohne Antwort; Abfrage hielt Zug 71 min; Release-Text E-170 ungemessen
+- [E-188 und Release 7.2.2.132](entscheidung-e188-release-7-2-2-132.md) — Gregor 03.11. abends: Release bleibt stehen; vor jedem Release nach Freigabe neu gemessene Verluste erfragen
+- [Stand 04.11.2026](stand-04-11-2026.md) — v7.2.2.132 draußen; release-Zweig wartet auf BUCHHALTER, dann PR; E-188 Rest-Ursache im Downloader (:859)
+- [Prüfstand mit Fenster 04.11.](entscheidung-pruefstand-fenster-04-11.md) — erlaubt nur an diesem Tag (E-188)
+- [Nummer 7.2.2.N fortlaufend](entscheidung-nummer-7-2-2-fortlaufend.md) — Gregor 04.11.: nächstes Paket 7.2.2.133, auch nur Fehlerbehebungen; 7.2.1 abgeschlossen
+- [Agentenmodell nach Auftrag](agenten-modell-nach-auftrag.md) — Gregor 04.11.: mechanische Aufträge günstiger, LEKTOR/PRÜFER/CHRONIST wie bisher
+- [E-193 zweistufig](entscheidung-e193-zweistufig.md) — Gregor 04.11.: ohne Umlaut nur Index, mit Umlaut/€ Index plus Nachprüfung
+- [Release-Text 7.2.2.132 Nachtrag](entscheidung-release-text-7-2-2-132-nachtrag.md) — Gregor 04.11.: Rat zu E-188d-Doppeln nachtragen; Testrückstand erst ab nächstem Release
+- [E-188 K3 Sicherheit vor Platz](entscheidung-e188-k3-sicherheit-vor-platz.md) — Gregor 04.11.: Mail mit verweigertem Teil bleibt ungeladen; K2 im selben Sinn
+- [Randfälle unkritisch](entscheidung-randfaelle-unkritisch.md) — Gregor 04.11.: E-123/124/126/129 Stufe unkritisch (Randfall)

@@ -73,3 +73,11 @@ Das sind 20 Ablehnungen, 16 davon nach dem Nachtrag „Ursache abgestellt“ (Da
 - **Nicht** getroffen sind drei Fälle: ein Befehl, der mit `cd` an einen anderen Ort beginnt (CHRONIST 22:41, Hauptsitzung 22:44), ein schreibender Werkzeugaufruf, während die Hauptsitzung im Rollenbaum steht (22:45:20), und alles, was gar nicht unter eine Regel fällt (`git status`, `git fetch`, PowerShell). Die beiden ersten Fälle haben eine gemeinsame Ursache, siehe [[hauptsitzung-bleibt-im-projektordner]]. Ob die Abfrage um 22:45:20 von der fehlenden `settings.local.json` im Rollenbaum kam oder vom Modus, der schreibende Aufrufe vorlegt, ist nicht gemessen.
 
 **How to apply, zusätzlich:** „Ursache abgestellt“ steht erst in einer Lehre, wenn ein Lauf mit dem Merkmal, das vorher die Abfrage auslöste, ohne Abfrage durchkam. Ein Werkzeug umzubauen reicht dafür nicht. Hier wäre das der erste LEKTOR gewesen, und der kam um 22:32 mit acht Abfragen zurück ([[erfolgsmeldung-aus-dem-ergebnis]]).
+
+## Nachtrag 03.11.2026 (CHRONIST): eine Abfrage, die den Zug 71 Minuten hielt
+
+Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 3). Um 11:50:10 ging eine Abfrage (`AskUserQuestion`) an Gregor: *„Auch die älteren Logzeilen zu E-125 und E-142 … nennen noch den Ordnernamen. Sollen sie ihn auch verlieren?“* Welche Ordner das sind, stand nicht darin. Um 12:45:11 meldete der Schnürer das fertige Paket, die Hauptsitzung konnte es nicht lesen. Um 13:01:20 lehnte Gregor die Abfrage ab, um nachzufragen: *„welche ordner namen sind es denn?“* Die Meldung „Paket bereit“ kam um 13:02:04, 17 Minuten nach dem Paket. Ob Gregor zwischen 11:38 und 13:01 am Rechner war, ist nicht gemessen.
+
+Das ist kein Befehl, den er nicht nachvollziehen kann, wie am 30.10., aber dieselbe Wurzel: eine Frage, die ohne Beispiel nicht zu beantworten ist. Dazu kommt: Eine Abfrage hält den ganzen Zug fest, auch die Rückmeldungen der Agenten.
+
+**How to apply, zusätzlich:** Eine Frage an Gregor nennt das konkrete Ding (hier: „z. B. ‚Trash‘ oder ein eigener IMAP-Ordner“), sonst bekommt er sie gar nicht gestellt. Läuft ein Agent, steht die Frage als Text am Ende der Meldung, und die Antwort kommt als Einwurf. Der `PreToolUse`-Haken dafür ist seit dem 01.11. in [[daueraufgaben-brauchen-einen-takt]] vorgeschlagen; zweites gemessenes Auftreten ([[fehlerklassen-abstellen]]).

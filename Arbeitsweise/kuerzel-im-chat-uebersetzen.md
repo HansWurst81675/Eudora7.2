@@ -57,3 +57,9 @@ Zeiten MEZ, 26.10., gemessen am Transkript.
 Um 08:27:40 MEZ schrieb ich: *„Als Nächstes würde ich deine Entscheidung ‚ab dem Release geht es mit 7.2.1 weiter‘ als Entscheidung 20 eintragen.“* Gregor um 08:36:24: *„lassen, dann mach weiter mit entscheidung 20: was ist 20?“* Der Inhalt stand im selben Satz. Gregor kannte aber die nummerierte Liste nicht, in die die Nummer gehört (`Intern/WEITERMACHEN.md`, „Geltende Entscheidungen“, seit dem Umbau am 30.10. die Nummern 1–20). Die Antwort um 08:36:31 hat das erklärt.
 
 **How to apply, zusätzlich:** Eine Entscheidungsnummer nenne ich Gregor nur zusammen mit dem Inhalt, dem Datum und dem Ort der Liste. Beispiel: *„deine Entscheidung vom 30.10. (Nr. 20 in der Liste in WEITERMACHEN): auch Testpakete heißen 7.2.1.N“*.
+
+## Nachtrag 03.11.2026 (CHRONIST): „welcher aufruf? wovon sprichst du?“
+
+Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 7). Um 09:57:35 und 09:57:58 gingen zwei Arbeitssätze an Gregor: *„Bevor ich schreibe ‚heute gibt es keinen solchen Aufruf‘, prüfe ich es.“* und *„Es gibt genau ein `new CFileDialog(`, in `AttachTran.cpp:225`.“* Gregor um 09:58:25: *„welcher aufruf? wovon sprichst du?“*, um 10:01:13: *„bedauerlicherweise kann ich nicht mal nachlesen in befunde.md, was ein e-214 ist“*. E-214 stand nur auf einem Zweig. Die Antwort klärte E-214, den „Aufruf“ nicht.
+
+Nicht nur Fundkürzel sind Kürzel. Ein Zwischenstand, der eine Codestelle nennt, ohne zu sagen, welche Frage sie beantwortet, ist für Gregor genauso unlesbar. **How to apply, zusätzlich:** Ein Zwischenstand sagt, woran ich bin, in Gregors Worten („ich prüfe, ob es noch einen zweiten Speicherdialog mit demselben Fehler gibt“), oder er bleibt weg. Eine Kennung, die nur auf einem Zweig steht, kommt mit dem Zweig und einem Halbsatz Inhalt.

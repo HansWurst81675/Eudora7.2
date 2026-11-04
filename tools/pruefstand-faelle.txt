@@ -261,6 +261,33 @@ E-189 | C:\Temp\E184 | 20 | messung | E189 ERGEBNIS fremd=1 kopie-neu=1 kopie-mi
 # anfrage=3,2,1 - rot, ueber Kreuz. (Erste Gegenprobe mit Listen "1,2,3" mass
 # nur den alten Leser, PRUEFER-78 K7; seither Bereiche und Pflicht "anfrage".)
 E-184m | C:\Temp\E184 | 20 | messung | E184M ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3 | | | messen=tools\messen-e184m.ps1
+# E-188 (03.11.2026, PRUEFER-75 K1): Verschieben zwischen ZWEI IMAP-Konten
+# und von IMAP nach lokal. tools/messen-e188.ps1 startet zwei Pruefserver
+# (Port 1143 = Konto A, Port 1144 = Konto B mit Postfach "Ziel") und liest den
+# Serverbestand aus deren Protokoll (--zustand), nicht aus der Anzeige.
+# Erwartet ohne Fehler: Anzeige richtig und keine Mail, die am Ende auf
+# keinem Server ohne \Deleted steht (bzw. nach lokal: deren Text lokal fehlt).
+# Pruefstand C:\Temp\E188: Programm = der zu messende Bau, nach C:\Temp\E188
+# kopiert (Gegenprobe: 7.2.2.132 aus C:\Temp\E128); Mailverzeichnis aus
+# C:\Temp\E184; -Vorbereiten legt das zweite Konto an.
+E-188k | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=konten anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188k.ps1
+E-188a | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=append | E188 SERVER VERLOREN | | messen=tools\messen-e188a.ps1
+E-188u | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=ohneuid anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188u.ps1
+E-188t | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=kontentext anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188t.ps1
+E-188l | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=lokal anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188l.ps1
+E-188f | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=fetch | E188 SERVER VERLOREN | | messen=tools\messen-e188f.ps1
+E-188tm | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=kontenmehr | E188 SERVER VERLOREN | | messen=tools\messen-e188tm.ps1
+E-188fm | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=fetchmehr | E188 SERVER VERLOREN | | messen=tools\messen-e188fm.ps1
+E-188e | C:\Temp\E188 | 20 | messung | E188 ERGEBNIS weg=lokaleins anzeige=richtig | E188 SERVER VERLOREN | | messen=tools\messen-e188e.ps1
+E-188d | C:\Temp\E188 | 20 | messung | E188 LOESCHEN GEMESSEN fremd-lebt=1 | E188 SERVER FREMDE GELOESCHT | | messen=tools\messen-e188d.ps1
+# E-193 (03.11.2026): Find Messages (mit und ohne Suchindex X1) gegen Edit ->
+# Find im Nachrichtenfenster, mit neun Mails bekannten Inhalts
+# (Testdaten/e193-m0..m8-*.eml: Umlaute und Euro in Latin-1, UTF-8, QP, nur im
+# Betreff, nur als HTML-Entitaet, windows-1252). tools/messen-e193.ps1 holt sie
+# per POP, sucht 11 Woerter in beiden Suchfenster-Arten und 24 Wort/Mail-Paare
+# ueber WM_FINDREPLACE im Nachrichtenfenster. Erwartet ohne Fehler: nirgends
+# falsch. Pruefstand C:\Temp\E193 ist eine Kopie von C:\Temp\E128 (7.2.2.132).
+E-193p | C:\Temp\E193 | 20 | messung | E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
 
 # E-192 (03.11.2026, Rest von E-184 K3): drei Mails, nach Datum sortiert
 # (Liste 3,2,1), alle markiert und GELOESCHT - "in den Papierkorb verschieben",
@@ -453,6 +480,23 @@ E-204w | C:\Temp\E204 | 90 | messung | E204 PROBE ok | | | messen=tools\messen-e
 # schreibt Eudora gepuffert - geprueft wird sie nach dem Beenden (A-5p-log).
 A-5p | C:\Temp\EHILFE | 60 | messung | HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1 | | | messen=tools\messen-hilfe.ps1
 A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: Tastenkuerzel.html geoeffnet | | messen=tools\messen-hilfe.ps1
+# E-216 (03.11.2026): Help -> About. Alle Knoepfe in einer Reihe ohne
+# Ueberlappung, der Knopf "Latest Release" ist da, die Zeilen "Log" und "Mail
+# folder from" sind mindestens zwei Zeilen hoch, und jede Pfadzeile hat die
+# Dialogbreite und fasst ihren Text (passt=, PRUEFER-91 K1/K3). Der Knopf
+# wird NICHT gedrueckt - das oeffnete den Browser auf dem Bildschirm.
+# Pruefstand C:\Temp\EABOUT (Kopie von C:\Temp\E128, neuer Bau hinein).
+# Gegenprobe am Bau 7.2.1.131 ohne die Behebung (C:\Temp\EABOUT-alt):
+# knoepfe=4 ueberlappt=1 github=0 herkunft-zeilen=1 log-zeilen=1 passt=0.
+E-216p | C:\Temp\EABOUT | 30 | messung | ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1 | | | messen=tools\messen-about.ps1
+# E-216l (PRUEFER-91 K1): die Zeile "Log:" mit LogLevel aus der Vorgabe
+# (25759, ohne 32768 -> Zusatz "keine E-nn-Marken") und langem Pfad braucht
+# zwei Zeilen. Pruefstand C:\Temp\EABOUT-langer-pfad-fuer-die-log-zeile
+# (Kopie von EABOUT, LogLevel=25759 in Mailverzeichnis\Eudora.ini): die
+# Zeile hat 114 Zeichen, DrawText braucht 26 Pixel. Gegenprobe 7.2.1.131
+# (C:\Temp\EABOUT-alt-langer-pfad-fuer-log-zeile): Rechteck 16 Pixel hoch,
+# passt=0.
+E-216l | C:\Temp\EABOUT-langer-pfad-fuer-die-log-zeile | 30 | messung | ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1 | | | messen=tools\messen-about.ps1
 # E-133 (02.11.2026): zeigt CommandLine\Current auf ein Mailverzeichnis, das
 # es nicht mehr gibt, fragt Eudora beim Start ohne Argument (Doppelklick)
 # statt sich mit zwei Fehlermeldungen zu beenden. messen-e133.ps1 setzt im

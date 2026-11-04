@@ -2131,6 +2131,7 @@ void CImapCrossServerTransferMsgAction::DoPostProcessing()
 	CSummary	*pSum = NULL;
 	CSummary	*pCopySum = NULL;
 	CString		 strUIDList(m_szMessageIDs);
+	CString		 strAngekommen;		// E-188: nur diese UIDs werden in der Quelle geloescht
 	bool		 bSomeFailed = false;
 	do
 	{
@@ -2148,16 +2149,64 @@ void CImapCrossServerTransferMsgAction::DoPostProcessing()
 														FALSE/*m_bClearCacheOnly*/,
 														TRUE/*m_bInvalidateCachedPreviewSums*/);
 			}
-			if (!m_pTocDoc->ImapCopyMsgBetweenAccounts(pSum, m_pDestTocDoc, &pCopySum))
+			// E-188: ohne Anhang laedt ImapCopyMsgBetweenAccounts den lokalen Text hoch
+			// (AppendMessageFromLocal). Liess er sich nicht holen, kaeme im Ziel nur der
+			// Kopf an - bis 7.2.2.132 geschah das, und die Quelle wurde trotzdem
+			// geloescht (gemessen, Fall E-188t). Dann lieber gar nicht hochladen.
+			bool bAngekommen = false;
+			pCopySum = NULL;	// E-188: sonst bliebe die Kopie der vorigen Mail stehen
+			if (!pSum->HasAttachment() && pSum->IsNotFullyIMAPDownloaded())
+			{
+				CString szSpur;
+				szSpur.Format("E-188 Text nicht geladen, nicht hochgeladen, Quelle bleibt: uid=%lu", pSum->GetHash());
+				::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			}
+			else if (m_pTocDoc->ImapCopyMsgBetweenAccounts(pSum, m_pDestTocDoc, &pCopySum))
+			{
+				bAngekommen = true;
+			}
+			// E-188: bleibt die Vorab-Kopie im Ziel ohne Gegenstueck auf dem Server -
+			// nicht angekommen (E-188a/t) oder ohne APPENDUID keine neue Nummer
+			// (E-188u) -, traegt sie die alte Nummer, die im Ziel einer fremden Mail
+			// gehoeren kann. Wie bei E-189 entfernen; ohne APPENDUID kommt die Kopie
+			// mit dem naechsten Abgleich unter ihrer richtigen Nummer.
+			if (!pCopySum && m_pDestTocDoc)
+			{
+				CString szAlt;
+				szAlt.Format("%lu", pSum->GetHash());
+				E189VorabKopienEntfernen(m_pDestTocDoc, szAlt);
+			}
+			if (bAngekommen)
+			{
+				CString szUid;
+				szUid.Format("%lu", pSum->GetHash());
+				if (!strAngekommen.IsEmpty())
+					strAngekommen += ",";
+				strAngekommen += szUid;
+			}
+			else
 			{
 				bSomeFailed = true;
 			}
 		}
 	} while (pSum);
 
+	// E-188: bis 7.2.2.132 wurde hier die ganze Liste m_szMessageIDs geloescht,
+	// auch wenn das Hochladen abgelehnt wurde (Fall E-188a, Dialog "Attempt to add
+	// the message ... failed") - die Mail stand dann auf keinem Server mehr ohne
+	// \Deleted. Innerhalb eines Kontos loescht CImapTransferMsgAction::DoWork
+	// ebenso nur nach gelungenem COPY.
 	if (!m_bCopy)
 	{
-		m_pImapMailbox->DeleteMessagesFromServer(m_szMessageIDs, m_bAutoExpunge, TRUE/*bSilent*/);
+		if (bSomeFailed)
+		{
+			CString szSpur;
+			szSpur.Format("E-188 Quelle nur teilweise geloescht: verlangt=%s angekommen=%s",
+						  (LPCTSTR) m_szMessageIDs, (LPCTSTR) strAngekommen);
+			::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		}
+		if (!strAngekommen.IsEmpty())
+			m_pImapMailbox->DeleteMessagesFromServer(strAngekommen, m_bAutoExpunge, TRUE/*bSilent*/);
 	}
 
 	if (bSomeFailed)
@@ -2359,16 +2408,24 @@ void CImapToLocalTransferMsgAction::DoPostProcessing()
 	CSummary	*pSum = NULL;
 	CSummary	*pCopySum = NULL;
 	CString		 strUIDList(m_szMessageIDs);
+	CString		 strAngekommen;		// E-188: nur diese UIDs werden in der Quelle geloescht
+	bool		 bSomeFailed = false;
 	do
 	{
 		pSum = GetSummaryFromUIDString(strUIDList);
 
 		if (pSum)
 		{
+			bool bAngekommen = true;
 			// Only proceed if the message is not fully downloaded.  If the message is already
 			// downloaded, then the local transfer we did before this action was queued already
 			// did all the work.
-			if (pSum->IsNotFullyIMAPDownloaded())
+			// E-188 K2 (PRUEFER-94): ausser, die Mail wurde erst NACH dem Verschieben ganz
+			// geladen - dann hat Xfer nur den Kopf kopiert, und im Ziel liegt noch die
+			// markierte Vorab-Kopie (Xfer markiert nach lokal nur nicht ganz geladene).
+			// Bis hierher galt sie als angekommen, und die Quelle wurde geloescht.
+			if (pSum->IsNotFullyIMAPDownloaded() ||
+				(m_pDestTocDoc && E184FindeVorabKopie(m_pDestTocDoc, pSum->GetHash())))
 			{
 				CSumList		sumList;
 				sumList.AddHead(pSum);
@@ -2377,10 +2434,33 @@ void CImapToLocalTransferMsgAction::DoPostProcessing()
 														TRUE/*m_bOnlyIfNotDownloaded*/,
 														FALSE/*m_bClearCacheOnly*/,
 														TRUE/*m_bInvalidateCachedPreviewSums*/);
+				// E-188: bis 7.2.2.132 wurde die Quelle auch geloescht, wenn der Text
+				// nicht zu holen war (lokal nur der Kopf, Fall E-188f) oder das Kopieren
+				// scheiterte.
+				bAngekommen = false;
 				if (!pSum->IsNotFullyIMAPDownloaded())
 				{
-					m_pTocDoc->ImapCopyMsgFromImapToLocal(pSum, m_pDestTocDoc, &pCopySum);
+					if (m_pTocDoc->ImapCopyMsgFromImapToLocal(pSum, m_pDestTocDoc, &pCopySum))
+						bAngekommen = true;
 				}
+				else
+				{
+					CString szSpur;
+					szSpur.Format("E-188 Text nicht geladen, Quelle bleibt: uid=%lu", pSum->GetHash());
+					::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+				}
+			}
+			if (bAngekommen)
+			{
+				CString szUid;
+				szUid.Format("%lu", pSum->GetHash());
+				if (!strAngekommen.IsEmpty())
+					strAngekommen += ",";
+				strAngekommen += szUid;
+			}
+			else
+			{
+				bSomeFailed = true;
 			}
 		}
 	} while (pSum);
@@ -2388,12 +2468,21 @@ void CImapToLocalTransferMsgAction::DoPostProcessing()
 	// We are done with the TocDoc so allow it to auto-delete again.
 	m_pDestTocDoc->DecrementPreventAutoDelete();
 
+	// E-188: nur loeschen, was lokal vollstaendig angekommen ist.
 	if (!m_bCopy)
 	{
-		m_pImapMailbox->DeleteMessagesFromServer(m_szMessageIDs, m_bAutoExpunge, TRUE/*bSilent*/);
+		if (bSomeFailed)
+		{
+			CString szSpur;
+			szSpur.Format("E-188 Quelle nur teilweise geloescht: verlangt=%s angekommen=%s",
+						  (LPCTSTR) m_szMessageIDs, (LPCTSTR) strAngekommen);
+			::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		}
+		if (!strAngekommen.IsEmpty())
+			m_pImapMailbox->DeleteMessagesFromServer(strAngekommen, m_bAutoExpunge, TRUE/*bSilent*/);
 	}
 
-	m_iState = kActionStateSucceeded;
+	m_iState = bSomeFailed ? kActionStateFailed : kActionStateSucceeded;
 
 }
 

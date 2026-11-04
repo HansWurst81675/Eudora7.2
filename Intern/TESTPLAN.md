@@ -1,6 +1,79 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.1.131 (Release `v7.2.1.131`, veröffentlicht am 02.11.2026; `VERSION` gleich; geschnürt am 02.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`, ZIP daneben; davor 7.2.1.130, geschnürt am 01.11.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`), Stand 03.11.2026 (E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.132 (Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 04.11.2026 (auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+
+## <a id="test-7-2-2-132"></a>Dein Test an 7.2.2.132 — ca. 15 Minuten, an deinem echten System
+
+**Hier steht nur, was der Prüfstand nicht kann:** deine echten Konten und
+Server, dein Mailverzeichnis, dein Browser, deine Einstellungen und Filter.
+Was der Prüfstand selbst misst, steht im Kasten darunter und braucht dich
+nicht. 7.2.2.132 war ein **Testpaket**, die erste Fassung mit neuen
+Funktionen (Hilfe-Menü, About-Dialog, *Speichern unter*); nach deinem Ja ist
+es am 03.11.2026 als `v7.2.2.132` veröffentlicht. Das Paket liegt neben deinem letzten
+Testverzeichnis, das ZIP daneben.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.132+` beginnt. |
+| 2 | POP | Post abrufen (*File → Check Mail*). | neue Post im lokalen *In* ankommt und *Task Errors* nichts meldet. |
+| 3 | IMAP | Einen Ordner deines IMAP-Kontos öffnen und Post abrufen. | die Liste kommt und *Task Errors* nichts meldet. |
+| 4 | SMTP | Eine Mail mit Umlauten und `€` an dich selbst senden. | sie rausgeht und beim nächsten Abruf mit richtigen Umlauten und `€` ankommt. |
+| 5 | lokal | Ein vorhandener Filter von dir läuft beim Abruf aus Schritt 2 mit. | er wirkt wie gewohnt (Mail im Zielpostfach, Label gesetzt, je nach Filter). |
+| 6 | lokal | *Help → Keyboard Shortcuts* ([A-5](BEFUNDE.md#a-5)). | dein Standard-Browser eine Seite *Eudora — Tastenkürzel* öffnet, mit richtigen Umlauten und oben der Fassung 7.2.2.132; Eudora zeigt keine Meldung. |
+| 7 | lokal | *Help → Settings Reference* ([A-5](BEFUNDE.md#a-5)). | der Browser eine zweite Seite *Eudora — Einstellungen und Eudora.ini-Schlüssel* öffnet, mit einer Tabelle je Seite von *Tools → Options*. |
+| 8 | lokal | *Help → About Eudora* ([E-216](BEFUNDE.md#e-216)), ansehen, noch nichts drücken. | unten fünf Knöpfe in einer Reihe stehen — *Close*, *Visit Web Site*, *Latest Release*, *Credits*, *Copy info* —, keiner einen anderen überdeckt und die Zeilen *Log* und *Mail folder from* ganz zu lesen sind. |
+| 9 | lokal | Im selben Dialog **nur** *Latest Release* drücken — der einzige Klick in diesem Dialog, der einen Browser öffnet —, danach *Close*. | der Browser die GitHub-Seite des neuesten Releases öffnet (`…/Eudora7.2/releases/…`; seit dem 03.11.2026 ist das 7.2.2.132 selbst, bei deinem Test war es noch 7.2.1.131) und Eudora **keine** Meldung *„The release page could not be opened …“* zeigt. |
+| 10 | lokal | In der **Postfachliste** eines lokalen Postfachs eine HTML-Mail markieren, *File → Save As*; dann dieselbe Mail öffnen und noch einmal *File → Save As* ([E-128](BEFUNDE.md#e-128)). | aus der Liste der Dateityp **Mail Files (*.eml)** vorgewählt ist, aus dem geöffneten Fenster **HTML Files (*.htm)**; beide Dialoge mit *Cancel* schließen genügt. |
+| 11 | lokal | *Tools → Signatures*, eine Signatur per Doppelklick öffnen, **nichts ändern**, *File → Save As*, als `.txt` an einen Ort deiner Wahl speichern, das Fenster schließen ([E-207](BEFUNDE.md#e-207)). | die gespeicherte Datei nicht leer ist, sondern den Text der Signatur enthält. |
+| 12 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
+bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`. Die
+ausführlichen Abschnitte weiter unten ([A-5](#a-5-naechstes),
+[E-128](#e-128-naechstes), [E-216](#e-216-naechstes)) sind freiwillig.
+
+**Ergebnis 03.11.2026, Gregor an 7.2.2.132 (mit einer Kopie seines
+Mailverzeichnisses): alle zwölf Schritte bestanden** — vom Hauptagenten an
+Gregors Bildschirmfotos und an der `eudora.log` des Laufs nachgelesen (nur
+lokal ausgewertet; aus Gregors Testdaten steht hier nichts — keine
+Betreffzeilen, Namen, Dateinamen oder Inhalte):
+
+| # | Beleg |
+|---|---|
+| 1 | Titelzeile `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46` (Bildschirmfoto) |
+| 2, 3 | Abrufaufgaben POP und IMAP laufen durch, keine Task-Fehler; IMAP-Teile übersetzt (`E-85 imap: …`) |
+| 4 | zweimal `E-88 auf der Leitung`; die Antwort kam mit richtigen Umlauten und `€` an (Bildschirmfoto) |
+| 5 | ein vorhandener Filter greift beim Abruf (`E-64 Match=1`) |
+| 6, 7 | beide Hilfeseiten im Browser, Statuszeilentexte wie beschrieben (Bildschirmfotos) |
+| 8, 9 | fünf Knöpfe ohne Überlappung; *Latest Release* öffnet die Release-Seite (`About: Latest Release geoeffnet …`) |
+| 10 | Endung richtig vorgeschlagen und gespeichert: Postfachliste `endung=eml`, Nachrichtenfenster `endung=htm`; die `.htm` trägt `<meta … charset=windows-1252>` ([E-196](BEFUNDE.md#e-196)). **Neu gefunden:** der vorgeschlagene **Dateiname** verliert Umlaute, ist bei 63 Zeichen abgeschnitten. Der ganze Pfad mit doppeltem Rückstrich im Feld, den Windows ablehnte, kam nach Gregors eigener Einschätzung aus dem Explorer hineinkopiert; am Prüfstand ließ er sich nicht nachstellen. Eigener Befund `E-220` (Zweig `e220_dateiname_vorschlag`). |
+| 11 | die gespeicherte Signatur ist nicht leer ([E-207](BEFUNDE.md#e-207)) |
+| 12 | `CloseDown … liefere TRUE`, kein Fehlerdialog |
+
+Einzige Fehlerzeile: `Error opening LMOS file … lmos.dat` — die Datei für
+„Leave on Server“ fehlt, seit Wochen so, nicht neu in 7.2.2.132.
+
+> **Am Prüfstand erledigt, nur zur Kenntnis — keine Schritte für dich.**
+> Jede Neuerung in 7.2.2.132 hat einen Prüfstandsfall. Voller Lauf am Bau
+> `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46` (dem Bau im Paket): **81
+> Fälle, 81 bestanden** — vier E-170-Fälle erst nach einer Berichtigung im
+> Messskript, das ein Anführungszeichen mitlas (das Programm war richtig, siehe
+> [CHANGELOG](../CHANGELOG.md)); dazu 408 Unit-Tests und 19 Schranken,
+> [PRUEFBERICHT](../Releases/PRUEFBERICHT.md) **BESTANDEN**.
+>
+> | Befund | Fall | Was der Prüfstand misst |
+> |---|---|---|
+> | [A-5](BEFUNDE.md#a-5) Hilfe-Menü | `A-5p`, `A-5p-log` | beide Einträge im Menü; fehlt eine Seite, kommt die Meldung mit dem erwarteten Pfad, Eudora läuft weiter |
+> | [E-216](BEFUNDE.md#e-216) About-Dialog | `E-216p`, `E-216l` | fünf Knöpfe, keiner überlappt, *Latest Release* führt zur GitHub-Seite, Pfadzeilen mit Platz für zwei Zeilen, auch mit langem Pfad |
+> | [E-128](BEFUNDE.md#e-128) Endung beim Speichern | `E-128p`, `E-128k`, `E-128t` | `.eml`/`.htm`/`.txt` je nach Inhalt und Fenster |
+> | [E-194](BEFUNDE.md#e-194), [E-195](BEFUNDE.md#e-195), [E-196](BEFUNDE.md#e-196) Speichern unter | `E-194p`, `E-194k` | keine `<x-flowed>`-Zeilen, kein *Rtf Files* für Nachrichten, `.htm` mit Zeichensatz |
+> | [E-205](BEFUNDE.md#e-205) Datum beim Speichern | `E-205p` | Abweichung `0h`, Zone wie die des Rechners |
+> | [E-207](BEFUNDE.md#e-207) Signatur speichern | `E-207p` | `.txt` und `.htm` enthalten den Text |
+> | [E-133](BEFUNDE.md#e-133) fehlendes Mailverzeichnis | `E-133p`, `E-133q` | Rückfrage statt Ende, Registry danach berichtigt |
+> | [E-39](BEFUNDE.md#e-39), [E-203](BEFUNDE.md#e-203) Persönlichkeit löschen, *Change Password* | `E-203p`, `E-203v`, `E-203w` | kein gelöschter Abschnitt kommt wieder, die vorige Persönlichkeit ist wieder die aktuelle |
+> | [E-204](BEFUNDE.md#e-204) Kennwort einer gelöschten Persönlichkeit | `E-204p`, `E-204w` | die neue Persönlichkeit fragt nach ihrem Kennwort |
+> | [E-170](BEFUNDE.md#e-170) Label ohne UIDPLUS | `E-170p`, `E-170o`, `E-170m`, `E-170f`, `E-170g`, `E-170c`, `E-170s` (IMAP-Prüfserver) | das Label bleibt, eine fremde Mail bekommt keines |
+> | [E-141](BEFUNDE.md#e-141), [E-179](BEFUNDE.md#e-179) aus 7.2.1.131 | `E-141p`, `E-141g`, `E-179p` | keine falsche Meldung beim Entwurf nach *Out*; Emoji im Textteil bleiben Zeichenangaben |
 
 ## <a id="test-7-2-1-131"></a>Dein Test an 7.2.1.131 — ca. 10 Minuten, an deinem echten System
 
@@ -340,8 +413,10 @@ lokalen *In*.
 
 **Bestanden** heißt `passt` bei `tt`, `link` und `gespeichert` — und bei
 `antwort` erst, wenn die Antwort nachweislich nur die Markierung zitiert.
-Das Urteil sieht nur die beiden Zeichen: einen leeren Link, den `t;`-Rest aus
-[E-199](BEFUNDE.md#e-199) oder ein Vollzitat erkennt es nicht.
+Das Urteil sieht nur die beiden Zeichen: einen leeren Link oder ein Vollzitat
+erkennt es nicht. Den `t;`-Rest aus [E-199](BEFUNDE.md#e-199) erkennt seit
+`4ae1c87e` die Wirkprobe (Zeile `E178 MUELL`; nicht hinter einem Buchstaben
+oder einer Ziffer).
 
 Bis 7.2.1.129 machten *Make Hyperlink* und *Festbreite* aus dem Emoji schon
 auf dem Bildschirm `??` (gemessen am 02.11.2026 am Bau 7.2.1.128+d3a625fd\*,
@@ -496,6 +571,29 @@ deinem System.
    kommt. Am Prüfstand ist dieser Weg nicht gemessen.
 
 Wer eine andere Endung will, wählt sie im Dialog wie bisher.
+
+## <a id="e-216-naechstes"></a>Mit 7.2.2.132: About-Dialog ([E-216](BEFUNDE.md#e-216))
+
+**Erst mit dem Paket 7.2.2.132 auszuführen** — in 7.2.1.x gibt es den Knopf
+nicht. **Ort: lokal, egal welches Konto**; es wird keine Post gebraucht.
+
+1. Eudora starten (mit `Eudora starten.cmd` aus dem Paket), *Help → About
+   Eudora* wählen. **Bestanden:** unten stehen fünf Knöpfe in einer Reihe —
+   *Close*, *Visit Web Site*, *Latest Release*, *Credits*, *Copy info* —,
+   keiner überdeckt einen anderen, jede Beschriftung ist ganz zu lesen. Die
+   Zeilen *Log: …* und *Mail folder from: …* sind ganz zu lesen; ist eine
+   länger als die Dialogbreite, steht der Rest in einer zweiten Zeile (bei
+   *Log* meist der Zusatz *keine E-nn-Marken*, wenn das Protokoll nicht alle
+   Bereiche schreibt).
+2. *Latest Release* drücken. **Bestanden:** dein Standard-Browser öffnet die
+   GitHub-Seite des Projekts mit dem neuesten Release (Adresse
+   `https://github.com/HansWurst81675/Eudora7.2/releases/…`), dort lässt sich
+   das ZIP herunterladen. **Eudora zeigt dabei keine Meldung** — kommt neben
+   dem Browser ein Fenster *„The release page could not be opened …“*, ist
+   das ein Fehler, auch wenn die Seite aufging. Der About-Dialog bleibt offen
+   und geht mit *Close* zu.
+3. *Copy info* drücken und in einen Editor einfügen. **Bestanden:** dieselben
+   Zeilen wie im Dialog, auch die Herkunftszeile ungekürzt.
 
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 

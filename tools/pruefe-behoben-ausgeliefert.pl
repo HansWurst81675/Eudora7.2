@@ -128,8 +128,9 @@ sub fassungen_der_exe {
     my %v;
     # 7.2.0.NN (Testpaket bis zum Release 7.2.1.128) und 7.2.1.NN (Release,
     # seit dem 30.10.2026 auch Testpaket; Gregors Entscheidungen 10 und 20 in
-    # Intern/WEITERMACHEN.md).
-    while ($inhalt =~ /(7\x00\.\x002\x00\.\x00[01]\x00\.\x00(?:\d\x00)+)/g) {
+    # Intern/WEITERMACHEN.md) und seit 03.11.2026 7.2.2.NN (L-142.3; bis dahin
+    # meldete Pruefung A das Paket 7.2.2.132 als "keine Fassung").
+    while ($inhalt =~ /(7\x00\.\x002\x00\.\x00[012]\x00\.\x00(?:\d\x00)+)/g) {
         my $s = $1;
         $s =~ s/\x00//g;
         $v{$s} = 1;
@@ -145,7 +146,7 @@ sub urteile {
     for my $z (split /\n/, $befunde) {
         next unless $z =~ /^\s*\|\s*$ANKER\s*\**\s*([A-Z]{1,3}\d*-\d+)\b/;
         my $kennung = $1;
-        next unless $z =~ /behoben\s+in\s+\**\s*(7\.2\.[01]\.(\d+))\b/i;
+        next unless $z =~ /behoben\s+in\s+\**\s*(7\.2\.[012]\.(\d+))\b/i;
         my ($voll, $fassung) = ($1, $2);
 
         # "von Gregor ... bestaetigt" - dieselbe Wendung, die
@@ -357,8 +358,8 @@ if (grep { $_ eq '--tests' } @ARGV) {
 my %pakete;
 for my $verz (glob("$wurzel/Releases/Eudora72-1.0.*-release"), glob("$wurzel/Releases/Eudora72-7.2.*-release")) {
     next unless -d $verz;
-    my ($name) = $verz =~ /(Eudora72-(?:1\.0|7\.2\.[01])\.\d+-release)/ or next;
-    my ($nr)   = $name =~ /((?:1\.0|7\.2\.[01])\.\d+)/;
+    my ($name) = $verz =~ /(Eudora72-(?:1\.0|7\.2\.[012])\.\d+-release)/ or next;
+    my ($nr)   = $name =~ /((?:1\.0|7\.2\.[012])\.\d+)/;
     my $exe = "$verz/Eudora.exe";
     next unless -f $exe;
     $pakete{$nr} = [ fassungen_der_exe(lies_ende($exe)) ];
@@ -383,7 +384,7 @@ for my $verz (glob("$wurzel/Releases/Eudora72-1.0.*-release"), glob("$wurzel/Rel
 #
 for my $zip (glob("$wurzel/Releases/Eudora72-1.0.*-release.zip"), glob("$wurzel/Releases/Eudora72-7.2.*-release.zip")) {
     next unless -f $zip;
-    my ($nr) = $zip =~ /Eudora72-((?:1\.0|7\.2\.[01])\.\d+)-release/ or next;
+    my ($nr) = $zip =~ /Eudora72-((?:1\.0|7\.2\.[012])\.\d+)-release/ or next;
     next if $pakete{$nr};                 # entpackt vorhanden, das zaehlt zuerst
 
     # NICHT entpacken. Am 20.10.2026 um 20:45:19 hat Defender die hier
@@ -416,7 +417,7 @@ my @u = urteile(lies("$wurzel/Intern/BEFUNDE.md"));
 # als das einzige mitversionierte Paket; siehe den Kasten bei Pruefung B.
 my $dokumentiert = 0;
 for my $z (split /\n/, (lies("$wurzel/Releases/PAKETE.md") || '')) {
-    next unless $z =~ /^##\s+(?:1\.0|7\.2\.[01])\.(\d+)\b/;
+    next unless $z =~ /^##\s+(?:1\.0|7\.2\.[012])\.(\d+)\b/;
     $dokumentiert = $1 if $1 > $dokumentiert;
 }
 

@@ -643,7 +643,7 @@ if (length $paket_haupt) {
                     my ($klein) = $nr =~ /\.([0-9]+)$/;
                     next if index($ueberschrift, $nr) >= 0;
                     next if defined $klein
-                        and $ueberschrift =~ /\b(?:7\.2\.[01]|1\.0)\.\Q$klein\E\b/;
+                        and $ueberschrift =~ /\b(?:7\.2\.[012]|1\.0)\.\Q$klein\E\b/;
                 }
 
                 my $zeile = 1 + (() = $davor =~ /\n/g);
@@ -675,11 +675,11 @@ for my $datei (@aktuell) {
     next if $kopf =~ /gemessen an [`']?[0-9a-f]{7}/i;
     next if $kopf =~ /Geprueft|Gepr(ü|ue)ft.*\bam\b/i;
     next if $kopf =~ /Vorarbeit vom \d{2}\.\d{2}\.20\d\d/i;
-    next unless $inhalt =~ /\b7\.2\.[01]\.\d+\b/ or $inhalt =~ /\b1\.0\.\d+\b/;
+    next unless $inhalt =~ /\b7\.2\.[012]\.\d+\b/ or $inhalt =~ /\b1\.0\.\d+\b/;
     next if index($inhalt, $quellstand) >= 0;
     next if index($inhalt, $paket)      >= 0;
     my %gefunden;
-    $gefunden{$2} = $1 while $inhalt =~ /\b(7\.2\.[01]\.(\d+))\b/g;
+    $gefunden{$2} = $1 while $inhalt =~ /\b(7\.2\.[012]\.(\d+))\b/g;
     my ($hoechste) = sort { $b <=> $a } keys %gefunden;
     push @hinweis, sprintf("%s nennt weder den Quellstand %s noch die Paketnummer %s%s",
                            $datei, $quellstand, $paket,
@@ -812,7 +812,7 @@ for my $datei (@alle_md) {
                 $zitiert .= $1 . ' ';
             }
         }
-        while ($fenster =~ /\b(7\.2\.[01]\.\d+)\b/g) {
+        while ($fenster =~ /\b(7\.2\.[012]\.\d+)\b/g) {
             next if $1 eq $quellstand or $schon{$1}++;
             next if index($zitiert, $1) >= 0;
             next if $stand_gemeldet{"$datei|$1"}++;

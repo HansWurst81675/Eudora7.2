@@ -211,6 +211,7 @@ CImapDownloader::CImapDownloader(unsigned long AccountID, CImapConnection* pImap
 
 	// We haven't seen any CRLF's yet
 	m_bEndedWithCRLF = FALSE;
+	m_bE188TeilFehlt = FALSE;
 
 	// The buffer is allocated during the Write.
 	m_nBufferSize	= 0;
@@ -729,6 +730,7 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 	long			MStart = 0, MEnd = 0;
 	IMAPUID			Uid = 0;
 	BOOL			bWeOpenedMbxFile = FALSE;
+	m_bE188TeilFehlt = FALSE;		// E-188 K1: je Nachricht neu
 
 	// SAnity:
 	if (! pSum )
@@ -973,6 +975,13 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 				{
 					hResult = S_OK;
 				}
+				else
+				{
+					// E-188 (PRUEFER-95 K1): auch ein Scheitern ohne markierte Abrufstelle -
+					// etwa der Kopf einer eingebetteten Mail (message/rfc822,
+					// UIDFetchRFC822Header) - laesst die Mail "nicht geladen".
+					m_bE188TeilFehlt = TRUE;
+				}
 
 				// If we saved embedded content lines, go write those out.
 				WriteEmbeddedElements( m_pHd->m_isMHTML );
@@ -986,12 +995,34 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 				{
 					hResult = S_OK;
 				}
+				else
+				{
+					m_bE188TeilFehlt = TRUE;	// E-188 (PRUEFER-95 K1), wie oben
+				}
 			}
 			else
 			{
 				if ( DownloadSimpleBody (Uid, pBody, "1") )
 				{
 					hResult = S_OK;
+				}
+				else
+				{
+					// E-188: hResult stammt hier noch vom gelungenen Kopfabruf
+					// (UIDFetchHeaderFull oben). Bis 7.2.2.132 blieb es S_OK, wenn der
+					// Server den Rumpf verweigerte (NO) oder die Verbindung riss: die
+					// Mail galt als vollstaendig geladen, mit leerem Rumpf, und beim
+					// Verschieben in ein anderes Konto oder nach lokal wurde nur der
+					// Kopf uebertragen und die Quelle geloescht (gemessen, E-188t/f).
+					// Jetzt schneidet der Weg unten die Datei zurueck, und die Mail
+					// bleibt "nicht geladen". Mehrteilige Mails laufen nicht hier durch,
+					// sondern ueber m_bE188TeilFehlt (PRUEFER-94 K1): dort meldet schon
+					// ein einzelner gescheiterter Anhang FALSE, und die Mail soll das
+					// Angekommene zeigen, also kein E_FAIL.
+					hResult = E_FAIL;
+					CString szSpur;
+					szSpur.Format("E-188 Rumpf nicht geladen, Mail bleibt ungeladen: uid=%lu", (unsigned long) Uid);
+					::PutDebugLog(DEBUG_MASK_MISC, szSpur);
 				}
 			}
 
@@ -1064,7 +1095,22 @@ HRESULT CImapDownloader::DownloadSingleMessage (CImapSum *pSum, BOOL bDownloadAt
 			pSum->m_MsgSize = (unsigned short) max (pSum->m_Length/1024, 1);
 
 		// Now signal to the summary that this message is now fully downloaded.
-		pSum->m_Imflags &= ~IMFLAGS_NOT_DOWNLOADED;
+		// E-188 K1 (PRUEFER-94): fehlte ein Teil (Server-NO, Abbruch), bleibt die
+		// Mail "nicht geladen" - das Angekommene wird gezeigt, der Rest beim naechsten
+		// Oeffnen erneut geholt, und die Loeschschranke beim Verschieben greift. Bis
+		// 7.2.2.132 galt eine mehrteilige Mail mit verweigertem Rumpf als geladen
+		// (gemessen: E-188tm/fm, nur der Kopf kam an, die Quelle wurde geloescht).
+		if (m_bE188TeilFehlt)
+		{
+			// Setzen, nicht nur stehen lassen: auf den Wegen DownloadRemainingMessages(MT)
+			// ist die Zusammenfassung neu und das Merkzeichen sonst leer (PRUEFER-95 K2).
+			pSum->m_Imflags |= IMFLAGS_NOT_DOWNLOADED;
+			CString szSpur;
+			szSpur.Format("E-188 Teil des Rumpfs nicht geladen, Mail bleibt ungeladen: uid=%lu", (unsigned long) Uid);
+			::PutDebugLog(DEBUG_MASK_MISC, szSpur);
+		}
+		else
+			pSum->m_Imflags &= ~IMFLAGS_NOT_DOWNLOADED;
 
 		// If any data writers found a "fancy" part, tell summary.
 		if (m_bIsMhtml)
@@ -3591,6 +3637,7 @@ BOOL CImapDownloader::BreakoutBodyToFile (IMAPUID uid, BODY *pBody, LPSTR pSecti
 			// Route the body's contents into the external file.
 			//
 			bResult = SUCCEEDED (m_pImap->FetchAttachmentContentsToFile (uid, pSection, (LPCSTR)ExternalPathname, pBody->encoding, pBody->subtype));
+			if (!bResult) m_bE188TeilFehlt = TRUE;	// E-188 K1
 		}
 		// It is now safe to cast lMaxsize to an unsigned long.
 		//
@@ -3600,6 +3647,7 @@ BOOL CImapDownloader::BreakoutBodyToFile (IMAPUID uid, BODY *pBody, LPSTR pSecti
 			// Route the body's contents into the external file.
 			//
 			bResult = SUCCEEDED (m_pImap->FetchAttachmentContentsToFile (uid, pSection, (LPCSTR)ExternalPathname, pBody->encoding, pBody->subtype));
+			if (!bResult) m_bE188TeilFehlt = TRUE;	// E-188 K1
 		}
 		else
 		{
@@ -3755,6 +3803,7 @@ BOOL CImapDownloader::BreakoutBodyToEmbeddedFile (IMAPUID uid, BODY *pParentBody
 
 	// Go write the contents to the file.
 	bResult = SUCCEEDED (m_pImap->FetchAttachmentContentsToFile (uid, pSection, strFilename, pBody->encoding, pBody->subtype));
+	if (!bResult) m_bE188TeilFehlt = TRUE;	// E-188 K1
 
 	// Set some members of the headerdesc so we can pass it to the EmbeddedElement creation 
 	// routine.
@@ -3889,6 +3938,7 @@ BOOL CImapDownloader::AppendBodyTextToMbxFile (IMAPUID uid, LPSTR pSection, BODY
 	SetDecoder (BodyEncoding);
 
 	bResult = SUCCEEDED (m_pImap->DownloadAttachmentContents (uid, pSection, this));
+	if (!bResult) m_bE188TeilFehlt = TRUE;	// E-188 K1
 
 	ResetDecoder();
 
@@ -3977,6 +4027,16 @@ BOOL CImapDownloader::DownloadSubMessage (IMAPUID uid, BODY *pBody, LPSTR pParen
 	// Make sure to reset the header desc. object.
 	m_pHd = pOldHeaderDesc;
 
+	// E-188 (PRUEFER-96 K1): ohne eingebettete Mail (message/delivery-status,
+	// message/disposition-notification - Unzustellbarkeitsberichte, Lesebestaetigungen)
+	// ist BODY[n.HEADER] laut RFC 3501 gar nicht vorgesehen; ein Server darf mit NO
+	// antworten. Dann weitermachen - den Inhalt holt AppendBodyTextToMbxFile unten,
+	// und erst wenn DER scheitert, fehlt wirklich etwas. Seit 9c9d9ffc zaehlt ein
+	// FALSE hier als fehlender Teil; ohne diese Ausnahme blieben solche Berichte
+	// dauerhaft "nicht geladen".
+	if (!bResult && !(pBody->nested.msg && (pBody->nested.msg)->body))
+		bResult = TRUE;
+
 	if (!bResult)
 		return FALSE;
 
@@ -4039,7 +4099,7 @@ BOOL CImapDownloader::DownloadSubMessage (IMAPUID uid, BODY *pBody, LPSTR pParen
 				else
 				{
 					// Simple body type. Treat as first part of this message.
-					DownloadSimpleBody (uid, l_body, sequence);
+					bResult = DownloadSimpleBody (uid, l_body, sequence);	// E-188 (PRUEFER-96 K2): Ergebnis zaehlt
 				}
 
 				break;
@@ -4050,7 +4110,7 @@ BOOL CImapDownloader::DownloadSubMessage (IMAPUID uid, BODY *pBody, LPSTR pParen
 				// as the message/rfc822 part.
 				//
 
-				DownloadMultipartBody (uid, l_body, pParentSection);
+				bResult = DownloadMultipartBody (uid, l_body, pParentSection);	// E-188 (PRUEFER-96 K2): Ergebnis zaehlt
 				break;
 		} // switch
 	}

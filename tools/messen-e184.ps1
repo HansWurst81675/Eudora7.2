@@ -529,9 +529,13 @@ if ($Label -gt 0) {
     $cu = 'ja'; if ($OhneCopyuid) { $cu = 'nein' }
     $log = Join-Path $voll 'Mailverzeichnis\eudora.log'
     $grund = '(keine-logzeile)'
+    # Seit PRUEFER-90 K10 stehen die E-170-Zeilen im Bereich Dialog, dort in
+    # Anfuehrungszeichen: Dialog: "... grund=zugeordnet". Endet die Zeile mit
+    # grund=, gehoert das schliessende " nicht zum Wert (gemessen beim
+    # Schnueren von 7.2.2.132: E-170o/m/f/g rot mit log-grund=zugeordnet").
     if (Test-Path $log) {
         $z = Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-170 Labels beim Verschieben' } | Select-Object -Last 1
-        if ($z) { Write-Host ('E170 LOG ' + $z); if ($z -match 'grund=(\S+)') { $grund = $Matches[1] } }
+        if ($z) { Write-Host ('E170 LOG ' + $z); if ($z -match 'grund=([^\s"]+)') { $grund = $Matches[1] } }
     }
     $p2 = Get-Process -Id $pp -ErrorAction SilentlyContinue
     $lebt = 0; if ($p2 -and -not $p2.HasExited) { $lebt = 1 }
@@ -587,9 +591,13 @@ if ($MehrereLabels) {
     }
     $log = Join-Path $voll 'Mailverzeichnis\eudora.log'
     $grund = '(keine-logzeile)'
+    # Seit PRUEFER-90 K10 stehen die E-170-Zeilen im Bereich Dialog, dort in
+    # Anfuehrungszeichen: Dialog: "... grund=zugeordnet". Endet die Zeile mit
+    # grund=, gehoert das schliessende " nicht zum Wert (gemessen beim
+    # Schnueren von 7.2.2.132: E-170o/m/f/g rot mit log-grund=zugeordnet").
     if (Test-Path $log) {
         $z = Get-Content -LiteralPath $log | Where-Object { $_ -match 'E-170 Labels beim Verschieben' } | Select-Object -Last 1
-        if ($z) { Write-Host ('E170M LOG ' + $z); if ($z -match 'grund=(\S+)') { $grund = $Matches[1] } }
+        if ($z) { Write-Host ('E170M LOG ' + $z); if ($z -match 'grund=([^\s"]+)') { $grund = $Matches[1] } }
     }
     $p2 = Get-Process -Id $pp -ErrorAction SilentlyContinue
     $lebt = 0; if ($p2 -and -not $p2.HasExited) { $lebt = 1 }

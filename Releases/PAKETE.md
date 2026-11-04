@@ -3,7 +3,7 @@
 Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 [AUSLIEFERUNGEN.md](1.0/AUSLIEFERUNGEN.md), das nur die QCSSL.dll verfolgt.
 
-> **Diese Buchführung ist unvollständig — Stand 03.11.2026, am 03.11.2026 kein neues Paket (Nummern bis 7.2.1.131 verzeichnet, geschnürt ist bis 7.2.1.129 (Testpaket vom 31.10.2026, nicht veröffentlicht), geschnürt ist auch 7.2.1.130 (Testpaket vom 01.11.2026, nicht veröffentlicht) und 7.2.1.131 (Release vom 02.11.2026, von Gregor am selben Tag getestet, alle sieben Schritte bestanden; veröffentlicht als `v7.2.1.131` am 02.11.2026 um 13:51:08 UTC, Marke auf `7564f54e`, auf GitHub *Latest*); veröffentlicht zuletzt also 7.2.1.131; davor 7.2.1.128 — das erste Release 7.2.1, am 29.10.2026 geschnürt, von Gregor am selben Tag getestet ([E-166](../Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden), veröffentlicht als `v7.2.1.128` am 29.10.2026 um 21:17:31 UTC (Marke auf `c8b0893f`, damals *Latest*); davor 1.0.127; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../Intern/BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; davor veröffentlicht **1.0.120** als `v1.0.120` am 21.10.2026 um 19:07:37 UTC (Marke `30feeae2`, auf GitHub *Latest*) — es trägt 1.0.118, 1.0.119 und 1.0.120 —, davor **1.0.117** als `v1.0.117` am selben Tag um 07:56:56 UTC (Marke `f546b004`), davor **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
+> **Diese Buchführung ist unvollständig — Stand 04.11.2026 (Nummern bis 7.2.2.132 verzeichnet, auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N nach Entscheidung 26, geschnürt ist bis 7.2.1.129 (Testpaket vom 31.10.2026, nicht veröffentlicht), geschnürt ist auch 7.2.1.130 (Testpaket vom 01.11.2026, nicht veröffentlicht) und 7.2.1.131 (Release vom 02.11.2026, von Gregor am selben Tag getestet, alle sieben Schritte bestanden; veröffentlicht als `v7.2.1.131` am 02.11.2026 um 13:51:08 UTC, Marke auf `7564f54e`, damals *Latest*) und 7.2.2.132 (Release vom 03.11.2026, die erste Fassung der Reihe 7.2.2, von Gregor am selben Tag getestet, alle zwölf Schritte bestanden; veröffentlicht als `v7.2.2.132` am 03.11.2026 um 17:38:35 UTC, Marke auf `7a8118e5`, auf GitHub *Latest*); veröffentlicht zuletzt also 7.2.2.132; davor 7.2.1.131; davor 7.2.1.128 — das erste Release 7.2.1, am 29.10.2026 geschnürt, von Gregor am selben Tag getestet ([E-166](../Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden), veröffentlicht als `v7.2.1.128` am 29.10.2026 um 21:17:31 UTC (Marke auf `c8b0893f`, damals *Latest*); davor 1.0.127; 1.0.114 wurde geschnürt und bei Gregor getestet, aber **nicht veröffentlicht** — sein Lauf fand den Kurzform-Fehler aus [E-132](../Intern/BEFUNDE.md#e-132), behoben in 1.0.115; 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber nie geschnürt; davor veröffentlicht **1.0.120** als `v1.0.120` am 21.10.2026 um 19:07:37 UTC (Marke `30feeae2`, auf GitHub *Latest*) — es trägt 1.0.118, 1.0.119 und 1.0.120 —, davor **1.0.117** als `v1.0.117` am selben Tag um 07:56:56 UTC (Marke `f546b004`), davor **1.0.113** als `v1.0.113` am 20.10.2026 um 13:01:36 UTC, davor **1.0.112** als `v1.0.112` am selben Tag um 11:55:10 UTC, davor **1.0.101** als `v1.0.101` am 17.10.2026 und **1.0.87** als `v1.0.87` am 14.10.2026; 1.0.85 und 1.0.86 nur als Testverzeichnisse bei Gregor, nicht einzeln veröffentlicht, ihr Stand steckt in 1.0.87; davor veröffentlicht 1.0.84); die Zahlen zu 1.0.66 und jünger sind am 17.09.2026 abends gemessen.** Seit dem 09.09.2026 sind **1.0.30 bis 1.0.72** dazugekommen; eigene Abschnitte stehen unten für **1.0.66 bis 1.0.72** sowie — seit dem 11.10.2026 nachgetragen — für **1.0.43**, **1.0.47** und **1.0.64**. Für die übrigen aus **1.0.30 bis 1.0.65** fehlen sie weiterhin. **Warum das zählt:** wer die nächste Fassungsnummer aus dieser Liste ableitet, greift daneben. Am 17.09.2026 haben **zwei Sitzungen gleichzeitig** die **68** vergeben, weil hier nur bis **1.0.65** verzeichnet war; die zweite musste auf **1.0.69** ausweichen. Die Liste ist keine Nebensache, sondern die Quelle, aus der die Nummer kommt. **Und sie war auch rückwärts lückenhaft:** von 14 Veröffentlichungen auf GitHub fehlten am 11.10.2026 drei hier ganz — gemeldet hat das kein Werkzeug, `tools/pruefe-release-buchfuehrung.pl` prüft nur die neueste Marke. Was in den Fassungen steckt, steht vollständig in [CHANGELOG.md](../CHANGELOG.md)
 > Abschnitte gibt es unten für **1.0.27**, **1.0.23**, **1.0.22**, **1.0.21**,
 > **1.0.18**, **1.0.3**, **1.0.2** und **1.0.1**. Die Pakete **1.0.4 bis
 > 1.0.17**, **1.0.19**, **1.0.20** sowie **1.0.24**, **1.0.25** und **1.0.26**
@@ -48,10 +48,13 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > **Seit dem 29.10.2026 gibt es keine eigene Paketnummer `1.0.x` mehr**
 > (Gregors Entscheidungen 10 und 20 in [WEITERMACHEN.md](../Intern/WEITERMACHEN.md#entscheidungen)).
 > `VERSION` trägt dieselbe vierteilige Nummer wie `Eudora71/Version.h`.
-> **Seit dem Release 7.2.1.128 heißt jede Fassung `7.2.1.N`**, Testpaket wie
-> Release (Entscheidung 20, 30.10.2026); davor hießen Testpakete `7.2.0.N`. ZIP
-> (`Eudora72-7.2.1.N-release.zip`), Marke (`v7.2.1.N`) und Titelzeile
-> (`Eudora 7.2.1.N+<commit> <Zeit>`) heißen genauso. Die **Endnummer zählt
+> **Seit 7.2.2.132 heißt jede Fassung `7.2.2.N`**, auch eine, die nur Fehler
+> behebt (Gregor 04.11.2026, Entscheidung 26; das nächste Paket ist 7.2.2.133);
+> vom Release 7.2.1.128 bis 7.2.1.131 hieß sie `7.2.1.N` (Entscheidung 20),
+> Testpaket wie Release; davor hießen Testpakete `7.2.0.N`. ZIP (`Eudora72-7.2.1.N-release.zip` bzw.
+> `Eudora72-7.2.2.N-release.zip`), Marke (`v7.2.1.N` bzw. `v7.2.2.N`) und
+> Titelzeile (`Eudora 7.2.1.N+<commit> <Zeit>` bzw. `Eudora 7.2.2.N+…`) heißen
+> genauso. Die **Endnummer zählt
 > über beide Formen weiter**, auch über die alte: auf 1.0.127 folgt 128. Zwei
 > Stände tragen also nie dieselbe Endnummer, und die Werkzeuge, die nur die
 > letzte Stelle vergleichen, bleiben eindeutig. Alles unterhalb dieses Kastens
@@ -91,9 +94,11 @@ Für die nächste Nummer sind es **fünf Zeilen in zwei Dateien**. Beispiel: von
 
 **Ab der Endnummer 128** steht in `VERSION` die ganze Nummer (etwa
 `7.2.1.128` statt `1.0.128`). Für ein Release ändert sich außerdem die dritte Stelle:
-`EUDORA_VERSION3` von `0` auf `1`, und in `EUDORA_BUILD_NUMBER`,
-`EUDORA_BUILD_DESC` und `EUDORA_BUILD_VERSION` entsprechend `7,2,1,N` bzw.
-`7.2.1.N` — **sechs Zeilen**.
+`EUDORA_VERSION3` von `0` auf `1` (7.2.1.N, Fehlerbehebungen) bzw. auf `2`
+(7.2.2.N, mit neuen Funktionen, Gregor 02.11.2026), und in
+`EUDORA_BUILD_NUMBER`, `EUDORA_BUILD_DESC` und `EUDORA_BUILD_VERSION`
+entsprechend `7,2,1,N` bzw. `7.2.1.N` (oder `7,2,2,N` bzw. `7.2.2.N`) —
+**sechs Zeilen**.
 
 > **`EUDORA_BUILD_NUMBER` ist seit 7.2.0.13 nicht mitgezogen worden** und steht
 > am 07.09.2026 auf `7,2,0,12`, während die drei anderen Angaben auf `18`
@@ -179,9 +184,25 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.132 — Release `v7.2.2.132`, Zweig `paket_7_2_2_132` (gemergt als #217)
+
+**Geschnürt am 03.11.2026 um 12:41, bereitgestellt neben Gregors letztem Testverzeichnis, ZIP daneben; veröffentlicht am 03.11.2026 als [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132)** (Latest, 17:38:35 UTC, Marke auf `7a8118e5` = Merge `7de75dcf` von #217 plus die Berichtigung von `tools/release-veroeffentlichen.ps1`, die die Reihe 7.2.2.N zulässt) nach Gregors Ja: *„ja, wir können es auf github releasen, dann mit den anderen punkten fortfahren.“* Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Gregors Ja kam vor der Messung des Mailverlusts aus [E-188](../Intern/BEFUNDE.md#e-188); danach gefragt, entschied er am selben Abend: *„Stehen lassen“* — die Warnung steht in den Release-Notizen, E-188 wird als Nächstes behoben. Nummer am 02.11.2026 vereinbart (Gregor: *„7.2.2.132, ja“*), Zweigname von Gregor am 03.11.2026 bestätigt. Die erste Fassung der Reihe 7.2.2 (neue Funktionen: Hilfe-Menü [A-5](../Intern/BEFUNDE.md#a-5), About-Dialog [E-216](../Intern/BEFUNDE.md#e-216), *Speichern unter* mit passender Endung [E-128](../Intern/BEFUNDE.md#e-128)). Gregor hat damit am 03.11.2026 die Schritte aus dem [TESTPLAN](../Intern/TESTPLAN.md#test-7-2-2-132) getestet: **alle zwölf Schritte bestanden**.
+
+| | |
+|---|---|
+| Testverzeichnis | neben Gregors letztem Testverzeichnis (wie 7.2.1.131). Das Mailverzeichnis darin ist leer bis auf `Eudora.ini` |
+| ZIP | `Releases/Eudora72-7.2.2.132-release.zip` im Arbeitsbaum des Zweigs, byte-gleich daneben neben dem Testverzeichnis; 9.174.979 Byte, SHA-256 `177b5997f8650ebe285ff3d85cda8ecd4a555d88a97f2d0b601a78f7d9115478`; nicht im Repo (`.gitignore`); auf GitHub als Anhang von [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132), SHA-256 dort gleich. Ausgepackt mit dem Testverzeichnis verglichen: 163 Dateien, alle byte-gleich |
+| Gegen den Bau gemessen | `Eudora.exe`, `EudoraRes.dll`, `Imap.dll`, `QCUtils.dll`, `QCSocket.dll`, `QCSSL.dll`, `EuLang.dll`, `plstclnt.dll` im Paket und im ZIP **byte-gleich** mit `Eudora71/Bin/Release` (SHA-256; `Eudora.exe` `1e998bd4d2983ac649e6d53a9c894f6e41dbaa651b1f361f732ec91c8ac9a43c`), Dateiversion 7.2.2.132, Bau `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46` (ohne Sternchen: der Arbeitsbaum war beim Bau sauber). Titelzeile am Prüfstand abgelesen: `Eudora 7.2.2.132+561f3ebf 2026-11-03 11:46`. `paket-bauen.ps1` Schritt 8: *„6 ersetzt, 33 schon gleich, keine Debug-Laufzeit“* |
+| `paket-pruefen.ps1` | am ausgepackten ZIP: keine Fehler, Kriterium 0 *„JA“*; vier Warnungen wie bei 7.2.1.131 |
+| Geprüft | 408 Unit-Tests bestanden (`RunTests.cmd`); voller Prüfstandslauf **81 Fälle**, 47 Eudora-Starts (11:49–12:26, Gregor am 03.11.2026: *„Ja, heute erlaubt“*): 77 bestanden, 4 rot (`E-170o`, `E-170m`, `E-170f`, `E-170g`) — Ursache im Messskript, nicht im Programm (siehe CHANGELOG, *Werkzeug beim Schnüren*); nach der Berichtigung von `tools/messen-e184.ps1` die sieben E-170-Fälle am selben Bau 7 von 7 (12:29–12:39). [PRUEFBERICHT](PRUEFBERICHT.md) **BESTANDEN** (408 Unit-Tests, 19 Schranken, 81 Prüfstandsfälle) — derselbe Bericht liegt im Paket |
+| Rollenschranke | gebaut mit `-RollenSindGelaufen`: LEKTOR nur wegen der Paketbuchführung (MD-Dateien) fällig, PRÜFER nur wegen `Version.h` (Versionssprung), CHRONIST betrifft nur Lehren; nichts davon geht in die Programmdateien. LEKTOR läuft vor dem PR |
+| Gebaut im Arbeitsbaum | `.wt/paket`. Wie bei 7.2.1.131: `Plugins\EudoraUnicodeFix*` liegen nur im `Bin/Release` des Hauptbaums — von dort byte-gleich kopiert (die VC++-Laufzeit nimmt `paket-bauen.ps1` aus dem VS-Redist). Neu gemessen: `bauen.ps1` fährt seine Regressionstests über `pruefe-tests-gruen.pl`, und das sucht den Baum im **aktuellen Verzeichnis**; aus dem Hauptordner aufgerufen, lief die alte `EudoraTests.exe` des Hauptbaums (385 Tests, 1 rot) statt der des Arbeitsbaums (408 von 408). Nicht berichtigt, gemeldet |
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.132.
+
 ## 7.2.1.131 — Release `v7.2.1.131`, Zweig `paket_7_2_1_131` (eingereicht als `release_7_2_1_131`, #204)
 
-**Geschnürt am 02.11.2026 um 14:04, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`; veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131)** (Latest, Marke auf dem Merge `7564f54e` von #204) nach Gregors Ja: *„ja, veröffentliche v7.2.1.131“*. Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Nummer am selben Tag vergeben (Gregor: *„ja, paket_7_2_1_131 ist ok“*). Gregor hat damit am 02.11.2026 an seinem echten System den kurzen Durchgang aus dem [TESTPLAN](../Intern/TESTPLAN.md#test-7-2-1-131) getestet: **alle sieben Schritte bestanden** (Belege dort, aus seiner `eudora.log`); die Behebungen selbst ([E-177](../Intern/BEFUNDE.md#e-177), [E-143](../Intern/BEFUNDE.md#e-143) Suchfenster, [E-122](../Intern/BEFUNDE.md#e-122), [E-184](../Intern/BEFUNDE.md#e-184), [E-189](../Intern/BEFUNDE.md#e-189)) sind am Prüfstand gemessen.
+**Geschnürt am 02.11.2026 um 14:04, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`; veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131)** (Latest bis zum 03.11.2026, Marke auf dem Merge `7564f54e` von #204) nach Gregors Ja: *„ja, veröffentliche v7.2.1.131“*. Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Nummer am selben Tag vergeben (Gregor: *„ja, paket_7_2_1_131 ist ok“*). Gregor hat damit am 02.11.2026 an seinem echten System den kurzen Durchgang aus dem [TESTPLAN](../Intern/TESTPLAN.md#test-7-2-1-131) getestet: **alle sieben Schritte bestanden** (Belege dort, aus seiner `eudora.log`); die Behebungen selbst ([E-177](../Intern/BEFUNDE.md#e-177), [E-143](../Intern/BEFUNDE.md#e-143) Suchfenster, [E-122](../Intern/BEFUNDE.md#e-122), [E-184](../Intern/BEFUNDE.md#e-184), [E-189](../Intern/BEFUNDE.md#e-189)) sind am Prüfstand gemessen.
 
 | | |
 |---|---|
@@ -835,7 +856,7 @@ offen sind** — P1/P2 zu **E-123** (Beenden wartet), P3 zu **E-69**
 | Testverzeichnis | als Verzeichnis bereitgestellt, `C:\Users\Gregor\Eudora72-1.0.84-release` (Prüfstand: `C:\Temp\E94-nachher`, die 8 Kerndateien byteidentisch) |
 | ZIP (Release) | `Releases/Eudora72-1.0.84-release.zip`, 9 361 952 Byte (nicht versioniert); die 34 EXE/DLL/OCX darin byteidentisch mit Gregors getestetem Verzeichnis |
 | SHA256 | `4b25a26ff55d5759153228b2bf17e3091a4fdc5cd59a2a5e083f32bd18731741` — gemessen am von GitHub heruntergeladenen ZIP |
-| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, damals *Latest*, abgelöst durch `v1.0.87` (heute ist `v7.2.1.131` *Latest*); Marke auf `eb54752` |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.84 — 12.10.2026, 12:59:15 UTC, damals *Latest*, abgelöst durch `v1.0.87` (heute ist `v7.2.2.132` *Latest*); Marke auf `eb54752` |
 | Quellstand | 7.2.0.84 (`Eudora71/Version.h`), gemergt als PR #86 |
 | Gregors Test, 13.10.2026 | **bestätigt:** Testplan Teil A (E-49, E-50, E-52 bis E-63), E-85, E-93, AN-2; E-83 auf seinen Auftrag nachgemessen. **Durchgefallen:** E-101 (gespeicherte HTML-Datei: `<meta>` UTF-8, Inhalt Windows-1252), E-112 unverändert. **Neu gemeldet:** E-114, E-115. Urteile mit Zitat in [BEFUNDE.md](../Intern/BEFUNDE.md) |
 
@@ -848,7 +869,7 @@ Vergeben am 12.10.2026, weil sich die `Eudora.exe` gegenüber dem veröffentlich
 |---|---|
 | ZIP | `Releases/Eudora72-1.0.83-release.zip`, 9 361 416 Byte (nicht versioniert); dazu als Verzeichnis bei Gregor, `C:\Users\Gregor\Eudora72-1.0.83-release` (Prüfstand: `C:\Temp\AN5`) |
 | SHA256 | `7cef4852645d053ca6e4fde3855e9294e3cbb22698e30687eed176be3c88f3eb` — gemessen am von GitHub heruntergeladenen ZIP |
-| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, damals *Latest*, abgelöst durch `v1.0.84` (heute ist `v7.2.1.131` *Latest*); Marke auf `ec9f11d` |
+| URL | https://github.com/HansWurst81675/Eudora7.2/releases/tag/v1.0.83 — 12.10.2026, 11:18:20 UTC, damals *Latest*, abgelöst durch `v1.0.84` (heute ist `v7.2.2.132` *Latest*); Marke auf `ec9f11d` |
 | Quellstand | 7.2.0.83 (`Eudora71/Version.h`), Zweig `an1-endungen` |
 
 Vergeben am 12.10.2026, weil 7.2.0.82 gebaut und gemessen war und 7.2.0.83 davon
