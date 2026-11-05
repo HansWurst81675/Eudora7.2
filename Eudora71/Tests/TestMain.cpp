@@ -95,6 +95,7 @@ void RunHilfeMenueTests(const char* szEudoraDir);
 void RunE133Tests(const char* szEudoraDir);
 void RunE216Tests(const char* szEudoraDir);
 void RunE221Tests(const char* szEudoraDir);
+void RunE222Tests(const char* szEudoraDir);
 void RunE223Tests(const char* szEudoraDir);
 
 //
@@ -255,6 +256,7 @@ int main(int argc, char* argv[])
 	RunE133Tests(szEudoraDir);
 	RunE216Tests(szEudoraDir);
 	RunE221Tests(szEudoraDir);
+	RunE222Tests(szEudoraDir);
 	RunE223Tests(szEudoraDir);
 
 	iFailed = TT_Summary();

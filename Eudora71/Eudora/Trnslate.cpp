@@ -4513,9 +4513,11 @@ long CTranslatorManager::InterpretFile(const long context,
 	
 	if (firstTrans)
 	{
-		long moduleID, transID;
-	    sscanf( firstTrans, "<%04ld.%04ld>", &moduleID, &transID );
-		trltor = GetTranslator(moduleID,transID);
+		// E-222: Kennung nur verwenden, wenn sscanf beide Teile erkannt hat -
+		// sonst standen moduleID und transID unbelegt im Aufruf.
+		long moduleID = 0, transID = 0;
+		if (2 == sscanf( firstTrans, "<%04ld.%04ld>", &moduleID, &transID ))
+			trltor = GetTranslator(moduleID,transID);
 		if (!trltor)
 		{
 			// Throw up an error message

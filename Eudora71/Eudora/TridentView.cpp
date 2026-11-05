@@ -2971,6 +2971,16 @@ IHTMLElement* pElement )
 
 	// Convert %20 to ' ' and forward slashes to back slashes
 	szHRef.Replace("%20", " ");
+	// E-222: Trident liefert den Verweis prozentkodiert zurueck. Die
+	// Plugin-Kennung "<5335.0002>" eines signierten Teils kam als
+	// "%3C5335.0002%3E" bei InterpretFile an, das kein Plugin erkannte
+	// ("Plugin no longer available", Originalfehler). Nur die beiden Klammern
+	// werden zurueckgewandelt, wie %20; ein volles Entschluesseln des Pfads
+	// ist ein eigener Schritt.
+	szHRef.Replace("%3C", "<");
+	szHRef.Replace("%3c", "<");
+	szHRef.Replace("%3E", ">");
+	szHRef.Replace("%3e", ">");
 	szHRef.Replace('/', '\\');
 
 	if (isOnDisplayPlugin)

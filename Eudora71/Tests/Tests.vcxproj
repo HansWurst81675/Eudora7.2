@@ -176,6 +176,7 @@
     <ClCompile Include="TestE216.cpp" />
     <ClCompile Include="TestE220.cpp" />
     <ClCompile Include="TestE221.cpp" />
+    <ClCompile Include="TestE222.cpp" />
     <ClCompile Include="TestE223.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />
     <ClCompile Include="TestE118.cpp" />

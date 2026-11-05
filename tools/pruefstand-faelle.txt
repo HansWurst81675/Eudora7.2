@@ -481,6 +481,25 @@ E-223p | C:\Temp\E223 | 60 | messung | E223 ERGEBNIS savepassword=1 ini-kennwort
 E-223w | C:\Temp\E223 | 60 | messung | E223 PROBE ok | | | messen=tools\messen-e223.ps1
 
 # -------------------------------------------------------------------------
+# E-222 - signierte Mail: "Plugin Error: %3C5335.0002%3E"
+# -------------------------------------------------------------------------
+# In.mbx mit einer Klartext-Nachricht, deren Rumpf die Zeile
+# 'Run Plugin:"...\attach\e222.ems <5335.0002>"' traegt; Klick wie die Maus
+# (WM_LBUTTONDOWN an "Internet Explorer_Server") auf den Anker EUDORA=PLUGIN.
+# Am 05.11.2026 am Bau 7.2.2.133+3d3789d3 (Release, C:\Temp\E222-alt, SMIME
+# geladen): "Plugin Error: %3C5335.0002%3E  Plugin no longer available"
+# (kennung=kodiert) - genau Gregors Meldung. Mit der Behebung: ohne
+# MFC71.DLL "Plugin Error: <5335.0002> Plugin no longer available"
+# (kennung=erkannt, in der Sache richtig); mit MFC71.DLL/msvcp71.dll im
+# Pruefstand und einem echten signierten Teil (e222-quelle.ems, nicht im
+# Repo) laeuft das Plugin und meldet selbst "Couldn't load the system
+# security components (CAPICOM)" (kennung=kein-fehler). Der Fall behauptet
+# deshalb nur: nie mehr kodiert. MFC71.DLL und msvcp71.dll liegen nicht im
+# Repo; ohne sie bleibt der Fall gueltig.
+E-222p | C:\Temp\E222 | 120 | messung | E222 ERGEBNIS kennung= | kennung=kodiert | | messen=tools\messen-e222.ps1
+E-222w | C:\Temp\E222 | 120 | messung | E222 PROBE ok | | | messen=tools\messen-e222.ps1
+
+# -------------------------------------------------------------------------
 # A-5 - Hilfe-Menue (Help -> Keyboard Shortcuts / Settings Reference), 7.2.2
 # -------------------------------------------------------------------------
 # Pruefstand C:\Temp\EHILFE (Kopie von C:\Temp\E140, Hilfe\ erzeugt mit
