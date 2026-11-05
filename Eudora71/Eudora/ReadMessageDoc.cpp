@@ -617,7 +617,20 @@ void CReadMessageDoc::OnFileSaveAs()
 	E128SpurSchreiben( "Nachrichtenfenster", 1, false, bHtmlE128, pszE128,
 					   E128FilterIndex( CRString( IDS_MSG_SAVEAS_FILE_FILTER ), pszE128 ) );
 
-	if ( ! (m_Sum && SA.Start(m_Sum->m_Subject, TRUE, NULL, FALSE, pszE128)) )
+	if ( !m_Sum )
+		return;
+
+	//
+	// BEFUND E-220: Vorschlag aus dem ganzen Betreff im Kopf der Nachricht, mit
+	// Umlauten (Regeln an E220DateinameAusBetreff, msgutils.cpp). Bis 7.2.2.132
+	// ging m_Subject durch StripIllegalMT: ohne Umlaute, hoechstens 63 Zeichen.
+	//
+	char		szNameE220[_MAX_PATH + 1];
+	char *		pszVollE220 = GetFullMessage();
+	E220DateinameVorschlag( szNameE220, sizeof( szNameE220 ), m_Sum->m_Subject, pszVollE220, "Nachrichtenfenster" );
+	delete [] pszVollE220;
+
+	if ( !SA.Start(szNameE220, TRUE, NULL, FALSE, pszE128, TRUE) )
 		return;
 
 	E128GewaehltSchreiben( "Nachrichtenfenster", SA.GetPathName() );	// E-128

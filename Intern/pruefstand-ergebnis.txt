@@ -1,8 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 14:17:22
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Pruefstand mit Eudora-Fenster, E-199 geschaerfte Wirkprobe)
-nur=E-178p   (Teillauf, nicht der Gesamtstand)
-faelle=1
-bestanden=1
+zeit=2026-11-04 18:09:50
+freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Testpaket 7.2.2.133, Suchfaelle am endgueltigen Bau)
+nur=E-141   (Teillauf, nicht der Gesamtstand)
+faelle=2
+bestanden=2
 fehlgeschlagen=0
-fall=[ ok ] E-178p   E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1
+fall=[ ok ] E-141p   E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1
+fall=[ ok ] E-141g   geloescht=1 lebt=1

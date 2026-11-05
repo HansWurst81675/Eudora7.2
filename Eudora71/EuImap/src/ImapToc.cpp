@@ -1855,13 +1855,13 @@ void E189VorabKopienEntfernen(CTocDoc* pZiel, const char* szAlteUIDs)
 				CDocument* pFensterDoc = pFenster->GetActiveDocument();
 				if (pFensterDoc && !pFensterDoc->CanCloseFrame(pFenster))
 				{
-					szSpur.Format("E-189 Vorab-Kopie bleibt, Fenster nicht geschlossen: alte-uid=%lu ziel=\"%s\"", ulUid, (LPCTSTR) pZiel->Name());
+					szSpur.Format("E-189 Vorab-Kopie bleibt, Fenster nicht geschlossen: alte-uid=%lu", ulUid);	// keine Ordnernamen ins Protokoll (Gregor 03.11.2026)
 					PutDebugLog(DEBUG_MASK_MISC, szSpur);
 					continue;
 				}
 			}
 
-			szSpur.Format("E-189 Vorab-Kopie ohne neue UID entfernt: alte-uid=%lu ziel=\"%s\"", ulUid, (LPCTSTR) pZiel->Name());
+			szSpur.Format("E-189 Vorab-Kopie ohne neue UID entfernt: alte-uid=%lu", ulUid);	// keine Ordnernamen ins Protokoll (Gregor 03.11.2026)
 			PutDebugLog(DEBUG_MASK_MISC, szSpur);
 			pSum->SetDeleteEmbedded(FALSE);
 			pZiel->InvalidateCachedPreviewSummary(pSum, true);
@@ -3126,18 +3126,22 @@ HRESULT CTocDoc::ImapMoveMsgsToTrash (CSummary* SingleSum)
 	CUidMap mapUidsActuallyRemoved;
 
 	CDWordArray		 dwaNewUIDs;
+	CDWordArray		 dwaQuellUIDs;	// E-192: Quellmenge aus COPYUID
 	CTocDoc			*pTargetToc = NULL;
 	hResult = m_pImapMailbox->MoveMsgsToTrash((LPCSTR)sUidlist,
 											  &dwaNewUIDs,
 											  mapUidsActuallyRemoved,
-											  &pTargetToc);
+											  &pTargetToc,
+											  &dwaQuellUIDs);
 
 	// Remove the summaries corresponding to the UID's that were actually expunged.
 	//
 	if ( SUCCEEDED (hResult) )
 	{
 		// Use the UIDPLUS data to move summary data between the TOC's.
-		ImapTransferSummaryData(sUidlist, pTargetToc, &dwaNewUIDs);
+		// E-192: sUidlist folgt der Sortierung der Ansicht, der Server nummeriert
+		// in UID-Folge - zuordnen ueber die Quellmenge (wie E-184 K3).
+		ImapTransferSummaryData(sUidlist, pTargetToc, &dwaNewUIDs, NULL, false, &dwaQuellUIDs);
 
 		int HighlightIndex;
 		if (mapUidsActuallyRemoved.GetCount() > 0)
@@ -3433,17 +3437,19 @@ HRESULT CTocDoc::ImapChangeMsgsJunkStatus(CString &strUIDList, bool bJunk, CImap
 	// a UidMap of the UID's that were actually removed from the mailbox.
 	CUidMap			 mapUidsActuallyMoved;
 	CDWordArray		 dwaNewUIDs;
+	CDWordArray		 dwaQuellUIDs;	// E-192: Quellmenge aus COPYUID
 	CTocDoc			*pTargetToc = NULL;
 	hResult = m_pImapMailbox->MoveMsgsToOrFromJunk(bJunk,
 												   (LPCSTR)strUIDList,
 												   &dwaNewUIDs,
 												   mapUidsActuallyMoved,
-												   &pTargetToc);
+												   &pTargetToc,
+												   &dwaQuellUIDs);
 
 	if (SUCCEEDED(hResult))
 	{
 		// Use the UIDPLUS data to move summary data between the TOC's.
-		ImapTransferSummaryData(strUIDList, pTargetToc, &dwaNewUIDs, pImapSum);
+		ImapTransferSummaryData(strUIDList, pTargetToc, &dwaNewUIDs, pImapSum, false, &dwaQuellUIDs);	// E-192
 
 		int HighlightIndex;
 		if (mapUidsActuallyMoved.GetCount() > 0)

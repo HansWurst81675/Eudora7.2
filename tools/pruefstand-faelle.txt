@@ -288,6 +288,16 @@ E-188d | C:\Temp\E188 | 20 | messung | E188 LOESCHEN GEMESSEN fremd-lebt=1 | E18
 # ueber WM_FINDREPLACE im Nachrichtenfenster. Erwartet ohne Fehler: nirgends
 # falsch. Pruefstand C:\Temp\E193 ist eine Kopie von C:\Temp\E128 (7.2.2.132).
 E-193p | C:\Temp\E193 | 20 | messung | E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
+E-193w | C:\Temp\E193 | 20 | messung | E193 WEICHE gleich=11/11 index-zu-viel=0 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
+
+# E-192 (03.11.2026, Rest von E-184 K3): drei Mails, nach Datum sortiert
+# (Liste 3,2,1), alle markiert und GELOESCHT - "in den Papierkorb verschieben",
+# Papierkorb "Ablage" (messen-e192.ps1 -Vorbereiten stellt das ein). Weg:
+# CTocDoc::ImapMoveMsgsToTrash, direkt, ohne Warteschlange. Gemessen am Bau
+# 7.2.1.131: richtig=1 falsch=2 (UIDs ueber Kreuz); mit der Behebung gruen.
+# Eigener Pruefstand (Kopie von C:\Temp\E184), damit E-184/E-170 ihren
+# Papierkorb-Schalter nicht erben.
+E-192 | C:\Temp\E192 | 20 | messung | E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3 | | | messen=tools\messen-e192.ps1
 
 # E-97 / E-100 (25.10.2026): "Speichern unter" darf Eudora nicht abstuerzen
 # lassen - einmal aus dem Postfach mit OK und geschriebener Datei, einmal aus
@@ -542,8 +552,12 @@ E-170s | C:\Temp\E170 | 30 | messung | E170S ERGEBNIS vorhanden=1 kopie=1 vorhan
 # E-141: Entwurf aus IMAP nach Out, E-142-Rueckfrage Yes - danach KEINE
 # Meldung "No messages were transferred!". Alter Bau: nicht-uebertragen=1.
 # Gegenprobe IMAP -> lokal und Loeschen in derselben Zeile (lokal, geloescht).
+# Seit E-188 (#220, 04.11.2026) bleibt die nach lokal uebertragene Quelle
+# stehen, weil der Pruefserver den Rumpf nicht liefert ("E-188 Text nicht
+# geladen, Quelle bleibt") - der Server sieht nur noch das ausdrueckliche
+# Loeschen: geloescht=1 (an 7.2.2.132 vor E-188: 2; gemessen 04.11.2026).
 E-141p | C:\Temp\EM141 | 30 | messung | E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1 | | | messen=tools\messen-e141.ps1
-E-141g | C:\Temp\EM141 | 30 | messung | geloescht=2 lebt=1 | | | messen=tools\messen-e141.ps1
+E-141g | C:\Temp\EM141 | 30 | messung | geloescht=1 lebt=1 | | | messen=tools\messen-e141.ps1
 # E-179: Textteil einer gesendeten HTML-Mail (SMTP-Pruefserver). Alter Bau:
 # emoji=kaputt ("%"), kyr=kaputt (0x16), und nach &#x1F525; endet der Text.
 E-179p | C:\Temp\EM179 | 30 | messung | E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1 | | | messen=tools\messen-e179.ps1
@@ -564,3 +578,23 @@ E-179p | C:\Temp\EM179 | 30 | messung | E179 ERGEBNIS gesendet=1 form=plain emoj
 E-128p | C:\Temp\E128 | 90 | messung | E128 ERGEBNIS kopf=0 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1
 E-128k | C:\Temp\E128K | 90 | messung | E128 ERGEBNIS kopf=1 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1
 E-128t | C:\Temp\E128T | 90 | messung | E128 ERGEBNIS kopf=0 mail=text mbx=1 liste=txt lesen=txt verfassen=htm spur=6 rtf=0 lebt=1 | | | messen=tools\messen-e128.ps1
+# E-220 (03.11.2026): laesst sich der Name, den "Speichern unter" aus dem
+# Betreff vorschlaegt, ohne Aenderung speichern? Gregor: "dateinamen so
+# vorgeben, dass man auf speichern klicken kann, ohne den namen zu aendern."
+# tools/messen-e220.ps1; Pruefstand C:\Temp\E220 (Kopie von C:\Temp\E128),
+# Pruefmail Testdaten\e220-dateiname-betreff.eml (Betreff mit Umlauten,
+# zweimal "|", Apostroph, Versionsnummer 7.2.1.128R, 107 Zeichen). Wege: Postfachliste, Nachrichten-
+# fenster (speichert nach ablage\), noch einmal Postfachliste (liste2: der
+# zuletzt benutzte Ordner ist nicht das Mailverzeichnis). Gegenprobe am alten
+# Bau (C:\Temp\E220-alt, 7.2.1.131, direkt ueber testlauf.ps1): umlaute=0
+# doppelleer=1 voll=0 auf allen drei Wegen.
+E-220p | C:\Temp\E220 | 90 | messung | E220 ERGEBNIS mbx=1 probe=1 liste-pfad=0 liste-umlaute=1 liste-doppelleer=0 liste-ende=1 liste-gespeichert=1 liste-voll=1 liste-punkte=1 liste-endung=eml lesen-pfad=0 lesen-umlaute=1 lesen-doppelleer=0 lesen-ende=1 lesen-gespeichert=1 lesen-voll=1 lesen-punkte=1 lesen-endung=htm liste2-pfad=0 liste2-umlaute=1 liste2-doppelleer=0 liste2-ende=1 liste2-gespeichert=1 liste2-voll=1 liste2-punkte=1 liste2-endung=eml lebt=1 | | | messen=tools\messen-e220.ps1
+# E-221 (03.11.2026): ein Betreff mit Umlauten, den Eudora direkt hinter
+# "Subject: " faltete, verlor in der Postfachliste 7 Zeichen (Gregor an
+# 7.2.2.132). tools/messen-e221.ps1 sendet einen Entwurf an den
+# SMTP-Pruefserver, holt die gesendete Nachricht und zwei fertige (kurz;
+# "Subject:" + Umbruch) ueber POP und liest den Betreff in In.toc.
+# Pruefstand C:\Temp\E221, Kopie von C:\Temp\E128. Alter Bau (7.2.1.131 und
+# 7.2.2.132, C:\Temp\E221-alt): faltung=doppelpunkt gefaltet=fehlen7
+# gesendet-betreff=fehlen7, kurz=heil.
+E-221p | C:\Temp\E221 | 90 | messung | E221 ERGEBNIS gesendet=1 faltung=wort kurz=heil gefaltet=heil gesendet-betreff=heil lebt=1 | | | messen=tools\messen-e221.ps1

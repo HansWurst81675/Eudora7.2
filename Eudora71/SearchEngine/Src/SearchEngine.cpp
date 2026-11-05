@@ -44,6 +44,7 @@ DAMAGE. */
 extern QCMailboxDirector	g_theMailboxDirector;
 
 #include "guiutils.h"
+#include "debug.h"		// E-193: PutDebugLog
 
 #include <list>
 #include <vector>
@@ -596,6 +597,27 @@ bool SearchEngine::SearchMessage(CSummary *pSum, SearchCriteria Sct, char *szMes
 
 
 #define USE_OFFSETS 1
+// E-193: enthaelt der Text dieses Suchbegriffs ein Byte ab 0x80 (Umlaut, Euro)?
+bool E193TextMitUmlaut(SearchCriteria& Sct)
+{
+	CriteriaValueText text;
+	if (!Sct.GetCurValueText(text))
+		return false;
+	for (int i = 0; i < text.GetLength(); i++)
+	{
+		if ((unsigned char) text[i] >= 0x80)
+			return true;
+	}
+	return false;
+}
+
+// E-193: sucht dieser Suchbegriff im Text der Nachricht (Body/Anywhere)? Nur dort wandelt
+// GetTextToSearch HTML mit Html2Text um; bei From, To, Headers hilft das Oeffnen nicht.
+bool E193ImText(SearchCriteria& Sct)
+{
+	return (Sct.GetCriteria() == CRITERIA_OBJECT_BODY) || (Sct.GetCriteria() == CRITERIA_OBJECT_ANYWHERE);
+}
+
 bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int nFreq /* = 1000 */)
 {
 	DWORD nLastCallbackTick = GetTickCount();
@@ -604,6 +626,21 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 	int nStartHits = 0;
 
 	const SearchCriteriaList* pList = m_pMSC->GetCriteriaList();
+
+	// E-193: mit Umlaut oder Euro im Suchbegriff darf ein Postfach nicht schon nach der ersten
+	// Mail aufgegeben werden, nur weil der rohe Text nirgends passt (USE_OFFSETS unten) - eine
+	// HTML-Mail kann den Begriff als Entitaet tragen (Sp&auml;tzle). Gemessen 04.11.2026: ohne
+	// das fand die Suche "Spaetzle" mit Umlaut nicht, "ae" allein schon (stand roh in anderen Mails).
+	bool bE193Weiter = false;
+	if (m_CorrectResults > 0)
+	{
+		for (SearchCriteriaIter it = pList->begin(); it != pList->end(); ++it)
+		{
+			SearchCriteria sc = *it;
+			if (E193TextMitUmlaut(sc) && E193ImText(sc))
+				bE193Weiter = true;
+		}
+	}
 	if(pList == NULL)
 	{
 		ASSERT(0);
@@ -749,7 +786,11 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 			for(SearchCriteriaIter iter = pList->begin(); iter != pList->end(); ++iter)
 			{
 				SearchCriteria Sct = *iter;
-				if(CTocDoc::ImapServerCanSearch(&Sct) )
+				// E-193 (PRUEFER-99 K1): mit Umlaut oder Euro nicht auf dem Server suchen - die
+				// Anfrage ginge als rohe Latin-1-Bytes ohne CHARSET hinaus (ImapConnection.cpp,
+				// proto.cpp). Bis 7.2.2.132 suchte der Index auch in IMAP-Postfaechern lokal;
+				// so bleibt es lokal, in dem, was Eudora schon geladen hat.
+				if(CTocDoc::ImapServerCanSearch(&Sct) && !E193TextMitUmlaut(Sct))
 					bDoImapServerSearch = true;
 				else
 				{
@@ -890,6 +931,14 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 						}
 
 						
+						// E-193: steht im Suchbegriff ein Umlaut oder Euro (Byte ab 0x80), kann eine HTML-Mail
+						// ihn als Entitaet tragen (&auml;, &euro;, &#228;) - die rohe Suche oben findet ihn dann
+						// nicht. Dann die Mail oeffnen und den Text nach Html2Text pruefen (GetTextToSearch).
+						// Bis 7.2.2.132 fehlte so jede HTML-Mail mit Entitaeten (gemessen, Testmail m5).
+						// PRUEFER-99 K2: nur fuer Body/Anywhere (nur dort laeuft Html2Text) und nicht fuer
+						// IMAP-Mails, deren Text noch gar nicht geladen ist (sonst holte die Suche sie).
+						if (!bOpenMessage && m_CorrectResults > 0 && pSum->IsHTML() && E193TextMitUmlaut(srchCriteria) && E193ImText(srchCriteria) && !pSum->IsNotIMAPDownloadedAtAll())
+							bOpenMessage = true;
 						if(!bOpenMessage && (bMatched == true) && m_CorrectResults > 0 && pSum->IsHTML())
 						{
 							//user wants correct results even if the search is slower;
@@ -993,7 +1042,7 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 				pMsgDoc->OnCloseDocument();
 		
 #ifdef USE_OFFSETS
-			if(m_pMSC->NonSummarySearch() && !m_pMSC->HasNegationSearch() && !bFoundMatches)
+			if(m_pMSC->NonSummarySearch() && !m_pMSC->HasNegationSearch() && !bFoundMatches && !bE193Weiter)
 				break;
 #endif
 
@@ -1075,6 +1124,16 @@ bool SearchEngine::Start(ResultsCBType ReportResults /* = NULL */, unsigned int 
 			pToc->OnCloseDocument();
 
 	} //for each mailbox
+
+	// E-193 (PRUEFER-99 K2): wie viel die genaue Suche mit Umlaut oder Euro geoeffnet hat und
+	// wie lange sie brauchte - fuer die Messung an grossen Postfaechern.
+	if (bE193Weiter)
+	{
+		char szE193[160];
+		sprintf(szE193, "E-193 genaue Suche: %d Mails geoeffnet, davon %d HTML, %d ms",
+				nOpenedMsgs, nHTMLMsgs, (int)(GetTickCount() - nStart));
+		PutDebugLog(DEBUG_MASK_MISC, szE193);
+	}
 
 #ifdef _DEBUG
 	{

@@ -1,6 +1,32 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.2.132 (Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 04.11.2026 (auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.133 (Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+
+## <a id="test-7-2-2-133"></a>Dein Test an 7.2.2.133 — ca. 15 Minuten, an deinem echten System
+
+**Hier steht nur, was der Prüfstand nicht kann:** deine echten Konten und
+Server, deine großen Postfächer, deine Einstellungen und Filter. 7.2.2.133 ist
+ein **Testpaket** mit Fehlerbehebungen, keine neue Funktion (nach deinem Test am 04.11.2026 am 05.11.2026 als `v7.2.2.133` veröffentlicht). Wichtigster
+Punkt ist die Suche (Schritt 4); bei ihr misst nur dein Bestand, ob sie schnell
+genug ist. Für die Schritte 6 und 7 bitte nur Mails nehmen, die du dir selbst
+geschickt hast.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.133+` beginnt. |
+| 2 | POP | Post abrufen (*File → Check Mail*). | neue Post im lokalen *In* ankommt und *Task Errors* nichts meldet. |
+| 3 | SMTP | Eine Mail an dich selbst senden, Betreff mit Umlauten, 40 bis 60 Zeichen lang ([E-221](BEFUNDE.md#e-221)). | sie beim nächsten Abruf in der Postfachliste mit dem **ganzen** Betreff steht, die ersten Zeichen eingeschlossen. |
+| 4 | lokal | *Tools → Find Messages* mit einem Wort ohne Umlaut, dann mit „€“, mit „ä“, mit „öft“ und mit einem Umlaut-Wort aus einer HTML-Mail ([E-193](BEFUNDE.md#e-193), ausführlich [unten](#e-193-naechstes)). | ohne Umlaut alles wie bisher; mit Umlaut oder € nur Mails, in denen das Zeichen wirklich steht, die HTML-Mail ist dabei, und die Dauer ist für dich in Ordnung — wenn nicht: ungefähr wie lange, bei wie vielen Mails. |
+| 5 | lokal | Die Mail aus Schritt 3 markieren, *File → Save As* ([E-220](BEFUNDE.md#e-220)). | im Feld *Dateiname* der ganze Betreff mit Umlauten steht und *Speichern* ohne Änderung die Datei anlegt. |
+| 6 | IMAP | In einem IMAP-Ordner zwei oder drei eigene Mails markieren, die Liste vorher nach **Datum** sortiert, und mit *Entf* in den Papierkorb — nur wenn Löschen bei dir in den IMAP-Papierkorb verschiebt, sonst überspringen ([E-192](BEFUNDE.md#e-192)). | im Papierkorb jede Mail mit ihrem eigenen Betreff steht und beim Öffnen ihren eigenen Text zeigt. |
+| 7 | IMAP | Eine eigene Mail aus einem IMAP-Ordner in ein **lokales** Postfach ziehen ([E-188](BEFUNDE.md#e-188)). | sie im lokalen Postfach vollständig ist (öffnen) und erst danach im IMAP-Ordner verschwindet. |
+| 8 | lokal | Eine empfangene Mail öffnen, in den Bearbeiten-Modus schalten (Knopf mit dem Hinweistext *Edit the message*), ein Wort markieren, *Festbreite* ([E-199](BEFUNDE.md#e-199)). | das Wort in fester Breite erscheint und **kein** `t;` im Text steht. |
+| 9 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
+bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
+
+**Ergebnis 04.11.2026, Gregor an 7.2.2.133** (Bildschirmfotos und `eudora.log`, ausgewertet in [BEFUNDE](BEFUNDE.md)): einzelne Schritte nicht als *bestanden* oder *nicht bestanden* gemeldet. Gefunden: [E-222](BEFUNDE.md#e-222) (S/MIME-Mail lässt sich nicht öffnen), [E-223](BEFUNDE.md#e-223) („Remember password“ erst beim zweiten Mal), [E-224](BEFUNDE.md#e-224) (Protokoll kodiert Umlaute falsch). Zu Schritt 4 nahm *Find Messages* mit Umlaut die genaue Suche (132 HTML-Mails in 141–156 ms); *Edit → Find* übersah das Wort in einer Outlook-Rundmail (Nachtrag zu [E-193](BEFUNDE.md#e-193)). [E-222](BEFUNDE.md#e-222), [E-223](BEFUNDE.md#e-223) und [E-224](BEFUNDE.md#e-224) aus dem Original, beim Rest von [E-193](BEFUNDE.md#e-193) ist die Ursache offen; keiner mit Mailverlust. Freigabe am 05.11.2026, veröffentlicht als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133).
 
 ## <a id="test-7-2-2-132"></a>Dein Test an 7.2.2.132 — ca. 15 Minuten, an deinem echten System
 
@@ -413,7 +439,7 @@ lokalen *In*.
 
 **Bestanden** heißt `passt` bei `tt`, `link` und `gespeichert` — und bei
 `antwort` erst, wenn die Antwort nachweislich nur die Markierung zitiert.
-Das Urteil sieht nur die beiden Zeichen: einen leeren Link oder ein Vollzitat
+Das Urteil sieht bei `tt` und `link` nur die beiden Zeichen (bei `gespeichert` verlangt es seit `1e96dc3a` mindestens ein `<TT>` und weder Platzhalter noch `T>`-Rest): einen leeren Link oder ein Vollzitat
 erkennt es nicht. Den `t;`-Rest aus [E-199](BEFUNDE.md#e-199) erkennt seit
 `4ae1c87e` die Wirkprobe (Zeile `E178 MUELL`; nicht hinter einem Buchstaben
 oder einer Ziffer).
@@ -594,6 +620,44 @@ nicht. **Ort: lokal, egal welches Konto**; es wird keine Post gebraucht.
    und geht mit *Close* zu.
 3. *Copy info* drücken und in einen Editor einfügen. **Bestanden:** dieselben
    Zeilen wie im Dialog, auch die Herkunftszeile ungekürzt.
+
+## <a id="e-193-naechstes"></a>Im nächsten Paket nach 7.2.2.132: Find Messages mit Umlauten und € ([E-193](BEFUNDE.md#e-193))
+
+**Erst mit dem nächsten Paket nach 7.2.2.132 auszuführen.** **Ort: lokal,
+deine großen Postfächer** (am besten lokale POP-Postfächer; bei IMAP findet die
+Suche nur, was Eudora schon geladen hat). *Tools → Find Messages* (Strg+Umschalt+F),
+*Anywhere*, *contains*.
+
+1. Ein Wort **ohne** Umlaut suchen (etwa ein Name).
+   **Bestanden:** Treffer wie bisher, so schnell wie bisher (unten steht
+   *Powered by X1*).
+2. „€“ suchen.
+   **Bestanden:** nur Mails, in denen wirklich ein € steht — nicht mehr
+   fast alle Mails wie in 7.2.2.132 (dort 110).
+3. „ä“ suchen, danach „öft“.
+   **Bestanden:** nur Mails mit „ä“ bzw. „öft“; eine Mail, in der nur „oft“
+   steht, kommt bei „öft“ nicht mehr.
+4. Ein Wort mit Umlaut suchen, das du aus einer **HTML-Mail** kennst.
+   **Bestanden:** die Mail ist unter den Treffern.
+5. Bei 2 bis 4 auf die **Dauer** achten.
+   **Bestanden:** du kannst damit leben. Mit Umlaut sucht Eudora jetzt
+   ohne Index, Mail für Mail; am Prüfstand mit neun Mails dauerte das
+   0,4 s, an deinem Bestand weiß es niemand. Ist es zu langsam, sag mir
+   ungefähr wie lange und wie viele Mails.
+
+## <a id="e-220-naechstes"></a>Im nächsten Paket nach 7.2.2.132: Speichern unter schlägt einen speicherbaren Namen vor ([E-220](BEFUNDE.md#e-220))
+
+**Erst mit dem nächsten Paket nach 7.2.2.132 auszuführen** — in 7.2.2.132
+fehlen die Umlaute noch. **Ort: lokal, ein POP-Postfach** (z. B. *In*); eine
+Nachricht, deren Betreff Umlaute und ein `|` oder `:` enthält.
+
+1. In der Postfachliste die Nachricht markieren, *File → Save As…*.
+   **Bestanden:** im Feld *Dateiname* steht der ganze Betreff mit Umlauten,
+   ohne `|`/`:` und ohne doppelte Leerzeichen, Punkte einer Versionsnummer
+   bleiben stehen, kein Pfad; *Speichern* ohne
+   Änderung legt die Datei an.
+2. Dieselbe Nachricht öffnen, im Nachrichtenfenster *File → Save As…*.
+   **Bestanden:** wie 1, Endung `.htm` bei einer HTML-Nachricht.
 
 ## <a id="e-171-naechstes"></a>In 7.2.1.129: Suche aus dem Rechtsklickmenü ohne Markierung ([E-171](BEFUNDE.md#e-171))
 

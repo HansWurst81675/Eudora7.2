@@ -49,3 +49,4 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | 2026-10-29 22:17:31 | v7.2.1.128 | Gregor am 29.10.2026 nach Merge von PR #187: 'gemergt. ja, release veroeffentlichen' | veroeffentlicht |
 | 2026-11-02 14:51:08 | v7.2.1.131 | Gregor am 02.11.2026: 'ja, veroeffentliche v7.2.1.131' (nach seinem Test: alle sieben Schritte bestanden) | veroeffentlicht |
 | 2026-11-03 18:38:35 | v7.2.2.132 | Gregor am 03.11.2026 nach seinem Test ausserhalb der VM: 'ja, wir koennen es auf github releasen, dann mit den anderen punkten fortfahren.'; PR #217 gemergt | veroeffentlicht |
+| 2026-11-05 09:36:39 | v7.2.2.133 | Gregor am 05.11.2026 nach seinem Test vom 04.11.2026: 'ja zu beidem, leg los' (Release 7.2.2.133) und 'gut.' auf 'GitHub-Release, genau das getestete ZIP' | veroeffentlicht |

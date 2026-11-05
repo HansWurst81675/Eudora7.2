@@ -59,7 +59,7 @@ CSaveAs::~CSaveAs()
 	delete m_File;
 }
 
-BOOL CSaveAs::Start(const char* Filename /*= NULL*/, BOOL IsMessage /*= FALSE*/, CWnd* pParent /*= NULL*/, BOOL Stationery /*= FALSE*/, const char* pszVorgabeendung /*= NULL*/)
+BOOL CSaveAs::Start(const char* Filename /*= NULL*/, BOOL IsMessage /*= FALSE*/, CWnd* pParent /*= NULL*/, BOOL Stationery /*= FALSE*/, const char* pszVorgabeendung /*= NULL*/, BOOL bNameFertig /*= FALSE*/)
 {
 	char Name[_MAX_PATH + 1];
 	CString	szPathName;
@@ -69,7 +69,15 @@ BOOL CSaveAs::Start(const char* Filename /*= NULL*/, BOOL IsMessage /*= FALSE*/,
 	Stationery = FALSE;		// Lite doesn't support saving (creating) Stationery
 #endif //COMMERCIAL
 			
-	if (Filename)
+	// BEFUND E-220: bNameFertig - der Aufrufer hat den Vorschlag schon mit
+	// E220DateinameVorschlag (msgutils.cpp) gebildet. Er geht dann nicht noch
+	// einmal durch StripIllegalMT, das alle Umlaute wegwirft.
+	if (Filename && bNameFertig)
+	{
+		strncpy(Name, Filename, sizeof(Name) - 1);
+		Name[sizeof(Name) - 1] = 0;
+	}
+	else if (Filename)
 	{
 		strcpy(Name, Filename);
 		char* Slash = strrchr(Name, SLASH);

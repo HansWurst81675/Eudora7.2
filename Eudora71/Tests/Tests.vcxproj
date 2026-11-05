@@ -95,6 +95,7 @@
     <ClCompile Include="UnderTestE101.cpp" />
     <ClCompile Include="UnderTestE136.cpp" />
     <ClCompile Include="UnderTestE179.cpp" />
+    <ClCompile Include="UnderTestE221.cpp" />
     <ClCompile Include="TestE101.cpp" />
     <ClCompile Include="UnderTestResolveURL.cpp" />
     <ClCompile Include="TestResolveURL.cpp" />
@@ -161,8 +162,10 @@
     <ClCompile Include="TestE170.cpp" />
     <ClCompile Include="TestE143.cpp" />
     <ClCompile Include="TestE184.cpp" />
+    <ClCompile Include="TestE192.cpp" />
     <ClCompile Include="TestE188.cpp" />
     <ClCompile Include="TestE199.cpp" />
+    <ClCompile Include="TestE193.cpp" />
     <ClCompile Include="TestM1.cpp" />
     <ClCompile Include="TestE145.cpp" />
     <ClCompile Include="TestE141.cpp" />
@@ -171,6 +174,8 @@
     <ClCompile Include="TestHilfeMenue.cpp" />
     <ClCompile Include="TestE133.cpp" />
     <ClCompile Include="TestE216.cpp" />
+    <ClCompile Include="TestE220.cpp" />
+    <ClCompile Include="TestE221.cpp" />
     <ClCompile Include="UnderTestE118.cpp" />
     <ClCompile Include="TestE118.cpp" />
     <ClCompile Include="Quelltext.cpp" />

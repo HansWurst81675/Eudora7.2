@@ -144,6 +144,13 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
   ([E-196](Intern/BEFUNDE.md#e-196), [E-205](Intern/BEFUNDE.md#e-205),
   [E-207](Intern/BEFUNDE.md#e-207)); Einzelheiten im
   [CHANGELOG](CHANGELOG.md) unter 7.2.2.132.
+* **In 7.2.2.133 (veröffentlicht am 05.11.2026, nur
+  Fehlerbehebungen):** *Find Messages* mit Umlauten und € ([E-193](Intern/BEFUNDE.md#e-193)),
+  kein Mailverlust beim Verschieben zwischen IMAP-Konten ([E-188](Intern/BEFUNDE.md#e-188)),
+  Papierkorb mit mehreren IMAP-Mails ([E-192](Intern/BEFUNDE.md#e-192)), *Festbreite*
+  ([E-199](Intern/BEFUNDE.md#e-199)), Dateiname beim Speichern ([E-220](Intern/BEFUNDE.md#e-220)),
+  gekürzter Betreff ([E-221](Intern/BEFUNDE.md#e-221)); Einzelheiten im
+  [CHANGELOG](CHANGELOG.md) unter 7.2.2.133.
 
 Von den übrigen Kandidaten ist noch nichts umgesetzt; die Reihenfolge entscheidet Gregor.
 
@@ -230,7 +237,7 @@ Vorgabe, hier festgehalten, damit sie nicht an jemandes Gedächtnis hängt:
 > verweisen hierher, statt sie zu wiederholen. Wer den Stand ändert, ändert ihn
 > **hier**.
 
-**Stand 03.11.2026.** Quellstand **7.2.2.132** (`VERSION` gleich; geschnürt am 03.11.2026, Prüfbericht BESTANDEN, von Gregor am selben Tag getestet, alle zwölf Schritte bestanden; davor 7.2.1.131, geschnürt am 02.11.2026, von Gregor am selben Tag getestet, alle sieben Schritte bestanden; davor 7.2.1.130, geschnürt am 01.11.2026, und 7.2.1.129, geschnürt am 31.10.2026, beide nicht veröffentlicht). Veröffentlicht zuletzt **7.2.2.132** als [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132) am 03.11.2026; davor **7.2.1.131** als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131) am 02.11.2026 und **7.2.1.128** (erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026. **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
+**Stand 05.11.2026.** Quellstand **7.2.2.133** (`VERSION` gleich; geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet; davor 7.2.2.132: geschnürt am 03.11.2026, Prüfbericht BESTANDEN, von Gregor am selben Tag getestet, alle zwölf Schritte bestanden; davor 7.2.1.131, geschnürt am 02.11.2026, von Gregor am selben Tag getestet, alle sieben Schritte bestanden; davor 7.2.1.130, geschnürt am 01.11.2026, und 7.2.1.129, geschnürt am 31.10.2026, beide nicht veröffentlicht). Veröffentlicht zuletzt **7.2.2.133** als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133) am 05.11.2026; davor **7.2.2.132** als [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132) am 03.11.2026; davor **7.2.1.131** als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131) am 02.11.2026 und **7.2.1.128** (erstes Release 7.2.1, geschnürt, von Gregor am 29.10.2026 getestet ([E-166](Intern/TESTPLAN.md#ergebnis-e-166-hauptrechner) bestanden)), veröffentlicht als [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) am 29.10.2026. **Was zur Fassung 7.2.1 noch fehlt, steht im erzeugten Block oben** — nicht hier. Die Fassungsgeschichte steht in [CHANGELOG.md](CHANGELOG.md), die Messung zu jedem Befund in [Intern/BEFUNDE.md](Intern/BEFUNDE.md).
 
 > **Hier stand bis zum 22.10.2026 ein Absatz mit 9356 Zeichen** — eine vollständige Fassungsgeschichte von 7.2.0.120 rückwärts bis 7.2.0.85, unter einer Überschrift, die eine Tabelle ankündigt. Gregor dazu: *„ist das eine tabelle?"* Gemessen wurden an dem Tag **17 Absätze über 1200 Zeichen** in den führenden Dokumenten. Kein Inhalt ist verloren: jede genannte Fassung hat ihren Abschnitt in [CHANGELOG.md](CHANGELOG.md).
 
