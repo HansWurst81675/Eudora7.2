@@ -21,6 +21,15 @@ Jede Behebung hat einen Regressionstest und einen Prüfstandsfall am laufenden
 Programm, der am alten Bau rot und am neuen grün war
 ([Prüfbericht](https://github.com/HansWurst81675/Eudora7.2/blob/main/Releases/PRUEFBERICHT.md)).
 
+**Rückstand an Regressionstests:** Nicht jede ältere Behebung hat schon einen
+eigenen automatischen Test. Am 05.11.2026 sind es **50** behobene Befunde ohne
+eigenen Testfall; bei den kritischen Befunden (Verlust, Schaden, Absturz) ist
+**einer von 70** ohne jede Prüfung: der Absturz beim Beenden bei offenem
+Hinweis nach dem Mailabruf
+([E-239](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-239)),
+am 05.11.2026 im vollen Prüfstandslauf gefunden und noch nicht gezielt
+nachgestellt.
+
 ## Bekannte Fehler
 
 Was noch nicht geht, steht in der

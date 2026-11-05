@@ -481,11 +481,12 @@ Wer das Kennwort **nicht mehr** speichern will, wählt das Häkchen ab — im
 Kennwortdialog oder unter *Tools → Options → Checking Mail* — und nimmt dann
 *Forget Password(s)*.
 
-Das ist so gewollt; Gregor hat am 05.11.2026 entschieden, es so zu lassen und
+Das bleibt so; Gregor hat am 05.11.2026 entschieden, es so zu lassen und
 diesen Hinweis aufzunehmen. *Am Quelltext nachgesehen*
 (`persona.cpp:891-914`, [PRÜFER-100](../Befunde/PRUEFER-100.md) K1) und
 **am Programm geprüft**: Gregor an 7.2.2.134 am 05.11.2026 — das Häkchen war
-nach *Forget Password(s)* noch gesetzt. Seit 7.2.2.134 speichert Eudora das
-Kennwort schon beim ersten Setzen des Häkchens
+nach *Forget Password(s)* noch gesetzt. Ab dem nächsten Release (im Testpaket
+7.2.2.134 von Gregor bestätigt) speichert Eudora das Kennwort schon beim
+ersten Setzen des Häkchens
 ([E-223](../Intern/BEFUNDE.md#e-223)); vorher fragte es dann noch ein zweites
 Mal.

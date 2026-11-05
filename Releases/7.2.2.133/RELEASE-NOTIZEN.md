@@ -53,7 +53,7 @@ und
 [E-223](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-223)
 stammen aus dem Original; beim Rest von
 [E-193](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-193)
-ist die Ursache noch offen.
+ist die Ursache noch offen (Nachtrag 05.11.2026: gefunden, Originalfehler – *Edit → Find* sucht nach dem Öffnen aus *Find Messages* ab dem schon markierten Treffer weiter; behoben im Testpaket 7.2.2.135).
 
 **Rückstand an Regressionstests:** Nicht jede ältere Behebung hat schon einen
 eigenen automatischen Test. Am 05.11.2026 sind es **50** behobene Befunde ohne
