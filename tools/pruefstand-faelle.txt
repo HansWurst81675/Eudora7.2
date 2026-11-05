@@ -290,17 +290,18 @@ E-188d | C:\Temp\E188 | 20 | messung | E188 LOESCHEN GEMESSEN fremd-lebt=1 | E18
 E-193p | C:\Temp\E193 | 20 | messung | E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
 E-193w | C:\Temp\E193 | 20 | messung | E193 WEICHE gleich=11/11 index-zu-viel=0 | E193 ABBRUCH | | messen=tools\messen-e193.ps1
 
-# E-193 Rest (05.11.2026, Gregors Test an 7.2.2.133): Edit -> Find in
-# weitergeleiteten Outlook-HTML-Mails. Acht synthetische Mails
-# (Testdaten/e193-f1..f8.eml: Outlook-Aufbau mit Tabellen/o:p/mso, Emoji als
-# Zeichenreferenz ausserhalb der BMP vor oder nach dem Wort, inneres
-# meta charset=utf-8, BMP-Zeichen, einfache HTML-Mail). Je Mail fuenf Woerter
-# (Umlautwort, ganzes Wort, ASCII-Teil, ASCII hinter dem Wort, ASCII vorn) und
-# Zebrafink als Gegenprobe; einmal ueber WM_FINDREPLACE (E-193f), einmal ueber
-# den echten Suchdialog Edit -> Find mit Weitersuchen (E-193fd). Pruefstand
-# C:\Temp\E193f ist eine Kopie von C:\Temp\E193.
-E-193f | C:\Temp\E193f | 540 | messung | E193F ERGEBNIS f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 negativ-falsch=0 mails=8 lebt=1 | E193F ABBRUCH | | messen=tools\messen-e193f.ps1
-E-193fd | C:\Temp\E193f | 540 | messung | E193F ERGEBNIS-DIALOG f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 negativ-falsch=0 | E193F ABBRUCH | | messen=tools\messen-e193f.ps1
+# E-193 Rest (05.11.2026, Gregors Test an 7.2.2.133/134): Edit -> Find nach
+# Oeffnen aus Find Messages. tools/messen-e193f.ps1 holt 14 synthetische Mails
+# (Testdaten/e193-f1..f14.eml: Outlook-Aufbau, Emoji, inneres meta, 0xAD,
+# Wort zweimal) und misst vier Runden (Kopf des Skripts). E-193fs ist der
+# Regressionsfall zu Gregors Entscheidung vom 05.11.2026 (Variante A): Mail
+# per Doppelklick aus dem Ergebnis von Find Messages, Edit -> Find mit
+# demselben Wort findet beim ERSTEN Weitersuchen - am Bau 7.2.2.134 rot
+# (alle 0 ausser f14). E-193f/E-193fd: Oeffnen aus In, beide Wege finden.
+# Pruefstand C:\Temp\E193f ist eine Kopie von C:\Temp\E193.
+E-193fs | C:\Temp\E193f | 1500 | messung | E193F ERGEBNIS suchweg-ohne f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 f9=1 f10=1 f11=1 f12=1 f14=1 | E193F ABBRUCH | | messen=tools\messen-e193f.ps1
+E-193f | C:\Temp\E193f | 1500 | messung | E193F ERGEBNIS direkt f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 f9=1 f10=1 f11=1 f12=1 f13=1 f14=1 | E193F ABBRUCH | | messen=tools\messen-e193f.ps1
+E-193fd | C:\Temp\E193f | 1500 | messung | E193F ERGEBNIS dialog f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 f9=1 f10=1 f11=1 f12=1 f13=1 f14=1 | E193F ABBRUCH | | messen=tools\messen-e193f.ps1
 
 # E-192 (03.11.2026, Rest von E-184 K3): drei Mails, nach Datum sortiert
 # (Liste 3,2,1), alle markiert und GELOESCHT - "in den Papierkorb verschieben",

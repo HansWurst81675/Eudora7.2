@@ -1886,7 +1886,8 @@ BOOL CTridentView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWhole
 		if( !vbFound )
 		{
 			pNextRange->Release();
-			return FALSE;
+			// E-193: Lesezeichen nicht mehr gueltig - von oben suchen (siehe unten).
+			return DoFindFirst( szSearch, bMatchCase, bWholeWord, bSelect );
 		}
 
 
@@ -1930,6 +1931,18 @@ BOOL CTridentView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWhole
 		{
 			pRange->Release();
 		}
+	}
+
+	// E-193 (Gregor 05.11.2026, Variante A): ab dem Lesezeichen nichts mehr
+	// gefunden - einmal von oben suchen, markieren und dorthin scrollen
+	// (DoFindFirst). Das Lesezeichen setzt auch ein Oeffnen aus Find Messages
+	// (SearchView.cpp, DoFindFirst auf den Treffer); stand das Wort nur einmal
+	// in der Mail, meldete Edit -> Find danach "not found", obwohl es sichtbar
+	// war. Kein Kreis: DoFindFirst ruft DoFindNext nicht, und jeder Aufruf
+	// kommt aus genau einer Benutzerhandlung (Weitersuchen, F3).
+	if( !bReturn )
+	{
+		return DoFindFirst( szSearch, bMatchCase, bWholeWord, bSelect );
 	}
 
 	return bReturn;

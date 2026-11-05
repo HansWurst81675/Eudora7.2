@@ -30,8 +30,8 @@ darunter:
 * ***Edit → Find* im geöffneten Fenster** meldet *„not found“*, wenn die Mail
   aus *Find Messages* geöffnet wurde und das Wort nur einmal vorkommt: der
   Treffer ist dann schon markiert, und die Suche läuft ab dort weiter, ohne
-  oben neu anzufangen. Abhilfe bis zur Behebung: einmal oben in den Text
-  klicken und erneut suchen
+  oben neu anzufangen. Abhilfe: einmal oben in den Text klicken und erneut
+  suchen. Im Quellstand behoben (05.11.2026), kommt mit dem nächsten Paket
   ([E-193](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-193)).
 
 ## Hinweis: Kennwort vergessen lassen
