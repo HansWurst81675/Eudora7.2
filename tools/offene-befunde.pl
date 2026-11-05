@@ -421,6 +421,24 @@ my $st_ende   = '<!-- stufen: Ende -->';
         next if exists $stufe{$k};
         my ($st) = $zeile =~ /\*\*Stufe:\s*(kritisch|wichtig|unkritisch|werkzeug)\*\*/i;
         $stufe{$k} = defined $st ? lc $st : 'ohne';
+        # UNTERZEILEN MIT URTEIL (05.11.2026). P-2.1, P-2.2, B-2.2 und B-2.5
+        # stehen in Abweichungstabellen; die Schleife oben liest Kennungen mit
+        # Punkt nicht, also wurden sie nie als erledigt erkannt und standen
+        # in der Stufentabelle dauerhaft als "ohne Urteilswort" - auch dann,
+        # wenn ihr Urteil vorn **widerlegt** oder **ueberholt** sagt. Gregor
+        # schaut sich diese Tabelle an; 16 "ohne Urteilswort" waren am
+        # 05.11.2026 der Anlass. Dieselbe Regel wie oben: das erste
+        # Fettgedruckte entscheidet, ein Offen-Wort vorn schlaegt alles.
+        my @c = split /(?<![\x5c])[|]/, $zeile, -1;
+        if (@c >= 4) {
+            my @fs = grep { /\S/ } fettstellen($c[3]);
+            if (@fs) {
+                my $w = lc $fs[0];
+                my $beginnt_offen = grep { $w =~ /^[\s\W]*\Q$_\E/ } @offen_wort;
+                $erledigt{$k} = 1
+                    if !$beginnt_offen and grep { index($w, $_) >= 0 } @erledigt_wort;
+            }
+        }
     }
     my (%z, %summe);
     for my $k (keys %stufe) {
