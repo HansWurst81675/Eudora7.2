@@ -2,27 +2,27 @@
 
 | | |
 |---|---|
-| **Quellstand** | `7.2.2.133` (Paketnummer `7.2.2.133`) |
-| **Commit** | `3d3789d3` — **Arbeitsbaum nicht sauber** (7 Dateien) |
-| **Erstellt** | 2026-11-04 18:15 |
+| **Quellstand** | `7.2.2.134` (Paketnummer `7.2.2.134`) |
+| **Commit** | `6a3da99d` — **Arbeitsbaum nicht sauber** (8 Dateien) |
+| **Erstellt** | 2026-11-05 10:25 |
 | **Gesamturteil** | **NICHT VOLLSTAENDIG** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 09 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 00 s | dieser Lauf |
 | Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
 | Pruefstand, 96 Faelle, 61 Eudora-Starts | 59 min 50 s | voller Lauf, Ende 2026-11-04 17:53:27 |
-| **zusammen** | **60 min 07 s** | |
+| **zusammen** | **59 min 58 s** | |
 
-Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
+Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.134+6a3da99d* 2026-11-05 10:23`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
-| Unit-Tests (`EudoraTests.exe`) | 421 | 421 | 0 |  |
+| Unit-Tests (`EudoraTests.exe`) | 424 | 424 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 96 | 6 | 0 | 90 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 102 | 0 | 0 | 96 an anderem Bau, 6 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
@@ -51,9 +51,9 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-11-04 18:15** gegen den Quelltext von Commit `3d3789d3*`.
+Gelaufen am **2026-11-05 10:25** gegen den Quelltext von Commit `6a3da99d*`.
 
-<details><summary>Alle 421 Unit-Tests einzeln</summary>
+<details><summary>Alle 424 Unit-Tests einzeln</summary>
 
 | Bereich | Test | Ergebnis |
 |---|---|---|
@@ -478,6 +478,9 @@ Gelaufen am **2026-11-04 18:15** gegen den Quelltext von Commit `3d3789d3*`.
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-221 (Funktion): Encode2047 faltet einen Betreff mit Umlauten nicht direkt hinter dem Doppelpunkt | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-221 (Funktion): E221BetreffAnfang - Betreff einer Folgezeile beginnt am Zeilenanfang | ok |
 | E-148: keine kompromittierten Wurzelzertifikate im Paket | E-221 (Quelltext): CSummary::Build nimmt E221BetreffAnfang, Encode2047 bricht erst bei '>' um | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-222: DoSpecialAttachment wandelt %3C und %3E im Plugin-Verweis zurueck | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-222: InterpretFile nimmt die Kennung nur, wenn sscanf beide Teile erkannt hat | ok |
+| E-148: keine kompromittierten Wurzelzertifikate im Paket | E-223: GetPOPPassword_ liest SavePassword nach dem Kennwortdialog neu | ok |
 
 </details>
 
@@ -487,7 +490,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-11-04 18:15** gegen Commit `3d3789d3*`.
+Gelaufen am **2026-11-05 10:25** gegen Commit `6a3da99d*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -515,7 +518,7 @@ Gelaufen am **2026-11-04 18:15** gegen Commit `3d3789d3*`.
 
 Je Fall der **letzte** Lauf. *Bau* ist die Kennung aus der `Eudora.exe` des
 Pruefstands (Fassung, Paket, Commit; ein `*` heisst: mit uncommitteten
-Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.2.133`
+Aenderungen gebaut). Ein Fall, der an einer anderen Fassung als `7.2.2.134`
 lief, zaehlt fuer diesen Stand nicht als gruen.
 
 | Fall | Ergebnis | gelaufen am | Pruefstand | Bau | erwartet |
@@ -564,8 +567,10 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-188fm | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E188` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E188 ERGEBNIS weg=fetchmehr` |
 | E-188e | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E188` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E188 ERGEBNIS weg=lokaleins anzeige=richtig` |
 | E-188d | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E188` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E188 LOESCHEN GEMESSEN fremd-lebt=1` |
-| E-193p | ok | 2026-11-04 18:07:05 | `C:\Temp\E193` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1` |
-| E-193w | ok | 2026-11-04 18:07:05 | `C:\Temp\E193` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E193 WEICHE gleich=11/11 index-zu-viel=0` |
+| E-193p | **ok, ANDERER BAU** | 2026-11-04 18:07:05 | `C:\Temp\E193` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E193 ERGEBNIS index-falsch=0/11 ohne-falsch=0/11 fenster-falsch=0/24 x1=1 mails=9 lebt=1` |
+| E-193w | **ok, ANDERER BAU** | 2026-11-04 18:07:05 | `C:\Temp\E193` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E193 WEICHE gleich=11/11 index-zu-viel=0` |
+| E-193f | **NIE GELAUFEN** |  | `` |  | `E193F ERGEBNIS f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 negativ-falsch=0 mails=8 lebt=1` |
+| E-193fd | **NIE GELAUFEN** |  | `` |  | `E193F ERGEBNIS-DIALOG f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 negativ-falsch=0` |
 | E-192 | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E192` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3` |
 | E-97 | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E97` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
 | E-100 | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E97` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |
@@ -581,10 +586,10 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-144p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E144` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E144 ERGEBNIS probe=ok gleich=1 references=1` |
 | E-140p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E140` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E140 ERGEBNIS liste=1 lesen=1 verfassen=1 lebt=1 zeichensatz=3` |
 | E-139p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E139` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E139 ERGEBNIS lauf=1 erschienen=1 kaestchen=1 angekreuzt=1 lebt=1` |
-| E-171p | ok | 2026-11-04 18:07:26 | `C:\Temp\E171` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1` |
+| E-171p | **ok, ANDERER BAU** | 2026-11-04 18:07:26 | `C:\Temp\E171` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E171 ERGEBNIS fehlermeldung=0 suchfenster=1 lebt=1` |
 | E-177p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E177` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E177 ERGEBNIS dateien=3 pop=passt e118=passt roh=falsch falsche-angabe=0 fehlende-angabe=0 lebt=1` |
 | E-122p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E122` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E122 ERGEBNIS nachrichten=2 passt=2 verschoben=0 lebt=1` |
-| E-143s | ok | 2026-11-04 18:07:54 | `C:\Temp\E143S` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1` |
+| E-143s | **ok, ANDERER BAU** | 2026-11-04 18:07:54 | `C:\Temp\E143S` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E143S ERGEBNIS treffer=3 hinweise=1 abgelehnt-log=3 e125-zeilen=0 out-neu=0 lebt=1` |
 | E-178p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E178` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E178 ERGEBNIS fett=passt kursiv=passt tt=passt link=passt gespeichert=passt antwort=passt lebt=1` |
 | E-194p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E194` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1` |
 | E-205p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E205` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E205 ERGEBNIS neu1=0h neu2=0h q1=0h q2=0h liste1=0h liste2=0h zone=passt lebt=1` |
@@ -595,6 +600,10 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-203w | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E203` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E39 PROBE ok` |
 | E-204p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E204` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E204 ERGEBNIS rueckfrage=1 user=e204neu pass=neu lebt=1` |
 | E-204w | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E204` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E204 PROBE ok` |
+| E-223p | **NIE GELAUFEN** |  | `` |  | `E223 ERGEBNIS savepassword=1 ini-kennwort=1 beendet=1` |
+| E-223w | **NIE GELAUFEN** |  | `` |  | `E223 PROBE ok` |
+| E-222p | **NIE GELAUFEN** |  | `` |  | `E222 ERGEBNIS kennung=` |
+| E-222w | **NIE GELAUFEN** |  | `` |  | `E222 PROBE ok` |
 | A-5p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\EHILFE` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `HILFE ERGEBNIS menue=1 kuerzel=ausgelassen einstellungen=ausgelassen fehlt-meldung=1 lebt=1` |
 | A-5p-log | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\EHILFE` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `Hilfe: Tastenkuerzel.html fehlt` |
 | E-216p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\EABOUT` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1` |
@@ -608,8 +617,8 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-170g | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E170` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1` |
 | E-170c | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E170` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1` |
 | E-170s | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E170` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E170S ERGEBNIS vorhanden=1 kopie=1 vorhanden-label=0 kopie-label=0 schon-da=1 vorgemerkt=0 log-grund=keine-neuen-uids lebt=1` |
-| E-141p | ok | 2026-11-04 18:09:50 | `C:\Temp\EM141` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1` |
-| E-141g | ok | 2026-11-04 18:09:50 | `C:\Temp\EM141` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `geloescht=1 lebt=1` |
+| E-141p | **ok, ANDERER BAU** | 2026-11-04 18:09:50 | `C:\Temp\EM141` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1` |
+| E-141g | **ok, ANDERER BAU** | 2026-11-04 18:09:50 | `C:\Temp\EM141` | Eudora 7.2.2.133+3d3789d3 2026-11-04 18:02 | `geloescht=1 lebt=1` |
 | E-179p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\EM179` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E179 ERGEBNIS gesendet=1 form=plain emoji=entitaet kyr=entitaet hex=entitaet euro=zeichen umlaut=zeichen lebt=1` |
 | E-128p | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E128` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E128 ERGEBNIS kopf=0 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1` |
 | E-128k | **ok, ANDERER BAU** | 2026-11-04 17:53:26 | `C:\Temp\E128K` | Eudora 7.2.2.133+7818338c 2026-11-04 16:51 | `E128 ERGEBNIS kopf=1 mail=html mbx=1 liste=eml lesen=htm verfassen=htm spur=6 rtf=0 lebt=1` |

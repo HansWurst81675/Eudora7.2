@@ -1,6 +1,25 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.2.133 (Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.134 (Testpaket, nur übersetzt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.133: Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+
+## <a id="test-7-2-2-134"></a>Dein Test an 7.2.2.134 — ca. 10 Minuten, an deinem echten System
+
+7.2.2.134 ist ein **Testpaket** mit zwei Fehlerbehebungen aus deinem Test an
+7.2.2.133. `MFC71.DLL` und `msvcp71.dll` liegen diesmal **im ZIP** neben der
+`Eudora.exe`; du musst nichts dazukopieren. Für Schritt 4 den PC nehmen, an dem
+S/MIME unter *Special → Message Plug-ins Settings* in der Liste steht.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.134+` beginnt. |
+| 2 | lokal | *Special → Message Plug-ins Settings*. | *S/MIME Plugin* und *SpamHeaders Plugin* in der Liste stehen. |
+| 3 | POP | Eine Persönlichkeit nehmen, deren Kennwort **nicht** gespeichert ist (oder vorher *Special → Forget Password(s)*). *File → Check Mail*, Kennwort eingeben, Häkchen *Remember password* setzen, OK. Eudora beenden, neu starten, noch einmal *Check Mail* ([E-223](BEFUNDE.md#e-223)). | beim zweiten *Check Mail* **keine** Kennwortfrage kommt. |
+| 4 | lokal | Eine S/MIME-signierte Mail öffnen und auf das `.ems`-Symbol klicken ([E-222](BEFUNDE.md#e-222)). | **nicht** mehr *„Plugin no longer available“* kommt, sondern der Inhalt oder das Ergebnis der Signaturprüfung. Kommt *„Couldn't load the system security components (CAPICOM)“*, ist unsere Behebung in Ordnung; dann fehlt bei dir CAPICOM — bitte Bildschirmfoto, das wird ein eigener Punkt. |
+| 5 | lokal | Die Outlook-Rundmail aus deinem letzten Test öffnen, **zuerst einmal in den Text der Mail klicken**, dann *Edit → Find* „führung“ ([E-193](BEFUNDE.md#e-193)). | das Wort gefunden wird. Wenn nicht: in der `eudora.log` die letzte Zeile `E-86: Anzeigedatei …` suchen und genau diese `eud*.htm` aus deinem `%TEMP%` in den Testordner legen — sie wird nur am Prüfstand verwendet, nicht im Repo. |
+| 6 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
+bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
 ## <a id="test-7-2-2-133"></a>Dein Test an 7.2.2.133 — ca. 15 Minuten, an deinem echten System
 

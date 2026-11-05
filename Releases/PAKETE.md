@@ -184,6 +184,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.134 — Testpaket, Zweig `e223_e222_e193rest`
+
+**Nur übersetzt am 05.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer von Gregor am 05.11.2026 (*„paket nummer ist dann 2.134, das ist ok für mich“*); Zweigname von Gregor am 05.11.2026 bestätigt. Inhalt: Behebungen aus Gregors Test an 7.2.2.133, [E-223](../Intern/BEFUNDE.md#e-223) und [E-222](../Intern/BEFUNDE.md#e-222); zu [E-193](../Intern/BEFUNDE.md#e-193) nur Messfälle. **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.134.
+
 ## 7.2.2.133 — Release `v7.2.2.133`, Zweig `paket_7_2_2_133`
 
 **Geschnürt am 04.11.2026 um 18:20, bereitgestellt neben Gregors letztem Testverzeichnis, ZIP daneben; veröffentlicht am 05.11.2026 als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133)** (Latest, 08:36:38 UTC, Marke auf `a0278acf` = Kopf von `paket_7_2_2_133` nach #223/#224 mit Gregors Befunden; der Zweig ist noch nicht nach `main` gemergt) nach Gregors Ja am 05.11.2026: *„ja zu beidem, leg los“* und *„gut.“* auf die Rückfrage, ob genau das getestete ZIP als GitHub-Release gemeint ist. Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Gregor hat das Paket am 04.11.2026 an seinem System getestet und dabei [E-222](../Intern/BEFUNDE.md#e-222), [E-223](../Intern/BEFUNDE.md#e-223), [E-224](../Intern/BEFUNDE.md#e-224) und einen Nachtrag zu [E-193](../Intern/BEFUNDE.md#e-193) gefunden, alle aus dem Original, keiner mit Mailverlust; einzelne Schritte hat er nicht als bestanden gemeldet.
