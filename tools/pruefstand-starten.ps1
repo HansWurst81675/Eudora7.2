@@ -32,14 +32,19 @@
 # Aufruf:
 #   Pruefstand starten.cmd
 #   powershell -NoProfile -ExecutionPolicy Bypass -File tools\pruefstand-starten.ps1
-#       [-Wurzel C:\Temp\Eudora72-Pruefstand] [-Grundlage <release.zip>]
+#       [-Wurzel C:\Temp] [-Grundlage <release.zip>]
 #       [-ZusatzDlls <ordner>] [-Nur <Kennung>] [-Bau <ordner>] [-Ja]
 #
 # Kodierung: reines ASCII, nur LF.
 
 [CmdletBinding()]
 param(
-    [string] $Wurzel     = 'C:\Temp\Eudora72-Pruefstand',
+    # Vorgabe C:\Temp: nur dort stimmen die erwarteten Zeilen der Faelle, die
+    # den Pfad selbst pruefen (E-133 Registry mit 8.3-Kurznamen, E-216l langer
+    # Pfad) - gemessen an der Klonprobe vom 05.11.2026 mit tieferer Wurzel.
+    # Gibt es dort schon ein Verzeichnis gleichen Namens, das nicht vom
+    # Einrichter stammt, wird es nicht angefasst und sein Fall uebersprungen.
+    [string] $Wurzel     = 'C:\Temp',
     [string] $Grundlage  = '',
     [string] $ZusatzDlls = '',
     [string] $Nur        = '',
@@ -82,9 +87,25 @@ if ($mangel.Count -gt 0) {
 }
 
 # --- 2. Fragen -------------------------------------------------------------
+# Erwartete Dauer aus der letzten Messung (Gregor 05.11.2026: die Dauer
+# "sollte ... auf jeden fall in die beschreibung rein") - gelesen, nicht von
+# Hand geschaetzt: Intern\pruefstand-dauer.txt schreibt pruefstand-lauf.ps1
+# nach jedem vollen Lauf auf der Entwicklermaschine.
+$erwartet = 'etwa eine bis eineinhalb Stunden'
+$dauerDatei = Join-Path $repo 'Intern\pruefstand-dauer.txt'
+if (Test-Path -LiteralPath $dauerDatei) {
+    $d = @{}
+    foreach ($z in [IO.File]::ReadAllLines($dauerDatei)) { if ($z -match '^(\w+)\t(.+)$') { $d[$Matches[1]] = $Matches[2] } }
+    if ($d['sekunden'] -match '^\d+$') {
+        $min = [int][math]::Round([int]$d['sekunden'] / 60)
+        $erwartet = ("etwa {0} min (letzter voller Lauf {1}: {2} Faelle, {3} Eudora-Starts)" -f $min, $d['ende'], $d['faelle'], $d['starts'])
+        if ($Nur) { $erwartet = "weniger - nur die Faelle zu $Nur (ganzer Lauf: $erwartet)" }
+    }
+}
 Zeile ''
+Zeile ("  Erwartete Dauer: {0}" -f $erwartet)
 Zeile '  Was jetzt passiert:'
-Zeile '    - Etwa 60 bis 70 Minuten lang gehen immer wieder Eudora-Fenster auf'
+Zeile '    - Die ganze Zeit gehen immer wieder Eudora-Fenster auf'
 Zeile '      und zu. Den Rechner in der Zeit nicht benutzen, nichts anklicken.'
 Zeile '    - Eudora schreibt waehrenddessen in die Windows-Registry'
 Zeile '      (HKCU\Software\Qualcomm\Eudora); der Pruefstand setzt das danach'
@@ -127,7 +148,7 @@ Zeile '  ============================================================'
 if ($rc -eq 0) { Zeile '  ERGEBNIS: alle Faelle bestanden.' }
 elseif ($rc -gt 0 -and $rc -lt 200) { Zeile ("  ERGEBNIS: {0} Fall/Faelle fehlgeschlagen - Liste oben ([FEHL])." -f $rc) }
 else { Zeile ("  ERGEBNIS: Lauf nicht vollstaendig (Rueckgabe {0}) - siehe oben." -f $rc) }
-Zeile ("  Gesamtdauer: {0} min" -f [int]$uhr.Elapsed.TotalMinutes)
+Zeile ("  Tatsaechliche Dauer: {0} min {1:00} s (Einrichten und Lauf; erwartet war {2})" -f [int][math]::Floor($uhr.Elapsed.TotalMinutes), $uhr.Elapsed.Seconds, $erwartet)
 Zeile ("  Ergebnisdatei: {0}" -f $ergebnis)
 Zeile '  Was ein roter Fall bedeutet, steht in Doku\PRUEFSTAND.md.'
 Zeile '  ============================================================'

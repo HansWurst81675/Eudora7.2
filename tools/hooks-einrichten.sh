@@ -577,6 +577,13 @@ schranke pruefe-befund-anfang.pl || exit $?
 #      Projekt schon zweimal vorgekommen (Befund E-109).
 schranke pruefe-testdaten-anonym.pl || exit $?
 
+# 14k. E-151: der Pruefstand laeuft aus jedem Klon. Kein Benutzerpfad
+#      'C:\Users\...' im Code der Pruefstand-Skripte, keine alte Pfadschranke
+#      '^C:\Temp\...' (Wurzel aus EUDORA72_PRUEFSTAND). Gregor 05.11.2026:
+#      "ich moechte separat von hier (oder auch jemand, der die repo forkt
+#      oder clonet) die tests nach eigenen aenderungen durchfuehren."
+schranke pruefe-feste-pfade.pl || exit $?
+
 # 15. E-123: die Wache beim Beenden muss JEDE Uebertragungsart sehen. Am
 #      20.10.2026 meldete Gregors Protokoll "eintraege=1 ... uebertragungen=0"
 #      - eine Verschiebung innerhalb desselben IMAP-Kontos wurde nicht
@@ -820,6 +827,7 @@ echo "  tools/pruefe-stand-md.pl              hinkt ein Stand-Kopf hinterher?"
 echo "  tools/pruefe-fassungsnummer.pl        ist eine Nummer zweimal vergeben?"
 echo "  tools/pruefe-behoben-ausgeliefert.pl  sagt die AUSGELIEFERTE Eudora.exe dasselbe?"
 echo "  tools/pruefe-testdaten-anonym.pl      keine persoenlichen Daten unter Testdaten/"
+echo "  tools/pruefe-feste-pfade.pl          Pruefstand ohne feste Pfade (E-151)"
 echo "  tools/offene-befunde.pl               deckt Intern/WEITERMACHEN.md die offenen Befunde?"
 echo "  tools/pruefe-nach-dem-release.pl      steht jede Aufgabe nach dem Release in der Liste?"
 echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"

@@ -48,6 +48,7 @@ verschickt.
 | **eine schnelle Antwort** (neue Fassung übernehmen, Verschlüsselung, IMAP, Konten, Kurznamen, Labels, Filter, Anhänge, Protokoll) | [Doku/FAQ.md](Doku/FAQ.md) — 21 häufige Fragen, nummeriert |
 | **wissen, welche Einstellungen anders sind als im Original Eudora — und warum** | [Intern/EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen) — zwei Tabellen mit Wert hier, Wert im Original und Begründung |
 | **es selbst bauen** | [Doku/BAUEN.md](Doku/BAUEN.md) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl |
+| **eigene Änderungen prüfen** (Regressionstests nach dem Bauen) | [Eigene Änderungen prüfen](#eigene-änderungen-prüfen-prüfstand) — `Pruefstand starten.cmd`, Anleitung in [Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md) |
 | **einen Fehler melden** | [Einen Fehler melden](Doku/ANWENDER.md#einen-fehler-melden) |
 | **mitarbeiten** | [Doku/MITARBEITEN.md](Doku/MITARBEITEN.md) |
 | **wissen, wie portiert wurde** | [Doku/HINTERGRUND.md](Doku/HINTERGRUND.md) und [PORTIERUNG.md](Intern/PORTIERUNG.md) |
@@ -99,6 +100,22 @@ Dazu [`Befunde/`](Befunde) (219 LEKTOR- und PRÜFER-Berichte, gezählt am 02.11.
 (124 Lehren aus Fehlern; beides am 02.11.2026 mit `git ls-files` gezählt, ohne
 Laufberichte, Stand-Notizen und Entscheidungen) und [`tools/`](tools) (über 100 Werkzeuge und
 Schranken).
+## Eigene Änderungen prüfen (Prüfstand)
+
+Wer Eudora in einem Klon oder Fork ändert, prüft mit dem Prüfstand, ob dabei
+etwas kaputtgegangen ist, was vorher ging. Er startet Eudora rund sechzig Mal
+mit vorbereiteten Testmails und eigenen Prüfservern auf dem eigenen Rechner
+(nichts geht ins Internet) und prüft gut hundert Fälle.
+
+1. Eudora bauen: `powershell -File tools\bauen.ps1` ([Doku/BAUEN.md](Doku/BAUEN.md)).
+2. **`Pruefstand starten.cmd`** im Hauptordner doppelklicken, Frage mit `j` beantworten.
+3. Warten — gemessen 60 bis 81 Minuten für den vollen Lauf (Stand 05.11.2026) — und den Rechner nicht benutzen; Eudora-Fenster gehen auf und zu. Der Starter nennt vorher die erwartete und am Ende die tatsächliche Dauer.
+4. Am Ende: `ERGEBNIS: alle Fälle bestanden` oder die Liste der roten Fälle.
+
+Voraussetzungen, Schalter, Ergebnis lesen und Fehlerbilder:
+**[Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md)**. Auf einem Rechner mit echter
+Eudora-Einrichtung besser ein eigenes Windows-Konto oder eine VM nehmen.
+
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 
 *Stand **7.2.2.135** — Testpaket: alles aus 7.2.2.134 und der Rest von [E-193](Intern/BEFUNDE.md#e-193) (*Edit → Find*): am 05.11.2026 geschnürt, Prüfbericht BESTANDEN (425 Unit-Tests, 19 Schranken, 103 Prüfstandsfälle; im vollen Lauf waren 3 Fälle rot, einzeln wiederholt grün, darunter ein Absturz beim Beenden, [E-239](Intern/BEFUNDE.md#e-239)), nicht veröffentlicht. Davor **7.2.2.134** — Testpaket mit zwei Fehlerbehebungen ([E-223](Intern/BEFUNDE.md#e-223), [E-222](Intern/BEFUNDE.md#e-222)): am 05.11.2026 geschnürt, Prüfbericht BESTANDEN (424 Unit-Tests, 19 Schranken, 102 Prüfstandsfälle), nicht veröffentlicht. Davor **7.2.2.133** — Release mit Fehlerbehebungen ([E-188](Intern/BEFUNDE.md#e-188), [E-192](Intern/BEFUNDE.md#e-192), [E-193](Intern/BEFUNDE.md#e-193), [E-199](Intern/BEFUNDE.md#e-199), [E-220](Intern/BEFUNDE.md#e-220), [E-221](Intern/BEFUNDE.md#e-221)): am 04.11.2026 geschnürt, von Gregor am 04.11.2026 an seinem System getestet, veröffentlicht am 05.11.2026 als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133); sein Test fand drei neue Fehler aus dem Original ([E-222](Intern/BEFUNDE.md#e-222), [E-223](Intern/BEFUNDE.md#e-223), ein Rest von [E-193](Intern/BEFUNDE.md#e-193)), behoben in den Testpaketen 7.2.2.134 und 7.2.2.135. Davor **7.2.2.132** — die erste Fassung der Reihe 7.2.2: am 03.11.2026 geschnürt, Prüfbericht BESTANDEN (408 Unit-Tests, 19 Schranken, 81 Prüfstandsfälle), von Gregor am 03.11.2026 an seinem System getestet (alle zwölf Schritte [bestanden](Intern/TESTPLAN.md#test-7-2-2-132)), veröffentlicht am 03.11.2026 als [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132). Neu sind das Hilfe-Menü ([A-5](Intern/BEFUNDE.md#a-5)), der About-Dialog mit *Latest Release* ([E-216](Intern/BEFUNDE.md#e-216)) und *Speichern unter* mit passender Endung ([E-128](Intern/BEFUNDE.md#e-128)), dazu Behebungen an Persönlichkeiten ([E-39](Intern/BEFUNDE.md#e-39), [E-203](Intern/BEFUNDE.md#e-203), [E-204](Intern/BEFUNDE.md#e-204)), beim Speichern ([E-194](Intern/BEFUNDE.md#e-194), [E-195](Intern/BEFUNDE.md#e-195), [E-196](Intern/BEFUNDE.md#e-196), [E-205](Intern/BEFUNDE.md#e-205), [E-207](Intern/BEFUNDE.md#e-207)), beim fehlenden Mailverzeichnis ([E-133](Intern/BEFUNDE.md#e-133)) und am IMAP-Label ([E-170](Intern/BEFUNDE.md#e-170)); was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.2.132, die Testschritte im [TESTPLAN](Intern/TESTPLAN.md#test-7-2-2-132). Davor **7.2.1.131** — zweites Release 7.2.1, am 02.11.2026 geschnürt, von Gregor am 02.11.2026 an seinem System getestet (alle sieben Schritte [bestanden](Intern/TESTPLAN.md#test-7-2-1-131)), veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131); es enthält die nicht veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130, was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.131 bis 7.2.1.129. Davor das erste Release 7.2.1, [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) vom 29.10.2026 (CHANGELOG unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123). Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).*

@@ -33,9 +33,11 @@
 # Was hier nicht einrichtbar ist, steht danach in
 # C:\Temp\Eudora72-Pruefstand-nicht-einrichtbar.txt; pruefstand-lauf.ps1
 # zaehlt diese Faelle als UEBERSPRUNGEN (Gregor 05.11.2026, S/MIME-Fall:
-# "ja, ueberspringen"). Das ist heute nur E-222w: er braucht MFC71.DLL und
+# "ja, ueberspringen"). Das sind heute E-222w (S/MIME) und E-166a/E-166b (die
+# Junk-Frage kommt nur mit geladenem Junk-Plugin): sie brauchen MFC71.DLL und
 # msvcp71.dll, die dieses Projekt nicht weitergeben darf (Befund S-3c). Wer
-# sie hat, gibt den Ordner mit -ZusatzDlls an.
+# sie hat, gibt den Ordner mit -ZusatzDlls an (gemessen an der Klonprobe
+# vom 05.11.2026: ohne sie E-166a/b "Vorbereiten gescheitert").
 #
 # Wurzel ist C:\Temp: rund vierzig Messskripte pruefen vor jeder Wirkung, dass
 # ihr Verzeichnis direkt unter C:\Temp liegt (Pfadschranke). Eine andere
@@ -144,6 +146,9 @@ foreach ($v in $verz) {
     }
     if (Test-Path -LiteralPath $voll) {
         if (-not (Test-Path -LiteralPath (Join-Path $voll $marke))) {
+            # Ein fremdes Verzeichnis gleichen Namens: unberuehrt lassen UND
+            # seine Faelle nicht darin fahren (sie zaehlen als uebersprungen).
+            foreach ($f in ($faelle | Where-Object { $_.Verzeichnis -eq $v })) { $nichtListe += ("{0}`t{1} gibt es schon und stammt nicht von diesem Skript - umbenennen oder -Wurzel waehlen" -f $f.Kennung, $voll) }
             Write-Host ("    {0,-42} vorhanden, nicht von diesem Skript - bleibt unberuehrt" -f $name); $uebergangen++; continue
         }
         if (-not $Erneuern) { Write-Host ("    {0,-42} schon eingerichtet (-Erneuern legt neu an)" -f $name); $uebergangen++; continue }
@@ -173,7 +178,7 @@ foreach ($v in $verz) {
     $md = Join-Path $voll 'Mailverzeichnis'
     if (Test-Path -LiteralPath $md) { Remove-Item -LiteralPath $md -Recurse -Force }
     Copy-Item -LiteralPath (Join-Path $vorlage 'Mailverzeichnis') -Destination $md -Recurse -Force
-    if ($name -like 'E222*' -and $smimeDa) { foreach ($q in $smime) { Copy-Item -LiteralPath $q -Destination $voll -Force } }
+    if (($name -like 'E222*' -or $name -eq 'E166') -and $smimeDa) { foreach ($q in $smime) { Copy-Item -LiteralPath $q -Destination $voll -Force } }
     [IO.File]::WriteAllText((Join-Path $voll $marke), ("eingerichtet " + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + " aus " + $Grundlage + "`n"))
     $angelegt++
     Write-Host ("    {0,-42} angelegt" -f $name)
@@ -181,8 +186,8 @@ foreach ($v in $verz) {
 
 # --- nicht einrichtbar -----------------------------------------------------
 if (-not $smimeDa) {
-    foreach ($f in ($faelle | Where-Object { $_.Kennung -eq 'E-222w' })) {
-        $nichtListe += ("{0}`tS/MIME-Plugin braucht MFC71.DLL und msvcp71.dll (nicht im Projekt, Befund S-3c); mit -ZusatzDlls <ordner> einrichtbar" -f $f.Kennung)
+    foreach ($f in ($faelle | Where-Object { $_.Kennung -in 'E-222w', 'E-166a', 'E-166b' })) {
+        $nichtListe += ("{0}`tS/MIME- bzw. Junk-Plugin braucht MFC71.DLL und msvcp71.dll (nicht im Projekt, Befund S-3c); mit -ZusatzDlls <ordner> einrichtbar" -f $f.Kennung)
     }
 }
 if (-not $NurZeigen) {

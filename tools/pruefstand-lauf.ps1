@@ -133,7 +133,9 @@ if ($liste.Count -eq 0) { Write-Host '  Keine Faelle ausgewaehlt.'; exit 2 }
 # als gruen. Auf der Entwicklermaschine gibt es die Datei nicht.
 $uebersprungen = @()
 $nichtEinrichtbar = Join-Path $PsWurzel 'Eudora72-Pruefstand-nicht-einrichtbar.txt'
-if (Test-Path -LiteralPath $nichtEinrichtbar) {
+# Nur im Lauf ueber den Starter (-OhneBuch): auf der Entwicklermaschine darf
+# eine liegengebliebene Liste die Laeufe der Agenten nicht ausduennen.
+if ($OhneBuch -and (Test-Path -LiteralPath $nichtEinrichtbar)) {
     $grund = @{}
     foreach ($z in [IO.File]::ReadAllLines($nichtEinrichtbar)) {
         if ($z -match '^\s*(#|$)') { continue }
