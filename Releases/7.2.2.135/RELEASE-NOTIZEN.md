@@ -17,7 +17,10 @@ Nummer: `7.2.2.135`. Dieses Release enthält alles seit `v7.2.2.133`.
 * ***Edit → Find* findet ein Wort, das *Find Messages* gemeldet hat,** auch
   gleich nach dem Öffnen der Mail: bisher suchte es ab dem schon markierten
   Treffer weiter und meldete *„not found“*; jetzt sucht es dann einmal von
-  oben, markiert den Treffer und scrollt ihn in den sichtbaren Bereich
+  oben, markiert den Treffer und scrollt ihn in den sichtbaren Bereich.
+  *Weitersuchen* und F3 springen nach dem letzten Treffer stumm wieder zum
+  ersten, statt *„not found“* zu melden; *„not found“* kommt nur noch, wenn
+  das Wort gar nicht in der Mail steht
   ([E-193](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-193)).
 
 ## Wie geprüft

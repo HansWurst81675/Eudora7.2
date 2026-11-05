@@ -186,7 +186,17 @@ haben.
 
 ## 7.2.2.135 — Testpaket, Zweig `e223_e222_e193rest`
 
-**Nur übersetzt am 05.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ok, melde dich wenn 2.135 da ist“*, *„erstelle mir dann ein lokales zip zum testen.“* Inhalt: alles aus 7.2.2.134 ([E-223](../Intern/BEFUNDE.md#e-223), [E-222](../Intern/BEFUNDE.md#e-222)) und der Rest von [E-193](../Intern/BEFUNDE.md#e-193) (*Edit → Find* nach dem Öffnen aus *Find Messages*). **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
+**Geschnürt am 05.11.2026 um 17:58, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.135-release`), ZIP daneben; nicht veröffentlicht.**
+
+| | |
+|---|---|
+| Bau | `Eudora 7.2.2.135+1cf4a59f 2026-11-05 16:30`, 0 Fehler, Unit-Tests 425/425 |
+| Prüfstand | voller Lauf am endgültigen Bau `1cf4a59f`: 103 Fälle, 100 bestanden, 3 rot. `E-194k` ohne Ergebniszeile; `E-223p` `beendet=0` und `E-223w` **Absturz von Eudora.exe** (`c0000005`, 17:33:22, `C:\Temp\E223`). Wiederholt einzeln am selben Bau: `E-223p`, `E-223w`, `E-194p`, `E-194k` grün. **Der Absturz ist nicht geklärt und nicht behoben:** laut `Exception.log` schickte das Messskript `WM_CLOSE` ans Hauptfenster, während der POP-Abruf in `~CPOPSession` → `NotifyMailCheckResults` → `AlertDialog` (`GetMail.cpp:269`) noch seinen Hinweis zeigte; `CMainFrame::OnClose` lief in der Nachrichtenschleife dieses Dialogs, `CloseDown` stürzte in `mainfrm.cpp:5868` (`g_Nicknames->CanCloseFrame`) ab. Zeitabhängig, Code aus dem Original, unabhängig von den Behebungen dieses Pakets (Vermutung zur Ursache, gemessen ist nur der Aufrufstapel) |
+| Prüfbericht | BESTANDEN nach den Wiederholungen (425 Unit-Tests, 19 Schranken, 103 Prüfstandsfälle) — er wertet je Fall den letzten Lauf; der einmalige Absturz steht nur hier; gebaut mit `-RollenSindGelaufen` (Gregor 05.11.2026: *„erstelle mir dann ein lokales zip zum testen“*; PRÜFER-101 eingearbeitet, LEKTOR steht vor PR und Release aus) |
+| Paket | `Eudora72-7.2.2.135-release.zip`, 9 179 111 Byte, SHA-256 `c249ee57fb612abee2dd39729aaa80544a4d049c276460730db019e0ac534f8f` — ohne die beiden DLLs; `paket-pruefen`: keine Fehler, Kriterium 0 JA, Defender 0 Funde, vier Warnungen wie bisher; `Eudora.exe`, `Imap.dll`, `EudoraRes.dll` byte-gleich mit dem Bau |
+| Test-ZIP | `Eudora72-7.2.2.135-test-mit-smime-dlls.zip`, 9 802 805 Byte, SHA-256 `611bb64701adb24feacc11fdfc10b685fc572ee7fc9adb9b35a91a37692759ef` = Paket-ZIP plus `MFC71.DLL` und `msvcp71.dll` (dieselben wie bei 7.2.2.134) neben `Eudora.exe`; liegt neben dem Paket-ZIP und im Austauschordner `test_2.135` |
+
+Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ok, melde dich wenn 2.135 da ist“*, *„erstelle mir dann ein lokales zip zum testen.“* Inhalt: alles aus 7.2.2.134 ([E-223](../Intern/BEFUNDE.md#e-223), [E-222](../Intern/BEFUNDE.md#e-222)) und der Rest von [E-193](../Intern/BEFUNDE.md#e-193) (*Edit → Find* nach dem Öffnen aus *Find Messages*). **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.135.
 

@@ -311,9 +311,15 @@ function SuchfensterRunde([string] $wort) {
                 }
                 Start-Sleep -Milliseconds 400
                 $ist = $(if ($nf) { 'nicht' } else { 'gefunden' })
-                # Ein zweites Weitersuchen im selben Dialog: nach "not found" ist das
-                # Lesezeichen geloescht (TridentView.cpp DoFindNext), die Suche beginnt
-                # wieder oben. So zeigt sich, ob nur die Startposition schuld ist.
+                # Ein zweites Weitersuchen im selben Dialog. Am alten Bau (bis
+                # 7.2.2.134) war nach "not found" das Lesezeichen geloescht
+                # (TridentView.cpp DoFindNext), die Suche begann wieder oben - so
+                # zeigte sich, dass nur die Startposition schuld war. Seit der
+                # Behebung (7.2.2.135, Gregors Entscheidung A) sucht DoFindNext
+                # selbst einmal von oben und springt nach dem letzten Treffer stumm
+                # zum ersten; "not found" kommt nur, wenn das Wort fehlt. Dieser
+                # Zweig laeuft dann nur noch bei einem Wort, das nicht in der Mail
+                # steht, oder am alten Bau (Gegenprobe).
                 $zweiter = '-'
                 if ($nf) {
                     [void][E193]::PostMessageA($dlg, 0x0111, [IntPtr]1, (NachID $dlg 1))

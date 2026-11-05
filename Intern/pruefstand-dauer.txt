@@ -1,5 +1,5 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - Dauer des letzten vollen Laufs.
-ende	2026-11-05 13:00:34
-sekunden	4032
-faelle	102
+ende	2026-11-05 17:52:25
+sekunden	4852
+faelle	103
 starts	64
