@@ -112,6 +112,9 @@ mit vorbereiteten Testmails und eigenen Prüfservern auf dem eigenen Rechner
 3. Warten — gemessen 60 bis 81 Minuten für den vollen Lauf (Stand 05.11.2026) — und den Rechner nicht benutzen; Eudora-Fenster gehen auf und zu. Der Starter nennt vorher die erwartete und am Ende die tatsächliche Dauer.
 4. Am Ende: `ERGEBNIS: alle Fälle bestanden` oder die Liste der roten Fälle.
 
+**Nur ausprobieren, ohne Visual Studio:** Git für Windows installieren, Repo klonen, `Pruefstand starten.cmd` doppelklicken, `j` – geprüft wird dann das zuletzt veröffentlichte Release (einmaliger Download, rund 9 MB).
+**Voraussetzungen kurz:** eigenes Windows-Konto oder VM · Git für Windows · Visual Studio 2022 nur für eigene Änderungen · freie Ports 11110, 1143, 1144, 1025 · gut eine Stunde · Internet beim ersten Lauf.
+
 Voraussetzungen, Schalter, Ergebnis lesen und Fehlerbilder:
 **[Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md)**. Auf einem Rechner mit echter
 Eudora-Einrichtung besser ein eigenes Windows-Konto oder eine VM nehmen.

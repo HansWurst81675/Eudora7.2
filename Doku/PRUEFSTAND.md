@@ -9,7 +9,7 @@ Stunde (gemessen 60 bis 81 Minuten), ob die Änderung etwas kaputt gemacht hat, 
 
 Diese Anleitung setzt kein Wissen über das Projekt voraus.
 
-## Kurz
+## Kurz: eigene Änderungen prüfen
 
 1. Eudora bauen (siehe unten „Bauen“).
 2. Im Hauptordner des Repos **`Pruefstand starten.cmd`** doppelklicken.
@@ -17,6 +17,29 @@ Diese Anleitung setzt kein Wissen über das Projekt voraus.
 4. Warten – gemessen 60 bis 81 Minuten, siehe „Wie lange es dauert“ – und den Rechner nicht benutzen.
 5. Am Ende steht `ERGEBNIS: alle Fälle bestanden` – oder die Liste der Fälle,
    die nicht bestanden haben.
+
+## Kurz: nur ausprobieren – ohne Visual Studio
+
+1. Windows 10 oder 11, am besten in einem eigenen Windows-Konto oder einer
+   virtuellen Maschine.
+2. Git für Windows installieren (<https://git-scm.com>).
+3. Repo klonen: `git clone https://github.com/HansWurst81675/Eudora7.2.git`
+4. Im geklonten Ordner **`Pruefstand starten.cmd`** doppelklicken und die
+   Frage mit `j` beantworten. Geprüft wird dann das zuletzt veröffentlichte
+   Release (einmaliger Download, rund 9 MB).
+5. Gut eine Stunde warten (gemessen 60 bis 81 Minuten), den Rechner nicht
+   benutzen.
+
+### Voraussetzungen in Kürze
+
+* eigenes Windows-Konto oder VM, wenn auf dem Rechner eine echte Eudora-Einrichtung läuft
+* Git für Windows (bringt das nötige Perl mit)
+* Visual Studio 2022 nur, um eigene Änderungen zu bauen
+* freie Ports 11110, 1143, 1144 und 1025 auf `127.0.0.1`
+* gut eine Stunde, in der der Rechner nicht benutzt wird
+* Internet nur beim ersten Lauf (Download des Release-ZIPs)
+
+Ausführlich unter „Voraussetzungen“ weiter unten.
 
 ## Wie lange es dauert
 
