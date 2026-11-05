@@ -467,6 +467,20 @@ E-204p | C:\Temp\E204 | 90 | messung | E204 ERGEBNIS rueckfrage=1 user=e204neu p
 E-204w | C:\Temp\E204 | 90 | messung | E204 PROBE ok | | | messen=tools\messen-e204.ps1
 
 # -------------------------------------------------------------------------
+# E-223 - "Remember password" wirkt erst beim zweiten Mal
+# -------------------------------------------------------------------------
+# <Dominant> mit Konto e223@127.0.0.1, SavePassword=0. Check Mail, in der
+# Kennwortfrage das Kennwort eingetragen und das Haekchen "Remember password"
+# gesetzt (BM_SETCHECK, zurueckgelesen), OK; dann File > Exit und die
+# Eudora.ini gelesen. Am 05.11.2026 am Bau 7.2.2.133+3d3789d3 (dem Release):
+# "E223 ERGEBNIS savepassword=1 ini-kennwort=0 beendet=1" - das Haekchen
+# stand in der INI, das Kennwort nicht; der naechste Start haette wieder
+# gefragt. E-223w ist die Positivprobe: Kennwortfrage kam, Haekchen gesetzt,
+# das Kennwort kam am POP-Pruefserver an.
+E-223p | C:\Temp\E223 | 60 | messung | E223 ERGEBNIS savepassword=1 ini-kennwort=1 beendet=1 | | | messen=tools\messen-e223.ps1
+E-223w | C:\Temp\E223 | 60 | messung | E223 PROBE ok | | | messen=tools\messen-e223.ps1
+
+# -------------------------------------------------------------------------
 # A-5 - Hilfe-Menue (Help -> Keyboard Shortcuts / Settings Reference), 7.2.2
 # -------------------------------------------------------------------------
 # Pruefstand C:\Temp\EHILFE (Kopie von C:\Temp\E140, Hilfe\ erzeugt mit

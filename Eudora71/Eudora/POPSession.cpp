@@ -2859,6 +2859,12 @@ int CPOPSession::GetPOPPassword_()
 		{
 			if (! ::GetPassword(::POPPassword))
 				return (-1);
+			// E-223: GetPassword hat das Haekchen "Remember password" eben in die
+			// INI geschrieben (password.cpp). SavePass oben stammt aus
+			// QCPOPSettings und wurde VOR dem Dialog gelesen; mit dem alten Wert 0
+			// blieb das Kennwort beim ersten Setzen des Haekchens ungespeichert,
+			// und der naechste Start fragte noch einmal (Originalfehler).
+			SavePass = (GetIniShort(IDS_INI_SAVE_PASSWORD) != 0);
 			if (SavePass)
 				SetIniString(IDS_INI_SAVE_PASSWORD_TEXT, ::EncodePassword(::POPPassword));
 		}
