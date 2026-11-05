@@ -4,34 +4,24 @@
 
 - **Veröffentlicht zuletzt:**
   [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133)
-  (05.11.2026, Latest, Marke `a0278acf`; ZIP byte-gleich mit dem Paket, das Gregor am
-  04.11.2026 getestet hat).
-- **Gemergt am 05.11.2026:** #225 (`paket_7_2_2_133`, Release-Stand und Nachträge) und #226
-  (`e223_e222_e193rest`: [E-223](BEFUNDE.md#e-223), [E-222](BEFUNDE.md#e-222), Rest von
-  [E-193](BEFUNDE.md#e-193)).
-- **Testpaket 7.2.2.135 von Gregor getestet:** alle vier Schritte bestanden (05.11.2026,
-  [Testplan](TESTPLAN.md#test-7-2-2-135)); [E-193](BEFUNDE.md#e-193) und
-  [E-222](BEFUNDE.md#e-222) an seinem System bestätigt, [E-223](BEFUNDE.md#e-223) schon an
-  7.2.2.134. Nicht veröffentlicht. Offen vor einem Release: [E-239](BEFUNDE.md#e-239)
-  (Behebung auf `e239_absturz_beenden` in Arbeit).
-- **In Arbeit:** Zweig `e239_absturz_beenden` ([E-239](BEFUNDE.md#e-239): Absturz beim
-  Beenden, während der Hinweis nach dem Mailabruf offen ist; erst nachstellen, dann beheben)
-  und Zweig `doku_weitermachen_kopf` (dieser Kopf, Schranke
-  `tools/pruefe-weitermachen-kopf.pl`).
+  (05.11.2026, Latest; ZIP byte-gleich mit Gregors Testpaket vom 04.11.2026).
+- **Gemergt am 05.11.2026:** #225 (Release-Stand 7.2.2.133) und #226 ([E-223](BEFUNDE.md#e-223),
+  [E-222](BEFUNDE.md#e-222), Rest von [E-193](BEFUNDE.md#e-193)).
+- **Testpaket 7.2.2.135:** von Gregor am 05.11.2026 getestet, alle vier Schritte bestanden
+  ([Testplan](TESTPLAN.md#test-7-2-2-135)). **Wird nicht veröffentlicht** (Entscheidung 34);
+  nächstes Release frühestens 7.2.2.136 nach Behebung von [E-239](BEFUNDE.md#e-239) und
+  Gregors Test.
+- **In Arbeit:** `e239_absturz_beenden` ([E-239](BEFUNDE.md#e-239), Absturz beim Beenden),
+  `e169_druckvorschau` ([E-169](BEFUNDE.md#e-169), Hintergründe beim Drucken),
+  `e151_pruefstand_klon` ([E-151](BEFUNDE.md#e-151), Prüfstand aus dem Klon) und
+  `doku_weitermachen_kopf` (dieser Kopf).
 - **Nächste Werkzeugaufgabe** ([LEKTOR-151](../Befunde/LEKTOR-151.md#l-151.1)):
-  `testlauf.ps1` vergleicht `<Prüfstand>\Mailverzeichnis\Exception.log` vor und nach jedem
-  Lauf; am 05.11.2026 hat der fehlende Abgleich zwei Abstürze als grün durchgelassen.
-- **Offen für Gregor:**
-  - [E-239](BEFUNDE.md#e-239) vor einem Release: veröffentlichen mit Hinweis, erst
-    nachstellen und die `.toc` prüfen, oder erst beheben (Datenverlust nicht beobachtet,
-    nicht ausgeschlossen).
-  - [E-236](BEFUNDE.md#e-236): das Fenster „Update Eudora“ abschalten oder auf die
-    GitHub-Release-Seite zeigen lassen.
-  - Eudoras eigene Anzeige (ohne die Microsoft-Anzeige) bekommt das Suchverhalten aus
-    [E-193](BEFUNDE.md#e-193) in einem späteren Paket? (Vorschlag: später.)
-  - Den veröffentlichten Text von `v7.2.2.133` auf GitHub nachziehen (die berichtigten
-    Aussagen aus [LEKTOR-150](../Befunde/LEKTOR-150.md#l-150.3) und der Satz zum
-    Testrückstand); das ZIP bliebe unverändert.
+  `testlauf.ps1` vergleicht `Exception.log` vor und nach jedem Lauf; `pruefe-behoben-belegt.pl`
+  verlangt auch bei „überholt“ ein Ziel ([L-152.3](../Befunde/LEKTOR-152.md#l-152.3)).
+- **Offen für Gregor:** [E-236](BEFUNDE.md#e-236) („Update Eudora“ abschalten oder auf
+  GitHub zeigen); eigene Anzeige mit dem Suchverhalten aus [E-193](BEFUNDE.md#e-193)
+  (Vorschlag: später); Text von `v7.2.2.133` auf GitHub nachziehen
+  ([LEKTOR-150](../Befunde/LEKTOR-150.md#l-150.3)).
 - Ältere Stände: [Frühere Stände](#fruehere-staende) am Ende dieser Datei.
 
 `main` ist gesperrt und wird nur von Gregor per Merge bewegt; jeder Agent arbeitet in seinem
@@ -112,7 +102,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 | **[E-233](BEFUNDE.md#e-233)** | Eine IMAP-Mail, deren Betreff direkt hinter Subject: umbricht, steht in der Postfachliste … | **nie gemessen** | am IMAP-Prüfserver nachstellen mit der Prüfmail aus `tools/messen-e221.ps1` (`Subject:` mit Umbruch), dann vor dem Abschneiden bei `\r\n` den Leerra… |
 | **[E-224](BEFUNDE.md#e-224)** | Das Protokoll gibt Zeichen über 127 falsch kodiert aus — \130 steht für ü, Ü, ø und… | **nie gemessen** | die Masken in `Eudora71/QCUtils/src/debug.cpp:373-376` berichtigen oder `\xHH` schreiben, mit Regressionstest; nebenbei auf dem Zweig `e223_e222_e193r… |
 | **[E-223](BEFUNDE.md#e-223)** | „Remember password“ wirkt erst beim zweiten Mal — wer das Häkchen im Kennwortdialog… | 05.11.2026 an 7.2.2.135 | das Release (Gregors Test an 7.2.2.134 ist bestanden, siehe unten). Der Messweg liest die `Eudora.ini` nach dem Beenden, statt einen zweiten Start zu… |
-| **[E-222](BEFUNDE.md#e-222)** | Ein Klick auf das Anhangsymbol einer S/MIME-signierten Mail meldet „Plugin Error: %3C533… | 05.11.2026 an 7.2.2.135 | das Release und Gregors Test (Testpaket 7.2.2.135, Schritt 3) auf dem Rechner mit geladenem S/MIME: Klick auf das Symbol einer signierten Mail zeigt I… |
+| **[E-222](BEFUNDE.md#e-222)** | Ein Klick auf das Anhangsymbol einer S/MIME-signierten Mail meldet „Plugin Error: %3C533… | 05.11.2026 an 7.2.2.135 | das Release (Gregors Test an 7.2.2.135, Schritt 3, ist bestanden); der Rest mit den zwei Kopfzeilen (siehe Nachtrag). **Nachtrag nach… |
 | **[E-212](BEFUNDE.md#e-212)** | Prüfstände tragen noch Debug-Fassungen der Import-Erweiterungen — NSImport.eif, OEImpo… | 02.11.2026 an 7.2.1.131 | die drei `.eif` in die Liste von `pruefstaende-auffrischen.ps1` aufnehmen und einmal über alle Prüfstände fahren; für Gregor nichts zu prüfen (Pa… |
 | **[E-211](BEFUNDE.md#e-211)** | Eine neue Nachricht, die sich nicht anlegen lässt, lässt Eudora auf ihrer Persönlichkei… | 02.11.2026 an 7.2.1.131 (Quelltext) | ein Lauf am Programm, und der Fehlerfall lässt sich nicht herbeiführen; für Gregor nichts zu prüfen (das Paket 7.2.2.132 ist seit dem 03.11.2026 d… |
 | **[E-210](BEFUNDE.md#e-210)** | Change Password kopiert das POP-Konto ungeprüft in 128 Byte — ein Konto ab 128 Zeichen … | 02.11.2026 an 7.2.1.131 (Quelltext) | die Messung am Programm (ein POP-Konto ab 128 Zeichen über *Change Password*); für Gregor nichts zu prüfen (das Paket 7.2.2.132 ist seit dem 03.11.… |
@@ -122,7 +112,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 | **[E-198](BEFUNDE.md#e-198)** | Eine gespeicherte oder an ein Programm übergebene mehrteilige Nachricht mit unübersetzte… | **nie gemessen** | den Zeichensatz des Textteils ermitteln (er steht in Eudoras Zusammenfassung bzw. im Teilkopf) und im multipart-Zweig dieselbe Prüfung wie im einteil… |
 | **[E-195](BEFUNDE.md#e-195)** | Der Speicherdialog für Nachrichten bietet .rtf an, liefert aber Klartext — die Datei he… | 03.11.2026 an 7.2.2.132 | das Signaturfenster — es bietet weiter *Rtf Files* an und schreibt dort Text (siehe oben); die Behebung für die Nachrichten- und Verfassen-Fenster… |
 | **[E-194](BEFUNDE.md#e-194)** | Eudoras interne Markierung <x-flowed> steht in der gespeicherten Textdatei — *Speichern … | 03.11.2026 an 7.2.2.132 | K3, K4 und eine Prüfnachricht mit Anhang (K9) als Rest (das Paket 7.2.2.132 ist seit dem 03.11.2026 draußen); der Hochladeweg (PRUEFER-27 F3) bleibt… |
-| **[E-193](BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | 05.11.2026 an 7.2.2.134 | Gregors Test an 7.2.2.135 (*Edit → Find* nach dem Öffnen aus *Find Messages*: das Wort ist markiert und im sichtbaren Bereich – das misst der Pr… |
+| **[E-193](BEFUNDE.md#e-193)** | Die Suche mit Umlauten oder € liefert widersprüchliche Ergebnisse — *Find Messages* m… | 05.11.2026 an 7.2.2.134 | das Release (Gregors Test an 7.2.2.135 ist bestanden); Gregors Frage zur eigenen Anzeige: mit abgeschalteter Microsoft-Anzeige (Paige-Ansicht `PgReadM… |
 | **[E-189](BEFUNDE.md#e-189)** | Beim Verschieben innerhalb eines IMAP-Kontos OHNE UIDPLUS steht die verschobene Mail im Zi… | 01.11.2026 an 7.2.1.130 | die Löschvermutung messen; bestätigen am Prüfserver ohne `COPYUID` (Fall `E-189`) oder an einem echten Server ohne UIDPLUS — Gregors Server melde… |
 | **[E-184](BEFUNDE.md#e-184)** | Beim Verschieben zwischen IMAP-Ordnern mit UIDPLUS kann Eudora die Zusammenfassung einer f… | 01.11.2026 an 7.2.1.130 | K4 aus PRÜFER-75 (Warteschlange nach Neustart, klein); PRÜFER-78 K2 (Teilkopie, klein); PRÜFER über die K3-Behebung erledigt… |
 | **[E-178](BEFUNDE.md#e-178)** | Im Bearbeiten-Modus einer Nachricht machen Link einfügen und Festbreite Emoji schon auf d… | 02.11.2026 an 7.2.1.130 | für Gregor entfällt der Test vorerst, gemessen am Prüfstand ([TESTPLAN](TESTPLAN.md#e-178-naechstes)); offen ist die Antwort auf markierten Text… |
@@ -130,7 +120,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 | **[E-176](BEFUNDE.md#e-176)** | Die Behebung von E-28 liest beim Schließen einer verworfenen neuen Nachricht aus einer sc… | **nie gemessen** | die Messung unter Page-Heap, und ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest nur den Quelltext). **Was es zum Messe… |
 | **[E-173](BEFUNDE.md#e-173)** | Im Filterfenster sind die Labels der Aktion *Make Label* einmal ausgegraut und nicht wähl… | **nie gemessen** | erst **nach dem Release 7.2.1** — nachstellen (unter welcher Bedingung ist die Liste grau: neuer Filter, bestimmte vorherige Aktion, Persönlichkeit… |
 | **[E-170](BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | 03.11.2026 an 7.2.2.132 | messen, warum das Label am 29.10.2026 an Paket 1.0.127 fehlte — nächste Spur (Vermutung): die alte Zusammenfassung stand nach dem automatischen L… |
-| **[E-169](BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt… |
+| **[E-169](BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | die Behebung auf `e169_druckvorschau`. (Bis 05.11.2026 stand hier: erst nach dem Release 7.2.1 die Ursache — welche Mails es trifft und warum die Zw… |
 | **[E-159](BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 — **veraltet** | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
@@ -165,6 +155,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 | **[NP3-1](BEFUNDE.md#np3-1)** | ZeigeInhaltsfenster läuft, bevor Eudora das Fenster umhängt | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die Umstellung der Reihenfolge — `ZeigeInhaltsfenster` (`OTShim_Reiter.cpp:1500-1503`) läuft weiterhin, bevor Eudora das Fenster umhängt (`Create`… |
 | **[P-1](BEFUNDE.md#p-1)** | der POP-Abrufpfad gegengelesen, elf Altlasten benannt | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die neun Altlasten **P-1.5b bis P-1.5j** — wortgleich wie in `567a5d8`, keine davon angefasst. Nach Aufwand-Nutzen zuerst die beiden Einzeiler: **P-… |
 | **[R-1](BEFUNDE.md#r-1)** | die Fehlerklasse hinter E-11 ausgezählt | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die 21 Änderungen selbst — 137 Vorkommen, 116 richtig gepaart, **21** zu ändern (16 `falsch`, 4 `lockbuffer`, 1 `danach`), seit dem 07.09.2026 kei… |
+| **[Z-1](BEFUNDE.md#z-1)** | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **nie gemessen** | die elf Zeilen der Abweichungstabelle unten einzeln gegen heute lesen und je schließen oder als überholt mit Ziel kennzeichnen. **Stufe: werkzeug**… |
 
 <!-- offene-befunde: Ende -->
 
@@ -209,6 +200,9 @@ Stand-Block.
 31. **Entschieden von Gregor am 05.11.2026:** **`MFC71.DLL` und `msvcp71.dll` werden nicht mit ausgeliefert**; die Release-Notizen nennen Dateien, Fassung und Herkunft aus einer vorhandenen Eudora-7.1-, Hermes- oder Visual-Studio-2003-Installation und raten von DLL-Download-Seiten ab; **das S/MIME-Plugin wird später aus `plugins/SMIME` neu gebaut**, damit es nur noch `mfc140`/`msvcp140` braucht (Gregor: *„dein vorschlag: 1 + 2 sind gut. so machen wir es.“* und *„S/MIME-Plugins als Befund für ein späteres Paket aufnehmen - ja, gute idee.“*; [S-3c](BEFUNDE.md#s-3c)). Lokale Test-ZIPs für Gregor dürfen die beiden DLLs enthalten (*„baue mir dann lokal ein 2.134 zip mit diesen DLLs drin“*).
 32. **Entschieden von Gregor am 05.11.2026:** [E-193](BEFUNDE.md#e-193) — findet *Edit → Find* ab der Markierung nichts mehr, **sucht es einmal von oben weiter, markiert den Treffer und scrollt ihn ins Bild** (*„A, aber dann dorthin scrollen, um es sichtbar zu machen.“*); umgesetzt im Testpaket 7.2.2.135.
 33. **Entschieden von Gregor am 05.11.2026:** ***Forget Password(s)* löscht nur das gespeicherte Kennwort, das Häkchen „Remember password“ bleibt gesetzt** (*„können wir aber so drin lassen.“*), mit Hinweis für Anwender (*„der hinweis sollte drin stehen zu "fortget password checkbox"“*; [FAQ 21](../Doku/FAQ.md), [E-223](BEFUNDE.md#e-223)).
+34. **Entschieden von Gregor am 05.11.2026:** **Auf GitHub kommen nur solide, getestete Bauten** (*„nein, eilt nicht. es sollten nur solide builds und getestete ergebnisse auf github.“*, auf die Frage, ob das getestete Testpaket 7.2.2.135 trotz offenem [E-239](BEFUNDE.md#e-239) veröffentlicht wird). 7.2.2.135 bleibt Testpaket; das nächste Release frühestens 7.2.2.136 nach Behebung von E-239 und Gregors Test. Ein Release mit offenem kritischem Befund wird nicht vorgeschlagen ([Arbeitsweise/entscheidung-kein-release-135-05-11.md](../Arbeitsweise/entscheidung-kein-release-135-05-11.md)).
+35. **Entschieden von Gregor am 05.11.2026:** [E-151](BEFUNDE.md#e-151) — **der Prüfstand läuft aus jedem Klon oder Fork** (Zweig `e151_pruefstand_klon`): `Pruefstand starten.cmd` fragt auf fremden Rechnern den Nutzer selbst (*„zu 1: die abfrage ist ok. macht sinn.“*), der S/MIME-Fall ohne `MFC71.DLL`/`msvcp71.dll` wird übersprungen (*„zu 2: ja, überspringen.“*), die lokalen Prüfserver werden nach Abbruch oder Absturz aufgeräumt (*„beim absturz muß er aufgeräumt werden, so daß nicht bei 3x starten auch 3 mail server im hintergrund laufen“*); die Anleitung steht auf GitHub (*„eine anleitung dazu sollte dann auch im github stehen“*) mit der gemessenen Dauer ([Arbeitsweise/entscheidung-e151-pruefstand-klon-05-11.md](../Arbeitsweise/entscheidung-e151-pruefstand-klon-05-11.md)).
+36. **Entschieden von Gregor am 05.11.2026:** [E-169](BEFUNDE.md#e-169) — **Hintergründe beim Drucken und in der Druckvorschau werden schaltbar, Vorgabe aus** (*„B: schaltbar mit default = OFF + bescheribung bei den help -> settings reference und FAQ …“*, präzisiert: *„Intern/EINSTELLUNGEN.md das meinte ich“*); beschrieben in `Intern/EINSTELLUNGEN.md`, *Help → Settings Reference* und der FAQ ([Arbeitsweise/entscheidung-e169-hintergrund-drucken-05-11.md](../Arbeitsweise/entscheidung-e169-hintergrund-drucken-05-11.md)).
 
 ## Wie man misst
 
@@ -303,7 +297,7 @@ den verlinkten Befunden, im [CHANGELOG](../CHANGELOG.md) und in
 - **05.11.2026, tagsüber:** Release `v7.2.2.133` veröffentlicht (von Gregor am 04.11.2026
   getestet, am 05.11.2026 freigegeben). Sein Test fand [E-222](BEFUNDE.md#e-222),
   [E-223](BEFUNDE.md#e-223), [E-224](BEFUNDE.md#e-224) und einen Rest von
-  [E-193](BEFUNDE.md#e-193) (*Edit → Find*); die ersten drei Behebungen kamen in die
+  [E-193](BEFUNDE.md#e-193) (*Edit → Find*); die Behebungen für E-222, E-223 und den E-193-Rest kamen in die
   Testpakete 7.2.2.134 und 7.2.2.135 (Zweig `e223_e222_e193rest`); E-224 ist offen.
 - **04.11.2026 abends, Sammelzweig `paket_7_2_2_133`:** Testpaket 7.2.2.133 mit
   [E-192](BEFUNDE.md#e-192), [E-193](BEFUNDE.md#e-193), [E-220](BEFUNDE.md#e-220),

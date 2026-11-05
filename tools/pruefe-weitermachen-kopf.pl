@@ -32,7 +32,10 @@ use warnings;
 #
 # Im Kopf (von "# Hier weitermachen" bis zur ersten Zeile "## "):
 #   * hoechstens EIN Absatz beginnt mit "**Stand ";
-#   * keine Zeile ist laenger als 400 Zeichen.
+#   * keine Zeile ist laenger als 400 Zeichen;
+#   * der Kopf hat hoechstens 45 Zeilen (LEKTOR-152 L-152.5: sonst wuchert er
+#     in kurzen Zeilen wieder zu). Ein Stand zaehlt auch als Listenpunkt und
+#     ohne Leerzeile davor.
 # Ein neuer Stand ERSETZT den alten; der alte wandert gekuerzt nach unten.
 #
 # BEKANNTE GRENZEN
@@ -42,6 +45,8 @@ use warnings;
 #   gezaehlt; die Laengengrenze faengt ihn aber, sobald er wuchert.
 
 my $GRENZE = 400;
+# Zeilen zwischen "# Hier weitermachen" und der ersten "## " (L-152.5, 05.11.2026: 39).
+my $ZEILEN = 45;
 
 my @dateien;
 for my $a (@ARGV) {
@@ -70,7 +75,7 @@ if (@mangel) {
     print "  \"Fruehere Staende\" am Ende der Datei (Gregor 05.11.2026).\n";
     exit 1;
 }
-print "  pruefe-weitermachen-kopf: Kopf mit hoechstens einem Stand, keine Zeile ueber $GRENZE Zeichen.\n";
+print "  pruefe-weitermachen-kopf: Kopf mit hoechstens einem Stand, hoechstens $ZEILEN Zeilen, keine Zeile ueber $GRENZE Zeichen.\n";
 exit 0;
 
 sub pruefe {
@@ -80,18 +85,20 @@ sub pruefe {
     my ($anfang) = grep { $z[$_] =~ /^# Hier weitermachen/ } 0 .. $#z;
     return ("keine Zeile '# Hier weitermachen'") unless defined $anfang;
     my $staende = 0;
-    my $vorher_leer = 1;
+    my $zeilen  = 0;
     for my $i ($anfang + 1 .. $#z) {
         my $l = $z[$i];
         last if $l =~ /^## /;
         $l =~ s/\r\z//;
-        if ($vorher_leer and $l =~ /^\*\*Stand /) { $staende++ }
+        $zeilen++;
+        # LEKTOR-152 L-152.5: auch als Listenpunkt und ohne Leerzeile davor.
+        if ($l =~ /^\s*(?:[-*+]\s+)?\*\*Stand /) { $staende++ }
         if (length($l) > $GRENZE) {
             push @m, sprintf('Zeile %d im Kopf hat %d Zeichen (Grenze %d)', $i + 1, length($l), $GRENZE);
         }
-        $vorher_leer = ($l =~ /^\s*\z/) ? 1 : 0;
     }
-    push @m, "$staende Absaetze beginnen im Kopf mit '**Stand ' (erlaubt: 1)" if $staende > 1;
+    push @m, "$staende Zeilen beginnen im Kopf mit '**Stand ' (erlaubt: 1)" if $staende > 1;
+    push @m, "der Kopf hat $zeilen Zeilen (Grenze $ZEILEN)" if $zeilen > $ZEILEN;
     return @m;
 }
 
@@ -100,10 +107,16 @@ sub selbsttest {
     my $gut = "# Hier weitermachen\n\n**Stand 05.11.2026 abends.**\n\n- eins\n- zwei\n\n## Liste\n\n**Stand 01.01.2020** darf unten stehen\n";
     my $zwei = "# Hier weitermachen\n\n**Stand 05.11.2026.** a\n\n**Stand 04.11.2026.** b\n\n## Liste\n";
     my $lang = "# Hier weitermachen\n\n**Stand 05.11.2026.** " . ('x' x 500) . "\n\n## Liste\n";
+    my $liste = "# Hier weitermachen\n\n**Stand 05.11.2026.** a\n\n- **Stand 06.11.2026:** neu\n- b\n\n## Liste\n";
+    my $dicht = "# Hier weitermachen\n\n**Stand 06.11.2026.** neu\n**Stand 05.11.2026.** a\n\n## Liste\n";
+    my $viel  = "# Hier weitermachen\n\n**Stand 05.11.2026.** a\n\n" . ("- kurz\n" x 300) . "\n## Liste\n";
     my @f = (
-        [ 'erlaubter Kopf ist gruen',          $gut,  0 ],
-        [ 'zwei Staende sind rot',             $zwei, 1 ],
-        [ 'Zeile ueber 400 Zeichen ist rot',   $lang, 1 ],
+        [ 'erlaubter Kopf ist gruen',             $gut,   0 ],
+        [ 'zwei Staende sind rot',                $zwei,  1 ],
+        [ 'Zeile ueber 400 Zeichen ist rot',      $lang,  1 ],
+        [ 'zweiter Stand als Listenpunkt ist rot', $liste, 1 ],
+        [ 'zwei Staende ohne Leerzeile sind rot', $dicht, 1 ],
+        [ 'Kopf mit 300 Zeilen ist rot',          $viel,  1 ],
     );
     for my $c (@f) {
         my ($name, $text, $soll_rot) = @$c;

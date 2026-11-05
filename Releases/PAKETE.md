@@ -49,7 +49,7 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > (Gregors Entscheidungen 10 und 20 in [WEITERMACHEN.md](../Intern/WEITERMACHEN.md#entscheidungen)).
 > `VERSION` trägt dieselbe vierteilige Nummer wie `Eudora71/Version.h`.
 > **Seit 7.2.2.132 heißt jede Fassung `7.2.2.N`**, auch eine, die nur Fehler
-> behebt (Gregor 04.11.2026, Entscheidung 26; 7.2.2.133 ist erschienen, die Testpakete 7.2.2.134 und 7.2.2.135 sind geschnürt, das nächste Release trägt die Nummer des zuletzt getesteten Testpakets);
+> behebt (Gregor 04.11.2026, Entscheidung 26; 7.2.2.133 ist erschienen, die Testpakete 7.2.2.134 und 7.2.2.135 sind geschnürt, das nächste Release frühestens 7.2.2.136, Gregor 05.11.2026: nur solide, getestete Bauten auf GitHub);
 > vom Release 7.2.1.128 bis 7.2.1.131 hieß sie `7.2.1.N` (Entscheidung 20),
 > Testpaket wie Release; davor hießen Testpakete `7.2.0.N`. ZIP (`Eudora72-7.2.1.N-release.zip` bzw.
 > `Eudora72-7.2.2.N-release.zip`), Marke (`v7.2.1.N` bzw. `v7.2.2.N`) und
@@ -186,7 +186,7 @@ haben.
 
 ## 7.2.2.135 — Testpaket, Zweig `e223_e222_e193rest`
 
-**Geschnürt am 05.11.2026 um 17:58, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.135-release`), ZIP daneben; nicht veröffentlicht.**
+**Geschnürt am 05.11.2026 um 17:58, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.135-release`), ZIP daneben; von Gregor am 05.11.2026 getestet, alle vier Schritte bestanden; nicht veröffentlicht (Gregor 05.11.2026).**
 
 | | |
 |---|---|

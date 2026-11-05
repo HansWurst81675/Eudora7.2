@@ -436,7 +436,8 @@ my $st_ende   = '<!-- stufen: Ende -->';
                 my $w = lc $fs[0];
                 my $beginnt_offen = grep { $w =~ /^[\s\W]*\Q$_\E/ } @offen_wort;
                 $erledigt{$k} = 1
-                    if !$beginnt_offen and grep { index($w, $_) >= 0 } @erledigt_wort;
+                    if !$beginnt_offen and $w !~ m{\b(?:nicht|kein|keine)\b} and grep { index($w, $_) >= 0 } @erledigt_wort;
+                    # LEKTOR-152 L-152.8: "**nicht behoben**" ist kein Erledigt-Wort.
             }
         }
     }
