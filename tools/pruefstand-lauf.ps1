@@ -59,9 +59,9 @@ param(
     # geht die Wurzel als Umgebungsvariable EUDORA72_PRUEFSTAND.
     [string] $Wurzel = $(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })
 )
-$Wurzel = [IO.Path]::GetFullPath($Wurzel).TrimEnd('\')
-if ($Wurzel -notmatch '^C:\\Temp(\\[^\\]+)*$') { Write-Host "  ABGEWIESEN: -Wurzel muss C:\Temp oder ein Ordner darunter sein: $Wurzel"; exit 2 }
-$env:EUDORA72_PRUEFSTAND = $Wurzel
+$PsWurzel = [IO.Path]::GetFullPath($Wurzel).TrimEnd('\')
+if ($PsWurzel -notmatch '^C:\\Temp(\\[^\\]+)*$') { Write-Host "  ABGEWIESEN: -Wurzel muss C:\Temp oder ein Ordner darunter sein: $PsWurzel"; exit 2 }
+$env:EUDORA72_PRUEFSTAND = $PsWurzel
 
 $ErrorActionPreference = 'Stop'
 $wurzel = Split-Path -Parent $PSScriptRoot
@@ -85,7 +85,7 @@ foreach ($zeile in (Get-Content -LiteralPath $Faelle)) {
     }
     $fall = [pscustomobject]@{
         Kennung     = $f[0].Trim()
-        Verzeichnis = $(if ($f[1].Trim() -match '^C:\\Temp\\(.+)$') { Join-Path $Wurzel $Matches[1] } else { $f[1].Trim() })
+        Verzeichnis = $(if ($f[1].Trim() -match '^C:\\Temp\\(.+)$') { Join-Path $PsWurzel $Matches[1] } else { $f[1].Trim() })
         Sekunden    = [int]$f[2].Trim()
         Quelle      = $f[3].Trim().ToLower()
         Muss        = $f[4].Trim()
@@ -132,7 +132,7 @@ if ($liste.Count -eq 0) { Write-Host '  Keine Faelle ausgewaehlt.'; exit 2 }
 # ueberspringen"). Sie zaehlen als UEBERSPRUNGEN, nicht als rot und nicht
 # als gruen. Auf der Entwicklermaschine gibt es die Datei nicht.
 $uebersprungen = @()
-$nichtEinrichtbar = Join-Path $Wurzel 'Eudora72-Pruefstand-nicht-einrichtbar.txt'
+$nichtEinrichtbar = Join-Path $PsWurzel 'Eudora72-Pruefstand-nicht-einrichtbar.txt'
 if (Test-Path -LiteralPath $nichtEinrichtbar) {
     $grund = @{}
     foreach ($z in [IO.File]::ReadAllLines($nichtEinrichtbar)) {
@@ -340,7 +340,7 @@ foreach ($g in $gruppen) {
     # wirklich ist, statt den Fall an der falschen Stelle gruen oder rot
     # zu melden.
     if (($sch -eq 'ohne-argument' -or $sch -like 'ohne-argument,*') -and -not (Test-Path $log)) {
-        $neueste = Get-ChildItem $Wurzel -Recurse -Depth 2 -Filter 'eudora.log' -ErrorAction SilentlyContinue |
+        $neueste = Get-ChildItem $PsWurzel -Recurse -Depth 2 -Filter 'eudora.log' -ErrorAction SilentlyContinue |
                    Where-Object { $_.LastWriteTime -gt $beginn } |
                    Sort-Object LastWriteTime -Descending | Select-Object -First 1
         if ($neueste) {
