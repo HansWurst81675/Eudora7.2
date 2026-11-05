@@ -46,7 +46,10 @@ $verz = @($verz | Sort-Object -Unique)
 
 # Zeilen der Eudora.ini, die nur einen Bildschirmzustand oder einen Pfad
 # ausserhalb des Pruefstands tragen.
-$iniWeg = '^(OpenWindow\d+|Mailbox\d+|LastAttachDir|LastSaveAsDir|SaveAsDirectory|AttachDir)='
+# OpenWindowN bleibt, solange es nur ein Postfach nennt: ohne die beim Start
+# offenen Fenster In/Out/Trash meldete E-13p an der Klonprobe vom 05.11.2026
+# "sichtbar=0" (Entwicklermaschine: 1). Weg nur mit Laufwerkspfad.
+$iniWeg = '^((OpenWindow\d+)=.*[A-Za-z]:\\|(Mailbox\d+|LastAttachDir|LastSaveAsDir|SaveAsDirectory|AttachDir)=)'
 
 # Was auf Gregor oder seinen Rechner zurueckfuehren koennte.
 $privat = '(?i)gregor|NAME-ENTFERNT|NAME-ENTFERNT|C:\\Users\\|@(?!127\.0\.0\.1|localhost)[a-z0-9-]+\.(de|com|net|org)\b'
