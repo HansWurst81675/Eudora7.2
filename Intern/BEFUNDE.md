@@ -153,13 +153,13 @@ Wie viele Befunde jede Stufe hat, und wie viele davon noch offen sind — erzeug
 
 <!-- stufen: Anfang (erzeugt von tools/offene-befunde.pl) -->
 
-| Stufe | offen | erledigt | ohne Urteilswort | zusammen |
-|---|---:|---:|---:|---:|
-| **kritisch** | 5 | 65 | 0 | 70 |
-| **wichtig** | 24 | 55 | 0 | 79 |
-| **unkritisch** | 18 | 39 | 1 | 58 |
-| **werkzeug** | 10 | 36 | 2 | 48 |
-| zusammen | 57 | 195 | 3 | 255 |
+| Stufe | offen | erledigt | zusammen |
+|---|---:|---:|---:|
+| **kritisch** | 5 | 65 | 70 |
+| **wichtig** | 24 | 55 | 79 |
+| **unkritisch** | 18 | 40 | 58 |
+| **werkzeug** | 11 | 37 | 48 |
+| zusammen | 58 | 197 | 255 |
 
 <!-- stufen: Ende -->
 
@@ -254,8 +254,8 @@ zuerst [**E-11**](#e-11), [**R-1**](#r-1) und [**E-1**](#e-1).
 | Kennung | Worum es geht | Status |
 |---|---|---|
 | <a id="pr-1"></a>PR-1 | drei Löcher in der Commit-Schranke | **überholt** durch W-1 — **Bericht** → durch W-1 abgearbeitet **Stufe: werkzeug** (Commit-Schranke)|
-| <a id="pr-2"></a>PR-2 | Nachprüfung des 31.08.: neun Punkte | **Bericht**; **PR-2.0** und PR-2.1 behoben (PR-2.0 am 06.09.2026, `Befunde/PAKET.md`, drei Gegenproben), PR-2.8 kein Handlungsbedarf, **PR-2.2 bis PR-2.7 offen** **Stufe: werkzeug** (Nachpruefung)|
-| <a id="z-1"></a>Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **Bericht**; die elf Abweichungen sind inzwischen berichtigt **Stufe: werkzeug** (Zahlen nachgerechnet)|
+| <a id="pr-2"></a>PR-2 | Nachprüfung des 31.08.: neun Punkte | **offen** (Bericht; PR-2.2 bis PR-2.7 offen) — **PR-2.0** und PR-2.1 behoben (PR-2.0 am 06.09.2026, `Befunde/PAKET.md`, drei Gegenproben), PR-2.8 kein Handlungsbedarf, **PR-2.2 bis PR-2.7 offen** **Stufe: werkzeug** (Nachpruefung) **Was noch fehlt:** PR-2.2 bis PR-2.7 einzeln gegen den heutigen Stand prüfen und schließen oder als überholt kennzeichnen (Liste in [PRUEFBERICHT.md](PRUEFBERICHT.md)).|
+| <a id="z-1"></a>Z-1 | alle Zahlen und Fundstellen des 31.08. nachgerechnet | **überholt** (Bericht vom 31.08.2026; die elf Abweichungen sind inzwischen berichtigt, jede in ihrem eigenen Befund) **Stufe: werkzeug** (Zahlen nachgerechnet)|
 | <a id="x-1"></a>X-1 | neun Löcher in der Schranke, gegen die eigenen Werkzeuge gemessen | **behoben** — vollständig, durch X-2, X-3 und X-4 **Stufe: werkzeug** (Schranke)|
 | <a id="x-2"></a>X-2 | die neun Löcher geschlossen, je mit Testfall; der Hook log | **behoben** im Skript — auf dieser Maschine war der *eingerichtete* Hook bis 05.09.2026 noch die alte Fassung (X-5) **Stufe: werkzeug** (Schranke)|
 | <a id="x-3"></a>X-3 | `suche-zeiger.pl` brauchbar gemacht: 347 Treffer auf 18, neun echte Kandidaten | **behoben** — die **neun Zeigerstellen** sind offen und brauchen einen Bau **Stufe: werkzeug** (Werkzeug)|
@@ -284,7 +284,7 @@ zuerst [**E-11**](#e-11), [**R-1**](#r-1) und [**E-1**](#e-1).
 | <a id="e-5"></a>E-5 | „Release startet auf Win11 gar nicht" | **überholt** durch E-6/E-8 **Stufe: kritisch** (Start: Release startet nicht)|
 | <a id="e-6"></a>E-6 | Release läuft, Assistent stürzt bei *Weiter* ab | **überholt** durch E-8 (es war der Debug-Bau) **Stufe: kritisch** (Absturz im Assistenten)|
 | <a id="e-7"></a>E-7 | die Bau-Kennung fehlt im Titel, solange kein Postfach offen ist | **behoben, ungeprüft** in **7.2.0.3** (05.09., `bcc59bb`: ein `OnUpdateFrameTitle(TRUE)` in `mainfrm.cpp:1135`) **Stufe: unkritisch** (Bau-Kennung fehlt im Titel)|
-| <a id="e-8"></a>E-8 | Berichtigung zu E-6, und Kriterium 0 zurückgezogen | **Beleg** **Stufe: unkritisch** (Berichtigung zu E-6)|
+| <a id="e-8"></a>E-8 | Berichtigung zu E-6, und Kriterium 0 zurückgezogen | **überholt** durch [E-6](#e-6) (Berichtigung zu E-6, kein eigener Fehler) **Stufe: unkritisch** (Berichtigung zu E-6)|
 | <a id="e-9"></a>E-9 | Absturz im Assistenten: die Kette bis zur Importsuche | **überholt** durch E-11; die Härtung bleibt richtig **Stufe: kritisch** (Absturz im Assistenten, Importsuche)|
 | <a id="e-11"></a>E-11 | `ReleaseBuffer` ohne `GetBuffer` in `eudora.cpp:3372` | **behoben, ungeprüft** in **7.2.0.3** — und laut R-1 wahrscheinlich **unvollständig** **Stufe: kritisch** (Speicherfehler: ReleaseBuffer ohne GetBuffer)|
 | <a id="e-12"></a>E-12 | `Eudora.exe Mailverzeichnis` hielt das Verzeichnis für den Ini-**Dateinamen** | **behoben, ungeprüft** in **7.2.0.4** (Kriterium 3) **Stufe: kritisch** (Start: Verzeichnis als Ini-Dateiname missdeutet)|
