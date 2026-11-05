@@ -184,6 +184,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.136 — Testpaket, Zweig `paket_7_2_2_136`
+
+**Nur übersetzt am 05.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Inhalt: `main` mit 7.2.2.135, dazu [E-239](../Intern/BEFUNDE.md#e-239) (Zweig `e239_absturz_beenden`) und [E-169](../Intern/BEFUNDE.md#e-169) (Zweig `e169_druckvorschau`). **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.136.
+
 ## 7.2.2.135 — Testpaket, Zweig `e223_e222_e193rest`
 
 **Geschnürt am 05.11.2026 um 17:58, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.135-release`), ZIP daneben; nicht veröffentlicht.**

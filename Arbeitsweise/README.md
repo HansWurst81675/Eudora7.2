@@ -246,6 +246,7 @@ eine Datei liest, liest diese.
 | [zweig-vorher-abstimmen](zweig-vorher-abstimmen.md) | Einen Zweig erst anlegen, wenn Gregor den Namen bestaetigt hat; ein nicht vereinbarter Zweig wird geloescht |
 | [zweigname-heisst-vorheriger-fertig](zweigname-heisst-vorheriger-fertig.md) | Einen neuen Zweignamen vorzuschlagen ist die Behauptung, der vorherige sei vollständig — erst git status leer und gepusht |
 | [zwischendateien-ins-scratchpad](zwischendateien-ins-scratchpad.md) | Zwischendateien (Sicherungskopien, Ersatztexte, Messausgaben, Agentenauftraege) nie nach $TEMP, sondern ins Scratchpad der Sitzung |
+| [pr-zum-mergen-ganz-oben](pr-zum-mergen-ganz-oben.md) | Einen PR zum Mergen immer als erste eigene Zeile der Meldung nennen, nie im Fließtext |
 
 `MEMORY.md` ist das Inhaltsverzeichnis, das der Assistent zu Sitzungsbeginn lädt.
 

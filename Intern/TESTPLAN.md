@@ -1,6 +1,27 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.2.135 (Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.134: Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.133: Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.136 (Testpaket, nur übersetzt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.135: Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.134: Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.133: Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+
+## <a id="test-7-2-2-136"></a>Dein Test an 7.2.2.136 — ca. 10 Minuten, an deinem echten System
+
+7.2.2.136 enthält alles aus 7.2.2.135, dazu die Behebung des Absturzes beim
+Beenden ([E-239](BEFUNDE.md#e-239)) und den Schalter `PrintBackground` für den
+Druck ([E-169](BEFUNDE.md#e-169)). Bitte das **Test-ZIP**
+`Eudora72-7.2.2.136-test-mit-smime-dlls.zip` aus dem Austauschordner
+`test_2.136` nehmen: `MFC71.DLL` und `msvcp71.dll` liegen darin schon neben
+der `Eudora.exe`.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.136+` beginnt. |
+| 2 | POP | **Pflicht:** Eudora normal beenden (*File → Exit*), auch einmal **direkt nach einem Abruf** (*File → Check Mail*, dann sofort *File → Exit*). Einmal den Hinweis nach dem Abruf („neue Mail“ bzw. „keine neue Mail“) offen lassen und das Hauptfenster schließen ([E-239](BEFUNDE.md#e-239)). | kein Fehlerdialog kommt und das Fenster verschwindet; bei offenem Hinweis bleibt Eudora stehen, bis du *OK* drückst, und beendet sich danach von selbst. |
+| 3 | POP | **Pflicht, nur wenn das Eudora-Symbol im Infobereich (Taskleiste unten rechts) bei dir sichtbar ist, sonst überspringen:** Post abrufen, den Hinweis nach dem Abruf offen lassen, Rechtsklick auf das Eudora-Symbol im Infobereich → *Exit* ([E-239](BEFUNDE.md#e-239), PRÜFER-102 K7: diesen Weg erreicht ein Anwender selbst). | kein Absturz und kein Fehlerdialog kommt; nach *OK* auf den Hinweis beendet sich Eudora von selbst, und beim nächsten Start ist die abgerufene Mail da. |
+| 4 | POP | **Freiwillig:** Post abrufen, den Hinweis offen lassen und Windows abmelden. Wieder anmelden, Eudora starten. | die abgerufene Mail da ist und keine Fehlermeldung kommt. |
+| 5 | lokal | Eine HTML-Mail mit farbigen Knöpfen oder Hintergrundbildern: *File → Print Preview* und ein Ausdruck auf Papier, einmal mit `PrintBackground=0` (Vorgabe, nichts eintragen) und einmal mit `PrintBackground=1` in `[Settings]` der `Eudora.ini` — Eudora vorher beenden ([E-169](BEFUNDE.md#e-169)). | mit `0` wie bisher ohne Hintergründe; mit `1` erscheinen die farbigen Flächen und Hintergrundbilder in Vorschau und Ausdruck. |
+| 6 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
+bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
 ## <a id="test-7-2-2-135"></a>Dein Test an 7.2.2.135 — ca. 5 Minuten, an deinem echten System
 
