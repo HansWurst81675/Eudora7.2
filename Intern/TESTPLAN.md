@@ -2,6 +2,24 @@
 
 **Stand:** Quellstand 7.2.2.135 (Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.134: Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.133: Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
+## <a id="test-e-151"></a>Prüfstand aus einem frischen Klon ([E-151](BEFUNDE.md#e-151)) — gut eine Stunde, in einer VM oder einem eigenen Windows-Konto
+
+**Prüfung: manuell.** Der Prüfstand soll aus jedem Klon laufen (du am
+05.11.2026: *„ich möchte separat von hier (oder auch jemand, der die repo
+forkt oder clonet) die tests nach eigenen änderungen durchführen"*). An der
+Entwicklermaschine ist das nur mit einer tieferen Wurzel messbar, weil unter
+`C:\Temp` die gewachsenen Prüfstände liegen; der Lauf mit `C:\Temp` gehört auf
+einen anderen Rechner oder in ein anderes Konto. Anleitung:
+[Doku/PRUEFSTAND.md](../Doku/PRUEFSTAND.md).
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Repo klonen (`git clone https://github.com/HansWurst81675/Eudora7.2.git`), Git für Windows ist installiert. | der Ordner `Testdaten\pruefstand\` 46 Unterordner hat. |
+| 2 | lokal | Bauen: `powershell -File tools\bauen.ps1` (oder ohne Bau weiter – dann wird das Release geprüft). | `Eudora71\Bin\Release\Eudora.exe` da ist. |
+| 3 | lokal | `Pruefstand starten.cmd` doppelklicken, Frage mit `j` beantworten, nichts anklicken. | vorher eine erwartete Dauer genannt wird und danach 46 Verzeichnisse unter `C:\Temp` „angelegt“ stehen. |
+| 4 | lokal | Ende abwarten. | `Ergebnis: 100 Faelle, 100 bestanden, 0 fehlgeschlagen` und genau drei `[UEBR]` (`E-166a`, `E-166b`, `E-222w`) – ohne `MFC71.DLL`/`msvcp71.dll`. |
+| 5 | lokal | Das Fenster mitten im Lauf schließen, dann `Pruefstand starten.cmd` erneut. | der zweite Start meldet „Pruefserver-Rest beendet“ (oder gar keinen Rest) und läuft durch; im Task-Manager steht danach kein `perl.exe` mehr. |
+
 ## <a id="test-7-2-2-135"></a>Dein Test an 7.2.2.135 — ca. 5 Minuten, an deinem echten System
 
 7.2.2.135 enthält alles aus 7.2.2.134 und die Behebung für *Edit → Find*
