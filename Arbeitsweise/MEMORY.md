@@ -188,3 +188,4 @@
 - [E-151 Prüfstand aus dem Klon](entscheidung-e151-pruefstand-klon-05-11.md) — Gregor 05.11.: Starter fragt fremde Nutzer (j/n), S/MIME überspringen, Prüfserver nach Absturz aufräumen
 - [E-169 Hintergrund drucken](entscheidung-e169-hintergrund-drucken-05-11.md) — Gregor 05.11.: INI-Schalter, Vorgabe aus; EINSTELLUNGEN.md, Settings Reference, FAQ
 - [Kein Release 7.2.2.135](entscheidung-kein-release-135-05-11.md) — Gregor 05.11.: nur solide, getestete Bauten auf GitHub; nächstes Release frühestens 7.2.2.136
+- [PR zum Mergen ganz oben](pr-zum-mergen-ganz-oben.md) — eigene erste Zeile, nie im Fließtext (#227 übersehen)

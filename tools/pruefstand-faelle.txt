@@ -493,12 +493,13 @@ E-204w | C:\Temp\E204 | 90 | messung | E204 PROBE ok | | | messen=tools\messen-e
 E-223p | C:\Temp\E223 | 60 | messung | E223 ERGEBNIS savepassword=1 ini-kennwort=1 beendet=1 | | | messen=tools\messen-e223.ps1
 E-223w | C:\Temp\E223 | 60 | messung | E223 PROBE ok | | | messen=tools\messen-e223.ps1
 # E-239: Absturz beim Beenden, wenn nach File > Exit ein zweiter Schliesswunsch
-# kommt, waehrend der Hinweis nach dem Abruf (bzw. die Rueckfrage "tasks running")
-# offen ist. C:\Temp\E239\modus.txt = exit-close. Rot an 7.2.2.135 (3/3 Absturz).
-# Gruen mit der Behebung (05.11.2026): dreimal absturz=0 beendet=1. Die
-# Vorbereitung setzt Alert=1 - ohne den Hinweis nach dem Abruf (Alert=0) gibt
-# es keinen Weg in den Fehler, und E239 PROBE meldet FEHL.
-E-239p | C:\Temp\E239 | 120 | messung | absturz=0 beendet=1 | | | messen=tools\messen-e239.ps1
+# kommt, waehrend der Hinweis nach dem Abruf offen ist. Betriebsart exit-close
+# legt tools\messen-e239-exit-close.ps1 fest (PRUEFER-102 K2; vorher
+# C:\Temp\E239\modus.txt ausserhalb des Repos, stille Vorgabe "einfach").
+# "E239 URTEIL gruen" nur mit hinweis=1 (DER Hinweis nach dem Abruf war offen),
+# absturz=0 und beendet=1. Die Vorbereitung setzt Alert=1 - ohne den Hinweis
+# (Alert=0) gibt es keinen Weg in den Fehler, und das Urteil ist "ungueltig".
+E-239p | C:\Temp\E239 | 120 | messung | E239 URTEIL gruen | | | messen=tools\messen-e239-exit-close.ps1
 
 # -------------------------------------------------------------------------
 # E-222 - signierte Mail: "Plugin Error: %3C5335.0002%3E"

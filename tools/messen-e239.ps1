@@ -31,14 +31,23 @@
 # noch lebt, wird nach Pfadpruefung beendet.
 #
 # Ausgabe:
-#   E239 ERGEBNIS weg=<weg> post=<0|1> hinweis=<0|1> haupt-aktiv=<0|1|-> absturz=<0|1> beendet=<0|1> mail-in-mbx=<0|1|-> toc-aktuell=<0|1|->
+#   E239 ERGEBNIS weg=<weg> post=<0|1> hinweis=<0|1> (der Hinweis nach dem Abruf war offen) haupt-aktiv=<0|1|-> absturz=<0|1> beendet=<0|1> mail-in-mbx=<0|1|-> toc-aktuell=<0|1|->
 #   E239 PROBE ok  - wenn der Hinweis wirklich offen war, als geschlossen wurde
+#   E239 SPUR <E-239-Zeile aus eudora.log>   - welcher Teil der Behebung lief
+#   E239 URTEIL gruen|rot|ungueltig  - gruen nur mit hinweis=1 absturz=0 beendet=1
 #
 # Kodierung: reines ASCII, kein BOM.
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten,
-    [int] $WarteSekunden = 25
+    [int] $WarteSekunden = 25,
+    # Betriebsart (PRUEFER-102 K2): kommt aus dem Aufruf - im Pruefstandsfall
+    # ueber tools\messen-e239-exit-close.ps1. Nur ohne -Weg gilt
+    # <Pruefstand>\modus.txt (Handbetrieb); fehlt beides, ist das ein Fehler.
+    # Vorher galt still "einfach", und mit "einfach" stuerzte auch der alte
+    # Bau nicht ab - ein frischer Pruefstand pruefte den Absturz nicht mehr.
+    [string] $Weg = '',
+    [switch] $MitPost
 )
 $ErrorActionPreference = 'Stop'
 $KENNWORT = 'e239-kennwort'
@@ -55,11 +64,15 @@ $ansi = [Text.Encoding]::Default
 $pidDatei  = Join-Path $voll 'pop-pruefserver.pid'
 $protokoll = Join-Path $voll 'pop-protokoll.txt'
 $modusDatei = Join-Path $voll 'modus.txt'
-$weg = 'einfach'; $mitPost = $false
-if (Test-Path -LiteralPath $modusDatei) {
+$mitPost = [bool]$MitPost
+if ($Weg -ne '') {
+    $weg = $Weg
+} elseif (Test-Path -LiteralPath $modusDatei) {
     $teile = @(((Get-Content -LiteralPath $modusDatei | Select-Object -First 1) -split '\s+') | Where-Object { $_ -ne '' })
-    if ($teile.Count -ge 1) { $weg = $teile[0] }
+    $weg = if ($teile.Count -ge 1) { $teile[0] } else { '' }
     $mitPost = ($teile -contains 'mitpost')
+} else {
+    Write-Output "E239 FEHLER: keine Betriebsart - weder -Weg noch $modusDatei"; exit 1
 }
 if (@('einfach','syscmd','endsession','exit-close','exit-exit','ohne') -notcontains $weg) { Write-Output "E239 FEHLER: unbekannter Weg $weg"; exit 1 }
 
@@ -148,6 +161,10 @@ public class E239W {
 $excLog = Join-Path $md 'Exception.log'
 function ExcLaenge { if (Test-Path -LiteralPath $excLog) { (Get-Item -LiteralPath $excLog).Length } else { 0 } }
 $excVorher = ExcLaenge
+# eudora.log ab hier: die E-239-Zeilen dieses Laufs zeigen, welcher Teil der
+# Behebung gewirkt hat (aufgeschoben / nachgeholt / laeuft schon / DestroyWindow).
+$eudLog = Join-Path $md 'eudora.log'
+$logVorher = if (Test-Path -LiteralPath $eudLog) { (Get-Item -LiteralPath $eudLog).Length } else { 0 }
 
 $proz = @(Get-Process -Name Eudora -ErrorAction SilentlyContinue |
           Where-Object { $_.Path -and $_.Path.StartsWith($voll + '\', [StringComparison]::OrdinalIgnoreCase) })
@@ -172,7 +189,7 @@ function Protokoll {
 }
 function Lebt { $p.Refresh(); return (-not $p.HasExited) }
 
-$hinweis = 0; $hauptAktiv = '-'; $quit = 0; $hinweisText = ''; $absturz = 0; $beendet = 0
+$hinweis = 0; $sichtbar = 0; $hauptAktiv = '-'; $quit = 0; $hinweisText = ''; $absturz = 0; $beendet = 0
 try {
     $bekannt = @(Dialoge)
     [void][E239W]::PostMessage($haupt, 0x0111, [IntPtr]32772, [IntPtr]::Zero)      # ID_FILE_CHECKMAIL
@@ -198,7 +215,18 @@ try {
                 Write-Output 'E239 Kennwortfrage beantwortet'
                 continue
             }
-            if ($quit -eq 1) { $hinweisHandle = $d; $hinweisText = DialogText $d; break }
+            # PRUEFER-102 K2: als Hinweis zaehlt nur DER Hinweis nach dem Abruf
+            # (GetMail.cpp, AlertDialog) - Titel "No New Mail" bzw. "New Mail!"
+            # und Text mit "new mail", gemessen am 05.11.2026. Vorher galt jeder
+            # Dialog nach dem QUIT, etwa auch die Rueckfrage "task(s) running".
+            if ($quit -eq 1) {
+                $titel = [E239W]::Titel($d); $text = DialogText $d
+                if (($titel -eq 'No New Mail' -or $titel -eq 'New Mail!') -and $text -match 'new mail') {
+                    $hinweisHandle = $d; $hinweisText = $text; break
+                }
+                Write-Output ('E239 anderer Dialog nach dem QUIT [' + $text + '] - kein Hinweis, bleibt stehen')
+                continue
+            }
             Write-Output ('E239 andere Meldung vor dem QUIT [' + (DialogText $d) + '] - mit OK geschlossen')
             [void][E239W]::PostMessage($d, 0x0111, [IntPtr]1, (Kind $d 1))
         }
@@ -206,9 +234,10 @@ try {
     }
     if ($hinweisHandle -ne [IntPtr]::Zero) {
         Start-Sleep -Milliseconds 500
-        $hinweis = [int][E239W]::IsWindowVisible($hinweisHandle)
+        $hinweis = 1   # PRUEFER-102 K2: der Hinweis war offen (gesehen), sichtbar oder nicht
+        $sichtbar = [int][E239W]::IsWindowVisible($hinweisHandle)
         $hauptAktiv = [int][E239W]::IsWindowEnabled($haupt)
-        Write-Output ('E239 Hinweis offen [' + $hinweisText + '] sichtbar=' + $hinweis + ' Hauptfenster aktiviert=' + $hauptAktiv)
+        Write-Output ('E239 Hinweis offen [' + $hinweisText + '] sichtbar=' + $sichtbar + ' Hauptfenster aktiviert=' + $hauptAktiv)
         switch ($weg) {
             'einfach'    { [void][E239W]::PostMessage($haupt, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero); Write-Output 'E239 WM_CLOSE geschickt' }
             'syscmd'     { [void][E239W]::PostMessage($haupt, 0x0112, [IntPtr]0xF060, [IntPtr]::Zero); Write-Output 'E239 WM_SYSCOMMAND SC_CLOSE geschickt' }
@@ -285,4 +314,14 @@ if ((Test-Path -LiteralPath $mbx) -and (Test-Path -LiteralPath $toc)) {
 }
 if ($hinweis -eq 1) { Write-Output 'E239 PROBE ok' } else { Write-Output 'E239 PROBE FEHL: Hinweis war nicht offen' }
 Write-Output ('E239 ERGEBNIS weg=' + $weg + ' post=' + [int]$mitPost + ' hinweis=' + $hinweis + ' haupt-aktiv=' + $hauptAktiv + ' absturz=' + $absturz + ' beendet=' + $beendet + ' mail-in-mbx=' + $mailIn + ' toc-aktuell=' + $tocAktuell)
+# E-239-Zeilen aus eudora.log seit Beginn der Messung
+if (Test-Path -LiteralPath $eudLog) {
+    $fs = [IO.File]::Open($eudLog, 'Open', 'Read', 'ReadWrite')
+    try { if ($fs.Length -ge $logVorher) { [void]$fs.Seek($logVorher, 'Begin') }; $neu = (New-Object IO.StreamReader($fs, $ansi)).ReadToEnd() } finally { $fs.Close() }
+    foreach ($z in @($neu -split "`r?`n" | Where-Object { $_ -match 'E-239 ' })) { Write-Output ('E239 SPUR ' + ($z -replace '^.*?(E-239 )', '$1')) }
+}
+# PRUEFER-102 K2: ein Gesamturteil. Gruen nur, wenn DER Hinweis offen war
+# (sonst ist der Fehlerweg nicht getroffen) und Eudora ohne Absturz endete.
+$urteil = if ($absturz -eq 1 -or ($hinweis -eq 1 -and $beendet -eq 0)) { 'rot' } elseif ($hinweis -eq 1 -and $beendet -eq 1) { 'gruen' } else { 'ungueltig' }
+Write-Output ('E239 URTEIL ' + $urteil)
 exit 0

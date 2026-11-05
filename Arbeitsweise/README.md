@@ -188,6 +188,7 @@ eine Datei liest, liest diese.
 | [paket-gegen-den-bau-messen](paket-gegen-den-bau-messen.md) | Was im Paket liegt, ist nicht automatisch das, was ich gebaut habe - jede Datei im Paket gegen das Bauverzeichnis messen, bevor Gregor sie bekommt |
 | [pakete-sammeln](pakete-sammeln.md) | Kein Testpaket für eine einzelne Behebung anbieten; Gregor testet mehrere Sachen zusammen in einem Bau |
 | [powershell-ist-nicht-bash](powershell-ist-nicht-bash.md) | Im PowerShell-Werkzeug gibt es kein perl, und ein Alias schlägt eine gleichnamige Funktion (Lp = Out-Printer); am 27.10.2026 dreimal, eine Gegenprobe lief dadurch auf unverändertem Quelltext |
+| [pr-zum-mergen-ganz-oben](pr-zum-mergen-ganz-oben.md) | Einen PR zum Mergen immer als erste eigene Zeile der Meldung nennen, nie im Fließtext |
 | [pruefen-statt-vermuten](pruefen-statt-vermuten.md) | Vorhandene Quellen oeffnen, bevor ich eine Ursache vermute - und Vermutungen nie als Tatsache aussprechen |
 | [pruefstand-kann-blind-sein](pruefstand-kann-blind-sein.md) | Ein kaputter und ein gruener Pruefstand melden im Alltag dasselbe, naemlich nichts - die Pruefinstanz braucht ihre eigene Schranke |
 | [pruefstand-nicht-bequemer-als-die-wirklichkeit](pruefstand-nicht-bequemer-als-die-wirklichkeit.md) | Ein Pruefstand, der bequemer gebaut ist als die Wirklichkeit, misst den Fehler weg - C:\\Temp\\E132 ist sein eigener 8.3-Kurzname, deshalb meldeten alle drei Messungen zu E-132 gruen, waehrend Eudora beim Anwender sein EIGENES Mailverzeichnis fuer fremd hielt |

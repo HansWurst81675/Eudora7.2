@@ -28,7 +28,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-239](Intern/BEFUNDE.md#e-239)** | Eudora kann abstürzen, wenn es beendet wird, während der Hinweis nach dem Mailabruf noch… | 05.11.2026 an 7.2.2.135 | die Windows-Abmeldung (`WM_QUERYENDSESSION`) ist nicht gemessen (MESSERs Positivprobe schlug fehl); das nächste Paket und Gregors Test daran. **Testp… |
+| **[E-239](Intern/BEFUNDE.md#e-239)** | Eudora kann abstürzen, wenn es beendet wird, während der Hinweis nach dem Mailabruf noch… | 05.11.2026 an 7.2.2.135 | der Fall `E-239p` mit dem neuen Messweg (`E239 URTEIL`, Betriebsart im Fall) rot am Bau 7.2.2.135 und grün am Bau mit Commit-Kennung — geplant für… |
 | **[E-236](Intern/BEFUNDE.md#e-236)** | Das Fenster „Update Eudora“ zeigt die Website des Computer History Museum — Eudora … | **nie gemessen** | Auslöser und Abstand am Quelltext belegen (`CNagManager.cpp`), am Prüfstand nachstellen, Entscheidung, welches der beiden. **Stufe: unkritisch** |
 | **[E-233](Intern/BEFUNDE.md#e-233)** | Eine IMAP-Mail, deren Betreff direkt hinter Subject: umbricht, steht in der Postfachliste … | **nie gemessen** | am IMAP-Prüfserver nachstellen mit der Prüfmail aus `tools/messen-e221.ps1` (`Subject:` mit Umbruch), dann vor dem Abschneiden bei `\r\n` den Leerra… |
 | **[E-224](Intern/BEFUNDE.md#e-224)** | Das Protokoll gibt Zeichen über 127 falsch kodiert aus — \130 steht für ü, Ü, ø und… | **nie gemessen** | die Masken in `Eudora71/QCUtils/src/debug.cpp:373-376` berichtigen oder `\xHH` schreiben, mit Regressionstest; nebenbei auf dem Zweig `e223_e222_e193r… |
