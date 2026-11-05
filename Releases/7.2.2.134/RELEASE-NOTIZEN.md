@@ -27,10 +27,21 @@ Was noch nicht geht, steht in der
 [README unter „Bekannte Fehler“](https://github.com/HansWurst81675/Eudora7.2/blob/main/README.md#bekannte-fehler),
 darunter:
 
-* ***Edit → Find* im geöffneten Fenster** übersieht in manchen HTML-Mails ein
-  sichtbares Wort mit Umlaut; *Find Messages* findet die Mail. Die Ursache ist
-  noch nicht gefunden
+* ***Edit → Find* im geöffneten Fenster** meldet *„not found“*, wenn die Mail
+  aus *Find Messages* geöffnet wurde und das Wort nur einmal vorkommt: der
+  Treffer ist dann schon markiert, und die Suche läuft ab dort weiter, ohne
+  oben neu anzufangen. Abhilfe bis zur Behebung: einmal oben in den Text
+  klicken und erneut suchen
   ([E-193](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-193)).
+
+## Hinweis: Kennwort vergessen lassen
+
+*Special → Forget Password(s)* löscht nur das gespeicherte Kennwort, nicht das
+Häkchen *Remember password* (bei POP auch *Save password* unter *Tools →
+Options → Checking Mail*). Ist es gesetzt, speichert Eudora das Kennwort beim
+nächsten Abruf wieder. Wer es nicht mehr speichern will, wählt erst das Häkchen
+ab und nimmt dann *Forget Password(s)*
+([FAQ 21](https://github.com/HansWurst81675/Eudora7.2/blob/main/Doku/FAQ.md#21-warum-speichert-eudora-das-kennwort-nach-forget-passwords-wieder)).
 
 ## S/MIME, Junk-Filter und LDAP
 

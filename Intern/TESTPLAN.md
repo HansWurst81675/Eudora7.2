@@ -13,13 +13,26 @@ S/MIME unter *Special → Message Plug-ins Settings* in der Liste steht.
 |---|---|---|---|
 | 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.134+` beginnt. |
 | 2 | lokal | *Special → Message Plug-ins Settings*. | *S/MIME Plugin* und *SpamHeaders Plugin* in der Liste stehen. |
-| 3 | POP | Eine Persönlichkeit nehmen, deren Kennwort **nicht** gespeichert ist (oder vorher *Special → Forget Password(s)*). *File → Check Mail*, Kennwort eingeben, Häkchen *Remember password* setzen, OK. Eudora beenden, neu starten, noch einmal *Check Mail* ([E-223](BEFUNDE.md#e-223)). | beim zweiten *Check Mail* **keine** Kennwortfrage kommt. |
+| 3 | POP | Beim POP-Konto zuerst unter *Tools → Options → Checking Mail* das Häkchen *Save password* **abwählen**, OK; dann *Special → Forget Password(s)*. *File → Check Mail*, Kennwort eingeben, im Dialog das Häkchen *Remember password* **setzen**, OK. Eudora beenden, neu starten, noch einmal *Check Mail* ([E-223](BEFUNDE.md#e-223)). Ohne das Abwählen sagt der Schritt nichts: *Forget Password(s)* löscht nur das Kennwort, das Häkchen bleibt, und dann speicherte auch der alte Bau sofort ([PRÜFER-100](../Befunde/PRUEFER-100.md) K1). | beim zweiten *Check Mail* **keine** Kennwortfrage kommt. |
 | 4 | lokal | Eine S/MIME-signierte Mail öffnen und auf das `.ems`-Symbol klicken ([E-222](BEFUNDE.md#e-222)). | **nicht** mehr *„Plugin no longer available“* kommt, sondern der Inhalt oder das Ergebnis der Signaturprüfung. Kommt *„Couldn't load the system security components (CAPICOM)“*, ist unsere Behebung in Ordnung; dann fehlt bei dir CAPICOM — bitte Bildschirmfoto, das wird ein eigener Punkt. |
 | 5 | lokal | Die Outlook-Rundmail aus deinem letzten Test öffnen, **zuerst einmal in den Text der Mail klicken**, dann *Edit → Find* „führung“ ([E-193](BEFUNDE.md#e-193)). | das Wort gefunden wird. Wenn nicht: in der `eudora.log` die letzte Zeile `E-86: Anzeigedatei …` suchen und genau diese `eud*.htm` aus deinem `%TEMP%` in den Testordner legen — sie wird nur am Prüfstand verwendet, nicht im Repo. |
 | 6 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
 
 Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
 bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
+
+**Ergebnis 05.11.2026, Gregor an 7.2.2.134** (Test-ZIP mit `MFC71.DLL`/`msvcp71.dll`, Bildschirmfotos und `eudora.log` bis 13:33 im Austauschordner `test_2.134`):
+
+| # | Ergebnis |
+|---|---|
+| 1 | **bestanden** — Titelzeile `Eudora 7.2.2.134+888cc82b 2026-11-05 10:27` |
+| 2 | **bestanden** — *S/MIME Plugin, v1.0.0.8* und *SpamHeaders Plugin (Paid Mode Only), v1.1.3* in der Liste, ohne dass Gregor etwas kopiert hat |
+| 3 | **bestanden** — POP und IMAP fragen nur einmal; auch mit vorher **abgewähltem** Häkchen (Gregor: *„auch wenn ich die checkbox deaktiviere, wird die passwort abfrage nur 1x angezeigt“*). Der erste Durchgang mit noch gesetztem Häkchen zählte nicht (PRÜFER-100 K1) |
+| 4 | **offen** — keine signierte Mail zur Hand |
+| 5 | **nicht bestanden, Ursache gefunden** (von Gregor): *Find Messages* öffnet die Mail mit dem Treffer **markiert**; *Edit → Find* sucht ab dieser Markierung weiter wie *Weitersuchen*, und kommt das Wort nur einmal vor, meldet es *„not found“* und springt nicht nach oben. Nach Klick und Scrollen wird es gefunden. Im Protokoll 13:31: *Find Messages* genaue Suche, 95 HTML-Mails in 125 ms, danach siebenmal `"f\130hrung" not found.`. Behebung von Gregor entschieden ([E-193](BEFUNDE.md#e-193)): von oben weitersuchen, Treffer markieren und sichtbar scrollen |
+| 6 | **bestanden** — alle 16 Starts von 7.2.2.134 im Protokoll enden mit `E-33 ExitInstance: erreicht` |
+
+Nebenbei erschien während Schritt 3 das Fenster *Update Eudora* mit der Website des Computer History Museum ([E-236](BEFUNDE.md#e-236)).
 
 ## <a id="test-7-2-2-133"></a>Dein Test an 7.2.2.133 — ca. 15 Minuten, an deinem echten System
 

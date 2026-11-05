@@ -97,6 +97,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-236](BEFUNDE.md#e-236)** | Das Fenster „Update Eudora“ zeigt die Website des Computer History Museum — Eudora … | **nie gemessen** | Auslöser und Abstand am Quelltext belegen (`CNagManager.cpp`), am Prüfstand nachstellen, Entscheidung, welches der beiden. **Stufe: unkritisch** |
 | **[E-233](BEFUNDE.md#e-233)** | Eine IMAP-Mail, deren Betreff direkt hinter Subject: umbricht, steht in der Postfachliste … | **nie gemessen** | am IMAP-Prüfserver nachstellen mit der Prüfmail aus `tools/messen-e221.ps1` (`Subject:` mit Umbruch), dann vor dem Abschneiden bei `\r\n` den Leerra… |
 | **[E-224](BEFUNDE.md#e-224)** | Das Protokoll gibt Zeichen über 127 falsch kodiert aus — \130 steht für ü, Ü, ø und… | **nie gemessen** | die Masken in `Eudora71/QCUtils/src/debug.cpp:373-376` berichtigen oder `\xHH` schreiben, mit Regressionstest; nebenbei auf dem Zweig `e223_e222_e193r… |
 | **[E-223](BEFUNDE.md#e-223)** | „Remember password“ wirkt erst beim zweiten Mal — wer das Häkchen im Kennwortdialog… | 05.11.2026 an 7.2.2.133 | das nächste Paket und Gregors Test daran (Häkchen zum ersten Mal setzen, beenden, neu starten: keine Frage mehr). Der Messweg liest die `Eudora.ini`… |
