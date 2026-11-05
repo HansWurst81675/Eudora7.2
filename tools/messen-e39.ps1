@@ -54,7 +54,7 @@ $NAME   = 'E39Zwei'
 $ABSCHN = 'Persona-' + $NAME
 
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Output "E39 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Output "E39 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
 $md  = Join-Path $voll 'Mailverzeichnis'
 $ini = Join-Path $md 'Eudora.ini'
 if (-not (Test-Path -LiteralPath $ini)) { Write-Output "E39 FEHLER: keine Eudora.ini in $md"; exit 1 }

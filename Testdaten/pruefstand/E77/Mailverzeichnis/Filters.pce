@@ -1,0 +1,11 @@
+3
+rule E-118 nach IMAP
+transfer Imap\pruefimap\Ablage\Ablage.mbx
+incoming
+header Subject:
+verb contains
+value E-118
+conjunction ignore
+header 
+verb contains
+value 

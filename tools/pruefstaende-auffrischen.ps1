@@ -47,7 +47,7 @@ $verz = $verz | Sort-Object -Unique
 $fehler = 0
 foreach ($v in $verz) {
     $voll = [IO.Path]::GetFullPath($v).TrimEnd('\')
-    if ($voll -notmatch '^C:\\Temp\\[^\\]+$') { Write-Host "  ABGEWIESEN: $voll liegt nicht direkt unter C:\Temp"; $fehler++; continue }
+    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+$')) { Write-Host "  ABGEWIESEN: $voll liegt nicht direkt unter C:\Temp"; $fehler++; continue }
     if (-not (Test-Path -LiteralPath $voll)) { Write-Host "  FEHLT: $voll"; $fehler++; continue }
     $laeuft = Get-Process Eudora -ErrorAction SilentlyContinue | Where-Object { $_.Path -and $_.Path.StartsWith($voll + '\', 'OrdinalIgnoreCase') }
     if ($laeuft) { Write-Host "  LAEUFT: in $voll ist Eudora offen (PID $($laeuft.Id)) - nicht angefasst"; $fehler++; continue }

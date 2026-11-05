@@ -102,7 +102,7 @@ function KontoLeeren([string] $konto, [string[]] $bleiben) {
 
 # --- -Vorbereiten: Ausgangslage, VOR dem Start ------------------------------
 if ($Vorbereiten) {
-    if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E188 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E188 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
     if (-not (Test-Path $kontoA)) { Write-Host "E188 FEHLER: kein IMAP-Konto pruefimap in $voll"; exit 1 }
     KontoLeeren $kontoA @('INBOX', 'Ablage', 'Entw&APw-rfe', 'Gel&APY-scht')
     KontoLeeren $kontoB @('INBOX', 'Ziel', 'Entw&APw-rfe', 'Gel&APY-scht')

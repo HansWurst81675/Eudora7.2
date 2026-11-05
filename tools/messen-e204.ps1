@@ -59,7 +59,7 @@ $PORT   = 11110
 $repo   = Split-Path -Parent $PSScriptRoot
 
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-if ($voll -notmatch '^C:\\Temp\\E204[^\\]*$') { Write-Output "E204 ABGEWIESEN: $voll ist kein Pruefstand C:\Temp\E204*"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\E204[^\\]*$')) { Write-Output "E204 ABGEWIESEN: $voll ist kein Pruefstand C:\Temp\E204*"; exit 2 }
 $md  = Join-Path $voll 'Mailverzeichnis'
 $ini = Join-Path $md 'Eudora.ini'
 if (-not (Test-Path -LiteralPath $ini)) { Write-Output "E204 FEHLER: keine Eudora.ini in $md"; exit 1 }

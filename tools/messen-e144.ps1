@@ -30,7 +30,7 @@ $ERWARTET = '<e118-pruefung@e118.invalid>'
 
 if ($Vorbereiten) {
     $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-    if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E144 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E144 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
     $md = Join-Path $voll 'Mailverzeichnis'
     if (-not (Test-Path (Join-Path $md 'Eudora.ini'))) { Write-Host "E144 FEHLER: kein Mailverzeichnis in $voll"; exit 1 }
     foreach ($n in 'Out','Trash','In') {

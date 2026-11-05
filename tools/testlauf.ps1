@@ -74,7 +74,8 @@ param(
     # -Pfadfilter <Verzeichnis> mit. So gehoert Messen und Aufraeumen in
     # denselben Lauf und die Instanz bleibt nicht aus Versehen stehen.
     [string]   $MessenSkript  = '',
-    [string[]] $ErlaubtePfade = @('C:\Temp'),
+    # E-151: Wurzel der Pruefverzeichnisse aus EUDORA72_PRUEFSTAND (gesetzt von pruefstand-lauf.ps1 -Wurzel)
+    [string[]] $ErlaubtePfade = @($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })),
     [switch]   $NurPruefen,
     # Startet Eudora OHNE das Mailverzeichnis als Argument - der einzige Weg,
     # auf dem Eudora sich sein Verzeichnis selbst sucht (Befund E-132).

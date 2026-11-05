@@ -1,0 +1,52 @@
+From ???@??? Mon Nov 02 10:00:00 2026
+From: Pruefung <absender@e122.invalid>
+To: empfaenger@e122.invalid
+Subject: Pruefung E-122: Datum mit Zone +0200
+Date: Mon, 02 Nov 2026 09:10:00 +0200
+Message-ID: <e122-plus0200@e122.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+E-122 Pruefnachricht. Der Date:-Kopf sagt 09:10:00 +0200.
+Nach dem Hochladen in einen IMAP-Ordner muss das Eingangsdatum (INTERNALDATE)
+denselben Zeitpunkt nennen, nur in der Zone des Rechners ausgedrueckt.
+
+From ???@??? Mon Nov 02 10:00:00 2026
+From: Pruefung <absender@e122.invalid>
+To: empfaenger@e122.invalid
+Subject: Pruefung E-122: Datum mit Zone -0500
+Date: Mon, 02 Nov 2026 09:10:00 -0500
+Message-ID: <e122-minus0500@e122.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+E-122 Pruefnachricht. Der Date:-Kopf sagt 09:10:00 -0500.
+Nach dem Hochladen in einen IMAP-Ordner muss das Eingangsdatum (INTERNALDATE)
+denselben Zeitpunkt nennen, nur in der Zone des Rechners ausgedrueckt.
+
+From ???@??? Thu Nov 05 17:27:49 2026
+From: Pruefung <absender@e122.invalid>
+To: empfaenger@e122.invalid
+Subject: Pruefung E-122: Datum mit Zone +0200
+Date: Mon, 02 Nov 2026 09:10:00 +0200
+Message-ID: <e122-plus0200@e122.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+E-122 Pruefnachricht. Der Date:-Kopf sagt 09:10:00 +0200.
+Nach dem Hochladen in einen IMAP-Ordner muss das Eingangsdatum (INTERNALDATE)
+denselben Zeitpunkt nennen, nur in der Zone des Rechners ausgedrueckt.
+
+From ???@??? Thu Nov 05 17:27:49 2026
+From: Pruefung <absender@e122.invalid>
+To: empfaenger@e122.invalid
+Subject: Pruefung E-122: Datum mit Zone -0500
+Date: Mon, 02 Nov 2026 09:10:00 -0500
+Message-ID: <e122-minus0500@e122.invalid>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+
+E-122 Pruefnachricht. Der Date:-Kopf sagt 09:10:00 -0500.
+Nach dem Hochladen in einen IMAP-Ordner muss das Eingangsdatum (INTERNALDATE)
+denselben Zeitpunkt nennen, nur in der Zone des Rechners ausgedrueckt.
+

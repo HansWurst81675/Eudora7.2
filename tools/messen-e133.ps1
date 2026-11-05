@@ -52,10 +52,10 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-$fehlt = 'C:\Temp\E133-gibt-es-nicht'
+$fehlt = (Join-Path $(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' }) 'E133-gibt-es-nicht')   # E-151: Wurzel
 $regPfad = 'HKCU:\Software\Qualcomm\Eudora\CommandLine'
 
-if ($voll -notmatch '^C:\\Temp\\E133') { Write-Host "E133 ABGEWIESEN: $voll liegt nicht unter C:\Temp\E133*"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\E133')) { Write-Host "E133 ABGEWIESEN: $voll liegt nicht unter C:\Temp\E133*"; exit 2 }
 
 if ($Vorbereiten) {
     try {

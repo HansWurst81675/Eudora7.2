@@ -1,0 +1,11 @@
+3
+rule E-177 Programm
+notifyApp C:\Windows\System32\wscript.exe //B //Nologo C:\Temp\E177\e177-kopieren.vbs "%6"
+manual
+header From:
+verb contains
+value .invalid
+conjunction ignore
+header 
+verb contains
+value 

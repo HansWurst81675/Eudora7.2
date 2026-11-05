@@ -63,7 +63,7 @@ $proben = @('e122-datum-mit-zone.eml', 'e122-datum-zone-minus.eml')
 # Die Pfadschranke steht vor jeder Wirkung (Arbeitsweise/tor-gehoert-zum-schritt.md).
 if ($Vorbereiten) {
     try {
-        if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E122 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+        if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E122 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
         if (-not (Test-Path (Join-Path $md 'Eudora.ini'))) { Write-Host "E122 FEHLER: kein Mailverzeichnis in $voll"; exit 1 }
         if (-not (Test-Path $konto)) { Write-Host "E122 FEHLER: kein IMAP-Konto pruefimap in $voll"; exit 1 }
         # lokales In: genau die zwei Pruefnachrichten (ohne In.toc baut Eudora
