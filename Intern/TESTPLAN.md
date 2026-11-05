@@ -1,6 +1,56 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.2.133 (Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.135 (Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.134: Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.133: Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+
+## <a id="test-7-2-2-135"></a>Dein Test an 7.2.2.135 — ca. 5 Minuten, an deinem echten System
+
+7.2.2.135 enthält alles aus 7.2.2.134 und die Behebung für *Edit → Find*
+([E-193](BEFUNDE.md#e-193)). Bitte das **Test-ZIP**
+`Eudora72-7.2.2.135-test-mit-smime-dlls.zip` aus dem Austauschordner
+`test_2.135` nehmen: `MFC71.DLL` und `msvcp71.dll` liegen darin schon neben
+der `Eudora.exe`, du musst nichts dazukopieren.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.135+` beginnt. |
+| 2 | lokal | *Tools → Find Messages* mit „führung“. Die Outlook-Rundmail aus der Trefferliste per Doppelklick öffnen, **sofort** *Edit → Find* „führung“, *Weitersuchen*. Danach noch einmal *Weitersuchen* ([E-193](BEFUNDE.md#e-193)). | das Wort **markiert** ist **und** im sichtbaren Bereich steht (du siehst es, ohne zu scrollen), ohne vorher in den Text zu klicken — das kann nur dein Test zeigen, der Prüfstand misst es nicht. Beim zweiten *Weitersuchen* springt die Markierung zum nächsten Treffer; nach dem letzten springt sie **stumm** wieder zum ersten (kommt das Wort nur einmal vor, bleibt sie dort), es kommt kein *„not found“*. *„not found“* kommt nur noch, wenn das Wort gar nicht in der Mail steht (deine Entscheidung A, 05.11.2026). |
+| 3 | lokal | Falls du eine S/MIME-signierte Mail hast: öffnen und auf das `.ems`-Symbol klicken ([E-222](BEFUNDE.md#e-222)). | **nicht** mehr *„Plugin no longer available“* kommt, sondern der Inhalt oder das Ergebnis der Signaturprüfung. Kommt *„Couldn't load the system security components (CAPICOM)“*, ist unsere Behebung in Ordnung; dann fehlt bei dir CAPICOM — bitte Bildschirmfoto, das wird ein eigener Punkt. |
+| 4 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
+bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
+
+## <a id="test-7-2-2-134"></a>Dein Test an 7.2.2.134 — ca. 10 Minuten, an deinem echten System
+
+7.2.2.134 ist ein **Testpaket** mit zwei Fehlerbehebungen aus deinem Test an
+7.2.2.133. `MFC71.DLL` und `msvcp71.dll` liegen diesmal **im Test-ZIP** (`Eudora72-7.2.2.134-test-mit-smime-dlls.zip`, im Austauschordner `test_2.134`) neben der
+`Eudora.exe`; du musst nichts dazukopieren. Für Schritt 4 den PC nehmen, an dem
+S/MIME unter *Special → Message Plug-ins Settings* in der Liste steht.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.134+` beginnt. |
+| 2 | lokal | *Special → Message Plug-ins Settings*. | *S/MIME Plugin* und *SpamHeaders Plugin* in der Liste stehen. |
+| 3 | POP | Beim POP-Konto zuerst unter *Tools → Options → Checking Mail* das Häkchen *Save password* **abwählen**, OK; dann *Special → Forget Password(s)*. *File → Check Mail*, Kennwort eingeben, im Dialog das Häkchen *Remember password* **setzen**, OK. Eudora beenden, neu starten, noch einmal *Check Mail* ([E-223](BEFUNDE.md#e-223)). Ohne das Abwählen sagt der Schritt nichts: *Forget Password(s)* löscht nur das Kennwort, das Häkchen bleibt, und dann speicherte auch der alte Bau sofort ([PRÜFER-100](../Befunde/PRUEFER-100.md) K1). | beim zweiten *Check Mail* **keine** Kennwortfrage kommt. |
+| 4 | lokal | Eine S/MIME-signierte Mail öffnen und auf das `.ems`-Symbol klicken ([E-222](BEFUNDE.md#e-222)). | **nicht** mehr *„Plugin no longer available“* kommt, sondern der Inhalt oder das Ergebnis der Signaturprüfung. Kommt *„Couldn't load the system security components (CAPICOM)“*, ist unsere Behebung in Ordnung; dann fehlt bei dir CAPICOM — bitte Bildschirmfoto, das wird ein eigener Punkt. |
+| 5 | lokal | Die Outlook-Rundmail aus deinem letzten Test öffnen, **zuerst einmal in den Text der Mail klicken**, dann *Edit → Find* „führung“ ([E-193](BEFUNDE.md#e-193)). | das Wort gefunden wird. Wenn nicht: in der `eudora.log` die letzte Zeile `E-86: Anzeigedatei …` suchen und genau diese `eud*.htm` aus deinem `%TEMP%` in den Testordner legen — sie wird nur am Prüfstand verwendet, nicht im Repo. |
+| 6 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
+bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
+
+**Ergebnis 05.11.2026, Gregor an 7.2.2.134** (Test-ZIP mit `MFC71.DLL`/`msvcp71.dll`, Bildschirmfotos und `eudora.log` bis 13:33 im Austauschordner `test_2.134`):
+
+| # | Ergebnis |
+|---|---|
+| 1 | **bestanden** — Titelzeile `Eudora 7.2.2.134+888cc82b 2026-11-05 10:27` |
+| 2 | **bestanden** — *S/MIME Plugin, v1.0.0.8* und *SpamHeaders Plugin (Paid Mode Only), v1.1.3* in der Liste, ohne dass Gregor etwas kopiert hat |
+| 3 | **bestanden** — POP und IMAP fragen nur einmal; auch mit vorher **abgewähltem** Häkchen (Gregor: *„auch wenn ich die checkbox deaktiviere, wird die passwort abfrage nur 1x angezeigt“*). Der erste Durchgang mit noch gesetztem Häkchen zählte nicht (PRÜFER-100 K1) |
+| 4 | **offen** — keine signierte Mail zur Hand |
+| 5 | **nicht bestanden, Ursache gefunden** (von Gregor): *Find Messages* öffnet die Mail mit dem Treffer **markiert**; *Edit → Find* sucht ab dieser Markierung weiter wie *Weitersuchen*, und kommt das Wort nur einmal vor, meldet es *„not found“* und springt nicht nach oben. Nach Klick und Scrollen wird es gefunden. Im Protokoll 13:31: *Find Messages* genaue Suche, 95 HTML-Mails in 125 ms, danach siebenmal `"f\130hrung" not found.`. Behebung von Gregor entschieden ([E-193](BEFUNDE.md#e-193)): von oben weitersuchen, Treffer markieren und sichtbar scrollen |
+| 6 | **bestanden** — alle 16 Starts von 7.2.2.134 im Protokoll enden mit `E-33 ExitInstance: erreicht` |
+
+Nebenbei erschien während Schritt 3 das Fenster *Update Eudora* mit der Website des Computer History Museum ([E-236](BEFUNDE.md#e-236)).
 
 ## <a id="test-7-2-2-133"></a>Dein Test an 7.2.2.133 — ca. 15 Minuten, an deinem echten System
 

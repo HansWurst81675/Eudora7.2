@@ -15,7 +15,7 @@ niemand angeklickt). Auf eine Frage verweist man mit ihrer Nummer, etwa
 | Neue Fassung, Start | [1](#1-wie-nehme-ich-bei-einer-neuen-fassung-post-konten-und-filter-mit) |
 | Abruf und Verschlüsselung | [2](#2-welche-verschlüsselung-und-welchen-port-nehme-ich), [3](#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist), [4](#4-es-kommt-ein-zertifikatsdialog-oder-ssl-negotiation-failed--was-tun) |
 | IMAP | [5](#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt), [20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu) |
-| Konten und Adressen | [6](#6-wie-trenne-ich-die-post-verschiedener-konten), [7](#7-wie-lege-ich-ein-zweites-konto-an), [8](#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben) |
+| Konten und Adressen | [6](#6-wie-trenne-ich-die-post-verschiedener-konten), [7](#7-wie-lege-ich-ein-zweites-konto-an), [8](#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben), [21](#21-warum-speichert-eudora-das-kennwort-nach-forget-passwords-wieder) |
 | Markieren und Filtern | [9](#9-wie-markiere-ich-wichtige-mails-farbig), [10](#10-wie-baue-ich-schnell-einen-filter-aus-einer-mail), [11](#11-wie-speichere-ich-einen-filter), [12](#12-filter-messages-strgj-tut-nichts), [13](#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte) |
 | Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus) |
 | Fehlersuche | [17](#17-wie-schreibt-eudora-mehr-ins-protokoll-loglevel), [18](#18-steht-schon-woanders) |
@@ -467,3 +467,26 @@ bleibt, und zwar für eine HTML-Mail, deren Teile alle verweigert werden
 (Fälle `E-188tm` und `E-188fm`), und der leere Eintrag beim Verschieben nach
 lokal (Fälle `E-188f` und `E-188fm`). Die Entscheidung steht in
 `Arbeitsweise/entscheidung-e188-k3-sicherheit-vor-platz.md`.
+
+## 21. Warum speichert Eudora das Kennwort nach Forget Password(s) wieder?
+
+Weil *Special → Forget Password(s)* nur das **gespeicherte Kennwort** löscht,
+nicht die Einstellung, es zu speichern. Das Häkchen *Remember password* im
+Kennwortdialog (für POP auch *Save password* unter *Tools → Options →
+Checking Mail*) bleibt gesetzt. Beim nächsten Abruf fragt Eudora zwar nach dem
+Kennwort, der Dialog kommt aber schon angehakt, und nach *OK* steht das
+Kennwort wieder in der `Eudora.ini`.
+
+Wer das Kennwort **nicht mehr** speichern will, wählt das Häkchen ab — im
+Kennwortdialog oder unter *Tools → Options → Checking Mail* — und nimmt dann
+*Forget Password(s)*.
+
+Das bleibt so; Gregor hat am 05.11.2026 entschieden, es so zu lassen und
+diesen Hinweis aufzunehmen. *Am Quelltext nachgesehen*
+(`persona.cpp:891-914`, [PRÜFER-100](../Befunde/PRUEFER-100.md) K1) und
+**am Programm geprüft**: Gregor an 7.2.2.134 am 05.11.2026 — das Häkchen war
+nach *Forget Password(s)* noch gesetzt. Ab dem nächsten Release (im Testpaket
+7.2.2.134 von Gregor bestätigt) speichert Eudora das Kennwort schon beim
+ersten Setzen des Häkchens
+([E-223](../Intern/BEFUNDE.md#e-223)); vorher fragte es dann noch ein zweites
+Mal.

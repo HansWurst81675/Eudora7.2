@@ -1,9 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-04 18:09:50
-freigabe=Gregor am 04.11.2026: 'Ja, heute erlaubt' (Testpaket 7.2.2.133, Suchfaelle am endgueltigen Bau)
-nur=E-141   (Teillauf, nicht der Gesamtstand)
+zeit=2026-11-05 17:54:11
+freigabe=Gregor am 05.11.2026: 'ja, pruefstand ist frei fuer dich' (7.2.2.135, Wiederholung E-194)
+nur=E-194   (Teillauf, nicht der Gesamtstand)
 faelle=2
 bestanden=2
 fehlgeschlagen=0
-fall=[ ok ] E-141p   E141 ERGEBNIS hochgeladen=1 rueckfrage=1 nicht-uebertragen=0 expunge=0 lokal=1
-fall=[ ok ] E-141g   geloescht=1 lebt=1
+fall=[ ok ] E-194p   E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
+fall=[ ok ] E-194k   E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1

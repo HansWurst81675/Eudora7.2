@@ -49,7 +49,7 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > (Gregors Entscheidungen 10 und 20 in [WEITERMACHEN.md](../Intern/WEITERMACHEN.md#entscheidungen)).
 > `VERSION` trägt dieselbe vierteilige Nummer wie `Eudora71/Version.h`.
 > **Seit 7.2.2.132 heißt jede Fassung `7.2.2.N`**, auch eine, die nur Fehler
-> behebt (Gregor 04.11.2026, Entscheidung 26; 7.2.2.133 ist erschienen, das nächste ist 7.2.2.134);
+> behebt (Gregor 04.11.2026, Entscheidung 26; 7.2.2.133 ist erschienen, die Testpakete 7.2.2.134 und 7.2.2.135 sind geschnürt, das nächste Release trägt die Nummer des zuletzt getesteten Testpakets);
 > vom Release 7.2.1.128 bis 7.2.1.131 hieß sie `7.2.1.N` (Entscheidung 20),
 > Testpaket wie Release; davor hießen Testpakete `7.2.0.N`. ZIP (`Eudora72-7.2.1.N-release.zip` bzw.
 > `Eudora72-7.2.2.N-release.zip`), Marke (`v7.2.1.N` bzw. `v7.2.2.N`) und
@@ -183,6 +183,36 @@ haben.
 > weil beide Pakete unter diesem Namen veröffentlicht sind und die Prüfsummen sonst
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
+
+## 7.2.2.135 — Testpaket, Zweig `e223_e222_e193rest`
+
+**Geschnürt am 05.11.2026 um 17:58, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.135-release`), ZIP daneben; nicht veröffentlicht.**
+
+| | |
+|---|---|
+| Bau | `Eudora 7.2.2.135+1cf4a59f 2026-11-05 16:30`, 0 Fehler, Unit-Tests 425/425 |
+| Prüfstand | voller Lauf am endgültigen Bau `1cf4a59f`: 103 Fälle, 100 bestanden, 3 rot. `E-194k` ohne Ergebniszeile; `E-223p` `beendet=0` und `E-223w` **Absturz von Eudora.exe** (`c0000005`, 17:33:22, `C:\Temp\E223`). Wiederholt einzeln am selben Bau: `E-223p`, `E-223w`, `E-194p`, `E-194k` grün. **Der Absturz ist nicht geklärt und nicht behoben:** laut `Exception.log` schickte das Messskript `WM_CLOSE` ans Hauptfenster, während der POP-Abruf in `~CPOPSession` → `NotifyMailCheckResults` → `AlertDialog` (`GetMail.cpp:269`) noch seinen Hinweis zeigte; `CMainFrame::OnClose` lief in der Nachrichtenschleife dieses Dialogs, `CloseDown` stürzte in `mainfrm.cpp:5868` (`g_Nicknames->CanCloseFrame`) ab. Zeitabhängig. Nur die Absturzzeile ist original; `OnClose`/`CloseDown` hat das Projekt umgebaut, die Herkunft ist offen. Ausgelöst am Prüfstand durch zwei Schließwünsche aus Skripten (Vermutung zur Ursache, gemessen ist nur der Aufrufstapel; [E-239](../Intern/BEFUNDE.md#e-239), [LEKTOR-151](../Befunde/LEKTOR-151.md#l-151.2)) |
+| Prüfbericht | BESTANDEN nach den Wiederholungen (425 Unit-Tests, 19 Schranken, 103 Prüfstandsfälle) — er wertet je Fall den letzten Lauf; der einmalige Absturz steht nur hier; gebaut mit `-RollenSindGelaufen` (Gregor 05.11.2026: *„erstelle mir dann ein lokales zip zum testen“*; PRÜFER-101 eingearbeitet, LEKTOR steht vor PR und Release aus) |
+| Paket | `Eudora72-7.2.2.135-release.zip`, 9 179 111 Byte, SHA-256 `c249ee57fb612abee2dd39729aaa80544a4d049c276460730db019e0ac534f8f` — ohne die beiden DLLs; `paket-pruefen`: keine Fehler, Kriterium 0 JA, Defender 0 Funde, vier Warnungen wie bisher; `Eudora.exe`, `Imap.dll`, `EudoraRes.dll` byte-gleich mit dem Bau |
+| Test-ZIP | `Eudora72-7.2.2.135-test-mit-smime-dlls.zip`, 9 802 805 Byte, SHA-256 `611bb64701adb24feacc11fdfc10b685fc572ee7fc9adb9b35a91a37692759ef` = Paket-ZIP plus `MFC71.DLL` und `msvcp71.dll` (dieselben wie bei 7.2.2.134) neben `Eudora.exe`; liegt neben dem Paket-ZIP und im Austauschordner `test_2.135` |
+
+Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ok, melde dich wenn 2.135 da ist“*, *„erstelle mir dann ein lokales zip zum testen.“* Inhalt: alles aus 7.2.2.134 ([E-223](../Intern/BEFUNDE.md#e-223), [E-222](../Intern/BEFUNDE.md#e-222)) und der Rest von [E-193](../Intern/BEFUNDE.md#e-193) (*Edit → Find* nach dem Öffnen aus *Find Messages*). **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.135.
+
+## 7.2.2.134 — Testpaket, Zweig `e223_e222_e193rest`
+
+**Geschnürt am 05.11.2026 um 13:15, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.134-release`), ZIP daneben; nicht veröffentlicht.** Nummer von Gregor am 05.11.2026 (*„paket nummer ist dann 2.134, das ist ok für mich“*); Zweigname von Gregor am 05.11.2026 bestätigt. Inhalt: Behebungen aus Gregors Test an 7.2.2.133, [E-223](../Intern/BEFUNDE.md#e-223) und [E-222](../Intern/BEFUNDE.md#e-222); zu [E-193](../Intern/BEFUNDE.md#e-193) nur Messfälle. **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c; Gregor 05.11.2026: im Release nur der Hinweis auf Herkunft und Ablage).
+
+| | |
+|---|---|
+| Bau | `Eudora 7.2.2.134+888cc82b 2026-11-05 10:27`, 0 Fehler, Unit-Tests 424/424 |
+| Prüfstand | voller Lauf am endgültigen Bau `888cc82b`: 102 Fälle, 102 bestanden (67 min, 64 Eudora-Starts), darunter `E-223p`, `E-222p`, `E-193f`, `E-193fd` |
+| Prüfbericht | BESTANDEN (424 Unit-Tests, 19 Schranken, 102 Prüfstandsfälle); gebaut mit `-RollenSindGelaufen` (Gregor 05.11.2026: *„baue mir dann lokal ein 2.134 zip mit diesen DLLs drin“*; LEKTOR steht vor PR und Release aus) |
+| Paket | `Eudora72-7.2.2.134-release.zip`, 9 179 016 Byte, SHA-256 `7dad878c63ff6b828f1def5b483a01d919888b1c0c0c608781410164fdf72e9a` — ohne die beiden DLLs, Kandidat für ein Release; `paket-pruefen`: keine Fehler, Kriterium 0 JA, Defender 0 Funde, vier Warnungen wie bisher; `Eudora.exe`, `Imap.dll`, `EudoraRes.dll` byte-gleich mit dem Bau |
+| Test-ZIP | `Eudora72-7.2.2.134-test-mit-smime-dlls.zip`, 9 802 710 Byte, SHA-256 `0ad884310056844e4a5290f65c7d337fc9a9f1584f2b896d55f14e353358c7a6` = Paket-ZIP plus `MFC71.DLL` (1 060 864 Byte, SHA-256 `a08ab5280687d699ccd307196e72847b23d0a475744ef7c73654defee0fb2cf2`, aus Gregors Ordner) und `msvcp71.dll` (503 808 Byte, Microsoft 7.10.6052.0, SHA-256 `71d3cc0edd1866c77de6444a260512f54c40a8413f673abf79fa24be27495c23`) neben `Eudora.exe`; liegt neben dem Paket-ZIP und im Austauschordner `test_2.134` |
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.134.
 
 ## 7.2.2.133 — Release `v7.2.2.133`, Zweig `paket_7_2_2_133`
 

@@ -1886,7 +1886,8 @@ BOOL CTridentView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWhole
 		if( !vbFound )
 		{
 			pNextRange->Release();
-			return FALSE;
+			// E-193: Lesezeichen nicht mehr gueltig - von oben suchen (siehe unten).
+			return DoFindFirst( szSearch, bMatchCase, bWholeWord, bSelect );
 		}
 
 
@@ -1930,6 +1931,18 @@ BOOL CTridentView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWhole
 		{
 			pRange->Release();
 		}
+	}
+
+	// E-193 (Gregor 05.11.2026, Variante A): ab dem Lesezeichen nichts mehr
+	// gefunden - einmal von oben suchen, markieren und dorthin scrollen
+	// (DoFindFirst). Das Lesezeichen setzt auch ein Oeffnen aus Find Messages
+	// (SearchView.cpp, DoFindFirst auf den Treffer); stand das Wort nur einmal
+	// in der Mail, meldete Edit -> Find danach "not found", obwohl es sichtbar
+	// war. Kein Kreis: DoFindFirst ruft DoFindNext nicht, und jeder Aufruf
+	// kommt aus genau einer Benutzerhandlung (Weitersuchen, F3).
+	if( !bReturn )
+	{
+		return DoFindFirst( szSearch, bMatchCase, bWholeWord, bSelect );
 	}
 
 	return bReturn;
@@ -2971,6 +2984,16 @@ IHTMLElement* pElement )
 
 	// Convert %20 to ' ' and forward slashes to back slashes
 	szHRef.Replace("%20", " ");
+	// E-222: Trident liefert den Verweis prozentkodiert zurueck. Die
+	// Plugin-Kennung "<5335.0002>" eines signierten Teils kam als
+	// "%3C5335.0002%3E" bei InterpretFile an, das kein Plugin erkannte
+	// ("Plugin no longer available", Originalfehler). Nur die beiden Klammern
+	// werden zurueckgewandelt, wie %20; ein volles Entschluesseln des Pfads
+	// ist ein eigener Schritt.
+	szHRef.Replace("%3C", "<");
+	szHRef.Replace("%3c", "<");
+	szHRef.Replace("%3E", ">");
+	szHRef.Replace("%3e", ">");
 	szHRef.Replace('/', '\\');
 
 	if (isOnDisplayPlugin)
