@@ -9,8 +9,11 @@
 - **Gemergt am 05.11.2026:** #225 (`paket_7_2_2_133`, Release-Stand und Nachträge) und #226
   (`e223_e222_e193rest`: [E-223](BEFUNDE.md#e-223), [E-222](BEFUNDE.md#e-222), Rest von
   [E-193](BEFUNDE.md#e-193)).
-- **Bei Gregor im Test:** Testpaket 7.2.2.135 (Test-ZIP im Austauschordner `test_2.135`,
-  nicht veröffentlicht; Schritte im [Testplan](TESTPLAN.md#test-7-2-2-135)).
+- **Testpaket 7.2.2.135 von Gregor getestet:** alle vier Schritte bestanden (05.11.2026,
+  [Testplan](TESTPLAN.md#test-7-2-2-135)); [E-193](BEFUNDE.md#e-193) und
+  [E-222](BEFUNDE.md#e-222) an seinem System bestätigt, [E-223](BEFUNDE.md#e-223) schon an
+  7.2.2.134. Nicht veröffentlicht. Offen vor einem Release: [E-239](BEFUNDE.md#e-239)
+  (Behebung auf `e239_absturz_beenden` in Arbeit).
 - **In Arbeit:** Zweig `e239_absturz_beenden` ([E-239](BEFUNDE.md#e-239): Absturz beim
   Beenden, während der Hinweis nach dem Mailabruf offen ist; erst nachstellen, dann beheben)
   und Zweig `doku_weitermachen_kopf` (dieser Kopf, Schranke

@@ -20,6 +20,15 @@ der `Eudora.exe`, du musst nichts dazukopieren.
 Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
 bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
+**Ergebnis 05.11.2026, Gregor an 7.2.2.135** (Test-ZIP mit `MFC71.DLL`/`msvcp71.dll`, `eudora.log` bis 20:05 und Bildschirmfotos im Austauschordner `test_2.135`): **alle vier Schritte bestanden.**
+
+| # | Ergebnis |
+|---|---|
+| 1 | **bestanden** — `Version 7.2.2.135` im Protokoll (Start 19:59:29), Titelzeile `Eudora 7.2.2.135+1cf4a59f 2026-11-05 16:30` |
+| 2 | **bestanden** — *Find Messages* nahm die genaue Suche (93 HTML-Mails in 110 ms), danach kein *„not found“* mehr im Protokoll; Gregors Bildschirmfoto zeigt das Wort in der Fußzeile **markiert und im sichtbaren Bereich**, ohne Klick ([E-193](BEFUNDE.md#e-193)) |
+| 3 | **bestanden** am zweiten PC, 21:15 (`screenshot20261105b.jpg`, `screenshot20261105c.jpg`): der Klick auf das `.ems`-Symbol ruft das S/MIME-Plugin auf; es meldet *„Signature verification failed … Stammzertifikat, das beim Vertrauensanbieter nicht als vertrauenswürdig gilt … Would you like to view the certificate of the signature?“* — ein echtes Prüfergebnis des Plugins, CAPICOM ist also vorhanden. Gregor: *„ja, nach "yes" konnte ich den inhalt der mail lesen, das ist gut.“* Über dem Inhalt stehen zwei Zeilen Kopftext, siehe Nachtrag in [E-222](BEFUNDE.md#e-222) |
+| 4 | **bestanden** — ein einziger Schließwunsch, sauberes Ende bis `E-33 ExitInstance: erreicht`, kein Absturz |
+
 ## <a id="test-7-2-2-134"></a>Dein Test an 7.2.2.134 — ca. 10 Minuten, an deinem echten System
 
 7.2.2.134 ist ein **Testpaket** mit zwei Fehlerbehebungen aus deinem Test an
