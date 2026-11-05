@@ -186,7 +186,15 @@ haben.
 
 ## 7.2.2.134 — Testpaket, Zweig `e223_e222_e193rest`
 
-**Nur übersetzt am 05.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer von Gregor am 05.11.2026 (*„paket nummer ist dann 2.134, das ist ok für mich“*); Zweigname von Gregor am 05.11.2026 bestätigt. Inhalt: Behebungen aus Gregors Test an 7.2.2.133, [E-223](../Intern/BEFUNDE.md#e-223) und [E-222](../Intern/BEFUNDE.md#e-222); zu [E-193](../Intern/BEFUNDE.md#e-193) nur Messfälle. **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
+**Geschnürt am 05.11.2026 um 13:15, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.134-release`), ZIP daneben; nicht veröffentlicht.** Nummer von Gregor am 05.11.2026 (*„paket nummer ist dann 2.134, das ist ok für mich“*); Zweigname von Gregor am 05.11.2026 bestätigt. Inhalt: Behebungen aus Gregors Test an 7.2.2.133, [E-223](../Intern/BEFUNDE.md#e-223) und [E-222](../Intern/BEFUNDE.md#e-222); zu [E-193](../Intern/BEFUNDE.md#e-193) nur Messfälle. **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c; Gregor 05.11.2026: im Release nur der Hinweis auf Herkunft und Ablage).
+
+| | |
+|---|---|
+| Bau | `Eudora 7.2.2.134+888cc82b 2026-11-05 10:27`, 0 Fehler, Unit-Tests 424/424 |
+| Prüfstand | voller Lauf am endgültigen Bau `888cc82b`: 102 Fälle, 102 bestanden (67 min, 64 Eudora-Starts), darunter `E-223p`, `E-222p`, `E-193f`, `E-193fd` |
+| Prüfbericht | BESTANDEN (424 Unit-Tests, 19 Schranken, 102 Prüfstandsfälle); gebaut mit `-RollenSindGelaufen` (Gregor 05.11.2026: *„baue mir dann lokal ein 2.134 zip mit diesen DLLs drin“*; LEKTOR steht vor PR und Release aus) |
+| Paket | `Eudora72-7.2.2.134-release.zip`, 9 179 016 Byte, SHA-256 `7dad878c63ff6b828f1def5b483a01d919888b1c0c0c608781410164fdf72e9a` — ohne die beiden DLLs, Kandidat für ein Release; `paket-pruefen`: keine Fehler, Kriterium 0 JA, Defender 0 Funde, vier Warnungen wie bisher; `Eudora.exe`, `Imap.dll`, `EudoraRes.dll` byte-gleich mit dem Bau |
+| Test-ZIP | `Eudora72-7.2.2.134-test-mit-smime-dlls.zip`, 9 802 710 Byte, SHA-256 `0ad884310056844e4a5290f65c7d337fc9a9f1584f2b896d55f14e353358c7a6` = Paket-ZIP plus `MFC71.DLL` (1 060 864 Byte, SHA-256 `a08ab5280687d699ccd307196e72847b23d0a475744ef7c73654defee0fb2cf2`, aus Gregors Ordner) und `msvcp71.dll` (503 808 Byte, Microsoft 7.10.6052.0, SHA-256 `71d3cc0edd1866c77de6444a260512f54c40a8413f673abf79fa24be27495c23`) neben `Eudora.exe`; liegt neben dem Paket-ZIP und im Austauschordner `test_2.134` |
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.134.
 

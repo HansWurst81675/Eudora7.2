@@ -183,3 +183,4 @@
 - [E-188 K3 Sicherheit vor Platz](entscheidung-e188-k3-sicherheit-vor-platz.md) — Gregor 04.11.: Mail mit verweigertem Teil bleibt ungeladen; K2 im selben Sinn
 - [Randfälle unkritisch](entscheidung-randfaelle-unkritisch.md) — Gregor 04.11.: E-123/124/126/129 Stufe unkritisch (Randfall)
 - [Prüfstand mit Fenster 05.11.](entscheidung-pruefstand-fenster-05-11.md) — erlaubt nur an diesem Tag (E-193-Rest)
+- [S-3c DLLs und S/MIME-Neubau](entscheidung-s3c-dlls-05-11.md) — Gregor 05.11.: MFC71/msvcp71 nicht ausliefern, Hinweis; SMIME später neu bauen; Test-ZIP darf sie haben

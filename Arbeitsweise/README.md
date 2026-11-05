@@ -129,6 +129,7 @@ eine Datei liest, liest diese.
 | [entscheidung-pruefstand-fenster-03-11](entscheidung-pruefstand-fenster-03-11.md) | Gregor 03.11.2026 - Prüfstand mit Eudora-Fenster nur an diesem Tag erlaubt (E-128, E-170) |
 | [entscheidung-pruefstand-fenster-04-11](entscheidung-pruefstand-fenster-04-11.md) | Gregor 04.11.2026: Prüfstand mit Eudora-Fenstern heute erlaubt (E-188 unter C:\Temp\E188) |
 | [entscheidung-pruefstand-fenster-05-11](entscheidung-pruefstand-fenster-05-11.md) | Gregor 05.11.2026: Prüfstand mit Fenster heute erlaubt (E-193-Rest messen: Outlook-Rundmail, Edit→Find) |
+| [entscheidung-s3c-dlls-05-11](entscheidung-s3c-dlls-05-11.md) | Gregor 05.11.2026: MFC71/msvcp71 nicht ausliefern, Hinweis in Release-Notizen; S/MIME-Plugin später aus plugins/SMIME neu bauen; Test-ZIP für Gregor darf sie enthalten |
 | [entscheidung-pruefstand-fenster-30-10](entscheidung-pruefstand-fenster-30-10.md) | Gregor 30.10.2026 ~13:10: Prüfstandsläufe mit Fenster ab sofort erlaubt; er hält sich zurück und testet das Release 7.2.1.128 separat |
 | [entscheidung-pruefstand-fenster-31-10](entscheidung-pruefstand-fenster-31-10.md) | Gregor 31.10.2026 ~19:15 - Prüfstandsläufe mit Fenster heute erlaubt: 'ja, starte auf deinem lokalen prüfstand deine testes, ich halte mich zurück'; VM-Uhr ging ~20 h nach |
 | [entscheidung-randfaelle-unkritisch](entscheidung-randfaelle-unkritisch.md) | Gregor 04.11.2026: E-123, E-124, E-126, E-129 bekommen die Stufe unkritisch (Randfall) - Fortsetzung seiner Entscheidung vom 23.10. |
