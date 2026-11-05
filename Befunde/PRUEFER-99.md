@@ -12,7 +12,7 @@ Wichtiger als die Laufzeit ist ein Fund bei **IMAP** (K1). Bisher suchte der Ind
 
 Zwei weitere Funde betreffen Stellen, die die Behebungen nicht berühren. Bei IMAP hat der Betreff dieselbe Faltung wie bei [E-221](../Intern/BEFUNDE.md#e-221), sie liest ihn vermutlich als **leer** (K5). Und [E-220](../Intern/BEFUNDE.md#e-220) nimmt bei einem so gefalteten Betreff wieder nur 63 Zeichen (K6).
 
-**Kein Fund hält das Testpaket auf.** K1 und K2 sollte Gregor aber an einem IMAP-Postfach und an einem großen Postfach prüfen, bevor 7.2.2.133 als Release hinausgeht. Ich habe zwei neue Kennungen vergeben: E-232 (K1) und E-233 (K5). Beide stehen noch nicht in BEFUNDE.md.
+**Kein Fund hält das Testpaket auf.** K1 und K2 sollte Gregor aber an einem IMAP-Postfach und an einem großen Postfach prüfen, bevor 7.2.2.133 als Release hinausgeht. Ich habe zwei neue Kennungen vergeben: E-232 (K1) und [E-233](../Intern/BEFUNDE.md#e-233) (K5). Beide stehen noch nicht in BEFUNDE.md. *(Nachtrag 05.11.2026 nach [LEKTOR-150](LEKTOR-150.md#l-150.4): [E-233](../Intern/BEFUNDE.md#e-233) steht jetzt in BEFUNDE; E-232 ist nicht vergeben, K1 ist in [E-193](../Intern/BEFUNDE.md#e-193) behoben.)*
 
 ## 1. E-193: Was die genaue Suche je Mail öffnet
 
@@ -79,7 +79,7 @@ Die bekannte Grenze aus [PRUEFER-78](PRUEFER-78.md) K2 gilt jetzt auch für Papi
 
 **Empfang (belegt, `summary.cpp:2291-2299`).** Eine Folgezeile wird nur gelesen, solange `m_Subject` leer ist. `bInSubject` wird von jeder Zeile ohne führenden Leerraum zurückgesetzt (:2257-2259). Das Lesen hinter dem Zeilenende bei Folgezeilen unter 8 Zeichen ist damit auch weg.
 
-**Dieselbe Stelle bei IMAP (belegt, K5, E-233).** `CImapDownloader::ParseMinimalHeaderInMemory` (ImapDownload.cpp:2354-2365) und `ParseHeaderInMemory` (:2725-2736) bekommen die **ganze** Kopfzeile samt Folgezeilen in `Buffer` (:2635-2676). Sie schneiden beim ersten `\r\n` ab und nehmen `Buffer + 8`. `ImapFix2047` entfernt eine Faltung nur zwischen zwei kodierten Wörtern (ImapLex822.cpp:775-790), nicht die direkt hinter `Subject:`. Bei `Subject:` mit Zeilenumbruch bleibt so `"Subject:"` übrig, und der Betreff ist **leer**. Das trifft neue IMAP-Mails, deren Kopf zuerst allein geholt wird (:1751, :1950). Ob ein späteres volles Laden den Betreff wieder setzt, habe ich nicht verfolgt (Vermutung: über `SetSummaryInfoFromHD`, :943). `befund-suchen.pl` auf beide Funktionsnamen: kein bestehender Befund.
+**Dieselbe Stelle bei IMAP (belegt, K5, [E-233](../Intern/BEFUNDE.md#e-233)).** `CImapDownloader::ParseMinimalHeaderInMemory` (ImapDownload.cpp:2354-2365) und `ParseHeaderInMemory` (:2725-2736) bekommen die **ganze** Kopfzeile samt Folgezeilen in `Buffer` (:2635-2676). Sie schneiden beim ersten `\r\n` ab und nehmen `Buffer + 8`. `ImapFix2047` entfernt eine Faltung nur zwischen zwei kodierten Wörtern (ImapLex822.cpp:775-790), nicht die direkt hinter `Subject:`. Bei `Subject:` mit Zeilenumbruch bleibt so `"Subject:"` übrig, und der Betreff ist **leer**. Das trifft neue IMAP-Mails, deren Kopf zuerst allein geholt wird (:1751, :1950). Ob ein späteres volles Laden den Betreff wieder setzt, habe ich nicht verfolgt (Vermutung: über `SetSummaryInfoFromHD`, :943). `befund-suchen.pl` auf beide Funktionsnamen: kein bestehender Befund.
 
 ## 7. Zusammenführen
 
@@ -173,7 +173,7 @@ Gemessen. Die Quelle habe ich vorübergehend mit Perl `:raw` geändert, je Probe
 | [K2](#k2) | genaue Suche öffnet jede HTML-Mail, auch bei Kriterien ohne `Html2Text`; bei IMAP lädt sie ungeholte Mails; Laufzeit an großem Postfach ungemessen | mittel | nein; Gregors Test an einem großen Postfach |
 | [K3](#k3) | lange Suche ohne Treffer nicht mit Esc abzubrechen | gering | nein |
 | [K4](#k4) | `TestE193` grün bei vorzeichenbehaftetem Vergleich, `> 0x80`, fehlendem X1-Ausstieg, falscher `&euro;`-Länge | gering | nein |
-| [K5](#k5) | IMAP: Betreff mit Faltung hinter `Subject:` wird leer gelesen (wie [E-221](../Intern/BEFUNDE.md#e-221), anderer Ort); E-233 | wichtig | nein (Original, durch das Paket nicht berührt) |
+| [K5](#k5) | IMAP: Betreff mit Faltung hinter `Subject:` wird leer gelesen (wie [E-221](../Intern/BEFUNDE.md#e-221), anderer Ort); [E-233](../Intern/BEFUNDE.md#e-233) | wichtig | nein (Original, durch das Paket nicht berührt) |
 | [K6](#k6) | [E-220](../Intern/BEFUNDE.md#e-220): bei Faltung hinter `Subject:` nur 63 Zeichen im Vorschlag | gering | nein |
 | T1 | `pList` vor der NULL-Prüfung benutzt | – | nein |
 | T2 | ASSERT im Debug-Bau bei Kriterien ohne Text | – | nein |

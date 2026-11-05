@@ -306,7 +306,7 @@ Auf derselben Seite regelt *„Delete automatic attachments“*, was mit Dateien
 geschieht, die Eudora selbst anhängt (*Never*, *After sending message*,
 *When message emptied from Trash* — ab Werk das letzte).
 
-Eine Ausnahme gilt ab der nächsten Fassung: Bei einer IMAP-Mail, die nie ganz
+Eine Ausnahme gilt ab 7.2.2.133: Bei einer IMAP-Mail, die nie ganz
 geladen wurde, bleiben die dabei gesammelten Anhangdateien nach dem Löschen
 liegen (am Quelltext belegt), siehe
 [Frage 20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu).
@@ -445,7 +445,8 @@ beim Verschieben nach lokal, zwischen zwei Konten am Quelltext belegt):
 
 Steckt der verweigerte Teil in einer **weitergeleiteten Mail** (als Anhang
 eingebettet), bricht die Anzeige dort ab: die Teile der äußeren Mail dahinter
-erscheinen in dieser Ladung nicht. Die Mail bleibt „nicht geladen“ und wird
+erscheinen in dieser Ladung nicht und, solange der Server den Teil verweigert,
+auch bei keinem späteren Öffnen. Die Mail bleibt „nicht geladen“ und wird
 beim nächsten Öffnen neu geholt; verloren geht nichts
 ([PRÜFER-97](../Befunde/PRUEFER-97.md#k1) K1, am Quelltext belegt).
 
@@ -453,7 +454,7 @@ Verweigert der Server den Teil nur einmal, holt das nächste Öffnen die Mail
 vollständig, und das Neuholen hört auf. Ob *Compact* die gewachsene
 Postfachdatei bei IMAP-Ordnern wieder verkleinert, ist **nicht gemessen**.
 
-Das gilt **ab der nächsten Fassung** (im Quellstand, noch in keinem Paket).
+Das gilt **ab 7.2.2.133**.
 
 *Am Quelltext belegt* ([PRÜFER-95](../Befunde/PRUEFER-95.md#k3) K3,
 [E-188](../Intern/BEFUNDE.md#e-188)): dass die Mail bei jedem Anzeigen neu
