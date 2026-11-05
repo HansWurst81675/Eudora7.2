@@ -185,3 +185,5 @@
 - [Prüfstand mit Fenster 05.11.](entscheidung-pruefstand-fenster-05-11.md) — erlaubt nur an diesem Tag (E-193-Rest)
 - [S-3c DLLs und S/MIME-Neubau](entscheidung-s3c-dlls-05-11.md) — Gregor 05.11.: MFC71/msvcp71 nicht ausliefern, Hinweis; SMIME später neu bauen; Test-ZIP darf sie haben
 - [E-193 Suche mit Umbruch](entscheidung-e193-suche-umbruch-05-11.md) — Gregor 05.11.: Edit→Find von oben weiter + zum Treffer scrollen; Forget Password lässt Häkchen
+- [E-151 Prüfstand aus dem Klon](entscheidung-e151-pruefstand-klon-05-11.md) — Gregor 05.11.: Starter fragt fremde Nutzer (j/n), S/MIME überspringen, Prüfserver nach Absturz aufräumen
+- [E-169 Hintergrund drucken](entscheidung-e169-hintergrund-drucken-05-11.md) — Gregor 05.11.: INI-Schalter, Vorgabe aus; EINSTELLUNGEN.md, Settings Reference, FAQ
