@@ -186,7 +186,17 @@ haben.
 
 ## 7.2.2.136 — Testpaket, Zweig `paket_7_2_2_136`
 
-**Nur übersetzt am 05.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Inhalt: `main` mit 7.2.2.135, dazu [E-239](../Intern/BEFUNDE.md#e-239) (Zweig `e239_absturz_beenden`) und [E-169](../Intern/BEFUNDE.md#e-169) (Zweig `e169_druckvorschau`). **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
+**Geschnürt am 05.11.2026 um 22:30, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.136-release`), ZIP daneben; nicht veröffentlicht. Testpaket ohne vollen Prüfstandslauf geschnürt (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*); voller Lauf am Folgetag vor einem Release, mit Gregors neuer Erlaubnis für den Prüfstand.**
+
+| | |
+|---|---|
+| Bau | `Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11`, 0 Fehler, Unit-Tests 428/428, Schranken 19/19 |
+| Prüfstand | **nicht gelaufen, geplant für den 06.11.2026** — gemessen sind [E-239](../Intern/BEFUNDE.md#e-239) und [E-169](../Intern/BEFUNDE.md#e-169) nur an den Bauten ihrer Zweige (`E-239p`, `E-169p`/`b`/`h`), nicht an diesem Bau |
+| Prüfbericht | NICHT VOLLSTÄNDIG (Prüfstand an anderem Bau bzw. nie gelaufen); gebaut mit `-OhnePruefbericht` (genau dafür vorgesehen: Prüfbericht nicht BESTANDEN, weil Prüfstandsfälle an anderem Bau oder nie gelaufen; Begründung Gregors Satz oben) und `-RollenSindGelaufen` (LEKTOR steht vor PR und Release aus) |
+| Paket | `Eudora72-7.2.2.136-release.zip`, 9 179 940 Byte, SHA-256 `12dda7a6cef90f62c0e409d34997dc38b13e36a18eb552d6163d333e451e54ad` — ohne die beiden DLLs; `paket-pruefen`: keine Fehler, Kriterium 0 JA, Defender 0 Funde, vier Warnungen wie bisher; `Eudora.exe`, `Imap.dll`, `EudoraRes.dll` byte-gleich mit dem Bau |
+| Test-ZIP | `Eudora72-7.2.2.136-test-mit-smime-dlls.zip`, 9 803 634 Byte, SHA-256 `89f747f1ab4cc6de5e182e84ba2694306fb42797c17dc633a31fd738d9437b95` = Paket-ZIP plus `MFC71.DLL` und `msvcp71.dll` (dieselben wie bei 7.2.2.134) neben `Eudora.exe`; liegt neben dem Paket-ZIP und im Austauschordner `test_2.136` |
+
+Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Inhalt: `main` mit 7.2.2.135, dazu [E-239](../Intern/BEFUNDE.md#e-239) (Zweig `e239_absturz_beenden`) und [E-169](../Intern/BEFUNDE.md#e-169) (Zweig `e169_druckvorschau`). **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.136.
 

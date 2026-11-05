@@ -117,9 +117,9 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## 7.2.2.136 — Testpaket (nur übersetzt am 05.11.2026, nicht veröffentlicht): kein Absturz beim Beenden bei offenem Hinweis (E-239), Druck mit Hintergründen auf Wunsch (E-169)
+## 7.2.2.136 — Testpaket (geschnürt am 05.11.2026 ohne vollen Prüfstandslauf, nicht veröffentlicht): kein Absturz beim Beenden bei offenem Hinweis (E-239), Druck mit Hintergründen auf Wunsch (E-169)
 
-Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Sammelzweig `paket_7_2_2_136` aus `main` (mit 7.2.2.135) und den Zweigen `e239_absturz_beenden` und `e169_druckvorschau`. **Nur übersetzt, noch nicht geschnürt, nicht veröffentlicht.**
+Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Sammelzweig `paket_7_2_2_136` aus `main` (mit 7.2.2.135) und den Zweigen `e239_absturz_beenden` und `e169_druckvorschau`. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.136-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner `test_2.136`), nicht veröffentlicht. Testpaket ohne vollen Prüfstandslauf geschnürt (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*); voller Lauf am Folgetag vor einem Release.** Bau `Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11`, Unit-Tests 428/428, Schranken 19/19, Prüfstand nicht gelaufen ([PAKETE](Releases/PAKETE.md)).
 
 * **Kein Absturz mehr, wenn Eudora beendet wird, während der Hinweis nach dem Mailabruf noch offen ist** ([E-239](Intern/BEFUNDE.md#e-239), Originalfehler). Das Beenden wird aufgeschoben, bis der Hinweis geschlossen ist; nach *OK* beendet sich Eudora von selbst, ein zweites `CloseDown` gibt es nicht. Am Prüfstand gemessen (`E-239p`: rot am Bau `7.2.2.135+1cf4a59f`, grün mit der Behebung; kein Mailverlust), Regressionstest `TestE239.cpp`. Gefunden im vollen Prüfstandslauf an 7.2.2.135.
 * **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll`** auf seinen Wunsch, wie bei 7.2.2.134 und 7.2.2.135; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung ([S-3](Intern/BEFUNDE.md#s-3), S-3c).
