@@ -51,7 +51,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-176](Intern/BEFUNDE.md#e-176)** | Die Behebung von E-28 liest beim Schließen einer verworfenen neuen Nachricht aus einer sc… | **nie gemessen** | die Messung unter Page-Heap, und ein Test, der `CSummary` und `CMessageFrame` echt anlegt (`TestE176.cpp` liest nur den Quelltext). **Was es zum Messe… |
 | **[E-173](Intern/BEFUNDE.md#e-173)** | Im Filterfenster sind die Labels der Aktion *Make Label* einmal ausgegraut und nicht wähl… | **nie gemessen** | erst **nach dem Release 7.2.1** — nachstellen (unter welcher Bedingung ist die Liste grau: neuer Filter, bestimmte vorherige Aktion, Persönlichkeit… |
 | **[E-170](Intern/BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | 03.11.2026 an 7.2.2.132 | messen, warum das Label am 29.10.2026 an Paket 1.0.127 fehlte — nächste Spur (Vermutung): die alte Zusammenfassung stand nach dem automatischen L… |
-| **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | **nie gemessen** | erst **nach dem Release 7.2.1** (Gregor 29.10.2026) die Ursache — welche Mails es trifft und warum die Zwischendatei `eud*.htm` ohne Bilder gedruckt… |
+| **[E-169](Intern/BEFUNDE.md#e-169)** | Die Druckvorschau einer HTML-Mail zeigt keine Bilder und keine farbigen Flächen — im Le… | 05.11.2026 an 7.2.2.135 | der Druck auf Papier (*File → Print*, `OLECMDID_PRINT`) ist nicht gemessen — ob MSHTML den Wert dort ebenso beim Aufruf liest wie bei der Vorschau… |
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 — **veraltet** | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein Werkzeug, das jeden Prüfstand aus dem Repo neu aufbaut (Testdaten plus INI-Vorlage je Stand); je Fall eine Zeile Klartext; der Abschnitt „Vorau… |
@@ -116,6 +116,12 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 > Fortschritt, solange der Anwender nichts damit tun kann.
 
 ---
+
+## Im Quellstand, noch in keinem Paket
+
+**Zweig `e169_druckvorschau`, Quellstand weiter 7.2.2.135 — nur übersetzt; kommt mit dem nächsten Paket.**
+
+* **Neuer Schlüssel `PrintBackground`: Druck und Druckvorschau einer HTML-Mail zeigen auf Wunsch auch die Hintergründe** ([E-169](Intern/BEFUNDE.md#e-169), Gregor 05.11.2026: *„schaltbar mit default = OFF“*). Farbig hinterlegte Knöpfe und Flächen und Bilder, die als Hintergrund eingebaut sind, fielen beim Drucken weg, weil der Internet Explorer Hintergründe ab Werk nicht druckt. Mit `PrintBackground=1` in `[Settings]` schaltet Eudora das nur für den Aufruf von *Print* bzw. *Print Preview* ein und stellt die Einstellung gleich danach wieder her; Vorgabe `0`, also wie bisher. Kein Menüpunkt — beschrieben in [FAQ 22](Doku/FAQ.md#22-warum-fehlen-beim-drucken-farbige-flächen-und-manche-bilder), [EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#3-schalter-ohne-menüpunkt) und unter *Help → Settings Reference*. Am Prüfstand gemessen (`E-169p`, `E-169b`, `E-169h`: am Bau 7.2.2.135 mit `1` ohne Hintergründe, mit der Behebung mit; die IE-Einstellung steht danach wie vorher, `E-169r`, `E-169s`), Regressionstest `TestE169.cpp`. Der Druck auf Papier ist noch nicht gemessen.
 
 ## 7.2.2.135 — Testpaket (geschnürt am 05.11.2026, nicht veröffentlicht): *Edit → Find* findet das Wort nach dem Öffnen aus *Find Messages* (Rest von E-193), dazu alles aus 7.2.2.134
 

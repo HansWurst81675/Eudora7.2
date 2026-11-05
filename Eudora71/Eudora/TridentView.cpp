@@ -2400,6 +2400,38 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 		VERIFY(RegCloseKey(hkIEPageSetup) == ERROR_SUCCESS);
 	}
 
+	// BEFUND E-169 (05.11.2026): Hintergruende - Farbflaechen (bgcolor,
+	// background-color) und Hintergrundbilder (background, background-image)
+	// - druckt MSHTML nur, wenn HKCU\...\Internet Explorer\PageSetup
+	// "Print_Background" auf "yes" steht; ab Werk fehlt der Wert, Druck und
+	// Druckvorschau zeigen dann nur Text und <img>-Bilder (gemessen am
+	// Pruefstand, Fall E-169p). Gregor 05.11.2026: schaltbar, Vorgabe aus -
+	// PrintBackground=1 in [Settings]. Wie Kopf- und Fusszeile oben wird der
+	// Wert nur fuer diesen Druck gesetzt und danach exakt so hergestellt,
+	// wie er war - auch "nicht vorhanden".
+	BYTE OldBackground[64];
+	DWORD OldBackgroundLen = 0;
+	DWORD BackgroundValueType = 0;
+	BOOL bHadBackground = FALSE;
+	BOOL bSetBackground = FALSE;
+	if (GetIniShort(IDS_INI_PRINT_BACKGROUND))
+	{
+		if (RegOpenKeyEx(HKEY_CURRENT_USER, IEPageSetupKeyName, NULL, KEY_QUERY_VALUE | KEY_SET_VALUE, &hkIEPageSetup) == ERROR_SUCCESS)
+		{
+			OldBackgroundLen = sizeof(OldBackground);
+			const LONG lAbfrage = RegQueryValueEx(hkIEPageSetup, "Print_Background", NULL, &BackgroundValueType, OldBackground, &OldBackgroundLen);
+			bHadBackground = (lAbfrage == ERROR_SUCCESS);
+			// Ein Wert, der nicht in den Puffer passt, liesse sich nicht
+			// zuruecksetzen - dann lieber nichts anfassen.
+			if (lAbfrage == ERROR_SUCCESS || lAbfrage == ERROR_FILE_NOT_FOUND)
+			{
+				if (RegSetValueEx(hkIEPageSetup, "Print_Background", NULL, REG_SZ, (LPBYTE)"yes", 4) == ERROR_SUCCESS)
+					bSetBackground = TRUE;
+			}
+			VERIFY(RegCloseKey(hkIEPageSetup) == ERROR_SUCCESS);
+		}
+	}
+
 	// print
 	ULONG uCmd = bDoPreview? OLECMDID_PRINTPREVIEW : OLECMDID_PRINT;
 	ExecCommandOnNullSet( uCmd, NULL, NULL, bDialog );
@@ -2418,6 +2450,17 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 		if (bSetFooter)
 			VERIFY(RegSetValueEx(hkIEPageSetup, FooterValueName, NULL, FooterValueType, OldFooter, OldFooterLen) == ERROR_SUCCESS);
 
+		VERIFY(RegCloseKey(hkIEPageSetup) == ERROR_SUCCESS);
+	}
+
+
+	// BEFUND E-169: Print_Background so herstellen, wie er vor dem Druck war.
+	if (bSetBackground && RegOpenKeyEx(HKEY_CURRENT_USER, IEPageSetupKeyName, NULL, KEY_QUERY_VALUE | KEY_SET_VALUE, &hkIEPageSetup) == ERROR_SUCCESS)
+	{
+		if (bHadBackground)
+			VERIFY(RegSetValueEx(hkIEPageSetup, "Print_Background", NULL, BackgroundValueType, OldBackground, OldBackgroundLen) == ERROR_SUCCESS);
+		else
+			VERIFY(RegDeleteValue(hkIEPageSetup, "Print_Background") == ERROR_SUCCESS);
 		VERIFY(RegCloseKey(hkIEPageSetup) == ERROR_SUCCESS);
 	}
 
