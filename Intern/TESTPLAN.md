@@ -1,12 +1,12 @@
 # Testplan für Gregor
 
-**Stand:** Quellstand 7.2.2.133 (Testpaket, geschnürt am 04.11.2026, nicht veröffentlicht; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 04.11.2026 (auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
+**Stand:** Quellstand 7.2.2.133 (Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 05.11.2026 (zuletzt getestet am 04.11.2026 7.2.2.133: siehe Ergebnis unter dem Test, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
 ## <a id="test-7-2-2-133"></a>Dein Test an 7.2.2.133 — ca. 15 Minuten, an deinem echten System
 
 **Hier steht nur, was der Prüfstand nicht kann:** deine echten Konten und
 Server, deine großen Postfächer, deine Einstellungen und Filter. 7.2.2.133 ist
-ein **Testpaket** mit Fehlerbehebungen, keine neue Funktion. Wichtigster
+ein **Testpaket** mit Fehlerbehebungen, keine neue Funktion (nach deinem Test am 05.11.2026 als `v7.2.2.133` veröffentlicht). Wichtigster
 Punkt ist die Suche (Schritt 4); bei ihr misst nur dein Bestand, ob sie schnell
 genug ist. Für die Schritte 6 und 7 bitte nur Mails nehmen, die du dir selbst
 geschickt hast.
@@ -25,6 +25,8 @@ geschickt hast.
 
 Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
 bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
+
+**Ergebnis 04.11.2026, Gregor an 7.2.2.133** (Bildschirmfotos und `eudora.log`, ausgewertet in [BEFUNDE](BEFUNDE.md)): einzelne Schritte nicht als *bestanden* oder *nicht bestanden* gemeldet. Gefunden: [E-222](BEFUNDE.md#e-222) (S/MIME-Mail lässt sich nicht öffnen), [E-223](BEFUNDE.md#e-223) („Remember password“ erst beim zweiten Mal), [E-224](BEFUNDE.md#e-224) (Protokoll kodiert Umlaute falsch). Zu Schritt 4 nahm *Find Messages* mit Umlaut die genaue Suche (132 HTML-Mails in 141–156 ms); *Edit → Find* übersah das Wort in einer Outlook-Rundmail (Nachtrag zu [E-193](BEFUNDE.md#e-193)). Alle aus dem Original, keiner mit Mailverlust. Freigabe am 05.11.2026, veröffentlicht als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133).
 
 ## <a id="test-7-2-2-132"></a>Dein Test an 7.2.2.132 — ca. 15 Minuten, an deinem echten System
 
