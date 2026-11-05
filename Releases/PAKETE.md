@@ -184,6 +184,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.135 — Testpaket, Zweig `e223_e222_e193rest`
+
+**Nur übersetzt am 05.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ok, melde dich wenn 2.135 da ist“*, *„erstelle mir dann ein lokales zip zum testen.“* Inhalt: alles aus 7.2.2.134 ([E-223](../Intern/BEFUNDE.md#e-223), [E-222](../Intern/BEFUNDE.md#e-222)) und der Rest von [E-193](../Intern/BEFUNDE.md#e-193) (*Edit → Find* nach dem Öffnen aus *Find Messages*). **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c).
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.135.
+
 ## 7.2.2.134 — Testpaket, Zweig `e223_e222_e193rest`
 
 **Geschnürt am 05.11.2026 um 13:15, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.134-release`), ZIP daneben; nicht veröffentlicht.** Nummer von Gregor am 05.11.2026 (*„paket nummer ist dann 2.134, das ist ok für mich“*); Zweigname von Gregor am 05.11.2026 bestätigt. Inhalt: Behebungen aus Gregors Test an 7.2.2.133, [E-223](../Intern/BEFUNDE.md#e-223) und [E-222](../Intern/BEFUNDE.md#e-222); zu [E-193](../Intern/BEFUNDE.md#e-193) nur Messfälle. **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll` auf seinen Wunsch; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung** ([S-3](../Intern/BEFUNDE.md#s-3), S-3c; Gregor 05.11.2026: im Release nur der Hinweis auf Herkunft und Ablage).

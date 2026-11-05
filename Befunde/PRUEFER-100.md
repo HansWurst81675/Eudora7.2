@@ -108,7 +108,7 @@ Lauf 3 zeigt: der Test erkennt auch eine stillgelegte Behebung, nicht nur eine f
 - **T1 (belegt):** `DisableSavePassword` (`IDS_DISABLE_SAVE_PASSWORD`) sperrt das Häkchen nur im Einstellungsfenster (`settings.cpp:2091-2095`) und setzt es beim Start auf 0 (`eudora.cpp:1227-1228`). Im Kennwortdialog bleibt es bedienbar. Das alte Programm speicherte dann beim zweiten Abruf derselben Sitzung (`SavePass` aus dem Zwischenspeicher, :2875-2876), die Behebung schon beim ersten. Original, durch die Behebung nur früher.
 - **T2 (belegt):** Der Kommentar zu [E-223](../Intern/BEFUNDE.md#e-223) sagt „in die INI geschrieben“. Gemeint ist der INI-Zwischenspeicher, auf die Platte kommt der Wert erst beim Beenden. Für die Behebung ist das gleich, weil `GetIniShort` denselben Zwischenspeicher liest.
 - **T3 (belegt):** `XLateDisplay` schreibt in den Puffer von `szHRef`, den es als `const char*` bekommt (`Trnslate.cpp:4192-4195`). Original, ohne Folge, weil `szHRef` danach nicht mehr gebraucht wird.
-- **T4 (belegt):** `Version.h` steht auf 7.2.2.134 in allen vier Angaben, `Tests.vcxproj` und `TestMain.cpp` führen beide neuen Testdateien genau einmal, keine Fallkennung in `pruefstand-faelle.txt` steht doppelt.
+- **T4 (belegt):** `Version.h` stand bei diesem Bericht (05.11.2026) auf 7.2.2.134 in allen vier Angaben, `Tests.vcxproj` und `TestMain.cpp` führen beide neuen Testdateien genau einmal, keine Fallkennung in `pruefstand-faelle.txt` steht doppelt.
 
 ## Übersicht
 

@@ -116,6 +116,13 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
+## 7.2.2.135 — Testpaket (nur übersetzt am 05.11.2026, nicht veröffentlicht): *Edit → Find* findet das Wort nach dem Öffnen aus *Find Messages* (Rest von E-193), dazu alles aus 7.2.2.134
+
+Nummer nach Entscheidung 26 (fortlaufend 7.2.2.N); Gregor am 05.11.2026: *„ok, melde dich wenn 2.135 da ist“* und *„erstelle mir dann ein lokales zip zum testen.“* Zweig `e223_e222_e193rest`. Nur Fehlerbehebungen, keine neue Funktion. **Nur übersetzt, noch nicht geschnürt, nicht veröffentlicht.** Enthält alles aus 7.2.2.134 ([E-223](Intern/BEFUNDE.md#e-223), [E-222](Intern/BEFUNDE.md#e-222)).
+
+* ***Edit → Find* findet ein Wort, das *Find Messages* gemeldet hat** ([E-193](Intern/BEFUNDE.md#e-193), Rest; Gregors Entscheidung A vom 05.11.2026). *Find Messages* öffnet die Mail mit markiertem Treffer; *Edit → Find* suchte ab dieser Markierung weiter und meldete *„not found“*, wenn das Wort nur einmal vorkam. Jetzt sucht *Edit → Find* in diesem Fall einmal von oben, markiert den Treffer und scrollt ihn in den sichtbaren Bereich; *Weitersuchen* bleibt beim selben Treffer, wenn es keinen weiteren gibt. Am Prüfstand gemessen (`E-193fs`: an 7.2.2.134 1 von 13 Mails gefunden, mit der Behebung 13 von 13), Regressionstest `TestE193f.cpp`. Gefunden hat die Ursache Gregor.
+* **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll`** auf seinen Wunsch, wie bei 7.2.2.134; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung ([S-3](Intern/BEFUNDE.md#s-3), S-3c). Für alle anderen gilt der Hinweis aus 7.2.2.134: S/MIME, Junk-Filter und LDAP brauchen beide Dateien neben der `Eudora.exe`, Herkunft eine vorhandene Installation von Eudora 7.1, Hermes oder Visual Studio 2003, von DLL-Download-Seiten raten wir ab.
+
 ## 7.2.2.134 — Testpaket (geschnürt am 05.11.2026, nicht veröffentlicht): „Remember password“ beim ersten Mal (E-223), signierte S/MIME-Mail öffnet sich wieder (E-222)
 
 Nummer von Gregor am 05.11.2026 (*„paket nummer ist dann 2.134, das ist ok für mich“*), Zweig `e223_e222_e193rest` (Name von Gregor am 05.11.2026 bestätigt). Nur Fehlerbehebungen aus Gregors Test an 7.2.2.133, keine neue Funktion. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.134-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner `test_2.134`), nicht veröffentlicht.** Bau `Eudora 7.2.2.134+888cc82b 2026-11-05 10:27`, Prüfbericht BESTANDEN (424 Unit-Tests, 19 Schranken, 102 Prüfstandsfälle) ([PAKETE](Releases/PAKETE.md)).
