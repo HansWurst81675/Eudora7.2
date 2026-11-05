@@ -4,7 +4,7 @@ param([Parameter(Mandatory = $true)] [string] $Freigabe, [string] $Eml, [int] $A
 # Bis 15.10.2026 stand hier fest "Gregor am 14.10.2026: ich mache gar nichts, du testest." -
 # 29 Starts am Folgetag liefen damit, zweimal sah Gregor fremde Fenster, waehrend er selbst testen
 # wollte (Arbeitsweise/nichts-auf-gregors-bildschirm-starten.md, Nachtrag 15.10.2026).
-$repo = 'C:\Users\Gregor\Documents\github\Eudora7.2'
+$repo = Split-Path -Parent $PSScriptRoot   # E-151: nicht fest auf einen Rechner
 $sp   = $PSScriptRoot   # messen-e118.ps1 liegt daneben (tools/)
 $perl = 'C:\Program Files\Git\usr\bin\perl.exe'
 $m    = Join-Path $Verzeichnis 'Mailverzeichnis'

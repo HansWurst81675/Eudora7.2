@@ -1,7 +1,7 @@
 # Laeuft unter testlauf.ps1: Abruf (32772), dann warten, bis der Filter
 # die Nachricht ins IMAP-Postfach "Ablage" hochgeladen hat.
 param([string] $Pfadfilter)
-$t = 'C:\Users\Gregor\Documents\github\Eudora7.2\tools'
+$t = $PSScriptRoot   # E-151: nicht fest auf einen Rechner
 & powershell -NoProfile -ExecutionPolicy Bypass -File "$t\befehl-schicken.ps1" -Verzeichnis $Pfadfilter -Befehl 32772 -Sekunden 15 | Select-Object -Last 3
 $ablage = $env:E118_ABLAGE
 for ($i = 0; $i -lt 60; $i++) {

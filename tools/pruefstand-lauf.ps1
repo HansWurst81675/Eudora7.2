@@ -45,7 +45,13 @@ param(
     [Parameter(Mandatory = $true)] [string] $Freigabe,
     [string] $Faelle = '',
     [string] $Nur    = '',
-    [switch] $NurPruefen
+    [switch] $NurPruefen,
+    # E-151 (05.11.2026): fuer den Lauf aus einem fremden Klon ueber
+    # "Pruefstand starten.cmd" - schreibt Ergebnis, Buch und Dauer NICHT nach
+    # Intern\ (die gehoeren zur Buchfuehrung dieses Projekts, nicht zu einem
+    # Fork), sondern nur auf den Bildschirm und nach -ErgebnisDatei.
+    [switch] $OhneBuch,
+    [string] $ErgebnisDatei = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -111,6 +117,30 @@ foreach ($zeile in (Get-Content -LiteralPath $Faelle)) {
 
 if ($liste.Count -eq 0) { Write-Host '  Keine Faelle ausgewaehlt.'; exit 2 }
 
+# --- E-151: Faelle, die sich auf diesem Rechner nicht einrichten liessen ---
+# tools\pruefstand-einrichten.ps1 schreibt sie hierher (Kennung TAB Grund),
+# etwa E-222w ohne MFC71.DLL/msvcp71.dll (Gregor 05.11.2026: "ja,
+# ueberspringen"). Sie zaehlen als UEBERSPRUNGEN, nicht als rot und nicht
+# als gruen. Auf der Entwicklermaschine gibt es die Datei nicht.
+$uebersprungen = @()
+$nichtEinrichtbar = 'C:\Temp\Eudora72-Pruefstand-nicht-einrichtbar.txt'
+if (Test-Path -LiteralPath $nichtEinrichtbar) {
+    $grund = @{}
+    foreach ($z in [IO.File]::ReadAllLines($nichtEinrichtbar)) {
+        if ($z -match '^\s*(#|$)') { continue }
+        $t2 = $z.Split("`t")
+        $grund[$t2[0].Trim()] = $(if ($t2.Count -gt 1) { $t2[1].Trim() } else { 'nicht einrichtbar' })
+    }
+    $behalten = @()
+    foreach ($f in $liste) {
+        if ($grund.ContainsKey($f.Kennung)) {
+            $uebersprungen += ("    [UEBR] {0,-8} {1}" -f $f.Kennung, $grund[$f.Kennung])
+        } else { $behalten += $f }
+    }
+    $liste = $behalten
+    if ($liste.Count -eq 0) { Write-Host '  Alle ausgewaehlten Faelle sind hier nicht einrichtbar.'; foreach ($u in $uebersprungen) { Write-Host $u }; exit 2 }
+}
+
 Write-Host '  ------------------------------------------------------------'
 Write-Host '  Regressionstests ueber die Oberflaeche'
 Write-Host '  ------------------------------------------------------------'
@@ -150,6 +180,9 @@ if ($NurPruefen) {
 # -Vorbereiten-Laeufe erben sie. Genommen wird sie unmittelbar vor dem try
 # unten (PRUEFER-87 N4), damit zwischen Nehmen und finally nichts liegt.
 . (Join-Path $PSScriptRoot 'pruefstand-sperre.ps1')
+# E-151 (Gregor 05.11.2026): Pruefserver-Reste eines abgebrochenen Laufs
+# beenden, bevor ein neuer startet - nur die aus DIESEM Repo.
+. (Join-Path $PSScriptRoot 'pruefserver-aufraeumen.ps1')
 
 # --- E-157: Abstuerze aus dem Windows-Ereignisprotokoll -------------------
 # Ein Fall, dessen Protokollzeile vor einem Absturz geschrieben wurde, blieb
@@ -185,9 +218,28 @@ if (-not (Sperre-Nehmen 'pruefstand-lauf.ps1' 15)) {
     exit 2
 }
 $regVorher = $null
+$gruppeNr = 0
+$gruppenZahl = @($gruppen).Count
+$fallNr = 0
 try {
+[void](Pruefserver-Aufraeumen $wurzel)
+$belegt = @(Pruefports-Belegt)
+if ($belegt.Count -gt 0) {
+    Write-Host '  ABGEWIESEN: Ports des Pruefstands sind belegt - nichts gestartet:'
+    foreach ($b in $belegt) { Write-Host ("    {0}" -f $b) }
+    Write-Host '  Laeuft ein anderer Pruefstand oder ein fremder Mailserver? Beenden und neu starten.'
+    exit 2
+}
 $regVorher = Registry-Festhalten
+$gedruckt = 0
 foreach ($g in $gruppen) {
+    # Ergebnisse der vorigen Gruppe gleich zeigen (Fortschritt, E-151)
+    while ($gedruckt -lt $meldungen.Count) { Write-Host $meldungen[$gedruckt]; $gedruckt++ }
+    $gruppeNr++
+    # Reste des vorigen Laufs (etwa nach einem Absturz im Messskript)
+    [void](Pruefserver-Aufraeumen $wurzel -Still)
+    Write-Host ("  [{0}/{1}] Faelle {2}-{3} von {4}: {5}" -f $gruppeNr, $gruppenZahl, ($fallNr + 1), ($fallNr + @($g.Group).Count), $liste.Count, ((@($g.Group) | ForEach-Object { $_.Kennung }) -join ', '))
+    $fallNr += @($g.Group).Count
 
     $hier = @($g.Group)
     $verz = $hier[0].Verzeichnis
@@ -379,7 +431,10 @@ foreach ($g in $gruppen) {
         }
     }
 }
+while ($gedruckt -lt $meldungen.Count) { Write-Host $meldungen[$gedruckt]; $gedruckt++ }
 } finally {
+    # E-151: keine Pruefserver stehen lassen - auch nicht bei Abbruch
+    try { [void](Pruefserver-Aufraeumen $wurzel -Still) } catch { }
     # PRUEFER-87 N4: die Freigabe auch, wenn das Zuruecksetzen wirft
     try {
         if ($null -ne $regVorher) { [void](Registry-Zurueck $regVorher) }
@@ -392,6 +447,26 @@ Write-Host '  ------------------------------------------------------------'
 foreach ($m in $meldungen) { Write-Host $m }
 Write-Host '  ------------------------------------------------------------'
 Write-Host ("  Ergebnis: {0} Faelle, {1} bestanden, {2} fehlgeschlagen" -f $liste.Count, $bestanden, $fehl)
+if ($uebersprungen.Count -gt 0) {
+    Write-Host ("  Uebersprungen (auf diesem Rechner nicht einrichtbar): {0}" -f $uebersprungen.Count)
+    foreach ($u in $uebersprungen) { Write-Host $u }
+}
+
+# E-151: Lauf aus einem fremden Klon - nichts in Intern\ schreiben.
+if ($OhneBuch) {
+    if ($ErgebnisDatei) {
+        $z = @("zeit=" + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss'), "freigabe=" + $Freigabe,
+               "faelle=" + $liste.Count, "bestanden=" + $bestanden, "fehlgeschlagen=" + $fehl,
+               "uebersprungen=" + $uebersprungen.Count)
+        $z += ($meldungen + $uebersprungen | ForEach-Object { "fall=" + $_.Trim() })
+        [IO.File]::WriteAllLines($ErgebnisDatei, [string[]]$z, (New-Object Text.UTF8Encoding $false))
+        Write-Host ("  Ergebnis abgelegt: {0}" -f $ErgebnisDatei)
+    }
+    $uhr.Stop()
+    $dauer = [int]$uhr.Elapsed.TotalSeconds
+    Write-Host ("  Dauer: {0} min {1:00} s fuer {2} Faelle, {3} Eudora-Starts" -f [int][math]::Floor($dauer / 60), ($dauer % 60), $liste.Count, $starts)
+    exit $fehl
+}
 
 # Ergebnis des LETZTEN Laufs ablegen. Gedacht war es fuer tools/pruefbericht.pl;
 # der liest seit dem 25.10.2026 das Buch weiter unten und diese Datei nicht
