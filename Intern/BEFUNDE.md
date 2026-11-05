@@ -225,7 +225,7 @@ zuerst [**E-11**](#e-11), [**R-1**](#r-1) und [**E-1**](#e-1).
 |---|---|---|
 | <a id="s-1"></a>S-1 | Paket 1.0.1 startete nicht: `MSVCR71D.dll` fehlte | **behoben**. **Regressionstest** `TestPaket.cpp` (30.10.2026, 321 Tests, 321 bestanden): das Debug-Muster aus `tools/paket-pruefen.ps1` und `tools/paket-bauen.ps1` wird ausgeführt und muss `MSVCR71D.dll` erkennen; eine DLL, die weder im Paket liegt noch zu Windows gehört, ist in `paket-pruefen.ps1` ein FEHLER, und die Windows-Liste nennt keine Visual-Studio-Laufzeit. Ohne `msvc[rp]\d+d\.dll` im Muster einmal rot, Meldung *„das Debug-Muster erkennt MSVCR71D.dll nicht“* **Stufe: kritisch** (Start: Paket startet nicht, DLL fehlt)|
 | <a id="s-2"></a>S-2 | Stapelüberlauf beim Start — die Werbefläche mit `CRect(0,0,0,0)` | **behoben** am 30.08.2026, am laufenden Programm gemessen: Eudora kommt seither über den Startbildschirm hinaus **Stufe: kritisch** (Start: Stapelueberlauf)|
-| <a id="s-3"></a>S-3 | erster Lauf durch Gregor: drei Beobachtungen | **teilweise** (S-3c: `MFC71`/`MSVCP71` dauerhaft offen) **Zuletzt gemessen: 28.10.2026 an 7.2.0.127** (S-3c, die drei Zusätze; der übrige Eintrag zuletzt am Quelltext belegt am 22.10.2026 an 7.2.0.121) — **S-3b ist gegenstandslos**, belegt und nicht vermutet: der Release-Bau setzt `NDEBUG` (`Eudora71/Eudora/Eudora.vcxproj:132`), damit fallen `ASSERT` und `VERIFY` samt den SUPERASSERT-Dialogen weg. Die Begründung von 2026-08-30 — *„nur der Debug-Bau ist lauffähig, der Release-Zweig scheitert an fehlender `Imap.lib`"* — trifft nicht mehr zu: `Eudora71/Lib/Release/Imap.lib` ist vorhanden, `Eudora71/Bin/Release/Eudora.exe` wurde am 22.10.2026 gebaut. Ausgeliefert wird mit `-Bauart Release` (`Intern/WEITERMACHEN.md:473`, `Releases/PAKETE.md:1380`); dass `tools/paket-bauen.ps1` ohne Schalter `Debug` vorgibt (`:54`), ändert daran nichts, weil der Releaseweg ihn setzt. **S-3c bleibt unverändert offen** — `MFC71.DLL` und `MSVCP71.dll` gibt es weiterhin nicht. **Was noch fehlt:** allein S-3c (die beiden Laufzeitbibliotheken) — `MFC71.DLL` und `MSVCP71.dll` fehlen dauerhaft, damit fallen die Verzeichnisdienste aus (Protokoll `EudoraBk.dll`, LDAP `Ldap.dll`, Ph `Ph.dll`; das eigene Adressbuch arbeitet), dazu still Junk-Filter (`SpamWatch.dll`, `SpamHeaders.dll`) und S/MIME (`SMIME.dll`) — am 28.10.2026 am Programm gemessen, [E-166](#e-166); Microsoft hat sie nicht zur Weitergabe freigegeben, siehe [E-47](#e-47); auf Rechnern, die sie schon haben, laden die Zusätze ([FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)). S-3a ist behoben, S-3b (SUPERASSERT) entfällt im Release-Bau. **Stufe: unkritisch** (erster Lauf, drei Beobachtungen)|
+| <a id="s-3"></a>S-3 | erster Lauf durch Gregor: drei Beobachtungen | **teilweise** (S-3c: `MFC71`/`MSVCP71` dauerhaft offen; Neubau des S/MIME-Plugins aus dem Quelltext für ein späteres Paket entschieden von Gregor am 05.11.2026, [S-3c](#s-3c)) **Zuletzt gemessen: 28.10.2026 an 7.2.0.127** (S-3c, die drei Zusätze; der übrige Eintrag zuletzt am Quelltext belegt am 22.10.2026 an 7.2.0.121) — **S-3b ist gegenstandslos**, belegt und nicht vermutet: der Release-Bau setzt `NDEBUG` (`Eudora71/Eudora/Eudora.vcxproj:132`), damit fallen `ASSERT` und `VERIFY` samt den SUPERASSERT-Dialogen weg. Die Begründung von 2026-08-30 — *„nur der Debug-Bau ist lauffähig, der Release-Zweig scheitert an fehlender `Imap.lib`"* — trifft nicht mehr zu: `Eudora71/Lib/Release/Imap.lib` ist vorhanden, `Eudora71/Bin/Release/Eudora.exe` wurde am 22.10.2026 gebaut. Ausgeliefert wird mit `-Bauart Release` (`Intern/WEITERMACHEN.md:473`, `Releases/PAKETE.md:1380`); dass `tools/paket-bauen.ps1` ohne Schalter `Debug` vorgibt (`:54`), ändert daran nichts, weil der Releaseweg ihn setzt. **S-3c bleibt unverändert offen** — `MFC71.DLL` und `MSVCP71.dll` gibt es weiterhin nicht. **Was noch fehlt:** allein S-3c (die beiden Laufzeitbibliotheken) — `MFC71.DLL` und `MSVCP71.dll` fehlen dauerhaft, damit fallen die Verzeichnisdienste aus (Protokoll `EudoraBk.dll`, LDAP `Ldap.dll`, Ph `Ph.dll`; das eigene Adressbuch arbeitet), dazu still Junk-Filter (`SpamWatch.dll`, `SpamHeaders.dll`) und S/MIME (`SMIME.dll`) — am 28.10.2026 am Programm gemessen, [E-166](#e-166); Microsoft hat sie nicht zur Weitergabe freigegeben, siehe [E-47](#e-47); auf Rechnern, die sie schon haben, laden die Zusätze ([FILTER.md](FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)). S-3a ist behoben, S-3b (SUPERASSERT) entfällt im Release-Bau. **Stufe: unkritisch** (erster Lauf, drei Beobachtungen)|
 | <a id="s-4"></a>S-4 | Zusicherung im Adressbuch-Wazoo | **behoben** **Stufe: unkritisch** (Zusicherung im Adressbuch-Wazoo)|
 | <a id="s-5"></a>S-5 | Menüs ließen sich nicht öffnen | **behoben**, am laufenden Programm gemessen: die Menüs klappen auf (Ursache M-1, belegt in E-1) **Stufe: wichtig** (Funktion: die Menues liessen sich nicht oeffnen - die ganze Bedienung)|
 | <a id="s-6"></a>S-6 | Bereiche überlagern sich | **teilweise** (A-1 umgesetzt, Splitter umgesetzt, Nachstellen offen) **Zuletzt belegt am Quelltext: 22.10.2026 an 7.2.0.121** — **die beiden Ursachen, die hier standen, gibt es nicht mehr.** (1) Die prozentualen Zeilenbreiten sind umgesetzt: `SECDockBar::NormalizeRow` normiert die Anteile einer Zeile (`OTShim.cpp:2847`), `SECDockBar::DistributeRow` verteilt sie danach auf `m_nRowExtent` (`:3341-3400`). (2) Die Splitter sind umgesetzt: angelegt werden sie in `TrennbalkenNeuAnlegen` (`OTShim.cpp:4674`) aus `OnSize` heraus (`:4667`), `HitTest` (`:3808`) und `StartTracking` (`:3974`) werden aus `OnLButtonDown` erreicht (`:4586`, `:4604`) — das Ergebnis der Behebungen zu [E-49](#e-49), [E-52](#e-52) und [E-66](#e-66). Die Angabe `OTShim.h:695-699` zeigt heute auf fremden Code; die veralteten Sätze stehen jetzt in den Quelltextkommentaren `OTShim.h:345-360` und `:731-735` — dort **nicht** geändert, an diesem Tag wurde keine Quelldatei angefasst. **Leer geblieben ist `SECDockBar::SetControlBarWidthsInRow` (`OTShim.cpp:2830`) — im ganzen Baum ohne Aufrufstelle, also toter Code**; wirklich offen ist allein `SECMDIFrameWnd::FloatControlBarInMDIChild` (`:372`), das über `:2544` erreicht wird. Gregors ursprüngliches Bild — sich überlagernde Bereiche — ist seit dem 30.08.2026 **nie nachgestellt** worden. **Was noch fehlt:** das Nachstellen — ob sich die Bereiche heute überhaupt noch überlagern, ist seit dem 30.08.2026 **nie geprüft** worden. Die beiden damals genannten Ursachen sind umgesetzt (`m_fPctWidth`: `OTShim.cpp:2847` und `:3341`; Splitter: `:4674`). Als Baustelle übrig bleibt `SECMDIFrameWnd::FloatControlBarInMDIChild` (`OTShim.cpp:372`) — eine Leiste als eigenes MDI-Kindfenster schweben lassen. **Stufe: unkritisch** (Bereiche ueberlagern sich)|
@@ -3034,6 +3034,38 @@ Zusaetze in `Plugins` beim Start (ergaenzt 28.10.2026):
 Mailabruf und -versand sind davon **nicht** betroffen. Ohne die beiden Dateien
 fallen die Verzeichnisdienste aus (nicht das eigene Adressbuch), dazu still
 Junk-Filter und S/MIME.
+
+**Fortgeschrieben am 05.11.2026 (Gregors Test an 7.2.2.133, [E-222](#e-222)).**
+Gemessen am Prüfstand `C:\Temp\E222`: mit `MFC71.DLL` (Microsoft 7.10.6041.0)
+und `msvcp71.dll` (Microsoft 7.10.6052.0) neben `Eudora.exe` und unserer
+`msvcr71`-Brücke ([B-1](#b-1)) laden `SMIME.dll` und `SpamHeaders.dll`; ohne
+die beiden fehlen sie in *Special → Message Plug-ins Settings*. Bei Gregor
+dasselbe: ohne `msvcp71.dll` nur „Eudora Unicode Fix“, mit ihr auch S/MIME
+1.0.0.8 und SpamHeaders 1.1.3.
+
+**Weitergeben dürfen wir die beiden nicht ohne Weiteres** (Einschätzung, keine
+Rechtsauskunft): sie gehören zur Laufzeit von Visual Studio .NET 2003 und sind
+nur für deren Lizenznehmer weiterverteilbar. Ein eigenes Laufzeitpaket
+(*vcredist*) für 7.1 hat Microsoft nie angeboten; .NET 1.1 brachte
+`msvcr71.dll` mit, aber kein `MFC71.DLL`. DLL-Download-Seiten sind keine
+geprüfte Quelle und werden Anwendern nicht empfohlen. Lokale Test-ZIPs für
+Gregor dürfen sie auf seinen Wunsch enthalten.
+
+**Entschieden von Gregor am 05.11.2026** (*„S/MIME-Plugins als Befund für ein
+späteres Paket aufnehmen - ja, gute idee.“*): **das S/MIME-Plugin aus dem
+Quelltext im Repo (`plugins/SMIME`, `SMIME.vcproj`) mit dem heutigen Compiler
+neu bauen**, so dass es nur noch `mfc140`/`msvcp140` braucht, die schon im
+Paket liegen. Damit geht S/MIME ohne fremde DLLs. Für `SpamWatch.dll` und
+`SpamHeaders.dll` liegt kein Quelltext vor; dort bleibt es beim Hinweis in
+den Release-Notizen (Dateien, Fassung, Herkunft aus einer vorhandenen
+Eudora-7.1-, Hermes- oder Visual-Studio-2003-Installation).
+
+**Was noch fehlt:** `plugins/SMIME` in die Lösung aufnehmen (Projekt auf das
+heutige Format heben, Plattformwerkzeug wie die übrigen Projekte), bauen,
+`SMIME.dll` in `Bin\Release\Plugins` ersetzen; am Prüfstand messen, dass es
+ohne `MFC71.DLL`/`msvcp71.dll` in der Plugin-Liste steht und eine signierte
+Mail aus [E-222](#e-222) verarbeitet (CAPICOM fehlt am Prüfstand, siehe
+E-222). Nicht in 7.2.2.134; ein späteres Paket.
 
 ## S-4 — Zusicherung im Adressbuch-Wazoo schlaegt zu (behoben 30.08.2026)
 
