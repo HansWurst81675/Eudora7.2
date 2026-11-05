@@ -25,7 +25,7 @@ bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
 **Hier steht nur, was der Prüfstand nicht kann:** deine echten Konten und
 Server, deine großen Postfächer, deine Einstellungen und Filter. 7.2.2.133 ist
-ein **Testpaket** mit Fehlerbehebungen, keine neue Funktion (nach deinem Test am 05.11.2026 als `v7.2.2.133` veröffentlicht). Wichtigster
+ein **Testpaket** mit Fehlerbehebungen, keine neue Funktion (nach deinem Test am 04.11.2026 am 05.11.2026 als `v7.2.2.133` veröffentlicht). Wichtigster
 Punkt ist die Suche (Schritt 4); bei ihr misst nur dein Bestand, ob sie schnell
 genug ist. Für die Schritte 6 und 7 bitte nur Mails nehmen, die du dir selbst
 geschickt hast.
@@ -45,7 +45,7 @@ geschickt hast.
 Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
 bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
-**Ergebnis 04.11.2026, Gregor an 7.2.2.133** (Bildschirmfotos und `eudora.log`, ausgewertet in [BEFUNDE](BEFUNDE.md)): einzelne Schritte nicht als *bestanden* oder *nicht bestanden* gemeldet. Gefunden: [E-222](BEFUNDE.md#e-222) (S/MIME-Mail lässt sich nicht öffnen), [E-223](BEFUNDE.md#e-223) („Remember password“ erst beim zweiten Mal), [E-224](BEFUNDE.md#e-224) (Protokoll kodiert Umlaute falsch). Zu Schritt 4 nahm *Find Messages* mit Umlaut die genaue Suche (132 HTML-Mails in 141–156 ms); *Edit → Find* übersah das Wort in einer Outlook-Rundmail (Nachtrag zu [E-193](BEFUNDE.md#e-193)). Alle aus dem Original, keiner mit Mailverlust. Freigabe am 05.11.2026, veröffentlicht als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133).
+**Ergebnis 04.11.2026, Gregor an 7.2.2.133** (Bildschirmfotos und `eudora.log`, ausgewertet in [BEFUNDE](BEFUNDE.md)): einzelne Schritte nicht als *bestanden* oder *nicht bestanden* gemeldet. Gefunden: [E-222](BEFUNDE.md#e-222) (S/MIME-Mail lässt sich nicht öffnen), [E-223](BEFUNDE.md#e-223) („Remember password“ erst beim zweiten Mal), [E-224](BEFUNDE.md#e-224) (Protokoll kodiert Umlaute falsch). Zu Schritt 4 nahm *Find Messages* mit Umlaut die genaue Suche (132 HTML-Mails in 141–156 ms); *Edit → Find* übersah das Wort in einer Outlook-Rundmail (Nachtrag zu [E-193](BEFUNDE.md#e-193)). [E-222](BEFUNDE.md#e-222), [E-223](BEFUNDE.md#e-223) und [E-224](BEFUNDE.md#e-224) aus dem Original, beim Rest von [E-193](BEFUNDE.md#e-193) ist die Ursache offen; keiner mit Mailverlust. Freigabe am 05.11.2026, veröffentlicht als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133).
 
 ## <a id="test-7-2-2-132"></a>Dein Test an 7.2.2.132 — ca. 15 Minuten, an deinem echten System
 
@@ -458,7 +458,7 @@ lokalen *In*.
 
 **Bestanden** heißt `passt` bei `tt`, `link` und `gespeichert` — und bei
 `antwort` erst, wenn die Antwort nachweislich nur die Markierung zitiert.
-Das Urteil sieht nur die beiden Zeichen: einen leeren Link oder ein Vollzitat
+Das Urteil sieht bei `tt` und `link` nur die beiden Zeichen (bei `gespeichert` verlangt es seit `1e96dc3a` mindestens ein `<TT>` und weder Platzhalter noch `T>`-Rest): einen leeren Link oder ein Vollzitat
 erkennt es nicht. Den `t;`-Rest aus [E-199](BEFUNDE.md#e-199) erkennt seit
 `4ae1c87e` die Wirkprobe (Zeile `E178 MUELL`; nicht hinter einem Buchstaben
 oder einer Ziffer).

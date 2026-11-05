@@ -49,7 +49,7 @@ Was in jeder Paketfassung steckte, und ob sie startete. Ergänzt
 > (Gregors Entscheidungen 10 und 20 in [WEITERMACHEN.md](../Intern/WEITERMACHEN.md#entscheidungen)).
 > `VERSION` trägt dieselbe vierteilige Nummer wie `Eudora71/Version.h`.
 > **Seit 7.2.2.132 heißt jede Fassung `7.2.2.N`**, auch eine, die nur Fehler
-> behebt (Gregor 04.11.2026, Entscheidung 26; das nächste Paket ist 7.2.2.133);
+> behebt (Gregor 04.11.2026, Entscheidung 26; 7.2.2.133 ist erschienen, das nächste ist 7.2.2.134);
 > vom Release 7.2.1.128 bis 7.2.1.131 hieß sie `7.2.1.N` (Entscheidung 20),
 > Testpaket wie Release; davor hießen Testpakete `7.2.0.N`. ZIP (`Eudora72-7.2.1.N-release.zip` bzw.
 > `Eudora72-7.2.2.N-release.zip`), Marke (`v7.2.1.N` bzw. `v7.2.2.N`) und
@@ -200,7 +200,7 @@ Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.134.
 
 ## 7.2.2.133 — Release `v7.2.2.133`, Zweig `paket_7_2_2_133`
 
-**Geschnürt am 04.11.2026 um 18:20, bereitgestellt neben Gregors letztem Testverzeichnis, ZIP daneben; veröffentlicht am 05.11.2026 als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133)** (Latest, 08:36:38 UTC, Marke auf `a0278acf` = Kopf von `paket_7_2_2_133` nach #223/#224 mit Gregors Befunden; der Zweig ist noch nicht nach `main` gemergt) nach Gregors Ja am 05.11.2026: *„ja zu beidem, leg los“* und *„gut.“* auf die Rückfrage, ob genau das getestete ZIP als GitHub-Release gemeint ist. Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Gregor hat das Paket am 04.11.2026 an seinem System getestet und dabei [E-222](../Intern/BEFUNDE.md#e-222), [E-223](../Intern/BEFUNDE.md#e-223), [E-224](../Intern/BEFUNDE.md#e-224) und einen Nachtrag zu [E-193](../Intern/BEFUNDE.md#e-193) gefunden, alle aus dem Original, keiner mit Mailverlust; einzelne Schritte hat er nicht als bestanden gemeldet.
+**Geschnürt am 04.11.2026 um 18:20, bereitgestellt neben Gregors letztem Testverzeichnis, ZIP daneben; veröffentlicht am 05.11.2026 als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133)** (Latest, 08:36:38 UTC, Marke auf `a0278acf` = Kopf von `paket_7_2_2_133` nach #223/#224 mit Gregors Befunden; der Zweig ist noch nicht nach `main` gemergt) nach Gregors Ja am 05.11.2026: *„ja zu beidem, leg los“* und *„gut.“* auf die Rückfrage, ob genau das getestete ZIP als GitHub-Release gemeint ist. Das ZIP auf GitHub ist byte-gleich mit dem getesteten Paket (SHA-256 nach dem Herunterladen nachgemessen). Gregor hat das Paket am 04.11.2026 an seinem System getestet und dabei [E-222](../Intern/BEFUNDE.md#e-222), [E-223](../Intern/BEFUNDE.md#e-223), [E-224](../Intern/BEFUNDE.md#e-224) und einen Nachtrag zu [E-193](../Intern/BEFUNDE.md#e-193) gefunden ([E-222](../Intern/BEFUNDE.md#e-222), [E-223](../Intern/BEFUNDE.md#e-223), [E-224](../Intern/BEFUNDE.md#e-224) aus dem Original, beim Rest von [E-193](../Intern/BEFUNDE.md#e-193) ist die Ursache offen), keiner mit Mailverlust; einzelne Schritte hat er nicht als bestanden gemeldet.
 
 | | |
 |---|---|
