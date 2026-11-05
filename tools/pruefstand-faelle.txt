@@ -495,6 +495,9 @@ E-223w | C:\Temp\E223 | 60 | messung | E223 PROBE ok | | | messen=tools\messen-e
 # E-239: Absturz beim Beenden, wenn nach File > Exit ein zweiter Schliesswunsch
 # kommt, waehrend der Hinweis nach dem Abruf (bzw. die Rueckfrage "tasks running")
 # offen ist. C:\Temp\E239\modus.txt = exit-close. Rot an 7.2.2.135 (3/3 Absturz).
+# Gruen mit der Behebung (05.11.2026): dreimal absturz=0 beendet=1. Die
+# Vorbereitung setzt Alert=1 - ohne den Hinweis nach dem Abruf (Alert=0) gibt
+# es keinen Weg in den Fehler, und E239 PROBE meldet FEHL.
 E-239p | C:\Temp\E239 | 120 | messung | absturz=0 beendet=1 | | | messen=tools\messen-e239.ps1
 
 # -------------------------------------------------------------------------
