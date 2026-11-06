@@ -321,7 +321,7 @@ Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.1.129.
 | Gegen den Bau gemessen | `Eudora.exe`, `EudoraRes.dll`, `Imap.dll`, `QCSSL.dll`, `OLImport.eif`, `QCSocket.dll`, `QCUtils.dll` und `plstclnt.dll` **byte-gleich** mit `Eudora71/Bin/Release` (Bau `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36`, mit `cmp` gemessen) |
 | Geprüft vorher | 314 Unit-Tests, 19 Schranken, 41 Prüfstandsfälle in **einem** vollen Lauf, alle grün am selben Bau ([PRUEFBERICHT](PRUEFBERICHT.md), Gesamturteil BESTANDEN) |
 | `paket-pruefen.ps1` | keine Fehler, Kriterium 0 *„JA“* |
-| Gegenüber 1.0.127 | im Programm nur [E-166](../Intern/BEFUNDE.md#e-166) (`persona.cpp`); acht weitere Quelldateien nur in Kommentarzeilen (Datenschutz), gemessen mit `git diff ea3ebcbd..640e1a0e` |
+| Gegenüber 1.0.127 | im Programm nur [E-166](../Intern/BEFUNDE.md#e-166) (`persona.cpp`); acht weitere Quelldateien nur in Kommentarzeilen (Datenschutz) |
 | Rollenschranke | gebaut mit `-RollenSindGelaufen` (PRÜFER nur wegen `Version.h` fällig, reiner Versionssprung) und `-AgentLaeuftAbsichtlich` (der LEKTOR lief beim Schnüren noch und prüft nur MD-Dateien; nichts davon geht ins Paket) |
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.1.128.

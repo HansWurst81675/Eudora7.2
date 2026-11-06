@@ -1875,7 +1875,7 @@ Fassung schnürt.
 
 ## Neunundneunzigster Durchgang — Datenschutz nach PR #184 und #185, Release-Vorbereitung 7.2.1, 29.10.2026 (Bericht: `Befunde/LEKTOR-94.md`)
 
-Lauf auf `1ba04dbc` (= `main` nach #185). Nichts berichtigt (Auftrag: nur
+Lauf auf der Merge der Datenschutz-Bereinigung vom 29.10.2026 (= `main` nach #185). Nichts berichtigt (Auftrag: nur
 Bericht und Fahrtenbuch). Gesucht mit der lokalen Suchliste über das ganze
 Repo, die Zweige auf GitHub, die Commit-Nachrichten seit `750eb814` und die
 22 Release-Texte, dazu über jede seit dem Originalimport hinzugekommene

@@ -1,12 +1,12 @@
 # <a id="lektor-94"></a>LEKTOR-94 — Datenschutz nach PR #184 und #185, Release-Vorbereitung 7.2.1, 29.10.2026
 
 **Auftrag.** Nach den beiden Bereinigungen (PR #184 `eb0ad40b`, PR #185
-`94217d88`, Merge `1ba04dbc`) prüfen, ob im ganzen Repo noch etwas aus
+die Datenschutz-Bereinigung vom 29.10.2026, Merge der Merge der Datenschutz-Bereinigung vom 29.10.2026) prüfen, ob im ganzen Repo noch etwas aus
 Gregors Postfach steht; ob die Ersetzungen Sätze sinnlos gemacht oder Belege
 verfälscht haben; ob CHANGELOG, FAQ, README „Bekannte Fehler“, TESTPLAN und
 WEITERMACHEN für das Release 7.2.1 zusammenpassen; was aus den Funden von
 [LEKTOR-93](LEKTOR-93.md#lektor-93) wurde. Gemessen im Arbeitsbaum
-`Eudora7.2-wt-lektor` auf `wt/lektor-20261029d` (= `1ba04dbc` = `origin/main`).
+`Eudora7.2-wt-lektor` auf `wt/lektor-20261029d` (= der Merge der Datenschutz-Bereinigung vom 29.10.2026 = `origin/main`).
 Nichts gebaut, nichts gestartet.
 
 **Wie gesucht wurde** (gemessen): (a) die Muster aus der lokalen, von Git
@@ -17,7 +17,7 @@ GitHub; (b) jede seit dem Originalimport `567a5d87` hinzugekommene Zeile
 (271 257 Zeilen, ohne `OpenSSL*`) auf Mailadressen, Betreffmuster
 (`Fw:`/`Fwd:`/`Re:`/`WG:`/`AW:`/`Subject:`/`Betreff`), Message-IDs,
 Postfach- und IMAP-Ordnernamen, Anhang-Dateinamen und Adressen im Netz;
-(c) Stichwortsuche nach den Absendern, die in den Ersetzungen von `94217d88`
+(c) Stichwortsuche nach den Absendern, die in den Ersetzungen von die Datenschutz-Bereinigung vom 29.10.2026
 vorkommen. **Ausgenommen** wie beauftragt: OpenSSL, zlib, STL, Apple, die
 Junk-Datenbank unter `InstallersForEudora`; dazu die Testdateien unter
 `Documents/WinTestFiles` aus dem Originalimport (ein Treffer der Suchliste
@@ -38,7 +38,7 @@ geblieben** — darunter Anhang-Dateinamen aus einer beruflichen Mail
 ([L-94.1](#l-94.1)), der Name des Unterzeichners eines Rundbriefs mit
 Absenderdomain und Bildnamen ([L-94.2](#l-94.2)), die Betreffzeile einer
 privaten Anzeigen-Unterhaltung samt Gegenstand ([L-94.3](#l-94.3)) und
-die Firmennamen mehrerer Absender, obwohl der Commit `94217d88` *„Absender-
+die Firmennamen mehrerer Absender, obwohl der Commit die Datenschutz-Bereinigung vom 29.10.2026 *„Absender-
 und Firmennamen“* als ersetzt meldet ([L-94.4](#l-94.4)). Die öffentliche
 Git-Geschichte, sechs Zweige auf GitHub und die Diff-Ansichten der PRs #184
 und #185 zeigen alles Entfernte weiter ([L-94.7](#l-94.7), Gregors
@@ -151,7 +151,7 @@ Umlauten**, weil die Faltung und die Kodierung dort der Prüfgegenstand sind.
 
 ### <a id="l-94.4"></a>L-94.4 — Datenschutz: Firmennamen von Absendern und zwei Newsletter-Betreffe stehen weiter, obwohl der Commit sie als ersetzt meldet
 
-**Was passiert:** der Commit `94217d88` sagt *„Betreffzeilen, Absender- und
+**Was passiert:** der Commit die Datenschutz-Bereinigung vom 29.10.2026 sagt *„Betreffzeilen, Absender- und
 Firmennamen … durch Platzhalter ersetzt“*. Ersetzt wurden die Firmennamen,
 die in der Suchliste standen. Drei weitere Absender stehen mit Namen da —
 ein Software-Hersteller (21 Stellen), ein Anzeigenportal (21
@@ -184,7 +184,7 @@ Newsletter-Betreffe in einem Protokollauszug.
   `Eudora71/Tests/TestE101.cpp:36`, `:50` — für sich unbedenklich, aber
   zusammen mit [L-94.8](#l-94.8) zu lesen.
 
-**Was zu tun wäre:** wie in `94217d88`: Software-Hersteller →
+**Was zu tun wäre:** wie in die Datenschutz-Bereinigung vom 29.10.2026: Software-Hersteller →
 `Werbemail-C` (oder *„eine Mail mit eingebetteten Bildern“*),
 Anzeigenportal → *„Portal-Nachricht“*; die beiden Newsletter-Betreffe
 durch `<Betreff eines Newsletters>`. Ob Firmen, die nur als Absender von
@@ -316,7 +316,7 @@ ersetzt)“*.
 ### <a id="l-94.11"></a>L-94.11 — Beleg verfälscht: „Werbemail-A“ ist keine Werbemail
 
 **Was passiert:** der Platzhalter `Werbemail-A` ersetzt durchgehend einen
-einzigen Absender (gemessen: in `94217d88` alle Ersetzungen zu
+einzigen Absender (gemessen: in die Datenschutz-Bereinigung vom 29.10.2026 alle Ersetzungen zu
 `Werbemail-A` aus demselben Namen). Diese Mail war aber keine Werbung — das
 zeigt die Betreffzeile wenige Zeilen daneben im selben Test. Wer die
 Befunde liest, hält [E-95](../Intern/BEFUNDE.md#e-95) und
@@ -412,7 +412,7 @@ Prüfstand — Entscheidung 16 legt [E-169](../Intern/BEFUNDE.md#e-169) bis [E-1
 * **Belegt**, `Intern/WEITERMACHEN.md:11` *„Zweig `e166-junk_message_fix`
   (auf `main` seit PR #180 …)“* — [E-166](../Intern/BEFUNDE.md#e-166) kam mit #182.
 * **Belegt**, `CHANGELOG.md:106` *„weiter auf `release-7.2.1-vorbereiten`“*.
-* **Gemessen**, `git log`: `1ba04dbc` Merge #185, `0047f5d1` Merge #184,
+* **Gemessen**, `git log`: der Merge der Datenschutz-Bereinigung vom 29.10.2026 Merge #185, `0047f5d1` Merge #184,
   `fc3ac107` Merge #183.
 
 **Was zu tun wäre:** `:7` auf *„`main` nach #185; als Nächstes das Release
@@ -465,7 +465,7 @@ Wirkung; wer den Quellstand mit 1.0.127 vergleicht, findet Änderungen ohne
 Eintrag.
 
 * **Belegt**, `CHANGELOG.md:104-132` (kein Eintrag); `git show --stat
-  94217d88` 43 Dateien, darunter `Eudora71/Tests/TestPopEmpfang.cpp`,
+  die Datenschutz-Bereinigung vom 29.10.2026` 43 Dateien, darunter `Eudora71/Tests/TestPopEmpfang.cpp`,
   `TestE101.cpp`, `msgutils.cpp`, `PGHTMIMP.CPP`.
 
 **Was zu tun wäre:** eine Zeile unter *Werkzeuge* oder *Dokumentation*:
