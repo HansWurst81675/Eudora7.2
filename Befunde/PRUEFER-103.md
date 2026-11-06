@@ -60,7 +60,7 @@ Das Skript liegt im Scratchpad der Sitzung, nicht im Repo.
 
 ### <a id="k1"></a>K1 (mittel, gemessen): Die Nacharbeit zu PRÜFER-102 ist nicht im Paket und nicht auf `main`
 
-`2d8f7dfa` *„[E-239](../Intern/BEFUNDE.md#e-239): PRUEFER-102 K1/K2 – TestE239 prueft jeden Schutz ganz, Fall E-239p mit Urteil und fester Betriebsart“* liegt nur auf `origin/e239_absturz_beenden` (`git branch -r --contains 2d8f7dfa`). Weder `7739b889` noch `origin/main` enthalten ihn (`git merge-base --is-ancestor`: nein). Mit ihm fehlen:
+`2d8f7dfa` *„[E-239](../Intern/BEFUNDE.md#e-239): [PRUEFER-102](PRUEFER-102.md#pruefer-102) K1/K2 – TestE239 prueft jeden Schutz ganz, Fall E-239p mit Urteil und fester Betriebsart“* liegt nur auf `origin/e239_absturz_beenden` (`git branch -r --contains 2d8f7dfa`). Weder `7739b889` noch `origin/main` enthalten ihn (`git merge-base --is-ancestor`: nein). Mit ihm fehlen:
 * der geschärfte `TestE239.cpp`. Am ausgelieferten Stand bleiben G3 und G6 grün (§3, heute nachgemessen),
 * `Befunde/PRUEFER-102.md`. Er liegt sonst nur noch auf `wt/pruefer-20261105c`,
 * der Eintrag der Reste K4, K5 und K6 in [E-239](../Intern/BEFUNDE.md#e-239). `grep -c PRUEFER-102 Intern/BEFUNDE.md` ergibt am Paket **0**.
