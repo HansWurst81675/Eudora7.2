@@ -583,6 +583,13 @@ schranke pruefe-befund-anfang.pl || exit $?
 #      Projekt schon zweimal vorgekommen (Befund E-109).
 schranke pruefe-testdaten-anonym.pl || exit $?
 
+# 15c. Kein Name aus der lokalen Namensliste in IRGENDEINER Datei. 15b sieht
+#      nur Testdaten/; am 05.11.2026 standen zwei Familiennamen als Suchmuster
+#      in tools/pruefstand-vorlage-erfassen.ps1 und gingen ins oeffentliche
+#      Repo (Commit vom 05.11.2026, umgeschrieben, gefunden von PRUEFER-104 am 06.11.2026). Gregor:
+#      "wer hat gepennt?" Geprueft werden die hinzugefuegten Zeilen.
+schranke pruefe-namen-gestaget.pl || exit $?
+
 # 14k. E-151: der Pruefstand laeuft aus jedem Klon. Kein Benutzerpfad
 #      'C:\Users\...' im Code der Pruefstand-Skripte, keine alte Pfadschranke
 #      '^C:\Temp\...' (Wurzel aus EUDORA72_PRUEFSTAND). Gregor 05.11.2026:
@@ -664,6 +671,13 @@ echo "pre-push: Zeilenenden und Kodierung"
 #      (Rueckgabe 2): ein Freispruch ueber die leere Menge ist in diesem
 #      Projekt schon zweimal vorgekommen (Befund E-109).
 schranke pruefe-testdaten-anonym.pl || exit $?
+
+# 15c. Kein Name aus der lokalen Namensliste in den Commits seit main - der
+#      pre-commit sieht nur den eigenen Commit; was ein Agent in seinem Baum
+#      committet hat, kommt erst hier vorbei (05.11.2026).
+if [ -f "$WURZEL/tools/pruefe-namen-gestaget.pl" ]; then
+  perl "$WURZEL/tools/pruefe-namen-gestaget.pl" --seit-main || exit $?
+fi
 
 schranke pruefe-bytes.pl || exit $?
 

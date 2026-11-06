@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-10-29T20:38:17.853Z
+  modified: 2026-11-06T13:33:16.369Z
 ---
 
 Schranke: tools/pruefe-rueckstrich.pl (pre-commit 14d seit 14.10.2026 — weist einen Windows-Pfad ohne Rückstrich im Zuwachs einer .md ab) und tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile) und tools/ersetze-text.pl (Textstellen statt Zeilenbereiche, seit 01.11.2026; Selbsttest mit „neu enthält alt“ und Windows-Pfad)
@@ -582,3 +582,9 @@ Zeiten MEZ, Transkript `6f848773…`.
 **How to apply, zusätzlich:**
 - Ein Pfad aus `$TEMP`, `$USERPROFILE` oder `$TMP` geht nie in eine Perl-Ersetzung oder eine doppelt gequotete Perl-Zeichenkette. Den Scratchpad-Pfad in `/c/…`-Form schreiben oder als Argument übergeben (`@ARGV`, `$ENV{…}`).
 - Auch für Platzhalter in Testdateien gilt: `tools/ersetze-text.pl` oder die Datei gleich mit dem Write-Werkzeug fertig schreiben.
+
+## Nachtrag 06.11.2026: dreimal an einem Tag ein verschluckter Backslash
+
+Am 06.11.2026 verlor Ersatztext dreimal seine Backslashes, jedes Mal ohne Fehlermeldung: (1) Pfadschranken in `messen-e169.ps1`/`messen-e239.ps1` aus einem Bash-Heredoc (aus zwei Backslashes vor `E239` und in `[^…]` wurde je einer, E-239 nahm danach jeden Pfad an); (2) ein Perl-Skript aus einem Heredoc („Search pattern not terminated“); (3) `perl -i -pe` mit einem maskierten Punkt in der Ersetzung (der Backslash davor fiel weg, aus „Punkt“ wurde „beliebiges Zeichen“). Gefunden jeweils erst durch einen Test in beide Richtungen, die Schranke `pruefe-feste-pfade.pl` war bei (1) grün.
+
+**How to apply, zusätzlich:** Text mit Backslashes (Regex, Windows-Pfade) nie über Bash-Heredoc oder Shell-Argument schreiben, sondern mit dem Write-Werkzeug in eine Datei und von dort einsetzen – oder den Backslash als `chr(92)` erzeugen. Danach die Zeile mit `grep -o` zurücklesen und mit einem Test in beide Richtungen prüfen.

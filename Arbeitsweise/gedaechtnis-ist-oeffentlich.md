@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-29T20:36:42.188Z
 ---
 
-Schranke: keine - welcher Name privat ist, erkennt kein Werkzeug; prüfbar wäre nur der Lesezugriff selbst (ein PreToolUse-Haken, der Pfade unter C:/Users/Gregor/Eudora72-*/ außer eudora.log abweist), und eine Änderung an den Einstellungen kann nur Gregor anordnen.
+Schranke: tools/pruefe-namen-gestaget.pl (pre-commit gestagte Zeilen, pre-push alle Commits seit main) prueft jede Datei gegen tools/anonym-begriffe.lokal (seit 06.11.2026); pruefe-testdaten-anonym.pl nur Testdaten/. Was NICHT in der Liste steht, erkennt kein Werkzeug.
 
 # Das Gedächtnis ist öffentlich
 
@@ -118,3 +118,9 @@ Die Probe von oben, *„kommt das aus Gregors Rechner?“*, griff hier nicht. Di
 ## Nachtrag 03.11.2026 (CHRONIST): eine Veranschaulichung ist kein Zitat für die Notiz
 
 Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 8). Gregors ausgedachter Extremfall zur Abwägung von Randfällen (10:20:48) stand um 10:22:15 in einer neuen Gedächtnisnotiz. Gregor um 10:22:33: *„das war nur als beispiel zur veranschauung, nicht zum notieren auf github.“* Herausgenommen um 10:23:02. Kein Zweig und keine Commit-Nachricht enthält es (gemessen beim CHRONIST-Lauf). **How to apply, zusätzlich:** In eine Notiz kommt Gregors Regel, nicht sein Beispiel. Ein wörtliches Zitat nur, wenn es die Regel selbst ist, und vorher die Probe von oben.
+
+## Nachtrag 06.11.2026: Namen in einem Skript, nicht im Gedächtnis
+
+Ein Agent (E-151, 05.11.2026 20:13) schrieb zwei Familiennamen aus der lokalen Namensliste als Suchmuster des Privatfilters in `tools/pruefstand-vorlage-erfassen.ps1` (Commit vom 05.11.2026, inzwischen umgeschrieben, gepusht). Die Hauptsitzung übernahm und pushte den Commit, ohne ihn gegen die Liste zu prüfen; die einzige Namensschranke sah nur `Testdaten/`. Gefunden von PRÜFER-104 am 06.11.2026. Gregor: *„haben wir es nicht schon ausgemacht, daß sowas nicht passieren soll? warum also doch? wer hat gepennt?“* Behoben (Muster aus der Liste laden), Geschichte des Zweigs mit Gregors Ja umgeschrieben und force-gepusht, alte Rollenzweige von ihm gelöscht.
+
+**How to apply, zusätzlich:** Ein Filter oder Test, der private Namen erkennen soll, lädt sie aus `tools/anonym-begriffe.lokal` – nie hinschreiben. Den Rücklauf eines Agenten vor dem Push mit `perl tools/pruefe-namen-gestaget.pl --seit-main` prüfen (läuft jetzt auch im pre-push).
