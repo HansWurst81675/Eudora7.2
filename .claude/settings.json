@@ -27,6 +27,12 @@
             "command": "perl \"$CLAUDE_PROJECT_DIR/tools/haken-eudora-start.pl\"",
             "timeout": 30,
             "statusMessage": "Pruefe: kein direkter Eudora-Start"
+          },
+          {
+            "type": "command",
+            "command": "perl \"$CLAUDE_PROJECT_DIR/tools/haken-backslash.pl\"",
+            "timeout": 30,
+            "statusMessage": "Pruefe: kein Ersatztext mit Backslash ueber die Shell"
           }
         ]
       }

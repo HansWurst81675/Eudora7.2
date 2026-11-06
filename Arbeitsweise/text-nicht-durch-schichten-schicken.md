@@ -5,10 +5,10 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 75d9adec-3126-4823-88d3-b19debb061b7
-  modified: 2026-11-06T13:33:16.369Z
+  modified: 2026-11-06T13:46:56.983Z
 ---
 
-Schranke: tools/pruefe-rueckstrich.pl (pre-commit 14d seit 14.10.2026 — weist einen Windows-Pfad ohne Rückstrich im Zuwachs einer .md ab) und tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile) und tools/ersetze-text.pl (Textstellen statt Zeilenbereiche, seit 01.11.2026; Selbsttest mit „neu enthält alt“ und Windows-Pfad)
+Schranke: tools/haken-backslash.pl (PreToolUse seit 06.11.2026 — weist Heredoc und perl -i mit doppeltem Backslash im Ersatztext ab, bevor geschrieben wird; für Ersetzungen IMMER tools/ersetze-text.pl bzw. tools/ersetze-bereich.pl, nicht eigene Hilfsskripte) und tools/pruefe-rueckstrich.pl (pre-commit 14d seit 14.10.2026 — weist einen Windows-Pfad ohne Rückstrich im Zuwachs einer .md ab) und tools/ersetze-bereich.pl (für jeden Ersetzungstext — nimmt den neuen Block ausschließlich aus einer Datei, nie von der Kommandozeile) und tools/ersetze-text.pl (Textstellen statt Zeilenbereiche, seit 01.11.2026; Selbsttest mit „neu enthält alt“ und Windows-Pfad)
 
 **Gregor am 06.09.2026:** *„das hatten wir schon mit bash und PS. warum lernst du
 nicht daraus? warum passiert dir das immer wieder?"*
