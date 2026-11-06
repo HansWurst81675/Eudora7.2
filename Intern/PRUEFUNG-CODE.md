@@ -416,7 +416,7 @@ Das ist die Datei, auf deren Wort hin Gregor abschaltet.
 lassen. Es findet die neun anderen Bäume und meldet richtig 3, 15, 15, 17 nicht
 committete Dateien und 2 nicht gepushte Commits — die Überarbeitung wirkt.
 
-Für den Hauptbaum `C:/Users/Gregor/Documents/github/Eudora7.2` meldet es
+Für den Hauptbaum `%USERPROFILE%/Documents/github/Eudora7.2` meldet es
 **„sauber"**. **gemessen** zum selben Zeitpunkt hat dieser Baum **fünf**
 unverfolgte Einträge (`.claude/`, `Eudora71/EMSAPI/EMSSDK/emsapi-win.h`,
 `Eudora71/OT501/Src/OT501__4/`, `Releases/Eudora72-1.0.2-symbole.zip` und dessen

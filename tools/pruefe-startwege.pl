@@ -47,7 +47,7 @@ use Time::Local ();
 #
 #     Wed Oct 21 10:37:39 2026 / Version 7.2.0.118
 #     MAIN ... E-132 Startverzeichnis:
-#         gefunden="C:\Users\Gregor\Eudora72-1.0.118-release\Mailverzeichnis"
+#         gefunden="C:\Users\Anwender\Eudora72-1.0.118-release\Mailverzeichnis"
 #
 # Das war Gregors eigener Lauf, fuenfzehnmal mitkopiert. Wer ihn mitzaehlt,
 # schlaegt fuenfzehnmal fuer einen fremden Start Alarm.
@@ -68,7 +68,7 @@ use Time::Local ();
 # ---------------------------------------------------------------------------
 #
 # Gesucht wird NUR unter C:\Temp - dort liegen meine Pruefstaende. Gregors
-# eigene Verzeichnisse (C:\Users\Gregor\Eudora72-*) werden nicht angefasst;
+# eigene Verzeichnisse (C:\Users\Anwender\Eudora72-*) werden nicht angefasst;
 # seine Laeufe sind keine, die ich protokollieren muesste, und sein
 # Verzeichnis geht mich nichts an (CLAUDE.md, Punkt 4).
 #

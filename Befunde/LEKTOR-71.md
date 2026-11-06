@@ -115,14 +115,14 @@ die Zeile *„LogLevel 58527 (0xE49F)“* steht dort. Bringt Teil 0 B seine
 ## <a id="l-71.1"></a>L-71.1 — unvollständig: Teil 0 B überschreibt das Protokoll, in dem M1 Schritt 4 seinen Nachweis hinterlassen hat
 
 * `Intern/TESTPLAN.md:42-45` (belegt): *„Der Inhalt von
-  `C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis` in
-  `C:\Users\Gregor\Eudora72-1.0.123-release\Mailverzeichnis` kopieren
+  `%USERPROFILE%\Eudora72-1.0.122-release\Mailverzeichnis` in
+  `%USERPROFILE%\Eudora72-1.0.123-release\Mailverzeichnis` kopieren
   (überschreiben).“* Die einzige Ausnahme ist `rootcerts.p7b`.
 * M1 Schritt 4, `TESTPLAN.md:633` (belegt): *„Im Protokoll stehen `[E-132](../Intern/BEFUNDE.md#e-132)
   Startverzeichnis: … fremd=1` und danach `[E-132](../Intern/BEFUNDE.md#e-132) Startverzeichnis: eigenes
   gewaehlt="…"`“.* Diese Zeilen schreibt Eudora in das `eudora.log` des
   **neuen** Mailverzeichnisses (belegt, `eudora.cpp:1196-1200`).
-* Gemessen: `C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis\eudora.log`
+* Gemessen: `%USERPROFILE%\Eudora72-1.0.122-release\Mailverzeichnis\eudora.log`
   gibt es (51.314 Byte, 25.10.2026 19:32), und A.1 schreibt kurz vorher noch
   hinein. Im neuen Mailverzeichnis gibt es noch keins (gemessen, vor Gregors
   Test).
@@ -143,7 +143,7 @@ und `eigenes gewaehlt=` aus M1 aufnehmen.
 * `Intern/TESTPLAN.md:10` (belegt): *„**Starten immer mit `Eudora starten.cmd`**
   im neuen Verzeichnis.“*
 * `:35-36` (belegt): *„Im neuen Verzeichnis
-  `C:\Users\Gregor\Eudora72-1.0.123-release` die **`Eudora.exe`
+  `%USERPROFILE%\Eudora72-1.0.123-release` die **`Eudora.exe`
   doppelklicken**“*; ebenso M1 Schritt 1 (`:630`) *„nicht `Eudora starten.cmd`,
   denn das übergibt das Verzeichnis und schneidet den Weg ab“*.
 

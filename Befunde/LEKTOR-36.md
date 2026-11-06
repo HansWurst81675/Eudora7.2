@@ -130,7 +130,7 @@ Wortlaut im Befund, deshalb nicht selbst umgeschrieben.
 nichts, du testest.' - [E-118](../Intern/BEFUNDE.md#e-118) $Kennung Lauf $i“*. In `tools/TESTLAEUFE.md` stützen sich damit
 alle Läufe vom 15.10.2026 (`gp90`, `d92`, `d93`, `d93b`, `k95`, `k96…`) auf eine Freigabe
 vom Vortag und heißen *„[E-118](../Intern/BEFUNDE.md#e-118)“*, obwohl sie [E-121](../Intern/BEFUNDE.md#e-121) messen. Ob Gregors Satz vom 14.10. auch für
-den 15.10. galt, steht nirgends. Dazu `:3` `$repo = 'C:\Users\Gregor\Documents\github\Eudora7.2'`:
+den 15.10. galt, steht nirgends. Dazu `:3` `$repo = '%USERPROFILE%\Documents\github\Eudora7.2'`:
 aus einem Arbeitsbaum gestartet, laufen Prüfserver und `testlauf.ps1` aus dem Hauptbaum,
 nicht aus dem eigenen (`$PSScriptRoot` wird nur für `messen-e118.ps1` benutzt). Werkzeug
 nicht geändert (außerhalb der LEKTOR-Rolle); Vorschlag: `-Freigabe` als Pflichtparameter,

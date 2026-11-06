@@ -1629,7 +1629,7 @@ Test, mit `pruefe-release-buchfuehrung.pl` von Hand direkt nach
 Dateiende. **Ein Muster für eine neue Schranke:** fünf der sieben Funde sind
 Aussagen über den eigenen Auslieferungsstand, und keine der 33 Schranken hat
 eine davon gesehen — sie prüfen Dokumente gegen Dokumente, nie gegen
-`ls Releases/*.zip`, `ls C:\Users\Gregor\Eudora72-*` oder `sha256sum`.
+`ls Releases/*.zip`, `ls %USERPROFILE%\Eudora72-*` oder `sha256sum`.
 
 ## Zweiundfünfzigster Durchgang — die Papiere zu 1.0.119, 21.10.2026 (Bericht: `Befunde/LEKTOR-47.md`)
 
@@ -1670,7 +1670,7 @@ unter der Bedingung, dass beim Schnüren vier Stellen nachgezogen werden, die
 jetzt ausdrücklich *„noch nicht geschnürt"* sagen. **Dieselbe Schranke fehlt
 zum vierten Mal:** die Prüfung aus [L-44.11](../Befunde/LEKTOR-44.md#l-44.11),
 die *„veröffentlicht ist …"* und *„geschnürt ist …"* gegen `gh release view`,
-`ls Releases/*.zip` und `ls C:\Users\Gregor\Eudora72-*` hält statt gegen andere
+`ls Releases/*.zip` und `ls %USERPROFILE%\Eudora72-*` hält statt gegen andere
 Dokumente. Sie hätte sechs der zwölf Funde gefangen, darunter alle vier
 schweren.
 
@@ -3327,3 +3327,15 @@ Eingearbeitet (05.11.2026, Zweig `e223_e222_e193rest`): [L-151.1](../Befunde/LEK
 - Die Abnahme aus dem frischen Klon (`C:\Temp\Klonprobe-0611`, 16:48–17:02, nach dem letzten Commit) steht nirgends im Zweig; ihre zehn Startzeilen liegen nur ungesichert im Wegwerf-Klon, die Teilergebnisse außer `E-239p` in keiner Datei ([L-157.1](../Befunde/LEKTOR-157.md#l-157.1)).
 - E-151 (Prüfstand aus dem Klon) verlangt noch die Wurzel `C:\Temp` gegen Entscheidung 39 und kennt die Messungen des 06.11. nicht; E-151 und E-243 (Prüfstand konnte echte Eudora-Ordner treffen) stehen ohne Marke „Zuletzt gemessen“ in CHANGELOG und WEITERMACHEN als „nie gemessen“ ([L-157.2](../Befunde/LEKTOR-157.md#l-157.2)).
 - Der Lauf vom Nachmittag heißt „Klonprobe“, lief aber aus dem Entwicklerbaum; seine 81 min 21 s stehen in keiner Datei ([L-157.3](../Befunde/LEKTOR-157.md#l-157.3)). Kommentare in Einrichter, Starter und Sperre, WERKZEUGE:140/143/144 und E-133 kennen neue Wurzel bzw. `E-133r` nicht ([L-157.4](../Befunde/LEKTOR-157.md#l-157.4)); `-Wurzel D:\…` ist beworben, aber nie gefahren ([L-157.5](../Befunde/LEKTOR-157.md#l-157.5)).
+
+## LEKTOR-158 (06.11.2026) — `main` nach 037c361c (Merge #229): Datenschutz über das ganze Repo, Einarbeitung von LEKTOR-157
+[LEKTOR-158](../Befunde/LEKTOR-158.md): Die Commits seit LEKTOR-157 sind sauber, keine Kennung des umgeschriebenen Commits mehr im Baum oder in Nachrichten auf `main`. L-157.1 bis L-157.3 erledigt, L-157.4 offen, L-157.5/L-157.6 teilweise. Zehn Funde, sieben zum Datenschutz; der Bericht nennt keinen Fundtext.
+- Ein Werkzeug nennt seit dem 06.11. den vollständigen Freigabepfad der VM ([L-158.1](../Befunde/LEKTOR-158.md#l-158.1)); der Austauschordner steht nach der Regel vom 03.11. an 13 Stellen ([L-158.2](../Befunde/LEKTOR-158.md#l-158.2)); E-243 sagt weiter, dass die Voraussetzung für Datenverlust bei Gregor erfüllt ist ([L-158.3](../Befunde/LEKTOR-158.md#l-158.3)).
+- Absender und eine Betreffzeile aus Gregors Postfach sind von der Bereinigung übrig, darunter einer, der auf die Gesundheit schließen lässt ([L-158.4](../Befunde/LEKTOR-158.md#l-158.4)). Rund 90 Stellen verweisen per Kennung auf Commits in `main`, die Namen aus der Liste oder den VM-Pfad tragen ([L-158.5](../Befunde/LEKTOR-158.md#l-158.5)).
+- Gering: eine IP aus einem Einwahlnetz im Selbsttest (Vermutung), Gerät in den Testdaten, rund 290 alte Pfade in Testverzeichnisse, E-246 hinter der Entscheidung, WEITERMACHEN wartet auf den erfolgten Merge (L-158.6 bis L-158.10). Für Gregor: Geschichte von `main` umschreiben? Alte Pfade bereinigen?
+
+## LEKTOR-159 (06.11.2026) — `main` nach 9af39dc6 (Merge #230): die ganze Doku gegen den Bestand, Einarbeitung von LEKTOR-158
+[LEKTOR-159](../Befunde/LEKTOR-159.md): Verweise und CHANGELOG stimmen: 2 tote Anker in 72 Dateien, Marken, `tools/RELEASES.md` und die GitHub-Releases passen, der Prüfbericht gilt für den Release-Bau 7.2.2.136. Veraltet sind Zustandsangaben. L-158.1 und L-158.3 sind erledigt, die übrigen werden in `ranjit_bereinigt_teil2` bearbeitet. 14 Funde, keiner betrifft das Programm.
+- E-151 und E-243 (Prüfstand aus dem Klon, Schutz echter Eudora-Ordner) warten in BEFUNDE und in beiden erzeugten Tabellen auf den Merge von #229, der geschehen ist ([L-159.1](../Befunde/LEKTOR-159.md#l-159.1)). Sechs offene Befunde (E-177, E-184, E-189, E-143, E-178, E-136) sagen „im Quellstand“ oder „kommt mit dem Testpaket 7.2.1.131“, obwohl `v7.2.1.131` seit dem 02.11. draußen ist ([L-159.3](../Befunde/LEKTOR-159.md#l-159.3)).
+- Der Kopf von `Releases/PAKETE.md` nennt 7.2.2.133 und 1.0.120 als *Latest* ([L-159.4](../Befunde/LEKTOR-159.md#l-159.4)). Der CHANGELOG schickt Neueinsteiger in „Wo man weitermachen kann“, Stand 09.09.2026 ([L-159.5](../Befunde/LEKTOR-159.md#l-159.5)). Sechs Testplan-Abschnitte lesen sich als „auszuführen“, obwohl Gregor sie bestätigt hat ([L-159.6](../Befunde/LEKTOR-159.md#l-159.6)).
+- Gering: WEITERMACHEN ohne #229/#230, Kriterium 0 „nie gemessen“ gegen ZIEL.md, FUNKTIONEN-Stand 7.2.2.132, toter Anker `#e-203` aus `offene-befunde.pl`, E-222 widersprüchlich, „nach 7.2.1“ in offenen Befunden, der GitHub-Text von `v7.2.1.131` ohne den Nachtrag vom 03.11., der Prüfbericht ohne E-133r, vier „behoben“ ohne Fassung (L-159.2, L-159.7 bis L-159.14). Für Gregor: Release-Text 7.2.1.131 nachziehen? E-147 ohne Antwort im geschlossenen Issue #102? E-71 in 7.2.2.137?

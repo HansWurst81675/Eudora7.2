@@ -43,7 +43,7 @@ Die beiden Verdächtigungen aus der Aufgabenstellung sind **entkräftet**:
 
 ## 2. Der Beleg: Eudoras eigenes Absturzprotokoll
 
-`C:\Users\Gregor\Eudora72-1.0.12-release\Mailverzeichnis\Exception.log`,
+`%USERPROFILE%\Eudora72-1.0.12-release\Mailverzeichnis\Exception.log`,
 06.09.2026 00:32:43, Fassung 7.2.0.12:
 
 ```

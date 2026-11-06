@@ -8,7 +8,7 @@ mehr stimmen; geändert seit `8e78401c` sind `5ab3e4ea` (Quelltext),
 `1cf3d242` (Doku), `b5a8e717` (Prüfstand 36/36), `651a3b97`
 (`tools/messen-e137.ps1`, E-137a–c) und `5b8cf839` (Paket 1.0.126
 geschnürt). (3) Schwerpunkt für den PR: ob Gregor den Kurztest V1–V5 an
-`C:\Users\Gregor\Eudora72-1.0.126-release` ohne Rückfrage fahren kann; ob
+`%USERPROFILE%\Eudora72-1.0.126-release` ohne Rückfrage fahren kann; ob
 Fassung, Zweig, Paket, Testzahlen (314 Unit, 19 Schranken, 39 Prüfstand)
 und der Stand von [E-137](../Intern/BEFUNDE.md#e-137) (Strg+W nach einem
 Klick auf die schwebende Filterleiste schließt die Mail statt der Leiste)
@@ -268,7 +268,7 @@ von selbst. Hindert den PR nicht.
 
 * Vorbereitung `Intern/TESTPLAN.md:15-18`: Ordner, Startdatei und
   Titelzeile stimmen mit `Releases/PAKETE.md:166` (*„Testverzeichnis
-  `C:\Users\Gregor\Eudora72-1.0.126-release`, neben seinem 1.0.125“*) und
+  `%USERPROFILE%\Eudora72-1.0.126-release`, neben seinem 1.0.125“*) und
   `tools/paket-bauen.ps1:595` (`Eudora starten.cmd` wird ins Paket gelegt).
 * V1–V3 sind wortgleich mit U1–U3, die Gregor kennt (`:22-24` gegen `:53-55`); Menüweg *Tools → Filters* und die Beschriftung *„Match“* hat
   [LEKTOR-84](LEKTOR-84.md#l-84.7) an `EudoraRes.rc` geprüft.

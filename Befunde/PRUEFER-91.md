@@ -50,8 +50,8 @@ Gemessen mit `Eudora71\Tests\RunTests.cmd` aus PowerShell. Die Quelle habe ich m
 | Text (Beispiel) | einzeilig | nötig |
 |---|---|---|
 | `Log: C:\Users\Al\AppData\Roaming\Qualcomm\Eudora\eudora.log  (LogLevel=25759, keine E-nn-Marken)` | 511 px | 2 Zeilen |
-| `Log: C:\Users\Gregor\AppData\Roaming\…\eudora.log  (LogLevel=25759, keine E-nn-Marken)` | 534 px | 2 Zeilen |
-| `Log: C:\Users\Gregor\Eudora72-7.2.1.131\Mailverzeichnis\eudora.log  (LogLevel=25759, keine E-nn-Marken)` | 522 px | 2 Zeilen |
+| `Log: %USERPROFILE%\AppData\Roaming\…\eudora.log  (LogLevel=25759, keine E-nn-Marken)` | 534 px | 2 Zeilen |
+| `Log: %USERPROFILE%\Eudora72-7.2.1.131\Mailverzeichnis\eudora.log  (LogLevel=25759, keine E-nn-Marken)` | 522 px | 2 Zeilen |
 | dieselbe Zeile mit `LogLevel=58527` | 426 px | 1 Zeile |
 
 - **Was passiert:** Die zweite Zeile ist unsichtbar. Es fehlt ausgerechnet der Hinweis *„keine E-nn-Marken“*, also die Auskunft, für die [E-132](../Intern/BEFUNDE.md#e-132) die Zeile eingeführt hat. *Copy info* kopiert den vollen Text. Ein Ticket ist also vollständig, nur der Dialog zeigt den Hinweis nicht.

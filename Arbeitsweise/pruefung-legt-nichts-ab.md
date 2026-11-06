@@ -24,7 +24,7 @@ Defender hat an diesem Tag **dreimal** zugeschlagen ([E-124](../BEFUNDE.md#e-124
 | Zeit | Datei | ausgelöst von |
 |---|---|---|
 | 13:17:28 | `Eudora.exe` des Baus von 13:09:05 (daraus Paket 1.0.111) | — acht Minuten nach einem Scan mit **0 Funden** |
-| 20:33:12 | `C:\Users\Gregor\Eudora72-1.0.113-release\Eudora.exe` | **beim Ausführen** (Gregor: *„virus alarm vom defender!"*) |
+| 20:33:12 | `%USERPROFILE%\Eudora72-1.0.113-release\Eudora.exe` | **beim Ausführen** (Gregor: *„virus alarm vom defender!"*) |
 | 20:45:19 | `Releases\.pruefe-behoben-1.0.113\Eudora.exe` | **`perl.exe`** — unsere eigene Schranke |
 
 Der dritte Fall ist der, um den es hier geht.

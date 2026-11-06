@@ -1,7 +1,7 @@
 # PRÜFER-18 — die E-110-Spurmarke in `PGHTMIMP.CPP` (Commit `dca1d8f`)
 
 Stand: 18.09.2026. Zweig `e110-spurmarke-bilddaten`, Arbeitsbaum
-`C:\Users\Gregor\Documents\github\Eudora7.2`. **Kein Quelltext unter
+`%USERPROFILE%\Documents\github\Eudora7.2`. **Kein Quelltext unter
 `Eudora71/` angefasst, kein ändernder git-Befehl gefahren.** Geprüft wurde
 genau eine Änderung: `Eudora71/Eudora/PGHTMIMP.CPP`, Zeilen 2229–2311.
 
@@ -31,7 +31,7 @@ beantwortet [E-110](../Intern/BEFUNDE.md#e-110) nicht.
   nachgestellt, mit 64 Byte Wächter vor und hinter `szSrc`, Längen 0…1000
   (MSVC 14.38, `/W4 /Od`, 32 Bit).
 * **Gregors eigenes Protokoll gemessen**:
-  `C:\Users\Gregor\Eudora72-1.0.72-release\Mailverzeichnis\eudora.log`
+  `%USERPROFILE%\Eudora72-1.0.72-release\Mailverzeichnis\eudora.log`
   (150 580 Byte, 18.09.2026 08:20).
 
 ---

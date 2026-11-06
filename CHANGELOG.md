@@ -28,7 +28,6 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-246](Intern/BEFUNDE.md#e-246)** | Der umgeschriebene Commit mit zwei Familiennamen ist auf GitHub weiter abrufbar — kein Z… | **nie gemessen** | Gregors Entscheidung, ob er beim GitHub-Support die Entfernung beantragt (nur der Besitzer des Repos kann das); dann die Kennung aus dem Repo nehmen.… |
 | **[E-245](Intern/BEFUNDE.md#e-245)** | Die Namensschranke pruefe-namen-gestaget.pl sieht drei Wege nicht — einen Namen im Datei… | **nie gemessen** | Dateinamen (`git diff --cached --name-only`) und Commit-Nachricht (`commit-msg`-Haken bzw. `git log --format=%B` im pre-push) mitprüfen; Binärdateie… |
 | **[E-244](Intern/BEFUNDE.md#e-244)** | Liegt der Klon in einem Pfad mit Leerzeichen, startet kein Prüfserver — alle Fälle mit… | **nie gemessen** | die Argumente mit Leerzeichen selbst in Anführungszeichen setzen (auch das Mailverzeichnis in `testlauf.ps1`) (oder `Start-Process` mit einer einzige… |
 | **[E-243](Intern/BEFUNDE.md#e-243)** | Prüfstand-Werkzeuge konnten echte Eudora-Instanzen unter C:\Temp treffen — Postfächer … | 06.11.2026 an 7.2.2.136 | der Merge von `e151_pruefstand_klon`; die Messskripte prüfen die Marke nicht selbst (sie laufen nur über `pruefstand-lauf.ps1`/`testlauf.ps1`, die s… |
@@ -59,7 +58,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 | **[E-159](Intern/BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](Intern/BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 — **veraltet** | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](Intern/BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | 06.11.2026 an 7.2.2.136 | der Merge; ein voller Lauf nach der Berichtigung der Pfadfälle (erwartet 107 von 107 bei 3 übersprungenen) und Gregors Lauf auf einem zweiten Rechne… |
-| **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
+| **[E-147](Intern/BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Gregors Entscheidung, ob ohne diese Antwort gebaut wird; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text gespeichert… |
 | **[E-143](Intern/BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | 02.11.2026 an 7.2.1.130 — **veraltet** | der Filterteil ist am Programm gemessen (Gregor, 01. und 02.11.2026, [TESTPLAN](Intern/TESTPLAN.md#e-143-naechstes)) bis auf das Übergehen eines alten Out-F… |
 | **[E-142](Intern/BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 — **veraltet** | vor 7.2.1 nichts — Gregors Entscheidung 13 (26.10.2026): *Send Again* aus IMAP ergibt eine leere Mail (T6), das kommt erst nach 7.2.1 dran; Entwürf… |
 | **[E-136](Intern/BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 02.11.2026 an 7.2.1.130 — **veraltet** | *Speichern unter* als `.htm` am Programm messen; für Gregor entfällt der Test vorerst, der Strg-S-Weg ist am Prüfstand gemessen… |
@@ -125,7 +124,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ## 7.2.2.136 — Release (`v7.2.2.136`, veröffentlicht am 06.11.2026): kein Absturz beim Beenden bei offenem Hinweis (E-239), Druck mit Hintergründen auf Wunsch (E-169)
 
-Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Sammelzweig `paket_7_2_2_136` aus `main` (mit 7.2.2.135) und den Zweigen `e239_absturz_beenden` und `e169_druckvorschau`. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.136-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner `test_2.136`), als Testpaket ohne vollen Prüfstandslauf (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*). Veröffentlicht am 06.11.2026 als `v7.2.2.136`.** Bau `Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11`, Unit-Tests 428/428, Schranken 19/19; voller Prüfstandslauf am 06.11.2026 an diesem Bau 110/110, dazu sechs Messungen zum Beenden bei offenem Hinweis grün ([PAKETE](Releases/PAKETE.md)).
+Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Sammelzweig `paket_7_2_2_136` aus `main` (mit 7.2.2.135) und den Zweigen `e239_absturz_beenden` und `e169_druckvorschau`. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.136-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner), als Testpaket ohne vollen Prüfstandslauf (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*). Veröffentlicht am 06.11.2026 als `v7.2.2.136`.** Bau `Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11`, Unit-Tests 428/428, Schranken 19/19; voller Prüfstandslauf am 06.11.2026 an diesem Bau 110/110, dazu sechs Messungen zum Beenden bei offenem Hinweis grün ([PAKETE](Releases/PAKETE.md)).
 
 **Von Gregor am 06.11.2026 bestätigt** (*„ja zum release“*): Schritte 1, 2, 3, 5 und 6 bestanden, ausgewertet an seiner `eudora.log` (zehn Sitzungen mit 7.2.2.136, alle sauber beendet); *Exit* über das Symbol im Infobereich bei offenem Hinweis: `E-239 Beenden aufgeschoben` und nach *OK* `nachgeholt` ([Testplan](Intern/TESTPLAN.md#test-7-2-2-136)). Dabei neu gemeldet, nicht durch 7.2.2.136 entstanden: [E-240](Intern/BEFUNDE.md#e-240), [E-241](Intern/BEFUNDE.md#e-241), [E-242](Intern/BEFUNDE.md#e-242).
 
@@ -136,14 +135,14 @@ Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2
 
 ## 7.2.2.135 — Testpaket (geschnürt am 05.11.2026, nicht veröffentlicht): *Edit → Find* findet das Wort nach dem Öffnen aus *Find Messages* (Rest von E-193), dazu alles aus 7.2.2.134
 
-Nummer nach Entscheidung 26 (fortlaufend 7.2.2.N); Gregor am 05.11.2026: *„ok, melde dich wenn 2.135 da ist“* und *„erstelle mir dann ein lokales zip zum testen.“* Zweig `e223_e222_e193rest`. Nur Fehlerbehebungen, keine neue Funktion. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.135-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner `test_2.135`), nicht veröffentlicht.** Bau `Eudora 7.2.2.135+1cf4a59f 2026-11-05 16:30`, Prüfbericht BESTANDEN (425 Unit-Tests, 19 Schranken, 103 Prüfstandsfälle); im vollen Lauf einmal ein Absturz beim Beenden während des Hinweises nach dem Abruf ([E-239](Intern/BEFUNDE.md#e-239), kritisch, offen; Datenverlust nicht beobachtet, nicht ausgeschlossen), einzeln wiederholt nicht mehr ([PAKETE](Releases/PAKETE.md)). Derselbe Absturz kam schon am Morgen im ersten Lauf von [`E-223`](Intern/BEFUNDE.md#e-223) mit der Behebung (09:51) und war dort als grün eingetragen ([LEKTOR-151](Befunde/LEKTOR-151.md#l-151.1)). Enthält alles aus 7.2.2.134 ([E-223](Intern/BEFUNDE.md#e-223), [E-222](Intern/BEFUNDE.md#e-222)).
+Nummer nach Entscheidung 26 (fortlaufend 7.2.2.N); Gregor am 05.11.2026: *„ok, melde dich wenn 2.135 da ist“* und *„erstelle mir dann ein lokales zip zum testen.“* Zweig `e223_e222_e193rest`. Nur Fehlerbehebungen, keine neue Funktion. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.135-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner), nicht veröffentlicht.** Bau `Eudora 7.2.2.135+1cf4a59f 2026-11-05 16:30`, Prüfbericht BESTANDEN (425 Unit-Tests, 19 Schranken, 103 Prüfstandsfälle); im vollen Lauf einmal ein Absturz beim Beenden während des Hinweises nach dem Abruf ([E-239](Intern/BEFUNDE.md#e-239), kritisch, offen; Datenverlust nicht beobachtet, nicht ausgeschlossen), einzeln wiederholt nicht mehr ([PAKETE](Releases/PAKETE.md)). Derselbe Absturz kam schon am Morgen im ersten Lauf von [`E-223`](Intern/BEFUNDE.md#e-223) mit der Behebung (09:51) und war dort als grün eingetragen ([LEKTOR-151](Befunde/LEKTOR-151.md#l-151.1)). Enthält alles aus 7.2.2.134 ([E-223](Intern/BEFUNDE.md#e-223), [E-222](Intern/BEFUNDE.md#e-222)).
 
 * ***Edit → Find* findet ein Wort, das *Find Messages* gemeldet hat** ([E-193](Intern/BEFUNDE.md#e-193), Rest; Gregors Entscheidung A vom 05.11.2026). *Find Messages* öffnet die Mail mit markiertem Treffer; *Edit → Find* suchte ab dieser Markierung weiter und meldete *„not found“*, wenn das Wort nur einmal vorkam. Jetzt sucht *Edit → Find* in diesem Fall einmal von oben, markiert den Treffer und scrollt ihn in den sichtbaren Bereich; *Weitersuchen* und F3 springen nach dem letzten Treffer stumm wieder zum ersten (Umbruch), statt *„not found“* zu melden; *„not found“* kommt nur noch, wenn das Wort gar nicht in der Mail steht (Gregors Entscheidung A, 05.11.2026). Mit abgeschalteter Microsoft-Anzeige (Paige) bleibt der alte Fehler (PRÜFER-101 K1, Gregor entscheidet). Am Prüfstand gemessen (`E-193fs`: an 7.2.2.134 1 von 13 Mails gefunden, mit der Behebung 13 von 13), Regressionstest `TestE193f.cpp`. Gefunden hat die Ursache Gregor.
 * **Test-ZIP für Gregor enthält zusätzlich `MFC71.DLL` und `msvcp71.dll`** auf seinen Wunsch, wie bei 7.2.2.134; ein Release-Paket enthält sie nur nach seiner ausdrücklichen Entscheidung ([S-3](Intern/BEFUNDE.md#s-3), S-3c). Für alle anderen gilt der Hinweis aus 7.2.2.134: S/MIME, Junk-Filter und LDAP brauchen beide Dateien neben der `Eudora.exe`, Herkunft eine vorhandene Installation von Eudora 7.1, Hermes oder Visual Studio 2003, von DLL-Download-Seiten raten wir ab.
 
 ## 7.2.2.134 — Testpaket (geschnürt am 05.11.2026, nicht veröffentlicht): „Remember password“ beim ersten Mal (E-223), signierte S/MIME-Mail öffnet sich wieder (E-222)
 
-Nummer von Gregor am 05.11.2026 (*„paket nummer ist dann 2.134, das ist ok für mich“*), Zweig `e223_e222_e193rest` (Name von Gregor am 05.11.2026 bestätigt). Nur Fehlerbehebungen aus Gregors Test an 7.2.2.133, keine neue Funktion. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.134-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner `test_2.134`), nicht veröffentlicht.** Bau `Eudora 7.2.2.134+888cc82b 2026-11-05 10:27`, Prüfbericht BESTANDEN (424 Unit-Tests, 19 Schranken, 102 Prüfstandsfälle) ([PAKETE](Releases/PAKETE.md)).
+Nummer von Gregor am 05.11.2026 (*„paket nummer ist dann 2.134, das ist ok für mich“*), Zweig `e223_e222_e193rest` (Name von Gregor am 05.11.2026 bestätigt). Nur Fehlerbehebungen aus Gregors Test an 7.2.2.133, keine neue Funktion. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.134-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner), nicht veröffentlicht.** Bau `Eudora 7.2.2.134+888cc82b 2026-11-05 10:27`, Prüfbericht BESTANDEN (424 Unit-Tests, 19 Schranken, 102 Prüfstandsfälle) ([PAKETE](Releases/PAKETE.md)).
 
 * **„Remember password“ speichert das Kennwort schon beim ersten Mal** ([E-223](Intern/BEFUNDE.md#e-223), Originalfehler). Eudora las die Einstellung vor dem Kennwortdialog und entschied danach mit dem alten Wert; wer das Häkchen zum ersten Mal setzte, wurde beim nächsten Start noch einmal gefragt. Am Prüfstand gemessen (`E-223p`/`E-223w`: am Bau 7.2.2.133 kein Kennwort in der `Eudora.ini`, mit der Behebung gespeichert; mit der Behebung zwei Läufe, im ersten stürzte Eudora beim Beenden ab – [E-239](Intern/BEFUNDE.md#e-239), der Lauf war rot –, grün ist der zweite), Regressionstest `TestE223.cpp`. Von Gregor am 05.11.2026 an 7.2.2.134 bestätigt. IMAP war nicht betroffen.
 * **Ein Klick auf das Symbol einer S/MIME-signierten Mail ruft das Plugin wieder auf** ([E-222](Intern/BEFUNDE.md#e-222), Originalfehler). Die Anzeige liefert den Verweis prozentkodiert zurück; aus `<5335.0002>` wurde `%3C5335.0002%3E`, und Eudora meldete *„Plugin no longer available“*, obwohl das Plugin geladen war. Am Prüfstand gemessen (Meldung am Bau 7.2.2.133 wörtlich wie bei Gregor; mit der Behebung ruft Eudora das S/MIME-Plugin auf), Regressionstest `TestE222.cpp`. Ob die Mail danach ihren Inhalt zeigt, zeigt erst Gregors Test: am Prüfstand bricht das Plugin selbst ab, weil die Windows-Komponente CAPICOM fehlt.
@@ -234,7 +233,7 @@ Alle vier Fälle (`E-194p`, `E-194k`, `E-205p`, `E-207p`) nach dem Merge von `ma
 
 ## 7.2.1.131 — Release (`v7.2.1.131`, veröffentlicht am 02.11.2026): E-177, E-143 (Suchfenster), E-122, E-184, E-189 im Quelltext berichtigt und am Prüfstand gemessen; E-178 und E-136 (Strg+S) gemessen
 
-Nummer am 02.11.2026 vergeben (Gregor: *„ja, paket_7_2_1_131 ist ok“*), Zweig `paket_7_2_1_131`. **Geschnürt am 02.11.2026, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.131-release`; veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131)** ([PAKETE](Releases/PAKETE.md)); Prüfbericht BESTANDEN (362 Unit-Tests, 19 Schranken, 53 Prüfstandsfälle). **Von Gregor am 02.11.2026 an seinem System getestet: alle sieben Schritte bestanden** ([TESTPLAN](Intern/TESTPLAN.md#test-7-2-1-131), Belege aus seiner `eudora.log`); nach seinem Ja am selben Tag als Release `v7.2.1.131` veröffentlicht, danach 7.2.2. Darin die Zweige `e184_imap_zusammenfassung` (#197), `e184_mehrere_mails` (#198), `e177_filter_programm` (#200), `e143_suchfenster` (#201) und `e122_imap_datum` (#202), dazu `was_eudora_alles_kann` (#203, nur Doku im Repo, nicht im Paket). Testschritte für Gregor: [TESTPLAN](Intern/TESTPLAN.md#test-7-2-1-131). Kurz:
+Nummer am 02.11.2026 vergeben (Gregor: *„ja, paket_7_2_1_131 ist ok“*), Zweig `paket_7_2_1_131`. **Geschnürt am 02.11.2026, bereitgestellt in `%USERPROFILE%\Eudora72-7.2.1.131-release`; veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131)** ([PAKETE](Releases/PAKETE.md)); Prüfbericht BESTANDEN (362 Unit-Tests, 19 Schranken, 53 Prüfstandsfälle). **Von Gregor am 02.11.2026 an seinem System getestet: alle sieben Schritte bestanden** ([TESTPLAN](Intern/TESTPLAN.md#test-7-2-1-131), Belege aus seiner `eudora.log`); nach seinem Ja am selben Tag als Release `v7.2.1.131` veröffentlicht, danach 7.2.2. Darin die Zweige `e184_imap_zusammenfassung` (#197), `e184_mehrere_mails` (#198), `e177_filter_programm` (#200), `e143_suchfenster` (#201) und `e122_imap_datum` (#202), dazu `was_eudora_alles_kann` (#203, nur Doku im Repo, nicht im Paket). Testschritte für Gregor: [TESTPLAN](Intern/TESTPLAN.md#test-7-2-1-131). Kurz:
 
 * **Berichtigt:** [E-177](Intern/BEFUNDE.md#e-177) (*Notify Application* übergibt keine falsche Zeichensatzangabe mehr, dazu die `utf8`-Berichtigung im Kern), [E-143](Intern/BEFUNDE.md#e-143) im Suchfenster (ein Out-Hinweis je Übertragung statt je Treffer), [E-122](Intern/BEFUNDE.md#e-122) (Eingangsdatum nach IMAP übertragener Mails), [E-184](Intern/BEFUNDE.md#e-184) und [E-189](Intern/BEFUNDE.md#e-189) (Verschieben im IMAP-Konto überschreibt keine fremde Zusammenfassung, auch bei mehreren Mails und ohne UIDPLUS) — alle am Prüfstand oder IMAP-Prüfserver gemessen, vorher rot, nachher grün.
 * **Gemessen, ohne Codeänderung:** [E-178](Intern/BEFUNDE.md#e-178) (Link, Festbreite, Strg+S lassen Emoji stehen; die Antwort auf markierten Text ist nicht gemessen) und der Strg-S-Weg von [E-136](Intern/BEFUNDE.md#e-136); [E-172](Intern/BEFUNDE.md#e-172) als kein Programmfehler aufgeklärt.
@@ -289,7 +288,7 @@ Die Einzelheiten je Zweig, jüngster zuerst:
 
 ## 7.2.1.130 — Testpaket: E-178, E-179, E-170, E-143 im Quelltext berichtigt; E-136 zweiter Speicherweg
 
-Nummer am 01.11.2026 vergeben (Gregor: *„merged. ja, 7.2.1.130 schnüren“*). **Geschnürt am 01.11.2026, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.130-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md)). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e165_schliessen_e136_speichern_unter` (#194), `e178_bearbeiten_emoji` (#195) und `paket_7_2_1_130`. Alles hier ist gebaut und durch Regressionstests mit Gegenprobe gesichert, **am laufenden Programm aber noch nicht gemessen**.
+Nummer am 01.11.2026 vergeben (Gregor: *„merged. ja, 7.2.1.130 schnüren“*). **Geschnürt am 01.11.2026, bereitgestellt in `%USERPROFILE%\Eudora72-7.2.1.130-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md)). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e165_schliessen_e136_speichern_unter` (#194), `e178_bearbeiten_emoji` (#195) und `paket_7_2_1_130`. Alles hier ist gebaut und durch Regressionstests mit Gegenprobe gesichert, **am laufenden Programm aber noch nicht gemessen**.
 
 **Aus `e178_bearbeiten_emoji`:**
 
@@ -306,7 +305,7 @@ Nummer am 01.11.2026 vergeben (Gregor: *„merged. ja, 7.2.1.130 schnüren“*).
 
 ## 7.2.1.129 — Testpaket: E-139, E-140, E-171 behoben; E-136 und E-165 zum Nachmessen
 
-Nummer am 31.10.2026 vergeben (Gregor: *„bau mir dann ein 7.2.1.129“* — *„mit 7.2.1.129 kann ich die anderen fixes aus Intern/TESTPLAN.md testen“*). **Geschnürt am 31.10.2026, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md)). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e140-speichern-zeichensatz` (#192) und `e136_messweg`.
+Nummer am 31.10.2026 vergeben (Gregor: *„bau mir dann ein 7.2.1.129“* — *„mit 7.2.1.129 kann ich die anderen fixes aus Intern/TESTPLAN.md testen“*). **Geschnürt am 31.10.2026, bereitgestellt in `%USERPROFILE%\Eudora72-7.2.1.129-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md)). Testschritte je Behebung: [TESTPLAN](Intern/TESTPLAN.md). Zweige `e140-speichern-zeichensatz` (#192) und `e136_messweg`.
 
 * **FAQ 16** ([Doku/FAQ.md](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)): ein Wort in einer Mail suchen, auch in den Kopfzeilen — *Blah Blah Blah*, dann *Strg+Umschalt+F*; von Gregor am 31.10.2026 an 7.2.1.128 und an 7.2.1.129 bestätigt (wie [FAQ 16](Doku/FAQ.md#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus)).
 * **[E-136](Intern/BEFUNDE.md#e-136), Messweg:** warum der Prüfstand den Speicherweg nicht erreicht (Speichern nur bei geänderter Nachricht, Bearbeiten-Modus am Leistenknopf) — im Befund.
@@ -596,7 +595,7 @@ und die Protokollzeilen kommen mit dem PR aus dem Zweig
 
 ## 7.2.0.122 — Ziehen nach `Out` wird abgelehnt statt eine neue Nachricht anzulegen ([E-125](Intern/BEFUNDE.md#e-125))
 
-**Übersetzt am 23.10.2026, als Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.122-release` bereitgestellt und als ZIP geschnürt; nicht veröffentlicht.** 277 Tests, 277 bestanden.
+**Übersetzt am 23.10.2026, als Testverzeichnis `%USERPROFILE%\Eudora72-1.0.122-release` bereitgestellt und als ZIP geschnürt; nicht veröffentlicht.** 277 Tests, 277 bestanden.
 
 **Was der Anwender merkt.** Zieht er eine **empfangene** Nachricht nach `Out`,
 kommt ein Hinweis mit **einem** Knopf:
@@ -1081,7 +1080,7 @@ Messung.
 Fehlverhalten:
 
 > *„können wir den pfad komplett angeben?"* — im Fenster stand
-> `C:\Users\Gregor\EUDORA~1.113\MAILVE~1`.
+> `%USERPROFILE%\EUDORA~1.113\MAILVE~1`.
 >
 > *„eudora 0.114 2x gestartet, jedes mal werde ich nach dem verzeichnis
 > gefragt, obwohl schon einmal ein eigenes für 0.114 angelegt wurde. ist es
@@ -1093,8 +1092,8 @@ Fehlverhalten:
 `ExecutableDir`, und das kommt aus `GetModuleFileName` und ist **lang**:
 
 ```
-Kandidat (aus der Registry): C:\Users\Gregor\EUDORA~1.114\MAILVE~1
-Eigenes  (ExecutableDir)   : C:\Users\Gregor\Eudora72-1.0.114-release\
+Kandidat (aus der Registry): %USERPROFILE%\EUDORA~1.114\MAILVE~1
+Eigenes  (ExecutableDir)   : %USERPROFILE%\Eudora72-1.0.114-release\
 -> Praefixvergleich schlaegt fehl -> fremd=1
 ```
 
@@ -1776,7 +1775,7 @@ Derselbe Stand wie 7.2.0.106, nur mit dem Grundtext *„message text is empty“
 
 ## 7.2.0.90 — eingebettete Bilder beim Hochladen, kein Verlust beim Verschieben in IMAP (E-118 Teil 2, E-121) — **nicht einzeln veröffentlicht, enthalten in `v1.0.101`, Zweig `e-118_HTML_header`**
 
-**[E-118](Intern/BEFUNDE.md#e-118) Teil 2:** an 1.0.89 fehlten bei Gregors SoftMaker-Mail nach dem Verschieben in den IMAP-Ordner die eingebetteten Bilder – der Hochladecode kannte die Zeilen `Embedded Content:` nicht (Originalfehler). Jetzt wird jedes Bild ein eigener Teil mit dem `Content-ID`, unter dem das HTML es ruft, die Nachricht wird `multipart/related`. Nach PRÜFER-27: Text hinter `</x-html>` bleibt erhalten, die Teilegrenze entsteht nur einmal. Test `TestE118.cpp` (5), (6), Testsuite **209/209**.
+**[E-118](Intern/BEFUNDE.md#e-118) Teil 2:** an 1.0.89 fehlten bei Gregors Rundbrief-Mail nach dem Verschieben in den IMAP-Ordner die eingebetteten Bilder – der Hochladecode kannte die Zeilen `Embedded Content:` nicht (Originalfehler). Jetzt wird jedes Bild ein eigener Teil mit dem `Content-ID`, unter dem das HTML es ruft, die Nachricht wird `multipart/related`. Nach PRÜFER-27: Text hinter `</x-html>` bleibt erhalten, die Teilegrenze entsteht nur einmal. Test `TestE118.cpp` (5), (6), Testsuite **209/209**.
 
 **[E-121](Intern/BEFUNDE.md#e-121) (Datenverlust, Originalfehler):** gefunden beim Messen von [E-118](Intern/BEFUNDE.md#e-118) – eine Nachricht, die aus einem lokalen Postfach in einen IMAP-Ordner verschoben wird, konnte verschwinden, wenn die Abgleichsaufgabe des Zielordners vom Start die lokale Kopie verwarf, bevor sie hochgeladen war; gelöscht wurden dabei auch die eingebetteten Bilddateien. Jetzt bleibt die Nachricht in der Quelle, bis der Server sie angenommen hat; fehlt die Kopie im Ziel, wird aus der Quelle hochgeladen. **Am IMAP-Prüfserver gemessen (14.10.2026):** Normalfall, fehlende Kopie (mit Prüfschalter erzwungen) und abgelehntes `APPEND` (`--append-ablehnen`): nie verloren. Neu im Prüfserver: `--append-ablehnen`, `--gruss-verzoegerung`.
 
@@ -3429,13 +3428,13 @@ Stils stehen; bei mehreren Bildern trifft er die falsche. Genau das ist das
 Übereinanderliegen.
 
 **(2) Auswertbar, aber zu breit.** Ein zweites Thunderbird-Bild
-(freenet/audibene-Rundbrief) zeigt dasselbe Kopflogo im schmalen
+(ein Rundbrief) zeigt dasselbe Kopflogo im schmalen
 Verfassenfenster schmal und in der breiteren Leseansicht breiter —
 proportional auf die verfügbare Spaltenbreite gerechnet. Ein `<img>` mit
 `width="1200"` sprengt die Zeile auch dann, wenn Paige die Zahl lesen kann.
 
 **Gemessen an Gregors gesicherten Postfächern** (alle `.mbx` unter
-`C:\Users\Gregor\Eudora72-Postfaecher-gesichert`): **2884** `<img>`, davon
+`%USERPROFILE%\Eudora72-Postfaecher-gesichert`): **2884** `<img>`, davon
 **2601** mit Attribut, **122** nur mit CSS-Größe, **161** ganz ohne
 Größenangabe.
 

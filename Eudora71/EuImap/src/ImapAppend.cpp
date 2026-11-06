@@ -730,7 +730,7 @@ int E118Huelle (const char* p, long nLaenge, long* pnAnfang, long* pnEnde)
 }
 
 /* E-118, Teil 2: eingebettete Bilder (Gregor am 14.10.2026 an 1.0.89, die
-SoftMaker-Mail). Eudora legt die Bildteile einer multipart/related-Mail als
+Rundbrief-Mail). Eudora legt die Bildteile einer multipart/related-Mail als
 Dateien ab und schreibt in den Text nur
    Embedded Content: <datei>: <MRI>,<CID-Hash>,<CL-Hash>,<MRI_CB_CL-Hash>
 Den Content-ID selbst merkt es sich nicht, nur seinen Hash (HashMT, mime.cpp
@@ -1395,7 +1395,7 @@ BOOL CImapAppend::ReformatBody ()
 		}
 		// E-118 Teil 2: ein eingebettetes Bild. Bisher ging diese Zeile als
 		// Text an den Server und das Bild verloren - die lokale Datei loescht
-		// Eudora nach dem Verschieben (Gregor am 14.10.2026, SoftMaker-Mail).
+		// Eudora nach dem Verschieben (Gregor am 14.10.2026, Rundbrief-Mail).
 		// Jetzt wird es ein eigener Teil mit dem Content-ID, unter dem das HTML
 		// es ruft; die Nachricht wird multipart/related. Fehlt die Datei,
 		// bleibt die Zeile als Text stehen - wie bei einem Anhang.

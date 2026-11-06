@@ -109,16 +109,16 @@ void RunE118Tests(void)
 	TT_EndTest();
 
 	// ------------------------------------------------------------- (6)
-	// Die SoftMaker-Mail: drei Bilder als cid:, Eudora kennt nur den Hash.
+	// Die Rundbrief-Mail: drei Bilder als cid:, Eudora kennt nur den Hash.
 	TT_BeginTest("E-118: das eingebettete Bild findet seinen Verweis im HTML");
 	{
-		const char* pHtml = "<img src=\"cid:logo_softmaker-33ed702b.png\" alt=\"\">"
+		const char* pHtml = "<img src=\"cid:logo_rundbrief-33ed702b.png\" alt=\"\">"
 			"<td background='cid:bell.png'><img src=https://example.invalid/a.png >";
 		long n = (long)strlen(pHtml);
 		char szCid[256];
 
-		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("logo_softmaker-33ed702b.png"), 1, ZaehlHash, szCid, sizeof(szCid)) == 1
-			&& strcmp(szCid, "logo_softmaker-33ed702b.png") == 0, "cid in Anfuehrungszeichen");
+		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("logo_rundbrief-33ed702b.png"), 1, ZaehlHash, szCid, sizeof(szCid)) == 1
+			&& strcmp(szCid, "logo_rundbrief-33ed702b.png") == 0, "cid in Anfuehrungszeichen");
 		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("bell.png"), 1, ZaehlHash, szCid, sizeof(szCid)) == 1
 			&& strcmp(szCid, "bell.png") == 0, "cid in background mit einfachen Anfuehrungszeichen");
 		TT_CHECK_MSG(E118Verweis(pHtml, n, ZaehlHash("https://example.invalid/a.png"), 0, ZaehlHash, szCid, sizeof(szCid)) == 1

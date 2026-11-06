@@ -81,7 +81,7 @@ niemand sie gebildet hat.
 **Eine Falle beim Zählen.** Ein Prüfstand entsteht durch Kopieren, und
 mitkopiert wird das Mailverzeichnis samt `eudora.log`. Alle 15 E134-Stände
 trugen deshalb dieselbe fremde Startzeile — `Wed Oct 21 10:37:39 2026`, aus
-`C:\Users\Gregor\Eudora72-1.0.118-release`, also **Gregors** Lauf,
+`%USERPROFILE%\Eudora72-1.0.118-release`, also **Gregors** Lauf,
 fünfzehnmal vervielfältigt. Wer sie mitzählt, schlägt fünfzehnmal für einen
 fremden Start Alarm. Die Schranke zählt deshalb nur, was **nach** der
 `Eudora.exe` dieses Verzeichnisses liegt; gemessen trennt das sauber (die

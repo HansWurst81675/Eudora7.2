@@ -12,6 +12,6 @@ Gregor am 30.10.2026 auf meine Frage, ob ich heute Prüfstandsläufe mit Fenster
 
 **Why:** Die 16 „nie gemessen"-Befunde lassen sich meist nur am laufenden Eudora messen; ohne sein Ja öffne ich kein Fenster ([[nichts-auf-gregors-bildschirm-starten]]).
 
-**How to apply:** Gilt für den 30.10.2026, nur über `tools/testlauf.ps1` mit `-Freigabe` (heutiges Datum), nur Prüfstände unter `C:\Temp`, Prozesse nach Pfad filtern — nie seine `C:\Users\Gregor\Eudora72-*` oder sein laufendes 7.2.1.128 anfassen. Keine Tastendrücke ([[keine-tastendruecke-verschicken]]). Gilt nicht für spätere Tage ([[erlaubnis-nicht-hineinlesen]]).
+**How to apply:** Gilt für den 30.10.2026, nur über `tools/testlauf.ps1` mit `-Freigabe` (heutiges Datum), nur Prüfstände unter `C:\Temp`, Prozesse nach Pfad filtern — nie seine `%USERPROFILE%\Eudora72-*` oder sein laufendes 7.2.1.128 anfassen. Keine Tastendrücke ([[keine-tastendruecke-verschicken]]). Gilt nicht für spätere Tage ([[erlaubnis-nicht-hineinlesen]]).
 
 Schranke: keine - eine Freigabe für genau einen Tag; `tools/testlauf.ps1` verlangt ohnehin einen Freigabesatz mit dem heutigen Datum.

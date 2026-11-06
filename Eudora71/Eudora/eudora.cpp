@@ -3927,8 +3927,8 @@ bool E132IstFremdesVerzeichnis(LPCTSTR pKandidat, LPCTSTR pEigenes, bool bHatEig
 	// Registry liefert die 8.3-KURZFORM, ExecutableDir ist lang - der
 	// Aufrufer loest das auf, bevor er hier hereingeht. Ohne das meldet
 	// Eudora sein EIGENES Verzeichnis als fremd (gemessen am 21.10.2026 an
-	// C:\Users\Gregor\EUDORA~1.114\MAILVE~1 gegen
-	// C:\Users\Gregor\Eudora72-1.0.114-release\).
+	// C:\Users\Anwender\EUDORA~1.114\MAILVE~1 gegen
+	// C:\Users\Anwender\Eudora72-1.0.114-release\).
 	size_t nEigen = _tcslen(pEigenes);
 
 	// Ein abschliessender Rueckstrich gehoert nicht zum Namen.

@@ -1,7 +1,7 @@
 # <a id="lektor-5"></a>LEKTOR-5 — alle 50 MD gegen den Stand vom 08.09.2026 gemessen
 
 **Agent:** LEKTOR · **Kennung:** `L-9` · **Datum:** 08.09.2026 ·
-**Arbeitsbaum:** `C:\Users\Gregor\Documents\github\Eudora7.2-wt-lektor` ·
+**Arbeitsbaum:** `%USERPROFILE%\Documents\github\Eudora7.2-wt-lektor` ·
 **Zweig:** `pruefer-4-einarbeiten` ·
 **Bezugscommit:** `d003d46` (per `git merge --ff-only origin/pruefer-4-einarbeiten`)
 

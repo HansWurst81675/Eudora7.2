@@ -75,7 +75,7 @@ Eudora.exe 7.2.0.4, `0xc0000409`.
 ## 2. Der vorhandene Absturzbericht gehört zum Suchfenster, nicht zu Strg-N
 
 Auf diesem Rechner liegt genau **eine** `Exception.log`:
-`C:\Users\Gregor\Eudora72-1.0.12-release\Mailverzeichnis\Exception.log`,
+`%USERPROFILE%\Eudora72-1.0.12-release\Mailverzeichnis\Exception.log`,
 06.09.2026 00:32:43, Fassung 7.2.0.12:
 
 ```
@@ -172,7 +172,7 @@ wurde so zum lautlosen Abgang.
 Gregors Entscheidung ist):** `Eudora71/Bin/Release/dbghelp.dll` aus dem
 Repository entfernen. Das **Paket** liefert sie ohnehin nicht mit —
 `tools/paket-pruefen.ps1:273` führt `dbghelp` unter den Systembibliotheken, und
-in `C:\Users\Gregor\Eudora72-1.0.12-release` liegt keine. Der Paketbau läuft
+in `%USERPROFILE%\Eudora72-1.0.12-release` liegt keine. Der Paketbau läuft
 also längst gegen die von Windows; nur der Entwicklerbau aus `Bin\Release`
 läuft gegen die von 2005.
 

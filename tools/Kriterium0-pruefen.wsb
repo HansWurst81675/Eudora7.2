@@ -58,7 +58,7 @@
   -->
   <MappedFolders>
     <MappedFolder>
-      <HostFolder>C:\Users\Gregor\Eudora72-1.0.12-release</HostFolder>
+      <HostFolder>C:\Users\Anwender\Eudora72-1.0.12-release</HostFolder>
       <SandboxFolder>C:\Users\WDAGUtilityAccount\Desktop\Eudora</SandboxFolder>
       <ReadOnly>true</ReadOnly>
     </MappedFolder>

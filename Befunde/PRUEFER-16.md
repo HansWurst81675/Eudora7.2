@@ -2,7 +2,7 @@
 
 Stand: 17.09.2026. Geprüfter Commit: `ceab98f` (= `origin/main`), Quellstand
 7.2.0.70. Eigener Zweig `wt/pruefer-1070` von `origin/main`, eigener
-Arbeitsbaum `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer-1070`.
+Arbeitsbaum `%USERPROFILE%\Documents\github\Eudora7.2-wt-pruefer-1070`.
 **Kein Quelltext geändert.** Nur diese Datei ist neu.
 
 ---

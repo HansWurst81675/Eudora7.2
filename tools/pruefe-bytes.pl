@@ -292,7 +292,7 @@ my $BOM = chr(0xEF) . chr(0xBB) . chr(0xBF);
 # Steuerzeichen zaehlen - Regel 6.
 #
 # Am 19.10.2026 hat ein printf aus "\E" in einem Windows-Pfad ein ESC-Byte
-# (0x1B) gemacht: aus "C:\Users\Gregor\Eudora72-..." wurde "C:\Users\Gregor"
+# (0x1B) gemacht: aus "C:\Users\Anwender\Eudora72-..." wurde "C:\Users\Anwender"
 # plus ESC plus "udora72-...". Das Zeichen stand mitten in Releases/PAKETE.md
 # und in Intern/WEITERMACHEN.md, beide Dateien waren gueltiges UTF-8 mit reinen LF,
 # ohne Ersatzzeichen und ohne Doppelkodierung - alle fuenf bisherigen Regeln

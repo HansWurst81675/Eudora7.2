@@ -5,7 +5,7 @@ Lauf am 14.10.2026 auf `wt/lektor`, nach dem Merge von `origin/e-118_HTML_header
 (eingebettete Bilder beim Hochladen) und [E-121](../Intern/BEFUNDE.md#e-121) (Datenverlust beim
 Verschieben in einen IMAP-Ordner) ein und schreibt [E-122](../Intern/BEFUNDE.md#e-122) auf.
 [E-118](../Intern/BEFUNDE.md#e-118) ist von Gregor an 1.0.89 bestätigt (Newsletter-Mail), bei der
-SoftMaker-Mail fehlten an 1.0.89 die eingebetteten Bilder.
+Rundbrief-Mail fehlten an 1.0.89 die eingebetteten Bilder.
 
 **Umfang aus der Quelle:** `git ls-files '*.md'` ohne `Befunde/` und `Arbeitsweise/`
 = 41 Dateien. **Maßstab:** `Eudora71/Version.h` = 7.2.0.90, `VERSION` = 1.0.90,
@@ -25,7 +25,7 @@ Das erste Fettwort des Urteils von [E-118](../Intern/BEFUNDE.md#e-118) war *„B
 14.10.2026 an 1.0.89:“*; `offene-befunde.pl` wertet nur dieses und zählte
 [E-118](../Intern/BEFUNDE.md#e-118) damit als erledigt – obwohl Teil 2 (eingebettete Bilder) erst in
 7.2.0.90 steckt und nicht bestätigt ist. Neuer Anfang:
-*„**Teilweise offen: Teil 2 (eingebettete Bilder, SoftMaker-Mail) eingebaut in 7.2.0.90,
+*„**Teilweise offen: Teil 2 (eingebettete Bilder, Rundbrief-Mail) eingebaut in 7.2.0.90,
 von Gregor noch nicht bestätigt.** **Teil 1 BESTÄTIGT von Gregor am 14.10.2026 an
 1.0.89:**“*. Danach `offene-befunde.pl -schreiben` und `befunde-verlinken.pl
 --verlinken` (das Schreiben setzt die Kennungen ohne Link, siehe [L-35.8](#l-35.8)).
@@ -36,9 +36,9 @@ Die Liste in `WEITERMACHEN.md` nennt jetzt [E-122](../Intern/BEFUNDE.md#e-122), 
 | Datei, Stelle | stand | jetzt |
 |---|---|---|
 | `ZIEL.md`, Maßstab 7.2.1.0, Zeile [E-118](../Intern/BEFUNDE.md#e-118) | *„eingebaut in 7.2.0.89, von Gregor … bestätigt“* | dazu *„Teil 2, eingebettete Bilder, eingebaut in 7.2.0.90, noch nicht bestätigt“* |
-| `TESTPLAN.md` C5, Zeile [E-118](../Intern/BEFUNDE.md#e-118) (✅) | nur *„bestätigt 14.10.2026 an 1.0.89“*, obwohl der Handgriff „Bilder“ verlangt | dazu *„(Newsletter-Mail). **Nicht bestanden** bei der SoftMaker-Mail … Teil 2, zu prüfen an 1.0.90“* |
+| `TESTPLAN.md` C5, Zeile [E-118](../Intern/BEFUNDE.md#e-118) (✅) | nur *„bestätigt 14.10.2026 an 1.0.89“*, obwohl der Handgriff „Bilder“ verlangt | dazu *„(Newsletter-Mail). **Nicht bestanden** bei der Rundbrief-Mail … Teil 2, zu prüfen an 1.0.90“* |
 | `README.md`, bekannte Fehler, [E-118](../Intern/BEFUNDE.md#e-118) | *„von Gregor noch nicht bestätigt“* | *„von Gregor am 14.10.2026 an 1.0.89 bestätigt“*; Satz zu Teil 2 mit *„am IMAP-Prüfserver gemessen, von Gregor noch nicht bestätigt“* |
-| `WEITERMACHEN.md`, Zeile *Paket 1.0.89* | *„von Gregor noch nicht getestet“* | getestet am 14.10.2026, [E-118](../Intern/BEFUNDE.md#e-118) bestätigt, SoftMaker-Bilder fehlten, [E-105](../Intern/BEFUNDE.md#e-105) noch nicht geprüft |
+| `WEITERMACHEN.md`, Zeile *Paket 1.0.89* | *„von Gregor noch nicht getestet“* | getestet am 14.10.2026, [E-118](../Intern/BEFUNDE.md#e-118) bestätigt, Rundbrief-Bilder fehlten, [E-105](../Intern/BEFUNDE.md#e-105) noch nicht geprüft |
 | `Releases/PAKETE.md`, 1.0.89 | keine Zeile zu Gregors Test | Zeile *„Gregors Test, 14.10.2026“* wie bei 1.0.86/1.0.87 |
 | `AUFGABEN.md`, Zeile [E-118](../Intern/BEFUNDE.md#e-118) | *„neu, 13.10.2026 … Test zuerst, dann Bau“* | dazu *„Stand 14.10.2026: eingebaut in 7.2.0.89, bestätigt; Teil 2 in 7.2.0.90, nicht bestätigt“* |
 | `Testdaten/README.md`, `e118-html-in-imap-ordner.eml` | *„eingebaut in 7.2.0.89, am IMAP-Prüfserver gemessen“* | dazu *„von Gregor am 14.10.2026 an 1.0.89 bestätigt“* |
@@ -120,7 +120,7 @@ Testverzeichnis bereitsteht (`Releases/1.0.90/TESTEN.txt` gibt es noch nicht):
 
 | | Befund | Paket | Handgriff |
 |---|---|---|---|
-| ☐ | [E-118](../Intern/BEFUNDE.md#e-118) Teil 2 | 1.0.90 | eine HTML-Mail mit eingebetteten Bildern (etwa den SoftMaker-Newsletter) aus „In“ in einen IMAP-Ordner verschieben, den Ordner öffnen, die Mail anklicken — **die Bilder sind da**, Text und Fußzeile vollständig. Vor 1.0.90 verschobene Mails bleiben auf dem Server ohne Bilder |
+| ☐ | [E-118](../Intern/BEFUNDE.md#e-118) Teil 2 | 1.0.90 | eine HTML-Mail mit eingebetteten Bildern (etwa den Rundbrief) aus „In“ in einen IMAP-Ordner verschieben, den Ordner öffnen, die Mail anklicken — **die Bilder sind da**, Text und Fußzeile vollständig. Vor 1.0.90 verschobene Mails bleiben auf dem Server ohne Bilder |
 | ☐ | [E-121](../Intern/BEFUNDE.md#e-121) | 1.0.90 | beim selben Verschieben hinsehen: die Mail darf aus dem Posteingang **erst verschwinden, wenn sie im IMAP-Ordner steht**; ist sie in keinem der beiden Ordner, ist das ein Datenverlust — sofort melden, `eudora.log` sichern |
 | ☐ | [E-105](../Intern/BEFUNDE.md#e-105) | 1.0.90 | aus C5 übernommen, falls an 1.0.89 nicht mehr geprüft |
 

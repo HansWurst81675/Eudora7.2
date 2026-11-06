@@ -21,8 +21,8 @@ use warnings;
 # Win32::GetShortPathName:
 #
 #   Pruefstand      C:\Temp\E132          -> C:\Temp\E132          (gleich)
-#   Wirklichkeit    C:\Users\Gregor\Eudora72-1.0.114-release
-#                                         -> C:\Users\Gregor\EUDORA~1.114
+#   Wirklichkeit    C:\Users\Anwender\Eudora72-1.0.114-release
+#                                         -> C:\Users\Anwender\EUDORA~1.114
 #
 # Die Registry liefert den Aufruf in der KURZFORM. Am Pruefstand ist die
 # Kurzform mit der Langform identisch, der Vergleich "eigenes Verzeichnis?"
@@ -30,8 +30,8 @@ use warnings;
 # verschiedene Zeichenketten, und Eudora haelt sein eigenes Verzeichnis fuer
 # fremd. Im Protokoll von 1.0.114 steht es woertlich:
 #
-#   E-132 Startverzeichnis: gefunden="C:\Users\Gregor\EUDORA~1.114\MAILVE~1"
-#         eigenes="C:\Users\Gregor\Eudora72-1.0.114-release\" fremd=1
+#   E-132 Startverzeichnis: gefunden="C:\Users\Anwender\EUDORA~1.114\MAILVE~1"
+#         eigenes="C:\Users\Anwender\Eudora72-1.0.114-release\" fremd=1
 #
 # Ein Pruefstand, der bequemer gebaut ist als die Wirklichkeit, misst den
 # Fehler weg (Arbeitsweise/pruefstand-nicht-bequemer-als-die-wirklichkeit.md).
@@ -117,9 +117,9 @@ sub selbsttest {
         # Pfad, alias, leerstelle, profil
         [ 'C:\Temp\E132',                                    0, 0, 0 ],
         [ 'C:\Temp\E132\Mailverzeichnis',                    1, 0, 0 ],
-        [ 'C:\Users\Gregor\Eudora72-1.0.114-release',        1, 0, 1 ],
+        [ 'C:\Users\Anwender\Eudora72-1.0.114-release',        1, 0, 1 ],
         [ 'C:\Program Files\Eudora',                         1, 1, 0 ],
-        [ 'C:\Users\Gregor\Eudora',                          0, 0, 1 ],
+        [ 'C:\Users\Anwender\Eudora',                          0, 0, 1 ],
         [ 'D:\kurz\acht1234',                                0, 0, 0 ],
         [ 'D:\kurz\neun12345',                               1, 0, 0 ],
         [ 'C:\a b\c',                                        1, 1, 0 ],

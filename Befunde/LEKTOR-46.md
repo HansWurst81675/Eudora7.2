@@ -20,7 +20,7 @@ Beweis](../Arbeitsweise/einigkeit-ist-kein-beweis.md)):
 | ZIPs im Hauptbaum `Releases/` | `Eudora72-1.0.114-release.zip` (07:07), `…-115…` (07:26), `…-116…` (08:39), `…-117…` (09:14), alle 21.10.2026 |
 | `sha256sum Eudora72-1.0.117-release.zip` | **`335751a91ca67b7996c4076f077deb49a0f4ce4ac1de74c8a079cc2cb7eeb1a1`**, 9.382.044 Byte |
 | `sha256sum Eudora72-1.0.116-release.zip` | `78cfacf5…81fe` — **nicht** dieselbe Datei |
-| `ls C:\Users\Gregor\Eudora72-*` | 1.0.110, 1.0.111, 1.0.112, 1.0.113, **1.0.115, 1.0.116, 1.0.117** — **kein 1.0.114** |
+| `ls %USERPROFILE%\Eudora72-*` | 1.0.110, 1.0.111, 1.0.112, 1.0.113, **1.0.115, 1.0.116, 1.0.117** — **kein 1.0.114** |
 | `ls Releases/1.0.117/` | **gab es nicht**, bis dieser Lauf das Verzeichnis anlegte |
 | Uhr | 21.10.2026 |
 
@@ -184,7 +184,7 @@ gescheitert, wird nicht veröffentlicht) statt was fehlt.
 `TESTPLAN.md:1` sagt *„Paket 1.0.117, Stand 21.10.2026"*. Der einzige Schritt,
 der zu tun ist, sagte zwölf Zeilen tiefer (`:18`):
 
-> **Vorbereitung.** Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.115-release` —
+> **Vorbereitung.** Testverzeichnis `%USERPROFILE%\Eudora72-1.0.115-release` —
 > **das Paket ist noch nicht geschnürt**, das Verzeichnis gibt es also noch
 > nicht; dieser Schritt wird fällig, sobald es da ist.
 
@@ -302,7 +302,7 @@ sieben Funde sind **Aussagen über den eigenen Auslieferungsstand**: welches
 Paket geschnürt ist, wo es liegt, welche Nummer es trägt, welche Prüfsumme dazu
 gehört. Keine einzige davon hat eine der 33 Schranken gesehen, weil alle gegen
 **Dokumente** prüfen und keine gegen das **Dateisystem** — gegen
-`ls Releases/*.zip`, `ls C:\Users\Gregor\Eudora72-*`, `sha256sum`. Der Maßstab
+`ls Releases/*.zip`, `ls %USERPROFILE%\Eudora72-*`, `sha256sum`. Der Maßstab
 lag die ganze Zeit zwei Verzeichnisse weiter.
 
 ---

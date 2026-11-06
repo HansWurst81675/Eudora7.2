@@ -19,7 +19,7 @@ kein Eudora gestartet, kein Prüfstand.
 
 **Selbstmeldung vorweg.** Zum Nachprüfen von [L-95.4](LEKTOR-95.md#l-95.4)
 habe ich `perl tools/ausliefern.pl --pruefen` laufen lassen. Das Werkzeug
-liest die `Eudora.exe` in **jedem** `C:\Users\Gregor\Eudora72-*` — Gregors
+liest die `Eudora.exe` in **jedem** `%USERPROFILE%\Eudora72-*` — Gregors
 Testverzeichnisse; `tools/WERKZEUGE.md:58` sagt *„nur mit seiner Zustimmung
 aufrufen“*. Gelesen wurden nur Versionsangaben, nichts geschrieben oder
 gestartet; trotzdem ohne Zustimmung. Dass die Anleitung, nach der ich

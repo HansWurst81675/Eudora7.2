@@ -17,7 +17,7 @@ Beweis](../Arbeitsweise/einigkeit-ist-kein-beweis.md)):
 | `Eudora71/Version.h:13-14` | `7.2.0.119` |
 | `VERSION` | `1.0.119` |
 | ZIPs im Hauptbaum `Releases/` | jüngstes **`Eudora72-1.0.118-release.zip`** — **kein** `…-1.0.119-…` |
-| `ls C:\Users\Gregor\Eudora72-*` | 1.0.110–1.0.113, 1.0.115–1.0.118 — **kein 1.0.119** |
+| `ls %USERPROFILE%\Eudora72-*` | 1.0.110–1.0.113, 1.0.115–1.0.118 — **kein 1.0.119** |
 | `gh issue view 102` | der freigegebene Beitrag ist **abgeschickt**, 21.10.2026, 08:13:26 UTC |
 | `tools/RELEASES.md:36` | die `v1.0.117`-Zeile steht **in** der Tabelle (Ortszeit `09:56:57`) |
 | `EudoraRes.rc:5806` / `:2586` / `:1702` | *Tools* → `&Address Book` mit `Ctrl+L` (`ID_WINDOW_NICKNAMES`), Knopf `&New` (`IDC_NICKNAME_LEFT_NEW`), Feld `&Nickname:` |
@@ -37,9 +37,9 @@ wie in [L-46.8](LEKTOR-46.md#l-46.8): sie messen Dokumente gegen Dokumente.
 ### <a id="l-47.1"></a>L-47.1 — `Releases/PAKETE.md` führte 1.0.119 als geschnürt und bei Gregor bereitgestellt (hoch, der schwerste Punkt)
 
 Der neue Abschnitt trug in der Überschrift *„geschnürt am 21.10.2026 nach
-`C:\Users\Gregor\Eudora72-1.0.119-release`"* und in der ersten Zeile der
+`%USERPROFILE%\Eudora72-1.0.119-release`"* und in der ersten Zeile der
 Tabelle *„Testverzeichnis | bereitgestellt am 21.10.2026,
-`C:\Users\Gregor\Eudora72-1.0.119-release`"*.
+`%USERPROFILE%\Eudora72-1.0.119-release`"*.
 
 **Gemessen, beides falsch:** unter `Releases/` liegt kein
 `Eudora72-1.0.119-release.zip` — das jüngste ZIP ist `…-1.0.118-…` —, und bei
@@ -338,7 +338,7 @@ mitgezogen.
 **Die Schranke, die dreimal gefehlt hat.** [L-44.11](LEKTOR-44.md#l-44.11)
 verlangt eine Prüfung, die *„veröffentlicht ist …"* und *„geschnürt ist …"* in
 den MDs gegen `gh release view`, `ls Releases/*.zip` und
-`ls C:\Users\Gregor\Eudora72-*` hält statt gegen andere Dokumente. Sie ist seit
+`ls %USERPROFILE%\Eudora72-*` hält statt gegen andere Dokumente. Sie ist seit
 vier Tagen nicht gebaut. Sie hätte **[L-47.1](#l-47.1) bis
 [L-47.6](#l-47.6)** gefangen — sechs von zwölf Funden, darunter alle vier
 schweren. Solange sie fehlt, findet diese Klasse nur, wer von Hand nachsieht.

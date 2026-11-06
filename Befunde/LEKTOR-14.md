@@ -58,7 +58,7 @@ Und die Behebungen mit ihrer Uhrzeit:
 ## <a id="l-14.1"></a>L-14.1 — die Tabelle im CHANGELOG-Abschnitt 7.2.0.70 hat die Zeile zu 1.0.69 vertauscht
 
 **Das ist der teuerste Fund des Durchgangs**, weil Gregor **1.0.69** auf der
-Platte hat und **1.0.70 nicht** (gemessen: `C:\Users\Gregor\` trägt
+Platte hat und **1.0.70 nicht** (gemessen: `%USERPROFILE%\` trägt
 `Eudora72-1.0.65/-1.0.67/-1.0.68/-1.0.69-release`, kein `-1.0.70-release`).
 
 | | |
@@ -368,7 +368,7 @@ folgt — Kleinanzeigen-Nachricht öffnen, weiterleiten — ist einen Klick vom
 
 **Zu tun:** in derselben Tabelle hinter 1.0.70 *„enthält den Absturz [E-107](../Intern/BEFUNDE.md#e-107)"*,
 und die Prüfanleitung auf **1.0.71** ziehen. Bei Gregor liegt 1.0.71 bereits
-(`C:\Users\Gregor\Eudora72-1.0.71-release`, gemessen) — **1.0.70 dagegen nie**.
+(`%USERPROFILE%\Eudora72-1.0.71-release`, gemessen) — **1.0.70 dagegen nie**.
 
 ### 3. Die Ersetzungsklasse aus L-14.4 hat innerhalb einer Stunde zugeschlagen
 

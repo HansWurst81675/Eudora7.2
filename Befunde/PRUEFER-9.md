@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Datum | 13.09.2026 |
-| Arbeitsbaum | `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer` |
+| Arbeitsbaum | `%USERPROFILE%\Documents\github\Eudora7.2-wt-pruefer` |
 | Zweig | `wt/pruefer`, ausgehend von `origin/main` (`da95db4`) |
 | Gemessen an | dem Quelltext selbst und den Commits `c060648^`, `c060648`, `643a634^`, `643a634` |
 | Nicht getan | **nicht gebaut, kein Programm gestartet.** Geändert wurden nur `tools/`, `Arbeitsweise/` (Gedächtnisabgleich) und diese Datei |

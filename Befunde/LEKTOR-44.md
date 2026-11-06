@@ -34,7 +34,7 @@ stammt aus einem Dokument des Projekts:
 | `gh release list` | `v1.0.113` ist **Latest**, veröffentlicht **20.10.2026, 13:01:36 UTC**; `v1.0.112` am selben Tag **11:55:10 UTC** |
 | `gh release view v1.0.113` | Marke `ac094f15` (= Merge von PR **#117**), Anhang `Eudora72-1.0.113-release.zip`, **9 378 205 Byte**, SHA-256 `0d1d4bf4…f4772` |
 | `ls Releases/*.zip` | **kein** `Eudora72-1.0.114-release.zip` |
-| `ls C:\Users\Gregor\Eudora72-*` | 1.0.110, 1.0.111, 1.0.112, 1.0.113 — **kein 1.0.114** |
+| `ls %USERPROFILE%\Eudora72-*` | 1.0.110, 1.0.111, 1.0.112, 1.0.113 — **kein 1.0.114** |
 | `gh issue view 102` | 7 Beiträge; der letzte von uns (20.10.2026, 17:22:30) **nimmt die Ursachenbehauptung ausdrücklich zurück** |
 | Uhr | 20.10.2026 |
 
@@ -181,7 +181,7 @@ Fassungsnummer gezogen wird.
 
 **Erstens: 1.0.114.** Der Abschnitt hieß *„## 1.0.114 — **geschnürt am
 20.10.2026**"* und nannte als Testverzeichnis
-`C:\Users\Gregor\Eudora72-1.0.114-release`. **Gemessen:** kein
+`%USERPROFILE%\Eudora72-1.0.114-release`. **Gemessen:** kein
 `Eudora72-1.0.114-release.zip` unter `Releases/`, kein Verzeichnis
 `Releases/1.0.114/`, kein Tag `v1.0.114`, und bei Gregor liegen 1.0.110 bis
 1.0.113 — **kein 1.0.114**. Ein Abschnitt, der ein Paket beschreibt, das es

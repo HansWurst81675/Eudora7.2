@@ -3,7 +3,7 @@
 Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Alle vier Mängel sind im selben Commit wie dieser Bericht behoben.**
 
 
-Geprüft: Bildschirmfoto images/2.png, C:\Users\Gregor\Eudora72-1.0.84-release (existiert, Eudora.exe FileVersion 7.2.0.84), offene-befunde.pl („Die Liste deckt die offenen Befunde.", 28/28), doku-pruefen.pl („Kein Widerspruch gefunden."; zur Kenntnis: PORTIERUNG.md, Testdaten/README.md, tools/WERKZEUGE.md, tools/ZWEIGE.md, tools/pruefdaten/LIESMICH.md nennen 7.2.0.84/1.0.84 nicht).
+Geprüft: Bildschirmfoto images/2.png, %USERPROFILE%\Eudora72-1.0.84-release (existiert, Eudora.exe FileVersion 7.2.0.84), offene-befunde.pl („Die Liste deckt die offenen Befunde.", 28/28), doku-pruefen.pl („Kein Widerspruch gefunden."; zur Kenntnis: PORTIERUNG.md, Testdaten/README.md, tools/WERKZEUGE.md, tools/ZWEIGE.md, tools/pruefdaten/LIESMICH.md nennen 7.2.0.84/1.0.84 nicht).
 
 Richtig: Titelzeile `7.2.0.84 / Paket 1.0.84+05bbaba*`; Kopf-Betreff einstellig und ohne Gedankenstrich (zwei Leerzeichen vor `Nur bis`), wie die Beobachtung sagt; `Rabatt aktivieren und Preisvorteil si` steht in der Liste. PAKETE.md 1.0.84 passt zum Verzeichnis.
 

@@ -34,8 +34,8 @@ nachgesehen hat:
 | 22:43:06 | 7.2.0.10 | `ntdll.dll` +0x000e6dc3 | **`0xc0000374`** | `…\selbst_bauen\Eudora7.2\Eudora71\Bin\Release\Eudora.exe` |
 | 22:43:17 | 7.2.0.10 | `ntdll.dll` +0x000e6dc3 | **`0xc0000374`** | dito |
 | 22:46:31 | 7.2.0.10 | `dbghelp.dll` +0x00016c9c | `0xc0000005` | dito |
-| 21:54:48 | 7.2.0.7 | `ntdll.dll` +0x0003dfb6 | `0xc0000005` | `C:\Users\Gregor\Eudora72-1.0.7-release` |
-| 21:56:18 | 7.2.0.7 | `ntdll.dll` +0x000696ac | `0xc0000005` | `C:\Users\Gregor\Eudora72-1.0.7-debug` |
+| 21:54:48 | 7.2.0.7 | `ntdll.dll` +0x0003dfb6 | `0xc0000005` | `%USERPROFILE%\Eudora72-1.0.7-release` |
+| 21:56:18 | 7.2.0.7 | `ntdll.dll` +0x000696ac | `0xc0000005` | `%USERPROFILE%\Eudora72-1.0.7-debug` |
 
 `0xc0000374` ist `STATUS_HEAP_CORRUPTION`. Der Heap-Verwalter merkt beim
 nächsten `RtlFreeHeap`/`RtlAllocateHeap`, dass seine Buchführung nicht mehr

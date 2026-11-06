@@ -26,15 +26,15 @@ Eingearbeitet vor dem Commit dieses Berichts in 2e795e79.
 | Fund | Worum es ging | Heute | Beleg |
 |---|---|---|---|
 | [L-109.1](LEKTOR-109.md#l-109.1) | MITARBEITEN: zwei verschiedene Beispielnummern unter „beide gleich“ | **erledigt** | `Doku/MITARBEITEN.md:62` *„**Quellstand**, z. B. `7.2.1.129`“*, `:63` *„**Paketnummer**, z. B. `7.2.1.129`“* — beide gleich (gemessen; geändert in `13b1396a`) |
-| [L-109.2](LEKTOR-109.md#l-109.2) | CHANGELOG-Abschnitt 7.2.1.129 sagte nicht, dass das Paket noch nicht geschnürt war | **erledigt** (durch den Fortgang) | `CHANGELOG.md:107` *„**Geschnürt am 31.10.2026, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md))“* (gemessen) |
+| [L-109.2](LEKTOR-109.md#l-109.2) | CHANGELOG-Abschnitt 7.2.1.129 sagte nicht, dass das Paket noch nicht geschnürt war | **erledigt** (durch den Fortgang) | `CHANGELOG.md:107` *„**Geschnürt am 31.10.2026, bereitgestellt in `%USERPROFILE%\Eudora72-7.2.1.129-release`, nicht veröffentlicht** ([PAKETE](Releases/PAKETE.md))“* (gemessen) |
 
 ## Neu seit f7f1ebc6 — Abgleich der Aussagen
 
 | Stelle | Aussage | Urteil |
 |---|---|---|
-| `Releases/PAKETE.md:184` | *„**Geschnürt am 31.10.2026 um 21:31, bereitgestellt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`; nicht veröffentlicht**“* | stimmt mit `CHANGELOG.md:107` (gemessen) |
+| `Releases/PAKETE.md:184` | *„**Geschnürt am 31.10.2026 um 21:31, bereitgestellt in `%USERPROFILE%\Eudora72-7.2.1.129-release`; nicht veröffentlicht**“* | stimmt mit `CHANGELOG.md:107` (gemessen) |
 | `Releases/PAKETE.md:189` | ZIP *„nicht im Repo (`.gitignore`), nicht auf GitHub“* | stimmt (gemessen) |
-| `Intern/TESTPLAN.md:1` | *„geschnürt am 31.10.2026, liegt in `C:\Users\Gregor\Eudora72-7.2.1.129-release`“* | stimmt (gemessen) |
+| `Intern/TESTPLAN.md:1` | *„geschnürt am 31.10.2026, liegt in `%USERPROFILE%\Eudora72-7.2.1.129-release`“* | stimmt (gemessen) |
 | `Intern/WEITERMACHEN.md:3` | *„Testpaket **7.2.1.129** geschnürt und bei Gregor im Test … Zuletzt veröffentlicht: **`v7.2.1.128`**“* | stimmt (gemessen) |
 | `README.md:167`, `Doku/FAQ.md:333` | [E-171](../Intern/BEFUNDE.md#e-171) (Suche ohne Markierung): *„behoben in 7.2.1.129 (Testpaket)“* bzw. *„behoben ab 7.2.1.129“* | stimmt mit `Intern/BEFUNDE.md:389` *„behoben in 7.2.1.129 … Gregors Test steht aus“* (gemessen) |
 | `README.md:182` | [E-136](../Intern/BEFUNDE.md#e-136): *„in 7.2.1.129 geändert (am Programm noch nicht nachgemessen)“* | stimmt; kein „behoben“ (gemessen) |

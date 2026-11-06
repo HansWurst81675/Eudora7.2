@@ -241,7 +241,7 @@ Rechner:
 | Eingabe | `GetFullPath` | Ergebnis |
 |---|---|---|
 | `C:\Temp\..\Users` | `C:\Users` | abgewiesen |
-| `C:\Temp\E125\..\..\Users\Gregor` | `C:\Users\Gregor` | abgewiesen |
+| `C:\Temp\E125\..\..\Users\Anwender` | `%USERPROFILE%` | abgewiesen |
 | `c:\temp\x` | `c:\temp\x` | **durchgelassen** — richtig, derselbe Ort (`-notmatch` unterscheidet keine Groß- und Kleinschreibung) |
 | `\\localhost\C$\Temp\x` | unverändert | abgewiesen (auch wenn es auf `C:\Temp` zeigt) |
 | `\\?\C:\Users` | unverändert | abgewiesen |

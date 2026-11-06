@@ -112,7 +112,7 @@ Listen folgen von selbst.
   `VERSION` **1.0.123** (Testpaket)“*.
 * `TESTPLAN.md:3-6` (belegt), direkt unter der Überschrift *„Quellstand
   7.2.0.124“* (`:1`): *„**Testpaket 7.2.0.123** (Paket 1.0.123) — es kommt nach
-  `C:\Users\Gregor\Eudora72-1.0.123-release`, neben dein 1.0.122 … Nach deinem
+  `%USERPROFILE%\Eudora72-1.0.123-release`, neben dein 1.0.122 … Nach deinem
   Test und deinem Ja wird daraus das Release **7.2.1.<n>**.“*
 * Dagegen `WEITERMACHEN.md:9`, `AUFGABEN.md:3`, `TESTPLAN.md:1`, `:9-12` und
   `Doku/MITARBEITEN.md:63`: 7.2.0.124 / 1.0.124.
@@ -149,7 +149,7 @@ Entscheidung 10“.
   N7 `:141`), K4 (`:129`) und *Protokoll* (`:144`) mit *„—“*.
 * `BEFUNDE.md:383` ([E-156](../Intern/BEFUNDE.md#e-156), belegt): *„Gefunden an
   Gregors Test von 7.2.0.123: Windows meldete um 10:05 einen Absturz von
-  `C:\Users\Gregor\Eudora72-1.0.123-release\Eudora.exe` in `ucrtbased.dll`“*.
+  `%USERPROFILE%\Eudora72-1.0.123-release\Eudora.exe` in `ucrtbased.dll`“*.
 
 Der dritte Punkt des CHANGELOG ist also K4 (Vermutung, aus *„behebt die drei“*
 und [E-156](../Intern/BEFUNDE.md#e-156) geschlossen) — aber die Tabelle, die nach `ZIEL.md` Voraussetzung des

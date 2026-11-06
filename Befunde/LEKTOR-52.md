@@ -14,7 +14,7 @@ was die Dokumentation über es behauptet.
 ## Der Fund, der sofort wirkte
 
 ### <a id="l-52.6"></a>L-52.6 — dem Paket fehlte die Prüfanleitung
-**Gewicht: unvollständig.** `C:\Users\Gregor\Eudora72-1.0.122-release`
+**Gewicht: unvollständig.** `%USERPROFILE%\Eudora72-1.0.122-release`
 
 Ein Vergleich der Dateilisten von 1.0.120 und 1.0.122 ergab **genau einen**
 Unterschied: `TESTEN.txt` fehlte. Das Paket, dessen einziger Zweck ein

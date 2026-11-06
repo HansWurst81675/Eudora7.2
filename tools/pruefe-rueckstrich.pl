@@ -20,7 +20,7 @@ use warnings;
 #
 # In einem Perl-String in doppelten Anfuehrungszeichen ist \E das Ende einer
 # Gross-/Kleinschreibungs-Umschaltung und verschwindet, \T wird zu T, \U und
-# \L schalten die Schreibung um ("C:\Users\Gregor\AppData\Local" wird zu
+# \L schalten die Schreibung um ("C:\Users\Anwender\AppData\Local" wird zu
 # "C:SERSGREGORAPPDATAocal..."). Perl warnt dabei ("Unrecognized escape
 # \T", "Useless use of \E") - am 14.10.2026 wurde genau diese Warnung im
 # naechsten Aufruf mit grep -v weggefiltert.
@@ -108,7 +108,7 @@ sub selbsttest {
     );
     my @still = (
         ['Intern/WEITERMACHEN.md',      'Messverzeichnis `C:' . $BS . 'Temp' . $BS . 'E105`'],
-        ['README.md',            'unter C:/Users/Gregor/Documents'],
+        ['README.md',            'unter C:/Users/Anwender/Documents'],
         ['Intern/BEFUNDE.md',           '`C:Mailverzeichnis` ist laufwerksrelativ, nicht absolut'],
         ['Arbeitsweise/x.md',    'stand `C:Temp105` in WEITERMACHEN'],
         ['Befunde/LEKTOR-33.md', 'Fund: `C:Temp105` in PAKETE.md'],

@@ -1,9 +1,9 @@
 # home-aufraeumen.ps1 - raeumt weg, was am 10.09.2026 versehentlich in
-# C:\Users\Gregor selbst gelandet ist.
+# $env:USERPROFILE selbst gelandet ist.
 #
 # WARUM ES DAS GIBT
 #
-# Beim Ablegen von Paket 1.0.40 habe ich das ZIP nach C:\Users\Gregor
+# Beim Ablegen von Paket 1.0.40 habe ich das ZIP nach $env:USERPROFILE
 # entpackt statt in ein Unterverzeichnis. Das Paket-ZIP hat KEINE eigene
 # Wurzelebene - die 157 Dateien sind dadurch direkt ins Benutzerverzeichnis
 # gelaufen.
@@ -37,9 +37,9 @@
 
 [CmdletBinding()]
 param(
-    [string] $Heim  = 'C:\Users\Gregor',
-    [string] $Zip   = 'C:\Users\Gregor\Documents\github\Eudora7.2\Releases\Eudora72-1.0.40-release.zip',
-    [string] $IniQuelle = 'C:\Users\Gregor\Eudora72-1.0.36-release\Mailverzeichnis\Eudora.ini',
+    [string] $Heim  = "$env:USERPROFILE",
+    [string] $Zip   = "$env:USERPROFILE\Documents\github\Eudora7.2\Releases\Eudora72-1.0.40-release.zip",
+    [string] $IniQuelle = "$env:USERPROFILE\Eudora72-1.0.36-release\Mailverzeichnis\Eudora.ini",
     [switch] $NurZeigen
 )
 

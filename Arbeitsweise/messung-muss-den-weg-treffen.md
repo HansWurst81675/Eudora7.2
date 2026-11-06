@@ -97,7 +97,7 @@ Test.
 
 ## Fall 4, 10.09.2026: die Messgroesse stammte gar nicht von dem Ereignis
 
-Ich hatte ein Paket-ZIP versehentlich nach `C:\Users\Gregor` entpackt. Die
+Ich hatte ein Paket-ZIP versehentlich nach `%USERPROFILE%` entpackt. Die
 erste Frage war: lag dort vorher schon eine Installation, die ich gerade
 ueberschrieben habe? Ich habe die **Zeitstempel** angesehen, dort stand
 ueberall der 30.08., und daraus geschlossen: ja, dort lag schon etwas.

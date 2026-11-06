@@ -14,4 +14,4 @@ Gregor am 06.11.2026 auf die Frage, ob er beim GitHub-Support die Entfernung des
 
 **Why:** Gregors Entscheidung; kein Zweig enthält den Commit mehr, er ist nur über die Kennung erreichbar.
 
-**How to apply:** E-246 nicht wieder vorschlagen, keine Support-Anfrage vorbereiten, die Kennung in Werkzeugen/Lehren stehen lassen. Neue Namen gar nicht erst schreiben: [[gedaechtnis-ist-oeffentlich]], Schranke `pruefe-namen-gestaget.pl`.
+**How to apply:** E-246 nicht wieder vorschlagen, keine Support-Anfrage vorbereiten, Die Kennung selbst steht nicht mehr im Repo: Gregor ließ sie danach am 06.11.2026 entfernen (*„warum schreibt man überhaupt einen commit hash rein“*); nicht wieder hineinschreiben. Neue Namen gar nicht erst schreiben: [[gedaechtnis-ist-oeffentlich]], Schranke `pruefe-namen-gestaget.pl`.

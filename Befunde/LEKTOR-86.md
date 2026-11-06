@@ -7,7 +7,7 @@ Fassungssprung 7.2.0.127 / 1.0.127, `46f4a5f5` Prüfstand 39/39,
 `ce5cda3e` Paket 1.0.127 geschnürt), dazu ob [L-85.1](LEKTOR-85.md#l-85.1)
 bis .4, .6 und [L-84.9](LEKTOR-84.md#l-84.9) richtig angekommen sind.
 Schwerpunkte: kann Gregor den Kurztest V1–V6 an
-`C:\Users\Gregor\Eudora72-1.0.127-release` ohne Rückfrage fahren; steht
+`%USERPROFILE%\Eudora72-1.0.127-release` ohne Rückfrage fahren; steht
 irgendwo noch 1.0.126 als das zu testende Paket; stimmen Fassung, Paket und
 Testzahlen in README, ZIEL, WEITERMACHEN, AUFGABEN, CHANGELOG, PAKETE,
 PRUEFBERICHT überein; erklärt etwas [E-137](../Intern/BEFUNDE.md#e-137)
@@ -219,7 +219,7 @@ Rückfrage testen.
 **Ja** (belegt).
 
 * Kopf und Vorbereitung `Intern/TESTPLAN.md:1-20`: *„Das Paket 1.0.126 bitte
-  \*\*nicht\*\* testen“*; Ordner `C:\Users\Gregor\Eudora72-1.0.127-release`,
+  \*\*nicht\*\* testen“*; Ordner `%USERPROFILE%\Eudora72-1.0.127-release`,
   Daten aus `…-1.0.125-release\Mailverzeichnis` ohne `eudora.log`, Start
   nur über `Eudora starten.cmd`, Titelzeile *„7.2.0.127“* und *„Paket
   1.0.127“* — gleich mit `Releases/PAKETE.md:168` (*„neben seinem 1.0.125

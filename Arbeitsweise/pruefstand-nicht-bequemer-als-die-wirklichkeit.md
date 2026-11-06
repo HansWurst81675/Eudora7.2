@@ -8,7 +8,7 @@ metadata:
   modified: 2026-10-21T05:52:37.507Z
 ---
 
-Schranke: tools/pruefe-pruefstand-pfad.pl (vor jeder Messung am laufenden Programm, und in die Zeile „Gemessen" von Releases/PAKETE.md) - misst für jeden Prüfpfad mit Win32::GetShortPathName drei Lagen, die beim Anwender vorkommen: 8.3-Alias, Leerzeichen, Benutzerprofil. Gegengetestet mit --selbsttest (8 Fälle in beide Richtungen) und an den echten Pfaden: `C:\Temp\E132` deckt 3 von 3 Lagen nicht ab, `C:\Users\Gregor\Eudora72-1.0.114-release` hat den Alias `EUDORA~1.114`.
+Schranke: tools/pruefe-pruefstand-pfad.pl (vor jeder Messung am laufenden Programm, und in die Zeile „Gemessen" von Releases/PAKETE.md) - misst für jeden Prüfpfad mit Win32::GetShortPathName drei Lagen, die beim Anwender vorkommen: 8.3-Alias, Leerzeichen, Benutzerprofil. Gegengetestet mit --selbsttest (8 Fälle in beide Richtungen) und an den echten Pfaden: `C:\Temp\E132` deckt 3 von 3 Lagen nicht ab, `%USERPROFILE%\Eudora72-1.0.114-release` hat den Alias `EUDORA~1.114`.
 
 # Der Prüfstand darf nicht bequemer sein als die Wirklichkeit
 
@@ -34,7 +34,7 @@ Mailverzeichnis längst angelegt ist.
 | | Pfad | Kurzform |
 |---|---|---|
 | Prüfstand | `C:\Temp\E132` | `C:\Temp\E132` — **identisch** |
-| Wirklichkeit | `C:\Users\Gregor\Eudora72-1.0.114-release` | `C:\Users\Gregor\EUDORA~1.114` |
+| Wirklichkeit | `%USERPROFILE%\Eudora72-1.0.114-release` | `%USERPROFILE%\EUDORA~1.114` |
 
 Die Registry liefert den Aufruf in der **Kurzform**. Am Prüfstand sind Kurz-
 und Langform dasselbe, der Vergleich *„ist das mein eigenes Verzeichnis?"*
@@ -43,8 +43,8 @@ verschiedene Zeichenketten — und Eudora hält sein eigenes Verzeichnis für
 fremd. Im Protokoll von 1.0.114 steht es wörtlich:
 
 ```
-E-132 Startverzeichnis: gefunden="C:\Users\Gregor\EUDORA~1.114\MAILVE~1"
-      eigenes="C:\Users\Gregor\Eudora72-1.0.114-release\" fremd=1
+E-132 Startverzeichnis: gefunden="%USERPROFILE%\EUDORA~1.114\MAILVE~1"
+      eigenes="%USERPROFILE%\Eudora72-1.0.114-release\" fremd=1
 ```
 
 **Das stand in meiner eigenen Messausgabe**, bevor Gregor es meldete: der

@@ -7,8 +7,8 @@ Im Konto <Dominant> muss "IMAP Mailbox Location Prefix" leer sein.
 
 | Nr.   | Beschreibung                                         | Testschritte                                                                 | richtig ist                                            |
 |-------|------------------------------------------------------|------------------------------------------------------------------------------|--------------------------------------------------------|
-| E-118 | eingebettete Bilder gingen beim Verschieben in einen | eine HTML-Mail MIT eingebetteten Bildern (z.B. einen SoftMaker-Newsletter)   | die Mail erscheint im IMAP-Ordner MIT allen Bildern    |
-| Teil 2| IMAP-Ordner verloren (SoftMaker-Mail an 1.0.89)      | aus "In" in einen IMAP-Ordner verschieben, den Ordner oeffnen, Mail anklicken | (Logo, Glocke, Produktbild), Text vollstaendig         |
+| E-118 | eingebettete Bilder gingen beim Verschieben in einen | eine HTML-Mail MIT eingebetteten Bildern (z.B. einen Rundbrief)   | die Mail erscheint im IMAP-Ordner MIT allen Bildern    |
+| Teil 2| IMAP-Ordner verloren (Rundbrief-Mail an 1.0.89)      | aus "In" in einen IMAP-Ordner verschieben, den Ordner oeffnen, Mail anklicken | (Logo, Glocke, Produktbild), Text vollstaendig         |
 | E-121 | Mail konnte beim Verschieben in einen IMAP-Ordner    | dabei beobachten: die Mail verschwindet aus "In" erst, wenn sie im           | keine Mail ist weder in "In" noch im IMAP-Ordner;      |
 |  NEU  | spurlos verschwinden                                 | IMAP-Ordner steht (kann einen Moment dauern)                                 | im Zweifel lieber doppelt als weg                      |
 | E-118 | Gegenprobe: HTML-Mail ohne eingebettete Bilder       | wie an 1.0.89 (Newsletter-Mail): verschieben, oeffnen                          | normale HTML-Darstellung, kein Quelltext               |

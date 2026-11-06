@@ -29,7 +29,7 @@ Release zurückstellte.
 **How to apply:** Die Reihenfolge ist nicht verhandelbar:
 
 1. Bauen, Paket schnüren, `tools/paket-pruefen.ps1` laufen lassen.
-2. Paket bei Gregor ablegen (`C:\Users\Gregor\Eudora72-<Fassung>-release`) und
+2. Paket bei Gregor ablegen (`%USERPROFILE%\Eudora72-<Fassung>-release`) und
    **sagen, was zu prüfen ist**.
 3. **Warten.** Bis seine Rückmeldung da ist, entsteht **kein** Release, und
    keine Fassung wird auf „Latest" gehoben.

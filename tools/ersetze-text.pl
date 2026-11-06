@@ -141,9 +141,9 @@ sub selbsttest {
 
     # 2. Windows-Pfad mit Rueckstrichen bleibt
     %mem = (a => "Ort: X\n");
-    @p = lies_paare("\@\@\@ DATEI a\n<<< ALT\nOrt: X\n=== NEU\nOrt: C:\\Users\\Gregor\\Eudora72-7.2.1.130-release\n>>>\n");
+    @p = lies_paare("\@\@\@ DATEI a\n<<< ALT\nOrt: X\n=== NEU\nOrt: C:\\Users\\Anwender\\Eudora72-7.2.1.130-release\n>>>\n");
     ($fe, $neu) = anwenden(\@p, $lader);
-    $pruef->('Windows-Pfad: Rueckstriche bleiben', $fe == 0 && $neu->{a} eq "Ort: C:\\Users\\Gregor\\Eudora72-7.2.1.130-release\n");
+    $pruef->('Windows-Pfad: Rueckstriche bleiben', $fe == 0 && $neu->{a} eq "Ort: C:\\Users\\Anwender\\Eudora72-7.2.1.130-release\n");
 
     # 3. Trefferzahl falsch -> Fehler, nichts geaendert
     %mem = (a => "ab ab\n");

@@ -6,8 +6,8 @@ Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Alle vier Mä
 ## Bestätigt (gemessen)
 - `gh release view v1.0.83`: isDraft=false, isPrerelease=false, publishedAt 2026-10-12T11:18:20Z, targetCommitish ec9f11d; `gh release list`: v1.0.83 *Latest*; `git ls-remote`: refs/tags/v1.0.83 -> ec9f11d.
 - Asset von GitHub geladen: 9 361 416 Byte, SHA-256 7cef4852…f3eb (Soll getroffen); `Releases/Eudora72-1.0.83-release.zip` lokal identisch.
-- ZIP: 34 EXE/DLL/OCX. Stichprobe Eudora.exe, QCUtils.dll, Imap.dll byteidentisch mit C:\Users\Gregor\Eudora72-1.0.83-release.
-- WEITERMACHEN.md:27 „Bei Gregor liegen": stimmt mit `ls -d C:/Users/Gregor/Eudora72-*` (Verz. 1.0.72–1.0.76, 1.0.83; ZIPs 1.0.44/53/57).
+- ZIP: 34 EXE/DLL/OCX. Stichprobe Eudora.exe, QCUtils.dll, Imap.dll byteidentisch mit %USERPROFILE%\Eudora72-1.0.83-release.
+- WEITERMACHEN.md:27 „Bei Gregor liegen": stimmt mit `ls -d %USERPROFILE%/Eudora72-*` (Verz. 1.0.72–1.0.76, 1.0.83; ZIPs 1.0.44/53/57).
 - Keine Aussage mehr „v1.0.72 neuestes/Latest" oder „v1.0.83 nicht veröffentlicht" in README, WEITERMACHEN, AUFGABEN, ZIEL, PORTIERUNG, PAKETE (PORTIERUNG.md:54-67 ist als Stand 18.09.2026 gekennzeichnet).
 - WEITERMACHEN.md:108-158 Nummern 1–6 lückenlos, Reihenfolge [E-94](../Intern/BEFUNDE.md#e-94), [E-112](../Intern/BEFUNDE.md#e-112), [E-113](../Intern/BEFUNDE.md#e-113), [E-77](../Intern/BEFUNDE.md#e-77) durchgehalten.
 

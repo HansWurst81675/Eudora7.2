@@ -7,13 +7,16 @@
   (06.11.2026, Latest; ZIP byte-gleich mit Gregors getestetem Paket): [E-239](BEFUNDE.md#e-239)
   (kein Absturz beim Beenden bei offenem Hinweis) und [E-169](BEFUNDE.md#e-169) (`PrintBackground`).
   Voller Prüfstandslauf 110/110, Gregors Test bestanden ([Testplan](TESTPLAN.md#test-7-2-2-136)).
-- **Gemergt am 06.11.2026:** #228 (`paket_7_2_2_136`, Release-Stand 7.2.2.136).
-- **Wartet auf Merge:** `e151_pruefstand_klon` – Prüfstand nach einem frischen
-  `git clone` ([E-151](BEFUNDE.md#e-151)), Schutz echter Eudora-Ordner durch die
-  Marke ([E-243](BEFUNDE.md#e-243), Entscheidung 39), neue Schranken
-  `pruefe-namen-gestaget.pl` und `haken-backslash.pl`.
-- **Danach:** 7.2.2.137 mit [E-242](BEFUNDE.md#e-242) und [E-240](BEFUNDE.md#e-240),
-  [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache (Gregor 06.11.2026).
+- **Gemergt am 06.11.2026:** #228 (`paket_7_2_2_136`, Release-Stand 7.2.2.136),
+  #229 (`e151_pruefstand_klon` – Prüfstand nach einem frischen `git clone`
+  ([E-151](BEFUNDE.md#e-151)), Schutz echter Eudora-Ordner durch die Marke
+  ([E-243](BEFUNDE.md#e-243), Entscheidung 39), neue Schranken
+  `pruefe-namen-gestaget.pl` und `haken-backslash.pl`), #230
+  (`ranjit_bereinigt_teil1`, Datenschutz Teil 1).
+- **In Arbeit:** `ranjit_bereinigt_teil2` – Datenschutz nach [LEKTOR-158](../Befunde/LEKTOR-158.md#lektor-158)
+  (Pfade ins Benutzerverzeichnis raus, `C:\Temp` bleibt; Absender; Austauschordner).
+- **Danach:** 7.2.2.137 mit [E-71](BEFUNDE.md#e-71) (leerer Filterbericht, Gregor 06.11.2026: *„als nächstes“*),
+  [E-242](BEFUNDE.md#e-242), [E-240](BEFUNDE.md#e-240); [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache.
 - **Neu beim Test gemeldet:** [E-240](BEFUNDE.md#e-240) (Vorschau beim ersten Aufruf langsam;
   später, siehe [Nach dem Release 7.2.1](#nach-dem-release)), [E-241](BEFUNDE.md#e-241),
   [E-242](BEFUNDE.md#e-242) (Anmeldename auf Ausdrucken).
@@ -103,7 +106,6 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-246](BEFUNDE.md#e-246)** | Der umgeschriebene Commit mit zwei Familiennamen ist auf GitHub weiter abrufbar — kein Z… | **nie gemessen** | Gregors Entscheidung, ob er beim GitHub-Support die Entfernung beantragt (nur der Besitzer des Repos kann das); dann die Kennung aus dem Repo nehmen.… |
 | **[E-245](BEFUNDE.md#e-245)** | Die Namensschranke pruefe-namen-gestaget.pl sieht drei Wege nicht — einen Namen im Datei… | **nie gemessen** | Dateinamen (`git diff --cached --name-only`) und Commit-Nachricht (`commit-msg`-Haken bzw. `git log --format=%B` im pre-push) mitprüfen; Binärdateie… |
 | **[E-244](BEFUNDE.md#e-244)** | Liegt der Klon in einem Pfad mit Leerzeichen, startet kein Prüfserver — alle Fälle mit… | **nie gemessen** | die Argumente mit Leerzeichen selbst in Anführungszeichen setzen (auch das Mailverzeichnis in `testlauf.ps1`) (oder `Start-Process` mit einer einzige… |
 | **[E-243](BEFUNDE.md#e-243)** | Prüfstand-Werkzeuge konnten echte Eudora-Instanzen unter C:\Temp treffen — Postfächer … | 06.11.2026 an 7.2.2.136 | der Merge von `e151_pruefstand_klon`; die Messskripte prüfen die Marke nicht selbst (sie laufen nur über `pruefstand-lauf.ps1`/`testlauf.ps1`, die s… |
@@ -134,7 +136,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 | **[E-159](BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 — **veraltet** | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
 | **[E-151](BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | 06.11.2026 an 7.2.2.136 | der Merge; ein voller Lauf nach der Berichtigung der Pfadfälle (erwartet 107 von 107 bei 3 übersprungenen) und Gregors Lauf auf einem zweiten Rechne… |
-| **[E-147](BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
+| **[E-147](BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Gregors Entscheidung, ob ohne diese Antwort gebaut wird; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text gespeichert… |
 | **[E-143](BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | 02.11.2026 an 7.2.1.130 — **veraltet** | der Filterteil ist am Programm gemessen (Gregor, 01. und 02.11.2026, [TESTPLAN](TESTPLAN.md#e-143-naechstes)) bis auf das Übergehen eines alten Out-F… |
 | **[E-142](BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 — **veraltet** | vor 7.2.1 nichts — Gregors Entscheidung 13 (26.10.2026): *Send Again* aus IMAP ergibt eine leere Mail (T6), das kommt erst nach 7.2.1 dran; Entwürf… |
 | **[E-136](BEFUNDE.md#e-136)** | Ein Zeichen, das richtig auf dem Bildschirm steht, wird beim Speichern zerstört — aus … | 02.11.2026 an 7.2.1.130 — **veraltet** | *Speichern unter* als `.htm` am Programm messen; für Gregor entfällt der Test vorerst, der Strg-S-Weg ist am Prüfstand gemessen… |

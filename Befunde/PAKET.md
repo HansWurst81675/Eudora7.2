@@ -107,9 +107,9 @@ steht etwas Falsches darin, fällt das Urteil zu günstig aus. Bei 1.0.12 sind e
 
 | Paket | erwartet | gemessen |
 |---|---|---|
-| `C:\Users\Gregor\Eudora72-1.0.12-release` | grün | **`ERGEBNIS: keine Fehler` · EXITCODE=0** · 3 Warnungen |
+| `%USERPROFILE%\Eudora72-1.0.12-release` | grün | **`ERGEBNIS: keine Fehler` · EXITCODE=0** · 3 Warnungen |
 | Kopie davon im Scratchpad, `mfc140.dll` gelöscht | rot | **`FEHLT BEIM START: mfc140.dll` · EXITCODE=1** |
-| `C:\Users\Gregor\Eudora72-1.0.12-debug` | rot | **`Debug-Bau: 4 Debug-Laufzeit(en)` · EXITCODE=1** |
+| `%USERPROFILE%\Eudora72-1.0.12-debug` | rot | **`Debug-Bau: 4 Debug-Laufzeit(en)` · EXITCODE=1** |
 
 Gregors Verzeichnisse wurden nur gelesen; die Kopie liegt im Scratchpad.
 

@@ -27,17 +27,17 @@
 #
 # Aufruf (PowerShell):
 #   powershell -ExecutionPolicy Bypass -File tools\postfaecher-zusammenfuehren.ps1
-#   ... -Ziel "C:\Users\Gregor\Eudora72-1.0.40-release"      andere Fassung
+#   ... -Ziel "$env:USERPROFILE\Eudora72-1.0.40-release"      andere Fassung
 #   ... -NurZeigen                                           nichts schreiben
 #
 # Kodierung: reines ASCII, kein BOM.
 
 [CmdletBinding()]
 param(
-    [string] $Ziel      = 'C:\Users\Gregor\Eudora72-1.0.39-release',
-    [string] $Basis     = 'C:\Users\Gregor\Eudora72-1.0.36-release',
-    [string] $AltesIn   = 'C:\Users\Gregor\Eudora72-1.0.28-release',
-    [string] $AltesOut  = 'C:\Users\Gregor\Eudora72-1.0.32-release',
+    [string] $Ziel      = "$env:USERPROFILE\Eudora72-1.0.39-release",
+    [string] $Basis     = "$env:USERPROFILE\Eudora72-1.0.36-release",
+    [string] $AltesIn   = "$env:USERPROFILE\Eudora72-1.0.28-release",
+    [string] $AltesOut  = "$env:USERPROFILE\Eudora72-1.0.32-release",
     [switch] $NurZeigen
 )
 

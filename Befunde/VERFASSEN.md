@@ -8,7 +8,7 @@ Gregor, 05.09.2026, Debug-Bau 7.2.0.5:
 
 ```
 Debug Assertion Failed!
-Program: C:\Users\Gregor\Eudora72-1.0.5-debug\mfc140d.dll
+Program: %USERPROFILE%\Eudora72-1.0.5-debug\mfc140d.dll
 File: ...\ATLMFC\Include\afxcoll.inl
 Line: 213
 ```

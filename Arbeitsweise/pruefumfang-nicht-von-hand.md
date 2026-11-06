@@ -106,7 +106,7 @@ und das ist regelmäßig genau der Moment, in dem gemessen wird.
 
 Beim Übernehmen von Gregors Mailverzeichnis habe ich nachgemessen und **31
 Dateien** gezählt. Das sah vollständig aus. Nachgemessen am 11.09.2026 an
-`C:\Users\Gregor\Eudora72-1.0.48-release\Mailverzeichnis`: oberste Ebene 31,
+`%USERPROFILE%\Eudora72-1.0.48-release\Mailverzeichnis`: oberste Ebene 31,
 **rekursiv 153**, davon 43 unter `Imap\`. Die Nachmessung war nicht falsch, sie
 war **flach** — und eine flache Zählung über ein Verzeichnis mit zwölf
 Unterverzeichnissen meldet immer eine beruhigende Zahl

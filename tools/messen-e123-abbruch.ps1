@@ -44,7 +44,7 @@ $t = $PSScriptRoot
 # DIE SCHRANKE STEHT GANZ VORN - VOR JEDER WIRKUNG (23.10.2026).
 #
 # Der erste Entwurf dieser Datei hatte die Pfadpruefung NACH dem Ausloesen des
-# Abrufs. Mit "-Pfadfilter C:\Users\Gregor" wies sie zwar ab, aber da war der
+# Abrufs. Mit "-Pfadfilter $env:USERPROFILE" wies sie zwar ab, aber da war der
 # Befehl 32772 schon an ein Fenster unter diesem Pfad geschickt - also
 # moeglicherweise an Gregors eigene Sitzung. Gemessen am 23.10.2026 an der
 # eigenen Gegenprobe: die Abweisung kam, nachdem "Abruf ausloesen" dastand.
@@ -67,7 +67,7 @@ try {
 # Laufwerkswurzel: "C:\" wuerde sonst auf jeden Pfad passen.
 #
 # WARUM HIER UND NICHT NUR BEIM AUFRUFER: dieses Skript ist per -File direkt
-# aufrufbar. Mit "-Pfadfilter C:\Users\Gregor" HAETTE ES GREGORS EIGENE
+# aufrufbar. Mit "-Pfadfilter $env:USERPROFILE" HAETTE ES GREGORS EIGENE
 # SITZUNG ABGESCHOSSEN - die Schranke lag allein bei testlauf.ps1 (PRUEFER,
 # 22.10.2026).
 if ($voll -match '^[A-Za-z]:\\$') {
