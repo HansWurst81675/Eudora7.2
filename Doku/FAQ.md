@@ -485,7 +485,7 @@ Das bleibt so; Gregor hat am 05.11.2026 entschieden, es so zu lassen und
 diesen Hinweis aufzunehmen. *Am Quelltext nachgesehen*
 (`persona.cpp:891-914`, [PRÜFER-100](../Befunde/PRUEFER-100.md) K1) und
 **am Programm geprüft**: Gregor an 7.2.2.134 am 05.11.2026 — das Häkchen war
-nach *Forget Password(s)* noch gesetzt. Ab dem nächsten Release (im Testpaket
+nach *Forget Password(s)* noch gesetzt. Seit 7.2.2.136 (im Testpaket
 7.2.2.134 von Gregor bestätigt) speichert Eudora das Kennwort schon beim
 ersten Setzen des Häkchens
 ([E-223](../Intern/BEFUNDE.md#e-223)); vorher fragte es dann noch ein zweites
@@ -510,6 +510,6 @@ bisher, das spart Tinte.
 Gregor hat das am 05.11.2026 so entschieden (*„schaltbar mit default =
 OFF“*). **Am Programm geprüft** für die **Druckvorschau**: am Prüfstand
 gemessen ([E-169](../Intern/BEFUNDE.md#e-169), Fälle `E-169p` und `E-169b`).
-Der Druck auf Papier ist noch nicht gemessen. Kommt mit dem nächsten Paket.
+Der Druck auf Papier ist noch nicht gemessen. Seit 7.2.2.136.
 Mehr zum Schlüssel:
 [EINSTELLUNGEN.md, Abschnitt 3](../Intern/EINSTELLUNGEN.md#3-schalter-ohne-menüpunkt).
