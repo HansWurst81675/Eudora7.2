@@ -18,8 +18,7 @@
 - **Nächste Werkzeugaufgabe** ([LEKTOR-151](../Befunde/LEKTOR-151.md#l-151.1)):
   `testlauf.ps1` vergleicht `Exception.log` vor und nach jedem Lauf; `pruefe-behoben-belegt.pl`
   verlangt auch bei „überholt“ ein Ziel ([L-152.3](../Befunde/LEKTOR-152.md#l-152.3)).
-- **Offen für Gregor:** [E-236](BEFUNDE.md#e-236) („Update Eudora“ abschalten oder auf
-  GitHub zeigen); eigene Anzeige mit dem Suchverhalten aus [E-193](BEFUNDE.md#e-193)
+- **Offen für Gregor:** eigene Anzeige mit dem Suchverhalten aus [E-193](BEFUNDE.md#e-193)
   (Vorschlag: später); Text von `v7.2.2.133` auf GitHub nachziehen
   ([LEKTOR-150](../Befunde/LEKTOR-150.md#l-150.3)).
 - Ältere Stände: [Frühere Stände](#fruehere-staende) am Ende dieser Datei.
@@ -207,6 +206,7 @@ Stand-Block.
 35. **Entschieden von Gregor am 05.11.2026:** [E-151](BEFUNDE.md#e-151) — **der Prüfstand läuft aus jedem Klon oder Fork** (Zweig `e151_pruefstand_klon`): `Pruefstand starten.cmd` fragt auf fremden Rechnern den Nutzer selbst (*„zu 1: die abfrage ist ok. macht sinn.“*), der S/MIME-Fall ohne `MFC71.DLL`/`msvcp71.dll` wird übersprungen (*„zu 2: ja, überspringen.“*), die lokalen Prüfserver werden nach Abbruch oder Absturz aufgeräumt (*„beim absturz muß er aufgeräumt werden, so daß nicht bei 3x starten auch 3 mail server im hintergrund laufen“*); die Anleitung steht auf GitHub (*„eine anleitung dazu sollte dann auch im github stehen“*) mit der gemessenen Dauer ([Arbeitsweise/entscheidung-e151-pruefstand-klon-05-11.md](../Arbeitsweise/entscheidung-e151-pruefstand-klon-05-11.md)).
 36. **Entschieden von Gregor am 05.11.2026:** [E-169](BEFUNDE.md#e-169) — **Hintergründe beim Drucken und in der Druckvorschau werden schaltbar, Vorgabe aus** (*„B: schaltbar mit default = OFF + bescheribung bei den help -> settings reference und FAQ …“*, präzisiert: *„Intern/EINSTELLUNGEN.md das meinte ich“*); beschrieben in `Intern/EINSTELLUNGEN.md`, *Help → Settings Reference* und der FAQ ([Arbeitsweise/entscheidung-e169-hintergrund-drucken-05-11.md](../Arbeitsweise/entscheidung-e169-hintergrund-drucken-05-11.md)).
 37. **Entschieden von Gregor am 06.11.2026:** [E-240](BEFUNDE.md#e-240) — die Druckvorschau, die beim ersten Aufruf nach dem allerersten Start mehrere Sekunden ohne Rückmeldung braucht, wird **erst nach dem Release 7.2.2.136** angegangen (*„ja, e-240 nach dem release. aber notieren, damit nichts verloren geht“*); Abhilfe dann eine Rückmeldung (Sanduhr), schneller laden lässt es sich nicht.
+38. **Entschieden von Gregor am 06.11.2026:** [E-236](BEFUNDE.md#e-236) — das Fenster *„Update Eudora“* wird **nicht abgeschaltet, sondern zeigt die Release-Seite des Projekts auf GitHub** (*„e-236: nach github, nicht abschalten.“*).
 
 ## Wie man misst
 
