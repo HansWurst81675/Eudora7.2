@@ -8,7 +8,7 @@ metadata:
   modified: 2026-08-31T05:44:00.043Z
 ---
 
-Schranke: keine - ob ich eine Anleitung vor der Weitergabe selbst gefahren habe, steht nur im Chat; im Repo sieht eine ungeprüfte Anleitung genauso aus wie eine geprüfte
+Schranke: tools/testplan-voraussetzungen.pl in paket-bauen.ps1 (seit 06.11.2026) - prueft, dass jede INI-Voraussetzung eines Messskripts im Handtest steht; mit --ini gegen Gregors geschickte INI VOR jeder Anleitung. Ob ich eine Anleitung sonst selbst gefahren habe, prueft keine Schranke.
 
 Wenn ich Gregor sage „schau unter *Hilfe → Über*" oder „starte es aus diesem
 Verzeichnis", muss ich vorher **geprüft haben, dass dieser Weg funktioniert**.
@@ -158,3 +158,9 @@ Zeiten MEZ, Transkript `25e03584`, gemessen. Einzelheiten in [[CHRONIST-2026-11-
 Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 1). Der Nachtrag vom Vortag hier sagt: *„Ein Befehl für Gregor hat absolute Pfade und lief vorher einmal in genau dieser Form.“* Am 03.11. bekam Gregor zwischen 10:51:51 und 10:56:00 sechs `git push origin --delete …`-Befehle. Jeder scheiterte an etwas, das vorher messbar war: am Serverstand (`git ls-remote origin <zweig>`) und am `pre-push`-Haken, der den Baum prüft und nicht den Push. Um 10:53:11 stand als Tatsache da: *„Weil diese eine Angabe ins Leere ging, hat Git den ganzen Befehl abgelehnt. Die anderen vier stehen noch.“* Um 10:55:10 war das widerlegt (*„offenbar hat dein vorheriger Befehl doch gegriffen“*); gemessen wurde es nie ([[ursache-nur-gemessen-behaupten]]). Der sechste Befehl lief aus dem Baum, in dem gerade ein Agent arbeitete.
 
 **How to apply, zusätzlich:** Ein Befehl, den ich selbst nicht ausführen darf, kann ich auch nicht proben. Dann ist er kein Befehl für Gregor ([[abweisung-ist-eine-antwort]]), sondern eine gemessene Liste für die Oberfläche. Nach einem gescheiterten Befehl Gregors zuerst den Stand messen (`git ls-remote`), dann einen Satz dazu, erst danach etwas Neues.
+
+## Nachtrag 06.11.2026: Voraussetzung stand im Messskript, nicht im Testschritt
+
+Testplan 7.2.2.136, Schritt 2/3 (E-239, Hinweis nach dem Abruf offen lassen). `tools/messen-e239.ps1 -Vorbereiten` setzt selbst `Alert=1`, weil ohne Hinweis kein Weg in den Fehler führt (steht so in BEFUNDE E-239). Im Schritt für Gregor stand es nicht. Gregor fragte ausdrücklich *„müssen irgendwelche windows notifications aktiviert sein?"* — ich beantwortete nur das Infobereich-Symbol. Sein Log: `Alert=0`, Schritt unerreichbar. Gregor: *„deine anweisungen waren und sind immer noch unvollständig … dummerweise hast du es wieder nicht geprüft, sondern mich testen lassen."* und *„dann mußt du das jetzt leider selbst testen!"*
+
+**How to apply, zusätzlich:** Alles, was ein Messskript in `-Vorbereiten` an der INI stellt, ist eine Voraussetzung des Handtests und steht im Schritt. Fragt Gregor „muss etwas aktiviert sein?", werden die Vorbereiten-Zeilen des Messskripts gelesen, bevor ich antworte. Schranke gebaut: tools/testplan-voraussetzungen.pl (Marker `# VORAUSSETZUNG-HANDTEST:` im Messskript), in paket-bauen.ps1; `--ini <Mailverzeichnis.zip>` vor jeder Anleitung an Gregor. Und: aus Gregors ZIP immer auch die Eudora.ini lesen, nicht nur die eudora.log.

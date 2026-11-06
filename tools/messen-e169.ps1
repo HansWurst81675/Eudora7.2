@@ -43,6 +43,10 @@
 #   E169 ENDE lebt=<0|1>
 #
 # Kodierung: reines ASCII, kein BOM.
+# VORAUSSETZUNG-HANDTEST: keine
+#   (POPPort, SSLReceiveUse, SavePassword/Text sind nur fuer den Pruefserver;
+#   PrintBackground ist der Gegenstand des Handtests - Gregor stellt ihn im
+#   Schritt selbst um, er ist keine Voraussetzung.)
 param(
     [Parameter(Mandatory = $true)] [string] $Pfadfilter,
     [switch] $Vorbereiten

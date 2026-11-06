@@ -514,12 +514,17 @@ E-204w | C:\Temp\E204 | 90 | messung | E204 PROBE ok | | | messen=tools\messen-e
 E-223p | C:\Temp\E223 | 60 | messung | E223 ERGEBNIS savepassword=1 ini-kennwort=1 beendet=1 | | | messen=tools\messen-e223.ps1
 E-223w | C:\Temp\E223 | 60 | messung | E223 PROBE ok | | | messen=tools\messen-e223.ps1
 # E-239: Absturz beim Beenden, wenn nach File > Exit ein zweiter Schliesswunsch
-# kommt, waehrend der Hinweis nach dem Abruf (bzw. die Rueckfrage "tasks running")
-# offen ist. C:\Temp\E239\modus.txt = exit-close. Rot an 7.2.2.135 (3/3 Absturz).
-# Gruen mit der Behebung (05.11.2026): dreimal absturz=0 beendet=1. Die
-# Vorbereitung setzt Alert=1 - ohne den Hinweis nach dem Abruf (Alert=0) gibt
-# es keinen Weg in den Fehler, und E239 PROBE meldet FEHL.
+# kommt, waehrend der Hinweis nach dem Abruf offen ist.
+# C:\Temp\E239\modus.txt = hinweis-exit-close: erst auf den Hinweis warten,
+# dann File > Exit und WM_CLOSE. Seit 06.11.2026 - vorher exit-close, ein
+# Wettlauf: an 7.2.2.135 am 05.11. 3/3 Absturz, am 06.11. 3/3 kein Hinweis
+# (PROBE FEHL) und der Fall trotzdem gruen. hinweis-exit-close an
+# 7.2.2.135+1cf4a59f am 06.11.2026: 3/3 absturz=1 (Stapel CloseDown <- OnClose
+# <- AlertDialog). E-239w ist die Positivprobe: ohne offenen Hinweis gibt es
+# keinen Weg in den Fehler, und E-239p waere blind gruen. Die Vorbereitung
+# setzt Alert=1.
 E-239p | C:\Temp\E239 | 120 | messung | absturz=0 beendet=1 | | | messen=tools\messen-e239.ps1
+E-239w | C:\Temp\E239 | 120 | messung | E239 PROBE ok | | | messen=tools\messen-e239.ps1
 
 # -------------------------------------------------------------------------
 # E-222 - signierte Mail: "Plugin Error: %3C5335.0002%3E"

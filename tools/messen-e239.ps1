@@ -22,9 +22,21 @@
 #         exit-close  File > Exit gleich nach dem QUIT (vor dem Hinweis), bei
 #                     offenem Hinweis dann WM_CLOSE (der Pruefstandsfall)
 #         exit-exit   wie exit-close, aber zweimal File > Exit
+#         hinweis-exit  bei offenem Hinweis nur Exit (ID_APP_EXIT) - so kommt
+#                     Exit aus dem Menue des Infobereich-Symbols an
+#                     (IDR_SYSTEM_TRAY_MENU); Gregors Schritt 3 an 7.2.2.136
+#         hinweis-exit-close  erst warten, bis der Hinweis offen ist, dann
+#                     File > Exit und 0,8 s spaeter WM_CLOSE. Seit 06.11.2026
+#                     der Pruefstandsfall: exit-close ist ein Wettlauf - an
+#                     7.2.2.135 am 05.11. 3/3 Absturz, am 06.11. 3/3 kein
+#                     Hinweis (Exit kam vor ihm an, PROBE FEHL), Fall gruen.
 #         ohne        Hinweis mit OK schliessen, dann File > Exit (Gegenprobe)
 #   mitpost = der POP-Pruefserver liefert eine Mail (Testdaten/e193-f8.eml);
 #             danach wird geprueft, ob sie in In.mbx steht.
+#
+# VORAUSSETZUNG-HANDTEST: Alert=1
+#   (Use an alert dialog box; ohne den Hinweis nach dem Abruf kein Weg in den
+#   Fehler. Konto, Port und SavePassword=0 sind nur fuer den Pruefserver.)
 #
 # Nur Botschaften an gemessene Handles, kein Tastendruck. Das Kennwort ist
 # erfunden und geht nur an 127.0.0.1. Ein Prozess, der nach einem Absturz
@@ -61,7 +73,7 @@ if (Test-Path -LiteralPath $modusDatei) {
     if ($teile.Count -ge 1) { $weg = $teile[0] }
     $mitPost = ($teile -contains 'mitpost')
 }
-if (@('einfach','syscmd','endsession','exit-close','exit-exit','ohne') -notcontains $weg) { Write-Output "E239 FEHLER: unbekannter Weg $weg"; exit 1 }
+if (@('einfach','syscmd','endsession','exit-close','exit-exit','hinweis-exit','hinweis-exit-close','ohne') -notcontains $weg) { Write-Output "E239 FEHLER: unbekannter Weg $weg"; exit 1 }
 
 function PopBeenden {
     if (-not (Test-Path -LiteralPath $pidDatei)) { return }
@@ -219,6 +231,12 @@ try {
             }
             'exit-close' { [void][E239W]::PostMessage($haupt, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero); Write-Output 'E239 WM_CLOSE geschickt (zweiter Schliesswunsch)' }
             'exit-exit'  { [void][E239W]::PostMessage($haupt, 0x0111, [IntPtr]57665, [IntPtr]::Zero); Write-Output 'E239 File > Exit geschickt (zweiter Schliesswunsch)' }
+            'hinweis-exit' { [void][E239W]::PostMessage($haupt, 0x0111, [IntPtr]57665, [IntPtr]::Zero); Write-Output 'E239 Exit (ID_APP_EXIT, wie aus dem Menue des Infobereich-Symbols) bei offenem Hinweis geschickt' }
+            'hinweis-exit-close' {
+                [void][E239W]::PostMessage($haupt, 0x0111, [IntPtr]57665, [IntPtr]::Zero); Write-Output 'E239 File > Exit bei offenem Hinweis geschickt'
+                Start-Sleep -Milliseconds 800
+                [void][E239W]::PostMessage($haupt, 0x0010, [IntPtr]::Zero, [IntPtr]::Zero); Write-Output 'E239 WM_CLOSE geschickt (zweiter Schliesswunsch)'
+            }
             'ohne'       { [void][E239W]::PostMessage($hinweisHandle, 0x0111, [IntPtr]1, (Kind $hinweisHandle 1)); Start-Sleep -Milliseconds 800; [void][E239W]::PostMessage($haupt, 0x0111, [IntPtr]57665, [IntPtr]::Zero); Write-Output 'E239 Hinweis OK, dann File > Exit' }
         }
     } else {
