@@ -184,14 +184,14 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
-## 7.2.2.136 — Testpaket, Zweig `paket_7_2_2_136`
+## 7.2.2.136 — Release `v7.2.2.136`, Zweig `paket_7_2_2_136`
 
-**Geschnürt am 05.11.2026 um 22:30, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.136-release`), ZIP daneben; nicht veröffentlicht. Testpaket ohne vollen Prüfstandslauf geschnürt (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*); voller Lauf am Folgetag vor einem Release, mit Gregors neuer Erlaubnis für den Prüfstand.**
+**Geschnürt am 05.11.2026 um 22:30, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.136-release`), ZIP daneben; **veröffentlicht am 06.11.2026 als `v7.2.2.136`** (Marke auf `f99a3b41`, ZIP auf GitHub mit derselben SHA-256 wie unten), nach Gregors Test und Freigabe (*„ja zum release“*, *„gut, dann release“*). Testpaket ohne vollen Prüfstandslauf geschnürt (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*); voller Lauf am Folgetag vor einem Release, mit Gregors neuer Erlaubnis für den Prüfstand.**
 
 | | |
 |---|---|
 | Bau | `Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11`, 0 Fehler, Unit-Tests 428/428, Schranken 19/19 |
-| Prüfstand | **nicht gelaufen, geplant für den 06.11.2026** — gemessen sind [E-239](../Intern/BEFUNDE.md#e-239) und [E-169](../Intern/BEFUNDE.md#e-169) nur an den Bauten ihrer Zweige (`E-239p`, `E-169p`/`b`/`h`), nicht an diesem Bau |
+| Prüfstand | **06.11.2026 an genau diesem Bau: 110 von 110 bestanden** (91 min 16 s, 67 Eudora-Starts), dazu sechs E-239-Messungen grün. Beim Schnüren am 05.11.: nicht gelaufen — gemessen waren [E-239](../Intern/BEFUNDE.md#e-239) und [E-169](../Intern/BEFUNDE.md#e-169) nur an den Bauten ihrer Zweige (`E-239p`, `E-169p`/`b`/`h`), nicht an diesem Bau |
 | Prüfbericht | NICHT VOLLSTÄNDIG (Prüfstand an anderem Bau bzw. nie gelaufen); gebaut mit `-OhnePruefbericht` (genau dafür vorgesehen: Prüfbericht nicht BESTANDEN, weil Prüfstandsfälle an anderem Bau oder nie gelaufen; Begründung Gregors Satz oben) und `-RollenSindGelaufen` (LEKTOR steht vor PR und Release aus) |
 | Paket | `Eudora72-7.2.2.136-release.zip`, 9 179 940 Byte, SHA-256 `12dda7a6cef90f62c0e409d34997dc38b13e36a18eb552d6163d333e451e54ad` — ohne die beiden DLLs; `paket-pruefen`: keine Fehler, Kriterium 0 JA, Defender 0 Funde, vier Warnungen wie bisher; `Eudora.exe`, `Imap.dll`, `EudoraRes.dll` byte-gleich mit dem Bau |
 | Test-ZIP | `Eudora72-7.2.2.136-test-mit-smime-dlls.zip`, 9 803 634 Byte, SHA-256 `89f747f1ab4cc6de5e182e84ba2694306fb42797c17dc633a31fd738d9437b95` = Paket-ZIP plus `MFC71.DLL` und `msvcp71.dll` (dieselben wie bei 7.2.2.134) neben `Eudora.exe`; liegt neben dem Paket-ZIP und im Austauschordner `test_2.136` |

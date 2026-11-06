@@ -120,7 +120,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## 7.2.2.136 — Testpaket (geschnürt am 05.11.2026 ohne vollen Prüfstandslauf, nicht veröffentlicht): kein Absturz beim Beenden bei offenem Hinweis (E-239), Druck mit Hintergründen auf Wunsch (E-169)
+## 7.2.2.136 — Release (`v7.2.2.136`, veröffentlicht am 06.11.2026): kein Absturz beim Beenden bei offenem Hinweis (E-239), Druck mit Hintergründen auf Wunsch (E-169)
 
 Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Sammelzweig `paket_7_2_2_136` aus `main` (mit 7.2.2.135) und den Zweigen `e239_absturz_beenden` und `e169_druckvorschau`. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.136-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner `test_2.136`), nicht veröffentlicht. Testpaket ohne vollen Prüfstandslauf geschnürt (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*); voller Lauf am Folgetag vor einem Release.** Bau `Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11`, Unit-Tests 428/428, Schranken 19/19, Prüfstand nicht gelaufen ([PAKETE](Releases/PAKETE.md)).
 
