@@ -213,6 +213,27 @@ if (Test-Path -LiteralPath $dokupruefer) {
     exit 1
   }
 
+  # --- Schranke: kein Paket mit einem Handtest, dem eine Voraussetzung fehlt -
+  #
+  # Gregor am 06.11.2026 (Testplan 7.2.2.136, Schritt 2/3, E-239: das
+  # Messskript setzt Alert=1 selbst, der Schritt fuer Gregor nannte es nicht,
+  # bei ihm stand Alert=0): "deine anweisungen waren und sind immer noch
+  # unvollstaendig ... dummerweise hast du es wieder nicht geprueft, sondern
+  # mich testen lassen." Die Lehre stand seit dem 31.08.2026 da, ohne Schranke.
+  # Der Testplan wird VOR dem Bau geschrieben, also wird er hier gelesen.
+  $voraussetzungspruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'testplan-voraussetzungen.pl'
+  & $perlD $voraussetzungspruefer
+  if ($LASTEXITCODE -ne 0) {
+    Write-Host ''
+    Write-Host '  KEIN PAKET. Ein Schritt im Testplan verlangt eine Einstellung, die'
+    Write-Host '  das Messskript am Pruefstand selbst stellt, nennt sie aber nicht.'
+    Write-Host '  Erst den Testschritt ergaenzen. Vor der Anleitung an Gregor zusaetzlich:'
+    Write-Host '      perl tools/testplan-voraussetzungen.pl --ini <sein Mailverzeichnis.zip>'
+    Write-Host ''
+    exit 1
+  }
+
+
   # --- Schranke: kein Paket, solange eine Rolle ueberfaellig ist ----------
   #
   # rollen-faellig.pl gibt es seit dem 08.09.2026 und es meldet richtig -

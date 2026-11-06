@@ -7693,6 +7693,7 @@ BEGIN
     IDS_INI_KEEP_HTML_IN_RESPONSES "KeepHTMLInResponses\n1"
     IDS_INI_FORWARD_ORIGINAL_HTML "ForwardOriginalHTML\n1"
     IDS_INI_WARN_SPELL_UNAVAILABLE "WarnSpellUnavailable\n1"
+    IDS_INI_PRINT_BACKGROUND "PrintBackground\n0"
     IDS_SPELL_NICHT_VORHANDEN "Die Rechtschreibpruefung ist in dieser Fassung nicht verfuegbar. Die Pruefengine (SSCE) fehlt in der Quelltextfreigabe."
 END
 

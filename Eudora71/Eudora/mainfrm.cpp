@@ -735,7 +735,9 @@ CMainFrame::CMainFrame() :
 	m_idAutoActivateTimer(0),
 	m_bE123Gewartet(FALSE),
 	m_dwE123Beginn(0),
-	m_bE123WarteAktiv(FALSE)
+	m_bE123WarteAktiv(FALSE),
+	m_bE239BeendenLaeuft(FALSE),
+	m_bE239SchliessenWartet(FALSE)
 {
 	ASSERT(!m_pTheMainFrame);
 	m_pTheMainFrame = this;
@@ -1992,6 +1994,45 @@ void CMainFrame::OnTimer(UINT nIDEvent)
 			last_pt.y = pt.y;
 		}
 		break;
+
+	case E239_SCHLIESSEN_TIMER_ID:
+		// E-239: siehe OnClose - das aufgeschobene Beenden nachholen, sobald
+		// kein modaler Dialog das Hauptfenster mehr sperrt.
+		if (IsWindowEnabled())
+		{
+			KillTimer(E239_SCHLIESSEN_TIMER_ID);
+			m_bE239SchliessenWartet = FALSE;
+			PutDebugLog(DEBUG_MASK_MISC, "E-239 Beenden nachgeholt: der modale Dialog ist zu");
+			PostMessage(WM_CLOSE);
+		}
+		return;
+
+	case E239_ZERSTOEREN_TIMER_ID:
+		// E-239: siehe OnClose. CFrameWnd::OnClose hat das Fenster nicht
+		// zerstoert, weil noch OLE-Objekte offen waren; MFC holt das in
+		// AfxOleOnReleaseAllObjects nur nach, wenn das Hauptfenster gerade
+		// aktiviert ist (olelock.cpp). Lief das Beenden in einem modalen Hinweis,
+		// war es gesperrt, und ein versteckter Prozess blieb zurueck.
+		if (IsWindowEnabled() && AfxOleCanExitApp())
+		{
+			KillTimer(E239_ZERSTOEREN_TIMER_ID);
+			PutDebugLog(DEBUG_MASK_MISC, "E-239 Beenden: aufgeschobenes DestroyWindow nachgeholt");
+			DestroyWindow();
+		}
+		else
+		{
+			// Alle 5 s sagen, worauf gewartet wird - sonst ist ein
+			// stehengebliebenes Beenden von aussen nicht zu unterscheiden.
+			static int nE239Takt = 0;
+			if ((++nE239Takt % 10) == 1)
+			{
+				CString szSpur;
+				szSpur.Format("E-239 Beenden wartet: aktiviert=%d ole-frei=%d sichtbar=%d",
+							  IsWindowEnabled() ? 1 : 0, AfxOleCanExitApp() ? 1 : 0, IsWindowVisible() ? 1 : 0);
+				PutDebugLog(DEBUG_MASK_MISC, szSpur);
+			}
+		}
+		return;
 
 	case E123_WARTE_TIMER_ID:
 		{
@@ -5547,6 +5588,15 @@ BOOL CMainFrame::OnQueryEndSession()
 		SetMessageText(AFX_IDS_IDLEMESSAGE);
 	}
 
+	// E-239: laeuft das Beenden schon (CloseDown hat TRUE geliefert, danach
+	// sind Dokumente und g_Nicknames womoeglich schon zerstoert), nicht ein
+	// zweites Mal durch CloseDown gehen - zustimmen genuegt.
+	if (m_bE239BeendenLaeuft)
+	{
+		PutDebugLog(DEBUG_MASK_MISC, "E-239 Beenden laeuft schon: WM_QUERYENDSESSION ohne zweites CloseDown beantwortet");
+		return (TRUE);
+	}
+
 	if (!CloseDown())
 		return (FALSE);
 		
@@ -5616,6 +5666,34 @@ void CMainFrame::OnClose()
 	// Botschaften zu; ein zweites WM_CLOSE darin fuehrte in einen Haenger), die
 	// Statuszeile sagt, worauf gewartet wird (S2), und solange ein Hochladen
 	// gerade laeuft, wird nie beendet - auch nicht nach 90 s (siehe OnTimer).
+	// E-239: das Beenden laeuft schon. Ein zweites WM_CLOSE kommt, wenn waehrend
+	// CFrameWnd::OnClose (CloseAllDocuments) ein modaler Hinweis eine eigene
+	// Botschaftsschleife faehrt - etwa die Meldung nach dem Abruf aus
+	// ~CPOPSession -> NotifyMailCheckResults. Lief es erneut durch CloseDown,
+	// war g_Nicknames schon NULL (nickdoc.cpp), und Eudora stuerzte ab.
+	if (m_bE239BeendenLaeuft)
+	{
+		PutDebugLog(DEBUG_MASK_MISC, "E-239 Beenden laeuft schon: weiteres Schliessen ignoriert");
+		return;
+	}
+	// E-239 (gemessen 05.11.2026): ist das Hauptfenster gesperrt, laeuft
+	// gerade ein modaler Dialog - etwa der Hinweis nach dem Abruf
+	// (GetMail.cpp, AlertDialog), in dessen Schleife ein vorher geschicktes
+	// File > Exit ankommt. Das Beenden lief dann innerhalb dieser Schleife:
+	// ein zweites WM_CLOSE stuerzte ab (CloseDown mit g_Nicknames == NULL),
+	// und ohne zweites blieb das Hauptfenster gesperrt, MFC zerstoerte es nie
+	// (olelock.cpp, nur wenn aktiviert) - ein Prozess ohne Fenster. Jetzt wird
+	// das Beenden aufgeschoben und nachgeholt, sobald der Dialog zu ist.
+	if (!IsWindowEnabled())
+	{
+		if (!m_bE239SchliessenWartet)
+		{
+			PutDebugLog(DEBUG_MASK_MISC, "E-239 Beenden aufgeschoben: ein modaler Dialog ist offen");
+			m_bE239SchliessenWartet = TRUE;
+			SetTimer(E239_SCHLIESSEN_TIMER_ID, 500, NULL);
+		}
+		return;
+	}
 	if (m_bE123WarteAktiv)
 	{
 		PutDebugLog(DEBUG_MASK_MISC, "E-123 Beenden: weiteres Schliessen waehrend des Wartens ignoriert");
@@ -5653,6 +5731,10 @@ void CMainFrame::OnClose()
 
 	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 OnClose: CloseDown hat TRUE geliefert");
+
+	// E-239: ab hier gibt es kein Zurueck mehr; jedes weitere WM_CLOSE und
+	// WM_QUERYENDSESSION wird ignoriert (oben und in OnQueryEndSession).
+	m_bE239BeendenLaeuft = TRUE;
 
 	// BEFUND E-33, zweiter Durchgang: auch dieser Abschnitt bekommt Marken je
 	// Aufruf. Er liegt VOR CFrameWnd::OnClose und damit vor
@@ -5772,6 +5854,25 @@ void CMainFrame::OnClose()
 	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 OnClose: nach QCWorkbook::OnClose");
 
+	// E-239: steht das Fenster danach noch, gibt es zwei Faelle. Sichtbar:
+	// CFrameWnd::OnClose hat vor HideApplication aufgehoert (CanCloseFrame oder
+	// SaveAllModified lieferten FALSE) - dann darf der Merker ein spaeteres
+	// Beenden nicht sperren. Versteckt: es hat wegen offener OLE-Objekte nur
+	// das DestroyWindow aufgeschoben; das holt der Zeitgeber nach (OnTimer).
+	if (::IsWindow(m_hWnd))
+	{
+		if (IsWindowVisible())
+		{
+			PutDebugLog(DEBUG_MASK_MISC, "E-239 Beenden: Fenster steht noch sichtbar, Merker zurueckgesetzt");
+			m_bE239BeendenLaeuft = FALSE;
+		}
+		else
+		{
+			PutDebugLog(DEBUG_MASK_MISC, "E-239 Beenden: DestroyWindow aufgeschoben (OLE), Zeitgeber gestellt");
+			SetTimer(E239_ZERSTOEREN_TIMER_ID, 500, NULL);
+		}
+	}
+
 	// Get rid of TOCs still in memory
 	TocCleanup();
 	
@@ -5864,8 +5965,11 @@ BOOL CMainFrame::CloseDown()
 	// never returns FALSE, so the user won't get a
 	// chance to cancel the main app shutdown.
 	//
+	// E-239: g_Nicknames ist nach CloseAllDocuments NULL (nickdoc.cpp); das
+	// ASSERT allein tut im Release-Bau nichts. Wie CanCloseFiltersFrame
+	// (filtersd.cpp) fuer g_Filters: ohne Dokument nichts zu sichern.
 	ASSERT(g_Nicknames);
-	if (! g_Nicknames->CanCloseFrame(NULL))
+	if (g_Nicknames && ! g_Nicknames->CanCloseFrame(NULL))
 		return FALSE;
 
 	// BEFUND E-33: Stufe 3 - die Warteschlange. QuerySendQueuedMessages liefert

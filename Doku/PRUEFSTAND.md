@@ -4,8 +4,8 @@ Der Prüfstand startet Eudora rund sechzig Mal, jedes Mal in einer vorbereiteten
 Umgebung mit Testmails, bedient die Fenster über Windows-Nachrichten und prüft
 danach, ob das Programm sich so verhält wie erwartet. Seine gut hundert Fälle
 bewachen Fehler, die in diesem Projekt schon einmal behoben wurden. Wer Eudora selbst
-ändert – in einem Klon oder Fork dieses Repos –, sieht damit nach gut einer
-Stunde (gemessen 60 bis 81 Minuten), ob die Änderung etwas kaputt gemacht hat, was vorher ging.
+ändert – in einem Klon oder Fork dieses Repos –, sieht damit nach einer bis anderthalb
+Stunden (gemessen 60 bis 91 Minuten), ob die Änderung etwas kaputt gemacht hat, was vorher ging.
 
 Diese Anleitung setzt kein Wissen über das Projekt voraus.
 
@@ -14,7 +14,7 @@ Diese Anleitung setzt kein Wissen über das Projekt voraus.
 1. Eudora bauen (siehe unten „Bauen“).
 2. Im Hauptordner des Repos **`Pruefstand starten.cmd`** doppelklicken.
 3. Die Frage „Fortfahren? (j/n)“ mit `j` beantworten.
-4. Warten – gemessen 60 bis 81 Minuten, siehe „Wie lange es dauert“ – und den Rechner nicht benutzen.
+4. Warten – gemessen 60 bis 91 Minuten, siehe „Wie lange es dauert“ – und den Rechner nicht benutzen.
 5. Am Ende steht `ERGEBNIS: alle Fälle bestanden` – oder die Liste der Fälle,
    die nicht bestanden haben.
 
@@ -27,7 +27,7 @@ Diese Anleitung setzt kein Wissen über das Projekt voraus.
 4. Im geklonten Ordner **`Pruefstand starten.cmd`** doppelklicken und die
    Frage mit `j` beantworten. Geprüft wird dann das zuletzt veröffentlichte
    Release (einmaliger Download, rund 9 MB).
-5. Gut eine Stunde warten (gemessen 60 bis 81 Minuten), den Rechner nicht
+5. Eine bis anderthalb Stunden warten (gemessen 60 bis 91 Minuten), den Rechner nicht
    benutzen.
 
 ### Voraussetzungen in Kürze
@@ -36,14 +36,14 @@ Diese Anleitung setzt kein Wissen über das Projekt voraus.
 * Git für Windows (bringt das nötige Perl mit)
 * Visual Studio 2022 nur, um eigene Änderungen zu bauen
 * freie Ports 11110, 1143, 1144 und 1025 auf `127.0.0.1`
-* gut eine Stunde, in der der Rechner nicht benutzt wird
+* eine bis anderthalb Stunden, in der der Rechner nicht benutzt wird
 * Internet nur beim ersten Lauf (Download des Release-ZIPs)
 
 Ausführlich unter „Voraussetzungen“ weiter unten.
 
 ## Wie lange es dauert
 
-Gemessen, nicht geschätzt (Stand 05.11.2026):
+Gemessen, nicht geschätzt (Stand 06.11.2026):
 
 | Schritt | Dauer | gemessen |
 |---|---|---|
@@ -51,13 +51,34 @@ Gemessen, nicht geschätzt (Stand 05.11.2026):
 | Unit-Tests bauen und fahren | 11 s | Prüfbericht, 05.11.2026 |
 | Schranken | 9 s | Prüfbericht, 05.11.2026 |
 | Prüfverzeichnisse einrichten | gut 1 min für 46 Verzeichnisse (ohne den einmaligen Download des Release-ZIPs, rund 9 MB) | Klonprobe aus einem frischen Klon, 05.11.2026 |
-| **voller Prüfstandslauf** | **59 min 50 s** (96 Fälle, 04.11.2026) · **80 min 52 s** (103 Fälle, 64 Eudora-Starts, 05.11.2026) · **76 min 57 s** (102 Fälle, 63 Eudora-Starts, Klonprobe 05.11.2026) | Entwicklermaschine; Klonprobe |
+| **voller Prüfstandslauf** | **60 bis 91 min**, zuletzt **91 min 16 s** (110 Fälle, 67 Eudora-Starts, 7.2.2.136, 06.11.2026); je Fassung siehe [Dauer je Fassung](#dauer-je-fassung) | Entwicklermaschine; Klonprobe |
 
 Der Wert des letzten vollen Laufs steht immer aktuell in
 [`Intern/pruefstand-dauer.txt`](../Intern/pruefstand-dauer.txt);
 `Pruefstand starten.cmd` liest ihn und nennt die erwartete Dauer vor dem
 Start, am Ende die tatsächliche. Wie schnell es auf einem anderen Rechner
 geht, hängt vor allem davon ab, wie schnell Eudora startet und schließt.
+
+### Dauer je Fassung
+
+Je Fassung der letzte volle Lauf, gemessen von `tools/pruefstand-lauf.ps1`
+(`Intern/pruefstand-dauer.txt` in der Git-Geschichte; die Fassung aus der
+Freigabe bzw. Baukennung in `tools/TESTLAEUFE.md`). Entwicklermaschine, VM.
+Nur, was gemessen ist — ältere Läufe ohne eindeutige Fassung fehlen. Die Dauer
+wächst mit der Zahl der Fälle und der Eudora-Starts, nicht mit der Fassung.
+
+| Fassung | Art | Datum | Fälle | Eudora-Starts | Dauer |
+|---|---|---|---:|---:|---:|
+| 7.2.1.128 | Release | 29.10.2026 | 41 | 13 | 7 min 24 s |
+| 7.2.1.129 | Testpaket | 31.10.2026 | 46 | 18 | 8 min 56 s |
+| 7.2.1.130 | Testpaket | 01.11.2026 | 46 | 18 | 9 min 17 s |
+| 7.2.1.131 | Release | 02.11.2026 | 53 | 25 | 16 min 58 s |
+| 7.2.2.132 | Release | 03.11.2026 | 81 | 47 | 37 min 00 s |
+| 7.2.2.133 | Release | 04.11.2026 | 96 | 61 | 59 min 50 s |
+| 7.2.2.134 | Testpaket | 05.11.2026 | 102 | 64 | 67 min 12 s |
+| 7.2.2.135 | Testpaket | 05.11.2026 | 103 | 64 | 80 min 52 s |
+| 7.2.2.135 | Testpaket, Klonprobe aus einem frischen Klon (Prüfverzeichnisse aus `v7.2.2.133`) | 05.11.2026 | 102 | 63 | 76 min 57 s |
+| 7.2.2.136 | Testpaket, Release-Kandidat | 06.11.2026 | 110 | 67 | 91 min 16 s |
 
 ## Was der Prüfstand prüft – und was nicht
 
@@ -67,7 +88,7 @@ Es gibt drei Arten von Prüfungen in diesem Repo:
 |---|---|---|---|
 | **Unit-Tests** | einzelne Funktionen im Quelltext, ohne Fenster | Sekunden | `Eudora71\Tests\RunTests.cmd` |
 | **Schranken** | Regeln über Quelltext und Dokumente (Kodierung, Verweise …) | Sekunden | laufen beim Commit von selbst, wenn die Git-Haken eingerichtet sind |
-| **Prüfstand** | das **laufende Programm**: Mail abrufen, verschieben, suchen, speichern, beenden | 60 bis 81 min (gemessen) | `Pruefstand starten.cmd` |
+| **Prüfstand** | das **laufende Programm**: Mail abrufen, verschieben, suchen, speichern, beenden | 60 bis 91 min (gemessen) | `Pruefstand starten.cmd` |
 
 Der Prüfstand prüft **nicht**:
 
@@ -96,7 +117,7 @@ Der Prüfstand prüft **nicht**:
 * **Freie Ports** auf `127.0.0.1`: 11110 (POP), 1143 und 1144 (IMAP),
   1025 (SMTP). Belegt sie ein anderes Programm, startet der Prüfstand nicht
   und nennt das Programm.
-* **Gut eine Stunde** (gemessen 60 bis 81 Minuten), in der der Rechner nicht benutzt wird. Ein Klick in ein
+* **Eine bis anderthalb Stunden** (gemessen 60 bis 91 Minuten), in der der Rechner nicht benutzt wird. Ein Klick in ein
   Eudora-Fenster während des Laufs kann einen Fall rot machen.
 * **Internet** nur beim ersten Lauf: Fehlt im Ordner `Releases\` ein
   Release-ZIP, lädt der Prüfstand das neueste Release dieses Projekts von

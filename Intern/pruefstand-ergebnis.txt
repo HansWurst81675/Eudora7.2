@@ -1,9 +1,12 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-05 17:54:11
-freigabe=Gregor am 05.11.2026: 'ja, pruefstand ist frei fuer dich' (7.2.2.135, Wiederholung E-194)
-nur=E-194   (Teillauf, nicht der Gesamtstand)
-faelle=2
-bestanden=2
+zeit=2026-11-06 13:46:34
+freigabe=Gregor am 06.11.2026: 'pruefstand ist freigegeben' (e151 nach Merge von main: E-169 mit Pruefstand-Wurzel aus der Umgebung)
+nur=E-169   (Teillauf, nicht der Gesamtstand)
+faelle=5
+bestanden=5
 fehlgeschlagen=0
-fall=[ ok ] E-194p   E194 ERGEBNIS kopf=0 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
-fall=[ ok ] E-194k   E194 ERGEBNIS kopf=1 mbx=1 dateien=4 filter=4 liste-xflowed=0 liste-flowed=1 liste-umbruch=weich liste-euro=cp1252 liste-umlaute=10 lesen-xflowed=0 htm-meta=2 rtf=0 lebt=1
+fall=[ ok ] E-169p   E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABcdefgh
+fall=[ ok ] E-169r   E169 REGISTRY unveraendert=1
+fall=[ ok ] E-169b   E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh
+fall=[ ok ] E-169h   E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH
+fall=[ ok ] E-169s   E169 REGISTRY unveraendert=1

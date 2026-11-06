@@ -1,0 +1,37 @@
+From: Druckprobe <druckprobe@pruefstand.invalid>
+To: Empfaenger <empfaenger@pruefstand.invalid>
+Subject: E169 P1 Druckvorschau Merkmale
+Date: Thu, 05 Nov 2026 20:00:00 +0100
+Message-ID: <e169-p1@pruefstand.invalid>
+MIME-Version: 1.0
+Content-Type: multipart/related; boundary="e169grenze"; type="text/html"
+
+--e169grenze
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
+<style type="text/css">.gelb { background-color:#FFE000; padding:8px; }</style></head>
+<body>
+<p>E169 Probe: jede Zeile ist ein Merkmal.</p>
+<p>A cid-Bild (rot): <img src="cid:e169rot@pruefstand.invalid" width="80" height="60" alt="ROT-CID"></p>
+<p>B data-Bild (blau): <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAAA8CAYAAADxJz2MAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACgSURBVHhe7cgxDQAwDMCwQht/FGPSEcgRaW8OP545d/MBMx5mPMx4mPEw42HGw4yHGQ8zHmY8zHiY8TDjYcbDjIcZDzMeZjzMeJjxMONhxsOMhxkPMx5mPMx4mPEw42HGw4yHGQ8zHmY8zHiY8TDjYcbDjIcZDzMeZjzMeJjxMONhxsOMhxkPMx5mPMx4mPEw42HGw4yHGQ8zHmY8zEh3HxTYx4rLrBaJAAAAAElFTkSuQmCC" width="80" height="60" alt="BLAU-DATA"></p>
+<table cellpadding="8"><tr><td bgcolor="#FF8000">C Knopf bgcolor orange</td></tr></table>
+<div style="background-color:#00A000; padding:8px; color:#FFFFFF">D Flaeche CSS inline gruen</div>
+<div class="gelb">E Flaeche style-Block gelb</div>
+<p style="color:#C00000">F Text rot (Kontrolle Textfarbe)</p>
+<table cellpadding="8" bgcolor="#8000C0"><tr><td><font color="#FFFFFF">G Tabelle bgcolor lila</font></td></tr></table>
+</body></html>
+
+--e169grenze
+Content-Type: image/png; name="e169rot.png"
+Content-Transfer-Encoding: base64
+Content-ID: <e169rot@pruefstand.invalid>
+Content-Disposition: inline; filename="e169rot.png"
+
+iVBORw0KGgoAAAANSUhEUgAAAFAAAAA8CAYAAADxJz2MAAAAAXNSR0IArs4c6QAAAARnQU1BAACx
+jwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAACNSURBVHhe7dAxAQAgAASh75/SJtrBWxkowM52
++ScwEhgJjARGAiOBkcBIYCQwEhgJjARGAiOBkcBIYCQwEhgJjARGAiOBkcBIYCQwEhgJjARGAiOB
+kcBIYCQwEhgJjARGAiOBkcBIYCQwEhgJjARGAiOBkcBIYCQwEhgJjARGAiOBkcBIYCQwEhgJTHYf
+mQkXTknmXOAAAAAASUVORK5CYII=
+--e169grenze--

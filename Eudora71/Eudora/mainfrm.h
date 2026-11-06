@@ -416,7 +416,9 @@ protected:
 		LIGHT_32_VERSION = 16,
 		AUTOACTIVATE_TIMER_EVENT_ID = 1000,
 		GENERAL_BACKGROUND_TIMER_ID = 1001,
-		E123_WARTE_TIMER_ID = 1002	// E-123: Beenden wartet auf IMAP-Uebertragungen
+		E123_WARTE_TIMER_ID = 1002,	// E-123: Beenden wartet auf IMAP-Uebertragungen
+		E239_ZERSTOEREN_TIMER_ID = 1003,	// E-239: aufgeschobenes DestroyWindow nach dem Beenden
+		E239_SCHLIESSEN_TIMER_ID = 1004	// E-239: Beenden wartet, bis kein modaler Dialog mehr offen ist
 	};
 
 	//
@@ -430,6 +432,8 @@ protected:
 	UINT	m_idAutoActivateTimer;	// for Auto-Wazoo drag and drop auto-activation
 	BOOL	m_bE123Gewartet;		// E-123: beim Beenden schon auf Uebertragungen gewartet
 	BOOL	m_bE123WarteAktiv;		// E-123: das Warten laeuft gerade (Zeitgeber aktiv)
+	BOOL	m_bE239BeendenLaeuft;	// E-239: CloseDown hat TRUE geliefert, das Beenden laeuft
+	BOOL	m_bE239SchliessenWartet;	// E-239: WM_CLOSE kam bei offenem modalem Dialog, wird nachgeholt
 	HWND	m_hE137Leiste;			// E-137: Leiste des letzten Klicks (NULL = keine)
 	HWND	m_hE137MdiBeiKlick;		// E-137: aktives MDI-Fenster beim Klick (PRUEFER-62 K1)
 	DWORD	m_dwE123Beginn;			// E-123: Beginn des Wartens (GetTickCount)

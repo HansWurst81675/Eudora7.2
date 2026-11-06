@@ -1,8 +1,10 @@
 Fehlerbehebungen, keine neue Funktion. Programm, ZIP und Marke tragen dieselbe
-Nummer: `7.2.2.135`. Dieses Release enthält alles seit `v7.2.2.133`.
+Nummer: `7.2.2.135`. Das Testpaket enthält alles seit `v7.2.2.133`.
 
-> Entwurf vom 05.11.2026 für das Testpaket 7.2.2.135. Veröffentlicht wird
-> erst nach Gregors Test und Ja; dann kommt sein Ergebnis unter „Wie geprüft“.
+> **Wird nicht veröffentlicht** (Gregor 05.11.2026: *„nein, eilt nicht. es sollten
+> nur solide builds und getestete ergebnisse auf github.“*). Gregors Test vom
+> 05.11.2026: alle vier Schritte bestanden. Der Inhalt geht in das nächste
+> Release, frühestens 7.2.2.136 nach Behebung von E-239.
 
 ## Behoben
 

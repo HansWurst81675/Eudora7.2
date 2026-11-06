@@ -1,0 +1,15 @@
+From: Druckprobe <druckprobe@pruefstand.invalid>
+To: Empfaenger <empfaenger@pruefstand.invalid>
+Subject: E169 P2 Bild vom Server
+Date: Thu, 05 Nov 2026 21:00:00 +0100
+Message-ID: <e169-p2@pruefstand.invalid>
+MIME-Version: 1.0
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii"></head>
+<body>
+<p>E169 Probe 2: Bild vom Server.</p>
+<p>H http-Bild (cyan): <img src="http://127.0.0.1:18169/e169-cyan.png" width="80" height="60" alt="CYAN-HTTP"></p>
+<table cellpadding="8"><tr><td style="background-color:#FF8000">C2 Knopf CSS orange</td></tr></table>
+</body></html>

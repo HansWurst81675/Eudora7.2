@@ -56,3 +56,9 @@ Am Abend des 01.11. hatte Gregor gefragt, ob der Testplan zu E-178 eindeutig ist
 **Was zurückfiel:** der Nachtrag vom Vorabend selbst. Sein *„Ich trage es im selben Zug als Zeile `Reihenfolge (angekündigt <Datum>):` in `Intern/WEITERMACHEN.md` ein“* wurde am selben Abend nicht angewandt, keine fünf Stunden nach dem Schreiben ([[lehren-anwenden-nicht-nur-schreiben]]). Gut war: Die Abweichung kam von selbst auf den Tisch, zehn Minuten nach Gregors Frage und ohne Ausrede. Und die Zweigfrage um 07:08:36 benannte den Namen als schlecht gewählt.
 
 **Schranken-Vorschlag (nicht gebaut), ersetzt den vom 01.11.:** `tools/sitzungsbeginn.pl` gibt die Zeilen `Reihenfolge` aus `Intern/WEITERMACHEN.md` aus und dazu jede Zeile mit `ZUERST` aus dem jüngsten `memory/stand-*.md`. Gegenprobe: am Stand vom Morgen des 02.11. → Zeile 55 erscheint; ein Stand-Vermerk ohne `ZUERST` → nichts. Der `AskUserQuestion`-Haken vom 01.11. hätte heute nicht gegriffen, denn die Zweigfrage war eine Textfrage.
+
+## Nachtrag 06.11.2026 (CHRONIST): „nach dem Release“ ohne Auslöser
+
+Zeiten MEZ, Transkript `2e668d8e` ([[CHRONIST-2026-11-06]], Abschnitt 9). 05.11. 19:42:32 Gregor: *„wann kommt e-169 dran?“* 19:42:55: *„E-169 … ist durchgerutscht. Am 29.10. hast du entschieden, ihn nach dem Release 7.2.1 anzugehen. Dieses Release ist längst draußen, und eingeplant habe ich ihn seitdem nicht.“* Die Antwort war richtig kurz, und E-169 war am 06.11. im Release 7.2.2.136. Die Lücke: Eine Entscheidung mit dem Termin „nach Release X“ steht nur als Satz da; beim Release X schlägt nichts an.
+
+**How to apply, zusätzlich:** Nach jedem Release werden die Entscheidungen in `Intern/WEITERMACHEN.md` nach „nach dem Release“ und „nach 7.2.“ durchsucht, und was jetzt fällig ist, steht in der ersten Meldung danach. Vorschlag, nicht gebaut: `release-veroeffentlichen.ps1` gibt diese Zeilen nach dem Veröffentlichen aus.

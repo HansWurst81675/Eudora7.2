@@ -85,3 +85,9 @@ Zeiten MEZ, Transkript `c21b8f54`. Gregor fragte um 08:34:56: *„bevor wir weit
 Um 08:23:14 lautete die eigene Werkzeugantwort, vier Sekunden nach einem Lesezugriff im zweiten Arbeitsbaum: *„The user chose to block reads outside the working directories (permissions.blockReadsOutsideWorkingDirectories).“* Minute und Einstellungsname passen auf die geänderte Datei. Belegt am Wortlaut ist damit: Die Einstellung entstand als Antwort auf eine Freigabe-Abfrage. Nicht gemessen ist, welche Auswahl Gregor dort getroffen hat und ob die Abfrage sagte, dass dabei eine Datei geschrieben wird. Gregors *„ich habe nichts geändert. keine json.“* (08:33:27) widerspricht dem nicht, denn eine Auswahl in einer Abfrage ist keine bewusste Änderung an einer JSON-Datei.
 
 **How to apply, zusätzlich:** Hat eine Änderung einen gemessenen Zeitpunkt, lese ich zuerst die Werkzeugantworten der eigenen Sitzung aus dieser Minute. Erst danach suche ich die Ursache woanders. Wenn eine Vermutung „am wahrscheinlichsten“ heißt, sage ich im selben Absatz, was ich nicht gelesen habe.
+
+## Nachtrag 06.11.2026 (CHRONIST): „beim letzten Block“ und „13:00“
+
+Zeiten MEZ ([[CHRONIST-2026-11-06]], Abschnitt 3). 06.11. 11:29:07 auf Gregors Frage zum Prüfstandslauf: *„Laut der Liste der Prüfverzeichnisse ist er beim letzten Block (E128 und E128K …)“*. 11:30:18, selbst berichtigt: *„Vorhin habe ich ‚letzter Block‘ gesagt, ohne nachzusehen. … jetzt nur noch E220 (läuft gerade) und E221“*. Die Fallliste sagt, was laufen **soll**; wo der Lauf **steht**, sagt nur seine Ausgabe. Dieselbe Form wie „Testbau läuft“ (30.10.). Dazu 03.11. 18:28:55: *„Freigabe gefunden (13:00 …)“*, gefallen war sie um 14:00:43 MEZ; die Uhrzeit kam ungerechnet aus dem UTC-Transkript.
+
+**How to apply, zusätzlich:** Eine Fortschrittsangabe zu einem laufenden Lauf nennt die letzte Zeile seiner Ausgabe mit Uhrzeit. Eine Uhrzeit aus einem Transkript wird vor der Ausgabe in MEZ umgerechnet.
