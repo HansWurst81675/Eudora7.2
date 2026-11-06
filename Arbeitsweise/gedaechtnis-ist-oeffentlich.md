@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: feedback
   originSessionId: 2dc0ce9e-d597-4bea-8a46-cb21a63838b0
-  modified: 2026-10-29T20:36:42.188Z
+  modified: 2026-11-06T16:30:11.478Z
 ---
 
 Schranke: tools/pruefe-namen-gestaget.pl (pre-commit gestagte Zeilen, pre-push alle Commits seit main) prueft jede Datei gegen tools/anonym-begriffe.lokal (seit 06.11.2026); pruefe-testdaten-anonym.pl nur Testdaten/. Was NICHT in der Liste steht, erkennt kein Werkzeug.
@@ -122,5 +122,7 @@ Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 
 ## Nachtrag 06.11.2026: Namen in einem Skript, nicht im Gedächtnis
 
 Ein Agent (E-151, 05.11.2026 20:13) schrieb zwei Familiennamen aus der lokalen Namensliste als Suchmuster des Privatfilters in `tools/pruefstand-vorlage-erfassen.ps1` (Commit vom 05.11.2026, inzwischen umgeschrieben, gepusht). Die Hauptsitzung übernahm und pushte den Commit, ohne ihn gegen die Liste zu prüfen; die einzige Namensschranke sah nur `Testdaten/`. Gefunden von PRÜFER-104 am 06.11.2026. Gregor: *„haben wir es nicht schon ausgemacht, daß sowas nicht passieren soll? warum also doch? wer hat gepennt?“* Behoben (Muster aus der Liste laden), Geschichte des Zweigs mit Gregors Ja umgeschrieben und force-gepusht, alte Rollenzweige von ihm gelöscht.
+
+**Keine Fundstelle zu Privatem.** Danach stand die Kennung des umgeschriebenen Commits an sechs Stellen (Werkzeugköpfe, Haken, WERKZEUGE, diese Lehre, ein Prüfbericht) und in zwei Commit-Nachrichten – als „Beleg“ für den Anlass. Über die Kennung liefert GitHub den alten Commit samt Namen weiter aus; die Erwähnung war ein Wegweiser genau dorthin. Gregor: *„warum schreibt man überhaupt einen commit hash rein, um zu sagen, daß man dort verbotenes eingetragen hat?“* Entfernt am 06.11.2026 (Dateien und Nachrichten). Regel: ist der Anlass eine private Angabe, wird das Ereignis beschrieben (Datum, Art, was getan wurde) – ohne Commit-Kennung, Dateiname mit Zeile oder Link, der zum privaten Inhalt führt.
 
 **How to apply, zusätzlich:** Ein Filter oder Test, der private Namen erkennen soll, lädt sie aus `tools/anonym-begriffe.lokal` – nie hinschreiben. Den Rücklauf eines Agenten vor dem Push mit `perl tools/pruefe-namen-gestaget.pl --seit-main` prüfen (läuft jetzt auch im pre-push).
