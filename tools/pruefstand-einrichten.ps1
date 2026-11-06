@@ -57,14 +57,14 @@ param(
     [string] $Nur        = '',
     [switch] $NurZeigen,
     # C:\Temp oder ein Ordner darunter (siehe tools\pruefstand-lauf.ps1 -Wurzel)
-    [string] $Wurzel = $(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' }),
+    [string] $Wurzel = $(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp\Eudora72-Pruefstand' }),
     # Bauverzeichnis mit Eudora.exe usw.; Vorgabe Eudora71\Bin\Release dieses Repos
     [string] $Bau = ''
 )
 $ErrorActionPreference = 'Stop'
 $repo  = Split-Path -Parent $PSScriptRoot
 $wurzelTemp = [IO.Path]::GetFullPath($Wurzel).TrimEnd('\')
-if ($wurzelTemp -notmatch '^C:\\Temp(\\[^\\]+)*$') { Write-Host "  ABGEWIESEN: -Wurzel muss C:\Temp oder ein Ordner darunter sein: $wurzelTemp"; exit 2 }
+if ($wurzelTemp -notmatch '^[A-Za-z]:\\[^\\]+') { Write-Host "  ABGEWIESEN: -Wurzel muss ein Ordner sein, kein Laufwerksstamm: $wurzelTemp"; exit 2 }
 $env:EUDORA72_PRUEFSTAND = $wurzelTemp
 if (-not (Test-Path -LiteralPath $wurzelTemp)) { New-Item -ItemType Directory -Force -Path $wurzelTemp | Out-Null }
 $vorlagen = Join-Path $repo 'Testdaten\pruefstand'
@@ -138,7 +138,7 @@ $angelegt = 0; $uebergangen = 0
 foreach ($v in $verz) {
     $name = Split-Path -Leaf $v
     $voll = [IO.Path]::GetFullPath($v).TrimEnd('\')
-    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+$')) { Write-Host "    ABGEWIESEN: $voll liegt nicht direkt unter C:\Temp"; continue }
+    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp\Eudora72-Pruefstand' })) + '\\[^\\]+$')) { Write-Host "    ABGEWIESEN: $voll liegt nicht direkt unter der Wurzel"; continue }
     $vorlage = Join-Path $vorlagen $name
     if (-not (Test-Path -LiteralPath (Join-Path $vorlage 'Mailverzeichnis\Eudora.ini'))) {
         foreach ($f in ($faelle | Where-Object { $_.Verzeichnis -eq $v })) { $nichtListe += ("{0}`tkeine Vorlage Testdaten\pruefstand\{1}" -f $f.Kennung, $name) }

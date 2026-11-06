@@ -75,7 +75,7 @@ param(
     # denselben Lauf und die Instanz bleibt nicht aus Versehen stehen.
     [string]   $MessenSkript  = '',
     # E-151: Wurzel der Pruefverzeichnisse aus EUDORA72_PRUEFSTAND (gesetzt von pruefstand-lauf.ps1 -Wurzel)
-    [string[]] $ErlaubtePfade = @($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })),
+    [string[]] $ErlaubtePfade = @($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp\Eudora72-Pruefstand' })),
     [switch]   $NurPruefen,
     # Startet Eudora OHNE das Mailverzeichnis als Argument - der einzige Weg,
     # auf dem Eudora sich sein Verzeichnis selbst sucht (Befund E-132).
@@ -142,6 +142,16 @@ if ($voll -ne '') {
                       ($ErlaubtePfade -join ', ') + '): ' + $voll +
                       '. Gregors eigene Release-Verzeichnisse sind ausgeschlossen - ' +
                       'dort testet er selbst ("da hast du nichts zu suchen").')
+    }
+    # E-243 / Entscheidung 39 (Gregor 06.11.2026: "eigener unterordner mit
+    # marke"): gestartet wird nur in einem Verzeichnis mit der Marke
+    # .eudora72-pruefstand. Unter C:\Temp koennen Eudora-
+    # Instanzen mit echten Mails liegen; die Pfadschranke allein liess sie durch
+    # (PRUEFER-104 K2). Die Marke setzt tools\pruefstand-einrichten.ps1.
+    if (-not (Test-Path -LiteralPath (Join-Path $voll '.eudora72-pruefstand'))) {
+        Melde-Mangel ('Kein Pruefstand: die Marke .eudora72-pruefstand fehlt in ' + $voll +
+                      '. Pruefverzeichnisse legt tools\pruefstand-einrichten.ps1 an; ein ' +
+                      'fremdes Eudora-Verzeichnis (womoeglich mit echten Mails) wird nie angefasst.')
     }
 }
 

@@ -45,10 +45,15 @@ foreach ($z in [IO.File]::ReadAllLines((Join-Path $PSScriptRoot 'pruefstand-fael
 }
 $verz = $verz | Sort-Object -Unique
 $fehler = 0
+$pw = $(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp\Eudora72-Pruefstand' })
 foreach ($v in $verz) {
+    # Wie pruefstand-lauf.ps1: die Fallliste nennt C:\Temp\<Name>, gemeint ist <Wurzel>\<Name>.
+    if ($v -match '^C:\\Temp\\(.+)$') { $v = Join-Path $pw $Matches[1] }
     $voll = [IO.Path]::GetFullPath($v).TrimEnd('\')
-    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+$')) { Write-Host "  ABGEWIESEN: $voll liegt nicht direkt unter C:\Temp"; $fehler++; continue }
+    if ($voll -notmatch ('^' + [regex]::Escape($pw) + '\\[^\\]+$')) { Write-Host "  ABGEWIESEN: $voll liegt nicht direkt unter $pw"; $fehler++; continue }
     if (-not (Test-Path -LiteralPath $voll)) { Write-Host "  FEHLT: $voll"; $fehler++; continue }
+    # E-243 / Entscheidung 39: nur ueberschreiben, wo die Marke steht.
+    if (-not (Test-Path -LiteralPath (Join-Path $voll '.eudora72-pruefstand'))) { Write-Host "  KEIN PRUEFSTAND (Marke fehlt): $voll - nicht angefasst"; $fehler++; continue }
     $laeuft = Get-Process Eudora -ErrorAction SilentlyContinue | Where-Object { $_.Path -and $_.Path.StartsWith($voll + '\', 'OrdinalIgnoreCase') }
     if ($laeuft) { Write-Host "  LAEUFT: in $voll ist Eudora offen (PID $($laeuft.Id)) - nicht angefasst"; $fehler++; continue }
     $alt = Kennung (Join-Path $voll 'Eudora.exe')

@@ -44,7 +44,7 @@ param(
     # Pfad) - gemessen an der Klonprobe vom 05.11.2026 mit tieferer Wurzel.
     # Gibt es dort schon ein Verzeichnis gleichen Namens, das nicht vom
     # Einrichter stammt, wird es nicht angefasst und sein Fall uebersprungen.
-    [string] $Wurzel     = 'C:\Temp',
+    [string] $Wurzel     = 'C:\Temp\Eudora72-Pruefstand',
     [string] $Grundlage  = '',
     [string] $ZusatzDlls = '',
     [string] $Nur        = '',

@@ -57,10 +57,12 @@ param(
     # Nur C:\Temp oder darunter: dort setzt die Sperre die Registry zurueck
     # (tools\pruefstand-sperre.ps1, Reg-Unterschluessel). An die Messskripte
     # geht die Wurzel als Umgebungsvariable EUDORA72_PRUEFSTAND.
-    [string] $Wurzel = $(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })
+    # Entscheidung 39 (Gregor 06.11.2026): eigener Unterordner als Vorgabe,
+    # jede andere Wurzel als Parameter - geschuetzt durch die Marke.
+    [string] $Wurzel = $(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp\Eudora72-Pruefstand' })
 )
 $PsWurzel = [IO.Path]::GetFullPath($Wurzel).TrimEnd('\')
-if ($PsWurzel -notmatch '^C:\\Temp(\\[^\\]+)*$') { Write-Host "  ABGEWIESEN: -Wurzel muss C:\Temp oder ein Ordner darunter sein: $PsWurzel"; exit 2 }
+if ($PsWurzel -notmatch '^[A-Za-z]:\\[^\\]+') { Write-Host "  ABGEWIESEN: -Wurzel muss ein Ordner sein, kein Laufwerksstamm: $PsWurzel"; exit 2 }
 $env:EUDORA72_PRUEFSTAND = $PsWurzel
 
 $ErrorActionPreference = 'Stop'
@@ -265,6 +267,18 @@ foreach ($g in $gruppen) {
     if (-not (Test-Path $maildir)) {
         foreach ($f in $hier) {
             $meldungen += ("    [FEHL] {0,-8} Pruefverzeichnis fehlt: {1}" -f $f.Kennung, $maildir)
+            $fehl++
+        }
+        continue
+    }
+
+    # E-243 / Entscheidung 39: nichts anfassen - kein Loeschen der eudora.log,
+    # kein -Vorbereiten, kein Start -, wenn die Marke .eudora72-pruefstand
+    # fehlt. Unter C:\Temp koennen Eudora-Instanzen mit echten Mails liegen
+    # (Gregor 06.11.2026); die Pfadschranke allein liess sie durch.
+    if (-not (Test-Path -LiteralPath (Join-Path $verz '.eudora72-pruefstand'))) {
+        foreach ($f in $hier) {
+            $meldungen += ("    [FEHL] {0,-8} kein Pruefstand (Marke .eudora72-pruefstand fehlt): {1} - nicht angefasst" -f $f.Kennung, $verz)
             $fehl++
         }
         continue
