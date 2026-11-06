@@ -57,7 +57,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-if ($voll -notmatch '^C:\\Temp\\[^\\]+$') { Write-Host "ABOUT ABGEWIESEN: $voll liegt nicht direkt unter C:\Temp"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+$')) { Write-Host "ABOUT ABGEWIESEN: $voll liegt nicht direkt unter C:\Temp"; exit 2 }
 
 if ($Vorbereiten) {
     if (-not (Test-Path (Join-Path $voll 'Mailverzeichnis\Eudora.ini'))) { Write-Host "ABOUT FEHLER: kein Mailverzeichnis in $voll"; exit 1 }

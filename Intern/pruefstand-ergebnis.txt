@@ -1,8 +1,15 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-06 12:50:03
-freigabe=Gregor am 06.11.2026: 'pruefstand ist freigegeben' (E-239p nach Merge e239-Nacharbeit, gruen an 7.2.2.136)
-nur=E-239p   (Teillauf, nicht der Gesamtstand)
-faelle=1
-bestanden=1
-fehlgeschlagen=0
-fall=[ ok ] E-239p   E239 URTEIL gruen
+zeit=2026-11-06 17:22:19
+freigabe=Gregor am 06.11.2026: 'pruefstand ist freigegeben' (E-133r nach PRUEFER-105 K1)
+nur=E-133   (Teillauf, nicht der Gesamtstand)
+faelle=3
+bestanden=2
+fehlgeschlagen=1
+fall=[FEHL] E-133p   fehlt in messung: E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=
+             gemeldet: E133 ERGEBNIS meldung=fehlermeldung gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1 C:\Temp\E133\MAILVE~1\Eudora.ini lebt=1
+                         Beendet sich nicht - wird nach Pfadpruefung abgeschossen.
+                         Zeit vom WM_CLOSE bis zum Ende: 30.3 s
+                         Beendet: True
+                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\e151\tools\TESTLAEUFE.md
+fall=[ ok ] E-133r   E133 REGISTRY zeigt-hierher=1
+fall=[ ok ] E-133q   E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"

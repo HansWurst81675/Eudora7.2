@@ -149,8 +149,26 @@ function Sperre-Freigeben {
 # --- Registry ---------------------------------------------------------------
 
 function Ist-Pruefstandswert($wert) {
+    # E-243 / Entscheidung 39: ein Wert gehoert nur dann zu einem Pruefstand,
+    # wenn er auf ein Verzeichnis mit der Marke .eudora72-pruefstand zeigt
+    # (oder ins Scratchpad). Bis 06.11.2026 galt jeder Pfad unter X:\Temp -
+    # dort koennen Eudora-Instanzen mit echten Mails liegen, deren
+    # Registry-Werte waeren als "eigene" zurueckgesetzt worden (PRUEFER-104 K2).
     $t = '' + $wert
-    return ($t -match '(?i)(^|[^a-z])[a-z]:\\temp\\' -or $t -match '(?i)\\appdata\\local\\temp\\claude\\')
+    if ($t -match '(?i)\\appdata\\local\\temp\\claude\\') { return $true }
+    # Jeden Pfad einzeln: Eudora schreibt CommandLine\Current ohne
+    # Anfuehrungszeichen, mehrere Pfade durch Leerzeichen getrennt, mit
+    # 8.3-Kurznamen ("C:\Temp\EUDORA~2\E133\Eudora.exe C:\Temp\EUDORA~2\E133\MAILVE~1 ...").
+    # Die erste Fassung las das als EINEN Pfad, kam nicht bis zur Marke und
+    # meldete den eigenen Pruefstand als FREMD (gemessen 06.11.2026, Klonprobe).
+    foreach ($m in [regex]::Matches($t, '(?i)[a-z]:\\[^"\r\n]*?(?=\s+[a-z]:\\|"|$)')) {
+        $p = $m.Value.Trim()
+        for ($i = 0; $i -lt 6 -and $p -match '\\'; $i++) {
+            if (Test-Path -LiteralPath (Join-Path $p '.eudora72-pruefstand') -ErrorAction SilentlyContinue) { return $true }
+            $p = $p -replace '\\[^\\]*$', ''
+        }
+    }
+    return $false
 }
 
 function Reg-Unterschluessel([string] $Basis) {

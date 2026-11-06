@@ -68,7 +68,7 @@ $repo     = Split-Path -Parent $PSScriptRoot
 $POSTDATEI = Join-Path $repo 'Testdaten\e193-f8.eml'
 
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-if ($voll -notmatch '^C:\\Temp\\E239[^\\]*$') { Write-Output "E239 ABGEWIESEN: $voll ist kein Pruefstand C:\Temp\E239*"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\E239[^\\]*$')) { Write-Output "E239 ABGEWIESEN: $voll ist kein Pruefstand C:\Temp\E239*"; exit 2 }
 $md  = Join-Path $voll 'Mailverzeichnis'
 $ini = Join-Path $md 'Eudora.ini'
 if (-not (Test-Path -LiteralPath $ini)) { Write-Output "E239 FEHLER: keine Eudora.ini in $md"; exit 1 }

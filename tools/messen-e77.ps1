@@ -14,7 +14,7 @@ $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
 
 # -Vorbereiten: die Ordnerliste so anlegen, wie GMX sie schickt. Nur unter C:\Temp.
 if ($Vorbereiten) {
-    if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E77 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E77 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
     $konto = Join-Path $voll 'Mailverzeichnis\Imap\pruefimap'
     if (-not (Test-Path $konto)) { Write-Host "E77 FEHLER: kein IMAP-Konto pruefimap in $voll"; exit 1 }
     foreach ($d in 'Entw&APw-rfe', 'Gel&APY-scht') { New-Item -ItemType Directory -Force -Path (Join-Path $konto $d) | Out-Null }

@@ -27,6 +27,32 @@ bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
 **Ergebnis (Gregor, 06.11.2026):** Schritte 1, 2, 3, 5, 6 **bestanden**, Schritt 4 (freiwillig) nicht gemacht. Ausgewertet an seiner `eudora.log` (ZIP im Austauschordner, 11:25): zehn Sitzungen mit 7.2.2.136, alle sauber beendet, kein Absturzeintrag. Schritt 2 nach Berichtigung: normales Beenden, auch direkt nach dem Abruf; *Ctrl+Q* bei offenem Hinweis kommt nicht an (Sitzung 9: kein `WM_CLOSE` während des Hinweises), nach *OK* läuft Eudora weiter. Schritt 3 (Gregor: *„bei tray icon -> exit passiert erstmal nichts … erst nach OK“*): Sitzung 10 `E-239 Beenden aufgeschoben: ein modaler Dialog ist offen` (0.13), nach *OK* `E-239 Beenden nachgeholt: der modale Dialog ist zu` (1.13), danach `ExitInstance` und `Logging shutdown`. Vorher bei ihm `Alert=0` — der Testplan nannte die Voraussetzung nicht ([E-239](BEFUNDE.md#e-239), seither Schranke `tools/testplan-voraussetzungen.pl`). Schritt 5 für die Vorschau bestanden, ein Ausdruck auf Papier ist nicht berichtet — mit `PrintBackground=0` wie bisher ohne Hintergründe (weiße Schrift unsichtbar, ein Bild mit eigenem schwarzem Grund als schwarzer Balken), mit `PrintBackground=1` die schwarze Fläche, der blaue Knopf *Zum Angebot* und das Logo in der Vorschau. Dabei neu gemeldet: [E-240](BEFUNDE.md#e-240) (Vorschau braucht beim ersten Aufruf lange, ohne Rückmeldung; nach dem Release), [E-241](BEFUNDE.md#e-241) (*Bild ↑*/*Bild ↓* blättern nicht), [E-242](BEFUNDE.md#e-242) (Kopf-/Fußzeile vom Internet Explorer, Anmeldename im Pfad auf dem Ausdruck).
 
+## <a id="test-e-151"></a>Prüfstand aus einem frischen Klon ([E-151](BEFUNDE.md#e-151)) — eine bis anderthalb Stunden, in einer VM oder einem eigenen Windows-Konto
+
+**Prüfung: manuell.** Der Prüfstand soll aus jedem Klon laufen (du am
+05.11.2026: *„ich möchte separat von hier (oder auch jemand, der die repo
+forkt oder clonet) die tests nach eigenen änderungen durchführen"*). Anleitung:
+[Doku/PRUEFSTAND.md](../Doku/PRUEFSTAND.md).
+
+**Zurückgestellt (Gregor 06.11.2026):** *„komme erstmal nicht dazu, es auf
+einem extra PC zu testen.“*. Seither (Entscheidung 39)
+entstehen die Prüfverzeichnisse unter `C:\Temp\Eudora72-Pruefstand`, und der
+Prüfstand fasst nur Verzeichnisse mit seiner Marke an ([E-243](BEFUNDE.md#e-243));
+wegen der Registry trotzdem ein eigenes Windows-Konto oder eine VM nehmen.
+**Gemessen an der Entwicklermaschine (06.11.2026, Starter, Release
+`v7.2.2.136` von GitHub):** 49 Verzeichnisse angelegt, 106 Fälle, 103
+bestanden; die 3 roten (`E-133p`, `E-133q`, `E-216l`) prüften den Pfad und sind
+berichtigt, einzeln unter beiden Wurzeln grün; dazu neu `E-133r`. Ein voller
+Lauf nach der Berichtigung steht aus.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Repo klonen (`git clone https://github.com/HansWurst81675/Eudora7.2.git`) in einen Ordner **ohne Leerzeichen** im Pfad; Git für Windows ist für alle Benutzer installiert. | der Ordner `Testdaten\pruefstand\` 49 Unterordner hat. |
+| 2 | lokal | Bauen: `powershell -File tools\bauen.ps1` (oder ohne Bau weiter – dann wird das Release geprüft). | `Eudora71\Bin\Release\Eudora.exe` da ist. |
+| 3 | lokal | `Pruefstand starten.cmd` doppelklicken, Frage mit `j` beantworten, nichts anklicken. | vorher eine erwartete Dauer genannt wird und danach 49 Verzeichnisse unter `C:\Temp\Eudora72-Pruefstand` „angelegt“ stehen. |
+| 4 | lokal | Ende abwarten. | `Ergebnis: 107 Faelle, 107 bestanden, 0 fehlgeschlagen` und genau drei `[UEBR]` (`E-166a`, `E-166b`, `E-222w`) – ohne `MFC71.DLL`/`msvcp71.dll`. Die 107 sind aus der Fallliste gezählt, ein voller Lauf mit allen 107 steht noch aus (siehe oben). |
+| 5 | lokal | Das Fenster mitten im Lauf schließen, dann `Pruefstand starten.cmd` erneut. | der zweite Start meldet „Pruefserver-Rest beendet“ (oder gar keinen Rest) und läuft durch; im Task-Manager steht danach kein `perl.exe` mehr. |
+
 ## <a id="test-7-2-2-135"></a>Dein Test an 7.2.2.135 — ca. 5 Minuten, an deinem echten System
 
 7.2.2.135 enthält alles aus 7.2.2.134 und die Behebung für *Edit → Find*

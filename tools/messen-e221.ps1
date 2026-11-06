@@ -44,7 +44,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E221 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E221 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
 $md = Join-Path $voll 'Mailverzeichnis'
 $ablage = Join-Path $voll 'ablage-e221'
 $post = Join-Path $voll 'post'

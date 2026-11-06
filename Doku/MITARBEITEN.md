@@ -95,6 +95,11 @@ Was man als Erstes wissen muss:
   sind dagegen reines LF ohne BOM.
 * **Nichts starten, was ein Fenster öffnet**, ohne Absprache — dafür gibt es
   `tools/testlauf.ps1` als einzigen Weg.
+* **Nach einer Änderung den Prüfstand fahren.** `Pruefstand starten.cmd` im
+  Hauptordner legt alle Prüfverzeichnisse aus dem Repo an und fährt die gut
+  hundert Regressionstests über die Oberfläche, mit eigenen Prüfservern auf
+  `127.0.0.1` — rund eine Stunde. Anleitung für Klone und Forks:
+  **[Doku/PRUEFSTAND.md](PRUEFSTAND.md)**.
 
 ### Wie hier gearbeitet wird
 

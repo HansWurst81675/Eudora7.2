@@ -3,7 +3,7 @@
 # aus PRUEFER-38 - ohne den Ruecksetzer in LaufEnde() bliebe der ZWEITE
 # Durchgang stumm.
 param([string] $Pfadfilter)
-$t = "C:\Users\Gregor\Documents\github\Eudora7.2\tools"
+$t = $PSScriptRoot   # E-151: nicht fest auf einen Rechner
 $mbx = Join-Path $Pfadfilter 'Mailverzeichnis\In.mbx'
 foreach ($durchgang in 1, 2) {
     Write-Host "--- Durchgang $durchgang ---"

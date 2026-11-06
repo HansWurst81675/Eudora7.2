@@ -53,7 +53,7 @@ $ErrorActionPreference = 'Stop'
 trap { Write-Host ("E222 AUSNAHME " + $_.Exception.Message + " | " + ($_.InvocationInfo.PositionMessage -replace '\s+', ' ')); Write-Host "E222 ERGEBNIS abgebrochen"; exit 1 }
 
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-if ($voll -notmatch '^C:\\Temp\\E222[^\\]*$') { Write-Host "E222 ABGEWIESEN: $voll ist kein Pruefstand C:\Temp\E222*"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\E222[^\\]*$')) { Write-Host "E222 ABGEWIESEN: $voll ist kein Pruefstand C:\Temp\E222*"; exit 2 }
 $md = Join-Path $voll 'Mailverzeichnis'
 $BETREFF = 'Pruefung E-222 signiert'
 $PLUGINKENNUNG = '<5335.0002>'

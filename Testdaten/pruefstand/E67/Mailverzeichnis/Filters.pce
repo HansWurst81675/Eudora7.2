@@ -1,0 +1,10 @@
+3
+rule E-67 Junk
+incoming
+header «Junk Score»
+verb less
+value 50
+conjunction ignore
+header 
+verb contains
+value 

@@ -52,10 +52,10 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-$fehlt = 'C:\Temp\E133-gibt-es-nicht'
+$fehlt = (Join-Path $(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' }) 'E133-gibt-es-nicht')   # E-151: Wurzel
 $regPfad = 'HKCU:\Software\Qualcomm\Eudora\CommandLine'
 
-if ($voll -notmatch '^C:\\Temp\\E133') { Write-Host "E133 ABGEWIESEN: $voll liegt nicht unter C:\Temp\E133*"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\E133')) { Write-Host "E133 ABGEWIESEN: $voll liegt nicht unter C:\Temp\E133*"; exit 2 }
 
 if ($Vorbereiten) {
     try {
@@ -183,4 +183,22 @@ try {
 } catch {
     Write-Host ('E133 FEHLER: ' + $_.Exception.Message)
 }
+# E-151 (06.11.2026): Eudora schreibt den Eintrag mit 8.3-Kurznamen
+# (C:\Temp\EUDORA~2\E133\...); die ~2 haengt davon ab, welche Ordner auf dem
+# Rechner mit "Eudora" beginnen. Deshalb hier aufloesen und mit DIESEM
+# Pruefstand vergleichen, statt den Text in der Fallliste festzuschreiben.
+$hierher = 0
+try {
+    Add-Type -Namespace E133L -Name K -MemberDefinition '[DllImport("kernel32.dll", CharSet = CharSet.Auto)] public static extern uint GetLongPathName(string s, System.Text.StringBuilder l, uint n);' -ErrorAction SilentlyContinue
+    # Beide Pfade pruefen (PRUEFER-105 K1): den ERSTEN (Eudora.exe) schreibt
+    # schon -Vorbereiten richtig hinein - berichtigt hat Eudora nur, wenn auch
+    # der ZWEITE jetzt auf das Mailverzeichnis dieses Pruefstands zeigt (vorher
+    # stand dort <Wurzel>\E133-gibt-es-nicht).
+    $teile = @(([string]$regDanach -split '\s+(?=[A-Za-z]:\\)') | ForEach-Object { $_.Trim().Trim('"') })
+    function E133Lang([string] $p) { $sb = New-Object System.Text.StringBuilder 1024; if ([E133L.K]::GetLongPathName($p, $sb, 1024) -gt 0) { return $sb.ToString().TrimEnd('\') } else { return '' } }
+    if ($teile.Count -ge 2) {
+        $hierher = [int]((E133Lang $teile[0]) -ieq (Join-Path $voll 'Eudora.exe') -and (E133Lang $teile[1]) -ieq (Join-Path $voll 'Mailverzeichnis'))
+    }
+} catch { }
 Write-Host ("E133 ERGEBNIS meldung={0} gestartet={1} registry-danach={2} lebt={3}" -f $meldung, $gestartet, $regDanach, $lebt)
+Write-Host ("E133 REGISTRY zeigt-hierher={0}" -f $hierher)

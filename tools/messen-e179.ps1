@@ -55,7 +55,7 @@ $zeichen = @{ euro = [string][char]0x20AC; umlaut = [string][char]0xFC }
 
 if ($Vorbereiten) {
     try {
-        if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E179 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+        if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E179 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
         $ini = Join-Path $md 'Eudora.ini'
         if (-not (Test-Path $ini)) { Write-Host "E179 FEHLER: kein Mailverzeichnis in $voll"; exit 1 }
         Get-ChildItem -LiteralPath $md -File | Where-Object { $_.Name -match '^Out\.(mbx|toc)(\.\d{3})?$' } | Remove-Item -Force

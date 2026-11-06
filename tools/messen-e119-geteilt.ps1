@@ -48,7 +48,7 @@ function PopBeenden {
 # --- -Vorbereiten: Lage frisch anlegen, VOR dem Start ----------------------
 # Pfadschranke vor jeder Wirkung (Arbeitsweise/tor-gehoert-zum-schritt.md).
 if ($Vorbereiten) {
-    if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "K5 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "K5 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
     if (-not (Test-Path (Join-Path $md 'Eudora.ini'))) { Write-Host "K5 FEHLER: kein Mailverzeichnis in $voll"; exit 1 }
     PopBeenden
     foreach ($n in 'In','Out','Trash') {

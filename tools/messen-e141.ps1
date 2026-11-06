@@ -57,7 +57,7 @@ $repo = Split-Path -Parent $PSScriptRoot
 
 if ($Vorbereiten) {
     try {
-        if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E141 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+        if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E141 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
         if (-not (Test-Path (Join-Path $md 'Eudora.ini'))) { Write-Host "E141 FEHLER: kein Mailverzeichnis in $voll"; exit 1 }
         if (-not (Test-Path $konto)) { Write-Host "E141 FEHLER: kein IMAP-Konto pruefimap in $voll"; exit 1 }
         # Out: genau ein Entwurf; In: leer. Ohne .toc baut Eudora neu auf.

@@ -572,12 +572,16 @@ A-5p-log | C:\Temp\EHILFE | 60 | log | Hilfe: Tastenkuerzel.html fehlt | Hilfe: 
 E-216p | C:\Temp\EABOUT | 30 | messung | ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1 | | | messen=tools\messen-about.ps1
 # E-216l (PRUEFER-91 K1): die Zeile "Log:" mit LogLevel aus der Vorgabe
 # (25759, ohne 32768 -> Zusatz "keine E-nn-Marken") und langem Pfad braucht
-# zwei Zeilen. Pruefstand C:\Temp\EABOUT-langer-pfad-fuer-die-log-zeile
+# zwei Zeilen. Pruefstand C:\Temp\EABOUT-lang-log (bis 06.11.2026
+# EABOUT-langer-pfad-fuer-die-log-zeile; um 20 Zeichen gekuerzt, weil die
+# Vorgabe-Wurzel C:\Temp\Eudora72-Pruefstand 20 Zeichen laenger ist als C:\Temp -
+# mit dem alten Namen hatte die Zeile dort 134 Zeichen, brauchte drei Zeilen
+# und wurde abgeschnitten, gemessen an der Klonprobe: noetig=39 bei 33 Pixel)
 # (Kopie von EABOUT, LogLevel=25759 in Mailverzeichnis\Eudora.ini): die
 # Zeile hat 114 Zeichen, DrawText braucht 26 Pixel. Gegenprobe 7.2.1.131
 # (C:\Temp\EABOUT-alt-langer-pfad-fuer-log-zeile): Rechteck 16 Pixel hoch,
 # passt=0.
-E-216l | C:\Temp\EABOUT-langer-pfad-fuer-die-log-zeile | 30 | messung | ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1 | | | messen=tools\messen-about.ps1
+E-216l | C:\Temp\EABOUT-lang-log | 30 | messung | ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1 | | | messen=tools\messen-about.ps1
 # E-133 (02.11.2026): zeigt CommandLine\Current auf ein Mailverzeichnis, das
 # es nicht mehr gibt, fragt Eudora beim Start ohne Argument (Doppelklick)
 # statt sich mit zwei Fehlermeldungen zu beenden. messen-e133.ps1 setzt im
@@ -588,7 +592,13 @@ E-216l | C:\Temp\EABOUT-langer-pfad-fuer-die-log-zeile | 30 | messung | ABOUT ER
 # vor der Behebung (456c95e1): meldung=fehlermeldung gestartet=0 lebt=0.
 # Pruefstand C:\Temp\E133 ist eine Kopie von C:\Temp\E132; er muss beim
 # Beenden abgeschossen werden wie schon E132 seit dem 20.10.2026.
-E-133p | C:\Temp\E133 | 5 | messung | E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1 | | | ohne-argument,messen=tools\messen-e133.ps1
+E-133p | C:\Temp\E133 | 5 | messung | E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach= | | | ohne-argument,messen=tools\messen-e133.ps1
+# E-133r (E-151, 06.11.2026): der Registry-Eintrag zeigt aufgeloest auf DIESEN
+# Pruefstand. Bis dahin stand der Wert woertlich in E-133p
+# (C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1); unter einer anderen Wurzel
+# schreibt Eudora 8.3-Kurznamen wie C:\Temp\EUDORA~2\E133\... - die ~2 haengt
+# vom Rechner ab (gemessen an der Klonprobe unter C:\Temp\Eudora72-Pruefstand).
+E-133r | C:\Temp\E133 | 5 | messung | E133 REGISTRY zeigt-hierher=1 | | | ohne-argument,messen=tools\messen-e133.ps1
 E-133q | C:\Temp\E133 | 5 | log | E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\" | | | ohne-argument,messen=tools\messen-e133.ps1
 
 # -------------------------------------------------------------------------

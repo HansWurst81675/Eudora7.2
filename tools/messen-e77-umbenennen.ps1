@@ -45,7 +45,7 @@ $srvlog = Join-Path $voll 'imap-umbenennen.log'
 # --- -Vorbereiten: Ordnerliste auf den Ausgangsstand, VOR dem Start ---------
 # Die Pfadschranke steht vor jeder Wirkung (Arbeitsweise/tor-gehoert-zum-schritt.md).
 if ($Vorbereiten) {
-    if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E77U ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E77U ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
     if (-not (Test-Path $konto)) { Write-Host "E77U FEHLER: kein IMAP-Konto pruefimap in $voll"; exit 1 }
     $bleiben = @('INBOX', 'Ablage', 'Entw&APw-rfe', 'Gel&APY-scht')
     # Ordner aus einem frueheren Lauf (der umbenannte) wegraeumen.

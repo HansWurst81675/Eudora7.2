@@ -197,3 +197,7 @@
 - [Stand 06.11.2026](stand-06-11-2026.md) — v7.2.2.136 veröffentlicht; paket136 wartet auf LEKTOR/PRÜFER/CHRONIST, dann PR; e151-Doku gestaget
 - [CHRONIST 06.11.2026](CHRONIST-2026-11-06.md) — Laufbericht 03.–06.11.; E-239-Testschritt: Wissen ging zwischen eigener Antwort und Packer-Auftrag verloren, Schranke deckt nur die INI-Hälfte; Release 132 vor Rückkehr des eigenen CHRONIST; ein `--no-verify` gestoppt
 - [E-236 nach GitHub](entscheidung-e236-github-06-11.md) — Gregor 06.11.: Update-Fenster zeigt GitHub-Releases, nicht abschalten
+- [Prüfstand nur mit Marke](pruefstand-nur-mit-marke.md) — Werkzeuge fassen nur markierte Verzeichnisse an; nie Angaben über Gregors Rechner/Daten schreiben
+- [E-151 Unterordner mit Marke](entscheidung-e151-unterordner-marke-06-11.md) — Gregor 06.11.: eigener Prüfstand-Unterordner mit Markendatei, Wurzel als Parameter; Entscheidung 39
+- [7.2.2.137 Umfang](entscheidung-7-2-2-137-umfang-06-11.md) — Gregor 06.11.: E-242 + E-240 sicher, E-241 wenn Ursache klar; nach E-151
+- [E-246 stehen lassen](entscheidung-e246-stehen-lassen-06-11.md) — Gregor 06.11.: alter Commit bleibt abrufbar, keine Support-Anfrage

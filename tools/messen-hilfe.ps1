@@ -68,7 +68,7 @@ param(
 $ErrorActionPreference = 'Stop'
 
 $voll = [IO.Path]::GetFullPath($Pfadfilter).TrimEnd('\')
-if ($voll -notmatch '^C:\\Temp\\[^\\]+$') { Write-Host "HILFE ABGEWIESEN: $voll liegt nicht direkt unter C:\Temp"; exit 2 }
+if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+$')) { Write-Host "HILFE ABGEWIESEN: $voll liegt nicht direkt unter C:\Temp"; exit 2 }
 $md = Join-Path $voll 'Mailverzeichnis'
 $hilfeOrdner = Join-Path $voll 'Hilfe'
 $hilfeWeg = Join-Path $voll 'Hilfe.messen-weg'

@@ -107,7 +107,7 @@ $srvlog = Join-Path $voll 'imap-e184.log'
 # --- -Vorbereiten: Ausgangslage, VOR dem Start ------------------------------
 # Die Pfadschranke steht vor jeder Wirkung (Arbeitsweise/tor-gehoert-zum-schritt.md).
 if ($Vorbereiten) {
-    if ($voll -notmatch '^C:\\Temp\\[^\\]+') { Write-Host "E184 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
+    if ($voll -notmatch ('^' + [regex]::Escape($(if ($env:EUDORA72_PRUEFSTAND) { $env:EUDORA72_PRUEFSTAND } else { 'C:\Temp' })) + '\\[^\\]+')) { Write-Host "E184 ABGEWIESEN: $voll liegt nicht unter C:\Temp"; exit 2 }
     if (-not (Test-Path $konto)) { Write-Host "E184 FEHLER: kein IMAP-Konto pruefimap in $voll"; exit 1 }
     $bleiben = @('INBOX', 'Ablage', 'Entw&APw-rfe', 'Gel&APY-scht')
     Get-ChildItem -LiteralPath $konto -Directory | Where-Object { $bleiben -notcontains $_.Name } |

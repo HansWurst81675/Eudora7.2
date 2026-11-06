@@ -1,0 +1,22 @@
+From ???@??? Sat Oct 24 12:43:45 2026
+From: Pruefung <absender@e118.invalid>
+To: empfaenger@e118.invalid
+Subject: Pruefung E-118 Bild: eingebettetes Bild in IMAP-Ordner
+Date: Wed, 14 Oct 2026 10:30:00 +0200
+Message-ID: <e118-bild@e118.invalid>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="aussen-e118"
+
+<x-html>
+<html><body>
+<p>E-118 Pruefnachricht mit eingebettetem Bild:</p>
+<p><img src="cid:punkt-rot@e118.invalid" width="40" height="40" alt="rot"></p>
+<p>Text unter dem Bild.</p>
+</body></html>
+
+</x-html>
+
+
+Embedded Content: punkt-rot103.png: 00000001,60601317,00000000,00000000
+FUSSZEILE-E118: dieser Text steht hinter dem HTML-Teil und darf nicht verloren gehen.
+

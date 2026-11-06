@@ -25,7 +25,7 @@ param(
     [string] $Ablage      = 'C:\Temp\E80-htm'
 )
 $ErrorActionPreference = 'Continue'
-$wz = 'C:\Users\Gregor\Documents\github\Eudora7.2\tools'
+$wz = $PSScriptRoot   # E-151: nicht fest auf einen Rechner
 
 if (-not (Test-Path $Ablage)) { New-Item -ItemType Directory $Ablage | Out-Null }
 Get-ChildItem $Ablage -File -ErrorAction Ignore | Remove-Item -Force
