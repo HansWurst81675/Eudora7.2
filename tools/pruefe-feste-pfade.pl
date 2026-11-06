@@ -105,12 +105,37 @@ for my $f (sort keys %umfang) {
     push @mangel, pruefe_text($f, $t);
 }
 if ($gelesen == 0) { print "pruefe-feste-pfade: ROT - nichts geprueft (leere Menge ist kein Freispruch)\n"; exit 2 }
+
+# Jedes Verzeichnis der Fallliste braucht eine Vorlage unter Testdaten/pruefstand/,
+# sonst laeuft sein Fall in einem fremden Klon nicht und wird still
+# uebersprungen. Am 06.11.2026 fehlten E169, E169B und E239 (kamen mit main,
+# LEKTOR-156 L-156.1, PRUEFER-104 K4): 49 Verzeichnisse, 46 Vorlagen.
+my $vorlagen_geprueft = 0;
+if (open my $fh, '<:raw', "$tools/pruefstand-faelle.txt") {
+    my %namen;
+    while (my $z = <$fh>) {
+        next if $z =~ /^\s*(#|$)/;
+        my @f = split /\|/, $z;
+        next unless @f >= 8;
+        (my $d = $f[1]) =~ s/^\s+|\s+$//g;
+        my @teile = split /\Q$B\E/, $d;
+        $namen{$teile[-1]} = 1 if @teile;
+    }
+    close $fh;
+    for my $n (sort keys %namen) {
+        $vorlagen_geprueft++;
+        push @mangel, "Testdaten/pruefstand/$n/Mailverzeichnis/Eudora.ini fehlt - Vorlage erfassen: tools/pruefstand-vorlage-erfassen.ps1 -Nur $n"
+            unless -f "Testdaten/pruefstand/$n/Mailverzeichnis/Eudora.ini";
+    }
+} else {
+    push @mangel, "$tools/pruefstand-faelle.txt nicht lesbar - Vorlagen nicht geprueft";
+}
 if (@mangel) {
     print "pruefe-feste-pfade: $gelesen Pruefstand-Skripte, MANGEL:\n";
     print "  $_\n" for @mangel;
     print "  Der Pruefstand soll aus jedem Klon laufen (E-151): Repo-Pfad aus \$PSScriptRoot,\n";
-    print "  Wurzel aus \$env:EUDORA72_PRUEFSTAND (Vorgabe C:${B}Temp).\n";
+    print "  Wurzel aus \$env:EUDORA72_PRUEFSTAND (Vorgabe C:${B}Temp${B}Eudora72-Pruefstand, Entscheidung 39).\n";
     exit 1;
 }
-print "pruefe-feste-pfade: $gelesen Pruefstand-Skripte, kein fester Benutzerpfad, keine alte Pfadschranke.\n";
+print "pruefe-feste-pfade: $gelesen Pruefstand-Skripte, kein fester Benutzerpfad, keine alte Pfadschranke; $vorlagen_geprueft Fallverzeichnisse, jedes mit Vorlage.\n";
 exit 0;

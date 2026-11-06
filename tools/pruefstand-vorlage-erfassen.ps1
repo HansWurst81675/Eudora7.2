@@ -25,12 +25,17 @@
 # Namen, Benutzerpfade und fremde Mailadressen geprueft; ein Treffer bricht ab
 # (Arbeitsweise/gedaechtnis-ist-oeffentlich.md).
 #
-# Aufruf:  powershell -NoProfile -ExecutionPolicy Bypass -File tools\pruefstand-vorlage-erfassen.ps1 [-NurZeigen]
+# Aufruf:  powershell -NoProfile -ExecutionPolicy Bypass -File tools\pruefstand-vorlage-erfassen.ps1 [-NurZeigen] [-Nur E169,E169B]
+#
+# -Nur: nur diese Pruefverzeichnisse erfassen; die uebrigen Vorlagen bleiben
+# unberuehrt (06.11.2026, LEKTOR-156 L-156.1: E169, E169B, E239 fehlten).
+# Neben dem Mailverzeichnis werden Schalterdateien <eNNN>-schalter.txt
+# mitgenommen (E169B: e169-schalter.txt = 1); der Einrichter legt sie zurueck.
 #
 # Kodierung: reines ASCII, nur LF.
 
 [CmdletBinding()]
-param([switch] $NurZeigen)
+param([switch] $NurZeigen, [string[]] $Nur = @())
 $ErrorActionPreference = 'Stop'
 $repo = Split-Path -Parent $PSScriptRoot
 $ziel = Join-Path $repo 'Testdaten\pruefstand'
@@ -43,6 +48,12 @@ foreach ($z in [IO.File]::ReadAllLines((Join-Path $PSScriptRoot 'pruefstand-fael
     $verz += $f[1].Trim()
 }
 $verz = @($verz | Sort-Object -Unique)
+# Ueber "powershell -File" kommt "E169,E169B" als EIN Text an - selbst trennen.
+$Nur = @($Nur | ForEach-Object { $_ -split ',' } | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' })
+if ($Nur.Count -gt 0) {
+    $verz = @($verz | Where-Object { $Nur -contains (Split-Path -Leaf $_) })
+    if ($verz.Count -ne $Nur.Count) { Write-Host ("  ABGEWIESEN: -Nur nennt {0} Verzeichnisse, die Fallliste kennt davon {1}" -f $Nur.Count, $verz.Count); exit 2 }
+}
 
 # Zeilen der Eudora.ini, die nur einen Bildschirmzustand oder einen Pfad
 # ausserhalb des Pruefstands tragen.
@@ -105,9 +116,17 @@ foreach ($v in $verz) {
         }
         $text = $lat.GetString([IO.File]::ReadAllBytes($zd))
         $m = [regex]::Match($text, $privat)
-        if ($m.Success) { Write-Host ("  ABBRUCH: {0} enthaelt '{1}' - nichts Privates ins Repo" -f $zd, $m.Value); exit 1 }
+        # Den Treffer selbst nicht ausgeben - er ist ja das Private.
+        if ($m.Success) { Write-Host ("  ABBRUCH: {0} enthaelt an Stelle {1} etwas aus dem Privatfilter - nichts Privates ins Repo" -f $zd, $m.Index); exit 1 }
         $anzahl++
     }
     foreach ($l in $leer) { [IO.File]::WriteAllBytes((Join-Path $dz $l), [byte[]]@()) }
+    foreach ($s in @(Get-ChildItem -LiteralPath $v -File | Where-Object { $_.Name -match '^e\d+-schalter\.txt$' })) {
+        $inhalt = $lat.GetString([IO.File]::ReadAllBytes($s.FullName))
+        if ($inhalt -match $privat) { Write-Host ("  ABBRUCH: {0} enthaelt etwas aus dem Privatfilter" -f $s.FullName); exit 1 }
+        Copy-Item -LiteralPath $s.FullName -Destination (Join-Path (Join-Path $ziel $name) $s.Name) -Force
+        Write-Host ("  {0,-42} + {1}" -f $name, $s.Name)
+        $anzahl++
+    }
 }
 Write-Host ("  {0} Pruefverzeichnisse, {1} Dateien nach {2}" -f $verz.Count, $anzahl, $ziel)

@@ -33,10 +33,12 @@
 #
 # Kodierung: reines ASCII, nur LF.
 
-$script:PruefServerSkripte = @('anhang-pruefdaten.pl', 'imap-pruefserver.pl', 'smtp-pruefserver.pl')
+$script:PruefServerSkripte = @('anhang-pruefdaten.pl', 'imap-pruefserver.pl', 'smtp-pruefserver.pl', 'e169-bildserver.pl')
 # 11110 POP (anhang-pruefdaten.pl), 1143/1144 IMAP (zwei Konten bei E-188),
-# 1025 SMTP (smtp-pruefserver.pl).
-$script:PruefPorts = @(11110, 1143, 1144, 1025)
+# 1025 SMTP (smtp-pruefserver.pl), 18169 Bilder fuer E-169 (e169-bildserver.pl,
+# seit 06.11.2026 - LEKTOR-156 L-156.2: bricht ein Lauf waehrend E-169 ab,
+# blieb er sonst stehen).
+$script:PruefPorts = @(11110, 1143, 1144, 1025, 18169)
 
 function Pruefserver-Finden([string] $Repo) {
     $tools = ([IO.Path]::GetFullPath((Join-Path $Repo 'tools'))).TrimEnd('\') + '\'

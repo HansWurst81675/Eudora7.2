@@ -178,6 +178,8 @@ foreach ($v in $verz) {
     $md = Join-Path $voll 'Mailverzeichnis'
     if (Test-Path -LiteralPath $md) { Remove-Item -LiteralPath $md -Recurse -Force }
     Copy-Item -LiteralPath (Join-Path $vorlage 'Mailverzeichnis') -Destination $md -Recurse -Force
+    # Schalterdateien neben dem Mailverzeichnis (E169B: e169-schalter.txt).
+    foreach ($s in @(Get-ChildItem -LiteralPath $vorlage -File)) { Copy-Item -LiteralPath $s.FullName -Destination (Join-Path $voll $s.Name) -Force }
     if (($name -like 'E222*' -or $name -eq 'E166') -and $smimeDa) { foreach ($q in $smime) { Copy-Item -LiteralPath $q -Destination $voll -Force } }
     [IO.File]::WriteAllText((Join-Path $voll $marke), ("eingerichtet " + (Get-Date -Format 'yyyy-MM-dd HH:mm:ss') + " aus " + $Grundlage + "`n"))
     $angelegt++
