@@ -30,7 +30,7 @@
 #
 # AUFRUF
 #   perl tools/testplan-voraussetzungen.pl
-#   perl tools/testplan-voraussetzungen.pl --ini "//vmware-host/Shared Folders/Win10_VM/test_2.136/Mailverzeichnis.zip"
+#   perl tools/testplan-voraussetzungen.pl --ini "<Pfad zu seinem Mailverzeichnis.zip>"
 #   perl tools/testplan-voraussetzungen.pl --selbsttest
 #
 # Rueckgabe: Zahl der Maengel (0 = frei), 2 bei Aufrufproblem (mindestens).
