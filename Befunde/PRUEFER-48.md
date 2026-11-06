@@ -223,7 +223,7 @@ gemessen, und das bleibt ein Rest, den die Vermutung nicht erklärt.
 ### 3a. Nachgerechnet an Gregors Dateien
 
 **Gemessen.** Gelesen habe ich `eudora.log` und `Out.mbx` in
-`C:\Users\Gregor\Eudora72-1.0.116-release\Mailverzeichnis`, sonst nichts.
+`%USERPROFILE%\Eudora72-1.0.116-release\Mailverzeichnis`, sonst nichts.
 
 Lauf ab 23:20:21 (Protokollzeile 7963):
 

@@ -35,16 +35,16 @@
 #
 # Aufruf (PowerShell):
 #   powershell -ExecutionPolicy Bypass -File tools\mailverzeichnis-uebernehmen.ps1
-#   ... -Quelle "C:\Users\Gregor\Eudora72-1.0.39-release"
-#   ... -Ziel   "C:\Users\Gregor\Eudora72-1.0.40-release"
+#   ... -Quelle "$env:USERPROFILE\Eudora72-1.0.39-release"
+#   ... -Ziel   "$env:USERPROFILE\Eudora72-1.0.40-release"
 #   ... -NurZeigen                                    nichts schreiben
 #
 # Kodierung: reines ASCII, kein BOM.
 
 [CmdletBinding()]
 param(
-    [string] $Quelle = 'C:\Users\Gregor\Eudora72-1.0.39-release',
-    [string] $Ziel   = 'C:\Users\Gregor\Eudora72-1.0.40-release',
+    [string] $Quelle = "$env:USERPROFILE\Eudora72-1.0.39-release",
+    [string] $Ziel   = "$env:USERPROFILE\Eudora72-1.0.40-release",
     [switch] $NurZeigen,
     # Kopiert NICHTS und setzt nur CtrlJMapping=2 im Ziel. Fuer den Fall,
     # dass das Mailverzeichnis schon uebernommen ist und nur Strg+J noch

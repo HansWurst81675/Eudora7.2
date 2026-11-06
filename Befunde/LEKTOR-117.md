@@ -38,7 +38,7 @@ erzeugten Testtabellen. Jede Zahl gegen die zweite Stelle gehalten:
 
 | Angabe | Stellen | Ergebnis |
 |---|---|---|
-| Ablageort `C:\Users\Gregor\Eudora72-7.2.1.130-release` | `Releases/PAKETE.md:184`, `:188`; `CHANGELOG.md:108`; `Intern/TESTPLAN.md:1`; `Intern/WEITERMACHEN.md:3` | gleich (gemessen, `grep`) |
+| Ablageort `%USERPROFILE%\Eudora72-7.2.1.130-release` | `Releases/PAKETE.md:184`, `:188`; `CHANGELOG.md:108`; `Intern/TESTPLAN.md:1`; `Intern/WEITERMACHEN.md:3` | gleich (gemessen, `grep`) |
 | ZIP 9.131.484 Byte, SHA-256 `570a53ae…d61460` | `Releases/PAKETE.md:189` | an der Datei nachgemessen: `ls -l` → `9131484 Nov 1 15:18`, `sha256sum` → `570a53ae92e0e9f8e96d95d4aa6a02522f97001b4b3e3cad607d1c0d01d61460` (gemessen, nur gelesen) |
 | Geschnürt 15:18 | `Releases/PAKETE.md:184` | Zeitstempel des ZIP 15:18 (gemessen) |
 | Bau `Eudora 7.2.1.130+955d50d4* 2026-11-01 15:15` | `Releases/PAKETE.md:190`; `Releases/PRUEFBERICHT.md:19`; alle 46 Zeilen `Releases/PRUEFBERICHT.md:457-502`; 15 der 18 Zeilen in `tools/TESTLAEUFE.md` vom 01.11. 15:35–15:44 | gleich (gemessen). Die drei Zeilen ohne Kennung (`EBILD`, `E119K`, `E97`) sind Fälle ohne Titelzeile im Protokoll, wie in früheren Läufen |

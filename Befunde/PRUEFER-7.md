@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Datum | 09.09.2026 |
-| Arbeitsbaum | `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer` |
+| Arbeitsbaum | `%USERPROFILE%\Documents\github\Eudora7.2-wt-pruefer` |
 | Zweig | `wt/pruefer`, Stand von `main` nach Release 1.0.29 (`238cfec`) |
-| Gemessen an | Gregors Laufverzeichnis `C:\Users\Gregor\Eudora72-1.0.29-release` — `Mailverzeichnis\eudora.log` (111 KB, sechs Sitzungen vom 09.09.2026), `Mailverzeichnis\Filters.pce`, `Eudora.exe` vom 09.09.2026 12:37 |
+| Gemessen an | Gregors Laufverzeichnis `%USERPROFILE%\Eudora72-1.0.29-release` — `Mailverzeichnis\eudora.log` (111 KB, sechs Sitzungen vom 09.09.2026), `Mailverzeichnis\Filters.pce`, `Eudora.exe` vom 09.09.2026 12:37 |
 | Nicht getan | **nicht gebaut, kein Programm gestartet, keine Quelldatei geändert.** Geschrieben wurden nur diese Datei und der Nachtrag in `BEFUNDE.md` |
 
 **Kurzfassung.** Die drei Befunde haben drei verschiedene Ursachen, und keine
@@ -225,7 +225,7 @@ Kandidaten unten auf einmal aus oder ein, und sie sagt, ob `Match` überhaupt
 Gregors Wortlaut: *„filter kann man setzen, aber nicht mehr editieren."*
 
 **Was BELEGT ist.** Seine `Filters.pce` enthält vier Regeln, davon **zwei
-wortgleich** (`rule From:news@softmaker.invalid` steht zweimal, mit
+wortgleich** (`rule From:news@rundbrief.invalid` steht zweimal, mit
 identischen Bedingungen und Aktionen). Das ist das Bild eines Anwenders, der
 eine Regel neu anlegt, weil er die vorhandene nicht ändern kann. Die Regeln
 tragen die Namen, die `CFilter::SetName` (`filtersd.cpp:310-323`) aus

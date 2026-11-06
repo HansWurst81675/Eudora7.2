@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Datum | 08.09.2026 |
-| Arbeitsbaum | `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer` |
+| Arbeitsbaum | `%USERPROFILE%\Documents\github\Eudora7.2-wt-pruefer` |
 | Zweig | `wt/pruefer` |
 | Bezugscommit | `d003d46` („Paket 1.0.22: Kriterium 7 erfuellt, [A-1](../Intern/BEFUNDE.md#a-1) belegt"), per `git merge --ff-only origin/pruefer-4-einarbeiten` |
 | Behebungscommit | `269f3b5` („[E-40](../Intern/BEFUNDE.md#e-40)/[E-41](../Intern/BEFUNDE.md#e-41)/[E-42](../Intern/BEFUNDE.md#e-42): ein Fehler beim Aufraeumen verhindert das Beenden nicht mehr") |

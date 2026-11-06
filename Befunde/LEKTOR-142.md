@@ -125,7 +125,7 @@
 
 ## Bestand außerhalb des Schwerpunkts
 
-- **Persönliche Angaben:** keine in den Änderungen seit `7de75dcf` außerhalb von `Arbeitsweise/` (gelesen: `git show 7a8118e5 606789ba -- README.md CHANGELOG.md Intern/ Releases/ ZIEL.md Doku/ tools/RELEASES.md`). PAKETE spricht von *„neben Gregors letztem Testverzeichnis“* ohne Pfad. `Releases/PAKETE.md:200` (7.2.1.131, Altbestand) nennt `C:\Users\Gregor\Eudora72-7.2.1.131-release` — schon vor diesem Zweig so.
+- **Persönliche Angaben:** keine in den Änderungen seit `7de75dcf` außerhalb von `Arbeitsweise/` (gelesen: `git show 7a8118e5 606789ba -- README.md CHANGELOG.md Intern/ Releases/ ZIEL.md Doku/ tools/RELEASES.md`). PAKETE spricht von *„neben Gregors letztem Testverzeichnis“* ohne Pfad. `Releases/PAKETE.md:200` (7.2.1.131, Altbestand) nennt `%USERPROFILE%\Eudora72-7.2.1.131-release` — schon vor diesem Zweig so.
 - **Gregors Entscheidung „Stehen lassen“** zu [E-188](../Intern/BEFUNDE.md#e-188) steht in `Releases/PAKETE.md:184` und `Arbeitsweise/entscheidung-e188-release-7-2-2-132.md` gleichlautend; dass `Intern/WEITERMACHEN.md:3` *„der Zweigname wird vorher abgestimmt“* durch den bestätigten Zweig `e188_loeschschranke` ersetzt wird, ist dem Hauptagenten bekannt (in `.wt/release` ungestaget) — kein Fund.
 - **TESTPLAN Schritt 9** (`Intern/TESTPLAN.md:25`): *„seit dem 03.11.2026 ist das 7.2.2.132 selbst, bei deinem Test war es noch 7.2.1.131“* — stimmt mit `releases/latest` (gemessen).
 

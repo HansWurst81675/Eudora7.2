@@ -3129,7 +3129,7 @@ bool E88OriginalEinsetzen(
 // Stelle trifft. Das ist das Uebereinanderliegen.
 //
 // (2) AUSWERTBAR, ABER ZU BREIT. Gregors zweites Thunderbild-Bild
-// (freenet/audibene-Rundbrief) zeigt dasselbe Kopflogo im schmalen
+// (ein Rundbrief) zeigt dasselbe Kopflogo im schmalen
 // Verfassenfenster schmal und in der breiteren Leseansicht breiter -
 // proportional auf die verfuegbare Spaltenbreite gerechnet. Ein Bild mit
 // width="1200" sprengt die Zeile auch dann, wenn Paige die Zahl lesen
@@ -3148,7 +3148,7 @@ bool E88OriginalEinsetzen(
 // werden gemeinsam gerechnet, damit nichts verzerrt.
 //
 // GEMESSEN an Gregors gesicherten Postfaechern (alle .mbx unter
-// C:\Users\Gregor\Eudora72-Postfaecher-gesichert, Stand 14.09.2026):
+// C:\Users\Anwender\Eudora72-Postfaecher-gesichert, Stand 14.09.2026):
 // 2884 <img> insgesamt, davon 2601 mit Attribut, 122 nur mit CSS-Groesse
 // und 161 ganz ohne Groessenangabe. Ursache (1) trifft die letzten beiden
 // Gruppen, Ursache (2) kann jede der drei treffen.

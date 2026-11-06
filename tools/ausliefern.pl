@@ -96,7 +96,7 @@ printf("  Danach:  Produkt %s   Paket %s\n\n", $neu_produkt, $neu_paket);
 # Das ist die eigentliche Schranke: zwei Verzeichnisse mit derselben Version,
 # aber verschiedenen Kennungen sind genau der Fehler, gegen den es geht.
 
-my $heim = $ENV{USERPROFILE} || $ENV{HOME} || 'C:/Users/Gregor';
+my $heim = $ENV{USERPROFILE} || $ENV{HOME} || die "USERPROFILE fehlt\n";
 $heim =~ s{\\}{/}g;
 
 my %gesehen;

@@ -145,8 +145,8 @@ vorhandene Prüfung meldet den Fehler sauber und bricht ab.
 Nur gelesen, nichts geschrieben:
 
 ```
-C:\Users\Gregor\Eudora72-1.0.10-release\Mailverzeichnis\Eudora.ini
-C:\Users\Gregor\Eudora72-1.0.10-debug\Mailverzeichnis\Eudora.ini
+%USERPROFILE%\Eudora72-1.0.10-release\Mailverzeichnis\Eudora.ini
+%USERPROFILE%\Eudora72-1.0.10-debug\Mailverzeichnis\Eudora.ini
 ```
 
 Beide **3222 Byte, byte-gleich, unverändert seit dem 30.08.2026 17:57** — also

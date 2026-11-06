@@ -114,7 +114,7 @@ draußen war**: [E-93](BEFUNDE.md#e-93), [E-96](BEFUNDE.md#e-96), [E-97](BEFUNDE
 [E-104](BEFUNDE.md#e-104), [E-106](BEFUNDE.md#e-106) und [E-108](BEFUNDE.md#e-108). **Bei Gregor lagen damals 1.0.65, 1.0.67, 1.0.68,
 1.0.69, 1.0.71 und 1.0.72** — **1.0.70 nie**. Am 12.10.2026 liegen dort die
 Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
-1.0.57 (gemessen mit `ls C:\Users\Gregor\Eudora72-*`).
+1.0.57 (gemessen mit `ls %USERPROFILE%\Eudora72-*`).
 
 > **Berichtigt am 18.09.2026 (LEKTOR, [L-15.3](../Befunde/LEKTOR-15.md#l-15.3)).** Hier stand *„Gebaut und
 > geschnürt ist **7.2.0.70 / 1.0.70** … **Es ist das erste Paket, das alles
@@ -122,7 +122,7 @@ Verzeichnisse 1.0.72 bis 1.0.76 und 1.0.83 sowie die ZIPs 1.0.44, 1.0.53 und
 > Fehler in fünf Zeilen: der Stand ist 7.2.0.72 (`Version.h`, `VERSION`,
 > und die Zeile 3 **derselben Datei** sagt es bereits), 1.0.72 ist der
 > vollständige Stand, und 1.0.70 liegt bei Gregor **nicht** — gemessen mit
-> `ls C:\Users\Gregor\Eudora72-*`.
+> `ls %USERPROFILE%\Eudora72-*`.
 
 **Veröffentlicht war `v1.0.112`** (abgelöst; seit dem 29.10.2026 ist `v7.2.1.128` draußen) — am 20.10.2026 um 11:55:10 UTC auf GitHub veröffentlicht (*Latest*), Marke auf `f87a4a74` = Merge von PR #113, ZIP-SHA-256 `0406c1084640a766c2bd4d9eed5681974f5d2f0280f707de545c72ced28765fd`. **Davor `v1.0.101`** — am 17.10.2026 um 19:12:08 UTC (seinerzeit auf GitHub bereitgestellt, inzwischen abgelöst; Marke auf `eec4e4e5` = Merge von PR #99, ZIP 9 066 464 Byte, SHA-256 `79a40bc00e2ca4d929e23f4ad5d043a8cbdab27ce9a7ab66eb58a77764e8694a`, nachgerechnet an der von GitHub zurückgeladenen Datei; die 34 EXE/DLL/OCX byteidentisch mit Gregors getestetem `Eudora72-1.0.101-release`; Defender: 0 Funde). **Davor `v1.0.87`** — am 14.10.2026 um 05:46 Uhr UTC auf GitHub
 herausgegangen (bis 17.10.2026 das neueste), Marke auf `41c6752` (Merge von PR #96), mit

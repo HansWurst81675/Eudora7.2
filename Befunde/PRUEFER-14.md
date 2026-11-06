@@ -30,7 +30,7 @@ MFC-Quelle 14.38.33130: `dlgfile.cpp`, `winocc.cpp`, `afxwin2.inl`.
    — die zwölf aus PRÜFER-13 als Gegenprobe plus acht neue. Im Repo liegt
    davon nichts; die Fälle gehören nach `TestE101.cpp`.
 2. **Gregors eigenes Protokoll** wurde gelesen:
-   `C:\Users\Gregor\Eudora72-1.0.65-release\Mailverzeichnis\eudora.log`,
+   `%USERPROFILE%\Eudora72-1.0.65-release\Mailverzeichnis\eudora.log`,
    608 659 Byte vom 17.09.2026 12:23. Es enthält 12 `E-95 Bild`-Zeilen,
    6 `E-97 Nachtrag`-Zeilen, je eine [`E-88`](../Intern/BEFUNDE.md#e-88)- und [`E-89`](../Intern/BEFUNDE.md#e-89)-Zeile. Drei der
    Befunde unten sind **daran** belegt, nicht am Quelltext allein.

@@ -201,3 +201,4 @@
 - [E-151 Unterordner mit Marke](entscheidung-e151-unterordner-marke-06-11.md) — Gregor 06.11.: eigener Prüfstand-Unterordner mit Markendatei, Wurzel als Parameter; Entscheidung 39
 - [7.2.2.137 Umfang](entscheidung-7-2-2-137-umfang-06-11.md) — Gregor 06.11.: E-242 + E-240 sicher, E-241 wenn Ursache klar; nach E-151
 - [E-246 stehen lassen](entscheidung-e246-stehen-lassen-06-11.md) — Gregor 06.11.: alter Commit bleibt abrufbar, keine Support-Anfrage
+- [Alte Pfade weg 06.11.](entscheidung-alte-pfade-weg-06-11.md) — Gregor: Pfade ins Benutzerverzeichnis entfernen, C:\Temp bleibt

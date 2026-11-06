@@ -23,7 +23,7 @@ Dokument des Projekts:
 | `git tag \| sort -V \| tail -1` | **`v1.0.113`** — **kein** `v1.0.114` |
 | `gh release list` | `v1.0.113` ist **Latest** (20.10.2026, 13:01:36 UTC) |
 | `ls Releases/*.zip` | nur 1.0.2 und 1.0.30 — **kein** `Eudora72-1.0.114-release.zip` |
-| `ls C:\Users\Gregor\Eudora72-*` | 1.0.110, 1.0.111, 1.0.112, 1.0.113 — **kein 1.0.114** |
+| `ls %USERPROFILE%\Eudora72-*` | 1.0.110, 1.0.111, 1.0.112, 1.0.113 — **kein 1.0.114** |
 | `ls Releases/1.0.114/` | **ein** `RELEASE-NOTIZEN.md`, angelegt mit `5f721756` am 20.10.2026 um 21:39:33 |
 | `gh pr view 119 / 120` | **beide gemergt** — #119 am 20.10.2026, 19:53:26 UTC; #120 am 21.10.2026, 04:55:35 UTC |
 | `git branch -a` | `20261021_alles_was_claude_vergessen_hat` lokal **und** auf `origin`, in `main` enthalten |

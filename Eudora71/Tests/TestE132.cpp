@@ -30,7 +30,7 @@ void RunE132Tests(void)
 {
 	TT_Suite("E-132: fremdes Mailverzeichnis beim Start");
 
-	const char *EIGEN = "C:\\Users\\Gregor\\Eudora72-1.0.113-release\\";
+	const char *EIGEN = "C:\\Users\\Anwender\\Eudora72-1.0.113-release\\";
 
 	// ------------------------------------------------------------- (1)
 	// Der gemeldete Fall: die Registry zeigt auf eine andere Installation,
@@ -52,7 +52,7 @@ void RunE132Tests(void)
 	{
 		TT_CHECK_MSG(!E132IstFremdesVerzeichnis(EIGEN, EIGEN, true),
 			"genau das Programmverzeichnis");
-		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Users\\Gregor\\Eudora72-1.0.113-release\\Mailverzeichnis\\", EIGEN, true),
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("C:\\Users\\Anwender\\Eudora72-1.0.113-release\\Mailverzeichnis\\", EIGEN, true),
 			"darunter - so liegt es in unseren Paketen");
 	}
 	TT_EndTest();
@@ -62,7 +62,7 @@ void RunE132Tests(void)
 	// Die Registry liefert oft eine andere Schreibweise als GetModuleFileName.
 	TT_BeginTest("E-132: Schreibweise des Pfades aendert nichts");
 	{
-		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("c:\\users\\gregor\\EUDORA72-1.0.113-RELEASE\\", EIGEN, true),
+		TT_CHECK_MSG(!E132IstFremdesVerzeichnis("c:\\users\\anwender\\EUDORA72-1.0.113-RELEASE\\", EIGEN, true),
 			"dasselbe Verzeichnis, andere Schreibweise");
 	}
 	TT_EndTest();
@@ -158,7 +158,7 @@ void RunE132Tests(void)
 	// GREGORS LAUF VOM 21.10.2026. Er hat die Rueckfrage am gebauten
 	// 1.0.114 ausgeloest, und im Fenster stand
 	//
-	//   C:\Users\Gregor\EUDORA~1.113\MAILVE~1
+	//   C:\Users\Anwender\EUDORA~1.113\MAILVE~1
 	//
 	// Das ist die 8.3-Kurzform: Eudora schreibt sie so in die Registry
 	// (GetShortPathName), waehrend ExecutableDir aus GetModuleFileName lang
@@ -175,17 +175,17 @@ void RunE132Tests(void)
 	// genau das war der Fehler.
 	TT_BeginTest("E-132: Kurzform und Langform, der Fall vom 21.10.2026");
 	{
-		const char *LANG = "C:\\Users\\Gregor\\Eudora72-1.0.114-release\\";
+		const char *LANG = "C:\\Users\\Anwender\\Eudora72-1.0.114-release\\";
 
 		TT_CHECK_MSG(!E132IstFremdesVerzeichnis(
-				"C:\\Users\\Gregor\\Eudora72-1.0.114-release\\Mailverzeichnis",
+				"C:\\Users\\Anwender\\Eudora72-1.0.114-release\\Mailverzeichnis",
 				LANG, true),
 			"aufgeloest: das eigene Verzeichnis ist nicht fremd");
 
 		// Der Fehlerstand, zum Festhalten: ohne Aufloesung meldet dieselbe
 		// Funktion fremd - sie kann es nicht anders wissen.
 		TT_CHECK_MSG(E132IstFremdesVerzeichnis(
-				"C:\\Users\\Gregor\\EUDORA~1.114\\MAILVE~1", LANG, true),
+				"C:\\Users\\Anwender\\EUDORA~1.114\\MAILVE~1", LANG, true),
 			"unaufgeloest: die Kurzform sieht fremd aus - deshalb der Aufrufer");
 	}
 	TT_EndTest();

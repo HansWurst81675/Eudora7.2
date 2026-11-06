@@ -83,7 +83,7 @@ Punkt 3 dieser Lehre trennt zwei Fragen: *liest es sich harmlos* und
 gestellt und den Schaden dann selbst angerichtet — nicht ueber eine Datei im
 Paket, sondern ueber das **Ziel des Auspackens**.
 
-Beim Ablegen von Paket 1.0.40 habe ich das ZIP nach `C:\Users\Gregor`
+Beim Ablegen von Paket 1.0.40 habe ich das ZIP nach `%USERPROFILE%`
 entpackt, statt in ein Unterverzeichnis. **Das Paket-ZIP hat keine eigene
 Wurzelebene:** `Eudora.exe`, `Mailverzeichnis\`, `Plugins\` und 154 weitere
 Eintraege liegen direkt auf der obersten Ebene. Also landeten 157 Dateien

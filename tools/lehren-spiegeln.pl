@@ -63,8 +63,8 @@ exit 0 unless $wurzel && -d $wurzel;
 # Arbeitsbaum in den HAUPTBAUM geschrieben. Gemessen am 09.09.2026 aus
 # Eudora7.2-wt-lektor:
 #
-#   git rev-parse --git-common-dir  -> C:/Users/Gregor/.../Eudora7.2/.git
-#   git rev-parse --show-toplevel   -> C:/Users/Gregor/.../Eudora7.2-wt-lektor
+#   git rev-parse --git-common-dir  -> C:/Users/Anwender/.../Eudora7.2/.git
+#   git rev-parse --show-toplevel   -> C:/Users/Anwender/.../Eudora7.2-wt-lektor
 #   geschrieben wurde nach          -> Eudora7.2/Arbeitsweise/   (falsch)
 #
 # Zwei Folgen, beide gemessen:

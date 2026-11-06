@@ -1,7 +1,7 @@
 # PRÜFER-17 — die Schranken vor dem Commit, und warum v1.0.72 durchkam
 
 Stand: 18.09.2026. Zweig `schranken-vor-dem-commit`, Arbeitsbaum
-`C:\Users\Gregor\Documents\github\Eudora7.2`. **Kein Quelltext unter
+`%USERPROFILE%\Documents\github\Eudora7.2`. **Kein Quelltext unter
 `Eudora71/` angefasst, kein ändernder git-Befehl gefahren.** Geändert wurden
 nur `tools/` und die beiden Haken.
 

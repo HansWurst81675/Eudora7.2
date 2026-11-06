@@ -168,7 +168,7 @@ sub tests {
           "Telefon: 030 123456 78\r\n", 1,
           'Rufnummern werden abgewiesen' ],
         [ 'echte IP-Adresse',
-          "Received: from [91.59.234.223]\r\n", 1,
+          "Received: from [1.2.3.4]\r\n", 1,
           'eine IP ausserhalb RFC 5737 wird abgewiesen' ],
         [ 'erlaubte IP-Adresse',
           "Received: from [203.0.113.223] by [192.0.2.12]\r\n", 0,

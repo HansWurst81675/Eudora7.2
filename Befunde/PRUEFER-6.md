@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Datum | 09.09.2026 |
-| Arbeitsbaum | `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer` |
+| Arbeitsbaum | `%USERPROFILE%\Documents\github\Eudora7.2-wt-pruefer` |
 | Zweig | `wt/pruefer` |
 | Prüfstand | gelesen auf `40ec935` („A-4 umgesetzt, A-3 nachgebessert"); **alle Zeilenangaben auf `d751d23`** („[E-53](../Intern/BEFUNDE.md#e-53) behoben") umgerechnet und einzeln nachgeschlagen. `d751d23` aendert an `OTShim.cpp` nur die Fuellflaeche in `OnPaint` ([E-53](../Intern/BEFUNDE.md#e-53)) und beruehrt keinen Befund dieses Reviews |
 | Geprüfte Dateien | `Eudora71/OTShim/OTShim.cpp`, `OTShim.h`, `Eudora71/Eudora/workbook.cpp`, `DockBar.cpp`, `mainfrm.cpp`, `settings.cpp`, `AdWazooBar.cpp`, `WazooBarMgr.cpp` |

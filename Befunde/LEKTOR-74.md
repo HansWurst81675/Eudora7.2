@@ -96,7 +96,7 @@ Angreifer im selben Netz hätte einen Mailserver vorspielen können.
 
 * `BEFUNDE.md:388` (belegt), vorn: *„**Logzeile, eingebaut am 26.10.2026, am
   laufenden Programm gemessen an Gregors Paket 1.0.123:** `rootcerts.p7b
-  geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b
+  geladen aus: %USERPROFILE%\Eudora72-1.0.123-release\rootcerts.p7b
   (vorhanden)`, das Programmverzeichnis; Abruf bei GMX und freenet ohne
   Zertifikatsfehler (TESTPLAN K3)“*.
 * Dieselbe Zeile, weiter hinten (belegt): *„**Nicht gemessen:** eine

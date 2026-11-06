@@ -9,7 +9,7 @@
 # Gregor am 05.11.2026: "ich moechte separat von hier (oder auch jemand, der
 # die repo forkt oder clonet) die tests nach eigenen aenderungen durchfuehren."
 # Zwei Dinge banden den Pruefstand an diesen einen Rechner:
-#   1. der Repo-Pfad stand fest im Code ('C:\Users\Gregor\Documents\github\
+#   1. der Repo-Pfad stand fest im Code ('C:\Users\Anwender\Documents\github\
 #      Eudora7.2' in e118-serie.ps1, messen-e118.ps1 ...) - in jedem Klon
 #      zeigte er ins Leere oder, schlimmer, auf einen anderen Stand;
 #   2. jedes Messskript pruefte seinen Pfad mit '^C:\\Temp\\...' - eine andere

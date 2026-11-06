@@ -38,8 +38,8 @@ zu. Das ist ein eigener Mangel, aber nicht dieser hier.)
 **(b) Der Rahmenweg („exclusion-wrap") ist es auch nicht.**
 `PGHTMIMP.CPP:2045` baut nur dann einen `pg_frame` mit fester Lage, wenn das
 `<img>` ein `align`-Attribut trägt und **nicht** in einer Tabelle steht.
-Gemessen über alle `.mbx` in `C:\Users\Gregor\Eudora72-Postfaecher-gesichert`
-und `C:\Users\Gregor\Mailverzeichnis`: **3060 `<img>`, davon 16 mit
+Gemessen über alle `.mbx` in `%USERPROFILE%\Eudora72-Postfaecher-gesichert`
+und `%USERPROFILE%\Mailverzeichnis`: **3060 `<img>`, davon 16 mit
 `align`-Attribut — alle mit dem Wert `middle`.** `middle` läuft in
 `TranslateAlignment` auf `justify_middle` und setzt `frame.data` gerade
 **nicht**; es wird kein Rahmen eingefügt.

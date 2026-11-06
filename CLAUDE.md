@@ -77,7 +77,7 @@ wurde schon ein zweites Mal erfunden.
 * **Kein direkter Push auf `main`** — er merged.
 * **Kein Release ohne seinen lokalen Test und seine Zustimmung.**
 * **Nichts auf seinem Bildschirm starten**; Prozesse immer nach Pfad filtern.
-* `C:\Users\Gregor\Eudora72-*` sind **seine** Testverzeichnisse. Lesen der
+* `%USERPROFILE%\Eudora72-*` sind **seine** Testverzeichnisse. Lesen der
   `eudora.log` ist abgesprochen, alles andere nicht — es sei denn, er bittet
   ausdrücklich darum, ein Paket dorthin zu legen.
 

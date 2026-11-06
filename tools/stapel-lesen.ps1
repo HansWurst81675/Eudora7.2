@@ -5,7 +5,7 @@
 #
 #   C:\Windows\SysWOW64\WindowsPowerShell\v1.0\powershell.exe -NoProfile `
 #       -ExecutionPolicy Bypass -File tools\stapel-lesen.ps1 `
-#       -Pfadfilter C:\Users\Gregor\Eudora72-1.0.85-release `
+#       -Pfadfilter $env:USERPROFILE\Eudora72-1.0.85-release `
 #       -Symbole    <Verzeichnis mit der passenden Eudora.pdb> `
 #       -Freigabe   "<Gregors Satz>"
 #

@@ -3,7 +3,7 @@
 | | |
 |---|---|
 | Datum | 07.09.2026 |
-| Arbeitsbaum | `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer` |
+| Arbeitsbaum | `%USERPROFILE%\Documents\github\Eudora7.2-wt-pruefer` |
 | Zweig | `wt/pruefer` |
 | Bezugscommit | `4dae638` (`4dae6381d9a22a36b9da09ecb2ccb1fadc4f1d15`), per `merge --ff-only origin/beenden-und-kontovorgaben` |
 | Vergleichsstand | `003e8d8` (Zustand vor dem heutigen Einbau) |

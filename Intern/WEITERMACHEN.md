@@ -7,13 +7,16 @@
   (06.11.2026, Latest; ZIP byte-gleich mit Gregors getestetem Paket): [E-239](BEFUNDE.md#e-239)
   (kein Absturz beim Beenden bei offenem Hinweis) und [E-169](BEFUNDE.md#e-169) (`PrintBackground`).
   Voller Prüfstandslauf 110/110, Gregors Test bestanden ([Testplan](TESTPLAN.md#test-7-2-2-136)).
-- **Gemergt am 06.11.2026:** #228 (`paket_7_2_2_136`, Release-Stand 7.2.2.136).
-- **Wartet auf Merge:** `e151_pruefstand_klon` – Prüfstand nach einem frischen
-  `git clone` ([E-151](BEFUNDE.md#e-151)), Schutz echter Eudora-Ordner durch die
-  Marke ([E-243](BEFUNDE.md#e-243), Entscheidung 39), neue Schranken
-  `pruefe-namen-gestaget.pl` und `haken-backslash.pl`.
-- **Danach:** 7.2.2.137 mit [E-242](BEFUNDE.md#e-242) und [E-240](BEFUNDE.md#e-240),
-  [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache (Gregor 06.11.2026).
+- **Gemergt am 06.11.2026:** #228 (`paket_7_2_2_136`, Release-Stand 7.2.2.136),
+  #229 (`e151_pruefstand_klon` – Prüfstand nach einem frischen `git clone`
+  ([E-151](BEFUNDE.md#e-151)), Schutz echter Eudora-Ordner durch die Marke
+  ([E-243](BEFUNDE.md#e-243), Entscheidung 39), neue Schranken
+  `pruefe-namen-gestaget.pl` und `haken-backslash.pl`), #230
+  (`ranjit_bereinigt_teil1`, Datenschutz Teil 1).
+- **In Arbeit:** `ranjit_bereinigt_teil2` – Datenschutz nach [LEKTOR-158](../Befunde/LEKTOR-158.md#lektor-158)
+  (Pfade ins Benutzerverzeichnis raus, `C:\Temp` bleibt; Absender; Austauschordner).
+- **Danach:** 7.2.2.137 mit [E-71](BEFUNDE.md#e-71) (leerer Filterbericht, Gregor 06.11.2026: *„als nächstes“*),
+  [E-242](BEFUNDE.md#e-242), [E-240](BEFUNDE.md#e-240); [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache.
 - **Neu beim Test gemeldet:** [E-240](BEFUNDE.md#e-240) (Vorschau beim ersten Aufruf langsam;
   später, siehe [Nach dem Release 7.2.1](#nach-dem-release)), [E-241](BEFUNDE.md#e-241),
   [E-242](BEFUNDE.md#e-242) (Anmeldename auf Ausdrucken).
@@ -103,7 +106,6 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-246](BEFUNDE.md#e-246)** | Der umgeschriebene Commit mit zwei Familiennamen ist auf GitHub weiter abrufbar — kein Z… | **nie gemessen** | Gregors Entscheidung, ob er beim GitHub-Support die Entfernung beantragt (nur der Besitzer des Repos kann das); dann die Kennung aus dem Repo nehmen.… |
 | **[E-245](BEFUNDE.md#e-245)** | Die Namensschranke pruefe-namen-gestaget.pl sieht drei Wege nicht — einen Namen im Datei… | **nie gemessen** | Dateinamen (`git diff --cached --name-only`) und Commit-Nachricht (`commit-msg`-Haken bzw. `git log --format=%B` im pre-push) mitprüfen; Binärdateie… |
 | **[E-244](BEFUNDE.md#e-244)** | Liegt der Klon in einem Pfad mit Leerzeichen, startet kein Prüfserver — alle Fälle mit… | **nie gemessen** | die Argumente mit Leerzeichen selbst in Anführungszeichen setzen (auch das Mailverzeichnis in `testlauf.ps1`) (oder `Start-Process` mit einer einzige… |
 | **[E-243](BEFUNDE.md#e-243)** | Prüfstand-Werkzeuge konnten echte Eudora-Instanzen unter C:\Temp treffen — Postfächer … | 06.11.2026 an 7.2.2.136 | der Merge von `e151_pruefstand_klon`; die Messskripte prüfen die Marke nicht selbst (sie laufen nur über `pruefstand-lauf.ps1`/`testlauf.ps1`, die s… |

@@ -3,7 +3,7 @@
 Agent PAKET, 05.09.2026. Reine Messung, nichts geändert.
 Verfahren: PE-Kopf und Import-/Verzögerungstabelle jeder Binärdatei selbst
 ausgelesen (Perl, `peimp.pl` / `pesym.pl` im Kratzverzeichnis), nicht `dumpbin`.
-Alle ZIPs nur ins Kratzverzeichnis entpackt. `C:\Users\Gregor\Eudora72-*` nicht
+Alle ZIPs nur ins Kratzverzeichnis entpackt. `%USERPROFILE%\Eudora72-*` nicht
 angefasst. Kein Programm gestartet.
 
 ---

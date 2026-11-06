@@ -20,7 +20,7 @@ Beweis](../Arbeitsweise/einigkeit-ist-kein-beweis.md)):
 | `gh release view --json publishedAt` | `2026-10-21T07:56:56Z`, Marke `f546b004…` |
 | `git tag \| sort -V \| tail -1` | `v1.0.117` |
 | `ls Releases/*.zip` (Hauptbaum) | jüngstes **`Eudora72-1.0.119-release.zip`**, 9.382.180 Byte, **21.10.2026 13:07** — keines zu 1.0.120 |
-| `ls -d C:\Users\Gregor\Eudora72-*` | 1.0.110–1.0.113, **1.0.115–1.0.119** (1.0.119 seit 13:07) — keines zu 1.0.120 |
+| `ls -d %USERPROFILE%\Eudora72-*` | 1.0.110–1.0.113, **1.0.115–1.0.119** (1.0.119 seit 13:07) — keines zu 1.0.120 |
 | `tools/messen-e135.ps1`, `tools/messen-k9.ps1` | vorhanden, 6709 und 4518 Byte |
 | `perl tools/pruefe-startwege.pl --tag 2026-10-21` | 9 Starts, 5 Protokollzeilen, **4 ohne Zeile** |
 | Uhr | 21.10.2026 |
@@ -76,7 +76,7 @@ der Messung (*„unter `Releases/` endet die Reihe der ZIPs bei 1.0.119"*) und
 > 2. **Gregors Test an 1.0.119** abwarten: C9 […]
 
 **Gemessen:** `Releases/Eudora72-1.0.119-release.zip` liegt seit 13:07,
-`C:\Users\Gregor\Eudora72-1.0.119-release` steht bei Gregor seit 13:07, und
+`%USERPROFILE%\Eudora72-1.0.119-release` steht bei Gregor seit 13:07, und
 **er hat es getestet** — `TESTPLAN.md` sagt es zwei Abschnitte weiter selbst:
 *„[C9](../Intern/TESTPLAN.md#c9) ist durch: Gregor hat 1.0.119 getestet und [E-134](../Intern/BEFUNDE.md#e-134)
 bestätigt."* Wer diesen Block befolgt, schnürt ein zweites Mal ein Paket, das
@@ -87,7 +87,7 @@ zurückliegt ([L-44.7](LEKTOR-44.md#l-44.7), [L-45.4](LEKTOR-45.md#l-45.4),
 [L-46.1](LEKTOR-46.md#l-46.1)(b), [L-47.3](LEKTOR-47.md#l-47.3)) — und er
 trägt wieder das **heutige** Datum. Die Schranke aus
 [L-44.11](LEKTOR-44.md#l-44.11), die *„geschnürt ist …"* gegen
-`ls Releases/*.zip` und `ls C:\Users\Gregor\Eudora72-*` hält statt gegen ein
+`ls Releases/*.zip` und `ls %USERPROFILE%\Eudora72-*` hält statt gegen ein
 Dokument, ist seit **fünf Tagen** nicht gebaut. Sie hätte alle vier Male
 angeschlagen und in diesem Durchgang [L-48.1](#l-48.1) bis [L-48.4](#l-48.4)
 gefangen.
@@ -310,7 +310,7 @@ zeigten [L-48.1](#l-48.1) und [L-48.2](#l-48.2): *„1.0.119 ist übersetzt und
 noch nicht geschnürt"*, während das ZIP seit 13:07 liegt. **Richtig standen
 von Anfang an:** `Releases/PAKETE.md` (Abschnitt 1.0.120 *„noch nicht
 geschnürt"*, Abschnitt 1.0.119 *„geschnürt am 21.10.2026 nach
-`C:\Users\Gregor\Eudora72-1.0.119-release`"*), `README.md:38`, `:65-66` und
+`%USERPROFILE%\Eudora72-1.0.119-release`"*), `README.md:38`, `:65-66` und
 `:149`, `PORTIERUNG.md:44` und die *Buchführung* in `TESTPLAN.md`.
 Die Zeitangabe `07:56:56 UTC` für `v1.0.117` ist überall die **echte**
 UTC-Zeit — [L-47.9](LEKTOR-47.md#l-47.9) ist nicht zurückgefallen, alle vier
@@ -421,7 +421,7 @@ keinen Handgriff dazu im Text.
 **Die Schranke, die jetzt viermal gefehlt hat.**
 [L-44.11](LEKTOR-44.md#l-44.11) verlangt eine Prüfung, die *„veröffentlicht
 ist …"* und *„geschnürt ist …"* in den MDs gegen `gh release view`,
-`ls Releases/*.zip` und `ls C:\Users\Gregor\Eudora72-*` hält statt gegen
+`ls Releases/*.zip` und `ls %USERPROFILE%\Eudora72-*` hält statt gegen
 andere Dokumente. Sie ist seit **fünf Tagen** nicht gebaut und hätte in diesem
 Durchgang [L-48.1](#l-48.1) bis [L-48.4](#l-48.4) gefangen — **alle vier
 schweren Funde der Buchführung.** In [`LEKTOR-45`](LEKTOR-45.md#lektor-45), `-46`, `-47` und jetzt `-48`

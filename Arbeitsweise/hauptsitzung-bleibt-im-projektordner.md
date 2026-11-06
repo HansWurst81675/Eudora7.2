@@ -19,9 +19,9 @@ Schranke: keine - das Arbeitsverzeichnis der Sitzung prüft kein Werkzeug. Vorsc
 | Zeit | Was | Art |
 |---|---|---|
 | 22:35:37 | Gregor trägt `.wt/lektor` als freigegebenes Verzeichnis ein (*„ist gesetzt, prüfe“*), die Sitzung meldet *„Additional working directories added: …\.wt\lektor“* | gemessen |
-| 22:36:10 | Aufruf `cd /c/Users/Gregor/Documents/github/Eudora7.2/.wt/lektor && git status --short --branch`. Ab hier trägt jeder Eintrag der Sitzung `"cwd":"…\Eudora7.2\.wt\lektor"`, 82 Einträge bis 22:47 | gemessen (Grep auf `cwd`) |
+| 22:36:10 | Aufruf `cd $HOME/Documents/github/Eudora7.2/.wt/lektor && git status --short --branch`. Ab hier trägt jeder Eintrag der Sitzung `"cwd":"…\Eudora7.2\.wt\lektor"`, 82 Einträge bis 22:47 | gemessen (Grep auf `cwd`) |
 | 22:40 | Der CHRONIST startet. Sein Arbeitsverzeichnis ist `.wt\lektor`, der Zweig laut Kopf `wt/lektor-20261030`. Freigegeben sind ihm `.wt\lektor`, `.wt\chronist` und der Protokollordner, der Projektordner selbst nicht | belegt (Umgebungsblock des Laufs) |
-| 22:41:04–22:41:40 | Drei Abfragen beim CHRONIST, Befehl jedes Mal `cd /c/Users/Gregor/Documents/github/Eudora7.2 && perl tools/verlauf-messen.pl …`, alle abgelehnt | gemessen |
+| 22:41:04–22:41:40 | Drei Abfragen beim CHRONIST, Befehl jedes Mal `cd $HOME/Documents/github/Eudora7.2 && perl tools/verlauf-messen.pl …`, alle abgelehnt | gemessen |
 | 22:45:20 | Hauptsitzung: `perl tools/lehren-uebersicht.pl -schreiben` ohne Verkettung, aber in `.wt/lektor`. Trotz der Regel `Bash(perl tools/:*)` kam eine Abfrage, Gregor lehnte ab | gemessen |
 
 Der Bash-Hinweis von Claude Code sagt es selbst: Ein `cd` wirkt in der Hauptsitzung weiter, *wenn es innerhalb der freigegebenen Verzeichnisse endet*. Bis 22:35 war `.wt/lektor` kein solches Verzeichnis. Danach war es eines, und das `cd` blieb stehen.

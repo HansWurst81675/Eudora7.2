@@ -4,7 +4,7 @@ Lauf am 14.10.2026 auf `wt/lektor`, nach dem Merge von `origin/e-118_HTML_header
 (`65d066a8`, schnell vorgespult). Anlass: PR #97 ([E-105](../Intern/BEFUNDE.md#e-105), 7.2.0.88) ist
 gemergt und `e-105_doppelte_bilder` gelöscht; [E-118](../Intern/BEFUNDE.md#e-118) ist in 7.2.0.89
 eingebaut und am IMAP-Prüfserver gemessen; Gregor bekommt
-`C:\Users\Gregor\Eudora72-1.0.89-release` (Verzeichnis vorhanden, `TESTEN.txt` gelesen).
+`%USERPROFILE%\Eudora72-1.0.89-release` (Verzeichnis vorhanden, `TESTEN.txt` gelesen).
 1.0.88 wurde nie an Gregor ausgeliefert.
 
 **Umfang aus der Quelle:** `git ls-files '*.md'` ohne `Befunde/` und `Arbeitsweise/`

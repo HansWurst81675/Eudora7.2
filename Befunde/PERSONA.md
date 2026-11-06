@@ -59,7 +59,7 @@ dominante, gelesen wird also tatsächlich `[Settings]`. In Gregors Datei ist dor
 ### Ein Fehler, drei Symptome — auch das bestätigt
 
 Gregors `Eudora.ini` (nur lesend geprüft,
-`C:\Users\Gregor\Eudora72-1.0.5-debug\Mailverzeichnis\`):
+`%USERPROFILE%\Eudora72-1.0.5-debug\Mailverzeichnis\`):
 
 ```ini
 [Settings]
@@ -212,7 +212,7 @@ bleibt**, solange er nichts tut:
 
 **Wenn er das will — von Hand, bei geschlossenem Eudora** (sonst überschreibt
 Eudora die Datei beim Beenden): in
-`C:\Users\Gregor\Eudora72-1.0.5-debug\Mailverzeichnis\Eudora.ini` die sechs
+`%USERPROFILE%\Eudora72-1.0.5-debug\Mailverzeichnis\Eudora.ini` die sechs
 leeren Zeilen im Abschnitt `[Settings]` durch die Werte aus
 `[Persona-hans wurst]` ersetzen:
 

@@ -424,7 +424,7 @@ ergänzen: `msvcrtd\.dll|mfco\d+u?d\.dll|debug_heap\.cpp`.
 Anwendungsprotokolls auf diesem Rechner gelesen. Alle stammen vom Anbieter
 „Application Error“ und haben 15 Felder. `[0]` ist der Name der Anwendung,
 `[3]` das Modul, `[6]` der Code, `[10]` der volle Pfad, zum Beispiel
-`C:\Users\Gregor\Eudora72-1.0.123-release\Eudora.exe`. Das Schema gilt seit
+`%USERPROFILE%\Eudora72-1.0.123-release\Eudora.exe`. Das Schema gilt seit
 Windows 7. Auf älteren Systemen hat das Ereignis weniger Felder. Dann greift
 `$p.Count -gt 10`, und der Lauf bleibt still statt falsch. Der Filter fragt
 nur `Id = 1000`, nicht den Anbieter. Ein fremdes Programm mit eigener

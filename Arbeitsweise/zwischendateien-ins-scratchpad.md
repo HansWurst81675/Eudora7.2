@@ -8,11 +8,11 @@ metadata:
   modified: 2026-10-25T10:04:56.477Z
 ---
 
-Zwischendateien gehören ins Scratchpad-Verzeichnis der Sitzung (steht im Systemprompt), **nie** nach `$TEMP` (= `C:\Users\Gregor\AppData\Local\Temp`, Gregors allgemeiner Temp-Ordner).
+Zwischendateien gehören ins Scratchpad-Verzeichnis der Sitzung (steht im Systemprompt), **nie** nach `$TEMP` (= `%USERPROFILE%\AppData\Local\Temp`, Gregors allgemeiner Temp-Ordner).
 
 **Why:** Am 25.10.2026 fragte Gregor: *„warum liegt dort ein lektor58.txt? wer hat es dort abgelegt?"* — ich hatte in der Git-Bash `$TEMP` benutzt und 19 Dateien in seinem Temp-Ordner liegen lassen (Sicherungskopien für Gegenproben, Ersatztexte für Perl, Testausgaben, LEKTOR-Aufträge). Er musste sie selbst entdecken; niemand konnte sehen, wem sie gehören.
 
-**How to apply:** In Bash-Befehlen den Scratchpad-Pfad ausschreiben (`S=/c/Users/Gregor/AppData/Local/Temp/claude/.../scratchpad`), nicht `$TEMP`. Fällt doch etwas außerhalb an: am Ende des Arbeitsschritts selbst wegräumen und es sagen. Verwandt: [[text-nicht-durch-schichten-schicken]], [[nichts-auf-gregors-bildschirm-starten]].
+**How to apply:** In Bash-Befehlen den Scratchpad-Pfad ausschreiben (`S=$HOME/AppData/Local/Temp/claude/.../scratchpad`), nicht `$TEMP`. Fällt doch etwas außerhalb an: am Ende des Arbeitsschritts selbst wegräumen und es sagen. Verwandt: [[text-nicht-durch-schichten-schicken]], [[nichts-auf-gregors-bildschirm-starten]].
 
 Schranke: keine - wohin ich Zwischendateien lege, sieht kein Haken; gemessen wird es nur, wenn Gregor seinen Temp-Ordner ansieht. Ausweg ist die Gewohnheit, den Scratchpad-Pfad auszuschreiben.
 
@@ -37,8 +37,8 @@ Zeiten MEZ, gemessen am Transkript.
 | Zeit | Befehl | landete in |
 |---|---|---|
 | 26.10. 23:20:17 | `git diff --binary … > /tmp/x` | Git-Bash-`/tmp`, also Gregors `AppData\Local\Temp`; 23:20:25 gelöscht |
-| 27.10. 11:07:29 | `git status -sb > "$TEMP/../x"` | `C:\Users\Gregor\AppData\Local\x` (46 Byte); 11:07:45 gelöscht, 11:08:03 an Gregor gemeldet |
-| 27.10. 12:09:26 | `git commit … 2>$TEMP/../nul_unused` | `C:\Users\Gregor\AppData\Local\nul_unused` (19.472 Byte); 12:09:51 gelöscht |
+| 27.10. 11:07:29 | `git status -sb > "$TEMP/../x"` | `%USERPROFILE%\AppData\Local\x` (46 Byte); 11:07:45 gelöscht, 11:08:03 an Gregor gemeldet |
+| 27.10. 12:09:26 | `git commit … 2>$TEMP/../nul_unused` | `%USERPROFILE%\AppData\Local\nul_unused` (19.472 Byte); 12:09:51 gelöscht |
 
 Keiner der drei Befehle brauchte die Datei. Alle drei waren ein **Wegwerfziel**, geschrieben aus der Gewohnheit, eine Ausgabe „irgendwohin“ zu leiten. `$TEMP/..` ist nicht das Scratchpad, sondern eine Stufe **über** Gregors Temp-Ordner. Der dritte Fall kam 62 Minuten, nachdem ich den zweiten selbst als Fehler gemeldet hatte, also mit der Regel im Blick.
 

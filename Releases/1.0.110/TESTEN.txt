@@ -13,7 +13,7 @@ pruefen sollten. Das war mein Fehler, nicht deiner.
 
 Das Mailverzeichnis in diesem Paket ist leer. Postfaecher bei
 GESCHLOSSENEM Eudora hineinkopieren; deine Sicherung liegt unter
-C:\Users\Gregor\Eudora72-Postfaecher-gesichert.
+%USERPROFILE%\Eudora72-Postfaecher-gesichert.
 
 Starten mit "Eudora starten.cmd".
 Unter Help -> About Eudora muss 7.2.0.110 stehen.

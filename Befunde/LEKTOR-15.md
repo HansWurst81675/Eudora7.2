@@ -34,7 +34,7 @@ gegen den gemessenen Stand gehalten. Berichtigt wurden **10**: `PORTIERUNG.md`,
 | Neuestes Release | `gh release list` | **`v1.0.72`**, *Latest*, 2026-09-17T20:07:49Z; davor `v1.0.64` (10:23:08Z) |
 | Quellstand | `Eudora71/Version.h:14` | **7.2.0.72** |
 | Paketnummer | `VERSION` | **1.0.72** |
-| Pakete bei Gregor | `ls C:\Users\Gregor\Eudora72-*` | **1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71, 1.0.72** — **kein 1.0.70** |
+| Pakete bei Gregor | `ls %USERPROFILE%\Eudora72-*` | **1.0.65, 1.0.67, 1.0.68, 1.0.69, 1.0.71, 1.0.72** — **kein 1.0.70** |
 | Stand des Zweigs `p38-spurmarke-rumpf` | `git show ceab98f:Eudora71/Version.h`, `:VERSION` | **7.2.0.69 / 1.0.69** |
 | Offene Befunde | `perl tools/offene-befunde.pl` | vorher 13 / 12 — **[E-109](../Intern/BEFUNDE.md#e-109) fehlte**; nach [E-105](../Intern/BEFUNDE.md#e-105): **14 / 14** |
 | Testzahl | `BEFUNDE.md`, `CHANGELOG.md` 7.2.0.72 | **171/171** |
@@ -186,7 +186,7 @@ der Fehlalarm hier der teurere, weil ihm jemand **gefolgt** ist, dreimal.
 | `tools/RELEASES.md` | trägt `v1.0.72` mit Datum, Beleg und Marke — **stimmt**, nachgemessen gegen `gh release list` |
 | `Arbeitsweise/*.md` | **Spiegel des Gedächtnisverzeichnisses** ([L-14.9](LEKTOR-14.md#l-14.9)): jede Berichtigung dort wird vom Vorcommit-Haken aus der Quelle zurückgenommen. Ich habe nichts angefasst |
 | `Releases/PAKETE.md` | vom parallelen Lauf am 17.09. abends neu gemessen, nennt `v1.0.72` und führt 1.0.66 bis 1.0.72 einzeln — geprüft, keine Abweichung |
-| Die sieben LF-Weiterleitungen | **keine Befundnummer vergeben.** Noch nicht gemessen, ob Eudora sie verursacht oder die Samsung-App sie mitbringt. Eine Nummer ohne Messung wäre dieselbe Sorte Behauptung, die dieser Durchgang abstellt |
+| Die sieben LF-Weiterleitungen | **keine Befundnummer vergeben.** Noch nicht gemessen, ob Eudora sie verursacht oder die Mailanwendung des Telefons sie mitbringt. Eine Nummer ohne Messung wäre dieselbe Sorte Behauptung, die dieser Durchgang abstellt |
 
 ---
 
@@ -332,7 +332,7 @@ Tabellenstruktur ist unversehrt.
 ### Nachtrag zum Nachtrag: die Protokollmessung zu E-110 (L-15.13)
 
 Gregor hatte den Schalter schon gesetzt. **Selbst nachgemessen** an
-`C:\Users\Gregor\Eudora72-1.0.72-release\Mailverzeichnis\eudora.log`
+`%USERPROFILE%\Eudora72-1.0.72-release\Mailverzeichnis\eudora.log`
 (150.580 Byte, 18.09.2026 08:20) — jeden gemeldeten Wert nachgezählt, statt ihn
 zu übernehmen ([mannschaft-fuehren.md](../Arbeitsweise/mannschaft-fuehren.md)):
 

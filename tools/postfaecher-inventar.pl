@@ -33,7 +33,7 @@ use warnings;
 #
 #   perl tools/postfaecher-inventar.pl
 #   perl tools/postfaecher-inventar.pl --bezug "C:\Pfad\zum\Verzeichnis"
-#   perl tools/postfaecher-inventar.pl --wurzel "C:\Users\Gregor"
+#   perl tools/postfaecher-inventar.pl --wurzel "C:\Users\Anwender"
 #
 # Rueckgabe: 0 = alles ist im Bezugsverzeichnis vorhanden, die anderen
 # duerfen weg. 1 = mindestens eines enthaelt etwas Einzigartiges.
@@ -41,7 +41,7 @@ use warnings;
 # ES LOESCHT NICHTS. Es sagt nur, was gefahrlos weg darf.
 
 my %opt = (
-    wurzel => 'C:/Users/Gregor',
+    wurzel => ($ENV{USERPROFILE} // ''),
     bezug  => '',
     muster => 'Eudora72-*',
 );

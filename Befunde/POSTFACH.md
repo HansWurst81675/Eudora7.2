@@ -13,7 +13,7 @@ Der Verdacht lautete: der Ini-Abschnitt `[Recent Mailboxes]` enthalte zwei
 Zeilen, die auf dasselbe Postfach zeigen, aber verschieden geschrieben sind.
 
 **Das trifft nicht zu.** Gregors Ini
-`C:\Users\Gregor\Eudora72-1.0.10-release\Mailverzeichnis\Eudora.ini` enthält
+`%USERPROFILE%\Eudora72-1.0.10-release\Mailverzeichnis\Eudora.ini` enthält
 genau zwei Abschnitte:
 
 ```
@@ -22,7 +22,7 @@ genau zwei Abschnitte:
 ```
 
 Einen Abschnitt `[Recent Mailboxes]` gibt es dort **nicht** — und auch in
-keiner der fünf anderen Mailverzeichnis-Ini-Dateien unter `C:\Users\Gregor`
+keiner der fünf anderen Mailverzeichnis-Ini-Dateien unter `%USERPROFILE%`
 (Fassungen 1.0.8, 1.0.9 und 1.0.10, jeweils Debug und Release). Alle sechs
 Dateien sind byte-gleich der Auslieferungsfassung vom 30.08.2026.
 

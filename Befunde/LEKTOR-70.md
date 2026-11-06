@@ -192,7 +192,7 @@ sollte der Block es zumindest sagen.
 ## <a id="l-70.7"></a>L-70.7 — unvollständig: die Prüfanleitung sagt nicht, wie Gregors Postfächer ins neue Verzeichnis kommen — und was das für K3 heißt
 
 * `Intern/TESTPLAN.md:3-6` (belegt): *„es kommt nach
-  `C:\Users\Gregor\Eudora72-1.0.123-release`, neben dein 1.0.122"*; `:10`
+  `%USERPROFILE%\Eudora72-1.0.123-release`, neben dein 1.0.122"*; `:10`
   *„Starten immer mit `Eudora starten.cmd`"* — kein Wort zum Mailverzeichnis.
 * Das Paket bringt nur die Vorgabe mit (belegt: `Releases/PAKETE.md:642`
   *„`Mailverzeichnis` enthält nur die Vorgabe-`Eudora.ini`"*;
@@ -221,7 +221,7 @@ genügt nach `ZIEL.md:195`.
 Mailverzeichnis (1.0.122 oder die Sicherung) bei geschlossenem Eudora
 hineinkopieren; danach `rootcerts.p7b` im Mailverzeichnis löschen, falls
 vorhanden. In der Protokollzeile: *„… geladen aus:
-C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)"* — das
+%USERPROFILE%\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)"* — das
 Programmverzeichnis, nicht das Mailverzeichnis.
 
 ## <a id="l-70.8"></a>L-70.8 — unvollständig: M1 in Teil 3 lässt die Vorbereitung weg, und die Reihenfolge des Tests macht Schritt 1 stumm

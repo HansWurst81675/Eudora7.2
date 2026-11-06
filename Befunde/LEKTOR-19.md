@@ -3,7 +3,7 @@
 Lauf am 12.10.2026, nur lesend, aus dem Notizordner übernommen. **Alle drei Mängel und der Hinweis sind im selben Commit wie dieser Bericht eingearbeitet.**
 
 
-Nur gelesen: `eudora.log` und `Imap\dominant\Inbox\attach\` in `C:\Users\Gregor\Eudora72-1.0.83-release\Mailverzeichnis`.
+Nur gelesen: `eudora.log` und `Imap\dominant\Inbox\attach\` in `%USERPROFILE%\Eudora72-1.0.83-release\Mailverzeichnis`.
 
 ## Stimmt
 

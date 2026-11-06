@@ -73,7 +73,7 @@ noch *fast*, ist eine Zeile — entscheiden, wer den PR stellt);
   oder Rand des schwebenden Fensters) ist eingebaut, aber nicht im Paket
   1.0.124 und am Programm noch nicht gemessen.“* Seit `1e819254` steckt er im
   Paket 1.0.125 (gemessen: `grep -a -c '[E-137](../Intern/BEFUNDE.md#e-137) Klick auf den Rahmen der
-  schwebenden Leiste'` in `C:\Users\Gregor\Eudora72-1.0.125-release\Eudora.exe`
+  schwebenden Leiste'` in `%USERPROFILE%\Eudora72-1.0.125-release\Eudora.exe`
   → 1; `Releases/PAKETE.md:168`).
 * *Was noch fehlt* (dieselbe Zeile): *„Gregors Prüfung im nächsten
   Testpaket“* — das ist 1.0.125, Prüfschritte `Intern/TESTPLAN.md` U1–U3;
@@ -139,8 +139,8 @@ und 13)“*.
   7.2.0.121“*; in derselben Zeile seit `17a084ec`: *„**Wieder aufgetreten am
   26.10.2026 an Paket 1.0.124** … die `Eudora.exe` von 1.0.124 hat SHA-256
   `b08ca8dc30602343…` (gemessen an der Kopie in
-  `C:\Users\Gregor\Eudora72-1.0.124-release` …)“*.
-* Gemessen: `sha256sum C:\Users\Gregor\Eudora72-1.0.124-release\Eudora.exe`
+  `%USERPROFILE%\Eudora72-1.0.124-release` …)“*.
+* Gemessen: `sha256sum %USERPROFILE%\Eudora72-1.0.124-release\Eudora.exe`
   → `b08ca8dc30602343b272…` — der Nachtrag stimmt.
 * Das alte Datum geht in die erzeugten Listen: `CHANGELOG.md:45`,
   `Intern/WEITERMACHEN.md:374` *„23.10.2026 an 7.2.0.121“*.

@@ -151,7 +151,7 @@ sub selbsttest {
         [1, 'Start-Process C:\\Temp\\E184\\Eudora.exe'],
         [1, 'Start-Process -FilePath "C:\\Temp\\E184\\Eudora.exe" -ArgumentList x'],
         [1, 'cmd /c "C:\\Temp\\E184\\Eudora.exe"'],
-        [1, 'start "" C:\\Users\\Gregor\\Eudora72-7.2.1.130-release\\Eudora.exe'],
+        [1, 'start "" C:\\Users\\Anwender\\Eudora72-7.2.1.130-release\\Eudora.exe'],
         [1, 'cd /c/Temp/E184 && ./Eudora.exe'],
         [1, 'Invoke-Item C:\\Temp\\E184\\EUDORA.EXE'],
         [1, 'x=$(/c/Temp/E184/Eudora.exe --help)'],

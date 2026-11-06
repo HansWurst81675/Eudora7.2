@@ -108,8 +108,8 @@ Repo-Wurzel ab. In einem Arbeitsbaum ist die Wurzel aber nicht
 
 ```
 lehren-spiegeln: kein Gedaechtnis gefunden, nichts gespiegelt.
-  erwartet unter: C:\Users\Gregor/.claude/projects/
-                  C--Users-Gregor-Documents-github-Eudora7-2-wt-chronist/memory
+  erwartet unter: %USERPROFILE%/.claude/projects/
+                  C--Users-Anwender-Documents-github-Eudora7-2-wt-chronist/memory
 Rueckgabe=0
 ```
 

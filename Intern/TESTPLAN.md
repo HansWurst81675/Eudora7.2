@@ -8,7 +8,7 @@
 Beenden ([E-239](BEFUNDE.md#e-239)) und den Schalter `PrintBackground` für den
 Druck ([E-169](BEFUNDE.md#e-169)). Bitte das **Test-ZIP**
 `Eudora72-7.2.2.136-test-mit-smime-dlls.zip` aus dem Austauschordner
-`test_2.136` nehmen: `MFC71.DLL` und `msvcp71.dll` liegen darin schon neben
+nehmen: `MFC71.DLL` und `msvcp71.dll` liegen darin schon neben
 der `Eudora.exe`.
 
 **Voraussetzung für Schritt 2 bis 4:** *Tools → Options → Getting Attention* → *Use an alert dialog box* angehakt (`Alert=1` in `[Settings]`). Ohne das zeigt Eudora nach dem Abruf keinen Hinweis, und der Fehlerweg ist nicht erreichbar (bei Gregor am 06.11.2026 `Alert=0`; nachgetragen nach seinem Test). Für Schritt 3 zusätzlich das Symbol im Infobereich: Eudora zeigt es von selbst nur bei neuer Mail, immer mit `AlwaysShowTrayIcon=1` bzw. *Always Show Tray Icon* im Menü des Symbols (`mainfrm.cpp:2290-2322`). **Die Schritte 2 und 3 hat am 06.11.2026 zusätzlich der Prüfstand gemessen** (Gregor: *„dann mußt du das jetzt leider selbst testen!“*; sechs Läufe 11:31 bis 11:34, siehe `tools/TESTLAEUFE.md`); Gregor hat sie danach mit `Alert=1` an seinem System selbst gemacht (Ergebnis unten).
@@ -58,7 +58,7 @@ Lauf nach der Berichtigung steht aus.
 7.2.2.135 enthält alles aus 7.2.2.134 und die Behebung für *Edit → Find*
 ([E-193](BEFUNDE.md#e-193)). Bitte das **Test-ZIP**
 `Eudora72-7.2.2.135-test-mit-smime-dlls.zip` aus dem Austauschordner
-`test_2.135` nehmen: `MFC71.DLL` und `msvcp71.dll` liegen darin schon neben
+nehmen: `MFC71.DLL` und `msvcp71.dll` liegen darin schon neben
 der `Eudora.exe`, du musst nichts dazukopieren.
 
 | # | Ort | Schritt | Bestanden, wenn … |
@@ -71,19 +71,19 @@ der `Eudora.exe`, du musst nichts dazukopieren.
 Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
 bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
-**Ergebnis 05.11.2026, Gregor an 7.2.2.135** (Test-ZIP mit `MFC71.DLL`/`msvcp71.dll`, `eudora.log` bis 20:05 und Bildschirmfotos im Austauschordner `test_2.135`): **alle vier Schritte bestanden.**
+**Ergebnis 05.11.2026, Gregor an 7.2.2.135** (Test-ZIP mit `MFC71.DLL`/`msvcp71.dll`, `eudora.log` bis 20:05 und Bildschirmfotos im Austauschordner): **alle vier Schritte bestanden.**
 
 | # | Ergebnis |
 |---|---|
 | 1 | **bestanden** — `Version 7.2.2.135` im Protokoll (Start 19:59:29), Titelzeile `Eudora 7.2.2.135+1cf4a59f 2026-11-05 16:30` |
 | 2 | **bestanden** — *Find Messages* nahm die genaue Suche (93 HTML-Mails in 110 ms), danach kein *„not found“* mehr im Protokoll; Gregors Bildschirmfoto zeigt das Wort in der Fußzeile **markiert und im sichtbaren Bereich**, ohne Klick ([E-193](BEFUNDE.md#e-193)). Das zweite *Weitersuchen* (stummer Sprung zum ersten Treffer) ist nur aus dem Protokoll geschlossen (kein *„not found“*), nicht eigens angesehen |
-| 3 | **bestanden** am zweiten PC, 21:15 (`screenshot20261105b.jpg`, `screenshot20261105c.jpg`): der Klick auf das `.ems`-Symbol ruft das S/MIME-Plugin auf; es meldet *„Signature verification failed … Stammzertifikat, das beim Vertrauensanbieter nicht als vertrauenswürdig gilt … Would you like to view the certificate of the signature?“* — ein echtes Prüfergebnis des Plugins, CAPICOM ist also vorhanden. Gregor: *„ja, nach "yes" konnte ich den inhalt der mail lesen, das ist gut.“* Über dem Inhalt stehen zwei Zeilen Kopftext, siehe Nachtrag in [E-222](BEFUNDE.md#e-222) |
+| 3 | **bestanden**, 21:15 (Gregors Bildschirmfotos): der Klick auf das `.ems`-Symbol ruft das S/MIME-Plugin auf; es meldet *„Signature verification failed … Stammzertifikat, das beim Vertrauensanbieter nicht als vertrauenswürdig gilt … Would you like to view the certificate of the signature?“* — ein echtes Prüfergebnis des Plugins. Gregor: *„ja, nach "yes" konnte ich den inhalt der mail lesen, das ist gut.“* Über dem Inhalt stehen zwei Zeilen Kopftext, siehe Nachtrag in [E-222](BEFUNDE.md#e-222) |
 | 4 | **bestanden** — ein einziger Schließwunsch, sauberes Ende bis `E-33 ExitInstance: erreicht`, kein Absturz |
 
 ## <a id="test-7-2-2-134"></a>Dein Test an 7.2.2.134 — ca. 10 Minuten, an deinem echten System
 
 7.2.2.134 ist ein **Testpaket** mit zwei Fehlerbehebungen aus deinem Test an
-7.2.2.133. `MFC71.DLL` und `msvcp71.dll` liegen diesmal **im Test-ZIP** (`Eudora72-7.2.2.134-test-mit-smime-dlls.zip`, im Austauschordner `test_2.134`) neben der
+7.2.2.133. `MFC71.DLL` und `msvcp71.dll` liegen diesmal **im Test-ZIP** (`Eudora72-7.2.2.134-test-mit-smime-dlls.zip`, im Austauschordner) neben der
 `Eudora.exe`; du musst nichts dazukopieren. Für Schritt 4 den PC nehmen, an dem
 S/MIME unter *Special → Message Plug-ins Settings* in der Liste steht.
 
@@ -99,7 +99,7 @@ S/MIME unter *Special → Message Plug-ins Settings* in der Liste steht.
 Bitte je Schritt *bestanden* oder *nicht bestanden* melden; bei *nicht
 bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
-**Ergebnis 05.11.2026, Gregor an 7.2.2.134** (Test-ZIP mit `MFC71.DLL`/`msvcp71.dll`, Bildschirmfotos und `eudora.log` bis 13:33 im Austauschordner `test_2.134`):
+**Ergebnis 05.11.2026, Gregor an 7.2.2.134** (Test-ZIP mit `MFC71.DLL`/`msvcp71.dll`, Bildschirmfotos und `eudora.log` bis 13:33 im Austauschordner):
 
 | # | Ergebnis |
 |---|---|
@@ -268,7 +268,7 @@ Server“ fehlt), nicht neu in 7.2.1.131.
 ## <a id="release-7-2-1-128"></a>Release 7.2.1.128 — getestet am 29.10.2026
 
 > **Getestet am 29.10.2026: das Release 7.2.1.128** (Ergebnisse [Laptop](#ergebnis-e-166-laptop), [Hauptrechner](#ergebnis-e-166-hauptrechner), [VM](#ergebnis-7-2-1-128)), abgelegt am 29.10.2026 als
-> `C:\Users\Gregor\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
+> `%USERPROFILE%\Eudora72-7.2.1.128-release` (neben 1.0.127; ZIP daneben im
 > Repo unter `Releases\Eudora72-7.2.1.128-release.zip`). Die Titelzeile zeigte
 > `Eudora 7.2.1.128+640e1a0e 2026-10-29 12:36`. Das Mailverzeichnis darin
 > war leer bis auf `Eudora.ini`. **Neu gegenüber 1.0.127 ist im Programm nur
@@ -839,12 +839,12 @@ per IMAP als `text/HTML`. Schritt 2 (Verfassenfenster) ist nicht im Bild.
 
 ## Kurztest 7.2.0.127 — bestanden am 27.10.2026
 
-> Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.127-release`, neben dein
+> Das Paket kommt nach `%USERPROFILE%\Eudora72-1.0.127-release`, neben dein
 > 1.0.125. Geprüft wird nur, was sich gegenüber 7.2.0.125 geändert hat, dazu
 > U2 bis U4 aus 7.2.0.125, die noch offen waren (jetzt V2, V3 und V5).
 
-**Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.125-release\Mailverzeichnis`
-nach `C:\Users\Gregor\Eudora72-1.0.127-release\Mailverzeichnis` kopieren, **ohne**
+**Vorbereitung:** den Inhalt von `%USERPROFILE%\Eudora72-1.0.125-release\Mailverzeichnis`
+nach `%USERPROFILE%\Eudora72-1.0.127-release\Mailverzeichnis` kopieren, **ohne**
 `eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
 starten. In der Titelzeile muss **7.2.0.127** und **Paket 1.0.127** stehen.
 
@@ -883,11 +883,11 @@ Geht V1, V2, V3 oder V6 schief, genügt mir die Nummer und *nein*, etwa *„V2 n
 
 ## Kurztest 7.2.0.125 — überholt durch 7.2.0.127
 
-> Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.125-release`, neben dein
+> Das Paket kommt nach `%USERPROFILE%\Eudora72-1.0.125-release`, neben dein
 > 1.0.124. Geprüft wird nur, was sich gegenüber 7.2.0.124 geändert hat.
 
-**Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.124-release\Mailverzeichnis`
-nach `C:\Users\Gregor\Eudora72-1.0.125-release\Mailverzeichnis` kopieren, **ohne**
+**Vorbereitung:** den Inhalt von `%USERPROFILE%\Eudora72-1.0.124-release\Mailverzeichnis`
+nach `%USERPROFILE%\Eudora72-1.0.125-release\Mailverzeichnis` kopieren, **ohne**
 `eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
 starten. In der Titelzeile muss **7.2.0.125** und **Paket 1.0.125** stehen.
 
@@ -909,12 +909,12 @@ starten. In der Titelzeile muss **7.2.0.125** und **Paket 1.0.125** stehen.
 
 ## Kurztest 7.2.0.124 — abgeschlossen
 
-> Das Paket kommt nach `C:\Users\Gregor\Eudora72-1.0.124-release`, neben dein
+> Das Paket kommt nach `%USERPROFILE%\Eudora72-1.0.124-release`, neben dein
 > 1.0.123. Geprüft wird nur, was sich gegenüber 7.2.0.123 geändert hat; alles
 > andere hast du an 7.2.0.123 bestätigt (Ergebnistabelle unten).
 
-**Vorbereitung:** den Inhalt von `C:\Users\Gregor\Eudora72-1.0.123-release\Mailverzeichnis`
-nach `C:\Users\Gregor\Eudora72-1.0.124-release\Mailverzeichnis` kopieren, **ohne**
+**Vorbereitung:** den Inhalt von `%USERPROFILE%\Eudora72-1.0.123-release\Mailverzeichnis`
+nach `%USERPROFILE%\Eudora72-1.0.124-release\Mailverzeichnis` kopieren, **ohne**
 `eudora.log`. Dann **nur** mit `Eudora starten.cmd` im neuen Verzeichnis
 starten. In der Titelzeile muss **7.2.0.124** und **Paket 1.0.124** stehen.
 
@@ -965,8 +965,8 @@ das neue Verzeichnis, und die Rückfrage aus M1 kommt zu Recht nicht mehr.
    *File → Exit* beenden. Danach steht es als zuletzt benutzte Installation in
    der Registry.
 2. Im Explorer das **Änderungsdatum** von
-   `C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis\Eudora.ini` notieren.
-3. Im neuen Verzeichnis `C:\Users\Gregor\Eudora72-1.0.123-release` die
+   `%USERPROFILE%\Eudora72-1.0.122-release\Mailverzeichnis\Eudora.ini` notieren.
+3. Im neuen Verzeichnis `%USERPROFILE%\Eudora72-1.0.123-release` die
    **`Eudora.exe` doppelklicken** und [M1](#m1-e132) Schritt 1 bis 4 fahren.
    Für Schritt 3 und 4 („fremde `Eudora.ini` unverändert“): das Änderungsdatum
    aus 2. muss gleich bleiben.
@@ -975,8 +975,8 @@ das neue Verzeichnis, und die Rückfrage aus M1 kommt zu Recht nicht mehr.
    schließen, dann *File → Exit*.
 
 **B. Deine Daten in das neue Paket.** Der Inhalt von
-`C:\Users\Gregor\Eudora72-1.0.122-release\Mailverzeichnis` in
-`C:\Users\Gregor\Eudora72-1.0.123-release\Mailverzeichnis` kopieren
+`%USERPROFILE%\Eudora72-1.0.122-release\Mailverzeichnis` in
+`%USERPROFILE%\Eudora72-1.0.123-release\Mailverzeichnis` kopieren
 (überschreiben). **Zwei Ausnahmen, beide nicht mitkopieren:** `eudora.log` —
 sonst ist das Protokoll aus M1 Schritt 4 überschrieben, und das alte enthält
 selbst `E-132`-Zeilen, die wie ein Nachweis aussehen; und, falls vorhanden,
@@ -1045,7 +1045,7 @@ nicht").*
 | N7 | **nein** | 26.10.2026 | beim Antworten erschien ein großes `data:`-Bild als grüne Fläche mit Streifen (Gregors Bild); Ursache gefunden ([E-119](BEFUNDE.md#e-119) zweiter Teil, 16-Bit-Zähler), behoben für 7.2.0.124 |
 | M1 | **ja** | 26.10.2026 | Schritt 1 Rückfrage (Bild), 2 *No* vorgewählt (Bild), 3 *Cancel*: die genannte fremde `Eudora.ini` (`C:\Temp\E67`, siehe Bemerkung unten) unverändert seit 08:57:34, Gregors 1.0.122 ebenfalls; 4 Protokoll `E-132 Startverzeichnis: gefunden="…Eudora72-1.0.122-release\Mailverzeichnis" … fremd=1` und `eigenes gewaehlt="…Eudora72-1.0.123-release\Mailverzeichnis"` |
 | M3 | **ja** | 26.10.2026 | Hinweis erschien (Gregors Bild), kein *„No messages were transferred!“*, Protokoll `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out kopie=0 einzeln=0`; Schritt 4 (Entwurf über das lokale `Trash` zurück nach `Out`) laut Gregor *„sollte passen“*, im Protokoll ab 11:15 keine `E-125`-Zeile |
-| Protokoll | — | | von mir gelesen: aus M1 die Zeilen `E-132 Startverzeichnis: … fremd=1` und `E-132 Startverzeichnis: eigenes gewaehlt=…`; **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: C:\Users\Gregor\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
+| Protokoll | — | | von mir gelesen: aus M1 die Zeilen `E-132 Startverzeichnis: … fremd=1` und `E-132 Startverzeichnis: eigenes gewaehlt=…`; **keine** Zeile `Ausnahme in Fensterbotschaft` oder `Ausnahme ausserhalb einer Fensterbotschaft`; dafür `rootcerts.p7b geladen aus: %USERPROFILE%\Eudora72-1.0.123-release\rootcerts.p7b (vorhanden)` (das **Programm**verzeichnis), `E-137 Strg-W` aus N1/N1b/N2 und `E-142 Hinweis … antwort=nein` aus N3 |
 
 **Beim Test gefunden (26.10.2026):** Die erste M1-Rückfrage nannte `C:\Temp\E67\Mailverzeichnis`, einen meiner Prüfstände. Jeder Eudora-Start schreibt `HKCU\Software\Qualcomm\Eudora\CommandLine\Current`, auch die Starts des Prüfstands auf Gregors Rechner; mein letzter Start um 08:57 hatte den Eintrag auf `C:\Temp\E67` gesetzt. Seit 7.2.0.114 fragt Eudora vorher; Hermes 7.1 oder ein Eudora vor 7.2.0.114 würde per Doppelklick still in diesem Prüfstand arbeiten. Der Prüfstand muss den Eintrag sichern und zurückschreiben ([E-157](BEFUNDE.md#e-157), seit 26.10.2026 im Prüfstand behoben).
 
@@ -1131,7 +1131,7 @@ der Melder aus [Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/1
 erlebt; danach startete seine Hermes 7.1 nicht mehr
 ([E-131](BEFUNDE.md#e-131)). Ab 1.0.114 **fragt** Eudora vorher — seit **1.0.115** nur noch dann, wenn das Verzeichnis wirklich fremd ist (in 1.0.114 kam die Frage bei **jedem** Start, auch über das eigene Verzeichnis; Gregor hat das am 21.10.2026 gemeldet), seit **1.0.116** auf **allen** Startwegen und mit gemerkter Antwort, und seit **1.0.117** auch dann, wenn im fremden Ordner **keine** `Eudora.ini` liegt — der Fall einer kopierten Sicherung.
 
-**Vorbereitung.** Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.117-release`, am 21.10.2026 bereitgestellt. *(Bis zum 21.10.2026 stand hier `Eudora72-1.0.115-release` mit dem Zusatz „das Paket ist noch nicht geschnürt" — 1.0.115, 1.0.116 und 1.0.117 liegen alle drei bei dir, [LEKTOR-46](../Befunde/LEKTOR-46.md#l-46.5).)*
+**Vorbereitung.** Testverzeichnis `%USERPROFILE%\Eudora72-1.0.117-release`, am 21.10.2026 bereitgestellt. *(Bis zum 21.10.2026 stand hier `Eudora72-1.0.115-release` mit dem Zusatz „das Paket ist noch nicht geschnürt" — 1.0.115, 1.0.116 und 1.0.117 liegen alle drei bei dir, [LEKTOR-46](../Befunde/LEKTOR-46.md#l-46.5).)*
 Dein bisheriges `Eudora72-1.0.113-release` **stehen lassen** — es ist in diesem
 Test die „fremde Installation". Notier dir vorher Datum und Uhrzeit von
 `Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini`; daran siehst du am Ende,
@@ -1164,7 +1164,7 @@ Zeitstempel wie vorher**.
 greift die Rückfrage nicht. In dem Fall hilft die Zeile aus dem Protokoll:
 
 ```
-grep "E-132" "C:\Users\Gregor\Eudora72-1.0.117-release\Mailverzeichnis\eudora.log"
+grep "E-132" "%USERPROFILE%\Eudora72-1.0.117-release\Mailverzeichnis\eudora.log"
 ```
 
 Dort muss `E-132 Startverzeichnis: … fremd=1` stehen. Steht da `fremd=0`,
@@ -1184,9 +1184,9 @@ Programm endet, nichts angefasst.
 
 ### <a id="c7"></a>C7 · Paket 1.0.112 — was am 20.10.2026 schon bestätigt wurde
 
-Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.112-release`, starten mit
+Testverzeichnis `%USERPROFILE%\Eudora72-1.0.112-release`, starten mit
 `Eudora starten.cmd`. Das Mailverzeichnis im Paket ist **leer** — deine
-Postfächer liegen in `C:\Users\Gregor\Eudora72-Postfaecher-gesichert` und
+Postfächer liegen in `%USERPROFILE%\Eudora72-Postfaecher-gesichert` und
 müssen bei **geschlossenem** Eudora hineinkopiert werden.
 Unter *Help → About Eudora* muss **7.2.0.112** stehen.
 
@@ -1273,7 +1273,7 @@ Eigene Tests dieser Fassung: siehe [Releases/PRUEFBERICHT.md](../Releases/PRUEFB
 
 ## Buchführung — was wann an welchem Paket bestätigt wurde
 
-**Stand 23.10.2026: an 1.0.122 [E-125](BEFUNDE.md#e-125) bestätigt** (Ablehnung; die Gegenprobe am Prüfstand, [Testbericht](TESTBERICHT-E125.md)). [C8](#c8) wird als [M1](#m1-e132) geführt. **Stand 21.10.2026, nachmittags. [C9](#c9) ist durch: Gregor hat 1.0.119 getestet und [E-134](BEFUNDE.md#e-134) bestätigt** (*„ja, e-134 eintragen"*) — sein Bildschirmfoto zeigt drei Kurznamen mit Adressen im Baum. **[C10](#c10) ist ebenfalls durch: Gregor hat 1.0.120 getestet und [E-135](BEFUNDE.md#e-135) bestätigt** (*„beim cursor up/down bleibt die größe der box gleich. klasse!"*) — die Vervollständigungsbox im `To:`-Feld behält ihre Größe. **Offen zu testen bleibt [C8](#c8)** (der Starttest). Das Paket 1.0.119 liegt seit dem 21.10.2026 um 13:07 in `C:\Users\Gregor\Eudora72-1.0.119-release`; diese Zeile unverändert. Geschnürt und bei Gregor stehen 1.0.115 bis 1.0.118 (1.0.116 ist von ihm getestet, 1.0.117 und 1.0.118 nicht); 1.0.114 war bei ihm und ist an seinem eigenen Fund gescheitert. Veröffentlicht ist 1.0.120 als `v1.0.120` (21.10.2026, 19:07:37 UTC) — es trägt 1.0.118, 1.0.119 und 1.0.120; davor 1.0.117 als `v1.0.117` (07:56:56 UTC); an 1.0.117 selbst hat Gregor nichts am laufenden Programm gemessen, davor an 1.0.113 ebenfalls nichts. Davor Paket 1.0.112** (veröffentlicht als `v1.0.112`; an **1.0.110** bestätigt: eine gespeicherte Nachricht wird in Chrome richtig dargestellt — an **1.0.111** bestätigt: der Beenden-Weg auf beiden Wegen, 6015 ms aus dem lokalen Postfach und 4015 ms innerhalb des IMAP-Kontos — an **1.0.112** selbst ist **nichts am laufenden Programm gemessen**, es nimmt nur den Hochladezähler aus [PRÜFER-39](../Befunde/PRUEFER-39.md) N1 zurück). Davor: (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.111 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](../Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](../Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](../Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
+**Stand 23.10.2026: an 1.0.122 [E-125](BEFUNDE.md#e-125) bestätigt** (Ablehnung; die Gegenprobe am Prüfstand, [Testbericht](TESTBERICHT-E125.md)). [C8](#c8) wird als [M1](#m1-e132) geführt. **Stand 21.10.2026, nachmittags. [C9](#c9) ist durch: Gregor hat 1.0.119 getestet und [E-134](BEFUNDE.md#e-134) bestätigt** (*„ja, e-134 eintragen"*) — sein Bildschirmfoto zeigt drei Kurznamen mit Adressen im Baum. **[C10](#c10) ist ebenfalls durch: Gregor hat 1.0.120 getestet und [E-135](BEFUNDE.md#e-135) bestätigt** (*„beim cursor up/down bleibt die größe der box gleich. klasse!"*) — die Vervollständigungsbox im `To:`-Feld behält ihre Größe. **Offen zu testen bleibt [C8](#c8)** (der Starttest). Das Paket 1.0.119 liegt seit dem 21.10.2026 um 13:07 in `%USERPROFILE%\Eudora72-1.0.119-release`; diese Zeile unverändert. Geschnürt und bei Gregor stehen 1.0.115 bis 1.0.118 (1.0.116 ist von ihm getestet, 1.0.117 und 1.0.118 nicht); 1.0.114 war bei ihm und ist an seinem eigenen Fund gescheitert. Veröffentlicht ist 1.0.120 als `v1.0.120` (21.10.2026, 19:07:37 UTC) — es trägt 1.0.118, 1.0.119 und 1.0.120; davor 1.0.117 als `v1.0.117` (07:56:56 UTC); an 1.0.117 selbst hat Gregor nichts am laufenden Programm gemessen, davor an 1.0.113 ebenfalls nichts. Davor Paket 1.0.112** (veröffentlicht als `v1.0.112`; an **1.0.110** bestätigt: eine gespeicherte Nachricht wird in Chrome richtig dargestellt — an **1.0.111** bestätigt: der Beenden-Weg auf beiden Wegen, 6015 ms aus dem lokalen Postfach und 4015 ms innerhalb des IMAP-Kontos — an **1.0.112** selbst ist **nichts am laufenden Programm gemessen**, es nimmt nur den Hochladezähler aus [PRÜFER-39](../Befunde/PRUEFER-39.md) N1 zurück). Davor: (Teil A, C1, C2, [E-83](BEFUNDE.md#e-83), [E-85](BEFUNDE.md#e-85), [E-93](BEFUNDE.md#e-93) erledigt; [E-101](BEFUNDE.md#e-101) durchgefallen; [E-95](BEFUNDE.md#e-95)/[E-96](BEFUNDE.md#e-96) am 14.10. an 1.0.87 bestätigt; [C4](#c4) erledigt: [E-112](BEFUNDE.md#e-112), [E-103](BEFUNDE.md#e-103), [E-115](BEFUNDE.md#e-115) an 1.0.86, [E-117](BEFUNDE.md#e-117) an 1.0.87 bestätigt); 1.0.85 bis 1.0.87 liegen bei Gregor, 1.0.87 ist als `v1.0.87` veröffentlicht; getestet wurde an 1.0.84, 1.0.86 und 1.0.87; **Paket 1.0.111 ([E-69](BEFUNDE.md#e-69) Meldungsflut und die Prüfpunkte am Beenden-Weg zu [E-123](BEFUNDE.md#e-123); Prüfschritte in [C6](#c6); dazu [E-101](BEFUNDE.md#e-101) dritter Teil — F1, F3 und F4 aus [PRÜFER-37](../Befunde/PRUEFER-37.md) behoben, die Regression gegenüber 1.0.106 ist weg) — 1.0.107, 1.0.108 und 1.0.109 wurden übersetzt, aber NIE GESCHNÜRT, ihr Inhalt steckt in 1.0.110;** davor **Paket 1.0.106 ([E-69](BEFUNDE.md#e-69) und [E-123](BEFUNDE.md#e-123)) bei Gregor, nicht getestet;** davor Paket 1.0.104 ([E-123](BEFUNDE.md#e-123) Beenden wartet), **ersetzt durch 1.0.106, nie getestet;** davor **Paket 1.0.101 (gesendete Post nach IMAP, von Gregor bestätigt, veröffentlicht als `v1.0.101`);** davor **Paket 1.0.100 ([PRÜFER-31](../Befunde/PRUEFER-31.md) F1: zwei gesendete Mails auf einmal nach IMAP) von Gregor am 16.10.2026 getestet (eine gesendete und zwei Mails aus `In` hochgeladen, sauber beendet; zwei gesendete auf einmal nicht geprüft), kein Release wegen [PRÜFER-32](../Befunde/PRUEFER-32.md);** davor **Paket 1.0.99 (Neubau von 1.0.98, [E-124](BEFUNDE.md#e-124); [E-121](BEFUNDE.md#e-121) gesendete Post wieder hochgeladen und nur noch die verschobene Nachricht entfernt, [E-83](BEFUNDE.md#e-83) zweite Ursache) von Gregor am 16.10.2026 bestätigt; 1.0.97 und 1.0.98 nicht testen;** Paket 1.0.96 ([E-121](BEFUNDE.md#e-121) Kollision Kennung/Server-UID, an 1.0.95 gefunden) an 1.0.96 bestätigt; [E-118](BEFUNDE.md#e-118) Teil 1 an 1.0.89, Teil 2 an 1.0.90 bestätigt; offen: [C5](#c5) zum Testverzeichnis 1.0.89 ([E-105](BEFUNDE.md#e-105))**
 
 Was hier steht, ist aus dem Baum gemessen, nicht erinnert: die Maskenbits aus
 `QCUtils/public/inc/debug.h`, die vorhandenen Spurmarken aus den Quelltexten
@@ -1394,7 +1394,7 @@ grep "E-78\|E-70\|E-66\|E-76\|E-44\|E-43" eudora.log
 **Zahlen statt Augenmaß** für die Breite aus Schritt 3:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\leisten-messen.ps1 -Pfadfilter 'C:\Users\Gregor\Eudora72-1.0.84-release'
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\leisten-messen.ps1 -Pfadfilter '%USERPROFILE%\Eudora72-1.0.84-release'
 ```
 
 Einmal **vor** dem Ziehen, einmal **danach**. Der `-Pfadfilter` ist Pflicht,
@@ -1479,7 +1479,7 @@ Testverzeichnis bei dir; alle vier Befunde sind bestätigt, [E-117](BEFUNDE.md#e
 ### <a id="c5"></a>C5 · Paket 1.0.89 — E-118 und E-105
 
 **Stand 14.10.2026 ([LEKTOR-34](../Befunde/LEKTOR-34.md#lektor-34)).** Testverzeichnis
-`C:\Users\Gregor\Eudora72-1.0.89-release`, die Anleitung liegt dort als `TESTEN.txt`.
+`%USERPROFILE%\Eudora72-1.0.89-release`, die Anleitung liegt dort als `TESTEN.txt`.
 1.0.88 wurde nicht ausgeliefert (*„nein, 0.88 teste ich nicht zusätzlich, deine tests
 sollten reichen“*); [E-105](BEFUNDE.md#e-105) wird deshalb an 1.0.89 geprüft.
 **Vorher:** das Mailverzeichnis aus 1.0.87 hineinkopieren, Eudora dabei geschlossen —
@@ -1487,7 +1487,7 @@ das Mailverzeichnis im Paket ist leer.
 
 | | Befund | Paket | Handgriff |
 |---|---|---|---|
-| ✅ | [**E-118**](BEFUNDE.md#e-118) | 1.0.89 | eine HTML-Mail (etwa einen Newsletter) aus „In“ in einen IMAP-Ordner verschieben, den Ordner öffnen, die Mail anklicken — sie erscheint normal (Bilder, Formatierung, Umlaute richtig), **kein** `<head>… <body …>` als Text. Mails, die schon **vor** 1.0.89 verschoben wurden, bleiben auf dem Server falsch und erscheinen auch in 1.0.89 als Quelltext — **bestätigt 14.10.2026 an 1.0.89** (Newsletter-Mail). **Nicht bestanden** bei der SoftMaker-Mail: die eingebetteten Bilder fehlten (*„hier fehlt der inhalt“*) – das ist [E-118](BEFUNDE.md#e-118) Teil 2, zu prüfen an 1.0.90 |
+| ✅ | [**E-118**](BEFUNDE.md#e-118) | 1.0.89 | eine HTML-Mail (etwa einen Newsletter) aus „In“ in einen IMAP-Ordner verschieben, den Ordner öffnen, die Mail anklicken — sie erscheint normal (Bilder, Formatierung, Umlaute richtig), **kein** `<head>… <body …>` als Text. Mails, die schon **vor** 1.0.89 verschoben wurden, bleiben auf dem Server falsch und erscheinen auch in 1.0.89 als Quelltext — **bestätigt 14.10.2026 an 1.0.89** (Newsletter-Mail). **Nicht bestanden** bei der Rundbrief-Mail: die eingebetteten Bilder fehlten (*„hier fehlt der inhalt“*) – das ist [E-118](BEFUNDE.md#e-118) Teil 2, zu prüfen an 1.0.90 |
 | ☑ | [**E-105**](BEFUNDE.md#e-105) | 1.0.120 | einen freenet-Newsletter beantworten oder weiterleiten — jedes Bild und jeder Absatz genau einmal, keine Zeile `? ? ? ?` über dem Inhalt |
 
 Bekannt und nicht behoben, also kein neuer Fehler: [E-119](BEFUNDE.md#e-119) (`data:`-Bilder als

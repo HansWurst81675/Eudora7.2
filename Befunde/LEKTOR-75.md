@@ -73,7 +73,7 @@ zweimal in `BEFUNDE.md:389`).
   geschnuert“*) (gemessen: `git log`).
 * `Intern/WEITERMACHEN.md:12`, Zeile *Paketnummer* (belegt): *„**1.0.124** …
   Testpaket … — Kurztest in [TESTPLAN.md]“*; dass das Paket geschnürt ist und
-  in `C:\Users\Gregor\Eudora72-1.0.124-release` liegt, steht dort nicht.
+  in `%USERPROFILE%\Eudora72-1.0.124-release` liegt, steht dort nicht.
 
 Wer nach einer Unterbrechung bei *„HIER WEITERMACHEN“* einsteigt, beginnt mit
 zwei erledigten Schritten. **Was zu tun wäre:** in `:145` die ersten beiden
@@ -97,7 +97,7 @@ Windows-Registry verändert und Abstürze nicht bemerkt.
 
 Gelesen wird das als: die Zählung für 7.2.0.124 ist gemacht. Sie kann es nicht
 sein — Gregor hat 1.0.124 noch nicht gestartet (das Mailverzeichnis in
-`C:\Users\Gregor\Eudora72-1.0.124-release` enthält nur `Eudora.ini`, gemessen
+`%USERPROFILE%\Eudora72-1.0.124-release` enthält nur `Eudora.ini`, gemessen
 mit `ls`). Vermutung: gemeint ist der volle Prüfstandslauf am Bau 7.2.0.124
 um 12:31, der mit dem neuen `pruefstand-lauf.ps1` lief. **Was zu tun wäre:**
 im Eintrag einen Satz, was an 7.2.0.124 gemessen wurde (etwa *„Prüfstandslauf

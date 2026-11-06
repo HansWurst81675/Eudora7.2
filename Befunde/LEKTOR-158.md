@@ -108,7 +108,7 @@ Der Satz in `gedaechtnis-ist-oeffentlich.md:126`, *„Über die Kennung liefert 
 
 ### <a id="l-158.8"></a>L-158.8 — Pfade in Gregors Testverzeichnisse: rund 290 Zeilen, drei nach dem 03.11.
 
-**Gewicht: gering.** `C:\Users\Gregor\Eudora72-<Fassung>-…` und ähnliche Pfade stehen in etwa 290 Zeilen. Am meisten in `Releases/PAKETE.md` (rund 80), `Intern/TESTPLAN.md`, `Befunde/LEKTOR-*`, `Arbeitsweise/`, aber auch in `Eudora71/Tests/TestE132.cpp:33`, `:55`, `:65`, `:178`, `:181`, `Eudora71/Eudora/eudora.cpp:3931`, `Eudora71/Eudora/msgutils.cpp:3151` und in `tools/*.ps1`. Das Namensmuster selbst steht in `CLAUDE.md` §4. Nach der Regel vom 03.11. sind drei dazugekommen: `Arbeitsweise/stand-03-11-2026-abend.md:15`, `Befunde/PRUEFER-91.md:54`, `Releases/PAKETE.md:268`.
+**Gewicht: gering.** `%USERPROFILE%\Eudora72-<Fassung>-…` und ähnliche Pfade stehen in etwa 290 Zeilen. Am meisten in `Releases/PAKETE.md` (rund 80), `Intern/TESTPLAN.md`, `Befunde/LEKTOR-*`, `Arbeitsweise/`, aber auch in `Eudora71/Tests/TestE132.cpp:33`, `:55`, `:65`, `:178`, `:181`, `Eudora71/Eudora/eudora.cpp:3931`, `Eudora71/Eudora/msgutils.cpp:3151` und in `tools/*.ps1`. Das Namensmuster selbst steht in `CLAUDE.md` §4. Nach der Regel vom 03.11. sind drei dazugekommen: `Arbeitsweise/stand-03-11-2026-abend.md:15`, `Befunde/PRUEFER-91.md:54`, `Releases/PAKETE.md:268`.
 
 **Vorschlag:** Die drei neuen Stellen auf „neben Gregors letzter Fassung“ stellen. Für den Altbestand fehlt eine Entscheidung ([Was nur Gregor entscheiden kann](#gregor)).
 

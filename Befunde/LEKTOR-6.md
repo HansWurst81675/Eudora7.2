@@ -958,8 +958,8 @@ Die Kopien liegen jetzt im Arbeitsverzeichnis, sind aber nicht gestaget.
 
 | Befehl | Ergebnis |
 |---|---|
-| `git rev-parse --path-format=absolute --git-common-dir` | `C:/Users/Gregor/…/Eudora7.2/.git` → **Hauptbaum** |
-| `git rev-parse --show-toplevel` | `C:/Users/Gregor/…/Eudora7.2-wt-lektor` → **dieser Arbeitsbaum** |
+| `git rev-parse --path-format=absolute --git-common-dir` | `%USERPROFILE%/…/Eudora7.2/.git` → **Hauptbaum** |
+| `git rev-parse --show-toplevel` | `%USERPROFILE%/…/Eudora7.2-wt-lektor` → **dieser Arbeitsbaum** |
 | `$ziel` im Werkzeug | war `"$wurzel/Arbeitsweise"` mit `$wurzel` aus dem **common-dir** |
 
 Das Werkzeug hat `$wurzel` **absichtlich** aus `--git-common-dir` genommen —

@@ -156,7 +156,7 @@ denselben Versuch gefahren. Ergebnis: **keine Ausnahmemeldung**, und wieder
 0 Spurzeilen.
 
 **(c) Das ausgelieferte Paket 1.0.18 zeigt die Meldung ebenfalls nicht.**
-Kontrollversuch mit `C:\Users\Gregor\Eudora72-1.0.18-release` (in ein eigenes
+Kontrollversuch mit `%USERPROFILE%\Eudora72-1.0.18-release` (in ein eigenes
 Verzeichnis kopiert): auch dort **keine Ausnahmemeldung** beim Strg-N-Versuch.
 Das ist derselbe Bau, in dem [E-32](../Intern/BEFUNDE.md#e-32) gemeldet wurde.
 

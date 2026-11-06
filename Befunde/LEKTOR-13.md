@@ -32,7 +32,7 @@ gegen den Quelltext, gegen GitHub und gegen das Dateisystem nachgemessen.
 | Markdown-Verweise ins Leere | eigenes Skript | alle `[…](….md)` |
 | Werkzeugverweise ins Leere | `ls` gegen Text | 99 Dateien in `tools/` |
 | Veröffentlichte Releases | `gh release list`, `git ls-remote --tags` | 13 Releases |
-| Paket- und Verzeichnisstand | Dateisystem | `Releases/`, `C:\Users\Gregor\` |
+| Paket- und Verzeichnisstand | Dateisystem | `Releases/`, `%USERPROFILE%\` |
 | Testzahl | **Lauf des Testprogramms** | 166 Tests |
 
 ## Die Liste: Behauptung — gemessener Befund — berichtigt

@@ -82,7 +82,7 @@ Prüfstand"*, mit Verweis auf den Testbericht.
 **Was stimmt** (gemessen, nur die Dateiangaben gelesen, nicht geöffnet):
 
 ```
-$ ls -la --time-style=full-iso /c/Users/Gregor/Eudora72-1.0.122-release.zip
+$ ls -la --time-style=full-iso $HOME/Eudora72-1.0.122-release.zip
 -rw-r--r-- 1 Gregor 197121 9308973 2026-10-23 13:28:50 … Eudora72-1.0.122-release.zip
 ```
 

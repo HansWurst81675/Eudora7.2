@@ -18,7 +18,7 @@
 | SHA-256 | `26fde41437ae159659675f73cef9037a87aff755e3f71ca5a4bc084a3af6a6a1` — am Anhang auf GitHub gemessen (`gh release view v1.0.120 --json assets`), byte-gleich mit dem ZIP im Arbeitsbaum |
 | Enthält | **drei** Quellstände: 7.2.0.118 ([E-132](../../Intern/BEFUNDE.md#e-132), fehlgeschlagene Rückfrage), 7.2.0.119 ([E-134](../../Intern/BEFUNDE.md#e-134), Kurzname), 7.2.0.120 ([E-135](../../Intern/BEFUNDE.md#e-135), Vervollständigungsbox) |
 | Freigabe | Gregor am 21.10.2026: *„ich habe ja schon alles getestet."* |
-| Geschnürt | 21.10.2026 um 14:14 nach `C:\Users\Gregor\Eudora72-1.0.120-release`; Einzelheiten in [Releases/PAKETE.md](../PAKETE.md), Abschnitt 1.0.120 |
+| Geschnürt | 21.10.2026 um 14:14 nach `%USERPROFILE%\Eudora72-1.0.120-release`; Einzelheiten in [Releases/PAKETE.md](../PAKETE.md), Abschnitt 1.0.120 |
 
 ## Der veröffentlichte Text, wörtlich
 

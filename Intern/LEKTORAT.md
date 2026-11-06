@@ -1629,7 +1629,7 @@ Test, mit `pruefe-release-buchfuehrung.pl` von Hand direkt nach
 Dateiende. **Ein Muster für eine neue Schranke:** fünf der sieben Funde sind
 Aussagen über den eigenen Auslieferungsstand, und keine der 33 Schranken hat
 eine davon gesehen — sie prüfen Dokumente gegen Dokumente, nie gegen
-`ls Releases/*.zip`, `ls C:\Users\Gregor\Eudora72-*` oder `sha256sum`.
+`ls Releases/*.zip`, `ls %USERPROFILE%\Eudora72-*` oder `sha256sum`.
 
 ## Zweiundfünfzigster Durchgang — die Papiere zu 1.0.119, 21.10.2026 (Bericht: `Befunde/LEKTOR-47.md`)
 
@@ -1670,7 +1670,7 @@ unter der Bedingung, dass beim Schnüren vier Stellen nachgezogen werden, die
 jetzt ausdrücklich *„noch nicht geschnürt"* sagen. **Dieselbe Schranke fehlt
 zum vierten Mal:** die Prüfung aus [L-44.11](../Befunde/LEKTOR-44.md#l-44.11),
 die *„veröffentlicht ist …"* und *„geschnürt ist …"* gegen `gh release view`,
-`ls Releases/*.zip` und `ls C:\Users\Gregor\Eudora72-*` hält statt gegen andere
+`ls Releases/*.zip` und `ls %USERPROFILE%\Eudora72-*` hält statt gegen andere
 Dokumente. Sie hätte sechs der zwölf Funde gefangen, darunter alle vier
 schweren.
 

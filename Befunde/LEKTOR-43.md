@@ -200,7 +200,7 @@ gegenüber `v1.0.87`"* beschrieb den Sprung auf 1.0.101; sie heißt jetzt *„Ne
 
 `TESTPLAN.md:1` sagte *„Paket 1.0.112, Stand 20.10.2026"*. `:5-9` sagten:
 
-> Testverzeichnis `C:\Users\Gregor\Eudora72-1.0.110-release` …
+> Testverzeichnis `%USERPROFILE%\Eudora72-1.0.110-release` …
 > Unter *Help → About Eudora* muss **7.2.0.110** stehen.
 
 Der Plan wurde heute zweimal umgebaut; dabei ist der Kopf mitgewandert und der

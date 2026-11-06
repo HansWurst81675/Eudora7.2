@@ -10,6 +10,6 @@ fall=[FEHL] E-133p   fehlt in messung: E133 ERGEBNIS meldung=rueckfrage gestarte
                          Beendet sich nicht - wird nach Pfadpruefung abgeschossen.
                          Zeit vom WM_CLOSE bis zum Ende: 30.3 s
                          Beendet: True
-                         Protokolliert in C:\Users\Gregor\Documents\github\Eudora7.2\.wt\e151\tools\TESTLAEUFE.md
+                         Protokolliert in %USERPROFILE%\Documents\github\Eudora7.2\.wt\e151\tools\TESTLAEUFE.md
 fall=[ ok ] E-133r   E133 REGISTRY zeigt-hierher=1
 fall=[ ok ] E-133q   E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"

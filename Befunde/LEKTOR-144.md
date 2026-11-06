@@ -14,13 +14,13 @@
 
 ## Proben mit echter Hook-Eingabe (gemessen)
 
-JSON `{tool_input:{command:…}, cwd:"C:\Users\Gregor\Documents\github\Eudora7.2"}` an `perl tools/haken-pr-lektor.pl` aus `.wt/lektor` (Skriptstand `f4bdb2b2`):
+JSON `{tool_input:{command:…}, cwd:"%USERPROFILE%\Documents\github\Eudora7.2"}` an `perl tools/haken-pr-lektor.pl` aus `.wt/lektor` (Skriptstand `f4bdb2b2`):
 
 | Befehl | Rückgabe | gemessener Baum laut Meldung |
 |---|---|---|
 | `gh pr create --head e188_loeschschranke …` | 2 | `.wt/e188`, *„LEKTOR ist faellig: seit seinem Bericht (fe71b1a) haben sich 11 Datei(en) …“* — richtig |
 | `cd C:/…/.wt/e188 && gh pr create …` | 2 | `.wt/e188` — richtig |
-| `cd "C:/…/.wt/e188" && gh pr create …` | 2 | **`main`: `C:/Users/Gregor/Documents/github/Eudora7.2`** — falscher Baum ([L-144.1](#l-144.1)) |
+| `cd "C:/…/.wt/e188" && gh pr create …` | 2 | **`main`: `%USERPROFILE%/Documents/github/Eudora7.2`** — falscher Baum ([L-144.1](#l-144.1)) |
 | `Set-Location .wt\e188; gh pr create …` | 2 | **`main`** — falscher Baum |
 | `git -C .wt/e188 push; gh pr create …` | 2 | `main` — richtig, `gh` reicht dann den Zweig des Hauptordners ein |
 | `gh pr create --head HansWurst81675:e188_loeschschranke …` | 2 | *„liegt in keinem Arbeitsbaum“* — hält auf, sicher |

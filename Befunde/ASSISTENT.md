@@ -6,7 +6,7 @@
 **Fassung:** 7.2.0.10 · **Status:** Ursache belegt, behoben
 
 Gregor am 05.09.2026, zu seinem **selbst gebauten** Stand
-(`C:\Users\Gregor\Documents\github\selbst_bauen\Eudora7.2`, Bau grün,
+(`%USERPROFILE%\Documents\github\selbst_bauen\Eudora7.2`, Bau grün,
 18 Projekte): *„crash nach weiter (selbst compiliert)"*.
 
 Das ist derselbe Absturz wie **[E-9](../Intern/BEFUNDE.md#e-9)** vom 31.08.2026. Er ist nie behoben worden —

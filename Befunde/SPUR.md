@@ -195,7 +195,7 @@ Zusätzlich gegen die echte Datei gemessen:
 
 ```
 perl tools/absturz-auswerten.pl \
-  "C:\Users\Gregor\Eudora72-1.0.12-release\Mailverzeichnis\Exception.log" \
+  "%USERPROFILE%\Eudora72-1.0.12-release\Mailverzeichnis\Exception.log" \
   --karte="…\Eudora71\Bin\Release\Eudora.map"
 → DIE MODULTABELLE FEHLT IN DIESEM BERICHT.  (Rueckgabe 2)
 ```

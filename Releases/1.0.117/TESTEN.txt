@@ -19,7 +19,7 @@ Installation". Nicht loeschen, nicht verschieben.
 
 Notier dir vorher Datum und Uhrzeit dieser Datei:
 
-   C:\Users\Gregor\Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini
+   %USERPROFILE%\Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini
 
 Daran siehst du am Ende, ob etwas hineingeschrieben wurde.
 
@@ -57,7 +57,7 @@ Es kommt ein Fenster "Eudora 7.2" mit der Meldung
 
    Eudora found an existing mail folder that belongs to another
    installation:
-   C:\Users\Gregor\Eudora72-1.0.113-release\Mailverzeichnis
+   %USERPROFILE%\Eudora72-1.0.113-release\Mailverzeichnis
 
 und drei Schaltflaechen:
 
@@ -73,7 +73,7 @@ DANACH PRUEFEN
 
 Eudora laeuft mit einem leeren eigenen Postfach, und
 
-   C:\Users\Gregor\Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini
+   %USERPROFILE%\Eudora72-1.0.113-release\Mailverzeichnis\Eudora.ini
 
 hat NOCH DENSELBEN ZEITSTEMPEL wie vorher.
 
@@ -82,7 +82,7 @@ WENN GAR KEIN FENSTER KOMMT
 Dann greift die Rueckfrage nicht - bitte melden. Hilfreich ist
 dann diese Zeile aus dem Protokoll:
 
-   findstr E-132 "C:\Users\Gregor\Eudora72-1.0.117-release\Mailverzeichnis\eudora.log"
+   findstr E-132 "%USERPROFILE%\Eudora72-1.0.117-release\Mailverzeichnis\eudora.log"
 
 Dort muss "E-132 Startverzeichnis: ... fremd=1" stehen. Steht da
 "fremd=0", hat Eudora das Verzeichnis fuer sein eigenes gehalten -
@@ -171,8 +171,8 @@ WENN DOCH WIEDER GEFRAGT WIRD:
   (EUDORA~1.115), greift die Aufloesung nicht.
 
 Der Pfad im Fenster muss jetzt AUSGESCHRIEBEN sein, also
-C:\Users\Gregor\Eudora72-1.0.113-release\Mailverzeichnis
-und nicht C:\Users\Gregor\EUDORA~1.113\MAILVE~1.
+%USERPROFILE%\Eudora72-1.0.113-release\Mailverzeichnis
+und nicht %USERPROFILE%\EUDORA~1.113\MAILVE~1.
 
 
 ---------------------------------------------------------------------

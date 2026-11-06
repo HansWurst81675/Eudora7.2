@@ -21,7 +21,7 @@ Gregor gab um ~22:40 eine halbe Stunde und fuhr dann herunter (Testlauf: "egal, 
 4. PR - `gh` ist NICHT freigegeben (Abfrage). Gregor die Regel `Bash(gh pr create:*)` nennen.
 5. CHRONIST-Lauf (Bericht soll `CHRONIST-2026-10-30c.md` werden) lief beim Herunterfahren noch; was davon im memory-Ordner liegt, pruefen und vervollstaendigen.
 
-**Freigaben** siehe [[freigaben-settings-local]]. Ohne Abfrage liefen: Read/Grep/Glob/Edit/Write im Projekt, in `.wt/lektor` und im memory-/projects-Ordner; `git status/log/add/commit`, `git push`, `perl tools/...`. MIT Abfrage: `git fetch`, `git merge`, `gh`, Shell-Argumente mit Pfaden unter `C:\Users\Gregor\.claude`. Primaeres Arbeitsverzeichnis der Sitzung war zuletzt `.wt/lektor` (durch ein cd) - immer absolute Pfade.
+**Freigaben** siehe [[freigaben-settings-local]]. Ohne Abfrage liefen: Read/Grep/Glob/Edit/Write im Projekt, in `.wt/lektor` und im memory-/projects-Ordner; `git status/log/add/commit`, `git push`, `perl tools/...`. MIT Abfrage: `git fetch`, `git merge`, `gh`, Shell-Argumente mit Pfaden unter `%USERPROFILE%\.claude`. Primaeres Arbeitsverzeichnis der Sitzung war zuletzt `.wt/lektor` (durch ein cd) - immer absolute Pfade.
 
 `tools/messen-e140.ps1` liegt weiter ungetrackt im Hauptbaum, nie gelaufen.
 

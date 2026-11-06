@@ -3,9 +3,9 @@
 | | |
 |---|---|
 | Datum | 11.09.2026 |
-| Arbeitsbaum | `C:\Users\Gregor\Documents\github\Eudora7.2-wt-pruefer` |
+| Arbeitsbaum | `%USERPROFILE%\Documents\github\Eudora7.2-wt-pruefer` |
 | Zweig | `wt/pruefer`, Stand von `origin/main` (`a1a4c31`) |
-| Gemessen an | dem Quelltext selbst, den Commits `567a5d8`, `83c80fa`, `b3be298`, `f0952d2` und den sieben Postfächern in `C:\Users\Gregor\Eudora72-1.0.44-release\Mailverzeichnis` (134 Nachrichten) |
+| Gemessen an | dem Quelltext selbst, den Commits `567a5d8`, `83c80fa`, `b3be298`, `f0952d2` und den sieben Postfächern in `%USERPROFILE%\Eudora72-1.0.44-release\Mailverzeichnis` (134 Nachrichten) |
 | Nicht getan | **nicht gebaut, kein Programm gestartet.** Geändert wurden nur `tools/` und diese Datei |
 
 **Kurzfassung.** Vier Schranken gebaut, jede mit einer eigenen Gegenprobe;

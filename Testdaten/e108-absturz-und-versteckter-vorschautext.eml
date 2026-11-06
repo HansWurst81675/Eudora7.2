@@ -31,7 +31,7 @@ Importance: normal
 From: "absender" <absender@beispiel.invalid>
 To: empfaenger@beispiel.invalid
 MIME-Version: 1.0
-Content-Type: multipart/alternative; boundary="--_com.samsung.android.email_0000000000000000"
+Content-Type: multipart/alternative; boundary="--_org.example.phonemail.app_0000000000000000"
 Message-ID: <nachricht-003@beispiel.invalid>
 X-Provags-ID: V03:K1:XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
  XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX

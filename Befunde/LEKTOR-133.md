@@ -48,7 +48,7 @@ Die sechs Befundtexte stimmen in dem, was sie über den Quelltext sagen: Filterz
 | ohne Kopfzeilen `get_text`, mit Kopfzeilen Rohtext | `BEFUNDE.md:401` ([E-206](../Intern/BEFUNDE.md#e-206)) | `TridentReadMessageView.cpp:2910` `get_text`, `:2003-2025` `GetAllText` mit `GetFullMessage(RAW)` (`:2018`) — trifft; „Aufruf `:2946`“ siehe [L-133.5](#l-133.5) |
 | Tests zu K7/N3, K8, N5 | `BEFUNDE.md:400`, `:405`, `:407` | `TestE196.cpp:240` `Test_E196_K7`, `:257-258` mit `<p class="x">` (N3); `TestE194.cpp:126-131` (K8); `91a2856f` *„Gegenprobe J3 … 382/383, rot genau [E-207](../Intern/BEFUNDE.md#e-207) (Quelltext)“* — trifft |
 | Prüfstandsfälle | `BEFUNDE.md:400-407` | `tools/pruefstand-faelle.txt:366`, `:376`, `:377`, `:384`; zuletzt gelaufen `Intern/pruefstand-buch.tsv:50-53` (alle `ok`) — siehe [L-133.6](#l-133.6) |
-| persönliche Angaben | Diff `456c95e1..HEAD`, Commit-Nachrichten | `grep -ci 'Users\\Gregor\|Eudora72-\|@gmx\|@web\.de\|@t-online'` über die hinzugefügten Zeilen und `git log --format=%B` → je 0 |
+| persönliche Angaben | Diff `456c95e1..HEAD`, Commit-Nachrichten | `grep -ci 'Users\\Anwender\|Eudora72-\|@gmx\|@web\.de\|@t-online'` über die hinzugefügten Zeilen und `git log --format=%B` → je 0 |
 
 ## Funde
 
