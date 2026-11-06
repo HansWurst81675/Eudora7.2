@@ -58,3 +58,11 @@ Gemessen beim CHRONIST-Lauf am 03.11. abends: Die E-188-Zeile in `BEFUNDE.md` tr
 - **Eine Messung, die einen Verlustweg zeigt, setzt im selben Commit `DATENVERLUST`** in die Urteilszeile, auch auf einem reinen Messzweig.
 - **Ein Ja zum Release, das vor der Messung fiel, gilt nicht für den neuen Stand.** Die Frage an Gregor lautet ausdrücklich: „7.2.2.132 veröffentlichen, obwohl E-188 Mails auf dem Server verlieren kann, mit der Warnung in den Notizen?“ Seine Antwort kommt wörtlich in die Begründung von `-TrotzDatenverlust`.
 - **Schranken-Vorschlag (nicht gebaut):** `release-veroeffentlichen.ps1` fährt `pruefe-datenverlust.pl` wie der Paketbau; das Werkzeug meldet zusätzlich Urteilszeilen mit *„auf dem Server verloren“*, *„geht verloren“* oder *„Mailverlust“* ohne `DATENVERLUST`. Gegenprobe: E-188-Zeile des Messzweigs → gemeldet; mit `DATENVERLUST` und `**offen**` → Release abgewiesen; mit `**behoben**` → durch.
+
+## Nachtrag 06.11.2026 (CHRONIST): das Release kam, während die prüfende Rolle noch lief
+
+Zeiten MEZ, Transkript `1ad467cf`, gemessen ([[CHRONIST-2026-11-06]], Abschnitt 5). 03.11. 18:26:05 startete die Hauptsitzung selbst den CHRONIST. 18:38:19 veröffentlichte sie v7.2.2.132. 18:47:29 kam der CHRONIST zurück, erster Punkt: E-188 ist ein gemessener Mailverlust, das Release eine offene Frage an Gregor. Gefragt wurde 18:48:34, Gregor 18:52:20: *„Stehen lassen“* ([[entscheidung-e188-release-7-2-2-132]]). Die Abfrage vor dem Release (18:29:36) nannte nur Zweig und Werkzeug.
+
+Seither richtig: Vor v7.2.2.133 (05.11. 09:36:22) und v7.2.2.136 (06.11. 11:16:28) stand die Frage nach neuem Verlust ausdrücklich da. Weiter offen: `release-veroeffentlichen.ps1` fährt `pruefe-datenverlust.pl` nicht (gemessen am 06.11., `grep -i datenverlust` leer).
+
+**How to apply, zusätzlich:** Läuft eine Rolle, deren Ergebnis das Release berührt (CHRONIST, LEKTOR, PRÜFER), wird es vor dem Veröffentlichen abgewartet. Schranken-Vorschlag (nicht gebaut): `release-veroeffentlichen.ps1` liest `tools/AGENTEN-LAUFEN.md` im Hauptordner wie `haken-pr-lektor.pl` und weist ab, solange eine dieser Rollen als laufend steht; dazu Vorschlag 2 vom 03.11. **Gegenprobe:** Zustand 03.11. 18:38 → abweisen; leere Agentenliste → durch.

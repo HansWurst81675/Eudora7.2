@@ -222,3 +222,11 @@ Neu gegenüber dem 15.10. und 30.10.: Die Messung war jedes Mal da und schnell, 
 Die Frage von 09:06:14, *„alle gemergten fixes sind dann auch im changelog, befunde, weitermachen, testplan usw. nachgezogen?“*, ist fast dieselbe wie am 01.11. um 17:23:40. Beide Male wurde in den nächsten 30 Sekunden gemessen, und beide Male fehlte der Satz an Gregor. Bei 08:14 ebenso: drei Suchen nach Gregors früherer RTF-Entscheidung, dann ging es mit dem Prüfstand weiter. Fünftes gemessenes Auftreten (15.10., 28.10., 30.10., 01.11., 03.11.). Die Einwurfquote stieg von 27 % (02.11. tagsüber) auf 49 %.
 
 **How to apply, zusätzlich:** Kommen mehrere Einwürfe kurz hintereinander, beantwortet die nächste Meldung jeden einzeln, mit Uhrzeit oder Zitat, bevor sie den eigenen Stand nennt. `verlauf-messen.pl --offen` (Vorschlag vom 30.10.) bleibt ungebaut. Gegenprobe heute: 09:06:14 und 09:58:25 erscheinen, 13:36:00 (beantwortet 13:36:11) nicht.
+
+## Nachtrag 06.11.2026 (CHRONIST): vier Fragen ohne Antwort, und „etwas zum Mergen?“
+
+Zeiten MEZ, gemessen ([[CHRONIST-2026-11-06]], Abschnitt 8). Ohne Antwort oder an der Frage vorbei: 04.11. 15:29:56 (*„wieviel tickets … fehlen noch zum nächsten release“*; beantwortet wurde die Nummer, Gregor brach den nächsten Befehl ab), 04.11. 18:17:46 (*„pull request?“*, Antwort nur *„Alles ist gesichert“*), 05.11. 19:43:38 (*„sollte der prüfer finden? oder buchhalter? oder wer?“*), 06.11. 10:38:46 (halbe Antwort). Sechstes gemessenes Auftreten seit dem 15.10.
+
+Dazu zehn Nachrichten Gregors zum Mergen in vier Tagen, fünf davon Nachfragen (03.11. 19:14:29, 04.11. 09:02:50, 18:17:46, 05.11. 10:21:19, 22:34:40). Wer fragen muss, ob etwas bereitliegt, bekommt den Stand nicht von selbst.
+
+**How to apply, zusätzlich:** Jede Meldung, nach der Gregor warten oder herunterfahren könnte, endet mit „Zum Mergen: …“ oder „Zum Mergen: nichts, weil …“ ([[pr-zum-mergen-ganz-oben]]). Sichtbare Zwischenmeldungen stehen im Transkript teils als `thinking`-Block (Signatur „narration“); `verlauf-messen.pl --offen` muss beide Blockarten lesen, sonst zählt es beantwortete Fragen als offen (04.11. 07:30:40, beantwortet 07:31:04 nur dort).

@@ -22,23 +22,23 @@ Nummer: `7.2.2.136`. Dieses Release enthält alles seit `v7.2.2.133`.
 * **Kein Absturz mehr beim Beenden, während der Hinweis nach dem Mailabruf
   offen ist:** Eudora schiebt das Beenden auf, bis der Hinweis mit *OK*
   geschlossen ist, und beendet sich dann von selbst
-  ([E-239](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-239),
-  Originalfehler).
+  ([E-239](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-239);
+  ob der Fehler schon im Original steckt, ist nicht gemessen).
 
 ## Neu
 
 * **Druck und Druckvorschau mit Hintergründen auf Wunsch:** mit
-  `PrintBackground=1` in `[Settings]` der `Eudora.ini` zeigen *Print* und
-  *Print Preview* auch farbige Flächen und Hintergrundbilder einer HTML-Mail;
-  Vorgabe `0`, also wie bisher. Eudora vorher beenden
+  `PrintBackground=1` in `[Settings]` der `Eudora.ini` zeigt *Print Preview*
+  auch farbige Flächen und Hintergrundbilder einer HTML-Mail; Vorgabe `0`,
+  also wie bisher. Eudora vorher beenden. Derselbe Schalter gilt für *Print*;
+  der Druck auf Papier ist aber noch nicht gemessen
   ([E-169](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-169)).
 
 ## Wie geprüft
 
 Jede Behebung hat einen Regressionstest und einen Prüfstandsfall am laufenden
-Programm, der am alten Bau rot und am neuen grün war
-([Prüfbericht](https://github.com/HansWurst81675/Eudora7.2/blob/main/Releases/PRUEFBERICHT.md)).
-Der volle Prüfstandslauf an genau diesem Bau (`7.2.2.136+2a8fd4d7`) am
+Programm. Für E-239 ist rot/grün gemessen: am alten Bau 7.2.2.135 stürzte
+Eudora im Prüfstandsfall dreimal von drei ab, an diesem Bau nicht. Der volle Prüfstandslauf an genau diesem Bau (`7.2.2.136+2a8fd4d7`) am
 06.11.2026: **110 von 110 Fällen bestanden**. Das Beenden bei offenem Hinweis
 nach dem Abruf ist zusätzlich auf drei Wegen gemessen (Fenster schließen,
 *Fenster schließen* aus der Taskleiste, *Exit* aus dem Menü des Symbols im
