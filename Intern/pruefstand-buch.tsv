@@ -36,8 +36,9 @@ E-128t-alt	ok	2026-11-03 08:29:31	C:\Temp\E128T-alt	Eudora 7.2.1.131+a2f29b69* 2
 E-131a	ok	2026-11-06 11:30:44	C:\Temp\E131L	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	ohne MRUFloatXPos=-2147483648
 E-131b	ok	2026-11-06 11:30:44	C:\Temp\E131L	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	ohne MRUFloatYPos=-2147483648
 E-131c	ok	2026-11-06 11:30:44	C:\Temp\E131L	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E-131 Leistenposition:
-E-133p	ok	2026-11-06 11:30:44	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=C:\Temp\E133\Eudora.exe C:\Temp\E133\MAILVE~1
-E-133q	ok	2026-11-06 11:30:44	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"
+E-133p	ok	2026-11-06 16:37:09	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=
+E-133q	ok	2026-11-06 16:37:09	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"
+E-133r	ok	2026-11-06 16:37:09	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E133 REGISTRY zeigt-hierher=1
 E-137a	ok	2026-11-06 11:30:44	C:\Temp\E137	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1
 E-137b	ok	2026-11-06 11:30:44	C:\Temp\E137	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1
 E-137c	ok	2026-11-06 11:30:44	C:\Temp\E137	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja
@@ -95,7 +96,7 @@ E-204p	ok	2026-11-06 11:30:44	C:\Temp\E204	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 
 E-204w	ok	2026-11-06 11:30:44	C:\Temp\E204	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E204 PROBE ok
 E-205p	ok	2026-11-06 11:30:44	C:\Temp\E205	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E205 ERGEBNIS neu1=0h neu2=0h q1=0h q2=0h liste1=0h liste2=0h zone=passt lebt=1
 E-207p	ok	2026-11-06 11:30:44	C:\Temp\E207	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E207 ERGEBNIS fenster=1 geaendert=1 txt=passt htm=passt frage=0 sig=unveraendert lebt=1
-E-216l	ok	2026-11-06 11:30:44	C:\Temp\EABOUT-langer-pfad-fuer-die-log-zeile	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
+E-216l	ok	2026-11-06 16:37:20	C:\Temp\EABOUT-lang-log	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
 E-216p	ok	2026-11-06 11:30:44	C:\Temp\EABOUT	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	ABOUT ERGEBNIS knoepfe=5 ueberlappt=0 github=1 herkunft-zeilen=2 log-zeilen=2 passt=1 rand=0 lebt=1
 E-220p	ok	2026-11-06 11:30:44	C:\Temp\E220	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E220 ERGEBNIS mbx=1 probe=1 liste-pfad=0 liste-umlaute=1 liste-doppelleer=0 liste-ende=1 liste-gespeichert=1 liste-voll=1 liste-punkte=1 liste-endung=eml lesen-pfad=0 lesen-umlaute=1 lesen-doppelleer=0 lesen-ende=1 lesen-gespeichert=1 lesen-voll=1 lesen-punkte=1 lesen-endung=htm liste2-pfad=0 liste2-umlaute=1 liste2-doppelleer=0 liste2-ende=1 liste2-gespeichert=1 liste2-voll=1 liste2-punkte=1 liste2-endung=eml lebt=1
 E-221alt	ok	2026-11-03 14:26:42	C:\Temp\E221-alt	Eudora 7.2.1.131+a2f29b69* 2026-11-02 13:23	E221 ERGEBNIS gesendet=1

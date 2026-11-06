@@ -100,6 +100,8 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-244](BEFUNDE.md#e-244)** | Liegt der Klon in einem Pfad mit Leerzeichen, startet kein Prüfserver — alle Fälle mit… | **nie gemessen** | die Argumente mit Leerzeichen selbst in Anführungszeichen setzen (oder `Start-Process` mit einer einzigen, fertig gequoteten Argumentzeile), dann aus… |
+| **[E-243](BEFUNDE.md#e-243)** | Prüfstand-Werkzeuge konnten echte Eudora-Instanzen unter C:\Temp treffen — Postfächer … | **nie gemessen** | der Merge von `e151_pruefstand_klon`; die Messskripte prüfen die Marke nicht selbst (sie laufen nur über `pruefstand-lauf.ps1`/`testlauf.ps1`, die s… |
 | **[E-242](BEFUNDE.md#e-242)** | Druck und Druckvorschau tragen die Kopf- und Fußzeile des Internet Explorer statt der von… | **nie gemessen** | Kopf- und Fußzeile in `CTridentView::Print` (`TridentView.cpp:2350-2390`) auch bei fehlendem Registrywert setzen und danach wieder löschen, wie bei… |
 | **[E-241](BEFUNDE.md#e-241)** | In der Druckvorschau blättern *Bild ↑* / *Bild ↓* nicht — weiter kommt man nur mit … | **nie gemessen** | am Prüfstand nachstellen, ob das Vorschaufenster aus `OLECMDID_PRINTPREVIEW` (`TridentView.cpp:2436`) die Tasten bekommt; Vergleich mit dem Original… |
 | **[E-240](BEFUNDE.md#e-240)** | *File → Print Preview* zeigt lange nichts an — wer es nicht weiß, klickt erneut — z… | **nie gemessen** | Rückmeldung (Sanduhr) in `CTridentView::OnFilePrintPreview` (`TridentView.cpp:3221`) bzw. `Print`, nach dem Release (Gregor 06.11.2026). **Stufe: unk… |

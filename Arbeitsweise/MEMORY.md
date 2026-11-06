@@ -198,3 +198,4 @@
 - [CHRONIST 06.11.2026](CHRONIST-2026-11-06.md) — Laufbericht 03.–06.11.; E-239-Testschritt: Wissen ging zwischen eigener Antwort und Packer-Auftrag verloren, Schranke deckt nur die INI-Hälfte; Release 132 vor Rückkehr des eigenen CHRONIST; ein `--no-verify` gestoppt
 - [E-236 nach GitHub](entscheidung-e236-github-06-11.md) — Gregor 06.11.: Update-Fenster zeigt GitHub-Releases, nicht abschalten
 - [E-151 Unterordner mit Marke](entscheidung-e151-unterordner-marke-06-11.md) — Gregor 06.11.: eigener Prüfstand-Unterordner mit Markendatei, Wurzel als Parameter; Entscheidung 39
+- [7.2.2.137 Umfang](entscheidung-7-2-2-137-umfang-06-11.md) — Gregor 06.11.: E-242 + E-240 sicher, E-241 wenn Ursache klar; nach E-151

@@ -156,7 +156,12 @@ function Ist-Pruefstandswert($wert) {
     # Registry-Werte waeren als "eigene" zurueckgesetzt worden (PRUEFER-104 K2).
     $t = '' + $wert
     if ($t -match '(?i)\\appdata\\local\\temp\\claude\\') { return $true }
-    foreach ($m in [regex]::Matches($t, '(?i)[a-z]:\\[^"\r\n]*')) {
+    # Jeden Pfad einzeln: Eudora schreibt CommandLine\Current ohne
+    # Anfuehrungszeichen, mehrere Pfade durch Leerzeichen getrennt, mit
+    # 8.3-Kurznamen ("C:\Temp\EUDORA~2\E133\Eudora.exe C:\Temp\EUDORA~2\E133\MAILVE~1 ...").
+    # Die erste Fassung las das als EINEN Pfad, kam nicht bis zur Marke und
+    # meldete den eigenen Pruefstand als FREMD (gemessen 06.11.2026, Klonprobe).
+    foreach ($m in [regex]::Matches($t, '(?i)[a-z]:\\[^"\r\n]*?(?=\s+[a-z]:\\|"|$)')) {
         $p = $m.Value.Trim()
         for ($i = 0; $i -lt 6 -and $p -match '\\'; $i++) {
             if (Test-Path -LiteralPath (Join-Path $p '.eudora72-pruefstand') -ErrorAction SilentlyContinue) { return $true }

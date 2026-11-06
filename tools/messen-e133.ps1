@@ -183,4 +183,18 @@ try {
 } catch {
     Write-Host ('E133 FEHLER: ' + $_.Exception.Message)
 }
+# E-151 (06.11.2026): Eudora schreibt den Eintrag mit 8.3-Kurznamen
+# (C:\Temp\EUDORA~2\E133\...); die ~2 haengt davon ab, welche Ordner auf dem
+# Rechner mit "Eudora" beginnen. Deshalb hier aufloesen und mit DIESEM
+# Pruefstand vergleichen, statt den Text in der Fallliste festzuschreiben.
+$hierher = 0
+try {
+    Add-Type -Namespace E133L -Name K -MemberDefinition '[DllImport("kernel32.dll", CharSet = CharSet.Auto)] public static extern uint GetLongPathName(string s, System.Text.StringBuilder l, uint n);' -ErrorAction SilentlyContinue
+    $erst = ([string]$regDanach -split '\s+(?=[A-Za-z]:\\)')[0].Trim('"')
+    $sb = New-Object System.Text.StringBuilder 1024
+    if ([E133L.K]::GetLongPathName($erst, $sb, 1024) -gt 0) {
+        $hierher = [int]($sb.ToString() -ieq (Join-Path $voll 'Eudora.exe'))
+    }
+} catch { }
 Write-Host ("E133 ERGEBNIS meldung={0} gestartet={1} registry-danach={2} lebt={3}" -f $meldung, $gestartet, $regDanach, $lebt)
+Write-Host ("E133 REGISTRY zeigt-hierher={0}" -f $hierher)

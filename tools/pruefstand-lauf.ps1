@@ -90,8 +90,11 @@ foreach ($zeile in (Get-Content -LiteralPath $Faelle)) {
         Verzeichnis = $(if ($f[1].Trim() -match '^C:\\Temp\\(.+)$') { Join-Path $PsWurzel $Matches[1] } else { $f[1].Trim() })
         Sekunden    = [int]$f[2].Trim()
         Quelle      = $f[3].Trim().ToLower()
-        Muss        = $f[4].Trim()
-        DarfNicht   = $f[5].Trim()
+        # E-151: "C:\Temp\" in den erwarteten Texten ist die Wurzel (E-133q:
+        # "Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"" - unter
+        # C:\Temp\Eudora72-Pruefstand schreibt Eudora den Pfad dort hinein).
+        Muss        = $f[4].Trim().Replace('C:\Temp\', $PsWurzel + '\')
+        DarfNicht   = $f[5].Trim().Replace('C:\Temp\', $PsWurzel + '\')
         Nachricht   = $f[6].Trim()
         Schalter    = $f[7].Trim().ToLower()
     }
