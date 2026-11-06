@@ -14,11 +14,11 @@ Eudora habe ich weder gebaut noch gestartet und kein Fenster geöffnet. Keinen P
 
 **Die Marke lässt sich an einer Stelle umgehen (K3, mittel).** Ruft man ein Messskript direkt auf, etwa `messen-e13.ps1 -Vorbereiten`, prüft niemand die Marke. Gezählt: 62 Messskripte haben `-Vorbereiten`, keines prüft die Marke, 39 fallen ohne Umgebungsvariable noch auf `C:\Temp` zurück. Über `pruefstand-lauf.ps1` und `testlauf.ps1` ist die Marke dicht (belegt: beide prüfen vor jedem Löschen und Start).
 
-**Der alte Commit mit den Namen ist auf GitHub noch abrufbar (K4, mittel, neu als E-246).** Gemessen mit `gh api …/commits/<Kennung>`: Er kommt zurück, obwohl kein Zweig ihn mehr enthält. Seine Kennung steht an fünf Stellen im Baum und in drei Commit-Nachrichten, also gleich mit Wegweiser. Ganz entfernen kann ihn nur eine Anfrage beim GitHub-Support. Ob das gewollt ist, entscheidet Gregor. Den PR hält das nicht auf, denn der PR bringt den Commit nicht zurück.
+**Der alte Commit mit den Namen ist auf GitHub noch abrufbar (K4, mittel, neu als [E-246](../Intern/BEFUNDE.md#e-246)).** Gemessen mit `gh api …/commits/<Kennung>`: Er kommt zurück, obwohl kein Zweig ihn mehr enthält. Seine Kennung steht an fünf Stellen im Baum und in drei Commit-Nachrichten, also gleich mit Wegweiser. Ganz entfernen kann ihn nur eine Anfrage beim GitHub-Support. Ob das gewollt ist, entscheidet Gregor. Den PR hält das nicht auf, denn der PR bringt den Commit nicht zurück.
 
-**Die neue Namensschranke sieht drei Wege nicht (K5, mittel, neu als E-245).** Gemessen in einem Wegwerf-Repo mit einem erfundenen Muster: Ein Name im **Dateinamen**, in der **Commit-Nachricht** oder in einer **Binärdatei** geht durch. Ein Name im Inhalt wird abgewiesen.
+**Die neue Namensschranke sieht drei Wege nicht (K5, mittel, neu als [E-245](../Intern/BEFUNDE.md#e-245)).** Gemessen in einem Wegwerf-Repo mit einem erfundenen Muster: Ein Name im **Dateinamen**, in der **Commit-Nachricht** oder in einer **Binärdatei** geht durch. Ein Name im Inhalt wird abgewiesen.
 
-Dazu kommen vier geringe Funde (K6 bis K9). **Neue Kennungen:** E-245 für K5, E-246 für K4. Beide stehen noch nicht in `Intern/BEFUNDE.md`. Für K1 empfehle ich [E-151](../Intern/BEFUNDE.md#e-151) fortzuschreiben, für K2 [E-244](../Intern/BEFUNDE.md#e-244) und für K3 [E-243](../Intern/BEFUNDE.md#e-243). `befund-suchen.pl pruefe-namen-gestaget` meldet keinen Befund zu diesem Ort.
+Dazu kommen vier geringe Funde (K6 bis K9). **Neue Kennungen:** [E-245](../Intern/BEFUNDE.md#e-245) für K5, [E-246](../Intern/BEFUNDE.md#e-246) für K4. Beide stehen noch nicht in `Intern/BEFUNDE.md`. Für K1 empfehle ich [E-151](../Intern/BEFUNDE.md#e-151) fortzuschreiben, für K2 [E-244](../Intern/BEFUNDE.md#e-244) und für K3 [E-243](../Intern/BEFUNDE.md#e-243). `befund-suchen.pl pruefe-namen-gestaget` meldet keinen Befund zu diesem Ort.
 
 ## 1. Geschichte und Namensschranke
 
@@ -124,8 +124,8 @@ Siehe §1: 11 von 12 eigenen Varianten gehen durch, darunter `sed -i` und `perl 
 | [K1](#k1) | `E-133r` ist mit dem selbst vorbereiteten Registry-Wert grün, die Berichtigung misst kein Fall mehr | mittel | **ja, den PR** (zwei Zeilen); kein Programmpaket |
 | [K2](#k2) | Wurzel mit Leerzeichen: Eudora öffnet `…\Mein` statt des Prüfstands, Prüfserver schreiben daneben | mittel | nein (eine Zeile empfohlen) |
 | [K3](#k3) | Messskripte direkt aufgerufen löschen ohne Marke | mittel | nein |
-| [K4](#k4) | alter Commit mit Namen auf GitHub per Kennung abrufbar, Kennung fünfmal im Baum (E-246) | mittel | nein, Gregor entscheidet |
-| [K5](#k5) | Namensschranke blind für Dateiname, Commit-Nachricht, Binärdatei (E-245) | mittel | nein |
+| [K4](#k4) | alter Commit mit Namen auf GitHub per Kennung abrufbar, Kennung fünfmal im Baum ([E-246](../Intern/BEFUNDE.md#e-246)) | mittel | nein, Gregor entscheidet |
+| [K5](#k5) | Namensschranke blind für Dateiname, Commit-Nachricht, Binärdatei ([E-245](../Intern/BEFUNDE.md#e-245)) | mittel | nein |
 | [K6](#k6) | Registry-Unterschlüssel unter `C:\Temp` ohne Marke gelöscht | gering | nein |
 | [K7](#k7) | Wurzelschranke nimmt `C:\Windows`, `C:\Users\…`, `C:pf` an | gering | nein |
 | [K8](#k8) | Backslash-Haken lässt `sed -i`, `-pie` u. a. durch | gering | nein |

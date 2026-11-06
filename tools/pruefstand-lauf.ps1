@@ -63,6 +63,10 @@ param(
 )
 $PsWurzel = [IO.Path]::GetFullPath($Wurzel).TrimEnd('\')
 if ($PsWurzel -notmatch '^[A-Za-z]:\\[^\\]+') { Write-Host "  ABGEWIESEN: -Wurzel muss ein Ordner sein, kein Laufwerksstamm: $PsWurzel"; exit 2 }
+# PRUEFER-105 K2 / E-244: testlauf.ps1 uebergibt das Mailverzeichnis ohne
+# Anfuehrungszeichen; Eudora trennt an der ersten Leerstelle und liefe
+# ausserhalb der Marke. Bis das behoben ist: keine Wurzel mit Leerraum.
+if ($PsWurzel -match '\s') { Write-Host "  ABGEWIESEN: -Wurzel darf kein Leerzeichen enthalten (E-244): $PsWurzel"; exit 2 }
 $env:EUDORA72_PRUEFSTAND = $PsWurzel
 
 $ErrorActionPreference = 'Stop'

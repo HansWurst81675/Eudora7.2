@@ -7,13 +7,16 @@
   (06.11.2026, Latest; ZIP byte-gleich mit Gregors getestetem Paket): [E-239](BEFUNDE.md#e-239)
   (kein Absturz beim Beenden bei offenem Hinweis) und [E-169](BEFUNDE.md#e-169) (`PrintBackground`).
   Voller Prüfstandslauf 110/110, Gregors Test bestanden ([Testplan](TESTPLAN.md#test-7-2-2-136)).
-- **Wartet auf Merge:** `paket_7_2_2_136` (Release-Stand 7.2.2.136, enthält
-  `e239_absturz_beenden` und `e169_druckvorschau`); vor dem PR läuft der LEKTOR.
+- **Gemergt am 06.11.2026:** #228 (`paket_7_2_2_136`, Release-Stand 7.2.2.136).
+- **Wartet auf Merge:** `e151_pruefstand_klon` – Prüfstand nach einem frischen
+  `git clone` ([E-151](BEFUNDE.md#e-151)), Schutz echter Eudora-Ordner durch die
+  Marke ([E-243](BEFUNDE.md#e-243), Entscheidung 39), neue Schranken
+  `pruefe-namen-gestaget.pl` und `haken-backslash.pl`.
+- **Danach:** 7.2.2.137 mit [E-242](BEFUNDE.md#e-242) und [E-240](BEFUNDE.md#e-240),
+  [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache (Gregor 06.11.2026).
 - **Neu beim Test gemeldet:** [E-240](BEFUNDE.md#e-240) (Vorschau beim ersten Aufruf langsam;
   später, siehe [Nach dem Release 7.2.1](#nach-dem-release)), [E-241](BEFUNDE.md#e-241),
   [E-242](BEFUNDE.md#e-242) (Anmeldename auf Ausdrucken).
-- **In Arbeit:** `e151_pruefstand_klon` ([E-151](BEFUNDE.md#e-151), Prüfstand aus dem Klon,
-  Dauer je Fassung in `Doku/PRUEFSTAND.md`).
 - **Neue Schranke:** `tools/testplan-voraussetzungen.pl` (ein Testschritt nannte `Alert=1` nicht).
 - **Nächste Werkzeugaufgabe** ([LEKTOR-151](../Befunde/LEKTOR-151.md#l-151.1)):
   `testlauf.ps1` vergleicht `Exception.log` vor und nach jedem Lauf; `pruefe-behoben-belegt.pl`
@@ -100,8 +103,10 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
-| **[E-244](BEFUNDE.md#e-244)** | Liegt der Klon in einem Pfad mit Leerzeichen, startet kein Prüfserver — alle Fälle mit… | **nie gemessen** | die Argumente mit Leerzeichen selbst in Anführungszeichen setzen (oder `Start-Process` mit einer einzigen, fertig gequoteten Argumentzeile), dann aus… |
-| **[E-243](BEFUNDE.md#e-243)** | Prüfstand-Werkzeuge konnten echte Eudora-Instanzen unter C:\Temp treffen — Postfächer … | **nie gemessen** | der Merge von `e151_pruefstand_klon`; die Messskripte prüfen die Marke nicht selbst (sie laufen nur über `pruefstand-lauf.ps1`/`testlauf.ps1`, die s… |
+| **[E-246](BEFUNDE.md#e-246)** | Der umgeschriebene Commit mit zwei Familiennamen ist auf GitHub weiter abrufbar — kein Z… | **nie gemessen** | Gregors Entscheidung, ob er beim GitHub-Support die Entfernung beantragt (nur der Besitzer des Repos kann das); dann die Kennung aus dem Repo nehmen.… |
+| **[E-245](BEFUNDE.md#e-245)** | Die Namensschranke pruefe-namen-gestaget.pl sieht drei Wege nicht — einen Namen im Datei… | **nie gemessen** | Dateinamen (`git diff --cached --name-only`) und Commit-Nachricht (`commit-msg`-Haken bzw. `git log --format=%B` im pre-push) mitprüfen; Binärdateie… |
+| **[E-244](BEFUNDE.md#e-244)** | Liegt der Klon in einem Pfad mit Leerzeichen, startet kein Prüfserver — alle Fälle mit… | **nie gemessen** | die Argumente mit Leerzeichen selbst in Anführungszeichen setzen (auch das Mailverzeichnis in `testlauf.ps1`) (oder `Start-Process` mit einer einzige… |
+| **[E-243](BEFUNDE.md#e-243)** | Prüfstand-Werkzeuge konnten echte Eudora-Instanzen unter C:\Temp treffen — Postfächer … | 06.11.2026 an 7.2.2.136 | der Merge von `e151_pruefstand_klon`; die Messskripte prüfen die Marke nicht selbst (sie laufen nur über `pruefstand-lauf.ps1`/`testlauf.ps1`, die s… |
 | **[E-242](BEFUNDE.md#e-242)** | Druck und Druckvorschau tragen die Kopf- und Fußzeile des Internet Explorer statt der von… | **nie gemessen** | Kopf- und Fußzeile in `CTridentView::Print` (`TridentView.cpp:2350-2390`) auch bei fehlendem Registrywert setzen und danach wieder löschen, wie bei… |
 | **[E-241](BEFUNDE.md#e-241)** | In der Druckvorschau blättern *Bild ↑* / *Bild ↓* nicht — weiter kommt man nur mit … | **nie gemessen** | am Prüfstand nachstellen, ob das Vorschaufenster aus `OLECMDID_PRINTPREVIEW` (`TridentView.cpp:2436`) die Tasten bekommt; Vergleich mit dem Original… |
 | **[E-240](BEFUNDE.md#e-240)** | *File → Print Preview* zeigt lange nichts an — wer es nicht weiß, klickt erneut — z… | **nie gemessen** | Rückmeldung (Sanduhr) in `CTridentView::OnFilePrintPreview` (`TridentView.cpp:3221`) bzw. `Print`, nach dem Release (Gregor 06.11.2026). **Stufe: unk… |
@@ -128,7 +133,7 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 | **[E-170](BEFUNDE.md#e-170)** | Das Label einer Mail geht verloren, wenn man sie innerhalb eines IMAP-Kontos in einen ande… | 03.11.2026 an 7.2.2.132 | messen, warum das Label am 29.10.2026 an Paket 1.0.127 fehlte — nächste Spur (Vermutung): die alte Zusammenfassung stand nach dem automatischen L… |
 | **[E-159](BEFUNDE.md#e-159)** | Ein Prüfstandslauf an 7.2.0.122 endete mit einem Absturz in Eudora.exe selbst, den nieman… | 26.10.2026 an 7.2.0.122 — **veraltet** | den Versatz gegen die Symbole eines Baus 7.2.0.122 auflösen (die PDB dieses Zwischenstands ist überschrieben; ein Neubau von `62f6047c` mit denselbe… |
 | **[E-157](BEFUNDE.md#e-157)** | Die Prüfstandsläufe verändern Gregors Windows-Registry und sehen keine Abstürze — je… | 26.10.2026 an 7.2.0.124 — **veraltet** | nach jedem Testpaket dieselbe Zählung für Gregors Paketverzeichnis (für 7.2.0.124 muss sie null sein); ein Fall im Prüfstand, der einen echten Abs… |
-| **[E-151](BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | **nie gemessen** | ein voller Lauf über den Starter mit Wurzel `C:\Temp` auf einem zweiten Rechner oder Konto (dort gibt es keine gewachsenen Prüfstände; erwartet: al… |
+| **[E-151](BEFUNDE.md#e-151)** | Die Prüfstandsfälle lassen sich aus einem frischen Klon nicht ausführen — die Verzeic… | 06.11.2026 an 7.2.2.136 | der Merge; ein voller Lauf nach der Berichtigung der Pfadfälle (erwartet 107 von 107 bei 3 übersprungenen) und Gregors Lauf auf einem zweiten Rechne… |
 | **[E-147](BEFUNDE.md#e-147)** | Die Reparatur zerstörter Umlaute und Sonderzeichen aus dem Plug-in EudoraUnicodeFix soll … | **nie gemessen** | Rays Antwort im Issue #102, ob er die Veröffentlichung möchte; danach (nach 7.2.1) die Reparatur an der Stelle einbauen, an der eingehender Text ges… |
 | **[E-143](BEFUNDE.md#e-143)** | Aus dem Suchfenster und aus Filtern kommt der Out-Hinweis je Nachricht — zwanzig Treffer… | 02.11.2026 an 7.2.1.130 — **veraltet** | der Filterteil ist am Programm gemessen (Gregor, 01. und 02.11.2026, [TESTPLAN](TESTPLAN.md#e-143-naechstes)) bis auf das Übergehen eines alten Out-F… |
 | **[E-142](BEFUNDE.md#e-142)** | Ein Entwurf aus einem IMAP-Ordner nach Out gezogen ergibt in Out eine LEERE Nachricht — … | 26.10.2026 an 7.2.0.124 — **veraltet** | vor 7.2.1 nichts — Gregors Entscheidung 13 (26.10.2026): *Send Again* aus IMAP ergibt eine leere Mail (T6), das kommt erst nach 7.2.1 dran; Entwürf… |

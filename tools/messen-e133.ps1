@@ -190,10 +190,14 @@ try {
 $hierher = 0
 try {
     Add-Type -Namespace E133L -Name K -MemberDefinition '[DllImport("kernel32.dll", CharSet = CharSet.Auto)] public static extern uint GetLongPathName(string s, System.Text.StringBuilder l, uint n);' -ErrorAction SilentlyContinue
-    $erst = ([string]$regDanach -split '\s+(?=[A-Za-z]:\\)')[0].Trim('"')
-    $sb = New-Object System.Text.StringBuilder 1024
-    if ([E133L.K]::GetLongPathName($erst, $sb, 1024) -gt 0) {
-        $hierher = [int]($sb.ToString() -ieq (Join-Path $voll 'Eudora.exe'))
+    # Beide Pfade pruefen (PRUEFER-105 K1): den ERSTEN (Eudora.exe) schreibt
+    # schon -Vorbereiten richtig hinein - berichtigt hat Eudora nur, wenn auch
+    # der ZWEITE jetzt auf das Mailverzeichnis dieses Pruefstands zeigt (vorher
+    # stand dort <Wurzel>\E133-gibt-es-nicht).
+    $teile = @(([string]$regDanach -split '\s+(?=[A-Za-z]:\\)') | ForEach-Object { $_.Trim().Trim('"') })
+    function E133Lang([string] $p) { $sb = New-Object System.Text.StringBuilder 1024; if ([E133L.K]::GetLongPathName($p, $sb, 1024) -gt 0) { return $sb.ToString().TrimEnd('\') } else { return '' } }
+    if ($teile.Count -ge 2) {
+        $hierher = [int]((E133Lang $teile[0]) -ieq (Join-Path $voll 'Eudora.exe') -and (E133Lang $teile[1]) -ieq (Join-Path $voll 'Mailverzeichnis'))
     }
 } catch { }
 Write-Host ("E133 ERGEBNIS meldung={0} gestartet={1} registry-danach={2} lebt={3}" -f $meldung, $gestartet, $regDanach, $lebt)

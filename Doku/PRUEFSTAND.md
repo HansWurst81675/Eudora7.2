@@ -83,7 +83,7 @@ ein neuer kurzer Fall.
 | 7.2.2.135 | Testpaket | 05.11.2026 | 103 | 64 | 80 min 52 s |
 | 7.2.2.135 | Testpaket, Klonprobe aus einem frischen Klon (Prüfverzeichnisse aus `v7.2.2.133`) | 05.11.2026 | 102 | 63 | 76 min 57 s |
 | 7.2.2.136 | Release | 06.11.2026 | 110 | 67 | 91 min 16 s |
-| 7.2.2.136 | Release, Klonprobe mit dem Starter unter `C:\Temp\Eudora72-Pruefstand` (49 Verzeichnisse frisch aus den Vorlagen, ohne S/MIME-Zusatzdateien) | 06.11.2026 | 106 | 66 | 81 min 21 s |
+| 7.2.2.136 | Release, voller Lauf über den Starter unter `C:\Temp\Eudora72-Pruefstand` (49 Verzeichnisse frisch aus den Vorlagen, ohne S/MIME-Zusatzdateien; aus dem Entwicklerbaum, Dauer laut Ausgabe des Starters) | 06.11.2026 | 106 | 66 | 81 min 21 s |
 
 ## Was der Prüfstand prüft – und was nicht
 
@@ -202,7 +202,7 @@ Hinter `"Pruefstand starten.cmd"` lassen sich Schalter anhängen:
 | Schalter | Wirkung |
 |---|---|
 | `-Nur E-193` | nur die Fälle, deren Kennung so beginnt – schnell, um einen einzelnen Fehler nachzuprüfen |
-| `-Wurzel D:\Pruefstand` | anderer Ordner für die Prüfverzeichnisse, wie das Arbeitsverzeichnis beim Start von Eudora; jeder Ordner außer einem Laufwerksstamm. Die Marke schützt fremde Verzeichnisse auch dort. Ein deutlich längerer Pfad als die Vorgabe kann `E-216l` (langer Pfad im About-Dialog) rot machen, ohne dass etwas kaputt ist: der Dialog hat für die Zeile *Log* zwei Zeilen Platz |
+| `-Wurzel D:\Pruefstand` | anderer Ordner für die Prüfverzeichnisse, wie das Arbeitsverzeichnis beim Start von Eudora; jeder Ordner außer einem Laufwerksstamm und ohne Leerzeichen im Pfad (bekannter Fehler E-244). Die Marke schützt fremde Verzeichnisse auch dort. Ein deutlich längerer Pfad als die Vorgabe kann `E-216l` (langer Pfad im About-Dialog) rot machen, ohne dass etwas kaputt ist: der Dialog hat für die Zeile *Log* zwei Zeilen Platz |
 | `-Grundlage C:\pfad\Eudora72-7.2.2.133-release.zip` | dieses Release-ZIP statt des Downloads |
 | `-Bau C:\pfad\Bin\Release` | ein anderes Bauverzeichnis |
 | `-ZusatzDlls C:\pfad` | Ordner mit `MFC71.DLL` und `msvcp71.dll`, damit der S/MIME-Fall mitläuft |
@@ -211,7 +211,7 @@ Hinter `"Pruefstand starten.cmd"` lassen sich Schalter anhängen:
 ## Ergebnis lesen
 
 ```
-Ergebnis: 100 Faelle, 100 bestanden, 0 fehlgeschlagen
+Ergebnis: 107 Faelle, 107 bestanden, 0 fehlgeschlagen
 Uebersprungen (auf diesem Rechner nicht einrichtbar): 3
     [UEBR] E-166a   S/MIME- bzw. Junk-Plugin braucht MFC71.DLL und msvcp71.dll ...
 ```

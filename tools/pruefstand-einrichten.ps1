@@ -65,6 +65,7 @@ $ErrorActionPreference = 'Stop'
 $repo  = Split-Path -Parent $PSScriptRoot
 $wurzelTemp = [IO.Path]::GetFullPath($Wurzel).TrimEnd('\')
 if ($wurzelTemp -notmatch '^[A-Za-z]:\\[^\\]+') { Write-Host "  ABGEWIESEN: -Wurzel muss ein Ordner sein, kein Laufwerksstamm: $wurzelTemp"; exit 2 }
+if ($wurzelTemp -match '\s') { Write-Host "  ABGEWIESEN: -Wurzel darf kein Leerzeichen enthalten (E-244, PRUEFER-105 K2): $wurzelTemp"; exit 2 }
 $env:EUDORA72_PRUEFSTAND = $wurzelTemp
 if (-not (Test-Path -LiteralPath $wurzelTemp)) { New-Item -ItemType Directory -Force -Path $wurzelTemp | Out-Null }
 $vorlagen = Join-Path $repo 'Testdaten\pruefstand'

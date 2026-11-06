@@ -36,9 +36,9 @@ E-128t-alt	ok	2026-11-03 08:29:31	C:\Temp\E128T-alt	Eudora 7.2.1.131+a2f29b69* 2
 E-131a	ok	2026-11-06 11:30:44	C:\Temp\E131L	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	ohne MRUFloatXPos=-2147483648
 E-131b	ok	2026-11-06 11:30:44	C:\Temp\E131L	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	ohne MRUFloatYPos=-2147483648
 E-131c	ok	2026-11-06 11:30:44	C:\Temp\E131L	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E-131 Leistenposition:
-E-133p	ok	2026-11-06 16:37:09	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=
-E-133q	ok	2026-11-06 16:37:09	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"
-E-133r	ok	2026-11-06 16:37:09	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E133 REGISTRY zeigt-hierher=1
+E-133p	ok	2026-11-06 17:21:08	C:\Temp\Eudora72-Pruefstand\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E133 ERGEBNIS meldung=rueckfrage gestartet=1 registry-danach=
+E-133q	ok	2026-11-06 17:22:19	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E-133 Registry berichtigt: Mailverzeichnis="C:\Temp\E133\Mailverzeichnis\"
+E-133r	ok	2026-11-06 17:22:19	C:\Temp\E133	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E133 REGISTRY zeigt-hierher=1
 E-137a	ok	2026-11-06 11:30:44	C:\Temp\E137	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E137 ERGEBNIS titel: mail-offen=1 leiste-versteckt=1
 E-137b	ok	2026-11-06 11:30:44	C:\Temp\E137	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E137 ERGEBNIS rand: mail-offen=1 leiste-versteckt=1
 E-137c	ok	2026-11-06 11:30:44	C:\Temp\E137	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E-137 Strg-W angekommen: leiste-mit-fokus=nein zuletzt-angeklickte-leiste=ja
