@@ -8,13 +8,13 @@ metadata:
   modified: 2026-10-13T15:00:00.000Z
 ---
 
-Gregor am 12.10.2026: *„wenn eine neue version fertig ist, mach lasse die eigenen tests und wenn alles ok ist, stell mir diese bereit"* — und auf die Frage nach dem Ort: *„ja, hier C:\Users\Gregor\Eudora72-1.0.76-release parallel dazu"*.
+Gregor am 12.10.2026: *„wenn eine neue version fertig ist, mach lasse die eigenen tests und wenn alles ok ist, stell mir diese bereit"* — und auf die Frage nach dem Ort: *„ja, hier %USERPROFILE%\Eudora72-1.0.76-release parallel dazu"*.
 
 **Why:** Er will nicht nach jeder Fassung fragen müssen, ob sie getestet ist und wo sie liegt; er testet selbst erst, wenn meine Prüfung grün ist.
 
 **How to apply:**
 - Nach dem Bau: Testsuite (EudoraTests), Messlauf am laufenden Programm über `tools/testlauf.ps1` mit `-MessenSkript`, `paket-pruefen.ps1` — erst wenn alles grün ist, bereitstellen.
-- Ort: ein **neues** Verzeichnis `C:\Users\Gregor\Eudora72-<Paketnummer>-release` **neben** dem vorhandenen; das vorhandene (z. B. `Eudora72-1.0.76-release`) wird nicht angefasst. Sein `Mailverzeichnis` dort enthält seine alten Mails und die ini — nur lesen.
+- Ort: ein **neues** Verzeichnis `%USERPROFILE%\Eudora72-<Paketnummer>-release` **neben** dem vorhandenen; das vorhandene (z. B. `Eudora72-1.0.76-release`) wird nicht angefasst. Sein `Mailverzeichnis` dort enthält seine alten Mails und die ini — nur lesen.
 - Das ist eine Erlaubnis für genau dieses Bereitstellen, nicht für andere Schreibzugriffe in seinen `Eudora72-*`-Verzeichnissen ([[erlaubnis-nicht-hineinlesen]], [[nichts-auf-gregors-bildschirm-starten]]).
 - Kein Release ohne seinen Test ([[release-erst-nach-gregors-test]]).
 

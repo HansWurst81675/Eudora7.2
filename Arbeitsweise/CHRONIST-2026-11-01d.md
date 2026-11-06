@@ -40,7 +40,7 @@ Keine. Der Start ist ein Rückfall in [[nichts-auf-gregors-bildschirm-starten]] 
 | 17:21:44 | Nachtrag in [[nichts-auf-gregors-bildschirm-starten]], Überschrift **17:23** | gemessen |
 | 17:24:31 | Gregor: *„es kam wieder die start meldung mit dem verzeichnis von 1.128 oder 1.130, habe es auf die schnelle nicht gesehen“* | gemessen |
 | 17:24:43 | kein `Eudora.exe`-Prozess auf dem Rechner (`Get-CimInstance`, leer) | gemessen |
-| 17:24:54 | keine `eudora.log` unter `C:\Temp` oder `C:\Users\Gregor` jünger als 30 Minuten außer den Kopien von 17:19 | gemessen |
+| 17:24:54 | keine `eudora.log` unter `C:\Temp` oder `%USERPROFILE%` jünger als 30 Minuten außer den Kopien von 17:19 | gemessen |
 
 **Es war ein Start, nicht zwei** (gemessen): Zwischen 17:21:12 und 17:24:31 ruft kein Werkzeugaufruf eine `Eudora.exe` auf (`tasklist`, `cat`, `diff`, `git`, `cp` der Binärdateien, `grep -a` auf `Eudora.exe`, `Write`), und um 17:24:43 lief keine. Dass Gregors zweite Nachricht denselben Dialog von 17:19 beschreibt, ist Vermutung; *„wieder“* kann sich auf den Dialog früherer Tage beziehen ([[nichts-auf-gregors-bildschirm-starten]], Nachtrag 27.10.).
 

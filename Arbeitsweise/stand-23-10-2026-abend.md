@@ -60,7 +60,7 @@ dem Hinweis, dass C10 zwei Tage lang falsch als offen dastand.
 
 1. ~~**Sein Lauf an 1.0.122**~~ erledigt (siehe Nachtrag) nach `Intern/TESTPLAN.md#m3-e125` — vier Schritte,
    Schritt 4 ist die Gegenprobe mit einem Entwurf. Das Paket liegt in
-   `C:\Users\Gregor\Eudora72-1.0.122-release` mit `TESTEN.txt`.
+   `%USERPROFILE%\Eudora72-1.0.122-release` mit `TESTEN.txt`.
 2. **E-139 bauen** — er hat ausdrücklich gefragt, ob ich es nur aufschreibe.
    `AfxMessageBox` in `spell.cpp:58` durch `NoteDialog` ersetzen, dazu eine
    Ressourcenzeile und einen INI-Schlüssel. Ergäbe 7.2.0.123.

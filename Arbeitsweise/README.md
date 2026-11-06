@@ -113,6 +113,7 @@ eine Datei liest, liest diese.
 | [einwurf-ist-ein-messwert](einwurf-ist-ein-messwert.md) | 54 Prozent von Gregors Nachrichten kamen mitten in den laufenden Zug - das misst fehlenden Zwischenstand, nicht Beteiligung |
 | [entscheidung-7-2-2-137-umfang-06-11](entscheidung-7-2-2-137-umfang-06-11.md) | Gregor 06.11.2026: 7.2.2.137 = E-242 (Anmeldename auf Ausdrucken) + E-240 (Sanduhr erste Druckvorschau) sicher, E-241 (Bild auf/ab in Vorschau) nur wenn Ursache klar; Beginn erst nach E-151 |
 | [entscheidung-7-2-2-umfang](entscheidung-7-2-2-umfang.md) | Gregor 02.11.2026 — Release 7.2.1.131, danach 7.2.2.x mit neuen Funktionen (Hilfe-Menü Shortcuts/Settings); Termin in privat.txt |
+| [entscheidung-alte-pfade-weg-06-11](entscheidung-alte-pfade-weg-06-11.md) | Gregor 06.11.2026 — Pfade in sein Benutzerverzeichnis aus dem Repo entfernen, C:\\Temp darf stehen bleiben |
 | [entscheidung-autocomp-auswahl-kein-befund-06-11](entscheidung-autocomp-auswahl-kein-befund-06-11.md) | Gregor 06.11.2026: graue (unsichtbare) Auswahl in der To:-Vervollständigungsbox wird KEIN Befund; nicht wieder vorschlagen |
 | [entscheidung-e128-endung-aus-inhalt](entscheidung-e128-endung-aus-inhalt.md) | Gregor 03.11.2026 - E-128 Vorschlag angenommen, Vorgabeendung beim Speichern aus dem Inhalt ableiten |
 | [entscheidung-e133-no-und-release-text-03-11](entscheidung-e133-no-und-release-text-03-11.md) | Gregor 03.11.2026 - E-133 \"No\" bleibt wie gebaut (Befehlszeile genügt); Release-Text 7.2.1.131 zu E-170 beim nächsten PR ergänzen |
@@ -221,7 +222,7 @@ eine Datei liest, liest diese.
 | [stand-03-11-2026-abend](stand-03-11-2026-abend.md) | Stand 03.11.2026 abends — #217 (Paket 7.2.2.132) wartet auf Merge, dann Release; danach E-188-Löschbedingung vor E-199 |
 | [stand-04-11-2026](stand-04-11-2026.md) | Stand 04.11.2026 früh — v7.2.2.132 veröffentlicht; release_7_2_2_132 wartet auf BUCHHALTER, dann PR; E-188 Schritt 1 gesichert, Rest-Ursache im Downloader gefunden |
 | [stand-05-11-2026-nacht](stand-05-11-2026-nacht.md) | Stand 05.11.2026 nachts – v7.2.2.133 draußen; #225–#227 gemergt; Testpaket 7.2.2.136 bei Gregor ohne Prüfstandslauf; morgen: Prüfstand-Erlaubnis holen, voller Lauf 136, E-239p rot/grün, PRs e239/e169/e151 |
-| [stand-06-11-2026](stand-06-11-2026.md) | Stand 06.11.2026 – v7.2.2.136 veröffentlicht; paket_7_2_2_136 enthält main (7739b889), wartet auf LEKTOR-153/PRUEFER-103/CHRONIST, dann PR; e151 Doku-Dauer gestaget, nicht committet |
+| [stand-06-11-2026](stand-06-11-2026.md) | Stand 06.11.2026 abends – v7.2.2.136 veröffentlicht (#228), E-151 Prüfstand nach frischem Klon gemergt (#229, bereinigt); LEKTOR-158 läuft mit Datenschutz-Schwerpunkt; danach 7.2.2.137 (E-242, E-240) |
 | [stand-22-10-2026-abend](stand-22-10-2026-abend.md) | Was am Abend des 22.10.2026 nach dem letzten Merge offen blieb und NICHT im Repo steht - vier Berichtigungen, ein Sicherheitspunkt, das E-124-Ergebnis |
 | [stand-23-10-2026-abend](stand-23-10-2026-abend.md) | Was am 23.10.2026 beim Abschalten offen blieb und in KEINER Repo-Datei steht - die fertige Berichtigung des Testplan-Kopfes, der Zweigname, und was Gregor als naechstes erwartet |
 | [stand-23-10-2026-spaet](stand-23-10-2026-spaet.md) | Stand beim Abschalten am 23.10.2026 spaet - PR 156 offen, BILDBREITE (E-116) mitten in der Arbeit abgebrochen, Regressionstest-Rueckstand ist der erste Schritt |

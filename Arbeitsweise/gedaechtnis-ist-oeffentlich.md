@@ -19,9 +19,9 @@ Schranke: tools/pruefe-namen-gestaget.pl (pre-commit gestagte Zeilen, pre-push a
 | Zeit | Was |
 |---|---|
 | 08:22:49 | Gregor: *„Tools → Options… → Attachments → "Delete attachments when emptying Trash" - funktioniert. habe es gerade geteste. kannst du im log überprüfen.“* |
-| 08:23:19 | `grep … eudora.log` (abgesprochen), dazu `grep TidyAttach` in seiner `Eudora.ini` und `ls $D/Attach \| wc -l` in `C:\Users\Gregor\Eudora72-1.0.127-release\Mailverzeichnis` |
-| 08:23:26 | `ls -la $D/Attach`: Dateinamen seiner Anhänge, darunter Fachdokumente Dritter |
-| 08:23:33 | `unzip -l` auf seine Sicherung (ein ZIP) im selben Ordner |
+| 08:23:19 | `grep … eudora.log` (abgesprochen), dazu `grep` in seiner `Eudora.ini` und Zählen seines Anhangsordners in seinem Testverzeichnis |
+| 08:23:26 | Auflisten seines Anhangsordners (Dateinamen seiner Anhänge) |
+| 08:23:33 | Inhaltsverzeichnis einer Sicherung im selben Ordner |
 | 08:23:54 | Notiz `memory/stand-29-10-2026.md`, Zeile 11: der Betreff einer weitergeleiteten Mail und die Dateinamen ihrer fünf Anhänge, wörtlich (hier bewusst nicht wiederholt) |
 | 08:23:59 | an Gregor nur: *„Ich habe es mir vorgemerkt, damit es nach dem Merge nicht verloren geht.“* Das Ergebnis seiner Frage (Log bestätigt das Leeren) bekam er im Chat nicht |
 | 08:31 | `lehren-spiegeln` spiegelt die Notiz im LEKTOR-Arbeitsbaum nach `Arbeitsweise/` (Commit `750eb814`) |

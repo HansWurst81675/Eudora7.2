@@ -27,7 +27,7 @@ Ich habe es nicht aufgerufen, sondern drei eigene Zeilen geschrieben, die nur di
 > *„imap funktioniert gar nicht. keine passwort abfrage ... gar nichts."*
 
 Der Zertifikats-Patch stand unter Verdacht; die Ursache war mein Kopierbefehl.
-Nachgemessen am 11.09.2026 in `C:\Users\Gregor\Eudora72-1.0.48-release\Mailverzeichnis`:
+Nachgemessen am 11.09.2026 in `%USERPROFILE%\Eudora72-1.0.48-release\Mailverzeichnis`:
 
 | gezählt | Dateien |
 |---|---|

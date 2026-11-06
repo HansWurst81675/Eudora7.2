@@ -17,7 +17,7 @@ Gregor wurde gewarnt und hat die VM bewusst heruntergefahren.
 
 `tools/messen-e123-abbruch.ps1` (neu in #147) hat **keine eigene Pfadschranke**.
 Im vorgesehenen Weg ist es dicht — `testlauf.ps1` prüft gegen `C:\Temp`. Direkt
-aufgerufen mit `-Pfadfilter C:\Users\Gregor` **träfe es Gregors eigene Sitzung**.
+aufgerufen mit `-Pfadfilter %USERPROFILE%` **träfe es Gregors eigene Sitzung**.
 Das ist [[tor-gehoert-zum-schritt]]: die Schranke liegt beim Aufrufer statt beim
 Schritt. Vier Zeilen: dieselbe `$ErlaubtePfade`-Prüfung im Skript, plus Abweisung
 einer Laufwerkswurzel. Dazu `$p.Kill()` statt `Stop-Process -Id` (PID-Neuvergabe).
