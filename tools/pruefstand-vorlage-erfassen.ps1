@@ -51,8 +51,16 @@ $verz = @($verz | Sort-Object -Unique)
 # "sichtbar=0" (Entwicklermaschine: 1). Weg nur mit Laufwerkspfad.
 $iniWeg = '^((OpenWindow\d+)=.*[A-Za-z]:\\|(Mailbox\d+|LastAttachDir|LastSaveAsDir|SaveAsDirectory|AttachDir)=)'
 
-# Was auf Gregor oder seinen Rechner zurueckfuehren koennte.
-$privat = '(?i)gregor|NAME-ENTFERNT|NAME-ENTFERNT|C:\\Users\\|@(?!127\.0\.0\.1|localhost)[a-z0-9-]+\.(de|com|net|org)\b'
+# Was auf den Anwender oder seinen Rechner zurueckfuehren koennte.
+# Namen kommen NUR aus tools\anonym-begriffe.lokal (nie im Repo, .gitignore),
+# wie in tools\pruefe-testdaten-anonym.pl. Bis 06.11.2026 standen hier drei
+# Namen im Klartext (PRUEFER-104 K1). Fehlt die Liste, wird nicht erfasst:
+# ein Privatfilter ohne Namen waere blind gruen.
+$lokal = Join-Path $PSScriptRoot 'anonym-begriffe.lokal'
+if (-not (Test-Path -LiteralPath $lokal)) { Write-Host "  ABGEBROCHEN: $lokal fehlt - ohne die lokale Namensliste wird keine Vorlage erfasst."; exit 1 }
+$namen = @(Get-Content -LiteralPath $lokal | Where-Object { $_ -notmatch '^\s*(#|$)' } | ForEach-Object { ($_ -split "`t", 2)[0] })
+if ($namen.Count -eq 0) { Write-Host "  ABGEBROCHEN: $lokal enthaelt kein Muster."; exit 1 }
+$privat = '(?i)' + ($namen -join '|') + '|C:\\Users\\|@(?!127\.0\.0\.1|localhost)[a-z0-9.-]+\.(de|com|net|org)\b'
 
 $anzahl = 0
 foreach ($v in $verz) {
