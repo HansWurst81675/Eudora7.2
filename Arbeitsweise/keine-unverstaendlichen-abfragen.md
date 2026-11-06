@@ -81,3 +81,9 @@ Zeiten MEZ, Transkript `f3d03714`, gemessen ([[CHRONIST-2026-11-03]], Abschnitt 
 Das ist kein Befehl, den er nicht nachvollziehen kann, wie am 30.10., aber dieselbe Wurzel: eine Frage, die ohne Beispiel nicht zu beantworten ist. Dazu kommt: Eine Abfrage hält den ganzen Zug fest, auch die Rückmeldungen der Agenten.
 
 **How to apply, zusätzlich:** Eine Frage an Gregor nennt das konkrete Ding (hier: „z. B. ‚Trash‘ oder ein eigener IMAP-Ordner“), sonst bekommt er sie gar nicht gestellt. Läuft ein Agent, steht die Frage als Text am Ende der Meldung, und die Antwort kommt als Einwurf. Der `PreToolUse`-Haken dafür ist seit dem 01.11. in [[daueraufgaben-brauchen-einen-takt]] vorgeschlagen; zweites gemessenes Auftreten ([[fehlerklassen-abstellen]]).
+
+## Nachtrag 06.11.2026 (CHRONIST): „Schalter“ und 39 Minuten
+
+Zeiten MEZ, Transkript `1ad467cf`, gemessen ([[CHRONIST-2026-11-06]], Abschnitt 7). 04.11. 14:40:28 Abfrage zu E-193: *„Statt der zweistufigen Suche … ginge ein einfacher Schalter“*. Gregor hatte um 08:12:54 die zweistufige Suche gutgeheißen. Bis 15:19:02 kein Werkzeugaufruf; dann lehnte Gregor ab: *„was für ein schalter? was soll er bewirken?“*. 15:19:21: *„‚Schalter‘ war das falsche Wort. Gemeint ist … eine automatische Weiche im Programm“*. Gregor 15:19:37: *„ja, erst die Weiche bauen und messen“*.
+
+Drittes gemessenes Auftreten einer Abfrage, die den Zug hält (01.11., 03.11., 04.11.). **How to apply, zusätzlich:** Ein Wort, das im Projekt schon eine Bedeutung hat („Schalter“ = INI-Eintrag), wird in einer Frage nicht für etwas anderes benutzt. Eine Frage, die eine Entscheidung Gregors neu stellt, nennt die Entscheidung mit Datum und sagt, was sich seitdem geändert hat.

@@ -177,3 +177,9 @@ hat die dreizehn bestätigt (*„nein, die dreizehn können bleiben"*).
   unterscheiden, ohne dass es jemand gemerkt hat.
 - **Vor dem Löschen zählen, wer darauf verweist** (`grep -r` über die MDs) —
   und erst dann entscheiden.
+
+## Nachtrag 06.11.2026 (CHRONIST): der Zähler im selben Befehl wie das Verwerfen
+
+Zeiten MEZ, Transkript `1ad467cf` ([[CHRONIST-2026-11-06]], Abschnitt 6). 04.11. 15:37:54 im Baum `.wt/e192`: `git status --short | … | head -3; git checkout -q -- .; git merge …`. Die Rechteprüfung wies ab (*„[Irreversible Local Destruction]“*); 15:38:15: *„Die Rechteprüfung hat meinen Befehl zu Recht gestoppt“*. Gemessen danach: der Baum war sauber, verloren wäre nichts gewesen. Gerettet hat wieder etwas anderes als die eigene Aufmerksamkeit.
+
+**How to apply, zusätzlich:** Zähler und Verwerfen stehen nie im selben Befehl. Erst zählen, das Ergebnis lesen, dann in einem eigenen Aufruf verwerfen, und nur, wenn die Zahl 0 ist oder die Dateien benannt sind.

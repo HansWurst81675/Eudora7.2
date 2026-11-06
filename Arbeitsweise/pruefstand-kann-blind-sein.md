@@ -159,3 +159,11 @@ Die erste Zeile hat jetzt eine Schranke: `TinyTest.cpp` zählt einen Test, der o
 - Ein Test meldet nicht nur `[FEHL]`, er muss **den Rückgabewert** ändern. Die Gegenprobe prüft den Rückgabewert, nicht die Ausgabezeile.
 - Ein Test auf „die Behebung steht da“ braucht die Umkehrung „die alte Stelle steht nicht mehr da“ ([[gegenprobe-umdrehen]]).
 - Nach einer Gegenprobe wird die Sicherung **ohne** `cp -p` zurückgelegt, oder die Datei wird danach mit `touch` berührt. Sonst misst der nächste Bau den kaputten Stand und meldet ihn als den guten.
+
+## Nachtrag 06.11.2026 (CHRONIST): blind grün, vorhergesagt und durch Rot-zuerst gefunden
+
+Zeiten MEZ ([[CHRONIST-2026-11-06]], Abschnitt 2). PRÜFER-102 schrieb am 05.11. (Rücklauf 22:05:24) als K2: *„Der Fall `E-239p` verlangt nicht `hinweis=1` … So kann der Fall grün melden, ohne den Fehlerweg zu treffen.“* Am 06.11. um 09:54:07, beim ersten Lauf am **alten** Bau 7.2.2.135: dreimal grün. Am Vortag war derselbe Bau mit demselben Fall rot gewesen; *Exit* und Hinweis liefern ein Wettrennen, und an diesem Morgen gewann *Exit*. Abhilfe ab 09:57: die Betriebsart wartet auf den Hinweis, und eine Positivprobe `E-239w` wird rot, wenn er nicht kam. Danach am alten Bau beide rot (auch über `pruefstand-lauf.ps1`), an 7.2.2.136 beide grün.
+
+Das ist eine weitere Form von „grün aus dem falschen Grund“: **ein Wettlauf**, der an manchen Tagen den Fehlerweg trifft und an anderen nicht. Gefunden hat ihn die Reihenfolge rot vor grün.
+
+**How to apply, zusätzlich:** Ein Fall, dessen Fehlerweg von einer Reihenfolge abhängt (Dialog offen, bevor der Befehl kommt), prüft die Reihenfolge selbst (`PROBE ok`) und macht sie zur Bedingung der Fallzeile. Ein Rot am alten Bau vom Vortag reicht nicht; es wird am selben Tag wie das Grün gemessen.

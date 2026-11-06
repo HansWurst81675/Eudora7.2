@@ -17,7 +17,7 @@ niemand angeklickt). Auf eine Frage verweist man mit ihrer Nummer, etwa
 | IMAP | [5](#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt), [20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu) |
 | Konten und Adressen | [6](#6-wie-trenne-ich-die-post-verschiedener-konten), [7](#7-wie-lege-ich-ein-zweites-konto-an), [8](#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben), [21](#21-warum-speichert-eudora-das-kennwort-nach-forget-passwords-wieder) |
 | Markieren und Filtern | [9](#9-wie-markiere-ich-wichtige-mails-farbig), [10](#10-wie-baue-ich-schnell-einen-filter-aus-einer-mail), [11](#11-wie-speichere-ich-einen-filter), [12](#12-filter-messages-strgj-tut-nichts), [13](#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte) |
-| Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus) |
+| Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus), [22](#22-warum-fehlen-beim-drucken-farbige-flächen-und-manche-bilder) |
 | Fehlersuche | [17](#17-wie-schreibt-eudora-mehr-ins-protokoll-loglevel), [18](#18-steht-schon-woanders) |
 | Einstellungen | [19](#19-welche-einstellungen-sind-anders-als-im-original-eudora--und-warum) |
 
@@ -485,8 +485,31 @@ Das bleibt so; Gregor hat am 05.11.2026 entschieden, es so zu lassen und
 diesen Hinweis aufzunehmen. *Am Quelltext nachgesehen*
 (`persona.cpp:891-914`, [PRÜFER-100](../Befunde/PRUEFER-100.md) K1) und
 **am Programm geprüft**: Gregor an 7.2.2.134 am 05.11.2026 — das Häkchen war
-nach *Forget Password(s)* noch gesetzt. Ab dem nächsten Release (im Testpaket
+nach *Forget Password(s)* noch gesetzt. Seit 7.2.2.136 (im Testpaket
 7.2.2.134 von Gregor bestätigt) speichert Eudora das Kennwort schon beim
 ersten Setzen des Häkchens
 ([E-223](../Intern/BEFUNDE.md#e-223)); vorher fragte es dann noch ein zweites
 Mal.
+
+## 22. Warum fehlen beim Drucken farbige Flächen und manche Bilder?
+
+Weil der Druck einer HTML-Mail über den Internet Explorer läuft, und der
+druckt ab Werk **keine Hintergründe**: keine farbig hinterlegten Knöpfe und
+Flächen und keine Bilder, die als Hintergrund eingebaut sind — in
+Werbe-Mails sind das oft gerade die großen Bilder. Text, Textfarben und
+normale Bilder kommen mit, auch eingebettete und nachgeladene.
+
+Wer die Hintergründe mitdrucken will, setzt in der `Eudora.ini` im Abschnitt
+`[Settings]` den Schlüssel `PrintBackground=1` (Eudora vorher beenden). Es gibt
+dafür keinen Menüpunkt. Eudora schaltet dann beim Drucken und bei der
+Druckvorschau kurz die Internet-Explorer-Einstellung *Hintergrundfarben und
+-bilder drucken* ein und stellt sie gleich danach so her, wie sie war — Ihre
+Einstellung im Internet Explorer bleibt, wie sie ist. Vorgabe ist `0` — wie
+bisher, das spart Tinte.
+
+Gregor hat das am 05.11.2026 so entschieden (*„schaltbar mit default =
+OFF“*). **Am Programm geprüft** für die **Druckvorschau**: am Prüfstand
+gemessen ([E-169](../Intern/BEFUNDE.md#e-169), Fälle `E-169p` und `E-169b`).
+Der Druck auf Papier ist noch nicht gemessen. Seit 7.2.2.136.
+Mehr zum Schlüssel:
+[EINSTELLUNGEN.md, Abschnitt 3](../Intern/EINSTELLUNGEN.md#3-schalter-ohne-menüpunkt).

@@ -1,0 +1,16 @@
+From: Druckprobe <druckprobe@pruefstand.invalid>
+To: Empfaenger <empfaenger@pruefstand.invalid>
+Subject: E169 P3 Bilder als Hintergrund
+Date: Thu, 05 Nov 2026 22:00:00 +0100
+Message-ID: <e169-p3@pruefstand.invalid>
+MIME-Version: 1.0
+Content-Type: text/html; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=us-ascii"></head>
+<body>
+<p>E169 Probe 3: Bilder als Hintergrund.</p>
+<table cellpadding="0" cellspacing="0"><tr><td background="http://127.0.0.1:18169/e169-cyan.png" width="160" height="90">I td background</td></tr></table>
+<br>
+<div style="background-image:url(http://127.0.0.1:18169/e169-cyan.png); width:160px; height:90px">J CSS background-image</div>
+</body></html>

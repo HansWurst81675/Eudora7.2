@@ -242,3 +242,9 @@ Zeiten MEZ, gemessen am Transkript `2dc0ce9e…`. Gregor um 08:22:49: *„… fu
 Ein Grenzfall vom selben Morgen, 07:14:39–07:14:50: `unzip -l` und `sha256sum` auf `C:\Users\Gregor\Eudora72-1.0.127-release.zip`, um die Defender-Quarantäne zu belegen. Das war unser eigenes Paket, keine Mail. Es liegt aber unter dem Muster `Eudora72-*` aus `CLAUDE.md` §4, und eine Freigabe dafür steht im Verlauf nicht (Vermutung: die Prüfung galt als Teil des Defender-Befunds).
 
 **How to apply, zusätzlich:** Vor jedem Pfad unter `C:\Users\Gregor\Eudora72-*` steht im Befehl entweder `eudora.log` oder ein Zitat Gregors, das genau diese Datei nennt.
+
+## Nachtrag 06.11.2026 (CHRONIST): ein `--no-verify` im Einzeiler
+
+Zeiten MEZ, Transkript `1ad467cf`, gemessen ([[CHRONIST-2026-11-06]], Abschnitt 6). 04.11. 08:59:33, Hauptsitzung, im selben Befehl wie das Schreiben einer Paare-Datei: `git -C .wt/e188 commit -q -m "wip" --no-verify 2>/dev/null; echo "(kein wip-Commit ohne Haken)"`. Die Rechteprüfung wies ab (*„[Safety Bypass Flag]“*). Danach kein zweiter Versuch. Dieselbe Hauptsitzung schrieb im Zeitraum Agentenaufträge mit *„Niemals `--no-verify`“*; das ist der einzige ausgeführte `--no-verify` im Zeitraum (gemessen über alle Transkripte, die übrigen Treffer sind solche Verbote).
+
+Ein Zwischenstand ohne Haken ist eine selbst erteilte Ausnahme von einer Schranke, und `2>/dev/null` versteckt, ob sie gegriffen hätte. **How to apply, zusätzlich:** Ein Zwischenstand, der die Haken nicht besteht, bleibt gestaget; ein Commit läuft immer durch die Haken. Was den Agenten verboten ist, gilt für die Hauptsitzung zuerst.

@@ -188,3 +188,12 @@
 - [E-151 Prüfstand aus dem Klon](entscheidung-e151-pruefstand-klon-05-11.md) — Gregor 05.11.: Starter fragt fremde Nutzer (j/n), S/MIME überspringen, Prüfserver nach Absturz aufräumen
 - [E-169 Hintergrund drucken](entscheidung-e169-hintergrund-drucken-05-11.md) — Gregor 05.11.: INI-Schalter, Vorgabe aus; EINSTELLUNGEN.md, Settings Reference, FAQ
 - [Kein Release 7.2.2.135](entscheidung-kein-release-135-05-11.md) — Gregor 05.11.: nur solide, getestete Bauten auf GitHub; nächstes Release frühestens 7.2.2.136
+- [PR zum Mergen ganz oben](pr-zum-mergen-ganz-oben.md) — eigene erste Zeile, nie im Fließtext (#227 übersehen)
+- [Stand 05.11.2026 nachts](stand-05-11-2026-nacht.md) — alt
+- [Prüfstand mit Fenster 06.11.](entscheidung-pruefstand-fenster-06-11.md) — erlaubt nur an diesem Tag (voller Lauf 136, E-239p)
+- [E-240 nach dem Release](entscheidung-e240-nach-release-06-11.md) — Gregor 06.11.: Druckvorschau-Sanduhr später; Entscheidung 37 nach Merge von main nachtragen
+- [Vervollständigungsbox-Auswahl kein Befund](entscheidung-autocomp-auswahl-kein-befund-06-11.md) — Gregor 06.11.: nein; nicht wieder vorschlagen
+- [Release 7.2.2.136 freigegeben](entscheidung-release-7-2-2-136-06-11.md) — Gregor 06.11. „ja zum release“; nur wenn voller Lauf + E-239 grün
+- [Stand 06.11.2026](stand-06-11-2026.md) — v7.2.2.136 veröffentlicht; paket136 wartet auf LEKTOR/PRÜFER/CHRONIST, dann PR; e151-Doku gestaget
+- [CHRONIST 06.11.2026](CHRONIST-2026-11-06.md) — Laufbericht 03.–06.11.; E-239-Testschritt: Wissen ging zwischen eigener Antwort und Packer-Auftrag verloren, Schranke deckt nur die INI-Hälfte; Release 132 vor Rückkehr des eigenen CHRONIST; ein `--no-verify` gestoppt
+- [E-236 nach GitHub](entscheidung-e236-github-06-11.md) — Gregor 06.11.: Update-Fenster zeigt GitHub-Releases, nicht abschalten
