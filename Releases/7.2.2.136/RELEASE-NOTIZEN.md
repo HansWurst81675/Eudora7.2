@@ -1,9 +1,6 @@
 Fehlerbehebungen und ein neuer Schalter für den Druck. Programm, ZIP und Marke tragen dieselbe
 Nummer: `7.2.2.136`. Dieses Release enthält alles seit `v7.2.2.133`.
 
-> Entwurf vom 05.11.2026 für das Testpaket 7.2.2.136. Veröffentlicht wird
-> erst nach Gregors Test und Ja; dann kommt sein Ergebnis unter „Wie geprüft“.
-
 ## Behoben
 
 * **„Remember password“ speichert das Kennwort schon beim ersten Mal.**
@@ -41,13 +38,29 @@ Nummer: `7.2.2.136`. Dieses Release enthält alles seit `v7.2.2.133`.
 Jede Behebung hat einen Regressionstest und einen Prüfstandsfall am laufenden
 Programm, der am alten Bau rot und am neuen grün war
 ([Prüfbericht](https://github.com/HansWurst81675/Eudora7.2/blob/main/Releases/PRUEFBERICHT.md)).
+Der volle Prüfstandslauf an genau diesem Bau (`7.2.2.136+2a8fd4d7`) am
+06.11.2026: **110 von 110 Fällen bestanden**. Das Beenden bei offenem Hinweis
+nach dem Abruf ist zusätzlich auf drei Wegen gemessen (Fenster schließen,
+*Fenster schließen* aus der Taskleiste, *Exit* aus dem Menü des Symbols im
+Infobereich), je mit und ohne neue Mail: kein Absturz, die abgerufene Mail
+liegt im Posteingang. Getestet und freigegeben vom Projektinhaber am
+06.11.2026 an seinem eigenen System.
 
 **Rückstand an Regressionstests:** Nicht jede ältere Behebung hat schon einen
-eigenen automatischen Test. Am 05.11.2026 sind es **50** behobene Befunde ohne
+eigenen automatischen Test. Am 06.11.2026 sind es **50** behobene Befunde ohne
 eigenen Testfall; von den **70** kritischen Befunden (Verlust, Schaden,
 Absturz) ist keiner mehr ohne Prüfung.
 
 ## Bekannte Fehler
+
+**Ausdrucke tragen unten den Pfad einer Zwischendatei, darin Ihr
+Windows-Anmeldename** (`file:///C:/Users/<Name>/AppData/Local/Temp/eudN.htm`),
+oben den Titel der HTML-Seite statt der Nachricht: Eudora setzt seine eigene
+Kopf- und Fußzeile nur, wenn der Internet Explorer schon eine in der Registry
+hinterlegt hat, und unter Windows 10 ist das in der Regel nicht so
+([E-242](https://github.com/HansWurst81675/Eudora7.2/blob/main/Intern/BEFUNDE.md#e-242);
+nicht durch dieses Release entstanden, der Quelltext ist original). Eine
+Abhilfe ist noch nicht gemessen; die Behebung folgt in einem späteren Release.
 
 Was noch nicht geht, steht in der
 [README unter „Bekannte Fehler“](https://github.com/HansWurst81675/Eudora7.2/blob/main/README.md#bekannte-fehler).
