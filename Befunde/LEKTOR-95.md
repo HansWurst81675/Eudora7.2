@@ -41,15 +41,15 @@ bewusst unverändert. Als **getestet oder veröffentlicht** stellt keine Datei
 
 ## Funde aus LEKTOR-94
 
-Gemessen: die Begriffe, die `528a1589` und `8d42545b` ersetzt haben, kommen
+Gemessen: die Begriffe, die der Nachtrag zur Datenschutz-Bereinigung vom 29.10.2026 und der zweite Nachtrag zur Datenschutz-Bereinigung vom 29.10.2026 ersetzt haben, kommen
 im heutigen Stand außerhalb fremden Codes **0-mal** vor (`git grep`, 16
 Muster; die einzigen Treffer eines Musters liegen in Qt- und SDK-Kopfdateien).
 
 | Fund | Was es war | Heute | Beleg |
 |---|---|---|---|
-| [L-94.1](LEKTOR-94.md#l-94.1) | Anhang-Dateinamen einer beruflichen Mail im CHANGELOG | **erledigt** | gemessen: 0 Treffer; Platzhalter `anhang-a-…docx`/`.pdf` im CHANGELOG (`528a1589`) |
+| [L-94.1](LEKTOR-94.md#l-94.1) | Anhang-Dateinamen einer beruflichen Mail im CHANGELOG | **erledigt** | gemessen: 0 Treffer; Platzhalter `anhang-a-…docx`/`.pdf` im CHANGELOG (der Nachtrag zur Datenschutz-Bereinigung vom 29.10.2026) |
 | [L-94.2](LEKTOR-94.md#l-94.2) | Rundbrief: Unterzeichner, Absenderdomain, Bildnamen bis in Unit-Tests | **erledigt** | gemessen: 0 Treffer der Domain und der Bildnamen; Tests auf `beispiel.invalid`/`absender.invalid` |
-| [L-94.3](LEKTOR-94.md#l-94.3) | Betreff einer privaten Anzeigen-Unterhaltung mit Gegenstand | **erledigt** | gemessen: 0 Treffer; `8d42545b` neutralisiert dazu Anzeigennummer und Titel in `Testdaten/e106…` |
+| [L-94.3](LEKTOR-94.md#l-94.3) | Betreff einer privaten Anzeigen-Unterhaltung mit Gegenstand | **erledigt** | gemessen: 0 Treffer; der zweite Nachtrag zur Datenschutz-Bereinigung vom 29.10.2026 neutralisiert dazu Anzeigennummer und Titel in `Testdaten/e106…` |
 | [L-94.4](LEKTOR-94.md#l-94.4) | Firmennamen von Absendern, zwei Newsletter-Betreffe | **teilweise** — die Firmennamen bleiben nach Gregors Entscheidung 18; die **Betreffzeilen** nicht → [L-95.14](#l-95.14) | `Intern/WEITERMACHEN.md:139` *„Firmennamen von **Werbe-Absendern** bleiben im Repo … Alles andere aus seinem Postfach (Betreffzeilen, …) kommt nicht ins öffentliche Repo“*; `CHANGELOG.md:4344-4345` (gemessen) |
 | [L-94.5](LEKTOR-94.md#l-94.5) | Mailadresse mit echter Domain im Unit-Test | **erledigt** | `Eudora71/Tests/TestPopEmpfang.cpp` jetzt `empfaenger@beispiel.invalid` (gemessen) |
 | [L-94.6](LEKTOR-94.md#l-94.6) | Wort aus einer Werbe-Betreffzeile in zwei Release-Texten | **erledigt** | gemessen mit `gh release view` über **alle 22** Release-Texte: 0 Treffer; Entscheidung 19, `Intern/WEITERMACHEN.md:140` |
@@ -63,7 +63,7 @@ Muster; die einzigen Treffer eines Musters liegen in Qt- und SDK-Kopfdateien).
 | [L-94.14](LEKTOR-94.md#l-94.14) | drei ältere Release-Texte mit totem Link | **erledigt** | gemessen über alle 22 Texte: 0 × `blob/main/BEFUNDE.md`; Entscheidung 19 — aber das CHANGELOG nennt nur die ersten drei → [L-95.13](#l-95.13) |
 | [L-94.15](LEKTOR-94.md#l-94.15) | WEITERMACHEN-Einstieg auf dem Zweig vor #183 | **erledigt** — der Einstieg ist inzwischen wieder einen Schritt zurück → [L-95.9](#l-95.9) | `Intern/WEITERMACHEN.md:7` nennt `release-7.2.1`; der alte *„hier weiter“*-Block ist entfernt |
 | [L-94.16](LEKTOR-94.md#l-94.16) | Merge mit Terminal-Steuerzeichen als Nachricht | **unverändert, bewusst** | Geschichte wird nicht umgeschrieben (Entscheidung 18) |
-| [L-94.17](LEKTOR-94.md#l-94.17) | WERKZEUGE zählte 17 Muster, die Schranke sieht nur `Testdaten/` | **teilweise** — Zählung berichtigt; außerhalb `Testdaten/` weiter keine Schranke | `tools/WERKZEUGE.md:98` *„am 29.10.2026: 9 eingebaute, dazu die Begriffe aus der lokalen … Liste“*; die Commit-Nachrichten `528a1589`, `0a4d2390` nennen *„Begriffspruefung der Aenderungen 0 Treffer“* — von Hand |
+| [L-94.17](LEKTOR-94.md#l-94.17) | WERKZEUGE zählte 17 Muster, die Schranke sieht nur `Testdaten/` | **teilweise** — Zählung berichtigt; außerhalb `Testdaten/` weiter keine Schranke | `tools/WERKZEUGE.md:98` *„am 29.10.2026: 9 eingebaute, dazu die Begriffe aus der lokalen … Liste“*; die Commit-Nachrichten der Nachtrag zur Datenschutz-Bereinigung vom 29.10.2026, `0a4d2390` nennen *„Begriffspruefung der Aenderungen 0 Treffer“* — von Hand |
 | [L-94.18](LEKTOR-94.md#l-94.18) | CHANGELOG erwähnte die Bereinigung nicht | **erledigt** | `CHANGELOG.md:125` *„**Datenschutz:** Daten aus Gregors Postfach … entfernt und durch Platzhalter ersetzt“* |
 
 **Reste aus älteren Berichten** (unverändert, gemessen):
@@ -390,7 +390,7 @@ in der Liste stammen aus verschiedenen Ständen.
 die Berichtigung der Release-Texte auf GitHub nur für die ersten drei
 (Entscheidung 17), nicht für die sechs aus Entscheidung 19, und die
 eingearbeiteten Prüfungen nur bis [LEKTOR-93](LEKTOR-93.md#lektor-93), obwohl [LEKTOR-94](LEKTOR-94.md#lektor-94) in diesem
-Abschnitt eingearbeitet wurde (`528a1589`, `4b8a24b5`).
+Abschnitt eingearbeitet wurde (der Nachtrag zur Datenschutz-Bereinigung vom 29.10.2026, `4b8a24b5`).
 
 * **Belegt**, `CHANGELOG.md:128` *„Die veröffentlichten Release-Texte
   `v1.0.113`, `v1.0.117` und `v1.0.120` … am 29.10.2026 berichtigt“* gegen
