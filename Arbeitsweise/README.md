@@ -115,6 +115,7 @@ eine Datei liest, liest diese.
 | [entscheidung-7-2-2-umfang](entscheidung-7-2-2-umfang.md) | Gregor 02.11.2026 — Release 7.2.1.131, danach 7.2.2.x mit neuen Funktionen (Hilfe-Menü Shortcuts/Settings); Termin in privat.txt |
 | [entscheidung-alte-pfade-weg-06-11](entscheidung-alte-pfade-weg-06-11.md) | Gregor 06.11.2026 — Pfade in sein Benutzerverzeichnis aus dem Repo entfernen, C:\\Temp darf stehen bleiben |
 | [entscheidung-autocomp-auswahl-kein-befund-06-11](entscheidung-autocomp-auswahl-kein-befund-06-11.md) | Gregor 06.11.2026: graue (unsichtbare) Auswahl in der To:-Vervollständigungsbox wird KEIN Befund; nicht wieder vorschlagen |
+| [entscheidung-commit-verweise-bleiben-06-11](entscheidung-commit-verweise-bleiben-06-11.md) | Gregor 06.11.2026 — die rund 1145 Verweise auf alte Commits mit privatem Inhalt (LEKTOR-158 L-158.5) werden nicht ersetzt |
 | [entscheidung-e128-endung-aus-inhalt](entscheidung-e128-endung-aus-inhalt.md) | Gregor 03.11.2026 - E-128 Vorschlag angenommen, Vorgabeendung beim Speichern aus dem Inhalt ableiten |
 | [entscheidung-e133-no-und-release-text-03-11](entscheidung-e133-no-und-release-text-03-11.md) | Gregor 03.11.2026 - E-133 \"No\" bleibt wie gebaut (Befehlszeile genügt); Release-Text 7.2.1.131 zu E-170 beim nächsten PR ergänzen |
 | [entscheidung-e138-erledigt-durch-doku](entscheidung-e138-erledigt-durch-doku.md) | Gregor 31.10.2026: E-138 (Mark of the Web, Eudora.exe startet nach GitHub-Download nicht) ist durch die Doku erledigt; nicht wieder als offen fuehren |

@@ -202,3 +202,4 @@
 - [7.2.2.137 Umfang](entscheidung-7-2-2-137-umfang-06-11.md) — Gregor 06.11.: E-242 + E-240 sicher, E-241 wenn Ursache klar; nach E-151
 - [E-246 stehen lassen](entscheidung-e246-stehen-lassen-06-11.md) — Gregor 06.11.: alter Commit bleibt abrufbar, keine Support-Anfrage
 - [Alte Pfade weg 06.11.](entscheidung-alte-pfade-weg-06-11.md) — Gregor: Pfade ins Benutzerverzeichnis entfernen, C:\Temp bleibt
+- [Commit-Verweise bleiben 06.11.](entscheidung-commit-verweise-bleiben-06-11.md) — Gregor: L-158.5 nein, 1145 Verweise nicht ersetzen
