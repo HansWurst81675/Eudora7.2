@@ -559,6 +559,12 @@ schranke offene-befunde.pl || exit $?
 #      nicht wieder ueberall etwas verstreut ist."
 schranke pruefe-nach-dem-release.pl || exit $?
 
+# 19b3. Oben in Intern/WEITERMACHEN.md steht hoechstens EIN Stand, und keine
+#      Zeile im Kopf ist laenger als 400 Zeichen. Seit dem 05.11.2026: dort
+#      standen fuenf Stand-Absaetze als Zeilen bis 13 032 Zeichen. Gregor:
+#      "hier ist die formattierung am anfang wuest."
+schranke pruefe-weitermachen-kopf.pl || exit $?
+
 # 19c. Jede neu geschriebene Befundzeile beginnt mit ihrem Urteil. Seit dem
 #      24.10.2026: am 23.10.2026 begannen E-142 und E-144 mit "**Kurz: ...**",
 #      und offene-befunde.pl (19b) sah sie nicht mehr - es liest das erste
@@ -822,6 +828,7 @@ echo "  tools/pruefe-behoben-ausgeliefert.pl  sagt die AUSGELIEFERTE Eudora.exe 
 echo "  tools/pruefe-testdaten-anonym.pl      keine persoenlichen Daten unter Testdaten/"
 echo "  tools/offene-befunde.pl               deckt Intern/WEITERMACHEN.md die offenen Befunde?"
 echo "  tools/pruefe-nach-dem-release.pl      steht jede Aufgabe nach dem Release in der Liste?"
+echo "  tools/pruefe-weitermachen-kopf.pl     steht oben in WEITERMACHEN nur ein kurzer Stand?"
 echo "                               Vom 10.09. bis 13.09.2026 drei Tage lang NICHT,"
 echo "                               ohne dass es jemand gemerkt hat. Weist nur beim"
 echo "                               Baufehler ab, nicht bei roten Tests."
