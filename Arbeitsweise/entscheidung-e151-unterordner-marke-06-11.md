@@ -5,7 +5,7 @@ metadata:
   node_type: memory
   type: project
   originSessionId: 8e921d9a-b658-4cfb-9fea-ce8200ddbb4c
-  modified: 2026-11-06T13:12:22.973Z
+  modified: 2026-11-06T16:35:20.338Z
 ---
 
 Schranke: keine - Entscheidung zur Bauweise; nach der Umsetzung prüft sie eine Schranke (Werkzeuge weisen Verzeichnisse ohne Marke ab), dann hier nachtragen.
