@@ -33,9 +33,11 @@ Diese Anleitung setzt kein Wissen über das Projekt voraus.
 ### Voraussetzungen in Kürze
 
 * eigenes Windows-Konto oder VM, wenn auf dem Rechner eine echte Eudora-Einrichtung läuft
-* Git für Windows (bringt das nötige Perl mit)
+* Git für Windows, für alle Benutzer installiert (bringt das nötige Perl mit)
+* den Klon in einem Ordner **ohne Leerzeichen** im Pfad
 * Visual Studio 2022 nur, um eigene Änderungen zu bauen
-* freie Ports 11110, 1143, 1144 und 1025 auf `127.0.0.1`
+* freie Ports 11110, 1143, 1144, 1025 und 18169 auf `127.0.0.1`
+* gut 700 MB für den Klon, dazu rund 1,6 GB für die 49 Prüfverzeichnisse
 * eine bis anderthalb Stunden, in der der Rechner nicht benutzt wird
 * Internet nur beim ersten Lauf (Download des Release-ZIPs)
 
@@ -65,7 +67,9 @@ Je Fassung der letzte volle Lauf, gemessen von `tools/pruefstand-lauf.ps1`
 (`Intern/pruefstand-dauer.txt` in der Git-Geschichte; die Fassung aus der
 Freigabe bzw. Baukennung in `tools/TESTLAEUFE.md`). Entwicklermaschine, VM.
 Nur, was gemessen ist — ältere Läufe ohne eindeutige Fassung fehlen. Die Dauer
-wächst mit der Zahl der Fälle und der Eudora-Starts, nicht mit der Fassung.
+wächst vor allem mit der Zahl der Fälle und der Eudora-Starts; einzelne Fälle
+mit langen Wartezeiten (E-193f bis zu 25 Minuten) verschieben sie stärker als
+ein neuer kurzer Fall.
 
 | Fassung | Art | Datum | Fälle | Eudora-Starts | Dauer |
 |---|---|---|---:|---:|---:|
@@ -78,7 +82,8 @@ wächst mit der Zahl der Fälle und der Eudora-Starts, nicht mit der Fassung.
 | 7.2.2.134 | Testpaket | 05.11.2026 | 102 | 64 | 67 min 12 s |
 | 7.2.2.135 | Testpaket | 05.11.2026 | 103 | 64 | 80 min 52 s |
 | 7.2.2.135 | Testpaket, Klonprobe aus einem frischen Klon (Prüfverzeichnisse aus `v7.2.2.133`) | 05.11.2026 | 102 | 63 | 76 min 57 s |
-| 7.2.2.136 | Testpaket, Release-Kandidat | 06.11.2026 | 110 | 67 | 91 min 16 s |
+| 7.2.2.136 | Release | 06.11.2026 | 110 | 67 | 91 min 16 s |
+| 7.2.2.136 | Release, Klonprobe mit dem Starter unter `C:\Temp\Eudora72-Pruefstand` (49 Verzeichnisse frisch aus den Vorlagen, ohne S/MIME-Zusatzdateien) | 06.11.2026 | 106 | 66 | 81 min 21 s |
 
 ## Was der Prüfstand prüft – und was nicht
 
@@ -94,7 +99,7 @@ Der Prüfstand prüft **nicht**:
 
 * echte Mailserver und Konten – er benutzt eigene Prüfserver auf dem eigenen Rechner;
 * große Postfächer und lange Laufzeiten;
-* Drucken und alles, was nur von Hand zu sehen ist (Aussehen, Farben);
+* den Druck auf Papier und alles, was nur von Hand zu sehen ist (Aussehen, Farben) – die Druckvorschau prüft er;
 * das S/MIME-Plugin, solange `MFC71.DLL` und `msvcp71.dll` fehlen (siehe unten).
 
 ## Voraussetzungen
@@ -107,16 +112,31 @@ Der Prüfstand prüft **nicht**:
   (`HKCU\Software\Qualcomm\Eudora`). Der Prüfstand hält den Stand vorher fest
   und setzt ihn danach zurück; wird er hart abgebrochen (Strom weg, Prozess
   beendet), kann aber ein Rest bleiben, der auf ein Prüfverzeichnis zeigt.
+* **Eigene Eudora-Daten bleiben unberührt.** Der Prüfstand arbeitet nur in
+  Verzeichnissen, die er selbst angelegt und mit der Datei
+  `.eudora72-pruefstand` markiert hat – Vorgabe ist der Ordner
+  `C:\Temp\Eudora72-Pruefstand`. Ein Eudora-Verzeichnis ohne diese Marke, etwa
+  eine eigene Installation mit echten Mails unter `C:\Temp`, fasst er nie an:
+  er startet dort nichts, leert dort nichts und setzt dessen Registry-Einträge
+  nicht zurück.
 * **Git für Windows** (<https://git-scm.com>). Es bringt das Perl mit, mit dem
-  die Prüfserver laufen (`C:\Program Files\Git\usr\bin\perl.exe`). Weitere
-  Perl-Module braucht es nicht.
+  die Prüfserver laufen. Gesucht wird es unter
+  `C:\Program Files\Git\usr\bin\perl.exe`, also bei einer Installation für alle
+  Benutzer (die Vorgabe des Installers); wer Git nur für sich installiert hat,
+  bekommt „Perl fehlt“. Weitere Perl-Module braucht es nicht.
+* **Ein Ordner ohne Leerzeichen** für den Klon: liegt er etwa unter
+  `C:\Mein Ordner\…`, starten die Prüfserver nicht (bekannter Fehler E-244).
+
 * **Visual Studio 2022** mit „Desktopentwicklung mit C++“, um Eudora zu bauen.
   Ohne eigenen Bau prüft der Prüfstand das zuletzt veröffentlichte Release –
   das ist nützlich, um den Prüfstand selbst auszuprobieren, sagt aber nichts
   über eigene Änderungen.
 * **Freie Ports** auf `127.0.0.1`: 11110 (POP), 1143 und 1144 (IMAP),
-  1025 (SMTP). Belegt sie ein anderes Programm, startet der Prüfstand nicht
-  und nennt das Programm.
+  1025 (SMTP), 18169 (Bilder für die Druckvorschau). Belegt sie ein anderes
+  Programm, startet der Prüfstand nicht und nennt das Programm.
+* **Platz:** gut 700 MB für den Klon (gemessen am 06.11.2026: 510 MB Dateien
+  und 224 MB Git-Geschichte), dazu rund 1,6 GB für die 49 Prüfverzeichnisse
+  (gemessen: 1578 MB unter `C:\Temp\Eudora72-Pruefstand`).
 * **Eine bis anderthalb Stunden** (gemessen 60 bis 91 Minuten), in der der Rechner nicht benutzt wird. Ein Klick in ein
   Eudora-Fenster während des Laufs kann einen Fall rot machen.
 * **Internet** nur beim ersten Lauf: Fehlt im Ordner `Releases\` ein
@@ -156,12 +176,13 @@ Was dann geschieht:
    abgebrochenen Lauf dieses Repos werden beendet – andere Programme nicht.
 2. **Frage.** „Fortfahren? (j/n)“. Das `j` gilt als Freigabe für diesen Lauf
    und steht im Protokoll.
-3. **Einrichten.** Unter `C:\Temp` entstehen 46 Prüfverzeichnisse
-   (`C:\Temp\E13`, `C:\Temp\E118` …), je eine Kopie des Programms
+3. **Einrichten.** Unter `C:\Temp\Eudora72-Pruefstand` entstehen 49
+   Prüfverzeichnisse (`…\E13`, `…\E118` …), je eine Kopie des Programms
    (Release-ZIP, darüber der eigene Bau) und ein vorbereitetes Mailverzeichnis
-   aus `Testdaten\pruefstand\`. Bei jedem Start werden sie frisch angelegt.
-   Ein Verzeichnis gleichen Namens, das nicht vom Prüfstand stammt, wird nicht
-   angefasst; seine Fälle werden dann übersprungen.
+   aus `Testdaten\pruefstand\`. Jedes bekommt die Marke
+   `.eudora72-pruefstand`; nur Verzeichnisse mit dieser Marke fasst der
+   Prüfstand an. Ein Verzeichnis gleichen Namens ohne Marke bleibt unberührt;
+   seine Fälle werden dann übersprungen.
 4. **Lauf.** Fortschritt in der Form
 
    ```
@@ -172,7 +193,7 @@ Was dann geschieht:
    Zwischendurch gehen Eudora-Fenster auf und zu. Nichts anklicken.
 5. **Ergebnis.** Die Liste aller Fälle mit `[ ok ]` oder `[FEHL]`, die
    Ergebniszeile, die Dauer und die Datei
-   `C:\Temp\pruefstand-ergebnis.txt`.
+   `C:\Temp\Eudora72-Pruefstand\pruefstand-ergebnis.txt`.
 
 ### Schalter
 
@@ -181,7 +202,7 @@ Hinter `"Pruefstand starten.cmd"` lassen sich Schalter anhängen:
 | Schalter | Wirkung |
 |---|---|
 | `-Nur E-193` | nur die Fälle, deren Kennung so beginnt – schnell, um einen einzelnen Fehler nachzuprüfen |
-| `-Wurzel C:\Temp\Anders` | anderer Ordner für die Prüfverzeichnisse (nur `C:\Temp` oder darunter). Vier Fälle prüfen den Pfad selbst und sind dann rot, ohne dass etwas kaputt ist: `E-133p`, `E-133q` (Registry mit Kurznamen), `E-216l` (langer Pfad im About-Dialog), vermutlich `A-5p` (Meldung mit Pfad) – gemessen an der Klonprobe vom 05.11.2026 |
+| `-Wurzel D:\Pruefstand` | anderer Ordner für die Prüfverzeichnisse, wie das Arbeitsverzeichnis beim Start von Eudora; jeder Ordner außer einem Laufwerksstamm. Die Marke schützt fremde Verzeichnisse auch dort. Ein deutlich längerer Pfad als die Vorgabe kann `E-216l` (langer Pfad im About-Dialog) rot machen, ohne dass etwas kaputt ist: der Dialog hat für die Zeile *Log* zwei Zeilen Platz |
 | `-Grundlage C:\pfad\Eudora72-7.2.2.133-release.zip` | dieses Release-ZIP statt des Downloads |
 | `-Bau C:\pfad\Bin\Release` | ein anderes Bauverzeichnis |
 | `-ZusatzDlls C:\pfad` | Ordner mit `MFC71.DLL` und `msvcp71.dll`, damit der S/MIME-Fall mitläuft |
@@ -213,11 +234,12 @@ falsch war und wie es behoben wurde. Die erwartete Zeile jedes Falls steht in
 1. **Einzeln wiederholen:** `"Pruefstand starten.cmd" -Nur E-193fs`. Manche
    Fälle hängen von der Zeit ab; ist er beim zweiten Mal grün, war es
    vermutlich der Rechner, nicht die Änderung.
-2. **Gegenprobe ohne die eigene Änderung:** denselben Fall mit dem
-   unveränderten Stand bauen und fahren. Ist er auch dort rot, liegt es nicht an
-   der Änderung.
+2. **Gegenprobe ohne die eigene Änderung:** den unveränderten Stand bauen
+   (`git stash` oder ein zweiter Klon, dort `tools\bauen.ps1`) und denselben
+   Fall mit `-Bau <dessen Eudora71\Bin\Release>` fahren. Ist er auch dort rot,
+   liegt es nicht an der Änderung.
 3. **Protokoll lesen:** im Prüfverzeichnis des Falls,
-   `C:\Temp\<Name>\Mailverzeichnis\eudora.log`.
+   `C:\Temp\Eudora72-Pruefstand\<Name>\Mailverzeichnis\eudora.log`.
    `Exception.log` daneben gibt es nur, wenn Eudora abgestürzt ist.
 
 ### Typische Fehlerbilder
@@ -226,6 +248,7 @@ falsch war und wie es behoben wurde. Die erwartete Zeile jedes Falls steht in
 |---|---|---|
 | `Belegt: Port 11110: …` | ein anderer Mailserver oder ein zweiter Prüfstand läuft | das genannte Programm beenden |
 | `Pruefverzeichnis fehlt` | Einrichten wurde übersprungen oder ist gescheitert | Ausgabe oben lesen, neu starten |
+| `kein Pruefstand (Marke .eudora72-pruefstand fehlt)` | im Ordner liegt ein Verzeichnis gleichen Namens, das nicht der Prüfstand angelegt hat | es bleibt unberührt; anderen Ordner mit `-Wurzel` wählen oder das Verzeichnis selbst umbenennen |
 | `Vorbereiten mit … gescheitert` | ein Messskript fand seine Ausgangslage nicht | neu starten; bleibt es, Prüfverzeichnis löschen |
 | `kein Protokoll nach dem Lauf` | Eudora startete nicht (fehlende DLL, Defender) | `Eudora.exe` im Prüfverzeichnis von Hand starten und die Meldung lesen |
 | `Eudora ist in diesem Lauf abgestuerzt` | Absturz im Windows-Ereignisprotokoll | `Exception.log` im Prüfverzeichnis lesen |
@@ -255,9 +278,9 @@ Für alle, die den Prüfstand erweitern wollen:
 | `tools\pruefstand-faelle.txt` | ein Fall je Zeile: Kennung, Verzeichnis, Zeit, Quelle, erwartete Zeile, verbotene Zeile, Testmail, Messskript |
 | `tools\messen-*.ps1` | je Fall die Bedienung: Lage herstellen (`-Vorbereiten`), Fenster bedienen, Ergebniszeile ausgeben |
 | `tools\testlauf.ps1` | startet und beendet Eudora; der einzige Weg, auf dem die Skripte Eudora starten |
-| `tools\anhang-pruefdaten.pl`, `tools\imap-pruefserver.pl`, `tools\smtp-pruefserver.pl` | die Prüfserver für POP, IMAP und SMTP, nur auf `127.0.0.1` |
+| `tools\anhang-pruefdaten.pl`, `tools\imap-pruefserver.pl`, `tools\smtp-pruefserver.pl`, `tools\e169-bildserver.pl` | die Prüfserver für POP, IMAP, SMTP und die Bilder der Druckvorschau, nur auf `127.0.0.1` |
 | `tools\pruefserver-aufraeumen.ps1` | beendet Reste der Prüfserver dieses Repos, meldet belegte Ports |
-| `Testdaten\pruefstand\<Name>\` | das vorbereitete Mailverzeichnis je Prüfverzeichnis |
+| `Testdaten\pruefstand\<Name>\` | das vorbereitete Mailverzeichnis je Prüfverzeichnis, daneben bei Bedarf eine Schalterdatei (`e169-schalter.txt`); erfasst mit `tools\pruefstand-vorlage-erfassen.ps1 -Nur <Name>`. Zu jedem Verzeichnis der Fallliste muss es eine Vorlage geben (Schranke `tools\pruefe-feste-pfade.pl`) |
 | `Testdaten\*.eml` | die Testmails; alle erfunden, Adressen auf `.invalid` |
 
 Ein neuer Fall braucht eine Zeile in `tools\pruefstand-faelle.txt` und, wenn

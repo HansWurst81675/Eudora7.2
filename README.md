@@ -113,11 +113,15 @@ mit vorbereiteten Testmails und eigenen Prüfservern auf dem eigenen Rechner
 4. Am Ende: `ERGEBNIS: alle Fälle bestanden` oder die Liste der roten Fälle.
 
 **Nur ausprobieren, ohne Visual Studio:** Git für Windows installieren, Repo klonen, `Pruefstand starten.cmd` doppelklicken, `j` – geprüft wird dann das zuletzt veröffentlichte Release (einmaliger Download, rund 9 MB).
-**Voraussetzungen kurz:** eigenes Windows-Konto oder VM · Git für Windows · Visual Studio 2022 nur für eigene Änderungen · freie Ports 11110, 1143, 1144, 1025 · eine bis anderthalb Stunden · Internet beim ersten Lauf.
+**Voraussetzungen kurz:** eigenes Windows-Konto oder VM · Git für Windows · Visual Studio 2022 nur für eigene Änderungen · freie Ports 11110, 1143, 1144, 1025, 18169 · Klon in einem Ordner ohne Leerzeichen · gut 700 MB plus 1,6 GB · eine bis anderthalb Stunden · Internet beim ersten Lauf.
 
 Voraussetzungen, Schalter, Ergebnis lesen und Fehlerbilder:
-**[Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md)**. Auf einem Rechner mit echter
-Eudora-Einrichtung besser ein eigenes Windows-Konto oder eine VM nehmen.
+**[Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md)**. Die Prüfverzeichnisse entstehen
+unter `C:\Temp\Eudora72-Pruefstand` (anderer Ordner mit `-Wurzel`); der
+Prüfstand fasst nur Verzeichnisse an, die er selbst angelegt und markiert hat –
+eigene Eudora-Ordner mit echten Mails bleiben unberührt. Wegen der Registry
+auf einem Rechner mit echter Eudora-Einrichtung trotzdem besser ein eigenes
+Windows-Konto oder eine VM nehmen.
 
 ## Auf einen Blick: was das Paket kann und wo noch Fehler sind
 

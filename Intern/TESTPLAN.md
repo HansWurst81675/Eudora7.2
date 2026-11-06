@@ -31,18 +31,26 @@ bestanden* ein Bildschirmfoto oder die Zeilen aus der `eudora.log`.
 
 **Prüfung: manuell.** Der Prüfstand soll aus jedem Klon laufen (du am
 05.11.2026: *„ich möchte separat von hier (oder auch jemand, der die repo
-forkt oder clonet) die tests nach eigenen änderungen durchführen"*). An der
-Entwicklermaschine ist das nur mit einer tieferen Wurzel messbar, weil unter
-`C:\Temp` die gewachsenen Prüfstände liegen; der Lauf mit `C:\Temp` gehört auf
-einen anderen Rechner oder in ein anderes Konto. Anleitung:
+forkt oder clonet) die tests nach eigenen änderungen durchführen"*). Anleitung:
 [Doku/PRUEFSTAND.md](../Doku/PRUEFSTAND.md).
+
+**Zurückgestellt (Gregor 06.11.2026):** *„komme erstmal nicht dazu, es auf
+einem extra PC zu testen.“*. Seither (Entscheidung 39)
+entstehen die Prüfverzeichnisse unter `C:\Temp\Eudora72-Pruefstand`, und der
+Prüfstand fasst nur Verzeichnisse mit seiner Marke an ([E-243](BEFUNDE.md#e-243));
+wegen der Registry trotzdem ein eigenes Windows-Konto oder eine VM nehmen.
+**Gemessen an der Entwicklermaschine (06.11.2026, Starter, Release
+`v7.2.2.136` von GitHub):** 49 Verzeichnisse angelegt, 106 Fälle, 103
+bestanden; die 3 roten (`E-133p`, `E-133q`, `E-216l`) prüften den Pfad und sind
+berichtigt, einzeln unter beiden Wurzeln grün; dazu neu `E-133r`. Ein voller
+Lauf nach der Berichtigung steht aus.
 
 | # | Ort | Schritt | Bestanden, wenn … |
 |---|---|---|---|
-| 1 | lokal | Repo klonen (`git clone https://github.com/HansWurst81675/Eudora7.2.git`), Git für Windows ist installiert. | der Ordner `Testdaten\pruefstand\` 46 Unterordner hat. |
+| 1 | lokal | Repo klonen (`git clone https://github.com/HansWurst81675/Eudora7.2.git`) in einen Ordner **ohne Leerzeichen** im Pfad; Git für Windows ist für alle Benutzer installiert. | der Ordner `Testdaten\pruefstand\` 49 Unterordner hat. |
 | 2 | lokal | Bauen: `powershell -File tools\bauen.ps1` (oder ohne Bau weiter – dann wird das Release geprüft). | `Eudora71\Bin\Release\Eudora.exe` da ist. |
-| 3 | lokal | `Pruefstand starten.cmd` doppelklicken, Frage mit `j` beantworten, nichts anklicken. | vorher eine erwartete Dauer genannt wird und danach 46 Verzeichnisse unter `C:\Temp` „angelegt“ stehen. |
-| 4 | lokal | Ende abwarten. | `Ergebnis: 100 Faelle, 100 bestanden, 0 fehlgeschlagen` und genau drei `[UEBR]` (`E-166a`, `E-166b`, `E-222w`) – ohne `MFC71.DLL`/`msvcp71.dll`. |
+| 3 | lokal | `Pruefstand starten.cmd` doppelklicken, Frage mit `j` beantworten, nichts anklicken. | vorher eine erwartete Dauer genannt wird und danach 49 Verzeichnisse unter `C:\Temp\Eudora72-Pruefstand` „angelegt“ stehen. |
+| 4 | lokal | Ende abwarten. | `Ergebnis: 107 Faelle, 107 bestanden, 0 fehlgeschlagen` und genau drei `[UEBR]` (`E-166a`, `E-166b`, `E-222w`) – ohne `MFC71.DLL`/`msvcp71.dll`. Die 107 sind aus der Fallliste gezählt, ein voller Lauf mit allen 107 steht noch aus (siehe oben). |
 | 5 | lokal | Das Fenster mitten im Lauf schließen, dann `Pruefstand starten.cmd` erneut. | der zweite Start meldet „Pruefserver-Rest beendet“ (oder gar keinen Rest) und läuft durch; im Task-Manager steht danach kein `perl.exe` mehr. |
 
 ## <a id="test-7-2-2-135"></a>Dein Test an 7.2.2.135 — ca. 5 Minuten, an deinem echten System
