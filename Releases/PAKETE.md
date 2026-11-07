@@ -186,7 +186,15 @@ haben.
 
 ## 7.2.2.137 — Testpaket, Zweig `paket_7_2_2_137`
 
-**Nur übersetzt am 07.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer fortlaufend nach Entscheidung 26; Umfang nach [Entscheidung 40](../Intern/WEITERMACHEN.md#entscheidungen) (Gregor 06.11. und 07.11.2026: *„am ende mach mir ein lokales zip zum testen“*, Zweigname *„paket_7_2_2_137“*, *„Erst LEKTOR, dann ZIP“*). Inhalt: `main` mit 7.2.2.136, dazu [E-71](../Intern/BEFUNDE.md#e-71) (Zweig `e71_filterbericht`), [E-242](../Intern/BEFUNDE.md#e-242), [E-240](../Intern/BEFUNDE.md#e-240) und [E-247](../Intern/BEFUNDE.md#e-247) (Zweig `e242_e240_druckvorschau`). Vor dem Bau gelaufen: [LEKTOR-160](../Befunde/LEKTOR-160.md#lektor-160) und [PRÜFER-106](../Befunde/PRUEFER-106.md#pruefer-106), keiner ihrer Funde hält das Paket auf.
+**Geschnürt am 07.11.2026 um 14:43 aus dem Bau `7e102069`, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.137-release`), ZIP daneben; nicht veröffentlicht.** Ohne vollen Prüfstandslauf (Gregor 07.11.2026: *„ZIP ohne vollen Lauf“*, wie bei 7.2.2.136; voller Lauf vor einem Release); am Paketbau gelaufen: `E-242p`/`E-242r` 2/2, `E-169` 5/5, `E-71n`/`E-71r` 2/2; Unit-Tests 429/429.
+
+| | |
+|---|---|
+| Paket | `Eudora72-7.2.2.137-release.zip`, 9 181 863 Byte, SHA-256 `37f0e59c9b9b77b3b268d567db10f6c37d98453a7fa98f88ffff617e033cb42d` — ohne die beiden DLLs; `paket-pruefen`: keine Fehler, vier Warnungen wie bisher; `Eudora.exe`, `Imap.dll`, `EudoraRes.dll` byte-gleich mit dem Bau, Produktversion 7.2.2.137 |
+| Test-ZIP | `Eudora72-7.2.2.137-test-mit-smime-dlls.zip`, 9 805 557 Byte, SHA-256 `37693dd9e0fa496bf50b2d201c915e782a36e1aedab8421dd2cf4a60d82687ed` = Paket-ZIP plus `MFC71.DLL` und `msvcp71.dll` (dieselben wie bei 7.2.2.136) neben `Eudora.exe` |
+| Erstmals aus einem Arbeitsbaum geschnürt | `EudoraUnicodeFix.dll` samt LIESMICH/LIZENZ (nie im Repo) und die VC-Laufzeit-DLLs samt `Paige32d.dll` lagen nur im Bauverzeichnis des Hauptordners; nachgelegt nach Abgleich (Plug-in SHA-256 gleich dem 136er-ZIP, Laufzeit gleich dem VS-Redist-Ordner, `Paige32d.dll` = `Paige32.dll`) |
+
+Nummer fortlaufend nach Entscheidung 26; Umfang nach [Entscheidung 40](../Intern/WEITERMACHEN.md#entscheidungen) (Gregor 06.11. und 07.11.2026: *„am ende mach mir ein lokales zip zum testen“*, Zweigname *„paket_7_2_2_137“*, *„Erst LEKTOR, dann ZIP“*). Inhalt: `main` mit 7.2.2.136, dazu [E-71](../Intern/BEFUNDE.md#e-71) (Zweig `e71_filterbericht`), [E-242](../Intern/BEFUNDE.md#e-242), [E-240](../Intern/BEFUNDE.md#e-240) und [E-247](../Intern/BEFUNDE.md#e-247) (Zweig `e242_e240_druckvorschau`). Vor dem Bau gelaufen: [LEKTOR-160](../Befunde/LEKTOR-160.md#lektor-160) und [PRÜFER-106](../Befunde/PRUEFER-106.md#pruefer-106), keiner ihrer Funde hält das Paket auf.
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.137.
 

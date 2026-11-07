@@ -122,7 +122,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## 7.2.2.137 — Testpaket (Sammelzweig `paket_7_2_2_137`, nur übersetzt, nicht veröffentlicht): Kopf- und Fußzeile von Eudora in der Druckvorschau (E-242), Rückmeldung bei der Druckvorschau (E-240), Hinweis zum Filterbericht (E-71)
+## 7.2.2.137 — Testpaket (geschnürt am 07.11.2026, nicht veröffentlicht; Sammelzweig `paket_7_2_2_137`): Kopf- und Fußzeile von Eudora in der Druckvorschau (E-242), Rückmeldung bei der Druckvorschau (E-240), Hinweis zum Filterbericht (E-71)
 
 Umfang nach Entscheidung 40 (Gregor 06.11. und 07.11.2026). Sammelzweig aus `main` (mit 7.2.2.136), `e71_filterbericht` und `e242_e240_druckvorschau`. [E-241](Intern/BEFUNDE.md#e-241) (*Bild ↑/↓* blättern in der Vorschau nicht) ist **nicht** dabei, die Ursache ist nicht geklärt. Vor dem Bau gelaufen: [LEKTOR-160](Befunde/LEKTOR-160.md#lektor-160) und [PRÜFER-106](Befunde/PRUEFER-106.md#pruefer-106).
 

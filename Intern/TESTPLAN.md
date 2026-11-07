@@ -8,8 +8,10 @@
 der Druckvorschau ([E-242](BEFUNDE.md#e-242)), eine Sanduhr bei der
 Druckvorschau ([E-240](BEFUNDE.md#e-240)) und den Hinweis zum Filterbericht
 ([E-71](BEFUNDE.md#e-71)) und `&` im Betreff wörtlich in Kopf und Fuß
-([E-247](BEFUNDE.md#e-247)). Das Paket liegt neben deinem letzten
-Testverzeichnis, das ZIP daneben. Am Prüfstand gemessen
+([E-247](BEFUNDE.md#e-247)). Bitte das **Test-ZIP**
+`Eudora72-7.2.2.137-test-mit-smime-dlls.zip` nehmen (liegt neben deinem
+letzten Testverzeichnis): `MFC71.DLL` und `msvcp71.dll` liegen darin schon
+neben der `Eudora.exe`. Am Prüfstand gemessen
 sind Schritt 2 (Vorschau, rot ohne und grün mit der Behebung) und Schritt 5
 (mit einem Filter in einen IMAP-Ordner); **Schritt 3 (Papier) ist nirgends
 gemessen**, Schritt 4 am Prüfstand nicht nachzustellen.
