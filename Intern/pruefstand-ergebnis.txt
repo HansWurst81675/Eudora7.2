@@ -1,6 +1,6 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-07 12:52:58
-freigabe=Gregor 07.11.2026: pruefstand ist freigegeben (E-242/E-169)
+zeit=2026-11-07 14:02:37
+freigabe=Gregor 07.11.2026: pruefstand ist freigegeben (PRUEFER-106-Behebungen)
 nur=E-169   (Teillauf, nicht der Gesamtstand)
 faelle=5
 bestanden=5
