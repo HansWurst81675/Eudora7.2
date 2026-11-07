@@ -151,6 +151,11 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
   ([E-199](Intern/BEFUNDE.md#e-199)), Dateiname beim Speichern ([E-220](Intern/BEFUNDE.md#e-220)),
   gekürzter Betreff ([E-221](Intern/BEFUNDE.md#e-221)); Einzelheiten im
   [CHANGELOG](CHANGELOG.md) unter 7.2.2.133.
+* **In Arbeit für 7.2.2.138 (Testpaket, Zweig `paket_7_2_2_137`):** alles
+  aus 7.2.2.137, dazu die Sanduhr bis zur Druckvorschau
+  ([E-240](Intern/BEFUNDE.md#e-240)) und ein eigenes Release-ZIP aus einem
+  frischen Klon samt Anleitung ([E-248](Intern/BEFUNDE.md#e-248));
+  Einzelheiten im [CHANGELOG](CHANGELOG.md) unter 7.2.2.138.
 * **In Arbeit für 7.2.2.137 (Sammelzweig `paket_7_2_2_137`, noch nicht
   geschnürt):** Kopf- und Fußzeile von Eudora in der Druckvorschau statt des
   Pfads der Zwischendatei ([E-242](Intern/BEFUNDE.md#e-242)), Spurmarken und

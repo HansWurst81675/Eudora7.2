@@ -184,6 +184,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.138 — Testpaket, Zweig `paket_7_2_2_137`
+
+**Nur übersetzt am 07.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer fortlaufend nach Entscheidung 26; Gregor am 07.11.2026 nach seinem Test an 7.2.2.137 (Schritt 4 nicht bestanden): *„Jetzt, neues Test-ZIP 7.2.2.138“*. Auf demselben Zweig wie 7.2.2.137 (wie 7.2.2.134 und 7.2.2.135 auf `e223_e222_e193rest`). Inhalt: 7.2.2.137, dazu [E-240](../Intern/BEFUNDE.md#e-240) (Sanduhr bis zum Vorschaufenster) und [E-248](../Intern/BEFUNDE.md#e-248) (Paket aus einem frischen Klon, Anleitung); [E-241](../Intern/BEFUNDE.md#e-241) nicht.
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.138.
+
 ## 7.2.2.137 — Testpaket, Zweig `paket_7_2_2_137`
 
 **Geschnürt am 07.11.2026 um 14:43 aus dem Bau `7e102069`, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.137-release`), ZIP daneben; nicht veröffentlicht.** Ohne vollen Prüfstandslauf (Gregor 07.11.2026: *„ZIP ohne vollen Lauf“*, wie bei 7.2.2.136; voller Lauf vor einem Release); am Paketbau gelaufen: `E-242p`/`E-242r` 2/2, `E-169` 5/5, `E-71n`/`E-71r` 2/2; Unit-Tests 429/429.
