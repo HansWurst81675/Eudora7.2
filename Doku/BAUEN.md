@@ -201,47 +201,77 @@ Bildschirmfoto eindeutig einem Bau und einer Instanz zuzuordnen.
 
 ### Ein eigenes Release-ZIP bauen — aus einem frischen Klon
 
-Was hier steht, ist **gemessen**: am 07.11.2026 aus einem frischen
-`git clone` (Klonprobe, Zweig `paket_7_2_2_137`, Commit `1051bfaf`) — Bau
-3,4 Minuten, Paket 0,8 Minuten, `paket-pruefen.ps1` ohne Fehler, derselbe
-Dateibestand wie das Testpaket 7.2.2.137 ([E-248](../Intern/BEFUNDE.md#e-248)).
-Die Klonprobe rief `sh tools/hooks-einrichten.sh` in der Git Bash auf, die
-übrigen Zeilen genau so in der PowerShell. Bis zu diesem Tag ließ sich das
-Paket nur aus dem Hauptordner der
-Entwicklermaschine schnüren.
+Was hier steht, ist **gemessen**, am 07.11.2026 an zwei frischen
+`git clone` des Zweigs `paket_7_2_2_137` ([E-248](../Intern/BEFUNDE.md#e-248)):
+zuerst mit der Nummer des Projekts (Bau 3,4 Minuten, Paket 0,8 Minuten,
+derselbe Dateibestand wie das Testpaket 7.2.2.137), dann **ohne die
+Projekt-Haken, mit eigenem Zweig und eigener Nummer 7.2.2.139** genau nach den
+Befehlen unten (Paket 0,7 Minuten, `paket-pruefen.ps1` *„keine Fehler“*,
+Produktversion der `Eudora.exe` 7.2.2.139). Bis zu diesem Tag ließ sich ein
+Paket nur aus dem Hauptordner der Entwicklermaschine schnüren.
 
 **Voraussetzungen:** Visual Studio 2022 mit *Desktopentwicklung mit C++*
 einschließlich MFC (die verteilbare Laufzeit `mfc140.dll`, `msvcp140.dll`,
 `vcruntime140.dll` nimmt das Werkzeug aus dem Redist-Ordner von Visual
-Studio), Git für Windows (bringt `sh` und Perl mit), Windows PowerShell 5.1.
-Sonst nichts — alles Weitere liegt im Repo.
+Studio), Git für Windows (bringt Perl mit; `git config user.name` und
+`user.email` gesetzt, sonst geht der Commit nicht), Windows PowerShell 5.1.
+Zum Veröffentlichen zusätzlich die GitHub CLI `gh`. Alles Weitere liegt im
+Repo.
+
+**1. Klonen und einen eigenen Zweig anlegen.**
 
 ```powershell
 git clone https://github.com/HansWurst81675/Eudora7.2.git
 cd Eudora7.2
-& "$env:ProgramFiles\Git\bin\sh.exe" tools/hooks-einrichten.sh
+git switch -c eigener-bau
+```
+
+`tools/hooks-einrichten.sh` (oben, *Nach einem frischen Klon*) lässt man für
+einen eigenen Bau **weg**: die Haken sind für die Mitarbeit an diesem Projekt
+gedacht — sie weisen jeden Commit auf `main` ab und verlangen für eine neue
+Nummer die ganze Projekt-Doku (gemessen: *„MANGEL“* schon beim Commit der
+gehobenen Version).
+
+**2. Die eigene Nummer setzen und committen.** Die nächste Nummer nach dem
+Stand des Klons nehmen (steht in `VERSION`), also aus `7.2.2.138` wird
+`7.2.2.139`. Zu ändern sind `VERSION` und vier Zeilen in
+`Eudora71/Version.h` — welche, steht im Abschnitt
+[Vor dem Bau: die Version heben](#vor-dem-bau-die-version-heben). Ohne eigene
+Nummer trüge das ZIP dieselbe Nummer wie ein Release des Projekts.
+
+```powershell
+git commit -am "eigener Bau 7.2.2.139"
+```
+
+`bauen.ps1` baut nur einen committeten Stand; ein Push ist nicht nötig.
+
+**3. Bauen, schnüren, prüfen.**
+
+```powershell
 powershell -ExecutionPolicy Bypass -File tools\bauen.ps1
-powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel C:\Temp\Eudora72-eigen -Zip C:\Temp\Eudora72-eigen.zip -AusBauverzeichnis -Bauart Release -RollenSindGelaufen "eigener Bau" -OhnePruefbericht "eigener Bau" -AgentLaeuftAbsichtlich "eigener Bau"
+powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel C:\Temp\Eudora72-eigen -Zip C:\Temp\Eudora72-eigen.zip -AusBauverzeichnis -Bauart Release -EigenerBau "eigener Bau"
 powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket C:\Temp\Eudora72-eigen
 ```
 
-Danach liegt das fertige Paket in `C:\Temp\Eudora72-eigen` und das ZIP
-daneben. Was die Schritte tun und worauf man achtet:
+Danach liegt das Paket in `C:\Temp\Eudora72-eigen` und das ZIP daneben.
+Worauf man achtet:
 
-* **Die drei Schalter mit Begründung.** `paket-bauen.ps1` hat Schranken für
-  die Arbeitsweise *dieses* Projekts: es baut kein Paket, solange eine der
-  Prüfrollen (LEKTOR, PRÜFER, CHRONIST) fällig ist, ein Prüfauftrag läuft oder
-  der Prüfbericht nicht *BESTANDEN* meldet. In einem eigenen Klon weisen sie
-  deshalb ab (gemessen: *„KEIN PAKET, solange eine Rolle ueberfaellig
-  ist“*). Die Schalter übergehen sie; die Begründung steht danach im
-  Protokoll. Wer das Projekt selbst ausliefert, lässt sie weg und erfüllt die
-  Schranken.
-* **Die Grundlage.** Ohne `-Grundlage` nimmt das Werkzeug
-  `Releases/Eudora72-1.0.2-lauffaehig.zip` aus dem Repo (Hilfe, Emoticons,
-  Mailverzeichnis-Vorlage und die übrigen Dateien des Originals); **jede
-  ausführbare Datei** darin wird aus dem eigenen Bau ersetzt (Schritt 8, im
-  Lauf gemessen: *„6 ersetzt, 33 schon gleich, keine Debug-Laufzeit“*). Mit
-  `-Grundlage <ZIP>` geht auch das letzte Release von GitHub.
+* **`-EigenerBau "<Grund>"`** überspringt die Schranken der Arbeitsweise
+  *dieses* Projekts — offene Datenverlust-Befunde, Spurmarken, Doku-Takt und
+  Prüfrollen (LEKTOR, PRÜFER, CHRONIST), Standzeilen, Befundurteile,
+  Verweise, laufende Prüfaufträge — und baut auch, wenn der Prüfbericht nicht
+  *BESTANDEN* meldet (der Bericht läuft trotzdem und kommt ins Paket).
+  Gemessen ohne den Schalter: diese Schranken weisen in einem Klon
+  nacheinander ab. Die technischen Schritte bleiben: **jede ausführbare Datei
+  aus dem Release-Bau**, keine Debug-Laufzeit.
+* **Woher die Dateien kommen.** Grundlage ist ohne `-Grundlage` das ZIP
+  `Releases/Eudora72-1.0.2-lauffaehig.zip` im Repo (Hilfe, Emoticons,
+  Mailverzeichnis-Vorlage). Jede ausführbare Datei darin ersetzt das Werkzeug
+  aus dem eigenen Bau (im Lauf: *„6 ersetzt, 33 schon gleich, keine
+  Debug-Laufzeit“*) — außer der Laufzeit aus dem Redist-Ordner von Visual
+  Studio und den mitgelieferten Plug-ins aus `Eudora71/Bin/Release/Plugins`
+  (siehe Tabelle *Was fertig gebaut wird*). Mit `-Grundlage <ZIP>` geht auch
+  das letzte Release von GitHub.
 * **Ein zweiter Bau im selben Klon.** Der Bau schreibt fünf versionierte
   Dateien neu (`Eudora71/Eudora/EudoraExe_i.c`, `EudoraExe_p.c`,
   `GoogleDesktopSearchAPI_i.c`, `GoogleDesktopSearchAPI_p.c`, `dlldata.c`).
@@ -249,16 +279,16 @@ daneben. Was die Schritte tun und worauf man achtet:
   ein Sternchen. Vor dem nächsten Bau zurücksetzen:
   `git checkout -- Eudora71/Eudora/EudoraExe_i.c Eudora71/Eudora/EudoraExe_p.c Eudora71/Eudora/GoogleDesktopSearchAPI_i.c Eudora71/Eudora/GoogleDesktopSearchAPI_p.c Eudora71/Eudora/dlldata.c`
   (noch offen in [E-248](../Intern/BEFUNDE.md#e-248)).
-* **Eine eigene Fassungsnummer.** Wer veröffentlichen will, hebt vorher die
-  Version und committet (Abschnitt [Vor dem Bau: die Version heben](#vor-dem-bau-die-version-heben)) —
-  sonst trägt das ZIP dieselbe Nummer wie das letzte Release.
-* **Testen.** Das Paket mit `Eudora starten.cmd` und einem eigenen
-  Mailverzeichnis starten ([Den eigenen Bau starten](#den-eigenen-bau-starten));
-  die Regressionstests über die Oberfläche laufen mit dem
-  [Prüfstand](PRUEFSTAND.md).
-* **Veröffentlichen.** Das ZIP als Anhang eines GitHub-Release hochladen,
-  etwa `gh release create v7.2.2.N C:\Temp\Eudora72-eigen.zip --title "…" --notes-file <Text>`.
-  Dieses Projekt veröffentlicht erst nach Gregors Test und Freigabe.
+
+**4. Testen.** Das Paket mit `Eudora starten.cmd` und einem eigenen
+Mailverzeichnis starten ([Den eigenen Bau starten](#den-eigenen-bau-starten));
+die Regressionstests über die Oberfläche laufen mit dem
+[Prüfstand](PRUEFSTAND.md) (`-Bau` zeigt auf das eigene Bauverzeichnis).
+
+**5. Veröffentlichen.** Das ZIP als Anhang eines GitHub-Release, etwa
+`gh release create v7.2.2.139 C:\Temp\Eudora72-eigen.zip --title "…" --notes-file <Text>`
+— in einem eigenen Fork. Dieses Projekt veröffentlicht erst nach Gregors Test
+und Freigabe, und **ohne** `-EigenerBau`: dort müssen alle Schranken stehen.
 
 ### Nur für den Debug-Bau: die Laufzeit-DLLs
 

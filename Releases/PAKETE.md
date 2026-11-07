@@ -186,7 +186,14 @@ haben.
 
 ## 7.2.2.138 — Testpaket, Zweig `paket_7_2_2_137`
 
-**Nur übersetzt am 07.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer fortlaufend nach Entscheidung 26; Gregor am 07.11.2026 nach seinem Test an 7.2.2.137 (Schritt 4 nicht bestanden): *„Jetzt, neues Test-ZIP 7.2.2.138“*. Auf demselben Zweig wie 7.2.2.137 (wie 7.2.2.134 und 7.2.2.135 auf `e223_e222_e193rest`). Inhalt: 7.2.2.137, dazu [E-240](../Intern/BEFUNDE.md#e-240) (Sanduhr bis zum Vorschaufenster) und [E-248](../Intern/BEFUNDE.md#e-248) (Paket aus einem frischen Klon, Anleitung); [E-241](../Intern/BEFUNDE.md#e-241) nicht.
+**Geschnürt am 07.11.2026 um 16:08 aus dem Bau `dfa32f0c`, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.138-release`), ZIP daneben; nicht veröffentlicht.** Vor dem Bau gelaufen: [LEKTOR-162](../Befunde/LEKTOR-162.md#lektor-162) und [PRÜFER-107](../Befunde/PRUEFER-107.md#pruefer-107), nichts hält auf (K1 vor dem Bau behoben). Am Paketbau: `E-242p`/`E-242r` 2/2, `E-71n`/`E-71r` 2/2, `E-169` 5/5; Unit-Tests 429/429; ohne vollen Prüfstandslauf wie 7.2.2.137.
+
+| | |
+|---|---|
+| Paket | `Eudora72-7.2.2.138-release.zip`, 9 182 047 Byte, SHA-256 `f451c441b9d51ed9e4b33ae65020a9eb10e4803b0b48cb77667183ec30427407`; `paket-pruefen`: keine Fehler, vier Warnungen wie bisher; `Eudora.exe`, `Imap.dll`, `EudoraRes.dll` byte-gleich mit dem Bau, Produktversion 7.2.2.138 |
+| Test-ZIP | `Eudora72-7.2.2.138-test-mit-smime-dlls.zip`, 9 805 741 Byte, SHA-256 `6288f277b8e7370ba2c293cd5d9cfa53a584093fa887fe96dea08eac4d12d543` = Paket-ZIP plus `MFC71.DLL` und `msvcp71.dll` |
+
+Nummer fortlaufend nach Entscheidung 26; Gregor am 07.11.2026 nach seinem Test an 7.2.2.137 (Schritt 4 nicht bestanden): *„Jetzt, neues Test-ZIP 7.2.2.138“*. Auf demselben Zweig wie 7.2.2.137 (wie 7.2.2.134 und 7.2.2.135 auf `e223_e222_e193rest`). Inhalt: 7.2.2.137, dazu [E-240](../Intern/BEFUNDE.md#e-240) (Sanduhr bis zum Vorschaufenster) und [E-248](../Intern/BEFUNDE.md#e-248) (Paket aus einem frischen Klon, Anleitung); [E-241](../Intern/BEFUNDE.md#e-241) nicht.
 
 Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.138.
 
