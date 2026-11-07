@@ -1,12 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-07 14:02:37
-freigabe=Gregor 07.11.2026: pruefstand ist freigegeben (PRUEFER-106-Behebungen)
-nur=E-169   (Teillauf, nicht der Gesamtstand)
-faelle=5
-bestanden=5
+zeit=2026-11-07 14:33:42
+freigabe=Gregor 07.11.2026: pruefstand ist freigegeben (Paketbau 7.2.2.137)
+nur=E-71   (Teillauf, nicht der Gesamtstand)
+faelle=2
+bestanden=2
 fehlgeschlagen=0
-fall=[ ok ] E-169p   E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABcdefgh
-fall=[ ok ] E-169r   E169 REGISTRY unveraendert=1
-fall=[ ok ] E-169b   E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh
-fall=[ ok ] E-169h   E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH
-fall=[ ok ] E-169s   E169 REGISTRY unveraendert=1
+fall=[ ok ] E-71n    E-71 Eintrag: aktion=1 ziel=1 typ=8 notify=-1 ini=0
+fall=[ ok ] E-71r    E-71 Bericht: eintraege=1 fenster=1

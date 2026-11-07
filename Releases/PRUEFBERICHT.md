@@ -3,26 +3,26 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.2.137` (Paketnummer `7.2.2.137`) |
-| **Commit** | `7c5f870c` — **Arbeitsbaum nicht sauber** (17 Dateien) |
-| **Erstellt** | 2026-11-07 14:22 |
+| **Commit** | `7e102069` — **Arbeitsbaum nicht sauber** (3 Dateien) |
+| **Erstellt** | 2026-11-07 14:33 |
 | **Gesamturteil** | **NICHT VOLLSTAENDIG** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 09 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 00 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 07 s | dieser Lauf |
 | Pruefstand, 110 Faelle, 67 Eudora-Starts | 91 min 16 s | voller Lauf, Ende 2026-11-06 11:30:46 |
-| **zusammen** | **91 min 33 s** | |
+| **zusammen** | **91 min 23 s** | |
 
-Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.137+7c5f870c* 2026-11-07 14:07`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
+Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.137+7e102069 2026-11-07 14:26`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
 | Unit-Tests (`EudoraTests.exe`) | 429 | 429 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 114 | 0 | 0 | 114 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 114 | 9 | 0 | 105 an anderem Bau, 0 nie gelaufen |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-11-07 14:22** gegen den Quelltext von Commit `7c5f870c*`.
+Gelaufen am **2026-11-07 14:33** gegen den Quelltext von Commit `7e102069*`.
 
 <details><summary>Alle 429 Unit-Tests einzeln</summary>
 
@@ -495,7 +495,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-11-07 14:22** gegen Commit `7c5f870c*`.
+Gelaufen am **2026-11-07 14:33** gegen Commit `7e102069*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
@@ -533,8 +533,8 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-131c | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E131L` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E-131 Leistenposition:` |
 | E-121 | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E118` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `ablage-dateien=1` |
 | E-118 | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E118` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E-118 Bild:` |
-| E-71n | **ok, ANDERER BAU** | 2026-11-07 09:51:51 | `C:\Temp\Eudora72-Pruefstand\E118` | Eudora 7.2.2.136+1cb9087d* 2026-11-07 09:48 | `E-71 Eintrag: aktion=1 ziel=1 typ=8 notify=-1 ini=0` |
-| E-71r | **ok, ANDERER BAU** | 2026-11-07 09:51:51 | `C:\Temp\Eudora72-Pruefstand\E71` | Eudora 7.2.2.136+1cb9087d* 2026-11-07 09:48 | `E-71 Bericht: eintraege=1 fenster=1` |
+| E-71n | ok | 2026-11-07 14:33:42 | `C:\Temp\Eudora72-Pruefstand\E118` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E-71 Eintrag: aktion=1 ziel=1 typ=8 notify=-1 ini=0` |
+| E-71r | ok | 2026-11-07 14:33:42 | `C:\Temp\Eudora72-Pruefstand\E71` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E-71 Bericht: eintraege=1 fenster=1` |
 | E-125a | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E125` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E125 ERGEBNIS out=1 trash=0 (vorher 1) dialoge-gegenprobe=0` |
 | E-125b | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E125` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E125 UMKEHR in=1 (vorher 1) out=1 (vorher 1) dialoge=1` |
 | E-125c | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E125` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E-125 Xfer nach Out abgelehnt: quelle=In ziel=Out` |
@@ -579,13 +579,13 @@ lief, zaehlt fuer diesen Stand nicht als gruen.
 | E-193fs | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E193f` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E193F ERGEBNIS suchweg-ohne f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 f9=1 f10=1 f11=1 f12=1 f14=1` |
 | E-193f | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E193f` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E193F ERGEBNIS direkt f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 f9=1 f10=1 f11=1 f12=1 f13=1 f14=1` |
 | E-193fd | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E193f` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E193F ERGEBNIS dialog f1=1 f2=1 f3=1 f4=1 f5=1 f6=1 f7=1 f8=1 f9=1 f10=1 f11=1 f12=1 f13=1 f14=1` |
-| E-169p | **ok, ANDERER BAU** | 2026-11-07 14:02:37 | `C:\Temp\Eudora72-Pruefstand\E169` | Eudora 7.2.2.136+507227e8* 2026-11-07 13:56 | `E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABcdefgh` |
-| E-169r | **ok, ANDERER BAU** | 2026-11-07 14:02:37 | `C:\Temp\Eudora72-Pruefstand\E169` | Eudora 7.2.2.136+507227e8* 2026-11-07 13:56 | `E169 REGISTRY unveraendert=1` |
-| E-169b | **ok, ANDERER BAU** | 2026-11-07 14:02:37 | `C:\Temp\Eudora72-Pruefstand\E169B` | Eudora 7.2.2.136+507227e8* 2026-11-07 13:56 | `E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh` |
-| E-169h | **ok, ANDERER BAU** | 2026-11-07 14:02:37 | `C:\Temp\Eudora72-Pruefstand\E169B` | Eudora 7.2.2.136+507227e8* 2026-11-07 13:56 | `E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH` |
-| E-169s | **ok, ANDERER BAU** | 2026-11-07 14:02:37 | `C:\Temp\Eudora72-Pruefstand\E169B` | Eudora 7.2.2.136+507227e8* 2026-11-07 13:56 | `E169 REGISTRY unveraendert=1` |
-| E-242p | **ok, ANDERER BAU** | 2026-11-07 13:59:07 | `C:\Temp\Eudora72-Pruefstand\E169` | Eudora 7.2.2.136+507227e8* 2026-11-07 13:56 | `E242 WAEHREND-VORSCHAU vorschau-p1 kopf=eudora fuss=eudora` |
-| E-242r | **ok, ANDERER BAU** | 2026-11-07 13:59:07 | `C:\Temp\Eudora72-Pruefstand\E169` | Eudora 7.2.2.136+507227e8* 2026-11-07 13:56 | `E242 REGISTRY unveraendert=1` |
+| E-169p | ok | 2026-11-07 14:32:48 | `C:\Temp\Eudora72-Pruefstand\E169` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABcdefgh` |
+| E-169r | ok | 2026-11-07 14:32:48 | `C:\Temp\Eudora72-Pruefstand\E169` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E169 REGISTRY unveraendert=1` |
+| E-169b | ok | 2026-11-07 14:32:48 | `C:\Temp\Eudora72-Pruefstand\E169B` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh` |
+| E-169h | ok | 2026-11-07 14:32:48 | `C:\Temp\Eudora72-Pruefstand\E169B` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH` |
+| E-169s | ok | 2026-11-07 14:32:48 | `C:\Temp\Eudora72-Pruefstand\E169B` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E169 REGISTRY unveraendert=1` |
+| E-242p | ok | 2026-11-07 14:29:18 | `C:\Temp\Eudora72-Pruefstand\E169` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E242 WAEHREND-VORSCHAU vorschau-p1 kopf=eudora fuss=eudora` |
+| E-242r | ok | 2026-11-07 14:29:18 | `C:\Temp\Eudora72-Pruefstand\E169` | Eudora 7.2.2.137+7e102069 2026-11-07 14:26 | `E242 REGISTRY unveraendert=1` |
 | E-192 | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E192` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E192 ERGEBNIS richtig=3 falsch=0 eintraege=3 anfrage=3,2,1 copyuid=1:3/1:3` |
 | E-97 | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E97` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E97 ERGEBNIS dialog=1 lebt=1 datei=1` |
 | E-100 | **ok, ANDERER BAU** | 2026-11-06 11:30:44 | `C:\Temp\E97` | Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11 | `E100 ERGEBNIS dialog=1 lebt=1 ini=ok` |

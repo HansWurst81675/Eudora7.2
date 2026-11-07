@@ -9,5 +9,4 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-11-07 13:38 | LEKTOR-160.md: alle MDs gegen den Bestand, seit 1cb9087d |
-| PRUEFER | 2026-11-07 13:44 | PRUEFER-106.md: Aenderungen seit 1cb9087d gegen die Quelle, Kennungen [E-247](../Intern/BEFUNDE.md#e-247) und E-248 |
+| CHRONIST | 2026-11-07 14:35 | Laufbericht 06.11. 12:00 bis 07.11.2026, Sitzungen 8e921d9a (Rest) und af1c188a |
