@@ -258,12 +258,15 @@ Worauf man achtet:
 
 * **`-EigenerBau "<Grund>"`** überspringt die Schranken der Arbeitsweise
   *dieses* Projekts — offene Datenverlust-Befunde, Spurmarken, Doku-Takt und
-  Prüfrollen (LEKTOR, PRÜFER, CHRONIST), Standzeilen, Befundurteile,
-  Verweise, laufende Prüfaufträge — und baut auch, wenn der Prüfbericht nicht
+  Prüfrollen (LEKTOR, PRÜFER, CHRONIST), Testplan-Voraussetzungen, Abgleich
+  von `VERSION` mit `Version.h`, Standzeilen, Befundurteile, Verweise,
+  laufende Prüfaufträge — und baut auch, wenn der Prüfbericht nicht
   *BESTANDEN* meldet (der Bericht läuft trotzdem und kommt ins Paket).
   Gemessen ohne den Schalter: diese Schranken weisen in einem Klon
   nacheinander ab. Die technischen Schritte bleiben: **jede ausführbare Datei
-  aus dem Release-Bau**, keine Debug-Laufzeit.
+  aus dem Release-Bau**, keine Debug-Laufzeit. Er geht nur zusammen mit `-Bauart Release`. Weil der
+  Abgleich von `VERSION` und `Version.h` dabei entfällt, beide Dateien
+  gleich setzen: die Hilfeseiten im Paket tragen die Nummer aus `VERSION`.
 * **Woher die Dateien kommen.** Grundlage ist ohne `-Grundlage` das ZIP
   `Releases/Eudora72-1.0.2-lauffaehig.zip` im Repo (Hilfe, Emoticons,
   Mailverzeichnis-Vorlage). Jede ausführbare Datei darin ersetzt das Werkzeug

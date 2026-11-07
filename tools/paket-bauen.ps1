@@ -73,8 +73,9 @@ param(
     [string]$OhnePruefbericht = '',
     # E-248 (07.11.2026): ein eigener Bau aus einem Klon - fuer sich selbst
     # oder einen Fork. Ueberspringt die Schranken der ARBEITSWEISE dieses
-    # Projekts (Datenverlust-Liste in BEFUNDE, Spurmarken, Doku-Takt und
-    # Rollen, Standzeilen, Befundurteile, Verweise, laufende Agenten) und baut
+    # Projekts (Datenverlust-Liste in BEFUNDE, Spurmarken, Doku-Takt samt
+    # Testplan-Voraussetzungen, Rollen und Abgleich VERSION/Version.h,
+    # Standzeilen, Befundurteile, Verweise, laufende Agenten) und baut
     # trotz nicht BESTANDENEM Pruefbericht (der Bericht laeuft trotzdem und
     # kommt ins Paket). Die technischen Schritte bleiben: jede ausfuehrbare
     # Datei aus dem Release-Bau, keine Debug-Laufzeit. Gemessen an einer
@@ -84,6 +85,9 @@ param(
 )
 if ($EigenerBau) {
   if ($EigenerBau.Trim().Length -lt 5) { Write-Host '  -EigenerBau braucht eine Begruendung (mindestens 5 Zeichen).'; exit 2 }
+  # PRUEFER-108 K1: Vorgabe ist -Bauart Debug - ohne Release entstuende still
+  # ein Debug-Paket (Schritt 7 und 8 entfallen dann).
+  if ($Bauart -ne 'Release') { Write-Host '  -EigenerBau nur mit -Bauart Release (sonst entstuende ein Debug-Paket ohne die Pruefung auf Debug-Laufzeit).'; exit 2 }
   Write-Host ''
   Write-Host ('  EIGENER BAU: Schranken der Projekt-Arbeitsweise uebersprungen - ' + $EigenerBau.Trim())
   Write-Host ''
