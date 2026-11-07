@@ -142,9 +142,14 @@ static void Test_E242_KopfFuss(const char* szEudoraDir)
 		// der Wartezeit wird abgewiesen.
 		TT_CHECK_MSG(QT_Enthaelt(pH, "if (s_E242.bSanduhr)") && QT_Enthaelt(pH, "E240SanduhrSetzen();"),
 					 "der Zeitgeber haelt die Sanduhr nicht bis zum Vorschaufenster (E-240)");
-		TT_CHECK_MSG(QT_Stelle(pP, "if (s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau)") >= 0 &&
-					 QT_Stelle(pP, "if (s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau)") < QT_Stelle(pP, "SetRedraw( FALSE );"),
-					 "ein weiterer Aufruf waehrend die Vorschau laedt wird nicht vor allem anderen abgewiesen (E-240)");
+		// PRUEFER-107 K1/K4: abgewiesen wird nur eine weitere Vorschau, und
+		// zwar sofort; die Sanduhr wird beim Start des Zeitgebers scharf.
+		const long lAbweisung = QT_Stelle(pP, "if (bDoPreview && s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau) { PutDebugLog(DEBUG_MASK_MISC, \"E-240 weiterer Aufruf");
+		TT_CHECK_MSG(lAbweisung >= 0 && lAbweisung < QT_Stelle(pP, "SetRedraw( FALSE );") &&
+					 QT_Stelle(pP, "E240SanduhrSetzen(); return FALSE; }") > lAbweisung,
+					 "eine weitere Vorschau waehrend die erste laedt wird nicht sofort abgewiesen, oder auch ein Druck (E-240, PRUEFER-107 K1)");
+		TT_CHECK_MSG(QT_Enthaelt(pP, "s_E242.bSanduhr = (s_E242.uUhr != 0 && (bDoPreview || bDialog));"),
+					 "die Sanduhr wird beim Start des Zeitgebers nicht scharf geschaltet (E-240, PRUEFER-107 K4)");
 	}
 	if (pX) free(pX);
 	if (pE) free(pE);

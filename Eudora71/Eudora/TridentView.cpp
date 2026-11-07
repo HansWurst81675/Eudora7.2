@@ -2518,7 +2518,10 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 	// BEFUND E-240 (07.11.2026): solange das Fenster einer Vorschau noch
 	// laedt (bei Gregor 36,6 s), wird ein weiterer Aufruf ignoriert - sonst
 	// stuende die erste Rueckstellung zu frueh an (PRUEFER-106 K7).
-	if (s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau)
+	// PRUEFER-107 K1: nur eine weitere VORSCHAU abweisen - ein Druck (auch der
+	// mehrerer Mails aus der Liste, CTocFrame::Print wertet FALSE als Fehler)
+	// darf nicht still ausfallen.
+	if (bDoPreview && s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau)
 	{
 		PutDebugLog(DEBUG_MASK_MISC, "E-240 weiterer Aufruf, waehrend die Vorschau noch laedt - ignoriert");
 		E240SanduhrSetzen();
@@ -2643,9 +2646,11 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 	// BEFUND E-240: Rueckmeldung. Die Sanduhr wird direkt gesetzt (nicht ueber
 	// BeginWaitCursor, das zaehlt und bis zu EndWaitCursor ueber Eudoras
 	// Fenstern stehen bliebe): sie steht, bis das naechste WM_SETCURSOR
-	// verarbeitet wird. Laedt MSHTML waehrend Exec, bleibt sie bis dahin
-	// stehen; laedt es erst nach der Rueckkehr, nimmt die erste Mausbewegung
-	// sie weg (PRUEFER-106 K6, nicht gemessen).
+	// verarbeitet wird. MSHTML laedt die Vorschau erst NACH der Rueckkehr
+	// (an Gregors System gemessen: zurueck nach 94 ms, Fenster nach 36,6 s);
+	// deshalb setzt der Zeitgeber E242Uhr sie bis zum Fenster immer wieder
+	// neu (bSanduhr, E240SanduhrSetzen). Zwischen zwei Schlaegen kann sie bei
+	// Mausbewegung kurz zum Pfeil werden (PRUEFER-107 K3).
 	{
 		char szE240[96];
 		_snprintf(szE240, sizeof(szE240), "E-240 %s: Befehl ab nach %lu ms",

@@ -9,5 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-11-07 14:38 | LEKTOR-161.md: alle MDs gegen den Bestand, seit 02c94187 |
-| PRUEFER | 2026-11-07 15:49 | PRUEFER-107.md: Aenderungen seit 72bcb0b8 gegen die Quelle, Kennungen E-249 und E-250 |
