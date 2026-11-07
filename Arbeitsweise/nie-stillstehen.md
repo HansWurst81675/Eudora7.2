@@ -108,3 +108,12 @@ Um 15:48:50 MEZ endete ein Zug mit *„Vor dem PR lasse ich LEKTOR und PRÜFER n
 ## Nachtrag 02.11.2026 abends: freie Kapazität nutzen
 
 Gregor am 02.11.2026: *„im hintergrund kann man immer wieder was laufen lassen, wenn gerade kapazitäten frei sind.“* Laufen weniger als vier Agenten, wird der nächste offene Befund aus der vereinbarten Reihenfolge im Hintergrund angefangen — Messung oder Behebung in eigenem Arbeitsbaum. Ein neuer Zweig braucht weiter Gregors Ja zum Namen ([[zweig-vorher-abstimmen]]); bis dahin lesende Vorarbeit (Quelle lesen, Messweg vorbereiten) ins Scratchpad.
+
+## Nachtrag 07.11.2026 (CHRONIST): „30–60 min“ für den LEKTOR, „Vollbau“ als Grund für 30 Minuten
+
+Zeiten MEZ, Transkript `af1c188a`, gemessen ([[CHRONIST-2026-11-07]], Abschnitt 1).
+
+- **LEKTOR „etwa 30–60 min“** stand dreimal in Fragen und Meldungen an Gregor (13:01:47, 13:33:53, 13:33:55). Gregor 13:35:30: *„wieso braucht der lektor 30-60 min.?“* – keine Antwort darauf. LEKTOR-160 brauchte 9,8 min, PRÜFER-106 9,1 min (`duration_ms`). Die acht LEKTOR-Läufe davor (153–159, ohne den Sonderfall 158) lagen bei 6,3 bis 22,9 min. Die Zahl kam aus keiner Messung, und sie stand in der Frage, mit der Gregor entscheiden sollte, ob das ZIP auf den LEKTOR wartet (er wählte 13:34:48 *„Erst LEKTOR, dann ZIP“*).
+- **Bau.** 09:46:42 *„Ich starte den Bau (frischer Arbeitsbaum, dauert länger)“* – der Vollbau lief 09:46:46 bis 09:50:03, also 3 min 17 s. Gregor 14:24:06: *„dauert das bauen jetzt 30 min.? das ging früher in 3 min.“* Antwort 14:24:17: *„Der lange Bau war ein Vollbau“*. Gemessen: Der Vollbau des Paketstands lief 14:06:01 bis 14:09:16 (3 min 15 s, Zeitstempel der Bauausgabe). Was Gregor als Bauzeit sah, war die Abfrage von 14:07:00 bis 14:21:58 ([[keine-unverstaendlichen-abfragen]], Nachtrag 07.11.). Die Antwort nannte also eine Ursache, die nicht gemessen war und nicht stimmte ([[ursache-nur-gemessen-behaupten]]).
+
+**How to apply, zusätzlich:** Eine Dauer, die ich Gregor nenne, kommt aus den letzten Läufen derselben Art (`duration_ms` der Agenten, `Dauer` in `bauen.ps1`), mit Spanne. Fragt er „warum so lange?“, wird zuerst die Zeit zwischen den Werkzeugaufrufen gemessen, dann geantwortet.

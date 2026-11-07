@@ -17,7 +17,7 @@
   [Entscheidung 40](#entscheidungen)): [E-71](BEFUNDE.md#e-71) durch die Doku erledigt (Bericht ab Werk aus,
   [FAQ 23](../Doku/FAQ.md#23-warum-ist-der-filterbericht-leer)), [E-242](BEFUNDE.md#e-242) Kopf-/Fußzeile in der Vorschau,
   [E-240](BEFUNDE.md#e-240) Spurmarken und Sanduhr, [E-247](BEFUNDE.md#e-247) `&` im Betreff; [E-241](BEFUNDE.md#e-241) **nicht** dabei (Ursache ungeklärt).
-  LEKTOR-160 und PRÜFER-106 gelaufen (nichts hält auf); Nummer 137 vergeben, danach Bau und lokales Test-ZIP ([Test](TESTPLAN.md#test-7-2-2-137)).
+  LEKTOR-160 und PRÜFER-106 gelaufen (nichts hält auf); Nummer 137, am 07.11.2026 geschnürt, Test-ZIP liegt neben Gregors letztem Testverzeichnis ([Test](TESTPLAN.md#test-7-2-2-137)).
 - **Neue Schranke:** `tools/testplan-voraussetzungen.pl` (ein Testschritt nannte `Alert=1` nicht).
 - **Nächste Werkzeugaufgabe** ([LEKTOR-151](../Befunde/LEKTOR-151.md#l-151.1)):
   `testlauf.ps1` vergleicht `Exception.log` vor und nach jedem Lauf; `pruefe-behoben-belegt.pl`

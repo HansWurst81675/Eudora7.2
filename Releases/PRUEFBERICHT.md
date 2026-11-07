@@ -3,18 +3,18 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.2.137` (Paketnummer `7.2.2.137`) |
-| **Commit** | `7e102069` — **Arbeitsbaum nicht sauber** (3 Dateien) |
-| **Erstellt** | 2026-11-07 14:33 |
+| **Commit** | `1b18d0f7` — **Arbeitsbaum nicht sauber** (1 Dateien) |
+| **Erstellt** | 2026-11-07 14:42 |
 | **Gesamturteil** | **NICHT VOLLSTAENDIG** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 00 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 07 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 09 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 09 s | dieser Lauf |
 | Pruefstand, 110 Faelle, 67 Eudora-Starts | 91 min 16 s | voller Lauf, Ende 2026-11-06 11:30:46 |
-| **zusammen** | **91 min 23 s** | |
+| **zusammen** | **91 min 34 s** | |
 
 Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.137+7e102069 2026-11-07 14:26`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-11-07 14:33** gegen den Quelltext von Commit `7e102069*`.
+Gelaufen am **2026-11-07 14:42** gegen den Quelltext von Commit `1b18d0f7*`.
 
 <details><summary>Alle 429 Unit-Tests einzeln</summary>
 
@@ -495,7 +495,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-11-07 14:33** gegen Commit `7e102069*`.
+Gelaufen am **2026-11-07 14:42** gegen Commit `1b18d0f7*`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
