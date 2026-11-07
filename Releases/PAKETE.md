@@ -184,6 +184,12 @@ haben.
 > nicht mehr zuzuordnen wären. **Künftige Pakete heißen nach ihrem tatsächlichen
 > Stand.**
 
+## 7.2.2.137 — Testpaket, Zweig `paket_7_2_2_137`
+
+**Nur übersetzt am 07.11.2026, noch nicht geschnürt; nicht veröffentlicht.** Nummer fortlaufend nach Entscheidung 26; Umfang nach [Entscheidung 40](../Intern/WEITERMACHEN.md#entscheidungen) (Gregor 06.11. und 07.11.2026: *„am ende mach mir ein lokales zip zum testen“*, Zweigname *„paket_7_2_2_137“*, *„Erst LEKTOR, dann ZIP“*). Inhalt: `main` mit 7.2.2.136, dazu [E-71](../Intern/BEFUNDE.md#e-71) (Zweig `e71_filterbericht`), [E-242](../Intern/BEFUNDE.md#e-242), [E-240](../Intern/BEFUNDE.md#e-240) und [E-247](../Intern/BEFUNDE.md#e-247) (Zweig `e242_e240_druckvorschau`). Vor dem Bau gelaufen: [LEKTOR-160](../Befunde/LEKTOR-160.md#lektor-160) und [PRÜFER-106](../Befunde/PRUEFER-106.md#pruefer-106), keiner ihrer Funde hält das Paket auf.
+
+Inhalt: [CHANGELOG.md](../CHANGELOG.md), Abschnitt 7.2.2.137.
+
 ## 7.2.2.136 — Release `v7.2.2.136`, Zweig `paket_7_2_2_136`
 
 **Geschnürt am 05.11.2026 um 22:30, bereitgestellt neben Gregors letztem Testverzeichnis (`Eudora72-7.2.2.136-release`), ZIP daneben; **veröffentlicht am 06.11.2026 als `v7.2.2.136`** (Marke auf `f99a3b41`, ZIP auf GitHub mit derselben SHA-256 wie unten), nach Gregors Test und Freigabe (*„ja zum release“*, *„gut, dann release“*). Testpaket ohne vollen Prüfstandslauf geschnürt (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*); voller Lauf am Folgetag vor einem Release, mit Gregors neuer Erlaubnis für den Prüfstand.**

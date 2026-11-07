@@ -18,7 +18,7 @@ Eudora habe ich weder gebaut noch gestartet und kein Fenster geöffnet. Keinen P
 
 Dazu kommen fünf geringe Funde (K5 bis K9). Der wichtigste davon ist K8: Ein `&` im Betreff oder im Absender gilt dem Internet Explorer als Platzhalter. `&u` druckt die URL, also den Pfad der Zwischendatei mit dem Anmeldenamen. Das ist genau der Inhalt, den [E-242](../Intern/BEFUNDE.md#e-242) vom Papier holen will. Der Fehler steht schon im Original, wirkt aber erst jetzt, weil Kopf und Fuß jetzt überhaupt ankommen.
 
-**Neue Kennung:** E-247 für K8 (steht noch nicht in `Intern/BEFUNDE.md`). Ich empfehle, mit K1, K2 und K3 [E-242](../Intern/BEFUNDE.md#e-242) fortzuschreiben, mit K5 und K6 [E-240](../Intern/BEFUNDE.md#e-240) und mit K4 [E-71](../Intern/BEFUNDE.md#e-71). E-248 bleibt frei. `befund-suchen.pl "CTridentView::Print"` nennt [E-62](../Intern/BEFUNDE.md#e-62), [E-169](../Intern/BEFUNDE.md#e-169), [E-240](../Intern/BEFUNDE.md#e-240), [E-241](../Intern/BEFUNDE.md#e-241) und [E-242](../Intern/BEFUNDE.md#e-242), keinen zum `&` im Kopf.
+**Neue Kennung:** [E-247](../Intern/BEFUNDE.md#e-247) für K8 (steht noch nicht in `Intern/BEFUNDE.md`). Ich empfehle, mit K1, K2 und K3 [E-242](../Intern/BEFUNDE.md#e-242) fortzuschreiben, mit K5 und K6 [E-240](../Intern/BEFUNDE.md#e-240) und mit K4 [E-71](../Intern/BEFUNDE.md#e-71). E-248 bleibt frei. `befund-suchen.pl "CTridentView::Print"` nennt [E-62](../Intern/BEFUNDE.md#e-62), [E-169](../Intern/BEFUNDE.md#e-169), [E-240](../Intern/BEFUNDE.md#e-240), [E-241](../Intern/BEFUNDE.md#e-241) und [E-242](../Intern/BEFUNDE.md#e-242), keinen zum `&` im Kopf.
 
 ## 1. `CTridentView::Print` und die E242-Helfer: Aufbau gegen die Quelle
 
@@ -121,5 +121,5 @@ Gegenprobe (§4): Ohne `s_E242.bAktiv = TRUE;` wird nie hergestellt und kein Zei
 | [K5](#k5) | Kommentare: Vorschau „modal“, „kehrt erst beim Schließen zurück“, Marke `bereit` fehlt | gering | nein |
 | [K6](#k6) | Sanduhr verschwindet bei der ersten Mausbewegung, falls die Wartezeit nach `Exec` liegt | gering | nein; Testschritt ergänzen |
 | [K7](#k7) | zweite Vorschau während der ersten: zu frühe Rückstellung, falsches Fenster | gering | nein |
-| [K8](#k8) | `&` im Betreff/Absender wird IE-Platzhalter, `&u` druckt den Pfad mit Anmeldenamen (neu E-247) | gering | nein (zwei Zeilen) |
+| [K8](#k8) | `&` im Betreff/Absender wird IE-Platzhalter, `&u` druckt den Pfad mit Anmeldenamen (neu [E-247](../Intern/BEFUNDE.md#e-247)) | gering | nein (zwei Zeilen) |
 | [K9](#k9) | Quelltextprobe blind für fehlendes `bAktiv = TRUE`; Spurmarke unterscheidet „zu lang“ nicht von „fehlt“ | gering | nein |

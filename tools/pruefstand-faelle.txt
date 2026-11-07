@@ -136,7 +136,7 @@ E-118 | C:\Temp\E118 | 60 | log | E-118 Bild: | | Testdaten/e118-eingebettetes-b
 # E-71n: Vorgabe FilterReport=0 ("Generate filter report" aus, wie bei Gregor
 # und schon im Original) - kein Eintrag. E-71r: FilterReport=1 - ein Eintrag,
 # das Berichtsfenster wird gefunden.
-E-71n | C:\Temp\E118 | 60 | log | E-71 Bericht: eintraege=0 | E-71 Bericht: eintraege=1 | Testdaten/e118-html-in-imap-ordner.eml |
+E-71n | C:\Temp\E118 | 60 | log | E-71 Eintrag: aktion=1 ziel=1 typ=8 notify=-1 ini=0 | E-71 Bericht: eintraege=1 | Testdaten/e118-html-in-imap-ordner.eml |
 E-71r | C:\Temp\E71 | 60 | log | E-71 Bericht: eintraege=1 fenster=1 | E-71 Bericht: eintraege=0 | Testdaten/e118-html-in-imap-ordner.eml |
 # -------------------------------------------------------------------------
 # E-125 - Verschieben nach Out: empfangen abgelehnt, verfasst erlaubt
