@@ -2340,6 +2340,7 @@ struct E242StandTyp
 	HWND		hVorschau;
 	DWORD		dwAnfang;
 	BOOL		bVorschau;
+	BOOL		bSanduhr;		// E-240: Sanduhr halten, bis das Fenster da ist
 	DWORD		dwRuhigSeit;
 };
 
@@ -2382,6 +2383,7 @@ void E242Zurueckstellen(const char* szAnlass)
 		::KillTimer(NULL, s_E242.uUhr);
 		s_E242.uUhr = 0;
 	}
+	s_E242.bSanduhr = FALSE;
 	if (!s_E242.bAktiv)
 		return;
 	s_E242.bAktiv = FALSE;
@@ -2436,9 +2438,34 @@ static BOOL CALLBACK E242FensterSuchen(HWND h, LPARAM lp)
 	return FALSE;
 }
 
+// BEFUND E-240 (07.11.2026, an Gregors System gemessen): der Befehl kehrte
+// nach 94 ms zurueck, das Vorschaufenster kam erst nach 36,6 s - die Sanduhr
+// vor dem Befehl verschwand bei der ersten Mausbewegung (PRUEFER-106 K6).
+// Bis das Fenster da ist, setzt der Zeitgeber sie deshalb bei jedem Schlag
+// neu, solange die Maus ueber einem Fenster dieses Prozesses steht.
+static void E240SanduhrSetzen()
+{
+	POINT pt;
+	if (!::GetCursorPos(&pt))
+		return;
+	HWND h = ::WindowFromPoint(pt);
+	DWORD dwPid = 0;
+	if (h)
+		::GetWindowThreadProcessId(h, &dwPid);
+	if (dwPid == ::GetCurrentProcessId())
+		::SetCursor(::LoadCursor(NULL, IDC_WAIT));
+}
+
 static VOID CALLBACK E242Uhr(HWND, UINT, UINT_PTR, DWORD)
 {
 	const DWORD dwJetzt = ::GetTickCount();
+	if (s_E242.bSanduhr)
+	{
+		if (s_E242.hVorschau || dwJetzt - s_E242.dwAnfang > 120000)
+			s_E242.bSanduhr = FALSE;
+		else
+			E240SanduhrSetzen();
+	}
 	if (!s_E242.bVorschau)
 	{
 		E242Suche Suche = { TRUE, NULL };
@@ -2487,6 +2514,16 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 	CString	szFontName;
 	INT		iSize;
 	MSG		msg;
+
+	// BEFUND E-240 (07.11.2026): solange das Fenster einer Vorschau noch
+	// laedt (bei Gregor 36,6 s), wird ein weiterer Aufruf ignoriert - sonst
+	// stuende die erste Rueckstellung zu frueh an (PRUEFER-106 K7).
+	if (s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau)
+	{
+		PutDebugLog(DEBUG_MASK_MISC, "E-240 weiterer Aufruf, waehrend die Vorschau noch laedt - ignoriert");
+		E240SanduhrSetzen();
+		return FALSE;
+	}
 
 	SetRedraw( FALSE );
 
@@ -2642,6 +2679,9 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 		s_E242.hVorschau = NULL;
 		s_E242.bVorschau = bDoPreview;
 		s_E242.uUhr = ::SetTimer(NULL, 0, 250, E242Uhr);
+		// E-240: Sanduhr nur, wenn ein Fenster kommt (Vorschau oder
+		// Druckdialog) - beim Druck ohne Dialog nicht.
+		s_E242.bSanduhr = (s_E242.uUhr != 0 && (bDoPreview || bDialog));
 		if (!s_E242.uUhr)
 			E242Zurueckstellen("ohne Zeitgeber");
 	}

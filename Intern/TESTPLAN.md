@@ -25,6 +25,8 @@ gemessen**, Schritt 4 am Prüfstand nicht nachzustellen.
 | 5 | POP | *Tools → Options → Getting Attention* → **Generate filter report** anhaken, dann Post abrufen, die einer deiner Filter in ein anderes Postfach verschiebt ([E-71](BEFUNDE.md#e-71)). | *Tools → Filter Report* je Zielpostfach einen Eintrag mit Anzahl zeigt (das Fenster öffnet sich von selbst). Danach den Haken wieder so setzen, wie du ihn willst. |
 | 6 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
 
+**Ergebnis (Gregor, 07.11.2026, ausgewertet an seiner `eudora.log` und den zwei gedruckten PDFs; ohne Inhalte):** Schritt 1 **bestanden** (Titel `Eudora 7.2.2.137+7e102069`); Schritt 2 **bestanden** (Bildschirmfoto: Kopf mit Absender, Datum, Betreff und *„Page 1 of 3“*, Fuß *„Printed for …“* mit Datum); Schritt 3 **bestanden** (beide PDFs je drei Seiten mit *„Printed for“* und *„Page n of 3“*, kein `file:///`; Rückstellung `E-242 zurueck (Druck, 10 s ohne Dialog) nach 22297 ms`); Schritt 4 **nicht bestanden** — `E-240 Vorschau: zurueck nach 94 ms`, `E-242 Vorschaufenster da nach 36609 ms`, die Sanduhr verschwand vorher ([E-240](BEFUNDE.md#e-240), Abhilfe für 7.2.2.138); Schritt 5 **bestanden** (`E-71 Bericht: eintraege=1 fenster=1`, Bildschirmfoto mit zwei Zielpostfächern); Schritt 6 sauber beendet (`Logging shutdown`). Nebenbei gemeldet: Bild ↑/↓ in der Vorschau geht weiter nicht ([E-241](BEFUNDE.md#e-241), nicht im Paket).
+
 Bitte je Schritt *bestanden* oder *nicht bestanden* melden und die
 `eudora.log` mitschicken: die Zeilen `E-240 …` und `E-242 …` zeigen, wann
 Eudora die Druckeinstellung gesetzt und wieder hergestellt hat und wie lange

@@ -728,7 +728,13 @@ if (Test-Path -LiteralPath $liesmich) {
   Nimm $liesmich 'LIESMICH.txt'
 }
 
+# E-248 (07.11.2026): was Schritt 7 aus dem Redist-Ordner von Visual Studio
+# legt, gibt es nach einem frischen Klon im Bauverzeichnis nicht - Schritt 8
+# sucht es dort deshalb nicht (vorher Abbruch "mfc140.dll ... kein
+# Gegenstueck"; im Hauptordner lagen nur alte, nicht versionierte Kopien).
+$ausRedist = @()
 if ($Bauart -eq 'Release') {
+  $ausRedist = @('mfc140.dll', 'msvcp140.dll', 'vcruntime140.dll')
   Write-Host ''
   Write-Host '7. Verteilbare Laufzeit von Visual C++ 2022 (nur bei -Bauart Release)'
   # Diese drei DUERFEN weiterverteilt werden - anders als die Debug-Fassungen
@@ -782,6 +788,7 @@ if ($Bauart -eq 'Release') {
     $fs = [IO.File]::OpenRead($f.FullName); [void]$fs.Read($kopf, 0, 2); $fs.Close()
     if ($kopf[0] -ne 0x4D -or $kopf[1] -ne 0x5A) { continue }
     $rel = $f.FullName.Substring($Ziel.TrimEnd('\').Length + 1)
+    if ($ausRedist -contains $rel) { $gleich++; continue }   # E-248: kommt aus Schritt 7
     $quelle = if ($rel -ieq 'Paige32d.dll') { Join-Path $binRel 'Paige32.dll' } else { Join-Path $binRel $rel }
     if (-not (Test-Path -LiteralPath $quelle)) {
       throw ("ABBRUCH: {0} ist ausfuehrbar, hat aber kein Gegenstueck in {1} - die alte Fassung bleibt nicht stehen" -f $rel, $binRel)

@@ -136,6 +136,15 @@ static void Test_E242_KopfFuss(const char* szEudoraDir)
 					 "die Rueckstellung wartet nicht auf das Schliessen des Vorschaufensters");
 		TT_CHECK_MSG(QT_Enthaelt(pX, "E242Zurueckstellen(\"Beenden\");"),
 					 "ExitInstance stellt eine beim Beenden noch offene Rueckstellung nicht her");
+		// E-240 (07.11.2026, an Gregors System: Vorschaufenster erst nach
+		// 36,6 s, der Befehl kehrte nach 94 ms zurueck): der Zeitgeber haelt
+		// die Sanduhr, bis das Fenster da ist; ein weiterer Aufruf waehrend
+		// der Wartezeit wird abgewiesen.
+		TT_CHECK_MSG(QT_Enthaelt(pH, "if (s_E242.bSanduhr)") && QT_Enthaelt(pH, "E240SanduhrSetzen();"),
+					 "der Zeitgeber haelt die Sanduhr nicht bis zum Vorschaufenster (E-240)");
+		TT_CHECK_MSG(QT_Stelle(pP, "if (s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau)") >= 0 &&
+					 QT_Stelle(pP, "if (s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau)") < QT_Stelle(pP, "SetRedraw( FALSE );"),
+					 "ein weiterer Aufruf waehrend die Vorschau laedt wird nicht vor allem anderen abgewiesen (E-240)");
 	}
 	if (pX) free(pX);
 	if (pE) free(pE);
