@@ -323,6 +323,14 @@ E-169r | C:\Temp\E169 | 260 | messung | E169 REGISTRY unveraendert=1 | E169 ABBR
 E-169b | C:\Temp\E169B | 260 | messung | E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh | E169 ABBRUCH | | messen=tools\messen-e169.ps1
 E-169h | C:\Temp\E169B | 260 | messung | E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH | E169 ABBRUCH | | messen=tools\messen-e169.ps1
 E-169s | C:\Temp\E169B | 260 | messung | E169 REGISTRY unveraendert=1 | E169 ABBRUCH | | messen=tools\messen-e169.ps1
+# E-242 (07.11.2026): Druck und Druckvorschau trugen Kopf- und Fusszeile des
+# Internet Explorer (unten der Pfad der Zwischendatei mit dem Windows-
+# Anmeldenamen), weil CTridentView::Print "header"/"footer" unter
+# HKCU\...\Internet Explorer\PageSetup nur setzte, wenn sie schon standen -
+# ab Werk fehlen sie. Waehrend die Vorschau offen ist, muessen Eudoras Werte
+# stehen; danach muss die Registry wieder so sein wie vorher (auch "fehlt").
+E-242p | C:\Temp\E169 | 260 | messung | E242 WAEHREND-VORSCHAU vorschau-p1 kopf=eudora fuss=eudora | E169 ABBRUCH | | messen=tools\messen-e169.ps1
+E-242r | C:\Temp\E169 | 260 | messung | E242 REGISTRY unveraendert=1 | E169 ABBRUCH | | messen=tools\messen-e169.ps1
 
 # E-192 (03.11.2026, Rest von E-184 K3): drei Mails, nach Datum sortiert
 # (Liste 3,2,1), alle markiert und GELOESCHT - "in den Papierkorb verschieben",
