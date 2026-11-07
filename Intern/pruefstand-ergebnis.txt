@@ -1,9 +1,9 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-07 16:00:19
+zeit=2026-11-07 16:04:51
 freigabe=Gregor 07.11.2026: pruefstand ist freigegeben (Paketbau 7.2.2.138)
-nur=E-242   (Teillauf, nicht der Gesamtstand)
+nur=E-71   (Teillauf, nicht der Gesamtstand)
 faelle=2
 bestanden=2
 fehlgeschlagen=0
-fall=[ ok ] E-242p   E242 WAEHREND-VORSCHAU vorschau-p1 kopf=eudora fuss=eudora
-fall=[ ok ] E-242r   E242 REGISTRY unveraendert=1
+fall=[ ok ] E-71n    E-71 Eintrag: aktion=1 ziel=1 typ=8 notify=-1 ini=0
+fall=[ ok ] E-71r    E-71 Bericht: eintraege=1 fenster=1
