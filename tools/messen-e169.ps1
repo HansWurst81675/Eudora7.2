@@ -258,6 +258,9 @@ $lebt = 1; $erg = [ordered]@{}
 $pbVorLauf = PB
 $kfVorLauf = (RW 'header') + ' / ' + (RW 'footer')
 Write-Host ("E242 REGISTRY vor dem Lauf {0}" -f (KF))
+# PRUEFER-106 K3: stehen Eudoras Werte schon vor dem Lauf da (abgeschossener
+# frueherer Lauf), waeren E-242p und E-242r blind gruen - dann abbrechen.
+if ((KF) -match 'eudora') { Write-Host 'E169 ABBRUCH: Eudoras Kopf-/Fusszeile steht schon vor dem Lauf in PageSetup (Rest eines abgebrochenen Laufs) - von Hand entfernen'; exit 1 }
 Write-Host ("E169 REGISTRY Print_Background={0}" -f (PB))
 try {
     Befehl $haupt 32792                                   # ID_MAILBOX_IN

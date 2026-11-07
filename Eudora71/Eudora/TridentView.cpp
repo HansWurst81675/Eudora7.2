@@ -2443,10 +2443,19 @@ static VOID CALLBACK E242Uhr(HWND, UINT, UINT_PTR, DWORD)
 	{
 		E242Suche Suche = { TRUE, NULL };
 		::EnumWindows(E242FensterSuchen, (LPARAM) &Suche);
+		// PRUEFER-106 K1: erst zaehlen, wenn ein Dialog da war - beim ersten
+		// Aufruf nach dem Start brauchte die Vorschau bei Gregor ca. 38 s,
+		// der Druck kann ebenso lange laden. hVorschau dient hier nur als
+		// Merker "ein Dialog war schon zu sehen".
 		if (Suche.h)
+		{
 			s_E242.dwRuhigSeit = dwJetzt;
-		if (dwJetzt - s_E242.dwRuhigSeit > 10000)
+			s_E242.hVorschau = Suche.h;
+		}
+		if (s_E242.hVorschau && dwJetzt - s_E242.dwRuhigSeit > 10000)
 			E242Zurueckstellen("Druck, 10 s ohne Dialog");
+		else if (!s_E242.hVorschau && dwJetzt - s_E242.dwAnfang > 120000)
+			E242Zurueckstellen("Druck, kein Dialog binnen 120 s");
 		else if (dwJetzt - s_E242.dwAnfang > 600000)
 			E242Zurueckstellen("Druck, nach 10 min");
 		return;
@@ -2465,8 +2474,8 @@ static VOID CALLBACK E242Uhr(HWND, UINT, UINT_PTR, DWORD)
 			szE242[sizeof(szE242) - 1] = '\0';
 			PutDebugLog(DEBUG_MASK_MISC, szE242);
 		}
-		else if (::GetTickCount() - s_E242.dwAnfang > 60000)
-			E242Zurueckstellen("kein Vorschaufenster binnen 60 s");
+		else if (::GetTickCount() - s_E242.dwAnfang > 120000)
+			E242Zurueckstellen("kein Vorschaufenster binnen 120 s");
 		return;
 	}
 	if (!::IsWindow(s_E242.hVorschau) || !::IsWindowVisible(s_E242.hVorschau))
@@ -2483,10 +2492,12 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 
 	// BEFUND E-240 (07.11.2026): Gregor stoppte an 7.2.2.136 ca. 38 s vom
 	// Menuebefehl bis zur Druckvorschau, ohne jede Rueckmeldung; im Protokoll
-	// war die Vorschau nicht zu erkennen. Spurmarken: Anfang, bereit (nach der
-	// Warteschleife unten), Befehl an MSHTML ab und zurueck - je in ms seit
-	// dem Anfang. OLECMDID_PRINTPREVIEW kehrt erst zurueck, wenn die Vorschau
-	// geschlossen ist; die Zeit bis zum Erscheinen misst tools/messen-e169.ps1.
+	// war die Vorschau nicht zu erkennen. Spurmarken: Anfang, Befehl an MSHTML
+	// ab (nach der Warteschleife unten) und zurueck - je in ms seit dem
+	// Anfang. OLECMDID_PRINTPREVIEW kehrt nach 30-60 ms zurueck, nicht erst
+	// beim Schliessen (gemessen); die Zeit bis zum Erscheinen des Fensters
+	// misst tools/messen-e169.ps1, im Programm die Marke "E-242
+	// Vorschaufenster da nach ... ms".
 	const DWORD dwE240Anfang = ::GetTickCount();
 	{
 		char szE240[96];
@@ -2549,13 +2560,20 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 		if (pDoc && bDoHeaderFooter)
 		{
 			Title = pDoc->GetTitle();
+			// BEFUND E-247 (PRUEFER-106 K8): "&" leitet in der IE-Kopfzeile
+			// einen Platzhalter ein - "&u" druckt die Adresse der
+			// Zwischendatei, also wieder den Anmeldenamen. Ein woertliches
+			// "&" heisst "&&".
+			Title.Replace("&", "&&");
 			Title += CRString(IDS_IE_PRINT_HEADER_EXTRA);
 		}
 
 		CString NewFooter;
 		if (bDoHeaderFooter)
 		{
-			NewFooter.Format(CRString(IDS_PRINT_FOOTER), GetReturnAddress());
+			CString strAdresse(GetReturnAddress());
+			strAdresse.Replace("&", "&&");			// E-247, wie oben
+			NewFooter.Format(CRString(IDS_PRINT_FOOTER), (LPCTSTR) strAdresse);
 			NewFooter += CRString(IDS_IE_PRINT_FOOTER_EXTRA);
 		}
 
@@ -2586,10 +2604,11 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 	}
 
 	// BEFUND E-240: Rueckmeldung. Die Sanduhr wird direkt gesetzt (nicht ueber
-	// BeginWaitCursor, das zaehlt und bliebe ueber Eudoras Fenstern stehen,
-	// solange die modale Vorschau offen ist): sie steht, bis das naechste
-	// WM_SETCURSOR verarbeitet wird - also bis das Vorschau- bzw. Druckfenster
-	// da ist und Nachrichten annimmt.
+	// BeginWaitCursor, das zaehlt und bis zu EndWaitCursor ueber Eudoras
+	// Fenstern stehen bliebe): sie steht, bis das naechste WM_SETCURSOR
+	// verarbeitet wird. Laedt MSHTML waehrend Exec, bleibt sie bis dahin
+	// stehen; laedt es erst nach der Rueckkehr, nimmt die erste Mausbewegung
+	// sie weg (PRUEFER-106 K6, nicht gemessen).
 	{
 		char szE240[96];
 		_snprintf(szE240, sizeof(szE240), "E-240 %s: Befehl ab nach %lu ms",

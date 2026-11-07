@@ -117,6 +117,14 @@ static void Test_E242_KopfFuss(const char* szEudoraDir)
 					 "eine noch offene Rueckstellung wird nicht vor dem Setzen erledigt - der eigene Wert gaelte sonst als \"alt\"");
 		TT_CHECK_MSG(lKopf >= 0 && lFuss >= 0 && lKopf < lDruck && lFuss < lDruck,
 					 "Kopf- und Fusszeile werden nicht vor dem Druckbefehl gesetzt");
+		// PRUEFER-106 K9: ohne bAktiv stellt niemand zurueck - die Werte
+		// blieben dauerhaft in der IE-Einstellung.
+		const long lAktiv = QT_Stelle(pP, "s_E242.bAktiv = TRUE;");
+		TT_CHECK_MSG(lAktiv > lFuss && lAktiv < lDruck,
+					 "nach dem Setzen wird die Rueckstellung nicht scharf geschaltet (s_E242.bAktiv)");
+		// E-247: "&" in Betreff oder Adresse wuerde als IE-Platzhalter gelesen.
+		TT_CHECK_MSG(QT_Zaehle(pP, ".Replace(\"&\", \"&&\");") == 2,
+					 "Betreff oder Absenderadresse gehen ohne Verdopplung von & in Kopf/Fuss (E-247)");
 		// Die alte Form setzte nur, wenn RegQueryValueEx Erfolg hatte - ab
 		// Werk fehlen die Werte, dann kam nichts an.
 		TT_CHECK_MSG(!QT_Enthaelt(pP, "if (RegQueryValueEx(hkIEPageSetup, HeaderValueName"),
