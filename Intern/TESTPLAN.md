@@ -2,6 +2,31 @@
 
 **Stand:** 07.11.2026 kein neuer Testabschnitt — 7.2.2.137 ist in Arbeit, noch nicht geschnürt; zuletzt geschnürt: Quellstand 7.2.2.136 (Release `v7.2.2.136`, veröffentlicht am 06.11.2026; geschnürt am 05.11.2026, voller Prüfstandslauf am 06.11.2026 110/110 grün, von Gregor am 06.11.2026 getestet und freigegeben — *„ja zum release“*, Ergebnis unter dem Test; Stand 06.11.2026; davor 7.2.2.135: Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.134: Testpaket, geschnürt am 05.11.2026, nicht veröffentlicht; davor 7.2.2.133: Release `v7.2.2.133`, geschnürt am 04.11.2026, von Gregor am 04.11.2026 getestet, veröffentlicht am 05.11.2026; davor 7.2.2.132: Release `v7.2.2.132`, veröffentlicht am 03.11.2026, die erste Fassung der Reihe 7.2.2; `VERSION` gleich; geschnürt am 03.11.2026, liegt neben Gregors letztem Testverzeichnis, ZIP daneben; davor 7.2.1.131, Release `v7.2.1.131`, veröffentlicht am 02.11.2026), Stand 06.11.2026 (zuletzt getestet am 06.11.2026 7.2.2.136: Schritte 1, 2, 3, 5 und 6 bestanden, als `v7.2.2.136` veröffentlicht; davor am 05.11.2026 7.2.2.135: alle vier Schritte bestanden, nicht veröffentlicht (Gregor 05.11.2026: nur solide, getestete Bauten auf GitHub); davor am 04.11.2026 7.2.2.133, danach als `v7.2.2.133` veröffentlicht; davor 04.11.2026: auch eine Fassung nur mit Fehlerbehebungen trägt künftig 7.2.2.N, [Entscheidung 26](WEITERMACHEN.md); davor 03.11.2026: E-170 aus Gregors Ergebnis-ZIP vom 02.11.2026 ausgewertet; zuletzt getestet am 03.11.2026 7.2.2.132: alle zwölf Schritte bestanden, danach als `v7.2.2.132` veröffentlicht; davor am 02.11.2026 7.2.1.131, damals Release-Kandidat: alle sieben Schritte bestanden, siehe unten, danach als `v7.2.1.131` veröffentlicht; davor am 01. und 02.11.2026 das Testpaket 7.2.1.130: E-140 an beiden Fenstern und E-143 im Filterteil bestätigt; davor am 31.10.2026 das Testpaket 7.2.1.129: E-139 bestanden, E-165 bestätigt; davor am 29.10.2026 das Release 7.2.1.128, E-166 bestanden)
 
+## <a id="test-7-2-2-137"></a>Dein Test an 7.2.2.137 — ca. 10 Minuten, an deinem echten System
+
+7.2.2.137 enthält alles aus 7.2.2.136, dazu Eudoras Kopf- und Fußzeile in
+der Druckvorschau ([E-242](BEFUNDE.md#e-242)), eine Sanduhr bei der
+Druckvorschau ([E-240](BEFUNDE.md#e-240)) und den Hinweis zum Filterbericht
+([E-71](BEFUNDE.md#e-71)). **Noch nicht geschnürt** — das ZIP kommt nach dem
+LEKTOR; bis dahin ist dieser Abschnitt ein Entwurf. Am Prüfstand gemessen
+sind Schritt 2 (Vorschau, rot ohne und grün mit der Behebung) und Schritt 5
+(mit einem Filter in einen IMAP-Ordner); **Schritt 3 (Papier) ist nirgends
+gemessen**, Schritt 4 am Prüfstand nicht nachzustellen.
+
+| # | Ort | Schritt | Bestanden, wenn … |
+|---|---|---|---|
+| 1 | lokal | Das Paket so starten wie deine bisherigen Testpakete, mit deinem Mailverzeichnis. | die Titelzeile mit `Eudora 7.2.2.137+` beginnt. |
+| 2 | lokal | Eine Mail öffnen, *File → Print Preview* ([E-242](BEFUNDE.md#e-242)). | oben links Absender, Datum und Betreff stehen, oben rechts *„Page 1 of …“*, unten links *„Printed for <deine Adresse>“* und unten rechts das Datum — **nicht** `file:///C:/Users/…`. |
+| 3 | lokal | In der offenen Vorschau auf das Druckersymbol klicken und drucken — auf Papier oder auf *Microsoft Print to PDF*. Danach einmal *File → Print* ohne Vorschau. | auf beiden Ausdrucken dieselbe Kopf- und Fußzeile steht wie in Schritt 2. |
+| 4 | lokal | **Freiwillig:** nach einem Neustart des Rechners Eudora starten, eine Mail öffnen, *File → Print Preview* — einmal klicken und warten ([E-240](BEFUNDE.md#e-240)). | bis die Vorschau da ist, eine Sanduhr steht; die Zeit bitte grob stoppen. |
+| 5 | POP | *Tools → Options → Getting Attention* → **Generate filter report** anhaken, dann Post abrufen, die einer deiner Filter in ein anderes Postfach verschiebt ([E-71](BEFUNDE.md#e-71)). | *Tools → Filter Report* je Zielpostfach einen Eintrag mit Anzahl zeigt (das Fenster öffnet sich von selbst). Danach den Haken wieder so setzen, wie du ihn willst. |
+| 6 | lokal | Eudora beenden (*File → Exit*). | kein Fehlerdialog kommt und das Fenster verschwindet. |
+
+Bitte je Schritt *bestanden* oder *nicht bestanden* melden und die
+`eudora.log` mitschicken: die Zeilen `E-240 …` und `E-242 …` zeigen, wann
+Eudora die Druckeinstellung gesetzt und wieder hergestellt hat und wie lange
+die Vorschau brauchte (`LogLevel=58527` wie bisher genügt).
+
 ## <a id="test-7-2-2-136"></a>Dein Test an 7.2.2.136 — ca. 10 Minuten, an deinem echten System
 
 7.2.2.136 enthält alles aus 7.2.2.135, dazu die Behebung des Absturzes beim
