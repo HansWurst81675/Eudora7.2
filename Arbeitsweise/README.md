@@ -143,6 +143,7 @@ eine Datei liest, liest diese.
 | [entscheidung-pruefstand-fenster-04-11](entscheidung-pruefstand-fenster-04-11.md) | Gregor 04.11.2026: Prüfstand mit Eudora-Fenstern heute erlaubt (E-188 unter C:\Temp\E188) |
 | [entscheidung-pruefstand-fenster-05-11](entscheidung-pruefstand-fenster-05-11.md) | Gregor 05.11.2026: Prüfstand mit Fenster heute erlaubt (E-193-Rest messen: Outlook-Rundmail, Edit→Find) |
 | [entscheidung-pruefstand-fenster-06-11](entscheidung-pruefstand-fenster-06-11.md) | Gregor 06.11.2026: Prüfstand freigegeben (voller Lauf 7.2.2.136, E-239p rot/grün) |
+| [entscheidung-pruefstand-fenster-07-11](entscheidung-pruefstand-fenster-07-11.md) | Gregor 07.11.2026: Prüfstand freigegeben (E-71 Filterbericht nachstellen) |
 | [entscheidung-pruefstand-fenster-30-10](entscheidung-pruefstand-fenster-30-10.md) | Gregor 30.10.2026 ~13:10: Prüfstandsläufe mit Fenster ab sofort erlaubt; er hält sich zurück und testet das Release 7.2.1.128 separat |
 | [entscheidung-pruefstand-fenster-31-10](entscheidung-pruefstand-fenster-31-10.md) | Gregor 31.10.2026 ~19:15 - Prüfstandsläufe mit Fenster heute erlaubt: 'ja, starte auf deinem lokalen prüfstand deine testes, ich halte mich zurück'; VM-Uhr ging ~20 h nach |
 | [entscheidung-randfaelle-unkritisch](entscheidung-randfaelle-unkritisch.md) | Gregor 04.11.2026: E-123, E-124, E-126, E-129 bekommen die Stufe unkritisch (Randfall) - Fortsetzung seiner Entscheidung vom 23.10. |
@@ -223,6 +224,7 @@ eine Datei liest, liest diese.
 | [stand-03-11-2026-abend](stand-03-11-2026-abend.md) | Stand 03.11.2026 abends — #217 (Paket 7.2.2.132) wartet auf Merge, dann Release; danach E-188-Löschbedingung vor E-199 |
 | [stand-04-11-2026](stand-04-11-2026.md) | Stand 04.11.2026 früh — v7.2.2.132 veröffentlicht; release_7_2_2_132 wartet auf BUCHHALTER, dann PR; E-188 Schritt 1 gesichert, Rest-Ursache im Downloader gefunden |
 | [stand-05-11-2026-nacht](stand-05-11-2026-nacht.md) | Stand 05.11.2026 nachts – v7.2.2.133 draußen; #225–#227 gemergt; Testpaket 7.2.2.136 bei Gregor ohne Prüfstandslauf; morgen: Prüfstand-Erlaubnis holen, voller Lauf 136, E-239p rot/grün, PRs e239/e169/e151 |
+| [stand-06-11-2026-nacht](stand-06-11-2026-nacht.md) | Stand 06.11.2026 nachts — ranjit_bereinigt_teil2 gepusht (3d3586b7), LEKTOR fällig vor PR; danach 7.2.2.137 mit E-71, E-242, E-240 |
 | [stand-06-11-2026](stand-06-11-2026.md) | Stand 06.11.2026 abends – v7.2.2.136 veröffentlicht (#228), E-151 Prüfstand nach frischem Klon gemergt (#229, bereinigt); LEKTOR-158 läuft mit Datenschutz-Schwerpunkt; danach 7.2.2.137 (E-242, E-240) |
 | [stand-22-10-2026-abend](stand-22-10-2026-abend.md) | Was am Abend des 22.10.2026 nach dem letzten Merge offen blieb und NICHT im Repo steht - vier Berichtigungen, ein Sicherheitspunkt, das E-124-Ergebnis |
 | [stand-23-10-2026-abend](stand-23-10-2026-abend.md) | Was am 23.10.2026 beim Abschalten offen blieb und in KEINER Repo-Datei steht - die fertige Berichtigung des Testplan-Kopfes, der Zweigname, und was Gregor als naechstes erwartet |

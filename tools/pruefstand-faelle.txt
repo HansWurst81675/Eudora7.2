@@ -128,6 +128,16 @@ E-121 | C:\Temp\E118 | 60 | ablage | ablage-dateien=1 | | Testdaten/e118-html-in
 # E-118: eine HTML-Mail, in ein IMAP-Postfach verschoben, erschien dort als
 # Quelltext. Die Spurmarke muss im Protokoll stehen.
 E-118 | C:\Temp\E118 | 60 | log | E-118 Bild: | | Testdaten/e118-eingebettetes-bild.eml |
+# E-71 (07.11.2026): der Filterbericht ist nach einem Filterlauf leer. Der
+# Eingangsfilter "E-118 nach IMAP" uebertraegt die Nachricht in den IMAP-
+# Ordner Ablage (Gregors Weg: Filter in einen IMAP-Ordner). Die Spurmarken in
+# filtersd.cpp nennen, wovon die Aufnahme in den Bericht abhaengt
+# (E-71 Eintrag: ...) und was beim Abarbeiten ankommt (E-71 Bericht: ...).
+# E-71n: Vorgabe FilterReport=0 ("Generate filter report" aus, wie bei Gregor
+# und schon im Original) - kein Eintrag. E-71r: FilterReport=1 - ein Eintrag,
+# das Berichtsfenster wird gefunden.
+E-71n | C:\Temp\E118 | 60 | log | E-71 Bericht: eintraege=0 | E-71 Bericht: eintraege=1 | Testdaten/e118-html-in-imap-ordner.eml |
+E-71r | C:\Temp\E71 | 60 | log | E-71 Bericht: eintraege=1 fenster=1 | E-71 Bericht: eintraege=0 | Testdaten/e118-html-in-imap-ordner.eml |
 # -------------------------------------------------------------------------
 # E-125 - Verschieben nach Out: empfangen abgelehnt, verfasst erlaubt
 # -------------------------------------------------------------------------

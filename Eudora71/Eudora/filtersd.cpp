@@ -1667,6 +1667,20 @@ int CFilter::Action(const char* text, CSummary*& Sum, CFilterActions* fltAct, CO
 		pDestToc = Sum->m_TheToc;
 	}
 
+	// E-71: warum kommt (k)ein Eintrag in den Filterbericht? Alle Werte, von
+	// denen die Aufnahme in m_NotifyReportList unten abhaengt, in einer Zeile.
+	if (bDidMoveAction)
+	{
+		char szE71[256];
+		_snprintf(szE71, sizeof(szE71),
+			"E-71 Eintrag: aktion=%d ziel=%d typ=%d notify=%d ini=%d",
+			(int) bDidFiltAction, (int) (pDestToc != NULL),
+			pDestToc ? (int) pDestToc->m_Type : -1,
+			(int) m_NotfyUserNR, (int) GetIniShort(IDS_INI_FILTER_REPORT));
+		szE71[sizeof(szE71) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC, szE71);
+	}
+
 	// Only proceed if something did happen.  The Junk filter action is disallowed in some cases and we
 	// should not bother doing anything more if the only action was disallowed.
 	if (bDidFiltAction)
@@ -4149,10 +4163,19 @@ BOOL CFilterActions::EndFiltering()
 	
 	// Dump Report
 	pos = m_NotifyReportList.GetHeadPosition();
+	if (!pos)
+		PutDebugLog(DEBUG_MASK_MISC, "E-71 Bericht: eintraege=0 fenster=-");
 	if (pos)
 	{
 		// Find active Filter Report window, if any.
 		CFilterReportView* pView = CFilterReportView::GetFilterReportView();
+		{
+			char szE71[128];
+			_snprintf(szE71, sizeof(szE71), "E-71 Bericht: eintraege=%d fenster=%d",
+				(int) m_NotifyReportList.GetCount(), (int) (pView != NULL));
+			szE71[sizeof(szE71) - 1] = '\0';
+			PutDebugLog(DEBUG_MASK_MISC, szE71);
+		}
 		if (pView)
 		{
 			// Do the time stamp thang
