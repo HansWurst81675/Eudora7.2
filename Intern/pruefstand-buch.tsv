@@ -52,11 +52,11 @@ E-144p	ok	2026-11-06 11:30:44	C:\Temp\E144	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 
 E-146	ok	2026-11-06 11:30:44	C:\Temp\E146	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E146 ERGEBNIS rename=abgelehnt baum-neu=weg baum-alt=da liste=(kein Eintrag)
 E-166a	ok	2026-11-06 11:30:44	C:\Temp\E166	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	reihenfolge=junk-no,konto-ok
 E-166b	ok	2026-11-06 11:30:44	C:\Temp\E166	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	AskedAboutJunk=6
-E-169b	ok	2026-11-06 13:46:34	C:\Temp\E169B	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh
-E-169h	ok	2026-11-06 13:46:34	C:\Temp\E169B	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH
-E-169p	ok	2026-11-06 13:46:34	C:\Temp\E169	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABcdefgh
-E-169r	ok	2026-11-06 13:46:34	C:\Temp\E169	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E169 REGISTRY unveraendert=1
-E-169s	ok	2026-11-06 13:46:34	C:\Temp\E169B	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E169 REGISTRY unveraendert=1
+E-169b	ok	2026-11-07 12:52:58	C:\Temp\Eudora72-Pruefstand\E169B	Eudora 7.2.2.136+1cb9087d* 2026-11-07 12:30	E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh
+E-169h	ok	2026-11-07 12:52:58	C:\Temp\Eudora72-Pruefstand\E169B	Eudora 7.2.2.136+1cb9087d* 2026-11-07 12:30	E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH
+E-169p	ok	2026-11-07 12:52:58	C:\Temp\Eudora72-Pruefstand\E169	Eudora 7.2.2.136+1cb9087d* 2026-11-07 12:30	E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABcdefgh
+E-169r	ok	2026-11-07 12:52:58	C:\Temp\Eudora72-Pruefstand\E169	Eudora 7.2.2.136+1cb9087d* 2026-11-07 12:30	E169 REGISTRY unveraendert=1
+E-169s	ok	2026-11-07 12:52:58	C:\Temp\Eudora72-Pruefstand\E169B	Eudora 7.2.2.136+1cb9087d* 2026-11-07 12:30	E169 REGISTRY unveraendert=1
 E-170c	ok	2026-11-06 11:30:44	C:\Temp\E170	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E170C ERGEBNIS abgelehnt=1 fremde-gelegt=1 fremd-label=0 eintraege=1 vorgemerkt=0 log-grund=fehlgeschlagen lebt=1
 E-170f	ok	2026-11-06 11:30:44	C:\Temp\E170	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E170F ERGEBNIS art=anders fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=6 eintraege=2 log-grund=zugeordnet lebt=1
 E-170g	ok	2026-11-06 11:30:44	C:\Temp\E170	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E170F ERGEBNIS art=gleich fremde-gelegt=1 kopie-betreff-passt=1 fremd-label=0 kopie-label=0 eintraege=2 log-grund=mehrdeutig lebt=1
@@ -108,6 +108,8 @@ E-223p	ok	2026-11-06 11:30:44	C:\Temp\E223	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 
 E-223w	ok	2026-11-06 11:30:44	C:\Temp\E223	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E223 PROBE ok
 E-239p	ok	2026-11-06 13:41:24	C:\Temp\E239	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E239 URTEIL gruen
 E-239w	ok	2026-11-06 11:30:44	C:\Temp\E239	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	E239 PROBE ok
+E-242p	ok	2026-11-07 12:49:37	C:\Temp\Eudora72-Pruefstand\E169	Eudora 7.2.2.136+1cb9087d* 2026-11-07 12:30	E242 WAEHREND-VORSCHAU vorschau-p1 kopf=eudora fuss=eudora
+E-242r	ok	2026-11-07 12:49:37	C:\Temp\Eudora72-Pruefstand\E169	Eudora 7.2.2.136+1cb9087d* 2026-11-07 12:30	E242 REGISTRY unveraendert=1
 E-67	ok	2026-11-06 11:30:44	C:\Temp\E67	Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11	verb-gespeichert=14 verb-auswahl=0
 E-71n	ok	2026-11-07 09:51:51	C:\Temp\Eudora72-Pruefstand\E118	Eudora 7.2.2.136+1cb9087d* 2026-11-07 09:48	E-71 Bericht: eintraege=0
 E-71r	ok	2026-11-07 09:51:51	C:\Temp\Eudora72-Pruefstand\E71	Eudora 7.2.2.136+1cb9087d* 2026-11-07 09:48	E-71 Bericht: eintraege=1 fenster=1

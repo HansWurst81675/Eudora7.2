@@ -1,9 +1,12 @@
 # Erzeugt von tools/pruefstand-lauf.ps1 - nicht von Hand aendern.
-zeit=2026-11-07 09:51:51
-freigabe=Gregor 07.11.2026: pruefstand ist freigegeben (E-71)
-nur=E-71   (Teillauf, nicht der Gesamtstand)
-faelle=2
-bestanden=2
+zeit=2026-11-07 12:52:58
+freigabe=Gregor 07.11.2026: pruefstand ist freigegeben (E-242/E-169)
+nur=E-169   (Teillauf, nicht der Gesamtstand)
+faelle=5
+bestanden=5
 fehlgeschlagen=0
-fall=[ ok ] E-71n    E-71 Bericht: eintraege=0
-fall=[ ok ] E-71r    E-71 Bericht: eintraege=1 fenster=1
+fall=[ ok ] E-169p   E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABcdefgh
+fall=[ ok ] E-169r   E169 REGISTRY unveraendert=1
+fall=[ ok ] E-169b   E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh
+fall=[ ok ] E-169h   E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH
+fall=[ ok ] E-169s   E169 REGISTRY unveraendert=1
