@@ -160,3 +160,11 @@ Umbau einer Schranke geführt, die richtig arbeitet.
 * Eine Schranke, die im Gegentest nichts meldet, ist erst dann verdächtig,
   wenn der Gegentest selbst nachgewiesen hat, dass er den geprüften Weg trifft
   — nicht vorher.
+
+## Nachtrag 07.11.2026 nachmittags (CHRONIST): Commit-Nachricht nennt eine Änderung, die nicht im Commit ist
+
+Commit `e54fb907` (14:53:22 MEZ) heißt *„E-248: paket-bauen Schritt 8 sucht die Redist-DLLs aus Schritt 7 nicht im Bauverzeichnis; EudoraUnicodeFix … ins Repo“*. Im Commit liegen aber nur drei Dateien, alle unter `Bin/Release/Plugins/`. `tools/paket-bauen.ps1` fehlt (gemessen: `git show --stat`). Die Klonprobe ab 14:54:56 (*„Klon steht, das Plug-in ist mit drin. Jetzt der Vollbau im Klon“*) lief deshalb an einem Stand ohne die Behebung. Um 15:07:04 hieß es *„Der Bau aus einem frischen Klon läuft mit einem Befehl durch“*. Das stimmte für den Bau, die Behebung in Schritt 8 betraf aber das Schnüren. Bemerkt wurde es um 15:33:09: *„weil im Commit `e54fb907` nur das Plug-in landete“*. Nachgeholt wurde es in `1051bfaf` (15:42), mit dem ehrlichen Vermerk *„nachgeholt, fehlte in e54fb907“*.
+
+**How to apply, zusätzlich:** Vor `git commit` die Dateiliste aus `git diff --cached --stat` gegen die Commit-Nachricht lesen. Jede Datei und jedes Werkzeug, das die Nachricht nennt, muss in der Liste stehen. Eine Probe aus einem Klon beginnt mit `git log -1 --stat` im Klon.
+
+**Schranken-Vorschlag (nicht gebaut):** `commit-msg`-Haken: Nennt die Nachricht `tools/<name>` oder ein bekanntes Werkzeug (`paket-bauen`, `bauen.ps1` …) und ist keine passende Datei gestaget, wird gewarnt. Gegenprobe: Nachricht und Index von `e54fb907` ergeben eine Warnung, `1051bfaf` keine.

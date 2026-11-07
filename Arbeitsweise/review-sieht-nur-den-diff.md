@@ -122,3 +122,11 @@ derselbe Satz wie am 07.09., 13.09. und 18.09.
   mit Gregors Zustimmung zurückgestellt nachweisen.
 - **Kein Vorgriff in der Doku.** *„Veröffentlicht als …"* wird geschrieben,
   nachdem das Release-Werkzeug durchgelaufen ist, nicht davor.
+
+## Nachtrag 07.11.2026 (CHRONIST): die Bauanleitung, die das README versprach
+
+Gregor um 15:05:54, als Einwurf: *„übriegns: die fehlende bauanleitung verstößt scheinbar schon länger gegen ‚leine lügen auf main‘! es selbst bauen Doku/BAUEN.md — Visual Studio 2022 mit ‚Desktopentwicklung mit C++‘, ein Befehl -> warum ist es keinem aufgefallen? warum hat es der lektor übersehen? es ist sein job!“* Das README verspricht in seiner Einstiegstabelle, man könne mit `Doku/BAUEN.md` *selbst bauen*. Die Anleitung endete aber vor dem Release-ZIP (Zwischenmeldung 15:07:04). Aus einem frischen Klon ließ sich bis zu diesem Tag kein Paket schnüren ([[main-muss-immer-baubar-sein]], Nachträge vom 07.11.). Die Zeile war alt. Die LEKTOR-Läufe der letzten Wochen bekamen Zweige mit Diff als Auftrag, und die Zeile lag in keinem Diff. Das ist genau der Mechanismus dieser Lehre. Mit Gregors Wort „lügen auf main“ ist es das fünfte in dieser Datei gezählte Mal (07.09., 13.09., 18.09., 12.10., 07.11.).
+
+Am Nachmittag wurde es gemessen behoben. Die Anleitung bis zum ZIP steht jetzt in `Doku/BAUEN.md`. Sie wurde an zwei frischen Klonen gefahren, der zweite ohne Projekt-Haken, mit eigener Nummer und dem neuen Schalter `-EigenerBau`: Paket in 0,7 min, `paket-pruefen` ohne Fehler (16:24:18, 16:28:39). Nicht gemessen ist der Schritt „Veröffentlichen im eigenen Fork“, und das steht auch so da (16:57:54). Gregors Frage nach dem **Warum** blieb ohne Antwort ([[einwurf-ist-ein-messwert]], Nachtrag 07.11. nachmittags).
+
+**How to apply, zusätzlich:** Jedes Versprechen in der Einstiegstabelle des README (*„es selbst bauen“*, *„ein Befehl“*) ist ein Prüfpunkt, und zwar mit dem **Durchfahren**, nicht mit dem Lesen. Den Auftrag dafür bekommt ein LEKTOR oder PRÜFER einmal je Release, unabhängig vom Diff.

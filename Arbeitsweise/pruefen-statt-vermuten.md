@@ -291,3 +291,13 @@ Zwischen dem `grep` und der Tabelle lagen 16 Sekunden. Die erste falsche Zeile k
 Die Datei war richtig, die Überschrift kam aus dem Gedächtnis, vier Sekunden nach der Frage und ohne einen Werkzeugaufruf dazwischen.
 
 **How to apply, zusätzlich:** Eine Ortsangabe an Gregor (Datei, Abschnitt, Zeile) stammt aus einer Ausgabe derselben Antwort, etwa `grep -n "^## " <datei>`. Sonst nenne ich die Datei ohne Abschnitt.
+
+## Nachtrag 07.11.2026 nachmittags (CHRONIST): E-241, die Ursache stand als Tatsache im Quelltext, bevor der Thread gemessen war
+
+Gregor um 15:01:04: *„in 2.138 auch gleich das blättern in der vorschau mit tasten einbauen.“* Die Hauptsitzung um 15:01:38: *„die ich vermutlich bei Eudoras Tastenkürzeln vermute, noch ungeprüft“*. Um 15:02:47 war daraus geworden: *„Die Ursache liegt in `CTridentReadMessageView::PreTranslateMessage` …“*. Um 15:02:54 ging eine Durchreiche in `CEudoraApp::PreTranslateMessage` in den Quelltext, mit dem Kommentar *„Die Vorschau … laeuft in Eudoras Nachrichtenschleife; ihre Tasten gingen ueber das Hauptfenster an die aktive Mail … die Mail dahinter blaetterte“* (gemessen an der Ersetzungsdatei im Scratchpad). In diesem Satz stecken zwei ungemessene Annahmen: dieselbe Nachrichtenschleife und das Blättern der Mail dahinter. Gebaut und am Prüfstand gefahren wurde von 15:14 bis 15:26. Ergebnis 15:24:21: *„E-241 ist mit dem Fix aber noch rot“*. Um 15:29:36 kam heraus, dass die Spurmarke nie erschien, und um 15:32:59: *„Die Vorschau läuft in einem eigenen Thread“*. Die Messung dafür, Thread-Kennung des Vorschaufensters gegen die des Hauptfensters, kostete eine Zeile im Messskript. Sie hätte vor dem Bau stehen können.
+
+Der Befund E-241 sagte es seit dem 06.11. selbst: *„Ursache **nicht gemessen** — erst am Prüfstand die Tastenbotschaften nachstellen.“*
+
+Gut lief: Die Gegenprobe am alten Bau war vorher rot (15:13:59, „Seite 1 von 7“ vor und nach Bild ↓). Die wirkungslose Durchreiche kam nicht in einen Commit (15:33:00 zurückgenommen). Die widerlegte Vermutung steht mit Messwert in E-241. Im ersten Entwurf hieß es „zwei Vermutungen widerlegt“, widerlegt war aber eine (L-162.7).
+
+**How to apply, zusätzlich:** Wenn ein Befund „erst nachstellen“ sagt, kommt vor jedem Code die billigste Messung, die die Annahme des Codes prüft. Hier war das: Läuft das Fenster im selben Thread? Ein Quelltextkommentar, der eine Ursache nennt, ist ein Bericht ([[ursache-nur-gemessen-behaupten]]).

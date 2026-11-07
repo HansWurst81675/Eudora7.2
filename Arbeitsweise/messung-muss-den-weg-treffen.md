@@ -456,3 +456,9 @@ Behoben in `c0f70c11` (20:18:41): Der Prüfserver fasst zu Bereichen zusammen, d
 **How to apply, zusätzlich:**
 - Vor dem Satz „rot nachgestellt“ rechne ich aus, **welchen** roten Wert der vermutete Fehler liefert, und schreibe ihn vor dem Lauf in die Sollzeile der Gegenprobe. Kommt ein anderer roter Wert, ist das ein zweiter Fehler oder ein Prüfstandsfehler, keine Bestätigung.
 - Die Ergebniszeile trägt neben dem Ergebnis den Weg (`anfrage=`, `copyuid=`), so wie `reihenfolge=` bei Fall 12.
+
+## Nachtrag 07.11.2026 nachmittags (CHRONIST): „0,25 s statt 36,6 s“
+
+Die 36,6 s stammen aus Gregors Log an 7.2.2.137 (14:59:34: *„das Vorschaufenster aber erst nach 36,6 s“*). Die Testanweisung verlangte dafür den ersten Aufruf nach einem Rechnerstart. Die 0,25 s stammen aus seinem Test an 138. Dass dort ein erster Aufruf nach Rechnerstart gemessen wurde, ist nicht belegt; die Hauptsitzung selbst schrieb um 16:46:35, die Abhilfe lasse sich *„erst beim ersten Aufruf nach einem Rechnerstart messen“*. Die Abhilfe in 138 hält nur die Sanduhr und verkürzt keine Wartezeit. Trotzdem stand der Vergleich ab 16:28:39 (*„nach 250–300 ms (in 137 waren es 36 s)“*), 16:31:12 (*„von 36,6 s auf 0,25 s gefallen“*) und 16:36:16 an Gregor (*„Das Vorschaufenster kommt nach 0,25 s statt 36,6 s“*), dazu in TESTPLAN, E-240 und Commit `c84bb8c5` (belegt durch L-163.1). Das ist ein kalter gegen einen warmen Lauf, und er klang nach einer Beschleunigung, die niemand gebaut hatte. LEKTOR-164 (L-164.1) fand außerdem: Dass die 36,6 s ein erster Aufruf nach Rechnerstart waren, ist nicht belegt. Belegt ist nur, dass die Anweisung es verlangte.
+
+**How to apply, zusätzlich:** Zwei Zeiten stehen nur nebeneinander, wenn derselbe Betriebsmodus (kalt/warm, erster/zweiter Aufruf) für beide **belegt** ist. Sonst steht jede für sich da, mit ihrem Modus.

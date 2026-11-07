@@ -310,3 +310,21 @@ Die Schranke hat richtig gemeldet. Teuer war die **Reihenfolge**: Die Buchführu
 - **Buchführung vor dem LEKTOR-Auftrag**, nicht danach. Dazu gehören Stand-Kopf und laufender Zweig in `WEITERMACHEN`, `ZWEIGE.md` und Startzeilen in `TESTLAEUFE.md`. Was erst nach dem Bericht anfällt, wird gesammelt und **einmal** nachgeprüft.
 - **Ein Commit der Hauptsitzung heißt nie „LEKTOR-… Nachtrag“** (`48025bf3`), denn das ist der Name der Rolle.
 - Ob eine Kleinständerung ohne LEKTOR durch den PR-Haken darf, entscheidet allein Gregor. Schranken-Vorschlag 3 in [[CHRONIST-2026-11-02b]] meldet nur, er lockert nichts.
+
+## Nachtrag 07.11.2026 nachmittags (CHRONIST): die LEKTOR-Schleife, gemessen
+
+Zwischen 15:50 und 16:51 liefen drei LEKTOR- und zwei PRÜFER-Läufe für denselben Zweig. Laufzeiten aus `duration_ms`:
+
+| Agent | Start | fertig | Dauer |
+|---|---|---|---|
+| PRÜFER-107 | 15:50:36 | 15:58:09 | 7,4 min |
+| LEKTOR-162 | 15:50:47 | 15:59:12 | 8,4 min |
+| LEKTOR-163 | 16:36:00 | 16:42:10 | 6,0 min |
+| PRÜFER-108 | 16:36:11 | 16:40:31 | 4,3 min |
+| LEKTOR-164 | 16:46:28 | 16:50:22 | 3,9 min |
+
+16:45:37: *„Der LEKTOR gilt wieder als fällig, aber nur, weil ich seine eigenen Funde eingearbeitet habe. Das ist die bekannte Schleife.“* Gelöst wurde sie so: ein Nachlauf nur über die Einarbeitung, Ziel unter 10 Minuten. Die zwei kleinen Funde von LEKTOR-164 wurden zurückgestellt (16:50:28: *„trage ich nach dem PR nach, sonst beginnt die Schleife von vorn“*). Der PR-Haken wurde nicht umgangen (belegt). Ob L-164.1 und L-164.2 nachgetragen sind, ist bis 16:58 nicht geprüft.
+
+Die Schleife hat ihren Preis: Jede Einarbeitung kostet einen Lauf. Hier waren es drei LEKTOR-Läufe in einer Stunde, zusammen 18,3 Minuten. Das ist kurz, weil die Aufträge eng geschnitten waren. Die Läufe waren 3,9 bis 8,4 min lang und lagen damit weit unter den „30–60 min“, die am Vormittag angekündigt waren ([[CHRONIST-2026-11-07]], Abschnitt 1).
+
+**Vorschlag (nicht gebaut, nur Gregor entscheidet):** `haken-pr-lektor.pl` erkennt einen Commit, der nur Funde des letzten LEKTOR-Berichts einarbeitet (Kennungen `L-<n>.x` in der Nachricht, nur Doku-Dateien), und verlangt dann einen Nachlauf über genau diesen Diff statt eines vollen Laufs. Das bleibt eine Lockerung und braucht Gregors Ja ([[erlaubnis-nicht-hineinlesen]]).

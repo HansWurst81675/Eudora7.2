@@ -209,3 +209,7 @@ Um 14:28:50 war es am selben Tag richtig gelaufen: *„Dabei gehen ein Eudora-Fe
 **How to apply, zusätzlich:**
 - **Die Ansage gehört zum Start des Agenten**, nicht zu seinem ersten Lauf. Wenn ein Auftrag eine Gegenprobe am alten Bau enthält, steht im Chat **im selben Zug**: welche Fassung, ungefähr wann, wie viele Fenster.
 - **Eine Fassungsnummer, die Gregor selbst benutzt, ausdrücklich nennen.** 7.2.1.128 ist auch die Nummer seines eigenen Mailverzeichnisses. Ein Fenster „1.128“ sieht für ihn aus wie seines.
+
+## Nachtrag 07.11.2026 nachmittags (CHRONIST): der Haken hat gegriffen
+
+15:03:57: `tools/haken-eudora-start.pl` wies einen Befehl ab, der `Eudora.exe --version` aus einem Arbeitsbaum direkt aufrufen wollte (*„KEIN DIREKTER EUDORA-START“*). Am 01.11. um 17:18:55 war genau das noch auf Gregors Bildschirm gelandet, daraus entstand der Haken. Die Hauptsitzung um 15:04:06: *„Der Haken hat einen direkten Start von `Eudora.exe --version` zu Recht abgewiesen. Mein Fehler: Die Fassung liest man aus der Versionsressource“*. Danach kam nur der Teil ohne den Start, nicht umgangen (belegt). Die Schranke wirkt. Die Gewohnheit ist sechs Tage später aber noch da.

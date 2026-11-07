@@ -446,6 +446,13 @@ und `Strg+.` liegen auf beiden gleich.
 * Keine Taste ist in der Tabelle zweimal vergeben (nachgezählt mit
   `--kuerzel`).
 
+**In der Druckvorschau** (*File → Print Preview*) gelten nicht Eudoras
+Tasten, sondern die des Internet Explorer, dessen Vorschau dort läuft:
+**Alt+Pfeil rechts** blättert zur nächsten Seite, **Alt+Pfeil links** zur
+vorigen. **Bild ↑ / Bild ↓ blättern dort nicht.** Von Gregor am 07.11.2026
+an 7.2.2.138 bestätigt ([E-241](../Intern/BEFUNDE.md#e-241)); die Vorschau
+läuft in einem eigenen Thread, Eudoras Tastenbelegung wirkt dort nicht.
+
 ---
 
 ## 3. *Tools → Options*

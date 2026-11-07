@@ -70,7 +70,7 @@ use warnings;
 # weiter unten in diesem Quelltext schon einmal, fuer die ungepushten
 # Commits vom 06.09.2026.
 #
-#   perl tools/gesichert.pl --selbsttest   # 9 Faelle, beide Richtungen
+#   perl tools/gesichert.pl --selbsttest   # 11 Faelle, beide Richtungen
 
 my $ohne_holen = grep { $_ eq '--ohne-holen' } @ARGV;
 my $selbsttest = grep { $_ eq '--selbsttest' } @ARGV;
@@ -136,7 +136,10 @@ sub was_ist_wirklich_offen {
         next unless length $pfad;
         push @alle, $pfad;
     }
-    return (\@alle, []) unless @alle;
+    # LEKTOR-165 L-165.1: immer DREI Werte - der Aufrufer zaehlt den dritten;
+    # mit zwei starb gesichert.pl an jedem sauberen Arbeitsbaum (Rueckgabe
+    # 255), und sitzungsbeginn.pl meldete trotzdem "alles gesichert".
+    return (\@alle, [], []) unless @alle;
 
     # Fuer jeden Ref: was weicht davon ab? Was in KEINER dieser Listen steht,
     # liegt irgendwo auf dem Server.
@@ -150,11 +153,40 @@ sub was_ist_wirklich_offen {
         @verloren = grep { $weicht_ab{$_} } @verloren;
         last unless @verloren;
     }
-    return (\@alle, \@verloren);
+
+    # UEBERHOLT (07.11.2026): eine Datei, deren Aenderung gegenueber dem
+    # eigenen HEAD schon im ersten Ref (origin/main) steht, ist kein Verlust -
+    # auch wenn die Datei dort inzwischen weiter gewachsen ist. Anlass: der
+    # Sitzungsbeginn meldete .wt/e193rest als "ungesichert"; die vier neuen
+    # Zeilen des Startprotokolls standen alle in main, die Datei dort hatte
+    # nur hunderte Zeilen mehr. Gregor: "zwei davon mit ungesicherten
+    # Aenderungen -> war deine aussage". Regel: jede hinzugefuegte Zeile steht
+    # im Ref, und keine entfernte Zeile steht noch dort.
+    my @ueberholt;
+    my ($erster) = grep { length } @refs;
+    if (@verloren and defined $erster) {
+        my @noch;
+        for my $pfad (@verloren) {
+            my ($inhalt, $rc) = git_lauf('-C', $baum, 'show', "$erster:$pfad");
+            if ($rc != 0) { push @noch, $pfad; next; }
+            my %im_ref = map { $_ => 1 } split /\r?\n/, $inhalt;
+            my $diff = git('-C', $baum, 'diff', '-U0', 'HEAD', '--', $pfad);
+            my ($neu, $alt, $fehlt) = (0, 0, 0);
+            for my $z (split /\r?\n/, $diff) {
+                next if $z =~ /^(\+\+\+|---) /;
+                if ($z =~ /^\+(.*)$/)  { $neu++; $fehlt++ unless $im_ref{$1}; }
+                elsif ($z =~ /^-(.*)$/) { $alt++; $fehlt++ if $im_ref{$1}; }
+            }
+            if (!$fehlt and ($neu or $alt)) { push @ueberholt, $pfad; }
+            else                            { push @noch, $pfad; }
+        }
+        @verloren = @noch;
+    }
+    return (\@alle, \@verloren, \@ueberholt);
 }
 
 # ---------------------------------------------------------------------------
-# SELBSTTEST - neun Faelle, beide Richtungen
+# SELBSTTEST - elf Faelle, beide Richtungen (seit 07.11.2026 mit "ueberholt")
 # ---------------------------------------------------------------------------
 #
 # Gebaut wird ein Wegwerf-Repo im Temp-Verzeichnis: ein "Server" (bare), ein
@@ -192,8 +224,10 @@ if ($selbsttest) {
     g('-C', $baum, 'push', '--quiet', 'origin', 'main');
     g('-C', $baum, 'branch', 'alt');
 
-    # main geht weiter: a.txt geaendert, b.txt geloescht, c.txt dazu.
+    # main geht weiter: a.txt geaendert, b.txt geloescht, c.txt dazu, d.txt
+    # waechst um zwei Zeilen (fuer die Faelle "ueberholt").
     schreib(File::Spec->catfile($baum, 'a.txt'), "eins-neu\n");
+    schreib(File::Spec->catfile($baum, 'd.txt'), "vier\nfuenf-main\nsechs-main\n");
     unlink File::Spec->catfile($baum, 'b.txt');
     schreib(File::Spec->catfile($baum, 'c.txt'), "drei\n");
     g('-C', $baum, 'add', '-A');
@@ -217,8 +251,11 @@ if ($selbsttest) {
 
     my $pruefe = sub {
         my ($name, $refs, $e_alle, $e_verloren) = @_;
-        my ($alle, $verloren) = was_ist_wirklich_offen($baum, @$refs);
-        my $ok = (@$alle == $e_alle and @$verloren == $e_verloren);
+        my ($alle, $verloren, $ueberholt) = was_ist_wirklich_offen($baum, @$refs);
+        # L-165.1: der dritte Wert muss IMMER eine Liste sein, auch beim
+        # sauberen Baum - sonst stirbt der Aufrufer.
+        my $ok = (@$alle == $e_alle and @$verloren == $e_verloren
+                  and ref($ueberholt) eq 'ARRAY');
         printf "  [%s] %s\n", ($ok ? 'ok ' : 'ROT'), $name;
         printf "        erwartet geaendert=%d verloren=%d, bekommen %d / %d (%s)\n",
             $e_alle, $e_verloren, scalar @$alle, scalar @$verloren,
@@ -249,10 +286,20 @@ if ($selbsttest) {
     $pruefe->('echte eigene Aenderung wird als Verlust gemeldet', \@haupt, 3, 1);
     schreib(File::Spec->catfile($baum, 'a.txt'), "eins-neu\n");
 
+    # UEBERHOLT: die eigene Aenderung steht schon in origin/main, die Datei
+    # dort ist aber laenger (der Fall .wt/e193rest vom 07.11.2026).
+    schreib(File::Spec->catfile($baum, 'd.txt'), "vier\nfuenf-main\n");
+    $pruefe->('Aenderung steht in origin/main, die Datei dort ist laenger: ueberholt, kein Verlust',
+              \@haupt, 4, 0);
+    schreib(File::Spec->catfile($baum, 'd.txt'), "vier\nnur-hier\n");
+    $pruefe->('Gegenprobe: eine hinzugefuegte Zeile, die origin/main nicht hat, ist ein Verlust',
+              \@haupt, 4, 1);
+    g('-C', $baum, 'checkout', '--', 'd.txt');   # zurueck auf den Stand von HEAD
+
     unlink File::Spec->catfile($baum, 'd.txt');
     $pruefe->('Loeschung einer Datei, die origin/main noch hat, ist ein Verlust',
               \@haupt, 4, 1);
-    schreib(File::Spec->catfile($baum, 'd.txt'), "vier\n");
+    g('-C', $baum, 'checkout', '--', 'd.txt');
 
     # Inhalt, den NUR das eigene Gegenstueck kennt.
     schreib(File::Spec->catfile($baum, 'e.txt'), "fuenf\n");
@@ -333,10 +380,16 @@ my @neu    = grep {  /^\?\?/ } @zeilen;
 
 my $eigen_up = $abgeloest ? ''
              : git('rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}');
-my ($offen_ref, $verloren_ref) =
+my ($offen_ref, $verloren_ref, $ueberholt_ref) =
     was_ist_wirklich_offen($wurzel, grep { length } ($haupt, $eigen_up));
-my @offen    = @$offen_ref;
-my @verloren = @$verloren_ref;
+my @offen     = @$offen_ref;
+my @verloren  = @$verloren_ref;
+my @ueberholt = @$ueberholt_ref;
+if (@ueberholt) {   # L-165.3: auch im eigenen Baum benennen, nicht als "Byte fuer Byte"
+    push @hinweis, sprintf("%d geaenderte Datei(en), deren Aenderung schon in %s steht "
+                         . "(ueberholt, nichts geht verloren): %s", scalar @ueberholt, $haupt,
+                           join(', ', @ueberholt[0 .. ($#ueberholt > 4 ? 4 : $#ueberholt)]));
+}
 
 printf("  %-28s %d%s\n", "nicht committet", scalar @offen,
        (@offen && !@verloren) ? "  (Inhalt liegt auf dem Server)" : "");
@@ -346,7 +399,7 @@ if (@verloren) {
     print "      $_\n" for @verloren[0 .. ($#verloren > 7 ? 7 : $#verloren)];
     print "      ... und " . (@verloren - 8) . " weitere\n" if @verloren > 8;
 }
-elsif (@offen) {
+elsif (@offen > @ueberholt) {   # L-165.3: ueberholte sind oben schon benannt
     push @hinweis, sprintf("%d geaenderte Datei(en) - ihr Inhalt steht Byte fuer Byte "
                          . "schon auf dem Server; der Zweig hier haengt nur zurueck. "
                          . "Es geht nichts verloren", scalar @offen);
@@ -454,18 +507,25 @@ if (@baeume) {
         }
 
         my $fremd_up = git_in($p, 'rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}');
-        my ($f_alle, $f_verloren) =
+        my ($f_alle, $f_verloren, $f_ueberholt) =
             was_ist_wirklich_offen($p, grep { length } ($haupt, $fremd_up));
         my $n = scalar @$f_alle;
         my $v = scalar @$f_verloren;
+        my $u = scalar @$f_ueberholt;
         my @sagen;
+        if ($u) {
+            push @sagen,   "$u ueberholt (Aenderung steht schon in main)";
+            push @hinweis, "Arbeitsbaum $p hat $u geaenderte Datei(en), deren Aenderung schon in "
+                         . "$haupt steht (ueberholt, nichts geht verloren): "
+                         . join(', ', @$f_ueberholt[0 .. ($u > 4 ? 4 : $u - 1)]) . ($u > 5 ? " ..." : "");
+        }
         if ($v) {
             push @sagen,  "$v nicht gesichert";
             push @mangel, "Arbeitsbaum $p hat $v geaenderte Datei(en), die nirgends "
                         . "auf dem Server liegen: " . join(', ', @$f_verloren[0 .. ($v > 4 ? 4 : $v - 1)])
                         . ($v > 5 ? " ..." : "");
         }
-        elsif ($n) {
+        elsif ($n > $u) {
             # Der Fall vom 21.10.2026: 11 Dateien gemeldet, 0 verloren.
             push @sagen,  "$n geaendert, Inhalt liegt auf dem Server";
             push @hinweis, "Arbeitsbaum $p zeigt $n geaenderte Datei(en) - ihr Inhalt steht "

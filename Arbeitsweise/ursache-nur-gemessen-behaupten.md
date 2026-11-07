@@ -91,3 +91,9 @@ Um 08:23:14 lautete die eigene Werkzeugantwort, vier Sekunden nach einem Lesezug
 Zeiten MEZ ([[CHRONIST-2026-11-06]], Abschnitt 3). 06.11. 11:29:07 auf Gregors Frage zum Prüfstandslauf: *„Laut der Liste der Prüfverzeichnisse ist er beim letzten Block (E128 und E128K …)“*. 11:30:18, selbst berichtigt: *„Vorhin habe ich ‚letzter Block‘ gesagt, ohne nachzusehen. … jetzt nur noch E220 (läuft gerade) und E221“*. Die Fallliste sagt, was laufen **soll**; wo der Lauf **steht**, sagt nur seine Ausgabe. Dieselbe Form wie „Testbau läuft“ (30.10.). Dazu 03.11. 18:28:55: *„Freigabe gefunden (13:00 …)“*, gefallen war sie um 14:00:43 MEZ; die Uhrzeit kam ungerechnet aus dem UTC-Transkript.
 
 **How to apply, zusätzlich:** Eine Fortschrittsangabe zu einem laufenden Lauf nennt die letzte Zeile seiner Ausgabe mit Uhrzeit. Eine Uhrzeit aus einem Transkript wird vor der Ausgabe in MEZ umgerechnet.
+
+## Nachtrag 07.11.2026 nachmittags (CHRONIST): von „vermutlich“ zu „betrifft nur“ in fünf Minuten
+
+16:31:12 an Gregor, richtig gekennzeichnet: *„Bei deiner Mail lädt es dabei vermutlich die Bilder aus dem Netz. Das ist nicht gemessen.“* Gregor antwortete um 16:33:00: *„andere file -> print preview forschau erscheint sofort.“* Das belegt, dass es von der Mail abhängt. Dass es an Bildern aus dem Netz liegt, belegt es nicht. Um 16:33:14 hieß es in der Zwischenmeldung *„Die Verzögerung liegt nur am Nachladen von Bildern aus dem Netz … nicht an Eudora“*, um 16:36:16 an Gregor *„Die verzögerte Seite betrifft nur Mails mit Bildern aus dem Netz.“* Die Kennzeichnung ging zwischen zwei Antworten verloren, ohne dass etwas gemessen wurde (gemessen: zwischen 16:31:12 und 16:36:16 kein Werkzeugaufruf zu Bildern oder zum Inhalt der Mail).
+
+**How to apply, zusätzlich:** Eine Antwort Gregors, die zur Vermutung **passt**, macht sie nicht zur Messung. Das Wort „vermutlich“ bleibt stehen, bis eine Messung den Mechanismus selbst zeigt.

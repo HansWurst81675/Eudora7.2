@@ -17,7 +17,7 @@ niemand angeklickt). Auf eine Frage verweist man mit ihrer Nummer, etwa
 | IMAP | [5](#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt), [20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu) |
 | Konten und Adressen | [6](#6-wie-trenne-ich-die-post-verschiedener-konten), [7](#7-wie-lege-ich-ein-zweites-konto-an), [8](#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben), [21](#21-warum-speichert-eudora-das-kennwort-nach-forget-passwords-wieder) |
 | Markieren und Filtern | [9](#9-wie-markiere-ich-wichtige-mails-farbig), [10](#10-wie-baue-ich-schnell-einen-filter-aus-einer-mail), [11](#11-wie-speichere-ich-einen-filter), [12](#12-filter-messages-strgj-tut-nichts), [13](#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte), [23](#23-warum-ist-der-filterbericht-leer) |
-| Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus), [22](#22-warum-fehlen-beim-drucken-farbige-flächen-und-manche-bilder) |
+| Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus), [22](#22-warum-fehlen-beim-drucken-farbige-flächen-und-manche-bilder), [24](#24-wie-blättere-ich-in-der-druckvorschau) |
 | Fehlersuche | [17](#17-wie-schreibt-eudora-mehr-ins-protokoll-loglevel), [18](#18-steht-schon-woanders) |
 | Einstellungen | [19](#19-welche-einstellungen-sind-anders-als-im-original-eudora--und-warum) |
 
@@ -531,3 +531,19 @@ IMAP-Ordner gemessen, ohne Häkchen leer, mit Häkchen ein Eintrag
 ([E-71](../Intern/BEFUNDE.md#e-71), Fälle `E-71n` und `E-71r`). Gregor hat am
 07.11.2026 entschieden, dass die Vorgabe bleibt. Mehr:
 [FILTER.md, Der Filterbericht](../Intern/FILTER.md#der-filterbericht).
+
+## 24. Wie blättere ich in der Druckvorschau?
+
+Mit **Alt+Pfeil rechts** (nächste Seite) und **Alt+Pfeil links** (vorige
+Seite) — oder mit der Maus über die Pfeile unten im Vorschaufenster.
+**Bild ↑ / Bild ↓ gehen dort nicht**, auch nicht nach einem Klick in die
+Seite.
+
+Der Grund: die Druckvorschau ist die des Internet Explorer und läuft in einem
+eigenen Thread; dort gelten seine Tasten, nicht die von Eudora.
+
+**Am Programm geprüft:** von Gregor am 07.11.2026 an 7.2.2.138 —
+Alt+Pfeil links/rechts blättern, Bild ↑/↓ nicht, auch nach Klick in die Seite.
+Dass die Vorschau einen eigenen Thread hat, ist am Prüfstand gemessen
+([E-241](../Intern/BEFUNDE.md#e-241)). Alle Tasten auf einen Blick:
+[FUNKTIONEN.md, Tastenkürzel](FUNKTIONEN.md#2-tastenkürzel-auf-einen-blick).
