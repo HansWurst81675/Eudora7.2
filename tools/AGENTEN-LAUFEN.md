@@ -9,4 +9,3 @@ nächsten Paket geklärt sein.
 
 | Rolle | seit | Auftrag |
 |---|---|---|
-| LEKTOR | 2026-11-07 16:35 | LEKTOR-163.md: alle MDs gegen den Bestand, seit 8fb6db54 |

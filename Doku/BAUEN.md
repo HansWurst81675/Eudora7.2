@@ -213,7 +213,10 @@ Paket nur aus dem Hauptordner der Entwicklermaschine schnüren.
 **Voraussetzungen:** Visual Studio 2022 mit *Desktopentwicklung mit C++*
 einschließlich MFC (die verteilbare Laufzeit `mfc140.dll`, `msvcp140.dll`,
 `vcruntime140.dll` nimmt das Werkzeug aus dem Redist-Ordner von Visual
-Studio), Git für Windows (bringt Perl mit; `git config user.name` und
+Studio; dazu die Komponente *C++ ATL*, `Eudora.vcxproj` bindet ATL statisch
+ein), ein Klonpfad **ohne
+Leerzeichen** (sonst starten die Prüfserver des Prüfstands nicht,
+[E-244](../Intern/BEFUNDE.md#e-244)), Git für Windows (bringt Perl mit; `git config user.name` und
 `user.email` gesetzt, sonst geht der Commit nicht), Windows PowerShell 5.1.
 Zum Veröffentlichen zusätzlich die GitHub CLI `gh`. Alles Weitere liegt im
 Repo.
@@ -234,9 +237,11 @@ gehobenen Version).
 
 **2. Die eigene Nummer setzen und committen.** Die nächste Nummer nach dem
 Stand des Klons nehmen (steht in `VERSION`), also aus `7.2.2.138` wird
-`7.2.2.139`. Zu ändern sind `VERSION` und vier Zeilen in
-`Eudora71/Version.h` — welche, steht im Abschnitt
-[Vor dem Bau: die Version heben](#vor-dem-bau-die-version-heben). Ohne eigene
+`7.2.2.139`. Zu ändern sind `VERSION` und in `Eudora71/Version.h` die vier Zeilen
+`EUDORA_VERSION4`, `EUDORA_BUILD_NUMBER`, `EUDORA_BUILD_DESC` und
+`EUDORA_BUILD_VERSION` (Nachsehen:
+`Select-String "EUDORA_VERSION4|EUDORA_BUILD_" Eudora71\Version.h`; mehr im
+Abschnitt [Vor dem Bau: die Version heben](#vor-dem-bau-die-version-heben)). Ohne eigene
 Nummer trüge das ZIP dieselbe Nummer wie ein Release des Projekts.
 
 ```powershell
@@ -264,7 +269,8 @@ Worauf man achtet:
   *BESTANDEN* meldet (der Bericht läuft trotzdem und kommt ins Paket).
   Gemessen ohne den Schalter: diese Schranken weisen in einem Klon
   nacheinander ab. Die technischen Schritte bleiben: **jede ausführbare Datei
-  aus dem Release-Bau**, keine Debug-Laufzeit. Er geht nur zusammen mit `-Bauart Release`. Weil der
+  aus dem Release-Bau** (außer der Laufzeit aus Visual Studio und den
+  mitgelieferten Plug-ins, siehe nächster Punkt), keine Debug-Laufzeit. Er geht nur zusammen mit `-Bauart Release`. Weil der
   Abgleich von `VERSION` und `Version.h` dabei entfällt, beide Dateien
   gleich setzen: die Hilfeseiten im Paket tragen die Nummer aus `VERSION`.
 * **Woher die Dateien kommen.** Grundlage ist ohne `-Grundlage` das ZIP
@@ -288,10 +294,21 @@ Mailverzeichnis starten ([Den eigenen Bau starten](#den-eigenen-bau-starten));
 die Regressionstests über die Oberfläche laufen mit dem
 [Prüfstand](PRUEFSTAND.md) (`-Bau` zeigt auf das eigene Bauverzeichnis).
 
-**5. Veröffentlichen.** Das ZIP als Anhang eines GitHub-Release, etwa
-`gh release create v7.2.2.139 C:\Temp\Eudora72-eigen.zip --title "…" --notes-file <Text>`
-— in einem eigenen Fork. Dieses Projekt veröffentlicht erst nach Gregors Test
-und Freigabe, und **ohne** `-EigenerBau`: dort müssen alle Schranken stehen.
+**5. Veröffentlichen — in einem eigenen Fork.** `origin` zeigt nach dem Klon
+auf das Projekt-Repo, nicht auf einen eigenen. Mit der GitHub CLI:
+
+```powershell
+gh auth login
+gh repo fork --remote --remote-name fork
+git push -u fork eigener-bau
+gh release create v7.2.2.139 C:\Temp\Eudora72-eigen.zip --repo <dein-konto>/Eudora7.2 --target eigener-bau --title "Eudora 7.2.2.139 (eigener Bau)" --notes "…"
+```
+
+`--target eigener-bau` legt die Marke auf den gebauten Commit, sonst landete
+sie auf dem Standardzweig des Forks. **Dieser Schritt ist nicht gemessen**
+(kein Fork angelegt); die Schalter stammen aus der Hilfe von `gh`. Dieses
+Projekt selbst veröffentlicht erst nach Gregors Test und Freigabe, und
+**ohne** `-EigenerBau`: dort müssen alle Schranken stehen.
 
 ### Nur für den Debug-Bau: die Laufzeit-DLLs
 
