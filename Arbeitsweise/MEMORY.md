@@ -208,5 +208,5 @@
 - [E-71 Doku, Zweig e242_e240 07.11.](entscheidung-e71-doku-und-zweig-07-11.md) — Vorgabe bleibt, Hinweis; Zweig frei; Test-ZIP 137 am Ende
 - [137 ohne vollen Lauf](entscheidung-p137-ohne-vollen-lauf-07-11.md) — Gregor 07.11.: Test-ZIP ohne vollen Prüfstand; vor Release voller Lauf
 - [CHRONIST 07.11.2026](CHRONIST-2026-11-07.md) — Laufbericht; 3 h Abfrage-Stillstand, Zeiten ungemessen, Namensschranke in Arbeitsbäumen blind
-- [Stand 07.11.2026](stand-07-11-2026.md) — PR #232 wartet; E-240 nach Rechnerstart messen, E-241 offen, MIDL-Dateien
+- [Stand 07.11.2026](stand-07-11-2026.md) — #232, #233 gemergt; E-240 nach Rechnerstart messen, MIDL-Dateien, L-166.1, Release 138 offen
 - [CHRONIST 07.11.2026 nachmittags](CHRONIST-2026-11-07b.md) — Laufbericht; „bestanden“ ohne Zug der Abhilfe, E-241 vor der Messung gebaut, Commit ohne paket-bauen.ps1, haken-backslash.pl unversioniert
