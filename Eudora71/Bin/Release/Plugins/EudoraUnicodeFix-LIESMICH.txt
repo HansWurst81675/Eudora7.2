@@ -1,0 +1,72 @@
+EudoraUnicodeFix - Zusatz, nicht von uns
+========================================
+
+Was es tut
+----------
+Es repariert Nachrichten, die mit kaputten Umlauten im Postfach liegen -
+"GrÃ¼ÃŸe" statt "Grüße", "donâ€™t" statt "don't", "cafÃ©" statt "café".
+Diese Schäden entstehen beim Absender oder stammen aus der Zeit, bevor
+Eudora 7.2 den Zeichensatz richtig behandelt hat. Unsere Behebungen
+verhindern NEUEN Schaden beim Abrufen; was schon im Postfach liegt,
+heilen sie nicht. Genau diese Lücke schließt dieses Plug-in.
+
+Es läuft nur auf Befehl. Es fasst eingehende Post nicht von selbst an.
+
+
+!!! WARNUNG: BEIM SPEICHERN KÖNNEN ZEICHEN VERLOREN GEHEN !!!
+-------------------------------------------------------------
+Nach der Reparatur zeigt Eudora Zeichen an, die es sonst nie anzeigt -
+Emoji, Kyrillisch, Griechisch, Chinesisch. Sie stehen richtig auf dem
+Bildschirm.
+
+Wer die Nachricht dann mit Strg-S sichert, VERLIERT sie: aus einem
+Emoji werden zwei Fragezeichen, dauerhaft und ohne Rückfrage.
+
+Gemessen am 22.10.2026 an 7.2.0.120. Die Ursache liegt bei UNS, nicht
+beim Plug-in - das Plug-in liefert die Zeichen korrekt ab, Eudora
+verliert sie erst beim Schreiben in das Postfach. Geführt als Befund
+E-136 in Intern/BEFUNDE.md.
+
+Was das praktisch heißt:
+
+  * Zum LESEN einer beschädigten Nachricht: unbedenklich.
+  * Zum SPEICHERN: nur, wenn die Nachricht außer Umlauten, Akzenten
+    und dem Eurozeichen nichts Besonderes enthält. Diese gehen nicht
+    verloren - sie gibt es in windows-1252.
+  * Im Zweifel die Nachricht vorher kopieren.
+
+
+Benutzung
+---------
+1. Nachricht DOPPELKLICKEN, damit sie im eigenen Fenster steht.
+   Im Vorschaufenster gibt es den Befehl nicht.
+2. Edit > Message Plug-ins > Repair Gmail Unicode for Eudora
+3. Strg-S sichert - siehe Warnung oben.
+
+Einstellungen: Special > Message Plug-ins Settings >
+EudoraUnicodeFix Rev A > Settings. "Conservative mode" ist an und
+sollte an bleiben; damit wird nur repariert, was vier unabhängige
+Prüfungen besteht. Ein Protokoll schreibt es nach
+%TEMP%\EudoraUnicodeFix.log.
+
+
+Entfernen
+---------
+Eudora schließen, diese Datei und EudoraUnicodeFix.dll aus dem
+Plugins-Verzeichnis löschen, Eudora starten.
+
+
+Herkunft und Lizenz
+-------------------
+Von `rjsdotorg`, BSD-3-Clause - der Text liegt daneben
+in EudoraUnicodeFix-LIZENZ.txt. Es ist NICHT unser Code; wir liefern
+es unverändert mit, in der Fassung V1.0.0.
+
+  https://github.com/rjsdotorg/EudoraUnicodeFix-releases
+
+SHA256 der mitgelieferten DLL:
+  c4e80f68e7c633e2a3d78267fe60d4389269c6bd14ab1fcddb066d249c6d594a
+
+Er ist derselbe, der uns Issue #102 gemeldet hat - den Fehler, durch
+den eine daneben installierte Eudora 7.1 nach unserem Start nicht mehr
+hochkam.
