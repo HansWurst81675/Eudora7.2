@@ -28,6 +28,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 | Kennung | worum es geht | zuletzt gemessen | was noch fehlt |
 |---|---|---|---|
+| **[E-248](Intern/BEFUNDE.md#e-248)** | Aus einem frischen Klon lässt sich kein Release-ZIP schnüren — tools/paket-bauen.ps1 b… | **nie gemessen** | Schritt 8 nimmt die in Schritt 7 aus dem Redist-Ordner gelegten Dateien aus; das Plug-in kommt aus der Grundlage (das letzte Release-ZIP enthält es)… |
 | **[E-247](Intern/BEFUNDE.md#e-247)** | Ein & im Betreff oder in der Absenderadresse wird in der gedruckten Kopf- bzw. Fußzeile a… | **nie gemessen** | am Prüfstand mit einem Betreff wie *„Tom & Jerry &u“* nachmessen — die Vorschau muss den Betreff wörtlich zeigen, keinen Pfad. **Stufe: unkrit… |
 | **[E-245](Intern/BEFUNDE.md#e-245)** | Die Namensschranke pruefe-namen-gestaget.pl sieht drei Wege nicht — einen Namen im Datei… | **nie gemessen** | Dateinamen (`git diff --cached --name-only`) und Commit-Nachricht (`commit-msg`-Haken bzw. `git log --format=%B` im pre-push) mitprüfen; Binärdateie… |
 | **[E-244](Intern/BEFUNDE.md#e-244)** | Liegt der Klon in einem Pfad mit Leerzeichen, startet kein Prüfserver — alle Fälle mit… | **nie gemessen** | die Argumente mit Leerzeichen selbst in Anführungszeichen setzen (auch das Mailverzeichnis in `testlauf.ps1`) (oder `Start-Process` mit einer einzige… |
