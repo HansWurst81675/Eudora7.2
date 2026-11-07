@@ -26,7 +26,15 @@ tut es jede der drei.
 > der Abschnitt bis dahin `grep` verlangte, das es in der PowerShell nicht
 > gibt.)
 
-### Nach einem frischen Klon: ein Schritt
+### Nach einem frischen Klon: ein Schritt — nur, wer am Projekt mitarbeitet
+
+> **Wer nur ein eigenes Paket oder Release-ZIP bauen will, lässt diesen
+> Schritt weg** und geht gleich zu
+> [Ein eigenes Release-ZIP bauen](#ein-eigenes-release-zip-bauen--aus-einem-frischen-klon).
+> Die Haken weisen Commits auf `main` ab und verlangen für eine neue Nummer die
+> ganze Projekt-Doku. (Berichtigt am 07.11.2026, nachdem Gregor der Anleitung
+> der Reihe nach folgte und hier scheiterte: *„ich mache das, was in der
+> anleitung steht, klar?“*)
 
 ```bash
 sh tools/hooks-einrichten.sh
@@ -34,11 +42,20 @@ sh tools/hooks-einrichten.sh
 
 In der **PowerShell** gibt es `sh` nur, wenn das `bin`-Verzeichnis von Git für
 Windows im Suchpfad liegt — in der Standardinstallation tut es das nicht. Dann
-mit vollem Pfad:
+mit vollem Pfad. Wo Git liegt, sagt `(Get-Command git).Source` — je nach
+Installation `…\Git\cmd\git.exe` oder `…\Git\mingw64\bin\git.exe`; `sh.exe`
+liegt im Ordner `bin` des Git-Hauptordners. Diese Zeilen suchen ihn von
+`git.exe` aus nach oben (gemessen am 07.11.2026: `git.exe` unter
+`…\Git\mingw64\bin`, gefunden `C:\Program Files\Git\bin\sh.exe`):
 
 ```powershell
-& "$env:ProgramFiles\Git\bin\sh.exe" tools/hooks-einrichten.sh
+$d = Split-Path (Get-Command git).Source
+while ($d -and -not (Test-Path (Join-Path $d 'bin\sh.exe'))) { $d = Split-Path $d }
+& (Join-Path $d 'bin\sh.exe') tools/hooks-einrichten.sh
 ```
+
+Meldet `Get-Command git` nichts, ist Git für Windows nicht installiert — das
+braucht auch der Bau (Perl, Abschnitt [Voraussetzungen](#ein-eigenes-release-zip-bauen--aus-einem-frischen-klon)).
 
 Das war es. Der Hook liegt unter `.git/hooks` und wird von git nicht
 mitversioniert, muss also je Klon einmal eingerichtet werden; er prüft vor jedem
