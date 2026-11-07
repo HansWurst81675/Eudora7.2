@@ -95,7 +95,7 @@ beschädigt, steht oben.
 | Post wird verfälscht | [E-125](Intern/BEFUNDE.md#e-125) | Ziehen einer empfangenen Nachricht nach `Out` legte eine neue Nachricht an und meldete im selben Zug, es sei nichts übertragen worden (**gebaut in 7.2.0.122** nach Gregors Entscheidung B: der Weg wird abgelehnt, mit Hinweis auf *Message → Send Again*; 277 Tests, zweimal gegengetestet. **behoben in 7.2.0.122, von Gregor am 23.10.2026 an 1.0.122 bestätigt** (Ablehnung); die Gegenprobe mit einem Entwurf am Prüfstand, [Testbericht](Intern/TESTBERICHT-E125.md)) |
 
 **Ausdrücklich nicht Voraussetzung:** [E-114](Intern/BEFUNDE.md#e-114), [E-78](Intern/BEFUNDE.md#e-78), [E-47](Intern/BEFUNDE.md#e-47), [E-67](Intern/BEFUNDE.md#e-67) (Korrektur seit 7.2.0.43, am 17.10.2026 gemessen), [E-98](Intern/BEFUNDE.md#e-98), [E-39](Intern/BEFUNDE.md#e-39), die
-zurückgestellte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/BEFUNDE.md#r-1).
+durch die Doku erledigte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/BEFUNDE.md#r-1).
 
 **Vor dem Release:** die Tabelle der Kriterien neu messen — geschehen: Gregor
 am 26.10.2026 an 7.2.0.123, [Ergebnistabelle](Intern/TESTPLAN.md#ergebnis-7-2-0-123) —, dann Gregors Test aller neun Kriterien an einem frischen

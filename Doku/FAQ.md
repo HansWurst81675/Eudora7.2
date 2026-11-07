@@ -16,7 +16,7 @@ niemand angeklickt). Auf eine Frage verweist man mit ihrer Nummer, etwa
 | Abruf und Verschlüsselung | [2](#2-welche-verschlüsselung-und-welchen-port-nehme-ich), [3](#3-wie-sehe-ich-ob-die-verbindung-wirklich-verschlüsselt-ist), [4](#4-es-kommt-ein-zertifikatsdialog-oder-ssl-negotiation-failed--was-tun) |
 | IMAP | [5](#5-im-imap-posteingang-fehlen-mails-die-der-webmailer-zeigt), [20](#20-warum-holt-eudora-eine-imap-mail-bei-jedem-öffnen-neu) |
 | Konten und Adressen | [6](#6-wie-trenne-ich-die-post-verschiedener-konten), [7](#7-wie-lege-ich-ein-zweites-konto-an), [8](#8-wie-lege-ich-einen-kurznamen-an-und-nutze-ihn-beim-schreiben), [21](#21-warum-speichert-eudora-das-kennwort-nach-forget-passwords-wieder) |
-| Markieren und Filtern | [9](#9-wie-markiere-ich-wichtige-mails-farbig), [10](#10-wie-baue-ich-schnell-einen-filter-aus-einer-mail), [11](#11-wie-speichere-ich-einen-filter), [12](#12-filter-messages-strgj-tut-nichts), [13](#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte) |
+| Markieren und Filtern | [9](#9-wie-markiere-ich-wichtige-mails-farbig), [10](#10-wie-baue-ich-schnell-einen-filter-aus-einer-mail), [11](#11-wie-speichere-ich-einen-filter), [12](#12-filter-messages-strgj-tut-nichts), [13](#13-warum-landet-nichts-automatisch-in-junk--und-was-ich-dabei-nicht-tun-sollte), [23](#23-warum-ist-der-filterbericht-leer) |
 | Mails und Anhänge | [14](#14-werden-anhänge-gelöscht-wenn-ich-die-mail-lösche), [15](#15-kann-ich-eine-mail-als-anhang-weiterleiten), [16](#16-wie-blende-ich-alle-kopfzeilen-ein-und-wieder-aus), [22](#22-warum-fehlen-beim-drucken-farbige-flächen-und-manche-bilder) |
 | Fehlersuche | [17](#17-wie-schreibt-eudora-mehr-ins-protokoll-loglevel), [18](#18-steht-schon-woanders) |
 | Einstellungen | [19](#19-welche-einstellungen-sind-anders-als-im-original-eudora--und-warum) |
@@ -513,3 +513,21 @@ gemessen ([E-169](../Intern/BEFUNDE.md#e-169), Fälle `E-169p` und `E-169b`).
 Der Druck auf Papier ist noch nicht gemessen. Seit 7.2.2.136.
 Mehr zum Schlüssel:
 [EINSTELLUNGEN.md, Abschnitt 3](../Intern/EINSTELLUNGEN.md#3-schalter-ohne-menüpunkt).
+
+## 23. Warum ist der Filterbericht leer?
+
+Weil der Bericht ab Werk **aus** ist — wie im Original Eudora. Einschalten:
+*Tools → Options → Getting Attention*, Häkchen bei **Generate filter report**.
+Danach bekommt *Tools → Filter Report* nach jedem Filterlauf einen Eintrag
+je Zielpostfach, und das Fenster öffnet sich von selbst.
+
+Ohne das Häkchen kommt nur etwas in den Bericht, wenn eine Regel selbst die
+Aktion *Notify User* mit **In Report** hat. Und der Bericht zeigt nur Regeln,
+die eine Mail **verschoben oder kopiert** haben — nicht solche, die nur eine
+Marke setzen, drucken oder weiterleiten.
+
+**Am Programm geprüft:** am Prüfstand mit einem Eingangsfilter in einen
+IMAP-Ordner gemessen, ohne Häkchen leer, mit Häkchen ein Eintrag
+([E-71](../Intern/BEFUNDE.md#e-71), Fälle `E-71n` und `E-71r`). Gregor hat am
+07.11.2026 entschieden, dass die Vorgabe bleibt. Mehr:
+[FILTER.md, Der Filterbericht](../Intern/FILTER.md#der-filterbericht).

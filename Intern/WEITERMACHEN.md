@@ -15,8 +15,9 @@
   (`ranjit_bereinigt_teil1`, Datenschutz Teil 1).
 - **In Arbeit:** `ranjit_bereinigt_teil2` – Datenschutz nach [LEKTOR-158](../Befunde/LEKTOR-158.md#lektor-158)
   (Pfade ins Benutzerverzeichnis raus, `C:\Temp` bleibt; Absender; Austauschordner).
-- **Danach:** 7.2.2.137 mit [E-71](BEFUNDE.md#e-71) (leerer Filterbericht, Gregor 06.11.2026: *„als nächstes“*),
-  [E-242](BEFUNDE.md#e-242), [E-240](BEFUNDE.md#e-240); [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache.
+- **Danach:** 7.2.2.137 mit [E-71](BEFUNDE.md#e-71) (Zweig `e71_filterbericht`, am 07.11.2026 gemessen: der Bericht ist
+  ab Werk aus; Gregor: Vorgabe bleibt, Hinweis in [FAQ 23](../Doku/FAQ.md#23-warum-ist-der-filterbericht-leer)),
+  [E-242](BEFUNDE.md#e-242), [E-240](BEFUNDE.md#e-240) (Zweig `e242_e240_druckvorschau`), [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache; dann lokales Test-ZIP 7.2.2.137.
 - **Neu beim Test gemeldet:** [E-240](BEFUNDE.md#e-240) (Vorschau beim ersten Aufruf langsam;
   später, siehe [Nach dem Release 7.2.1](#nach-dem-release)), [E-241](BEFUNDE.md#e-241),
   [E-242](BEFUNDE.md#e-242) (Anmeldename auf Ausdrucken).
@@ -152,7 +153,6 @@ der letzten Spalte und ausführlich in [BEFUNDE.md](BEFUNDE.md).
 | **[E-91](BEFUNDE.md#e-91)** | zitierte Bereiche stehen bündig im Text, ohne Randbalken und Einrückung — auf Gregors … | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | die **Messung selbst** — ungeklärt ist, ob Gregors Bild den Lese- oder den Verfassenweg zeigte und ob die Nachricht überhaupt ein `blockquote` tru… |
 | **[E-90](BEFUNDE.md#e-90)** | Emoji in Betreffzeilen fallen ersatzlos weg (bis 7.2.0.58: sie erschienen als ?) — Grego… | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | nichts, was für sich zu beheben wäre — `?` ist die bessere von zwei Möglichkeiten, solange Eudora durchgehend ANSI/MBCS gebaut ist (Begründung i… |
 | **[E-78](BEFUNDE.md#e-78)** | die Standardanordnung der Leisten wird bei jedem Start nachgezogen, obwohl der Zustand ges… | 22.10.2026 an 7.2.0.121 — **veraltet** | die Auswertung der vorhandenen Spurmarken und danach die Behebung — `E-78 nach SetDockState` und `E-78 vor/nach LoadWazooBarConfig` (`mainfrm.cpp`,… |
-| **[E-71](BEFUNDE.md#e-71)** | der Filterbericht ist nach einem Filterlauf leer | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | nicht die Behebung, sondern Gregors Freigabe — er hat ihn ausdrücklich auf die nächste Fassung geschoben. Die Messung steht fertig da: in `CFilter… |
 | **[E-47](BEFUNDE.md#e-47)** | beim Öffnen der Kurznamen-/Verzeichnisdienst-Leiste kommt der Fehlerdialog *„Directory … | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | eine Entscheidung, keine Behebung — `MFC71.DLL` und `MSVCP71.dll` hat Microsoft nicht zur Weitergabe freigegeben, `RegisterCOMObjects()` scheitert d… |
 | **[E-39](BEFUNDE.md#e-39)** | wird die Persönlichkeit gelöscht, die Eudora in dem Moment als „aktuelle“ führt (nu… | 02.11.2026 an 7.2.1.131 | am Programm sieht den Weg seit der Behebung von [E-203](#e-203) kein Prüfstandsfall mehr — gesichert ist die Behebung durch `TestE39.cpp`; die Fäl… |
 | **[S-6](BEFUNDE.md#s-6)** | Bereiche überlagern sich | 22.10.2026 an 7.2.0.121 (Quelltext) — **veraltet** | das Nachstellen — ob sich die Bereiche heute überhaupt noch überlagern, ist seit dem 30.08.2026 **nie geprüft** worden. Die beiden damals genannt… |

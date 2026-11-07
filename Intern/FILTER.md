@@ -325,29 +325,26 @@ danach in einem anderen Postfach liegt.
 
 *Tools → Filter Report* (`EudoraRes.rc:5790`).
 
-> **Der Filterbericht bleibt in dieser Fassung leer — Befund [E-71](BEFUNDE.md#e-71), offen.**
-> Am 10.09.2026 an Paket 1.0.42 gemessen, nachdem die Filter nachweislich
-> griffen: *„filter report fenster ist leer: kommt nichts an."* Der Rest
-> dieses Abschnitts beschreibt, was **vorgesehen** ist, nicht, was Sie
-> beobachten werden.
+> **Ein leerer Filterbericht ist meist die Einstellung, kein Fehler — Befund
+> [E-71](BEFUNDE.md#e-71), am 07.11.2026 am Prüfstand gemessen.** Ab Werk ist
+> *Tools → Options → Getting Attention → Generate filter report* **aus**
+> (wie im Original Eudora). Dann kommt nur etwas in den Bericht, wenn eine
+> Regel selbst *Notify User → In Report* hat. Gemessen mit einem
+> Eingangsfilter in einen IMAP-Ordner: Vorgabe → `E-71 Bericht: eintraege=0`,
+> Haken gesetzt → `eintraege=1 fenster=1` (Fälle `E-71n`, `E-71r`).
 >
-> Belegt ist, dass der Lauf trifft: im Protokoll steht `E-64 Match=1` und
-> unmittelbar danach die Zeile `Filter "…" matches "…"` auf Protokollkanal
-> 1024 — dem Kanal des Berichts. Es scheitert also **nach** dem Vermerken,
-> vermutlich in `CFilterActions::EndFiltering`, wo `m_NotifyReportList`
-> abgearbeitet und über `CFilterReportView::GetFilterReportView()` das
-> Fenster gesucht wird; findet es keines, verfällt die Liste.
->
-> Auf Gregors Wunsch zurückgestellt: *„kann aber als ToDo für die nächste
-> version aufgeschrieben werden."*
+> Die frühere Annahme, es scheitere *nach* dem Vermerken, ist widerlegt: die
+> Zeile `Filter "…" matches "…"` auf Protokollkanal 1024 ist nur eine
+> Protokollzeile, kein Berichtseintrag. Gregor am 07.11.2026: die Vorgabe
+> bleibt, ein Hinweis genügt ([FAQ 23](../Doku/FAQ.md#23-warum-ist-der-filterbericht-leer)).
 
 **Vorgesehen ist:** der Bericht bekommt einen Eintrag, wenn eine Regel eine
 Nachricht **verschoben** hat und entweder
 
 * die Regel selbst *Notify User → In Report* eingestellt hat, oder
 * die Einstellung `FilterReport` gesetzt ist — *Options → Getting Attention →
-  Generate filter report* (`EudoraRes.rc:1922`, eingebaute Vorgabe **0**,
-  `EudoraRes.rc:10287`).
+  Generate filter report* (`EudoraRes.rc:1928`, eingebaute Vorgabe **0**,
+  `EudoraRes.rc:10324`).
 
 Belegt in `filtersd.cpp:1584-1588`. Das Fenster öffnet sich von selbst,
 sobald etwas darin steht (`filtersd.cpp:3769-3771`).
