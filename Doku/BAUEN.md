@@ -136,6 +136,7 @@ MFC/ATL, Windows SDK). Belege zum Bauzustand: [PRUEFUNG-BAU.md](../Intern/PRUEFU
 | `msvcr71.dll` (Projekt `VC71Bruecke`, Weiterleitung auf `msvcrt.dll`) | `Eudora71/Bin/<Konfiguration>` |
 | `NSImport.eif`, `OEImport.eif`, `OLImport.eif` (Importer-Plugins, DLLs mit eigener Endung) | `Eudora71/Bin/<Konfiguration>` |
 | `EudoraOldIcons.epi` (Icon-Plugin, ebenfalls eine DLL) | `Eudora71/EudoraOldIcons/<Konfiguration>` |
+| **nicht gebaut, mitgeliefert:** `Plugins/SMIME.dll`, `SpamHeaders.dll`, `SpamWatch.dll` (Originale von QUALCOMM, brauchen `MFC71.DLL`/`msvcp71.dll`, siehe [S-3](../Intern/BEFUNDE.md#s-3)) und `Plugins/EudoraUnicodeFix.dll` samt LIESMICH und LIZENZ (Zusatz von `rjsdotorg`, BSD-3, [E-147](../Intern/BEFUNDE.md#e-147)) | `Eudora71/Bin/Release/Plugins` (im Repo versioniert) |
 | die `.lib` (siehe unten) | `Eudora71/Lib/<Konfiguration>` |
 | `libeay32.lib`, `ssleay32.lib` (Projekt `OpenSSL`, Altbestand) | `Eudora71/OpenSSL/out32` |
 
@@ -197,6 +198,67 @@ Der Fenstertitel trägt die **Bau-Kennung** — Fassung, Commit und
 Herkunftsverzeichnis. Ein Sternchen hinter dem Commit heißt: beim Bau lagen
 ungesicherte Änderungen vor, der Bau ist nicht reproduzierbar. Damit ist ein
 Bildschirmfoto eindeutig einem Bau und einer Instanz zuzuordnen.
+
+### Ein eigenes Release-ZIP bauen — aus einem frischen Klon
+
+Was hier steht, ist **gemessen**: am 07.11.2026 aus einem frischen
+`git clone` (Klonprobe, Zweig `paket_7_2_2_137`, Commit `1051bfaf`) — Bau
+3,4 Minuten, Paket 0,8 Minuten, `paket-pruefen.ps1` ohne Fehler, derselbe
+Dateibestand wie das Testpaket 7.2.2.137 ([E-248](../Intern/BEFUNDE.md#e-248)).
+Die Klonprobe rief `sh tools/hooks-einrichten.sh` in der Git Bash auf, die
+übrigen Zeilen genau so in der PowerShell. Bis zu diesem Tag ließ sich das
+Paket nur aus dem Hauptordner der
+Entwicklermaschine schnüren.
+
+**Voraussetzungen:** Visual Studio 2022 mit *Desktopentwicklung mit C++*
+einschließlich MFC (die verteilbare Laufzeit `mfc140.dll`, `msvcp140.dll`,
+`vcruntime140.dll` nimmt das Werkzeug aus dem Redist-Ordner von Visual
+Studio), Git für Windows (bringt `sh` und Perl mit), Windows PowerShell 5.1.
+Sonst nichts — alles Weitere liegt im Repo.
+
+```powershell
+git clone https://github.com/HansWurst81675/Eudora7.2.git
+cd Eudora7.2
+& "$env:ProgramFiles\Git\bin\sh.exe" tools/hooks-einrichten.sh
+powershell -ExecutionPolicy Bypass -File tools\bauen.ps1
+powershell -ExecutionPolicy Bypass -File tools\paket-bauen.ps1 -Ziel C:\Temp\Eudora72-eigen -Zip C:\Temp\Eudora72-eigen.zip -AusBauverzeichnis -Bauart Release -RollenSindGelaufen "eigener Bau" -OhnePruefbericht "eigener Bau" -AgentLaeuftAbsichtlich "eigener Bau"
+powershell -ExecutionPolicy Bypass -File tools\paket-pruefen.ps1 -Paket C:\Temp\Eudora72-eigen
+```
+
+Danach liegt das fertige Paket in `C:\Temp\Eudora72-eigen` und das ZIP
+daneben. Was die Schritte tun und worauf man achtet:
+
+* **Die drei Schalter mit Begründung.** `paket-bauen.ps1` hat Schranken für
+  die Arbeitsweise *dieses* Projekts: es baut kein Paket, solange eine der
+  Prüfrollen (LEKTOR, PRÜFER, CHRONIST) fällig ist, ein Prüfauftrag läuft oder
+  der Prüfbericht nicht *BESTANDEN* meldet. In einem eigenen Klon weisen sie
+  deshalb ab (gemessen: *„KEIN PAKET, solange eine Rolle ueberfaellig
+  ist“*). Die Schalter übergehen sie; die Begründung steht danach im
+  Protokoll. Wer das Projekt selbst ausliefert, lässt sie weg und erfüllt die
+  Schranken.
+* **Die Grundlage.** Ohne `-Grundlage` nimmt das Werkzeug
+  `Releases/Eudora72-1.0.2-lauffaehig.zip` aus dem Repo (Hilfe, Emoticons,
+  Mailverzeichnis-Vorlage und die übrigen Dateien des Originals); **jede
+  ausführbare Datei** darin wird aus dem eigenen Bau ersetzt (Schritt 8, im
+  Lauf gemessen: *„6 ersetzt, 33 schon gleich, keine Debug-Laufzeit“*). Mit
+  `-Grundlage <ZIP>` geht auch das letzte Release von GitHub.
+* **Ein zweiter Bau im selben Klon.** Der Bau schreibt fünf versionierte
+  Dateien neu (`Eudora71/Eudora/EudoraExe_i.c`, `EudoraExe_p.c`,
+  `GoogleDesktopSearchAPI_i.c`, `GoogleDesktopSearchAPI_p.c`, `dlldata.c`).
+  Danach weist `bauen.ps1` ab (*„Erst sichern“*) und die Bau-Kennung bekäme
+  ein Sternchen. Vor dem nächsten Bau zurücksetzen:
+  `git checkout -- Eudora71/Eudora/EudoraExe_i.c Eudora71/Eudora/EudoraExe_p.c Eudora71/Eudora/GoogleDesktopSearchAPI_i.c Eudora71/Eudora/GoogleDesktopSearchAPI_p.c Eudora71/Eudora/dlldata.c`
+  (noch offen in [E-248](../Intern/BEFUNDE.md#e-248)).
+* **Eine eigene Fassungsnummer.** Wer veröffentlichen will, hebt vorher die
+  Version und committet (Abschnitt [Vor dem Bau: die Version heben](#vor-dem-bau-die-version-heben)) —
+  sonst trägt das ZIP dieselbe Nummer wie das letzte Release.
+* **Testen.** Das Paket mit `Eudora starten.cmd` und einem eigenen
+  Mailverzeichnis starten ([Den eigenen Bau starten](#den-eigenen-bau-starten));
+  die Regressionstests über die Oberfläche laufen mit dem
+  [Prüfstand](PRUEFSTAND.md).
+* **Veröffentlichen.** Das ZIP als Anhang eines GitHub-Release hochladen,
+  etwa `gh release create v7.2.2.N C:\Temp\Eudora72-eigen.zip --title "…" --notes-file <Text>`.
+  Dieses Projekt veröffentlicht erst nach Gregors Test und Freigabe.
 
 ### Nur für den Debug-Bau: die Laufzeit-DLLs
 

@@ -47,7 +47,7 @@ verschickt.
 | **es benutzen** (Filter, Defender, IMAP-Kennwort, Protokoll) | [Doku/ANWENDER.md](Doku/ANWENDER.md) |
 | **eine schnelle Antwort** (neue Fassung übernehmen, Verschlüsselung, IMAP, Konten, Kurznamen, Labels, Filter, Anhänge, Protokoll) | [Doku/FAQ.md](Doku/FAQ.md) — 21 häufige Fragen, nummeriert |
 | **wissen, welche Einstellungen anders sind als im Original Eudora — und warum** | [Intern/EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen) — zwei Tabellen mit Wert hier, Wert im Original und Begründung |
-| **es selbst bauen** | [Doku/BAUEN.md](Doku/BAUEN.md) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl |
+| **es selbst bauen** | [Doku/BAUEN.md](Doku/BAUEN.md) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl; bis zum eigenen Release-ZIP aus einem frischen Klon: [Ein eigenes Release-ZIP bauen](Doku/BAUEN.md#ein-eigenes-release-zip-bauen--aus-einem-frischen-klon) |
 | **eigene Änderungen prüfen** (Regressionstests nach dem Bauen) | [Eigene Änderungen prüfen](#eigene-änderungen-prüfen-prüfstand) — `Pruefstand starten.cmd`, Anleitung in [Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md) |
 | **einen Fehler melden** | [Einen Fehler melden](Doku/ANWENDER.md#einen-fehler-melden) |
 | **mitarbeiten** | [Doku/MITARBEITEN.md](Doku/MITARBEITEN.md) |
