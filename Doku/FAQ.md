@@ -540,7 +540,7 @@ Seite) — oder mit der Maus über die Pfeile unten im Vorschaufenster.
 Seite.
 
 Der Grund: die Druckvorschau ist die des Internet Explorer und läuft in einem
-eigenen Thread; dort gelten seine Tasten, Eudora kann sie nicht umbelegen.
+eigenen Thread; dort gelten seine Tasten, nicht die von Eudora.
 
 **Am Programm geprüft:** von Gregor am 07.11.2026 an 7.2.2.138 —
 Alt+Pfeil links/rechts blättern, Bild ↑/↓ nicht, auch nach Klick in die Seite.

@@ -136,7 +136,10 @@ sub was_ist_wirklich_offen {
         next unless length $pfad;
         push @alle, $pfad;
     }
-    return (\@alle, []) unless @alle;
+    # LEKTOR-165 L-165.1: immer DREI Werte - der Aufrufer zaehlt den dritten;
+    # mit zwei starb gesichert.pl an jedem sauberen Arbeitsbaum (Rueckgabe
+    # 255), und sitzungsbeginn.pl meldete trotzdem "alles gesichert".
+    return (\@alle, [], []) unless @alle;
 
     # Fuer jeden Ref: was weicht davon ab? Was in KEINER dieser Listen steht,
     # liegt irgendwo auf dem Server.
@@ -248,8 +251,11 @@ if ($selbsttest) {
 
     my $pruefe = sub {
         my ($name, $refs, $e_alle, $e_verloren) = @_;
-        my ($alle, $verloren) = was_ist_wirklich_offen($baum, @$refs);
-        my $ok = (@$alle == $e_alle and @$verloren == $e_verloren);
+        my ($alle, $verloren, $ueberholt) = was_ist_wirklich_offen($baum, @$refs);
+        # L-165.1: der dritte Wert muss IMMER eine Liste sein, auch beim
+        # sauberen Baum - sonst stirbt der Aufrufer.
+        my $ok = (@$alle == $e_alle and @$verloren == $e_verloren
+                  and ref($ueberholt) eq 'ARRAY');
         printf "  [%s] %s\n", ($ok ? 'ok ' : 'ROT'), $name;
         printf "        erwartet geaendert=%d verloren=%d, bekommen %d / %d (%s)\n",
             $e_alle, $e_verloren, scalar @$alle, scalar @$verloren,
@@ -374,10 +380,16 @@ my @neu    = grep {  /^\?\?/ } @zeilen;
 
 my $eigen_up = $abgeloest ? ''
              : git('rev-parse', '--abbrev-ref', '--symbolic-full-name', '@{u}');
-my ($offen_ref, $verloren_ref) =
+my ($offen_ref, $verloren_ref, $ueberholt_ref) =
     was_ist_wirklich_offen($wurzel, grep { length } ($haupt, $eigen_up));
-my @offen    = @$offen_ref;
-my @verloren = @$verloren_ref;
+my @offen     = @$offen_ref;
+my @verloren  = @$verloren_ref;
+my @ueberholt = @$ueberholt_ref;
+if (@ueberholt) {   # L-165.3: auch im eigenen Baum benennen, nicht als "Byte fuer Byte"
+    push @hinweis, sprintf("%d geaenderte Datei(en), deren Aenderung schon in %s steht "
+                         . "(ueberholt, nichts geht verloren): %s", scalar @ueberholt, $haupt,
+                           join(', ', @ueberholt[0 .. ($#ueberholt > 4 ? 4 : $#ueberholt)]));
+}
 
 printf("  %-28s %d%s\n", "nicht committet", scalar @offen,
        (@offen && !@verloren) ? "  (Inhalt liegt auf dem Server)" : "");
@@ -387,7 +399,7 @@ if (@verloren) {
     print "      $_\n" for @verloren[0 .. ($#verloren > 7 ? 7 : $#verloren)];
     print "      ... und " . (@verloren - 8) . " weitere\n" if @verloren > 8;
 }
-elsif (@offen) {
+elsif (@offen > @ueberholt) {   # L-165.3: ueberholte sind oben schon benannt
     push @hinweis, sprintf("%d geaenderte Datei(en) - ihr Inhalt steht Byte fuer Byte "
                          . "schon auf dem Server; der Zweig hier haengt nur zurueck. "
                          . "Es geht nichts verloren", scalar @offen);

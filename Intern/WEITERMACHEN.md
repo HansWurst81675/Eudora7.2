@@ -16,7 +16,7 @@
 - **In Arbeit: Testpaket 7.2.2.138** (geschnürt, von Gregor getestet: Vorschau schnell da, Sanduhr und zweiter Klick nicht prüfbar; davor 7.2.2.137 getestet, Schritt 4 Sanduhr nicht bestanden) auf dem Sammelzweig `paket_7_2_2_137` (= `main` + `e71_filterbericht` + `e242_e240_druckvorschau`,
   [Entscheidung 40](#entscheidungen)): [E-71](BEFUNDE.md#e-71) durch die Doku erledigt (Bericht ab Werk aus,
   [FAQ 23](../Doku/FAQ.md#23-warum-ist-der-filterbericht-leer)), [E-242](BEFUNDE.md#e-242) Kopf-/Fußzeile in der Vorschau,
-  [E-240](BEFUNDE.md#e-240) Spurmarken und Sanduhr, [E-247](BEFUNDE.md#e-247) `&` im Betreff; [E-241](BEFUNDE.md#e-241) **nicht** dabei (Ursache ungeklärt).
+  [E-240](BEFUNDE.md#e-240) Spurmarken und Sanduhr, [E-247](BEFUNDE.md#e-247) `&` im Betreff; [E-241](BEFUNDE.md#e-241) **nicht** dabei — seit 07.11.2026 geklärt: die Vorschau blättert mit Alt+Pfeil, durch die Doku erledigt (Zweig `e241_vorschau_tasten`).
   LEKTOR-160 und PRÜFER-106 gelaufen (nichts hält auf); Nummer 137, am 07.11.2026 geschnürt, Test-ZIP liegt neben Gregors letztem Testverzeichnis ([Test](TESTPLAN.md#test-7-2-2-137)).
 - **Neue Schranke:** `tools/testplan-voraussetzungen.pl` (ein Testschritt nannte `Alert=1` nicht).
 - **Nächste Werkzeugaufgabe** ([LEKTOR-151](../Befunde/LEKTOR-151.md#l-151.1)):
