@@ -230,3 +230,22 @@ Zeiten MEZ, gemessen ([[CHRONIST-2026-11-06]], Abschnitt 8). Ohne Antwort oder a
 Dazu zehn Nachrichten Gregors zum Mergen in vier Tagen, fünf davon Nachfragen (03.11. 19:14:29, 04.11. 09:02:50, 18:17:46, 05.11. 10:21:19, 22:34:40). Wer fragen muss, ob etwas bereitliegt, bekommt den Stand nicht von selbst.
 
 **How to apply, zusätzlich:** Jede Meldung, nach der Gregor warten oder herunterfahren könnte, endet mit „Zum Mergen: …“ oder „Zum Mergen: nichts, weil …“ ([[pr-zum-mergen-ganz-oben]]). Sichtbare Zwischenmeldungen stehen im Transkript teils als `thinking`-Block (Signatur „narration“); `verlauf-messen.pl --offen` muss beide Blockarten lesen, sonst zählt es beantwortete Fragen als offen (04.11. 07:30:40, beantwortet 07:31:04 nur dort).
+
+## Nachtrag 07.11.2026 (CHRONIST): sechs Fragen in zehn Minuten, und jede traf eine Lücke
+
+Zeiten MEZ, Transkripte `8e921d9a` (ab 06.11. 12:00) und `af1c188a` (07.11. bis 14:38), gemessen.
+
+Am 07.11. war Gregor von 09:54:32 bis 13:33:35 still. Dann kamen sechs Nachrichten in zehn Minuten:
+
+| Zeit | Gregor | was die Frage traf |
+|---|---|---|
+| 13:33:35 | *„ein 2.137 paket ist noch nicht verfügbar?“* | erbeten 09:54:32; der LEKTOR, Pflicht davor, war seit 13:01:44 als fällig bekannt und noch nicht gestartet |
+| 13:35:30 | *„schon was zum mergen? wieso braucht der lektor 30-60 min.? und was ist mit dem prüfer?“* | die Zeitfrage blieb unbeantwortet ([[nie-stillstehen]], Nachtrag 07.11.); PRÜFER erst danach gestartet (13:45:40) |
+| 13:36:02 | *„was ist jetzt in 2.137 drin? steht es im changelog auf einem branch?“* | nein; der Abschnitt wurde erst danach geschrieben (13:38:13) |
+| 13:37:52 | WEITERMACHEN *„ist vollständig?“* | nein: E-71 fehlte, der Kopf nannte einen gemergten Zweig |
+| 13:38:28 | *„nichts veraltetes drin?“* | fünf Dateien mit „Stand 06.11.“, drei Befunde fehlten in README/AUFGABEN/ZIEL |
+| 13:41:23 | TESTPLAN: *„es gab ja früher immer tabellen. jetzt nicht mehr? sparmaßnahmen?“* | kein Abschnitt für 137; LEKTOR-160 fand danach den Kopf im Widerspruch (L-160.1) |
+
+Dazu 13:43:20 die Frage zu „Offen für Gregor“ ([[nur-offene-entscheidungen-auf-gregors-liste]], Nachtrag 07.11.). Merge-Nachfragen seit 06.11. 12:00: zehn (06.11. 12:42:05, 15:39:00, 17:22:56, 17:31:27, 17:40:17, 21:42:36, 21:44:46, 22:54:04; 07.11. 13:35:30, 14:22:24), dazu 17:35:17 *„ich möchte es JETZT mergen!“*. Am 06.11. um 17:21:22 *„ich dachte, 16:35 ist der prüfstand fertig? was läuft gerade wieder?“* – 17:22:11: *„Seitdem habe ich mehrere kurze Läufe gestartet, ohne sie dir anzusagen.“*
+
+Jede der sechs Fragen vom 07.11. fand einen echten Rückstand. Das misst nicht Gregors Ungeduld, sondern dass Doku und Paketstand erst auf Nachfrage nachgezogen wurden ([[doku-parallel-nicht-hinterher]], Nachtrag 07.11.).

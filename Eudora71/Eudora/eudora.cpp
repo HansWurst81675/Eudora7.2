@@ -2098,6 +2098,13 @@ int CEudoraApp::ExitInstance()
 	PutDebugLog(DEBUG_MASK_MISC,
 		"E-33 ExitInstance: erreicht - das Hauptfenster ist zerstoert");
 
+	// BEFUND E-242 (07.11.2026): war beim Beenden noch eine Druckvorschau
+	// offen, stehen Eudoras Kopf-/Fusszeile (und Print_Background) noch in
+	// HKCU\...\Internet Explorer\PageSetup - hier den alten Stand herstellen
+	// (TridentView.cpp, E242Zurueckstellen).
+	extern void E242Zurueckstellen(const char* szAnlass);
+	E242Zurueckstellen("Beenden");
+
 #ifdef IMAP4
 	// E-170 ohne UIDPLUS (PRUEFER-89 K5): Vormerkungen, die noch auf ihren
 	// Abgleich warten, freigeben - sonst Leckmeldung im Debug-Bau.

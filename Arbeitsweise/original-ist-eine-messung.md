@@ -105,3 +105,9 @@ werden.
 
 Siehe [[ursache-nur-gemessen-behaupten]], [[pruefen-statt-vermuten]],
 [[anzeige-ist-kein-zustand]], [[widerlegte-vermutungen-aufschreiben]].
+
+## Nachtrag 07.11.2026 (CHRONIST): „Originalfehler“ einen Tag nach der Berichtigung
+
+LEKTOR-160 (07.11.2026, 13:55 MEZ), L-160.2: `CHANGELOG.md` nennt E-242 im Abschnitt 7.2.2.137 „Originalfehler“. Der Befund selbst war am 06.11. um 11:42:46 auf *„Quelltext original, Verhalten am Original nicht gemessen“* berichtigt worden, und für E-239 hatte LEKTOR-154 (L-154.4) dasselbe am 06.11. gemeldet. Der CHANGELOG-Abschnitt entstand am 07.11. neu (nach Gregors Frage 13:36:02, ob 2.137 im CHANGELOG steht) und übernahm das alte Wort. Berichtigt mit dem Versionssprung (Commit vom 07.11.). Drittes Auftreten in zwei Tagen; das Wort wandert aus Zusammenfassungen weiter, auch wenn der Befund stimmt.
+
+**How to apply, zusätzlich:** Wer einen Text für CHANGELOG oder Release-Notizen aus einem Befund schreibt, übernimmt dessen **Urteilszeile**, nicht die Überschrift oder eine ältere Tabelle.

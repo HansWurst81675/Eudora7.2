@@ -70,8 +70,29 @@ param(
     # Baut auch, wenn der Pruefbericht nicht BESTANDEN meldet (ein Test rot,
     # ein Pruefstandsfall an einem anderen Bau oder nie gelaufen). Braucht
     # eine Begruendung, die ins Protokoll geht.
-    [string]$OhnePruefbericht = ''
+    [string]$OhnePruefbericht = '',
+    # E-248 (07.11.2026): ein eigener Bau aus einem Klon - fuer sich selbst
+    # oder einen Fork. Ueberspringt die Schranken der ARBEITSWEISE dieses
+    # Projekts (Datenverlust-Liste in BEFUNDE, Spurmarken, Doku-Takt samt
+    # Testplan-Voraussetzungen, Rollen und Abgleich VERSION/Version.h,
+    # Standzeilen, Befundurteile, Verweise, laufende Agenten) und baut
+    # trotz nicht BESTANDENEM Pruefbericht (der Bericht laeuft trotzdem und
+    # kommt ins Paket). Die technischen Schritte bleiben: jede ausfuehrbare
+    # Datei aus dem Release-Bau, keine Debug-Laufzeit. Gemessen an einer
+    # Klonprobe: ohne den Schalter weisen diese Schranken nacheinander ab
+    # (Rollen, CHANGELOG-Abschnitt, lueckenlose Nummer, Standzeile).
+    [string]$EigenerBau = ''
 )
+if ($EigenerBau) {
+  if ($EigenerBau.Trim().Length -lt 5) { Write-Host '  -EigenerBau braucht eine Begruendung (mindestens 5 Zeichen).'; exit 2 }
+  # PRUEFER-108 K1: Vorgabe ist -Bauart Debug - ohne Release entstuende still
+  # ein Debug-Paket (Schritt 7 und 8 entfallen dann).
+  if ($Bauart -ne 'Release') { Write-Host '  -EigenerBau nur mit -Bauart Release (sonst entstuende ein Debug-Paket ohne die Pruefung auf Debug-Laufzeit).'; exit 2 }
+  Write-Host ''
+  Write-Host ('  EIGENER BAU: Schranken der Projekt-Arbeitsweise uebersprungen - ' + $EigenerBau.Trim())
+  Write-Host ''
+  if (-not $OhnePruefbericht) { $OhnePruefbericht = 'eigener Bau: ' + $EigenerBau.Trim() }
+}
 
 # --- Schranke: kein Paket bei offenem Datenverlustweg ----------------------
 #
@@ -82,7 +103,7 @@ param(
 #
 # Der Fehler war nicht die Analyse, sondern die Auslieferung.
 $pruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-datenverlust.pl'
-if (Test-Path -LiteralPath $pruefer) {
+if (-not $EigenerBau -and (Test-Path -LiteralPath $pruefer)) {
 
   # perl wird GESUCHT, nicht vorausgesetzt. Beim ersten Lauf am 10.09.2026
   # stand es im Kindprozess nicht im Suchpfad; der Aufruf schlug fehl, und
@@ -132,7 +153,7 @@ if (Test-Path -LiteralPath $pruefer) {
 # Eine eingebaute Messung, die niemand ausliest, ist keine Messung. Der
 # Moment, an dem sie ausgelesen gehoert, ist das naechste Paket - also hier.
 $spurpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'spuren-auswerten.pl'
-if (Test-Path -LiteralPath $spurpruefer) {
+if (-not $EigenerBau -and (Test-Path -LiteralPath $spurpruefer)) {
 
   # perl wird auch hier GESUCHT, nicht vorausgesetzt - und wenn es fehlt,
   # wird nicht gebaut. Dieselbe Begruendung wie bei der Schranke darueber:
@@ -183,7 +204,7 @@ if (Test-Path -LiteralPath $spurpruefer) {
 # Moment, an dem die Doku stehen muss, ist das Paket - also hier, an
 # derselben Stelle wie die Spurmarken-Schranke darueber.
 $dokupruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-doku-takt.pl'
-if (Test-Path -LiteralPath $dokupruefer) {
+if (-not $EigenerBau -and (Test-Path -LiteralPath $dokupruefer)) {
 
   $perlD = (Get-Command perl -ErrorAction Ignore).Source
   if (-not $perlD) {
@@ -276,7 +297,7 @@ if (Test-Path -LiteralPath $dokupruefer) {
 # 07.09.2026'? danach nichts mehr?" - Meine Antwort war falsch: gemessen
 # hatte ich 21 von 47 MDs.
 $standpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-stand-md.pl'
-if (Test-Path -LiteralPath $standpruefer) {
+if (-not $EigenerBau -and (Test-Path -LiteralPath $standpruefer)) {
 
   $perlM = (Get-Command perl -ErrorAction Ignore).Source
   if (-not $perlM) {
@@ -317,7 +338,7 @@ if (Test-Path -LiteralPath $standpruefer) {
 # WIEDER OFFEN fuehrt, von Gregor mit Bildschirmfoto widerlegt. Eine
 # Schranke, die niemand aufruft, ist keine.
 $urteilspruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'pruefe-befundurteile.pl'
-if (Test-Path -LiteralPath $urteilspruefer) {
+if (-not $EigenerBau -and (Test-Path -LiteralPath $urteilspruefer)) {
 
   $perlU = (Get-Command perl -ErrorAction Ignore).Source
   if (-not $perlU) {
@@ -358,7 +379,7 @@ if (Test-Path -LiteralPath $urteilspruefer) {
 # verteilt sind, wo man sie muehsam erst zusammen suchen muss." Ohne diese
 # Schranke verfaellt das mit der ersten neu geschriebenen Zeile wieder.
 $verweispruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'befunde-verlinken.pl'
-if (Test-Path -LiteralPath $verweispruefer) {
+if (-not $EigenerBau -and (Test-Path -LiteralPath $verweispruefer)) {
 
   $perlV = (Get-Command perl -ErrorAction Ignore).Source
   if (-not $perlV) {
@@ -400,7 +421,7 @@ if (Test-Path -LiteralPath $verweispruefer) {
 # liefen noch, als die Sitzung endete, und hatten nichts committet. Ein
 # Agent ist ein Prozess OHNE SPUR IM REPO, bis er selbst schreibt.
 $agentenpruefer = Join-Path (Split-Path -Parent $PSCommandPath) 'agenten-laufen.pl'
-if (Test-Path -LiteralPath $agentenpruefer) {
+if (-not $EigenerBau -and (Test-Path -LiteralPath $agentenpruefer)) {
 
   $perlA = (Get-Command perl -ErrorAction Ignore).Source
   if (-not $perlA) {
@@ -728,7 +749,13 @@ if (Test-Path -LiteralPath $liesmich) {
   Nimm $liesmich 'LIESMICH.txt'
 }
 
+# E-248 (07.11.2026): was Schritt 7 aus dem Redist-Ordner von Visual Studio
+# legt, gibt es nach einem frischen Klon im Bauverzeichnis nicht - Schritt 8
+# sucht es dort deshalb nicht (vorher Abbruch "mfc140.dll ... kein
+# Gegenstueck"; im Hauptordner lagen nur alte, nicht versionierte Kopien).
+$ausRedist = @()
 if ($Bauart -eq 'Release') {
+  $ausRedist = @('mfc140.dll', 'msvcp140.dll', 'vcruntime140.dll')
   Write-Host ''
   Write-Host '7. Verteilbare Laufzeit von Visual C++ 2022 (nur bei -Bauart Release)'
   # Diese drei DUERFEN weiterverteilt werden - anders als die Debug-Fassungen
@@ -782,6 +809,7 @@ if ($Bauart -eq 'Release') {
     $fs = [IO.File]::OpenRead($f.FullName); [void]$fs.Read($kopf, 0, 2); $fs.Close()
     if ($kopf[0] -ne 0x4D -or $kopf[1] -ne 0x5A) { continue }
     $rel = $f.FullName.Substring($Ziel.TrimEnd('\').Length + 1)
+    if ($ausRedist -contains $rel) { $gleich++; continue }   # E-248: kommt aus Schritt 7
     $quelle = if ($rel -ieq 'Paige32d.dll') { Join-Path $binRel 'Paige32.dll' } else { Join-Path $binRel $rel }
     if (-not (Test-Path -LiteralPath $quelle)) {
       throw ("ABBRUCH: {0} ist ausfuehrbar, hat aber kein Gegenstueck in {1} - die alte Fassung bleibt nicht stehen" -f $rel, $binRel)

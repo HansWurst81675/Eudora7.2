@@ -87,3 +87,17 @@ Das ist kein Befehl, den er nicht nachvollziehen kann, wie am 30.10., aber diese
 Zeiten MEZ, Transkript `1ad467cf`, gemessen ([[CHRONIST-2026-11-06]], Abschnitt 7). 04.11. 14:40:28 Abfrage zu E-193: *„Statt der zweistufigen Suche … ginge ein einfacher Schalter“*. Gregor hatte um 08:12:54 die zweistufige Suche gutgeheißen. Bis 15:19:02 kein Werkzeugaufruf; dann lehnte Gregor ab: *„was für ein schalter? was soll er bewirken?“*. 15:19:21: *„‚Schalter‘ war das falsche Wort. Gemeint ist … eine automatische Weiche im Programm“*. Gregor 15:19:37: *„ja, erst die Weiche bauen und messen“*.
 
 Drittes gemessenes Auftreten einer Abfrage, die den Zug hält (01.11., 03.11., 04.11.). **How to apply, zusätzlich:** Ein Wort, das im Projekt schon eine Bedeutung hat („Schalter“ = INI-Eintrag), wird in einer Frage nicht für etwas anderes benutzt. Eine Frage, die eine Entscheidung Gregors neu stellt, nennt die Entscheidung mit Datum und sagt, was sich seitdem geändert hat.
+
+## Nachtrag 07.11.2026 (CHRONIST): drei Abfragen, zusammen drei Stunden Stillstand
+
+Zeiten MEZ, Transkript `af1c188a`, gemessen an den Zeitstempeln von Frage und Antwort und am Fehlen jedes Werkzeugaufrufs dazwischen.
+
+| Frage | Antwort | Zug stand | Inhalt |
+|---|---|---|---|
+| 09:56:21 | 12:18:00 | 2 h 22 min | E-71 „Vorgabe bleibt / an“ und Zweigname für E-242/E-240 |
+| 13:01:47 | 13:30:56 | 29 min | Name des Sammelzweigs `paket_7_2_2_137` |
+| 14:07:00 | 14:21:58 | 15 min | Test-ZIP ohne vollen Prüfstandslauf? |
+
+Verständlich waren alle drei, und alle drei verlangten Gregors Wort (Zweigname, Abweichen von der Paketschranke). Gemessen ist aber: Während jeder Frage lief in der Hauptsitzung nichts, auch keine lesende Vorarbeit. Gregor war zwischen 09:54:32 (*„am ende mach mir ein lokales zip zum testen“*) und 13:33:35 (*„ein 2.137 paket ist noch nicht verfügbar?“*) still; ob er weg war, ist Vermutung. Die dritte Frage hielt den Zug, während der Bau längst fertig war (14:09:16), und kam bei Gregor als „Bau dauert 30 min“ an ([[nie-stillstehen]], Nachtrag 07.11.). Viertes gemessenes Auftreten nach 01.11., 03.11., 04.11.
+
+**How to apply, zusätzlich:** Eine Abfrage, die Gregors Wort braucht, geht als letzte Handlung eines Zuges hinaus, nachdem alles angestoßen ist, was nicht von der Antwort abhängt – Bau, Rollen, Lesen der Quelle für den nächsten Befund ([[nie-stillstehen]], Nachtrag 02.11.). Ist eine Rolle fällig, die von der Antwort nicht abhängt, läuft sie schon.

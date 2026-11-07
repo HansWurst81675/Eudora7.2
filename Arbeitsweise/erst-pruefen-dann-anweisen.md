@@ -180,3 +180,9 @@ Zeiten MEZ, Transkripte `2e668d8e` und `8e921d9a`, gemessen ([[CHRONIST-2026-11-
 - Ein ungeprüfter Abhilfesatz entstand am 06.11. um 11:45:26 zum zweiten Mal (Release-Notizen 7.2.2.136, entfernt 11:45:33, vor der Veröffentlichung). Zweites Auftreten nach dem 01.11. ([[fehlerklassen-abstellen]]).
 
 Schranken-Vorschlag (nicht gebaut): `testplan-voraussetzungen.pl` verlangt je Schritt mit Befundverweis eine Angabe `Prüfstand: <Betriebsart>`; die Betriebsart steht im `ValidateSet` des Messskripts und trägt dort einen Marker `# ANWENDERWEG`. **Gegenprobe:** Schritt 2 aus `2a8fd4d7` → abweisen; Schritt 3 mit `hinweis-exit` → durch; `hinweis-exit-close` als Anwenderweg erklärt → abweisen.
+
+## Nachtrag 07.11.2026 (CHRONIST): „ist gemessen“, und der Menüort war es nicht
+
+Zeiten MEZ, Transkript `af1c188a`, gemessen. Für E-71 (leerer Filterbericht) maßen die Fälle E-71n/E-71r um 09:52 den INI-Eintrag `FilterReport=1`. Um 09:52:13 schrieb die Hauptsitzung in den Befund: *„Tools → Options → Filtering → Generate filter report“*, committete lokal um 09:54 und fragte Gregor um 09:56:21: *„E-71 … ist gemessen: Der Bericht füllt sich, sobald unter Tools → Options → Filtering ‚Generate filter report‘ an ist.“* Der Haken sitzt unter *Getting Attention* (`IDD_SETTINGS_GET_ATTEN`); bemerkt um 12:18:28, weil `Intern/FILTER.md` den richtigen Ort nannte, berichtigt um 12:19:01. Auf den Server kam der falsche Ort nicht (der erste Push gelang erst 12:22). Dazu meldete PRÜFER-106 um 13:54 (K4), dass E-71n blind ist: die Zeile `E-71 Bericht: eintraege=0` schreibt jeder POP-Abruf; bestätigt 13:55:17.
+
+Gemessen war also eine Hälfte des Satzes, und auch die zur Hälfte blind; das Wort „gemessen“ stand vor dem ganzen Satz. Ein Menüpfad, den Gregor anklicken soll, ist eine Handlungsanweisung und wird an der Ressource (`.rc`) nachgesehen, bevor er in Befund oder Frage steht.

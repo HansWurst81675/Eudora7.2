@@ -43,38 +43,119 @@ static void Test_E169_Druck(const char* szEudoraDir)
 {
 	TT_BeginTest("E-169: Print setzt Print_Background nur mit dem Schalter und stellt ihn nach dem Druck wieder her");
 
+	// Seit E-242 (07.11.2026) laufen Kopf, Fuss und Print_Background ueber
+	// dieselben Helfer vor CTridentView::Print: E242Setzen merkt sich den
+	// alten Wert, E242Zurueckstellen stellt ihn her (nach der Vorschau, beim
+	// Druck nach 10 s ohne Dialog, spaetestens beim naechsten Druck/Beenden).
 	char* pT = QT_LiesNurCode(szEudoraDir, "TridentView.cpp");
 	char* pP = pT ? QT_Abschnitt(pT, "BOOL CTridentView::Print(", "void CTridentView::SetFont(") : 0;
-	if (!pP)
+	char* pH = pT ? QT_Abschnitt(pT, "static void E242Setzen(", "BOOL CTridentView::Print(") : 0;
+	if (!pP || !pH)
 	{
-		TT_Fail("CTridentView::Print nicht gefunden - ungeprueft ist nicht gruen");
+		TT_Fail("CTridentView::Print oder die E242-Helfer nicht gefunden - ungeprueft ist nicht gruen");
+		if (pP) free(pP);
+		if (pH) free(pH);
 		if (pT) free(pT);
 		TT_EndTest();
 		return;
 	}
 
 	const long lSchalter = QT_Stelle(pP, "if (GetIniShort(IDS_INI_PRINT_BACKGROUND))");
-	const long lSetzen   = QT_Stelle(pP, "RegSetValueEx(hkIEPageSetup, \"Print_Background\", NULL, REG_SZ, (LPBYTE)\"yes\", 4)");
+	const long lSetzen   = QT_Stelle(pP, "E242Setzen(hkIEPageSetup, \"Print_Background\", \"yes\", s_E242.Hintergrund);");
 	const long lDruck    = QT_Stelle(pP, "ExecCommandOnNullSet( uCmd, NULL, NULL, bDialog );");
-	const long lZurueck  = QT_Stelle(pP, "if (bSetBackground && RegOpenKeyEx(");
-	const long lAlt      = QT_Stelle(pP, "RegSetValueEx(hkIEPageSetup, \"Print_Background\", NULL, BackgroundValueType, OldBackground, OldBackgroundLen)");
-	const long lLoeschen = QT_Stelle(pP, "RegDeleteValue(hkIEPageSetup, \"Print_Background\")");
+	const long lUhr      = QT_Stelle(pP, "s_E242.uUhr = ::SetTimer(NULL, 0, 250, E242Uhr);");
 
 	TT_CHECK_MSG(QT_Zaehle(pP, "GetIniShort(IDS_INI_PRINT_BACKGROUND)") == 1,
 				 "Print fragt PrintBackground nicht (genau einmal) ab");
 	TT_CHECK_MSG(lSchalter >= 0 && lSetzen > lSchalter && lSetzen < lDruck,
 				 "Print_Background=yes wird nicht hinter dem Schalter und vor dem Druck gesetzt (E-169)");
-	TT_CHECK_MSG(QT_Zaehle(pP, "(LPBYTE)\"yes\"") == 1,
+	TT_CHECK_MSG(QT_Zaehle(pP, "\"yes\"") == 1,
 				 "Print_Background wird an mehr als einer Stelle auf yes gesetzt");
-	TT_CHECK_MSG(lZurueck > lDruck && lAlt > lZurueck && lLoeschen > lZurueck,
-				 "Print_Background wird nach dem Druck nicht wiederhergestellt - alter Wert bzw. Loeschen fehlt (E-169)");
+	TT_CHECK_MSG(lUhr > lDruck && QT_Enthaelt(pP, "E242Zurueckstellen(\"ohne Zeitgeber\");"),
+				 "nach dem Druck wird die Rueckstellung weder angestossen noch ersatzweise sofort ausgefuehrt (E-169/E-242)");
+	TT_CHECK_MSG(QT_Enthaelt(pH, "E242Herstellen(hk, s_E242.Hintergrund);"),
+				 "E242Zurueckstellen stellt Print_Background nicht wieder her (E-169)");
+	TT_CHECK_MSG(QT_Enthaelt(pH, "RegSetValueEx(hk, w.strName, NULL, w.dwTyp, w.abAlt, w.dwLaenge)") &&
+				 QT_Enthaelt(pH, "RegDeleteValue(hk, w.strName)"),
+				 "E242Herstellen stellt den alten Wert bzw. \"nicht vorhanden\" nicht her (E-169)");
 	// Ein Wert, der nicht in den Puffer passt, darf nicht angefasst werden -
 	// sonst stuende danach ein abgeschnittener oder gar kein Wert da.
-	TT_CHECK_MSG(QT_Enthaelt(pP, "if (lAbfrage == ERROR_SUCCESS || lAbfrage == ERROR_FILE_NOT_FOUND)"),
-				 "Print setzt Print_Background auch, wenn der alte Wert nicht gelesen werden konnte");
+	TT_CHECK_MSG(QT_Enthaelt(pH, "if (l != ERROR_SUCCESS && l != ERROR_FILE_NOT_FOUND)"),
+				 "E242Setzen setzt einen Wert auch, wenn der alte nicht gelesen werden konnte");
 
+	free(pH);
 	free(pP);
 	free(pT);
+	TT_EndTest();
+}
+
+// BEFUND E-242 (07.11.2026): Druck und Druckvorschau trugen MSHTMLs Kopf- und
+// Fusszeile - unten den Pfad der Zwischendatei mit dem Windows-Anmeldenamen.
+// Zwei Ursachen, beide am Pruefstand gemessen: die Werte wurden nur gesetzt,
+// wenn sie schon in der Registry standen, und sofort nach Exec wieder
+// hergestellt, waehrend die Vorschau sie erst danach liest. Die Wirkung misst
+// der Pruefstand (E-242p, E-242r) - hier steht die Form am Quelltext fest.
+static void Test_E242_KopfFuss(const char* szEudoraDir)
+{
+	TT_BeginTest("E-242: Kopf- und Fusszeile auch ohne vorhandenen Registrywert, Rueckstellung erst nach der Vorschau");
+
+	char* pT = QT_LiesNurCode(szEudoraDir, "TridentView.cpp");
+	char* pP = pT ? QT_Abschnitt(pT, "BOOL CTridentView::Print(", "void CTridentView::SetFont(") : 0;
+	char* pH = pT ? QT_Abschnitt(pT, "static void E242Setzen(", "BOOL CTridentView::Print(") : 0;
+	char* pE = QT_LiesNurCode(szEudoraDir, "eudora.cpp");
+	char* pX = pE ? QT_Abschnitt(pE, "int CEudoraApp::ExitInstance()", "return (CWinApp::ExitInstance());") : 0;
+	if (!pP || !pH || !pX)
+		TT_Fail("CTridentView::Print, die E242-Helfer oder CEudoraApp::ExitInstance nicht gefunden - ungeprueft ist nicht gruen");
+	else
+	{
+		const long lAlt   = QT_Stelle(pP, "E242Zurueckstellen(\"neuer Druck\");");
+		const long lKopf  = QT_Stelle(pP, "E242Setzen(hkIEPageSetup, HeaderValueName, Title, s_E242.Kopf);");
+		const long lFuss  = QT_Stelle(pP, "E242Setzen(hkIEPageSetup, FooterValueName, NewFooter, s_E242.Fuss);");
+		const long lDruck = QT_Stelle(pP, "ExecCommandOnNullSet( uCmd, NULL, NULL, bDialog );");
+
+		TT_CHECK_MSG(lAlt >= 0 && lKopf > lAlt && lFuss > lAlt,
+					 "eine noch offene Rueckstellung wird nicht vor dem Setzen erledigt - der eigene Wert gaelte sonst als \"alt\"");
+		TT_CHECK_MSG(lKopf >= 0 && lFuss >= 0 && lKopf < lDruck && lFuss < lDruck,
+					 "Kopf- und Fusszeile werden nicht vor dem Druckbefehl gesetzt");
+		// PRUEFER-106 K9: ohne bAktiv stellt niemand zurueck - die Werte
+		// blieben dauerhaft in der IE-Einstellung.
+		const long lAktiv = QT_Stelle(pP, "s_E242.bAktiv = TRUE;");
+		TT_CHECK_MSG(lAktiv > lFuss && lAktiv < lDruck,
+					 "nach dem Setzen wird die Rueckstellung nicht scharf geschaltet (s_E242.bAktiv)");
+		// E-247: "&" in Betreff oder Adresse wuerde als IE-Platzhalter gelesen.
+		TT_CHECK_MSG(QT_Zaehle(pP, ".Replace(\"&\", \"&&\");") == 2,
+					 "Betreff oder Absenderadresse gehen ohne Verdopplung von & in Kopf/Fuss (E-247)");
+		// Die alte Form setzte nur, wenn RegQueryValueEx Erfolg hatte - ab
+		// Werk fehlen die Werte, dann kam nichts an.
+		TT_CHECK_MSG(!QT_Enthaelt(pP, "if (RegQueryValueEx(hkIEPageSetup, HeaderValueName"),
+					 "Print setzt die Kopfzeile wieder nur, wenn sie schon in der Registry steht");
+		TT_CHECK_MSG(QT_Enthaelt(pH, "E242Herstellen(hk, s_E242.Kopf);") && QT_Enthaelt(pH, "E242Herstellen(hk, s_E242.Fuss);"),
+					 "E242Zurueckstellen stellt Kopf- oder Fusszeile nicht wieder her");
+		TT_CHECK_MSG(QT_Enthaelt(pH, "\"Internet Explorer_TridentDlgFrame\"") &&
+					 QT_Enthaelt(pH, "E242Zurueckstellen(\"Vorschau geschlossen\");"),
+					 "die Rueckstellung wartet nicht auf das Schliessen des Vorschaufensters");
+		TT_CHECK_MSG(QT_Enthaelt(pX, "E242Zurueckstellen(\"Beenden\");"),
+					 "ExitInstance stellt eine beim Beenden noch offene Rueckstellung nicht her");
+		// E-240 (07.11.2026, an Gregors System: Vorschaufenster erst nach
+		// 36,6 s, der Befehl kehrte nach 94 ms zurueck): der Zeitgeber haelt
+		// die Sanduhr, bis das Fenster da ist; ein weiterer Aufruf waehrend
+		// der Wartezeit wird abgewiesen.
+		TT_CHECK_MSG(QT_Enthaelt(pH, "if (s_E242.bSanduhr)") && QT_Enthaelt(pH, "E240SanduhrSetzen();"),
+					 "der Zeitgeber haelt die Sanduhr nicht bis zum Vorschaufenster (E-240)");
+		// PRUEFER-107 K1/K4: abgewiesen wird nur eine weitere Vorschau, und
+		// zwar sofort; die Sanduhr wird beim Start des Zeitgebers scharf.
+		const long lAbweisung = QT_Stelle(pP, "if (bDoPreview && s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau) { PutDebugLog(DEBUG_MASK_MISC, \"E-240 weiterer Aufruf");
+		TT_CHECK_MSG(lAbweisung >= 0 && lAbweisung < QT_Stelle(pP, "SetRedraw( FALSE );") &&
+					 QT_Stelle(pP, "E240SanduhrSetzen(); return FALSE; }") > lAbweisung,
+					 "eine weitere Vorschau waehrend die erste laedt wird nicht sofort abgewiesen, oder auch ein Druck (E-240, PRUEFER-107 K1)");
+		TT_CHECK_MSG(QT_Enthaelt(pP, "s_E242.bSanduhr = (s_E242.uUhr != 0 && (bDoPreview || bDialog));"),
+					 "die Sanduhr wird beim Start des Zeitgebers nicht scharf geschaltet (E-240, PRUEFER-107 K4)");
+	}
+	if (pX) free(pX);
+	if (pE) free(pE);
+	if (pH) free(pH);
+	if (pP) free(pP);
+	if (pT) free(pT);
 	TT_EndTest();
 }
 
@@ -82,4 +163,5 @@ void RunE169Tests(const char* szEudoraDir)
 {
 	Test_E169_Schalter(szEudoraDir);
 	Test_E169_Druck(szEudoraDir);
+	Test_E242_KopfFuss(szEudoraDir);
 }

@@ -102,3 +102,7 @@ Um 16:56:56, 17:00:43, 17:09:56 und 17:16:09 kam dieselbe Frage zu E-189: *„Is
 **How to apply, zusätzlich:**
 - **Eine Frage an Gregor muss er an dem beantworten können, was er sieht.** Dazu gehören sein Bildschirm, sein Log oder eine Entscheidung. Hängt die Antwort an einer inneren Bedingung (Serverfähigkeit, Codeweg), wird zuerst sie gemessen, oder sie wird eine Logzeile ([[eingebaute-messung-auslesen]]).
 - **Bleibt eine Frage unbeantwortet, kommt sie nicht wortgleich ein drittes Mal.** Dann steht sie einmal in `WEITERMACHEN` unter „Gregors Entscheidung“, mit dem, was ohne ihn geht.
+
+## Nachtrag 07.11.2026 (CHRONIST): „Text von v7.2.2.133 auf GitHub nachziehen“
+
+Zeiten MEZ, gemessen. Unter „Offen für Gregor“ in `Intern/WEITERMACHEN.md` stand: *„Text von v7.2.2.133 auf GitHub nachziehen (LEKTOR-150)“*. Gregor 07.11. 13:43:20: *„hierzu muß ich noch was machen? ich dachte, das wäre fertitg?“* Er hatte am 06.11. um 12:38:26 geschrieben *„ja, berichtige den text auf github“*; berichtigt wurde damals der Text von 7.2.2.136, nicht der von 133 (13:46:12: *„Daher der Eindruck, es sei fertig.“*). Der Punkt nannte eine Arbeit, nicht die Entscheidung, die Gregor treffen sollte. So hätte er lauten müssen: „Darf ich den GitHub-Text von v7.2.2.133 an drei Stellen berichtigen? (ja/nein)“. Und wenn ein Ja für den einen Text fällt, wird gefragt, ob es auch für den anderen gilt.

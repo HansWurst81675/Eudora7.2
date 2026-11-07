@@ -325,29 +325,26 @@ danach in einem anderen Postfach liegt.
 
 *Tools → Filter Report* (`EudoraRes.rc:5790`).
 
-> **Der Filterbericht bleibt in dieser Fassung leer — Befund [E-71](BEFUNDE.md#e-71), offen.**
-> Am 10.09.2026 an Paket 1.0.42 gemessen, nachdem die Filter nachweislich
-> griffen: *„filter report fenster ist leer: kommt nichts an."* Der Rest
-> dieses Abschnitts beschreibt, was **vorgesehen** ist, nicht, was Sie
-> beobachten werden.
+> **Ein leerer Filterbericht ist meist die Einstellung, kein Fehler — Befund
+> [E-71](BEFUNDE.md#e-71), am 07.11.2026 am Prüfstand gemessen.** Ab Werk ist
+> *Tools → Options → Getting Attention → Generate filter report* **aus**
+> (wie im Original Eudora). Dann kommt nur etwas in den Bericht, wenn eine
+> Regel selbst *Notify User → In Report* hat. Gemessen mit einem
+> Eingangsfilter in einen IMAP-Ordner: Vorgabe → `E-71 Bericht: eintraege=0`,
+> Haken gesetzt → `eintraege=1 fenster=1` (Fälle `E-71n`, `E-71r`).
 >
-> Belegt ist, dass der Lauf trifft: im Protokoll steht `E-64 Match=1` und
-> unmittelbar danach die Zeile `Filter "…" matches "…"` auf Protokollkanal
-> 1024 — dem Kanal des Berichts. Es scheitert also **nach** dem Vermerken,
-> vermutlich in `CFilterActions::EndFiltering`, wo `m_NotifyReportList`
-> abgearbeitet und über `CFilterReportView::GetFilterReportView()` das
-> Fenster gesucht wird; findet es keines, verfällt die Liste.
->
-> Auf Gregors Wunsch zurückgestellt: *„kann aber als ToDo für die nächste
-> version aufgeschrieben werden."*
+> Die frühere Annahme, es scheitere *nach* dem Vermerken, ist widerlegt: die
+> Zeile `Filter "…" matches "…"` auf Protokollkanal 1024 ist nur eine
+> Protokollzeile, kein Berichtseintrag. Gregor am 07.11.2026: die Vorgabe
+> bleibt, ein Hinweis genügt ([FAQ 23](../Doku/FAQ.md#23-warum-ist-der-filterbericht-leer)).
 
 **Vorgesehen ist:** der Bericht bekommt einen Eintrag, wenn eine Regel eine
 Nachricht **verschoben** hat und entweder
 
 * die Regel selbst *Notify User → In Report* eingestellt hat, oder
 * die Einstellung `FilterReport` gesetzt ist — *Options → Getting Attention →
-  Generate filter report* (`EudoraRes.rc:1922`, eingebaute Vorgabe **0**,
-  `EudoraRes.rc:10287`).
+  Generate filter report* (`EudoraRes.rc:1928`, eingebaute Vorgabe **0**,
+  `EudoraRes.rc:10324`).
 
 Belegt in `filtersd.cpp:1584-1588`. Das Fenster öffnet sich von selbst,
 sobald etwas darin steht (`filtersd.cpp:3769-3771`).
@@ -360,8 +357,9 @@ verlangt ein Verschieben oder Kopieren (`filtersd.cpp:1584`).
 sei *„kein eigener Fehler, sondern Folge von [E-72](BEFUNDE.md#e-72)"* — ein Filter ohne
 Merkmale sei für keinen Lauf zuständig und habe darum nichts zu berichten.
 Diese Begründung ist widerlegt: [E-72](BEFUNDE.md#e-72) ist behoben, die Filter greifen (von
-Gregor an 1.0.42 bestätigt), und der Bericht bleibt trotzdem leer. **[E-71](BEFUNDE.md#e-71) ist
-ein eigener, offener Befund.**
+Gregor an 1.0.42 bestätigt), und der Bericht blieb trotzdem leer. Am
+07.11.2026 gemessen: die Ursache ist die Einstellung *Generate filter report*
+(siehe Kasten oben); [E-71](BEFUNDE.md#e-71) ist durch die Doku erledigt.
 
 ---
 
@@ -733,7 +731,7 @@ vollständige Stand steht in [BEFUNDE.md](BEFUNDE.md).
 |---|---|
 | [**E-68**](BEFUNDE.md#e-68), halb | Zielpostfächer können beim Schreiben von `Filters.pce` verlorengehen (`copyInstead` wird anders geschrieben als gelesen). **Die andere Hälfte ist behoben:** `CFiltersDoc::Read` las ab der sechsten Aktion je Regel über den Puffer hinaus — und traf dabei nicht nur Zahlen, sondern `CString`-Felder, was Speicher zerstört. Seit 10.09.2026 gibt es eine Grenze; überzählige Zeilen werden verworfen und protokolliert |
 | [**E-69**](BEFUNDE.md#e-69) | `CFiltersDoc::FilterMsg` übersprang eine nicht lesbare Nachricht lautlos (nur diese, die übrigen werden weiter gefiltert). **Ab 7.2.0.106 (nicht veröffentlicht) steht sie mit Betreff, Postfach und Grund in *Task Errors***; **ab 7.2.0.109/7.2.0.110** nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden ([PRÜFER-36](../Befunde/PRUEFER-36.md) P3, [PRÜFER-38](../Befunde/PRUEFER-38.md) R1–R3). Keine dieser Fassungen ist veröffentlicht; von Gregor noch nicht bestätigt |
-| [**E-71**](BEFUNDE.md#e-71) | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen, nachdem die Filter nachweislich griffen. Auf seinen Wunsch zurückgestellt. Siehe [Der Filterbericht](#der-filterbericht) |
+| [**E-71**](BEFUNDE.md#e-71) | **der Filterbericht bleibt leer** — von Gregor am 10.09.2026 an 1.0.42 gemessen. **Erledigt durch die Doku am 07.11.2026:** am Prüfstand gemessen, der Bericht ist ab Werk aus (*Tools → Options → Getting Attention → Generate filter report*); Gregor: die Vorgabe bleibt. Siehe [Der Filterbericht](#der-filterbericht) |
 | [**E-47**](BEFUNDE.md#e-47) | `SpamWatch` und `SpamHeaders` laden nicht — siehe oben. **Praktische Folge für die Filter:** ohne `MFC71.DLL`/`MSVCP71.dll` auf dem Rechner behält jede eingehende Nachricht die Junk-Punktzahl 0, eine Regel auf *Junk Score* verhält sich dann wie oben unter *Praktisch heißt das* beschrieben ([Ausnahme](#warum-die-junk-bewertung-hier-nicht-arbeitet)) |
 
 Behoben, aber gut zu wissen, weil sie erklären, warum ältere `Filters.pce`

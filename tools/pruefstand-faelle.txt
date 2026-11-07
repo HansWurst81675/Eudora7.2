@@ -128,6 +128,16 @@ E-121 | C:\Temp\E118 | 60 | ablage | ablage-dateien=1 | | Testdaten/e118-html-in
 # E-118: eine HTML-Mail, in ein IMAP-Postfach verschoben, erschien dort als
 # Quelltext. Die Spurmarke muss im Protokoll stehen.
 E-118 | C:\Temp\E118 | 60 | log | E-118 Bild: | | Testdaten/e118-eingebettetes-bild.eml |
+# E-71 (07.11.2026): der Filterbericht ist nach einem Filterlauf leer. Der
+# Eingangsfilter "E-118 nach IMAP" uebertraegt die Nachricht in den IMAP-
+# Ordner Ablage (Gregors Weg: Filter in einen IMAP-Ordner). Die Spurmarken in
+# filtersd.cpp nennen, wovon die Aufnahme in den Bericht abhaengt
+# (E-71 Eintrag: ...) und was beim Abarbeiten ankommt (E-71 Bericht: ...).
+# E-71n: Vorgabe FilterReport=0 ("Generate filter report" aus, wie bei Gregor
+# und schon im Original) - kein Eintrag. E-71r: FilterReport=1 - ein Eintrag,
+# das Berichtsfenster wird gefunden.
+E-71n | C:\Temp\E118 | 60 | log | E-71 Eintrag: aktion=1 ziel=1 typ=8 notify=-1 ini=0 | E-71 Bericht: eintraege=1 | Testdaten/e118-html-in-imap-ordner.eml |
+E-71r | C:\Temp\E71 | 60 | log | E-71 Bericht: eintraege=1 fenster=1 | E-71 Bericht: eintraege=0 | Testdaten/e118-html-in-imap-ordner.eml |
 # -------------------------------------------------------------------------
 # E-125 - Verschieben nach Out: empfangen abgelehnt, verfasst erlaubt
 # -------------------------------------------------------------------------
@@ -323,6 +333,14 @@ E-169r | C:\Temp\E169 | 260 | messung | E169 REGISTRY unveraendert=1 | E169 ABBR
 E-169b | C:\Temp\E169B | 260 | messung | E169 ERGEBNIS p1 lesen=ABCDEFGh vorschau=ABCDEFGh | E169 ABBRUCH | | messen=tools\messen-e169.ps1
 E-169h | C:\Temp\E169B | 260 | messung | E169 ERGEBNIS p3 lesen=abcdefgH vorschau=abcdefgH | E169 ABBRUCH | | messen=tools\messen-e169.ps1
 E-169s | C:\Temp\E169B | 260 | messung | E169 REGISTRY unveraendert=1 | E169 ABBRUCH | | messen=tools\messen-e169.ps1
+# E-242 (07.11.2026): Druck und Druckvorschau trugen Kopf- und Fusszeile des
+# Internet Explorer (unten der Pfad der Zwischendatei mit dem Windows-
+# Anmeldenamen), weil CTridentView::Print "header"/"footer" unter
+# HKCU\...\Internet Explorer\PageSetup nur setzte, wenn sie schon standen -
+# ab Werk fehlen sie. Waehrend die Vorschau offen ist, muessen Eudoras Werte
+# stehen; danach muss die Registry wieder so sein wie vorher (auch "fehlt").
+E-242p | C:\Temp\E169 | 260 | messung | E242 WAEHREND-VORSCHAU vorschau-p1 kopf=eudora fuss=eudora | E169 ABBRUCH | | messen=tools\messen-e169.ps1
+E-242r | C:\Temp\E169 | 260 | messung | E242 REGISTRY unveraendert=1 | E169 ABBRUCH | | messen=tools\messen-e169.ps1
 
 # E-192 (03.11.2026, Rest von E-184 K3): drei Mails, nach Datum sortiert
 # (Liste 3,2,1), alle markiert und GELOESCHT - "in den Papierkorb verschieben",

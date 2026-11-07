@@ -203,3 +203,8 @@
 - [E-246 stehen lassen](entscheidung-e246-stehen-lassen-06-11.md) — Gregor 06.11.: alter Commit bleibt abrufbar, keine Support-Anfrage
 - [Alte Pfade weg 06.11.](entscheidung-alte-pfade-weg-06-11.md) — Gregor: Pfade ins Benutzerverzeichnis entfernen, C:\Temp bleibt
 - [Commit-Verweise bleiben 06.11.](entscheidung-commit-verweise-bleiben-06-11.md) — Gregor: L-158.5 nein, 1145 Verweise nicht ersetzen
+- [Stand 06.11.2026 nachts](stand-06-11-2026-nacht.md) — teil2 gepusht, LEKTOR vor PR; Binär-Pfade unkritisch; danach 7.2.2.137 mit E-71
+- [Prüfstand mit Fenster 07.11.](entscheidung-pruefstand-fenster-07-11.md) — erlaubt nur an diesem Tag (E-71)
+- [E-71 Doku, Zweig e242_e240 07.11.](entscheidung-e71-doku-und-zweig-07-11.md) — Vorgabe bleibt, Hinweis; Zweig frei; Test-ZIP 137 am Ende
+- [137 ohne vollen Lauf](entscheidung-p137-ohne-vollen-lauf-07-11.md) — Gregor 07.11.: Test-ZIP ohne vollen Prüfstand; vor Release voller Lauf
+- [CHRONIST 07.11.2026](CHRONIST-2026-11-07.md) — Laufbericht; 3 h Abfrage-Stillstand, Zeiten ungemessen, Namensschranke in Arbeitsbäumen blind

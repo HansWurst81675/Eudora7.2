@@ -95,7 +95,7 @@ beschädigt, steht oben.
 | Post wird verfälscht | [E-125](Intern/BEFUNDE.md#e-125) | Ziehen einer empfangenen Nachricht nach `Out` legte eine neue Nachricht an und meldete im selben Zug, es sei nichts übertragen worden (**gebaut in 7.2.0.122** nach Gregors Entscheidung B: der Weg wird abgelehnt, mit Hinweis auf *Message → Send Again*; 277 Tests, zweimal gegengetestet. **behoben in 7.2.0.122, von Gregor am 23.10.2026 an 1.0.122 bestätigt** (Ablehnung); die Gegenprobe mit einem Entwurf am Prüfstand, [Testbericht](Intern/TESTBERICHT-E125.md)) |
 
 **Ausdrücklich nicht Voraussetzung:** [E-114](Intern/BEFUNDE.md#e-114), [E-78](Intern/BEFUNDE.md#e-78), [E-47](Intern/BEFUNDE.md#e-47), [E-67](Intern/BEFUNDE.md#e-67) (Korrektur seit 7.2.0.43, am 17.10.2026 gemessen), [E-98](Intern/BEFUNDE.md#e-98), [E-39](Intern/BEFUNDE.md#e-39), die
-zurückgestellte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/BEFUNDE.md#r-1).
+durch die Doku erledigte [E-71](Intern/BEFUNDE.md#e-71), die NP-Punkte und [R-1](Intern/BEFUNDE.md#r-1).
 
 **Vor dem Release:** die Tabelle der Kriterien neu messen — geschehen: Gregor
 am 26.10.2026 an 7.2.0.123, [Ergebnistabelle](Intern/TESTPLAN.md#ergebnis-7-2-0-123) —, dann Gregors Test aller neun Kriterien an einem frischen
@@ -151,6 +151,17 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
   ([E-199](Intern/BEFUNDE.md#e-199)), Dateiname beim Speichern ([E-220](Intern/BEFUNDE.md#e-220)),
   gekürzter Betreff ([E-221](Intern/BEFUNDE.md#e-221)); Einzelheiten im
   [CHANGELOG](CHANGELOG.md) unter 7.2.2.133.
+* **In Arbeit für 7.2.2.138 (Testpaket, Zweig `paket_7_2_2_137`):** alles
+  aus 7.2.2.137, dazu die Sanduhr bis zur Druckvorschau
+  ([E-240](Intern/BEFUNDE.md#e-240)) und ein eigenes Release-ZIP aus einem
+  frischen Klon samt Anleitung ([E-248](Intern/BEFUNDE.md#e-248));
+  Einzelheiten im [CHANGELOG](CHANGELOG.md) unter 7.2.2.138.
+* **In Arbeit für 7.2.2.137 (Sammelzweig `paket_7_2_2_137`, noch nicht
+  geschnürt):** Kopf- und Fußzeile von Eudora in der Druckvorschau statt des
+  Pfads der Zwischendatei ([E-242](Intern/BEFUNDE.md#e-242)), Spurmarken und
+  Sanduhr bei der Druckvorschau ([E-240](Intern/BEFUNDE.md#e-240)), Hinweis
+  zum Filterbericht ([E-71](Intern/BEFUNDE.md#e-71), durch die Doku
+  erledigt); Einzelheiten im [CHANGELOG](CHANGELOG.md) unter 7.2.2.137.
 * **In 7.2.2.136 (Release `v7.2.2.136`, 06.11.2026):** alles aus
   7.2.2.135, dazu kein Absturz beim Beenden bei offenem Hinweis nach dem
   Abruf ([E-239](Intern/BEFUNDE.md#e-239)) und der Schalter `PrintBackground`

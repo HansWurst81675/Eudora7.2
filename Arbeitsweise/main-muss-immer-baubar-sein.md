@@ -56,3 +56,11 @@ Siehe [[pruefen-statt-vermuten]].
 
 Siehe [[was-lauffaehig-heisst]], [[lauffaehiges-ergebnis-liefern]],
 [[commit-auf-extra-branch-und-pushen]] und [[fehlerklassen-abstellen]].
+
+## Nachtrag 07.11.2026 (CHRONIST): Bauen geht im frischen Baum, Schnüren nicht
+
+Zeiten MEZ, Transkript `af1c188a`, gemessen. Der Paketstand 7.2.2.137 wurde zum ersten Mal in einem frischen Arbeitsbaum (`.wt/p137`) geschnürt. Gebaut hat er fehlerfrei (Vollbau 3 min 15 s). Das Schnüren brach dreimal ab: 14:39:55 *„Das Plug-in `EudoraUnicodeFix.dll` fehlt im Bauverzeichnis“* (liegt nur im Hauptordner, nicht im Repo), 14:41:33 Schritt 8 verlangt Gegenstücke im Bauverzeichnis, 14:41:46 *„Die Laufzeit-DLLs und Paige32d.dll fehlen in einem frischen Arbeitsbaum“*. Gregor 14:42:32 *„was treibst du denn da?“*, 14:42:39 *„hin und her? neubauen? abbrechen?“*, 14:43:34 *„nach dem frischen clone sollte es so sein, daß alles vorhanden ist. eine anleitung, wie man ein eigenes release.zip für github baut ist bereits vorhanden, erwarte ich.“* 14:45:36: eine solche Anleitung gibt es nicht. 14:48:20: *„die bau anleitung wird als nächstes sofort nachgeliefert! ich möchte lokal nach einem frischen git clone ein paket selbst bauen und testen können, um es auf github zu veröffentlichen!“*
+
+`bauen.ps1` prüft „baut“, nicht „lässt sich ein Release erstellen“; die zweite Hälfte dieser Lehre hatte bis heute keine Schranke, und alle bisherigen Pakete kamen aus dem Hauptordner, in dem die fehlenden Dateien aus früheren Läufen herumliegen ([[pruefstand-nicht-bequemer-als-die-wirklichkeit]]). Die Klonprobe vom 06.11. (E-151) deckte den Prüfstand ab, nicht das Paket.
+
+**Schranken-Vorschlag (nicht gebaut):** `paket-bauen.ps1 -Klonprobe` schnürt aus einem frischen `git clone` in einen Scratch-Ordner und vergleicht die Dateiliste mit dem letzten Release-ZIP. **Gegenprobe:** Stand `7e102069` → rot (`EudoraUnicodeFix.dll`, Laufzeit-DLLs); nach Nachtrag der Dateien oder der Anleitung → grün.

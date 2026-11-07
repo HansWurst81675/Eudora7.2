@@ -2315,13 +2315,236 @@ BOOL CTridentView::QuietPrint()
 	return Print(FALSE);
 }
 
+// BEFUND E-242 (07.11.2026): ein Wert unter HKCU\...\Internet Explorer\PageSetup,
+// fuer einen Druck gesetzt und danach so hergestellt, wie er war - auch
+// "fehlt". Bei der Druckvorschau geschieht das erst, wenn ihr Fenster wieder
+// zu ist: OLECMDID_PRINTPREVIEW kehrt nach 30-60 ms zurueck, die Vorschau
+// liest Kopf und Fuss spaeter (gemessen, siehe CTridentView::Print).
+struct E242Wert
+{
+	CString	strName;
+	BOOL	bGesetzt;
+	BOOL	bHatte;
+	DWORD	dwTyp;
+	DWORD	dwLaenge;
+	BYTE	abAlt[256];
+};
+
+struct E242StandTyp
+{
+	BOOL		bAktiv;
+	E242Wert	Kopf;
+	E242Wert	Fuss;
+	E242Wert	Hintergrund;
+	UINT_PTR	uUhr;
+	HWND		hVorschau;
+	DWORD		dwAnfang;
+	BOOL		bVorschau;
+	BOOL		bSanduhr;		// E-240: Sanduhr halten, bis das Fenster da ist
+	DWORD		dwRuhigSeit;
+};
+
+static E242StandTyp s_E242;
+
+static void E242Setzen(HKEY hk, LPCTSTR szName, const CString& strNeu, E242Wert& w)
+{
+	w.strName = szName;
+	w.bGesetzt = FALSE;
+	w.dwLaenge = sizeof(w.abAlt);
+	const LONG l = RegQueryValueEx(hk, szName, NULL, &w.dwTyp, w.abAlt, &w.dwLaenge);
+	w.bHatte = (l == ERROR_SUCCESS);
+	// Ein Wert, der nicht in den Puffer passt, liesse sich nicht
+	// zuruecksetzen - dann nichts anfassen.
+	if (l != ERROR_SUCCESS && l != ERROR_FILE_NOT_FOUND)
+		return;
+	if (RegSetValueEx(hk, szName, NULL, REG_SZ, (const BYTE*)(LPCTSTR)strNeu, strNeu.GetLength() + 1) == ERROR_SUCCESS)
+		w.bGesetzt = TRUE;
+}
+
+static void E242Herstellen(HKEY hk, E242Wert& w)
+{
+	if (w.bGesetzt)
+	{
+		if (w.bHatte)
+			VERIFY(RegSetValueEx(hk, w.strName, NULL, w.dwTyp, w.abAlt, w.dwLaenge) == ERROR_SUCCESS);
+		else
+			VERIFY(RegDeleteValue(hk, w.strName) == ERROR_SUCCESS);
+	}
+	w.bGesetzt = FALSE;
+	w.bHatte = FALSE;
+}
+
+// Auch aus CEudoraApp::ExitInstance gerufen (eine Vorschau, die beim Beenden
+// noch offen ist).
+void E242Zurueckstellen(const char* szAnlass)
+{
+	if (s_E242.uUhr)
+	{
+		::KillTimer(NULL, s_E242.uUhr);
+		s_E242.uUhr = 0;
+	}
+	s_E242.bSanduhr = FALSE;
+	if (!s_E242.bAktiv)
+		return;
+	s_E242.bAktiv = FALSE;
+
+	char szE242[160];
+	HKEY hk;
+	if (RegOpenKeyEx(HKEY_CURRENT_USER, CRString(IDS_REG_IE_PAGE_SETUP), NULL, KEY_QUERY_VALUE | KEY_SET_VALUE, &hk) != ERROR_SUCCESS)
+	{
+		_snprintf(szE242, sizeof(szE242), "E-242 zurueck (%s): PageSetup nicht zu oeffnen", szAnlass);
+		szE242[sizeof(szE242) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC, szE242);
+		return;
+	}
+	E242Herstellen(hk, s_E242.Kopf);
+	E242Herstellen(hk, s_E242.Fuss);
+	E242Herstellen(hk, s_E242.Hintergrund);
+	VERIFY(RegCloseKey(hk) == ERROR_SUCCESS);
+
+	_snprintf(szE242, sizeof(szE242), "E-242 zurueck (%s) nach %lu ms",
+		szAnlass, (unsigned long) (::GetTickCount() - s_E242.dwAnfang));
+	szE242[sizeof(szE242) - 1] = '\0';
+	PutDebugLog(DEBUG_MASK_MISC, szE242);
+}
+
+// Das Vorschaufenster: sichtbar, in diesem Prozess, Klasse
+// "Internet Explorer_TridentDlgFrame" (gemessen am Pruefstand, Titel
+// "Druckvorschau" - der Titel haengt an der Windows-Sprache, die Klasse nicht).
+// Beim Druck (ohne Vorschau) zaehlt zusaetzlich jeder Dialog "#32770" dieses
+// Prozesses - darunter der Druckdialog. Wann MSHTML beim Druck Kopf und Fuss
+// liest, ist NICHT gemessen (kein Drucker am Pruefstand); deshalb erst
+// zuruecksetzen, wenn 10 s lang keiner dieser Dialoge mehr offen ist.
+struct E242Suche
+{
+	BOOL	bAuchDialoge;
+	HWND	h;
+};
+
+static BOOL CALLBACK E242FensterSuchen(HWND h, LPARAM lp)
+{
+	E242Suche* pSuche = (E242Suche*) lp;
+	DWORD dwPid = 0;
+	::GetWindowThreadProcessId(h, &dwPid);
+	if (dwPid != ::GetCurrentProcessId() || !::IsWindowVisible(h))
+		return TRUE;
+	char szKlasse[64];
+	if (!::GetClassName(h, szKlasse, sizeof(szKlasse)))
+		return TRUE;
+	if (strcmp(szKlasse, "Internet Explorer_TridentDlgFrame") != 0 &&
+		!(pSuche->bAuchDialoge && strcmp(szKlasse, "#32770") == 0))
+		return TRUE;
+	pSuche->h = h;
+	return FALSE;
+}
+
+// BEFUND E-240 (07.11.2026, an Gregors System gemessen): der Befehl kehrte
+// nach 94 ms zurueck, das Vorschaufenster kam erst nach 36,6 s - die Sanduhr
+// vor dem Befehl verschwand bei der ersten Mausbewegung (PRUEFER-106 K6).
+// Bis das Fenster da ist, setzt der Zeitgeber sie deshalb bei jedem Schlag
+// neu, solange die Maus ueber einem Fenster dieses Prozesses steht.
+static void E240SanduhrSetzen()
+{
+	POINT pt;
+	if (!::GetCursorPos(&pt))
+		return;
+	HWND h = ::WindowFromPoint(pt);
+	DWORD dwPid = 0;
+	if (h)
+		::GetWindowThreadProcessId(h, &dwPid);
+	if (dwPid == ::GetCurrentProcessId())
+		::SetCursor(::LoadCursor(NULL, IDC_WAIT));
+}
+
+static VOID CALLBACK E242Uhr(HWND, UINT, UINT_PTR, DWORD)
+{
+	const DWORD dwJetzt = ::GetTickCount();
+	if (s_E242.bSanduhr)
+	{
+		if (s_E242.hVorschau || dwJetzt - s_E242.dwAnfang > 120000)
+			s_E242.bSanduhr = FALSE;
+		else
+			E240SanduhrSetzen();
+	}
+	if (!s_E242.bVorschau)
+	{
+		E242Suche Suche = { TRUE, NULL };
+		::EnumWindows(E242FensterSuchen, (LPARAM) &Suche);
+		// PRUEFER-106 K1: erst zaehlen, wenn ein Dialog da war - beim ersten
+		// Aufruf nach dem Start brauchte die Vorschau bei Gregor ca. 38 s,
+		// der Druck kann ebenso lange laden. hVorschau dient hier nur als
+		// Merker "ein Dialog war schon zu sehen".
+		if (Suche.h)
+		{
+			s_E242.dwRuhigSeit = dwJetzt;
+			s_E242.hVorschau = Suche.h;
+		}
+		if (s_E242.hVorschau && dwJetzt - s_E242.dwRuhigSeit > 10000)
+			E242Zurueckstellen("Druck, 10 s ohne Dialog");
+		else if (!s_E242.hVorschau && dwJetzt - s_E242.dwAnfang > 120000)
+			E242Zurueckstellen("Druck, kein Dialog binnen 120 s");
+		else if (dwJetzt - s_E242.dwAnfang > 600000)
+			E242Zurueckstellen("Druck, nach 10 min");
+		return;
+	}
+	if (!s_E242.hVorschau)
+	{
+		E242Suche Suche = { FALSE, NULL };
+		::EnumWindows(E242FensterSuchen, (LPARAM) &Suche);
+		HWND h = Suche.h;
+		if (h)
+		{
+			s_E242.hVorschau = h;
+			char szE242[96];
+			_snprintf(szE242, sizeof(szE242), "E-242 Vorschaufenster da nach %lu ms",
+				(unsigned long) (::GetTickCount() - s_E242.dwAnfang));
+			szE242[sizeof(szE242) - 1] = '\0';
+			PutDebugLog(DEBUG_MASK_MISC, szE242);
+		}
+		else if (::GetTickCount() - s_E242.dwAnfang > 120000)
+			E242Zurueckstellen("kein Vorschaufenster binnen 120 s");
+		return;
+	}
+	if (!::IsWindow(s_E242.hVorschau) || !::IsWindowVisible(s_E242.hVorschau))
+		E242Zurueckstellen("Vorschau geschlossen");
+}
+
 BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 {
 	CString	szFontName;
 	INT		iSize;
 	MSG		msg;
 
+	// BEFUND E-240 (07.11.2026): solange das Fenster einer Vorschau noch
+	// laedt (bei Gregor 36,6 s), wird ein weiterer Aufruf ignoriert - sonst
+	// stuende die erste Rueckstellung zu frueh an (PRUEFER-106 K7).
+	// PRUEFER-107 K1: nur eine weitere VORSCHAU abweisen - ein Druck (auch der
+	// mehrerer Mails aus der Liste, CTocFrame::Print wertet FALSE als Fehler)
+	// darf nicht still ausfallen.
+	if (bDoPreview && s_E242.uUhr && s_E242.bVorschau && !s_E242.hVorschau)
+	{
+		PutDebugLog(DEBUG_MASK_MISC, "E-240 weiterer Aufruf, waehrend die Vorschau noch laedt - ignoriert");
+		E240SanduhrSetzen();
+		return FALSE;
+	}
+
 	SetRedraw( FALSE );
+
+	// BEFUND E-240 (07.11.2026): Gregor stoppte an 7.2.2.136 ca. 38 s vom
+	// Menuebefehl bis zur Druckvorschau, ohne jede Rueckmeldung; im Protokoll
+	// war die Vorschau nicht zu erkennen. Spurmarken: Anfang, Befehl an MSHTML
+	// ab (nach der Warteschleife unten) und zurueck - je in ms seit dem
+	// Anfang. OLECMDID_PRINTPREVIEW kehrt nach 30-60 ms zurueck, nicht erst
+	// beim Schliessen (gemessen); die Zeit bis zum Erscheinen des Fensters
+	// misst tools/messen-e169.ps1, im Programm die Marke "E-242
+	// Vorschaufenster da nach ... ms".
+	const DWORD dwE240Anfang = ::GetTickCount();
+	{
+		char szE240[96];
+		_snprintf(szE240, sizeof(szE240), "E-240 %s: Anfang", bDoPreview ? "Vorschau" : "Druck");
+		szE240[sizeof(szE240) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC, szE240);
+	}
 
 	while( !IsReady() && PeekMessage(&msg, NULL, 0, 0, PM_REMOVE) )
 	{
@@ -2350,14 +2573,21 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 
 	// Temporarily set registry settings for header/footer.
 	// Hope that we don't crash while printing.
-	BYTE OldHeader[128];
-	BYTE OldFooter[128];
-	DWORD OldHeaderLen = 0;
-	DWORD OldFooterLen = 0;
-	DWORD HeaderValueType = 0;
-	DWORD FooterValueType = 0;
-	BOOL bSetHeader = FALSE;
-	BOOL bSetFooter = FALSE;
+	//
+	// BEFUND E-242 (07.11.2026): Kopf- und Fusszeile kamen nie an - zwei
+	// Gruende, beide gemessen. (1) "header"/"footer" unter
+	// HKCU\...\Internet Explorer\PageSetup wurden nur gesetzt, wenn sie dort
+	// schon standen; ab Werk fehlen sie. (2) OLECMDID_PRINTPREVIEW kehrt nach
+	// 30-60 ms zurueck (Spurmarke E-240), die Vorschau liest Kopf und Fuss
+	// erst danach - da war der alte Stand schon wieder hergestellt. Gedruckt
+	// wurde MSHTMLs Vorgabe: unten der Pfad der Zwischendatei mit dem
+	// Windows-Anmeldenamen. Ein SAFEARRAY mit Kopf und Fuss als pvaIn
+	// uebergeht die Vorschau (gemessen: hr=0, Bild unveraendert). Jetzt werden
+	// auch fehlende Werte gesetzt, und bei der Vorschau erst zurueckgesetzt,
+	// wenn ihr Fenster wieder zu ist (E242Zurueckstellen, Zeitgeber E242Uhr) -
+	// auch "Drucken" aus der Vorschau braucht die Werte noch. Print_Background
+	// (E-169) laeuft denselben Weg.
+	E242Zurueckstellen("neuer Druck");		// eine noch offene Rueckstellung zuerst
 	CRString IEPageSetupKeyName(IDS_REG_IE_PAGE_SETUP);
 	CRString HeaderValueName(IDS_REG_IE_HEADER);
 	CRString FooterValueName(IDS_REG_IE_FOOTER);
@@ -2365,103 +2595,100 @@ BOOL CTridentView::Print(BOOL bDialog, BOOL bDoPreview /*= FALSE*/)
 	const BOOL bDoHeaderFooter = GetIniShort(IDS_INI_PRINT_HEADERS);
 	if (RegOpenKeyEx(HKEY_CURRENT_USER, IEPageSetupKeyName, NULL, KEY_QUERY_VALUE | KEY_SET_VALUE, &hkIEPageSetup) == ERROR_SUCCESS)
 	{
-		OldHeaderLen = sizeof(OldHeader);
-		if (RegQueryValueEx(hkIEPageSetup, HeaderValueName, NULL, &HeaderValueType, OldHeader, &OldHeaderLen) == ERROR_SUCCESS)
+		CString Title;
+		CDocument* pDoc = GetDocument();
+		if (pDoc && bDoHeaderFooter)
 		{
-			CDocument* pDoc = GetDocument();
-			CString Title;
-			if (pDoc && bDoHeaderFooter)
-			{
-				Title = pDoc->GetTitle();
-				Title += CRString(IDS_IE_PRINT_HEADER_EXTRA);
-			}
-
-			if (RegSetValueEx(hkIEPageSetup, HeaderValueName, NULL, REG_SZ, (LPBYTE)(LPCTSTR)Title, Title.GetLength()) == ERROR_SUCCESS)
-			{
-				bSetHeader = TRUE;
-			}
+			Title = pDoc->GetTitle();
+			// BEFUND E-247 (PRUEFER-106 K8): "&" leitet in der IE-Kopfzeile
+			// einen Platzhalter ein - "&u" druckt die Adresse der
+			// Zwischendatei, also wieder den Anmeldenamen. Ein woertliches
+			// "&" heisst "&&".
+			Title.Replace("&", "&&");
+			Title += CRString(IDS_IE_PRINT_HEADER_EXTRA);
 		}
 
-		OldFooterLen = sizeof(OldFooter);
-		if (RegQueryValueEx(hkIEPageSetup, FooterValueName, NULL, &FooterValueType, OldFooter, &OldFooterLen) == ERROR_SUCCESS)
+		CString NewFooter;
+		if (bDoHeaderFooter)
 		{
-			CString NewFooter;
-			if (bDoHeaderFooter)
-			{
-				NewFooter.Format(CRString(IDS_PRINT_FOOTER), GetReturnAddress());
-				NewFooter += CRString(IDS_IE_PRINT_FOOTER_EXTRA);
-			}
-			if (RegSetValueEx(hkIEPageSetup, FooterValueName, NULL, REG_SZ, (LPBYTE)(LPCTSTR)NewFooter, NewFooter.GetLength()) == ERROR_SUCCESS)
-			{
-				bSetFooter = TRUE;
-			}
+			CString strAdresse(GetReturnAddress());
+			strAdresse.Replace("&", "&&");			// E-247, wie oben
+			NewFooter.Format(CRString(IDS_PRINT_FOOTER), (LPCTSTR) strAdresse);
+			NewFooter += CRString(IDS_IE_PRINT_FOOTER_EXTRA);
 		}
-	
+
+		E242Setzen(hkIEPageSetup, HeaderValueName, Title, s_E242.Kopf);
+		E242Setzen(hkIEPageSetup, FooterValueName, NewFooter, s_E242.Fuss);
+
+		// BEFUND E-169 (05.11.2026): Hintergruende - Farbflaechen (bgcolor,
+		// background-color) und Hintergrundbilder (background,
+		// background-image) - druckt MSHTML nur, wenn "Print_Background" auf
+		// "yes" steht; ab Werk fehlt der Wert (gemessen am Pruefstand, Fall
+		// E-169p). Gregor 05.11.2026: schaltbar, Vorgabe aus -
+		// PrintBackground=1 in [Settings].
+		if (GetIniShort(IDS_INI_PRINT_BACKGROUND))
+			E242Setzen(hkIEPageSetup, "Print_Background", "yes", s_E242.Hintergrund);
+
 		VERIFY(RegCloseKey(hkIEPageSetup) == ERROR_SUCCESS);
+		s_E242.bAktiv = TRUE;
+
+		char szE242[192];
+		_snprintf(szE242, sizeof(szE242),
+			"E-242 gesetzt: kopf vorher=%d gesetzt=%d fuss vorher=%d gesetzt=%d hintergrund vorher=%d gesetzt=%d PrintHeaders=%d vorschau=%d",
+			(int) s_E242.Kopf.bHatte, (int) s_E242.Kopf.bGesetzt,
+			(int) s_E242.Fuss.bHatte, (int) s_E242.Fuss.bGesetzt,
+			(int) s_E242.Hintergrund.bHatte, (int) s_E242.Hintergrund.bGesetzt,
+			(int) bDoHeaderFooter, (int) bDoPreview);
+		szE242[sizeof(szE242) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC, szE242);
 	}
 
-	// BEFUND E-169 (05.11.2026): Hintergruende - Farbflaechen (bgcolor,
-	// background-color) und Hintergrundbilder (background, background-image)
-	// - druckt MSHTML nur, wenn HKCU\...\Internet Explorer\PageSetup
-	// "Print_Background" auf "yes" steht; ab Werk fehlt der Wert, Druck und
-	// Druckvorschau zeigen dann nur Text und <img>-Bilder (gemessen am
-	// Pruefstand, Fall E-169p). Gregor 05.11.2026: schaltbar, Vorgabe aus -
-	// PrintBackground=1 in [Settings]. Wie Kopf- und Fusszeile oben wird der
-	// Wert nur fuer diesen Druck gesetzt und danach exakt so hergestellt,
-	// wie er war - auch "nicht vorhanden".
-	BYTE OldBackground[64];
-	DWORD OldBackgroundLen = 0;
-	DWORD BackgroundValueType = 0;
-	BOOL bHadBackground = FALSE;
-	BOOL bSetBackground = FALSE;
-	if (GetIniShort(IDS_INI_PRINT_BACKGROUND))
+	// BEFUND E-240: Rueckmeldung. Die Sanduhr wird direkt gesetzt (nicht ueber
+	// BeginWaitCursor, das zaehlt und bis zu EndWaitCursor ueber Eudoras
+	// Fenstern stehen bliebe): sie steht, bis das naechste WM_SETCURSOR
+	// verarbeitet wird. MSHTML laedt die Vorschau erst NACH der Rueckkehr
+	// (an Gregors System gemessen: zurueck nach 94 ms, Fenster nach 36,6 s);
+	// deshalb setzt der Zeitgeber E242Uhr sie bis zum Fenster immer wieder
+	// neu (bSanduhr, E240SanduhrSetzen). Zwischen zwei Schlaegen kann sie bei
+	// Mausbewegung kurz zum Pfeil werden (PRUEFER-107 K3).
 	{
-		if (RegOpenKeyEx(HKEY_CURRENT_USER, IEPageSetupKeyName, NULL, KEY_QUERY_VALUE | KEY_SET_VALUE, &hkIEPageSetup) == ERROR_SUCCESS)
-		{
-			OldBackgroundLen = sizeof(OldBackground);
-			const LONG lAbfrage = RegQueryValueEx(hkIEPageSetup, "Print_Background", NULL, &BackgroundValueType, OldBackground, &OldBackgroundLen);
-			bHadBackground = (lAbfrage == ERROR_SUCCESS);
-			// Ein Wert, der nicht in den Puffer passt, liesse sich nicht
-			// zuruecksetzen - dann lieber nichts anfassen.
-			if (lAbfrage == ERROR_SUCCESS || lAbfrage == ERROR_FILE_NOT_FOUND)
-			{
-				if (RegSetValueEx(hkIEPageSetup, "Print_Background", NULL, REG_SZ, (LPBYTE)"yes", 4) == ERROR_SUCCESS)
-					bSetBackground = TRUE;
-			}
-			VERIFY(RegCloseKey(hkIEPageSetup) == ERROR_SUCCESS);
-		}
+		char szE240[96];
+		_snprintf(szE240, sizeof(szE240), "E-240 %s: Befehl ab nach %lu ms",
+			bDoPreview ? "Vorschau" : "Druck", (unsigned long) (::GetTickCount() - dwE240Anfang));
+		szE240[sizeof(szE240) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC, szE240);
 	}
+	::SetCursor(::LoadCursor(NULL, IDC_WAIT));
 
 	// print
 	ULONG uCmd = bDoPreview? OLECMDID_PRINTPREVIEW : OLECMDID_PRINT;
 	ExecCommandOnNullSet( uCmd, NULL, NULL, bDialog );
 
-	// Set registry entries for header/footer back to what they were before
-	if (RegOpenKeyEx(HKEY_CURRENT_USER, IEPageSetupKeyName, NULL, KEY_QUERY_VALUE | KEY_SET_VALUE, &hkIEPageSetup) != ERROR_SUCCESS)
 	{
-		// Uh oh.  We just could open it a second ago.  How come we can't now?
-		// This is bad because it means we've just corrupted the user's header/footer settings in IE.
-		ASSERT(0);
-	}
-	else
-	{
-		if (bSetHeader)
-			VERIFY(RegSetValueEx(hkIEPageSetup, HeaderValueName, NULL, HeaderValueType, OldHeader, OldHeaderLen) == ERROR_SUCCESS);
-		if (bSetFooter)
-			VERIFY(RegSetValueEx(hkIEPageSetup, FooterValueName, NULL, FooterValueType, OldFooter, OldFooterLen) == ERROR_SUCCESS);
-
-		VERIFY(RegCloseKey(hkIEPageSetup) == ERROR_SUCCESS);
+		char szE240[96];
+		_snprintf(szE240, sizeof(szE240), "E-240 %s: zurueck nach %lu ms",
+			bDoPreview ? "Vorschau" : "Druck", (unsigned long) (::GetTickCount() - dwE240Anfang));
+		szE240[sizeof(szE240) - 1] = '\0';
+		PutDebugLog(DEBUG_MASK_MISC, szE240);
 	}
 
-
-	// BEFUND E-169: Print_Background so herstellen, wie er vor dem Druck war.
-	if (bSetBackground && RegOpenKeyEx(HKEY_CURRENT_USER, IEPageSetupKeyName, NULL, KEY_QUERY_VALUE | KEY_SET_VALUE, &hkIEPageSetup) == ERROR_SUCCESS)
+	// BEFUND E-242: die IE-Seiteneinstellungen so herstellen, wie sie vor dem
+	// Druck waren - bei der Vorschau, wenn ihr Fenster wieder zu ist; beim
+	// Druck, wenn 10 s lang kein Dialog dieses Prozesses mehr offen ist
+	// (E242Uhr sieht alle 250 ms nach; spaetestens beim naechsten Druck oder
+	// beim Beenden, CEudoraApp::ExitInstance).
+	if (s_E242.bAktiv)
 	{
-		if (bHadBackground)
-			VERIFY(RegSetValueEx(hkIEPageSetup, "Print_Background", NULL, BackgroundValueType, OldBackground, OldBackgroundLen) == ERROR_SUCCESS);
-		else
-			VERIFY(RegDeleteValue(hkIEPageSetup, "Print_Background") == ERROR_SUCCESS);
-		VERIFY(RegCloseKey(hkIEPageSetup) == ERROR_SUCCESS);
+		s_E242.dwAnfang = ::GetTickCount();
+		s_E242.dwRuhigSeit = s_E242.dwAnfang;
+		s_E242.hVorschau = NULL;
+		s_E242.bVorschau = bDoPreview;
+		s_E242.uUhr = ::SetTimer(NULL, 0, 250, E242Uhr);
+		// E-240: Sanduhr nur, wenn ein Fenster kommt (Vorschau oder
+		// Druckdialog) - beim Druck ohne Dialog nicht.
+		s_E242.bSanduhr = (s_E242.uUhr != 0 && (bDoPreview || bDialog));
+		if (!s_E242.uUhr)
+			E242Zurueckstellen("ohne Zeitgeber");
 	}
 
 	// reset the font and size

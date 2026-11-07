@@ -269,3 +269,9 @@ Neu gegenüber den Fällen oben ist die Richtung. Bisher blieb Text stehen, wenn
 **How to apply, zusätzlich:** Ein Commit, der in `Intern/TESTPLAN.md` ein Ergebnis zu E-nnn einträgt, ändert im selben Commit die Zeile E-nnn in `Intern/BEFUNDE.md` und, falls dort E-nnn als nächster Schritt steht, `Intern/WEITERMACHEN.md`.
 
 **Vorschlag für die Schranke (nicht gebaut):** `pre-commit` prüft: Gewinnt `Intern/TESTPLAN.md` eine Zeile mit E-nnn und „bestanden“/„nicht bestanden“, und enthält die E-nnn-Zeile in `Intern/BEFUNDE.md` danach noch „Test steht aus“ oder „wartet auf Gregor“, wird abgewiesen. **Gegenprobe:** `6dc43e4d` muss abgewiesen werden, `6dc43e4d` zusammen mit `3da667da` muss durchgehen.
+
+## Nachtrag 07.11.2026 (CHRONIST): Code fertig um 13:00, Doku auf Gregors Nachfrage
+
+Zeiten MEZ, Transkript `af1c188a`, gemessen. E-71 war um 12:21 und E-242/E-240 um 13:00 auf dem Server, beide mit grünen Messungen. CHANGELOG-Abschnitt 7.2.2.137, Kopf von WEITERMACHEN, Testabschnitt im TESTPLAN und die Nennung in README/AUFGABEN/ZIEL entstanden erst nach Gregors Fragen zwischen 13:36 und 13:41 ([[einwurf-ist-ein-messwert]], Nachtrag 07.11.). LEKTOR-160 fand danach trotzdem vier Stellen zum Berichtigen: TESTPLAN-Kopf (*„kein neuer Testabschnitt“*) gegen den Abschnitt darunter, „Originalfehler“ im CHANGELOG ([[original-ist-eine-messung]]), „nie gemessen“ in zwei Tabellen, weil die Marke `**Zuletzt gemessen:**` fehlte, und FILTER.md, das E-71 weiter als offen und zurückgestellt führte. Die Zeile „wann gemessen“ war also da, aber nicht in der Form, die `offene-befunde.pl` liest.
+
+**How to apply, zusätzlich:** Wer einen Befund auf „gebaut, gemessen“ setzt, setzt im selben Schritt `**Zuletzt gemessen: <Datum>**` und zieht CHANGELOG und Testabschnitt des laufenden Pakets nach – nicht erst beim Schnüren.

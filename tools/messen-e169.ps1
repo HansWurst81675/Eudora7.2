@@ -217,13 +217,30 @@ function Merkmale($zahl) {
 }
 $REGSETUP = 'HKCU:\Software\Microsoft\Internet Explorer\PageSetup'
 function PB() { $v = (Get-ItemProperty -LiteralPath $REGSETUP -Name 'Print_Background' -ErrorAction SilentlyContinue).Print_Background; if ($null -eq $v) { return 'fehlt' } else { return [string]$v } }
+# E-242 (07.11.2026): Kopf- und Fusszeile, ebenfalls nur gelesen. "eudora",
+# wenn Eudoras Werte stehen (Kopf endet auf "&bPage &p of &P", Fuss beginnt
+# mit "Printed for "), "fehlt" ohne Wert - dann druckt MSHTML seine Vorgabe
+# mit dem Pfad der Zwischendatei -, sonst "fremd".
+function RW([string] $n) { $v = (Get-ItemProperty -LiteralPath $REGSETUP -Name $n -ErrorAction SilentlyContinue).$n; if ($null -eq $v) { return 'fehlt' } else { return [string]$v } }
+function KF() {
+    $k = RW 'header'; $f = RW 'footer'
+    $kk = if ($k -eq 'fehlt') { 'fehlt' } elseif ($k.EndsWith('&bPage &p of &P')) { 'eudora' } else { 'fremd' }
+    $ff = if ($f -eq 'fehlt') { 'fehlt' } elseif ($f.StartsWith('Printed for ')) { 'eudora' } else { 'fremd' }
+    return "kopf=$kk fuss=$ff"
+}
 function Vorschau($lesen, [string] $name) {
     $vorher = @(Oberste $pp | Where-Object { [E193]::IsWindowVisible($_) })
     [void][E193]::PostMessageA($lesen, 0x0111, [IntPtr]0xE109, [IntPtr]::Zero)   # ID_FILE_PRINT_PREVIEW
     $neu = @()
-    for ($i = 0; $i -lt 20 -and $neu.Count -eq 0; $i++) { Start-Sleep -Milliseconds 500; $neu = @(Oberste $pp | Where-Object { [E193]::IsWindowVisible($_) -and $vorher -notcontains $_ }) }
+    # E-240 (07.11.2026): wie lange bis zum Vorschaufenster? Gregor stoppte
+    # beim ersten Aufruf nach dem Start ca. 38 s - deshalb bis 60 s warten
+    # und in 100-ms-Schritten nachsehen.
+    $uhr = [Diagnostics.Stopwatch]::StartNew()
+    while ($neu.Count -eq 0 -and $uhr.ElapsedMilliseconds -lt 60000) { Start-Sleep -Milliseconds 100; $neu = @(Oberste $pp | Where-Object { [E193]::IsWindowVisible($_) -and $vorher -notcontains $_ }) }
+    Write-Host ("E240 VORSCHAU-ERSCHIENEN {0} {1}" -f $name, $(if ($neu.Count) { "nach $($uhr.ElapsedMilliseconds) ms" } else { 'nicht binnen 60000 ms' }))
     Start-Sleep -Seconds 4
     Write-Host ("E169 WAEHREND-VORSCHAU {0} PageSetup\Print_Background={1}" -f $name, (PB))
+    Write-Host ("E242 WAEHREND-VORSCHAU {0} {1}" -f $name, (KF))
     $neu = @(Oberste $pp | Where-Object { [E193]::IsWindowVisible($_) -and $vorher -notcontains $_ })
     if ($neu.Count -eq 0) { Write-Host "E169 FEHLER: keine Vorschau ($name)"; return $null }
     $zahl = $null; $k = 0
@@ -239,6 +256,11 @@ function Vorschau($lesen, [string] $name) {
 
 $lebt = 1; $erg = [ordered]@{}
 $pbVorLauf = PB
+$kfVorLauf = (RW 'header') + ' / ' + (RW 'footer')
+Write-Host ("E242 REGISTRY vor dem Lauf {0}" -f (KF))
+# PRUEFER-106 K3: stehen Eudoras Werte schon vor dem Lauf da (abgeschossener
+# frueherer Lauf), waeren E-242p und E-242r blind gruen - dann abbrechen.
+if ((KF) -match 'eudora') { Write-Host 'E169 ABBRUCH: Eudoras Kopf-/Fusszeile steht schon vor dem Lauf in PageSetup (Rest eines abgebrochenen Laufs) - von Hand entfernen'; exit 1 }
 Write-Host ("E169 REGISTRY Print_Background={0}" -f (PB))
 try {
     Befehl $haupt 32792                                   # ID_MAILBOX_IN
@@ -284,5 +306,7 @@ finally {
 foreach ($k in $erg.Keys) { Write-Host ("E169 ERGEBNIS {0} {1} print_background={2}" -f $k, $erg[$k], (PB)) }
 $pbNachLauf = PB
 Write-Host ("E169 REGISTRY unveraendert={0} vorher={1} nachher={2}" -f [int]($pbVorLauf -eq $pbNachLauf), $pbVorLauf, $pbNachLauf)
+$kfNachLauf = (RW 'header') + ' / ' + (RW 'footer')
+Write-Host ("E242 REGISTRY unveraendert={0} vorher={1} nachher={2}" -f [int]($kfVorLauf -eq $kfNachLauf), $kfVorLauf, $kfNachLauf)
 Write-Host ("E169 ENDE lebt={0}" -f $lebt)
 try { Stop-Transcript | Out-Null } catch { }
