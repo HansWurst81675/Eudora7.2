@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 06.11.2026.**
+**Stand 07.11.2026.**
 
 - **Veröffentlicht zuletzt:**
   [`v7.2.2.136`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.136)
@@ -12,15 +12,12 @@
   ([E-151](BEFUNDE.md#e-151)), Schutz echter Eudora-Ordner durch die Marke
   ([E-243](BEFUNDE.md#e-243), Entscheidung 39), neue Schranken
   `pruefe-namen-gestaget.pl` und `haken-backslash.pl`), #230
-  (`ranjit_bereinigt_teil1`, Datenschutz Teil 1).
-- **In Arbeit:** `ranjit_bereinigt_teil2` – Datenschutz nach [LEKTOR-158](../Befunde/LEKTOR-158.md#lektor-158)
-  (Pfade ins Benutzerverzeichnis raus, `C:\Temp` bleibt; Absender; Austauschordner).
-- **Danach:** 7.2.2.137 mit [E-71](BEFUNDE.md#e-71) (Zweig `e71_filterbericht`, am 07.11.2026 gemessen: der Bericht ist
-  ab Werk aus; Gregor: Vorgabe bleibt, Hinweis in [FAQ 23](../Doku/FAQ.md#23-warum-ist-der-filterbericht-leer)),
-  [E-242](BEFUNDE.md#e-242), [E-240](BEFUNDE.md#e-240) (Zweig `e242_e240_druckvorschau`), [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache; dann lokales Test-ZIP 7.2.2.137.
-- **Neu beim Test gemeldet:** [E-240](BEFUNDE.md#e-240) (Vorschau beim ersten Aufruf langsam;
-  später, siehe [Nach dem Release 7.2.1](#nach-dem-release)), [E-241](BEFUNDE.md#e-241),
-  [E-242](BEFUNDE.md#e-242) (Anmeldename auf Ausdrucken).
+  (`ranjit_bereinigt_teil1`, Datenschutz Teil 1), #231 (`ranjit_bereinigt_teil2`, Datenschutz Teil 2).
+- **In Arbeit: 7.2.2.137** auf dem Sammelzweig `paket_7_2_2_137` (= `main` + `e71_filterbericht` + `e242_e240_druckvorschau`,
+  [Entscheidung 40](#entscheidungen)): [E-71](BEFUNDE.md#e-71) durch die Doku erledigt (Bericht ab Werk aus,
+  [FAQ 23](../Doku/FAQ.md#23-warum-ist-der-filterbericht-leer)), [E-242](BEFUNDE.md#e-242) Kopf-/Fußzeile in der Vorschau,
+  [E-240](BEFUNDE.md#e-240) Spurmarken und Sanduhr; [E-241](BEFUNDE.md#e-241) nur bei geklärter Ursache.
+  Nächste Schritte: LEKTOR-160 und PRÜFER laufen, dann Nummer 137, Bau, lokales Test-ZIP (Gregor: erst LEKTOR, dann ZIP).
 - **Neue Schranke:** `tools/testplan-voraussetzungen.pl` (ein Testschritt nannte `Alert=1` nicht).
 - **Nächste Werkzeugaufgabe** ([LEKTOR-151](../Befunde/LEKTOR-151.md#l-151.1)):
   `testlauf.ps1` vergleicht `Exception.log` vor und nach jedem Lauf; `pruefe-behoben-belegt.pl`

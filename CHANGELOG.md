@@ -121,6 +121,14 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
+## 7.2.2.137 — in Arbeit (Sammelzweig `paket_7_2_2_137`, noch nicht geschnürt): Kopf- und Fußzeile von Eudora in der Druckvorschau (E-242), Rückmeldung bei der Druckvorschau (E-240), Hinweis zum Filterbericht (E-71)
+
+Umfang nach Entscheidung 40 (Gregor 06.11. und 07.11.2026). Sammelzweig aus `main` (mit 7.2.2.136), `e71_filterbericht` und `e242_e240_druckvorschau`. Die Nummer wird erst beim Schnüren vergeben; bis dahin meldet sich der Bau weiter als 7.2.2.136.
+
+* **Die Druckvorschau trägt wieder Eudoras Kopf- und Fußzeile** ([E-242](Intern/BEFUNDE.md#e-242), Originalfehler): oben Absender, Datum und Betreff mit *„Page 1 of N“*, unten *„Printed for <Absender>“* mit Datum — statt des Pfads der Zwischendatei `file:///C:/Users/<Windows-Benutzer>/…`, der den Windows-Anmeldenamen aufs Papier brachte. Eudora setzte die Werte nur, wenn sie in der Internet-Explorer-Einstellung schon standen (ab Werk fehlen sie), und stellte sie zurück, bevor die Vorschau sie las. Jetzt bleiben sie stehen, bis das Vorschaufenster zu ist, danach steht die IE-Einstellung wieder wie vorher. Am Prüfstand an der Vorschau gemessen (rot ohne, grün mit der Behebung); **der Druck auf Papier ist nicht gemessen**.
+* **Die Druckvorschau gibt Rückmeldung** ([E-240](Intern/BEFUNDE.md#e-240)): eine Sanduhr, bis das Vorschaufenster da ist, und Zeilen im Protokoll, die zeigen, wo die Zeit liegt. Die lange Wartezeit beim allerersten Aufruf ließ sich am Prüfstand nicht nachstellen (dort nach rund 0,1 s da).
+* **Ein leerer Filterbericht ist die Einstellung, kein Fehler** ([E-71](Intern/BEFUNDE.md#e-71)): ab Werk ist *Tools → Options → Getting Attention → Generate filter report* aus, wie im Original. Am Prüfstand gemessen; Gregor: die Vorgabe bleibt, Hinweis in [FAQ 23](Doku/FAQ.md#23-warum-ist-der-filterbericht-leer).
+
 ## 7.2.2.136 — Release (`v7.2.2.136`, veröffentlicht am 06.11.2026): kein Absturz beim Beenden bei offenem Hinweis (E-239), Druck mit Hintergründen auf Wunsch (E-169)
 
 Nummer fortlaufend nach Entscheidung 26; Gregor am 05.11.2026: *„ja, paket_7_2_2_136 anlegen und schnüren“*. Sammelzweig `paket_7_2_2_136` aus `main` (mit 7.2.2.135) und den Zweigen `e239_absturz_beenden` und `e169_druckvorschau`. **Geschnürt am 05.11.2026, neben Gregors letztem Testverzeichnis bereitgestellt (`Eudora72-7.2.2.136-release`, ZIP daneben, dazu das Test-ZIP mit den beiden DLLs, auch im Austauschordner), als Testpaket ohne vollen Prüfstandslauf (Gregor 05.11.2026: *„bau mir 2.136 fertig, das kann ich noch testen. den großen testlauf machen wir morgen.“*). Veröffentlicht am 06.11.2026 als `v7.2.2.136`.** Bau `Eudora 7.2.2.136+2a8fd4d7 2026-11-05 22:11`, Unit-Tests 428/428, Schranken 19/19; voller Prüfstandslauf am 06.11.2026 an diesem Bau 110/110, dazu sechs Messungen zum Beenden bei offenem Hinweis grün ([PAKETE](Releases/PAKETE.md)).

@@ -151,6 +151,12 @@ aufnehmen“*), auf den Vorschlag, neue Funktionen nicht in 7.2.1 zu nehmen:
   ([E-199](Intern/BEFUNDE.md#e-199)), Dateiname beim Speichern ([E-220](Intern/BEFUNDE.md#e-220)),
   gekürzter Betreff ([E-221](Intern/BEFUNDE.md#e-221)); Einzelheiten im
   [CHANGELOG](CHANGELOG.md) unter 7.2.2.133.
+* **In Arbeit für 7.2.2.137 (Sammelzweig `paket_7_2_2_137`, noch nicht
+  geschnürt):** Kopf- und Fußzeile von Eudora in der Druckvorschau statt des
+  Pfads der Zwischendatei ([E-242](Intern/BEFUNDE.md#e-242)), Spurmarken und
+  Sanduhr bei der Druckvorschau ([E-240](Intern/BEFUNDE.md#e-240)), Hinweis
+  zum Filterbericht ([E-71](Intern/BEFUNDE.md#e-71), durch die Doku
+  erledigt); Einzelheiten im [CHANGELOG](CHANGELOG.md) unter 7.2.2.137.
 * **In 7.2.2.136 (Release `v7.2.2.136`, 06.11.2026):** alles aus
   7.2.2.135, dazu kein Absturz beim Beenden bei offenem Hinweis nach dem
   Abruf ([E-239](Intern/BEFUNDE.md#e-239)) und der Schalter `PrintBackground`
