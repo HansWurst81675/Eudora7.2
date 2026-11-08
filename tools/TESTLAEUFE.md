@@ -1676,3 +1676,4 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-11-07 16:09:40 | `C:\Temp\Eudora72-Pruefstand\E71` | Gregor 07.11.2026: pruefstand ist freigegeben (Paketbau 7.2.2.138 endgueltig) - [E-118](../Intern/BEFUNDE.md#e-118) regression Lauf 1 | Hauptfenster 1377552 - Eudora  Schliesszeit 1 s. |
 | 2026-11-07 16:12:03 | `C:\Temp\Eudora72-Pruefstand\E169` | Gregor 07.11.2026: pruefstand ist freigegeben (Paketbau 7.2.2.138 endgueltig) | Hauptfenster 1442982 - Eudora   [Eudora 7.2.2.138+dfa32f0c 2026-11-07 16:06 - E169]  Schliesszeit 1 s. |
 | 2026-11-07 16:14:07 | `C:\Temp\Eudora72-Pruefstand\E169B` | Gregor 07.11.2026: pruefstand ist freigegeben (Paketbau 7.2.2.138 endgueltig) | Hauptfenster 1574078 - Eudora  Schliesszeit 1 s. |
+| 2026-11-08 13:14:43 | c:\Users\CzempikG\GitLab\Eudora7.2\Eudora71\Bin\Release  | Gregor: 08.11.2026: eigenbau selbst getestet, ob die richtige versionsnummer drin steht |

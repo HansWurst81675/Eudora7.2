@@ -247,7 +247,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `e199_festbreite` | 04.11.2026 | **Von Gregor bestätigt** (04.11.2026, *„Ja, e199_festbreite“*). [E-199](../Intern/BEFUNDE.md#e-199): *Festbreite* im Bearbeiten-Modus schreibt `t;` in den Text - `WrapTag`/`SplitTagOff` schneiden nur noch ab, wenn der Text wirklich auf `\r\n` endet; Wirkprobe in `tools/messen-e178.ps1`. |
 | `pr_haken_zweig_messen` | 04.11.2026 | **Von Gregor bestätigt** (04.11.2026, *„Ja, pr_haken_zweig_messen“*). `tools/haken-pr-lektor.pl` misst den LEKTOR im Arbeitsbaum des eingereichten Zweigs statt im Hauptordner (`main`), der nach #217 jeden PR sperrte. |
 | `release_7_2_2_132` | 03.11.2026 | **Von Gregor bestätigt** (03.11.2026, *„Ja, so“*). `tools/release-veroeffentlichen.ps1` lässt neben 7.2.1.N auch die Reihe 7.2.2.N zu (die Entscheidung für 7.2.2 war dort nicht nachgezogen, das Werkzeug wies 7.2.2.132 ab); Veröffentlichung von `v7.2.2.132` aus diesem Zweig, danach die Nachträge zum Release. |
-| selbst_bauen_korrektur| 08.11.2026 | ich baue selbst auf einem anderen PC|
+| `selbst_bauen_korrektur` | 08.11.2026 | ich baue selbst auf einem anderen PC |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
