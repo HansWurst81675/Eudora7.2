@@ -71,9 +71,10 @@ my @INTERN = ('Intern/', 'Befunde/', 'Arbeitsweise/', 'tools/', 'Eudora71/');
 # Werkzeug ab - die Liste wird dann ergaenzt, nicht der Name ausgeliefert.
 my @NEUTRAL = (
     [ 'hatte Gregors Serverpostfach geleert', 'hatte ein Serverpostfach geleert' ],
-    [ 'Gregors Protokolle',                   "die Protokolle der Testl\x{e4}ufe" ],
+    [ 'Gregors Protokolle',                    "die Protokolle der Testl\x{e4}ufe" ],
     [ 'von Gregor best' . "\x{e4}" . 'tigt', 'am Programm best' . "\x{e4}" . 'tigt' ],
-    [ 'Gregor hat es',                        'Es wurde' ],
+    [ 'Gregor hat es',                         'Es wurde' ],
+    [ 'Von Gregor am',                         'Von einem Bearbeiter am' ],
 );
 my $NAME = qr/Gregor/;
 
