@@ -2,92 +2,95 @@
 
 **Deutsch | [English](README.en.md)**
 
-<!-- pruefstand: eceeecf -->
-<!-- Die Marke oben nennt den Commit, gegen den diese Datei zuletzt abgeglichen
-     wurde. Wer die Datei nachzieht, zieht die Marke mit.
-     Gelesen von tools/pruefstand-melden.pl (Befund [NP3-7](Intern/BEFUNDE.md#np3-7)). -->
-
-> **Vor dem ersten Start: sichern.** Wer bereits Eudora 7.1 oder Hermes
-> benutzt, sichert **vorher** die `Eudora.ini` und das komplette
-> Mailverzeichnis. Dieses Projekt startet mit einem **eigenen**
-> Mailverzeichnis und fasst eine vorhandene Installation nicht an —
-> `Eudora starten.cmd` hält sich daran, und wer `Eudora.exe` direkt startet,
-> wird gefragt. Eine Sicherung kostet zwei Minuten; eine verlorene Postablage
-> ist nicht wiederherstellbar.
+> **Vor dem ersten Start: sichern.** Wer bereits Eudora 7.1 oder Hermes benutzt, sichert **vorher** die `Eudora.ini` und das komplette Mailverzeichnis. Dieses Projekt startet mit einem **eigenen** Mailverzeichnis und fasst eine vorhandene Installation nicht an — `Eudora starten.cmd` hält sich daran, und wer `Eudora.exe` direkt startet, wird gefragt. Eine Sicherung kostet zwei Minuten; eine verlorene Postablage ist nicht wiederherstellbar.
 >
-> **Getrennte Verzeichnisse benutzen.** Die `Eudora.ini` bleibt **nicht**
-> rückwärtskompatibel — unsere Fassung und eine vorhandene Eudora oder Hermes
-> schreiben denselben Satz Werkzeugleisten mit unterschiedlichen MFC-Fassungen
-> in dieselbe Datei. Wer sich **eine** INI oder **ein** Mailverzeichnis teilt,
-> muss damit rechnen, dass die jeweils andere Installation danach Fehler
-> zeigt. Parallelbetrieb geschieht **auf eigene Gefahr**.
+> **Getrennte Verzeichnisse benutzen.** Die `Eudora.ini` bleibt **nicht** rückwärtskompatibel — unsere Fassung und eine vorhandene Eudora oder Hermes schreiben denselben Satz Werkzeugleisten mit unterschiedlichen MFC-Fassungen in dieselbe Datei. Wer sich **eine** INI oder **ein** Mailverzeichnis teilt, muss damit rechnen, dass die jeweils andere Installation danach Fehler zeigt. Parallelbetrieb geschieht **auf eigene Gefahr**.
 
-**Der Mailclient Eudora 7.1, wieder baubar — mit Visual Studio 2022 unter
-Windows 10 und 11.**
+**Der Mailclient Eudora 7.1, wieder baubar — mit Visual Studio 2022 unter Windows 10 und 11.**
 
-Eudora war von 1988 bis 2006 einer der meistbenutzten Mailclients überhaupt.
-2018 hat das [Computer History
-Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/)
-den Quellcode mit Genehmigung von Qualcomm freigegeben — als Archiv, nicht als
-baubares Projekt: er verlangt Visual C++ 6 und 7.1 von 1998 und 2003, dazu die
-kommerzielle Bibliothek *Stingray Objective Toolkit*, die es nicht mehr zu
-kaufen gibt.
+Eudora war von 1988 bis 2006 einer der meistbenutzten Mailclients überhaupt. 2018 hat das [Computer History Museum](https://computerhistory.org/blog/the-eudora-email-client-source-code/) den Quellcode mit Genehmigung von Qualcomm freigegeben — als Archiv, nicht als baubares Projekt: er verlangt Visual C++ 6 und 7.1 von 1998 und 2003, dazu die kommerzielle Bibliothek *Stingray Objective Toolkit*, die es nicht mehr zu kaufen gibt.
 
-**Dieses Repo macht daraus wieder ein Programm, das man bauen und benutzen
-kann.** Aus einem frischen Klon entsteht mit einem Befehl eine `Eudora.exe`,
-die auf einem heutigen Windows startet, Mail über TLS 1.3 abruft und
-verschickt.
+**Dieses Repo macht daraus wieder ein Programm, das man bauen und benutzen kann.** Aus einem frischen Klon entsteht mit einem Befehl eine `Eudora.exe`, die auf einem heutigen Windows startet, Mail über TLS 1.3 abruft und verschickt.
+
+---
+
+## Update-Infos
+
+**Aktuelles Release: [`v7.2.2.136`](https://github.com/HansWurst81675/Eudora7.2/releases/latest)** vom 06.11.2026.
+Neuere Testpakete (7.2.2.137, 7.2.2.138) sind gebaut, aber **nicht veröffentlicht**.
+
+### Versionsübersicht (neueste zuerst)
+
+| Fassung | Art | Datum | Inhalt |
+|---|---|---|---|
+| **7.2.2.138** | Testpaket, nicht veröffentlicht | — | Sanduhr bei der ersten Druckvorschau ([E-240](Intern/BEFUNDE.md#e-240)); eigenes Release-ZIP aus frischem Klon baubar ([E-248](Intern/BEFUNDE.md#e-248)) |
+| **7.2.2.137** | Testpaket, nicht veröffentlicht | — | Behebung der Druckvorschau für [E-242](Intern/BEFUNDE.md#e-242) gebaut (Befund noch offen: Pfad der Zwischendatei); Druck über *Microsoft Print to PDF* von Gregor bestanden |
+| **7.2.2.136** | **Release** | 06.11.2026 | Kein Absturz mehr beim Beenden bei offenem Hinweis ([E-239](Intern/BEFUNDE.md#e-239)); `PrintBackground` für die Druckvorschau ([E-169](Intern/BEFUNDE.md#e-169)); „Remember password“ wirkt beim ersten Mal ([E-223](Intern/BEFUNDE.md#e-223)); Anhangsymbol bei S/MIME-signierten Mails ([E-222](Intern/BEFUNDE.md#e-222)). Voller Prüfstandslauf 110/110 am Bau `2a8fd4d7`, Unit-Tests 428/428, von Gregor getestet und freigegeben |
+| 7.2.2.135 | Testpaket | 05.11.2026 | Rest von [E-193](Intern/BEFUNDE.md#e-193) (Edit → Find). Prüfbericht bestanden (425 Unit-Tests, 19 Schranken, 103 Prüfstandsfälle; im vollen Lauf 3 Fälle rot, einzeln grün, darunter der Absturz [E-239](Intern/BEFUNDE.md#e-239)) |
+| 7.2.2.134 | Testpaket | 05.11.2026 | [E-223](Intern/BEFUNDE.md#e-223), [E-222](Intern/BEFUNDE.md#e-222); 424 Unit-Tests, 19 Schranken, 102 Prüfstandsfälle |
+| **7.2.2.133** | **Release** | 05.11.2026 (geschnürt 04.11.) | [E-188](Intern/BEFUNDE.md#e-188), [E-192](Intern/BEFUNDE.md#e-192), [E-193](Intern/BEFUNDE.md#e-193), [E-199](Intern/BEFUNDE.md#e-199), [E-220](Intern/BEFUNDE.md#e-220), [E-221](Intern/BEFUNDE.md#e-221). Gregors Test fand drei neue Fehler aus dem Original ([E-222](Intern/BEFUNDE.md#e-222), [E-223](Intern/BEFUNDE.md#e-223), Rest [E-193](Intern/BEFUNDE.md#e-193)) |
+| **7.2.2.132** | **Release** | 03.11.2026 | Erste Fassung der Reihe 7.2.2: Hilfe-Menü ([A-5](Intern/BEFUNDE.md#a-5)), About-Dialog mit Latest Release ([E-216](Intern/BEFUNDE.md#e-216)), Speichern unter mit passender Endung ([E-128](Intern/BEFUNDE.md#e-128)); Persönlichkeiten ([E-39](Intern/BEFUNDE.md#e-39), [E-203](Intern/BEFUNDE.md#e-203), [E-204](Intern/BEFUNDE.md#e-204)), Speichern ([E-194](Intern/BEFUNDE.md#e-194)–[E-196](Intern/BEFUNDE.md#e-196), [E-205](Intern/BEFUNDE.md#e-205), [E-207](Intern/BEFUNDE.md#e-207)), fehlendes Mailverzeichnis ([E-133](Intern/BEFUNDE.md#e-133)), IMAP-Label ([E-170](Intern/BEFUNDE.md#e-170)). 408 Unit-Tests, 19 Schranken, 81 Prüfstandsfälle; Testschritte: [TESTPLAN](Intern/TESTPLAN.md#test-7-2-2-132) |
+| **7.2.1.131** | **Release** | 02.11.2026 | Enthält die nicht veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130 (u. a. [E-72](Intern/BEFUNDE.md#e-72) Filter mit verneinter Bedingung, [E-122](Intern/BEFUNDE.md#e-122) Eingangsdatum bei IMAP). Testschritte: [TESTPLAN](Intern/TESTPLAN.md#test-7-2-1-131) |
+| **7.2.1.128** | **Release** | 29.10.2026 | Erstes Release 7.2.1; enthält die Testpakete 7.2.0.123–7.2.0.127 (u. a. entfernte eMudhra-Wurzelzertifikate [E-148](Intern/BEFUNDE.md#e-148), IMAP-Ordnernamen mit Umlauten [E-77](Intern/BEFUNDE.md#e-77), Bilder in HTML-Mails [E-113](Intern/BEFUNDE.md#e-113), [E-119](Intern/BEFUNDE.md#e-119)) |
+| `v1.0.120` | Release | 21.10.2026 | Eudora übernimmt ein fremdes Mailverzeichnis nicht mehr stillschweigend, sondern fragt vorher ([E-132](Intern/BEFUNDE.md#e-132)); weitere Korrekturen [E-131](Intern/BEFUNDE.md#e-131), [E-134](Intern/BEFUNDE.md#e-134), [E-135](Intern/BEFUNDE.md#e-135) |
+
+Was sich je Fassung genau geändert hat, steht im [CHANGELOG](CHANGELOG.md); die Testschritte zu einer Fassung im [TESTPLAN](Intern/TESTPLAN.md).
+
+**Zur Versionsnummer:** Bis 7.2.1.128 hatten veröffentlichte Pakete eine eigene Zählung (`v1.0.x`), die von der Nummer im Quellstand abwich. Seit 7.2.1.128 tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-z%C3%A4hlungen-und-wie-sie-zusammenh%C3%A4ngen)).
+
+### Wichtig beim Aktualisieren
+
+- **Vorher sichern:** `Eudora.ini` und Mailverzeichnis kopieren, bevor eine neue Fassung zum ersten Mal läuft.
+- **Neue Fassung übernehmen:** siehe [Doku/FAQ.md](Doku/FAQ.md) (Frage zur neuen Fassung).
+- **Wer 7.2.1.128 oder älter benutzt:** Filter mit verneinter Bedingung („doesn't appear“, „doesn't contain“, „is not“) treffen dort jede Nachricht und können mit der Aktion *transfer* den ganzen Posteingang verschieben ([E-72](Intern/BEFUNDE.md#e-72)). Ab 7.2.1.129 behoben, im Release 7.2.1.131 enthalten.
+- **Wer `v1.0.117` oder älter benutzt:** diese Fassungen fassen ein vorhandenes Eudora-/Hermes-Mailverzeichnis ohne Rückfrage an. Unbedingt Hinweis oben beachten.
+- **Zertifikate:** Fassungen bis Paket 1.0.122 vertrauen vier Wurzelzertifikaten von eMudhra, zu denen am 20.10.2026 kompromittierte Zwischenzertifikate bekannt wurden. Behoben ab Release 7.2.1, siehe [unten](#kompromittierte-zertifikate-von-emudhra-oktober-2026).
+- **Eigene `rootcerts.p7b` im Mailverzeichnis** hat Vorrang vor der mitgelieferten und wird beim Update **nicht** ersetzt.
+
+---
 
 ## Wo fange ich an?
 
 | Ich will … | … dann hierhin |
 |---|---|
-| **es einfach ausprobieren** | [Neuestes Paket herunterladen](https://github.com/HansWurst81675/Eudora7.2/releases/latest) — auspacken, `Eudora starten.cmd` doppelklicken. Nichts zu installieren |
-| **wissen, was geht und was nicht** | [Auf einen Blick](#auf-einen-blick-was-das-paket-kann-und-wo-noch-fehler-sind) gleich hier unten; ausführlich in [Doku/ANWENDER.md](Doku/ANWENDER.md) |
+| **es einfach ausprobieren** | [Neuestes Paket herunterladen](https://github.com/HansWurst81675/Eudora7.2/releases/latest) — vor dem Auspacken die ZIP entsperren (siehe [Mark of the Web](#wenn-windows-den-start-blockiert-mark-of-the-web)), dann `Eudora starten.cmd` doppelklicken. Nichts zu installieren |
+| **wissen, was geht und was nicht** | [Was geht](#was-geht) und [Bekannte Fehler](#bekannte-fehler) gleich hier; ausführlich in [Doku/ANWENDER.md](Doku/ANWENDER.md) |
 | **es benutzen** (Filter, Defender, IMAP-Kennwort, Protokoll) | [Doku/ANWENDER.md](Doku/ANWENDER.md) |
-| **eine schnelle Antwort** (neue Fassung übernehmen, Verschlüsselung, IMAP, Konten, Kurznamen, Labels, Filter, Anhänge, Protokoll) | [Doku/FAQ.md](Doku/FAQ.md) — 21 häufige Fragen, nummeriert |
-| **wissen, welche Einstellungen anders sind als im Original Eudora — und warum** | [Intern/EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen) — zwei Tabellen mit Wert hier, Wert im Original und Begründung |
-| **es selbst bauen** | [Doku/BAUEN.md](Doku/BAUEN.md) — Visual Studio 2022 mit „Desktopentwicklung mit C++", ein Befehl; bis zum eigenen Release-ZIP aus einem frischen Klon: [Ein eigenes Release-ZIP bauen](Doku/BAUEN.md#ein-eigenes-release-zip-bauen--aus-einem-frischen-klon) (seit 7.2.2.138, [E-248](Intern/BEFUNDE.md#e-248)) |
-| **eigene Änderungen prüfen** (Regressionstests nach dem Bauen) | [Eigene Änderungen prüfen](#eigene-änderungen-prüfen-prüfstand) — `Pruefstand starten.cmd`, Anleitung in [Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md) |
+| **eine schnelle Antwort** | [Doku/FAQ.md](Doku/FAQ.md) — häufige Fragen, nummeriert |
+| **wissen, welche Einstellungen anders sind als im Original Eudora — und warum** | [Intern/EINSTELLUNGEN.md](Intern/EINSTELLUNGEN.md#abweichungen) |
+| **es selbst bauen** | [Doku/BAUEN.md](Doku/BAUEN.md) — Visual Studio 2022 mit „Desktopentwicklung mit C++“, ein Befehl; bis zum eigenen Release-ZIP: [Ein eigenes Release-ZIP bauen](Doku/BAUEN.md#ein-eigenes-release-zip-bauen--aus-einem-frischen-klon) (seit 7.2.2.138, [E-248](Intern/BEFUNDE.md#e-248)) |
+| **eigene Änderungen prüfen** | [Prüfstand](#eigene-änderungen-prüfen-prüfstand) — `Pruefstand starten.cmd`, Anleitung in [Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md) |
 | **einen Fehler melden** | [Einen Fehler melden](Doku/ANWENDER.md#einen-fehler-melden) |
 | **mitarbeiten** | [Doku/MITARBEITEN.md](Doku/MITARBEITEN.md) |
-| **wissen, wie portiert wurde** | [Doku/HINTERGRUND.md](Doku/HINTERGRUND.md) und [PORTIERUNG.md](Intern/PORTIERUNG.md) |
+| **wissen, wie portiert wurde** | [Doku/HINTERGRUND.md](Doku/HINTERGRUND.md) und [Intern/PORTIERUNG.md](Intern/PORTIERUNG.md) |
 
 ### Wenn hier jemand — oder eine KI — weiterarbeiten soll
 
 Die Reihenfolge ist wichtig, und sie ist kurz:
 
-1. **[CLAUDE.md](CLAUDE.md)** — was *vor* dem ersten Handgriff zu tun ist. 86 Zeilen.
-2. **`perl tools/offene-befunde.pl`** — was offen ist. Die erzeugte Tabelle in
-   [WEITERMACHEN.md](Intern/WEITERMACHEN.md) nennt zu jedem Punkt **was noch fehlt**,
-   nicht nur, wie er eingestuft ist.
-3. **[ZIEL.md](ZIEL.md)** — woran „fertig" gemessen wird. Neun Kriterien plus
-   der Maßstab für die Fassung 7.2.1. **ZIEL.md ist die Quelle**; widerspricht
-   ihr eine andere Datei, weist `tools/doku-pruefen.pl` den Commit ab.
-
-Mehr braucht es zum Anfangen nicht.
+1. [**CLAUDE.md**](CLAUDE.md) — was *vor* dem ersten Handgriff zu tun ist.
+2. **`perl tools/offene-befunde.pl`** — was offen ist. Die erzeugte Tabelle in [Intern/WEITERMACHEN.md](Intern/WEITERMACHEN.md) nennt zu jedem Punkt, **was noch fehlt**, nicht nur, wie er eingestuft ist.
+3. [**ZIEL.md**](ZIEL.md) — woran „fertig“ gemessen wird: neun Kriterien, dazu die erzeugte Liste dessen, was zur nächsten Fassung noch fehlt. **ZIEL.md ist die Quelle**; widerspricht ihr eine andere Datei, weist `tools/doku-pruefen.pl` den Commit ab.
 
 ### Welche Datei wofür da ist
 
-Im Wurzelverzeichnis liegt nur noch, was **für Leser** gedacht ist. Unser
-Arbeitsmaterial steht unter [`Intern/`](Intern) — es ist zum **Nachschlagen**
-da, nicht zum Lesen.
+Im Wurzelverzeichnis liegt, was **für Leser** gedacht ist. Unser Arbeitsmaterial steht unter [`Intern/`](Intern) — zum **Nachschlagen**, nicht zum Lesen.
 
 | Für Leser | |
 |---|---|
-| [README.md](README.md) | diese Datei: Einstieg und Wegweiser |
+| [README.md](README.md) | diese Datei: Einstieg, Update-Infos, Wegweiser |
 | [Doku/](Doku) | Benutzung, Bauen, Mitarbeiten, technischer Hintergrund |
-| [ZIEL.md](ZIEL.md) | woran „fertig" gemessen wird — **und was zur Fassung 7.2.1 noch fehlt**, ganz oben, erzeugt |
+| [ZIEL.md](ZIEL.md) | woran „fertig“ gemessen wird, und was noch fehlt (erzeugt) |
 | [CHANGELOG.md](CHANGELOG.md) | was sich je Fassung geändert hat, und die erzeugte Liste der offenen Befunde |
-| [Releases/PRUEFBERICHT.md](Releases/PRUEFBERICHT.md) | **jeder Test** mit Ergebnis, Zeitpunkt und Bau — Unit-Tests, Schranken, Prüfstandsfälle. Nach einer eigenen Änderung vergleicht `perl tools/pruefbericht.pl --vergleich` mit diesem Stand und nennt, was neu rot ist |
+| [Releases/PRUEFBERICHT.md](Releases/PRUEFBERICHT.md) | **jeder Test** mit Ergebnis, Zeitpunkt und Bau. Nach einer eigenen Änderung vergleicht `perl tools/pruefbericht.pl --vergleich` mit diesem Stand und nennt, was neu rot ist |
 | [MELDUNGEN-VON-AUSSEN.md](MELDUNGEN-VON-AUSSEN.md) | gemeldete Fehler von außen, mit Stand (auf Englisch) |
 | [LICENSE](LICENSE) | wer es wie benutzen darf |
 | [CLAUDE.md](CLAUDE.md) | was ein Agent **vor** dem ersten Handgriff tut |
 
 | `Intern/` — nachschlagen, nicht lesen | |
 |---|---|
-| [BEFUNDE.md](Intern/BEFUNDE.md) | jeder Befund mit Messung, Urteil und **was noch fehlt**. 8700 Zeilen; über die Kennung anspringen. Die Legende der 16 Kürzel steht ganz oben |
-| [WEITERMACHEN.md](Intern/WEITERMACHEN.md) | was zu tun ist: die eine Liste „Nach dem Release 7.2.1“ |
+| [BEFUNDE.md](Intern/BEFUNDE.md) | jeder Befund mit Messung, Urteil und **was noch fehlt**; über die Kennung (`#e-nnn`) anspringen. Legende der Kürzel ganz oben |
+| [WEITERMACHEN.md](Intern/WEITERMACHEN.md) | was zu tun ist (erzeugte Liste) |
 | [AUFGABEN.md](Intern/AUFGABEN.md), [TESTPLAN.md](Intern/TESTPLAN.md) | Arbeitspakete und Prüfpunkte |
 | [PORTIERUNG.md](Intern/PORTIERUNG.md) | Portierungstagebuch |
 | [LEKTORAT.md](Intern/LEKTORAT.md), [PRUEFBERICHT.md](Intern/PRUEFBERICHT.md) | Berichte der Rollen LEKTOR und PRÜFER (Archiv bis 30.08.2026 — nicht zu verwechseln mit dem Testbericht `Releases/PRUEFBERICHT.md`) |
@@ -96,317 +99,163 @@ da, nicht zum Lesen.
 | [AGENTEN.md](Intern/AGENTEN.md) | wie hier mit Agenten gearbeitet wird |
 | [BEFUNDE-ALTBESTAND.md](Intern/BEFUNDE-ALTBESTAND.md) | abgeschlossene Befunde aus der Frühzeit |
 
-Dazu [`Befunde/`](Befunde) (219 LEKTOR- und PRÜFER-Berichte, gezählt am 02.11.2026), [`Arbeitsweise/`](Arbeitsweise)
-(124 Lehren aus Fehlern; beides am 02.11.2026 mit `git ls-files` gezählt, ohne
-Laufberichte, Stand-Notizen und Entscheidungen) und [`tools/`](tools) (über 100 Werkzeuge und
-Schranken).
+Dazu [`Befunde/`](Befunde) (LEKTOR- und PRÜFER-Berichte), [`Arbeitsweise/`](Arbeitsweise) (Lehren aus Fehlern) und [`tools/`](tools) (Werkzeuge und Schranken). *Zählstand vom 02.11.2026 mit `git ls-files`: 219 Berichte, 124 Lehren, über 100 Werkzeuge — die Zahlen ändern sich laufend.*
+
+---
+
+## Was geht
+
+- **Mail abrufen und senden** über POP3, IMAP und SMTP mit **TLS 1.3** — auch an heutigen Servern (geprüft an GMX und freenet). Das Original von 2006 kann nur SSL 3.0 / TLS 1.0 und kommt an keinen heutigen Mailserver mehr heran.
+- **Lesen** von Text- und HTML-Nachrichten, mit Bildern in der richtigen Größe.
+- **Schreiben, antworten, weiterleiten**, Anhänge mit vollem Namen und Endung, mehrere Persönlichkeiten, Filter, Postfachverwaltung.
+- **Verschieben in einen IMAP-Ordner** — auch HTML-Nachrichten mit eingebetteten Bildern und gesendete Post; die Nachricht verschwindet aus dem lokalen Postfach erst, wenn sie auf dem Server steht.
+- **Ohne Installation:** ZIP auspacken, `Eudora starten.cmd` doppelklicken. Das Paket installiert nichts und legt nichts nach `C:\Program Files`.
+- **Selbst weiterbauen:** Der Quellbaum übersetzt vollständig mit MSVC v143 und MFC 14, ohne die Stingray-Bibliothek — an ihrer Stelle steht ein Nachbau in [`Eudora71/OTShim`](Eudora71/OTShim) (siehe [Die Ersatzschicht für Stingray OT501](Doku/HINTERGRUND.md#die-ersatzschicht-f%C3%BCr-stingray-ot501)).
+
+**Nicht `Eudora.exe` direkt starten.** Ohne Angabe des Mailverzeichnisses sucht Eudora sich eines und findet dabei über die Registry das einer **vorhandenen** Eudora- oder Hermes-Installation, auch in einem ganz anderen Ordner, und schreibt dann in deren `Eudora.ini` ([E-132](Intern/BEFUNDE.md#e-132)). `Eudora starten.cmd` übergibt das Verzeichnis als Argument und verhindert das; wer eine Verknüpfung anlegt, gibt den Pfad mit an: `Eudora.exe "C:\…\Mailverzeichnis"`. Ab 7.2.0.114 fragt Eudora vorher und legt ohne Zutun ein eigenes Verzeichnis an (auf allen Startwegen seit 7.2.0.116, auch bei einem fremden Ordner ohne `Eudora.ini` seit 7.2.0.117); veröffentlicht seit `v1.0.120`. Für `v1.0.117` und älter gilt der Hinweis oben unverändert.
+
+**Was zur nächsten Fassung noch fehlt,** steht erzeugt ganz oben in [ZIEL.md](ZIEL.md) — dort und nur dort, mit der Angabe, wer es prüft.
+
+---
+
+## Bekannte Fehler
+
+Stand: Release **7.2.2.136**. Behobene Fehler stehen in den [Update-Infos](#update-infos) und im [CHANGELOG](CHANGELOG.md); hier steht, was **im Release noch offen oder nur teilweise behoben** ist. Messung, Urteil und Quelltextstelle zu jedem Punkt stehen in [Intern/BEFUNDE.md](Intern/BEFUNDE.md) unter der genannten Kennung.
+
+**Ihre Post sichern.** Eudora legt alles im Verzeichnis `Mailverzeichnis` neben dem Programm ab. Wer es vor dem ersten Start einer neuen Fassung kopiert, kann jederzeit zurück.
+
+### Drucken
+
+| Befund | Was passiert | Was hilft | Stand |
+|---|---|---|---|
+| [E-242](Intern/BEFUNDE.md#e-242) | Druck und Druckvorschau zeigen unten den Pfad der Zwischendatei (`file:///C:/Users/<Windows-Benutzer>/…`) statt *„Printed for …“*; der Windows-Anmeldename steht auf dem Ausdruck | Ausdruck vor Weitergabe prüfen | Behebung der Druckvorschau im Testpaket 7.2.2.137 gebaut, Befund noch offen (nicht veröffentlicht); Druck über *Microsoft Print to PDF* von Gregor an 7.2.2.137 bestanden |
+| [E-240](Intern/BEFUNDE.md#e-240) | *File → Print Preview* braucht beim ersten Aufruf nach dem Start lange (rund 38 s gestoppt) ohne Rückmeldung | warten, nicht erneut klicken | Sanduhr im Testpaket 7.2.2.138 (nicht veröffentlicht) |
+
+### Fehlende Funktionen
+
+| Befund | Was passiert | Was hilft |
+|---|---|---|
+| [E-47](Intern/BEFUNDE.md#e-47) | **Verzeichnisdienste** (LDAP, Ph, EudoraBk), **S/MIME** und der **Junk-Filter** fehlen — Dialog *„Directory Services unavailable“*. Das eigene Adressbuch ist nicht betroffen | Brauchen `MFC71.DLL` und `msvcp71.dll` (Microsoft, 2003) neben der `Eudora.exe`, z. B. aus einer vorhandenen Eudora 7.1, Hermes oder Visual Studio 2003; ein offizielles Nachinstallationspaket gibt es nicht, **von DLL-Download-Seiten raten wir ab**. Ohne sie läuft Eudora, nur diese Zusätze fehlen. Die Bibliotheken von 2003 dürfen nicht mitgeliefert werden ([FILTER.md](Intern/FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)) |
+| [E-90](Intern/BEFUNDE.md#e-90) | Emoji in Betreffzeilen erscheinen nicht — sie fallen beim Abrufen ersatzlos weg | — |
+| [E-98](Intern/BEFUNDE.md#e-98) | Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | es gilt die zuletzt gewählte Einstellung |
+| [E-139](Intern/BEFUNDE.md#e-139) | Rechtschreibprüfung fehlt in dieser Fassung; die Meldung kommt bei jedem Start | mit *OK* wegklicken (in 7.2.1.129 behoben, siehe CHANGELOG) |
+
+### Speichern, Zeichensätze, Suche
+
+| Befund | Was passiert | Was hilft |
+|---|---|---|
+| [E-198](Intern/BEFUNDE.md#e-198) | Mehrteilige empfangene Nachricht in einem von Eudora beim Empfang nicht übersetzten Zeichensatz (`windows-1251`, `koi8-r`, `iso-8859-2`) bekommt bei *Speichern unter* und der Filteraktion *Notify Application* die Angabe `ISO-8859-1`; die gespeicherte Datei zeigt dann Zeichensalat (die Nachricht im Postfach nicht) | — |
+| [E-207](Intern/BEFUNDE.md#e-207) | *File → Save As* im **Signaturfenster**: schreibt seit 7.2.2.132 den Inhalt, aber das Fenster fragt danach beim Schließen nicht, die Änderung steht nur in der Kopie; der Dialog bietet weiter *Rtf Files* an und schreibt Text | Signatur mit *File → Save* sichern; als `.txt` statt `.rtf` speichern |
+| [E-136](Intern/BEFUNDE.md#e-136), [E-178](Intern/BEFUNDE.md#e-178), [E-179](Intern/BEFUNDE.md#e-179) | Emoji und Zeichen außerhalb des westeuropäischen Zeichensatzes können beim Speichern oder Bearbeiten zu `?` werden. Behoben für *Strg+S*, Link, Festbreite (7.2.1.129–130, am Prüfstand gemessen); **nicht gemessen:** *Speichern unter* als `.htm`, Antwort auf markierten Text, Textteil neben dem HTML-Teil und die Suche | in betroffenen Nachrichten nicht bearbeiten und speichern; vorher Postfach sichern |
+| [E-193](Intern/BEFUNDE.md#e-193) | Suche mit Umlauten oder `€`: *Find Messages* in 7.2.2.133 behoben; Rest (*Edit → Find* meldet *„not found“*) im Testpaket 7.2.2.135. Die genaue Suche in IMAP-Postfächern ist am Prüfstand nicht gemessen | findet *Edit → Find* ein Wort nicht, das *Find Messages* meldet: einmal oben in den Text klicken und erneut suchen |
+| [E-71](Intern/BEFUNDE.md#e-71) | Der Filterbericht bleibt leer — kein Fehler, er ist ab Werk aus (wie im Original) | *Tools → Options → Getting Attention → Generate filter report*, siehe [FAQ 23](Doku/FAQ.md#23-warum-ist-der-filterbericht-leer) |
+| [E-220](Intern/BEFUNDE.md#e-220) | Neues Postfach mit Umlaut im Namen (*Prüfung*) bekommt eine Datei ohne Umlaut (`Prfung.mbx`); in Eudora heißt es richtig | bewusst so gelassen; [Issue](https://github.com/HansWurst81675/Eudora7.2/issues) oder PR willkommen |
+
+### IMAP
+
+| Befund | Was passiert | Was hilft |
+|---|---|---|
+| [E-188](Intern/BEFUNDE.md#e-188) | **Verweigert ein IMAP-Server dauerhaft einen Teil einer Mail** (Anhang, eingebettetes Bild), holt Eudora die Mail bei jedem Anzeigen neu; Postfachdatei und Anhangordner können wachsen. Beim Verschieben bleibt die Mail in der Quelle stehen (Gregors Entscheidung vom 04.11.2026: *Sicherheit vor Platz*), im Ziel steht ein leerer Eintrag. Selten | Wächst eine Postfachdatei auffällig, die Mail auf dem Server prüfen; die Quelle nach dem Verschieben nicht von Hand löschen; den leeren Eintrag im Ziel nicht für die verschobene Mail halten |
+| [E-184](Intern/BEFUNDE.md#e-184), [E-189](Intern/BEFUNDE.md#e-189) | Verschieben zwischen IMAP-Ordnern desselben Kontos, wenn im Ziel schon eine andere Mail dieselbe interne Nummer trägt: Anzeige in 7.2.1.131 berichtigt. Ohne UIDPLUS steht die Mail im Ziel unter der alten Nummer neben der anderen | **scheinbare Doppel im Ziel nicht löschen** — auf dem Server trifft das vermutlich die andere Mail |
+| [E-142](Intern/BEFUNDE.md#e-142) | Entwurf aus einem IMAP-Ordner nach `Out` gezogen ergibt eine **leere** Nachricht; das Original bleibt im IMAP-Ordner. Ab 7.2.1 fragt Eudora vorher nach. Zur Meldung *„No messages were transferred!“* siehe [E-141](Intern/BEFUNDE.md#e-141) | Entwürfe im lokalen `Out` lassen (*Strg+S*); das Original erst löschen, wenn die Kopie geprüft ist |
+| [E-129](Intern/BEFUNDE.md#e-129) | Ohne Serververbindung nach IMAP verschoben und sofort beendet: der Zielordner zeigt nur einen Teil der Nachrichten | *Rechtsklick auf das Postfach → Show Deleted Messages*, dann *Message → UnDelete*; **nicht** *Purge Messages* benutzen |
+| [E-126](Intern/BEFUNDE.md#e-126) | Selten, vermutet: eine **gesendete** Mail, die genau während des Ordnerabgleichs verschoben wird, kommt nicht auf dem Server an und liegt nur im lokalen Papierkorb | nach dem Verschieben kurz im IMAP-Ordner nachsehen; Papierkorb nicht sofort leeren |
+| [E-123](Intern/BEFUNDE.md#e-123) | Nach Absturz, Stromausfall oder erzwungenem Herunterfahren mitten im Verschieben können eingebettete Bilder fehlen (beim normalen Beenden wartet Eudora seit 7.2.0.104) | vor dem Beenden warten, bis das Verschieben fertig ist |
+| [E-127](Intern/BEFUNDE.md#e-127) | War ein IMAP-Ordner seit dem Start noch nie geöffnet, konnten verschobene Mails in der Liste fehlen. Zuletzt am 23.10.2026 nicht mehr aufgetreten, **Ursache nie gefunden** | Ordner schließen und neu öffnen; bitte melden |
+| [E-233](Intern/BEFUNDE.md#e-233) | IMAP-Mail, deren Betreff gleich hinter `Subject:` umbricht, steht vermutlich ohne Betreff in der Liste (am Quelltext belegt, nicht gemessen) | Mail öffnen; der Betreff steht im Kopf |
+| [AN-1](Intern/BEFUNDE.md#an-1) | Ein Anhang ganz ohne Endung im Dateinamen bekommt über IMAP keine Endung (über POP schon) | Datei im Anhangverzeichnis umbenennen |
+| [E-77](Intern/BEFUNDE.md#e-77) | Vor dem Update auf 7.2.1 mit *Fcc* in einen IMAP-Ordner mit Umlaut gespeicherte Nachrichten werden gesendet, aber **ohne Meldung nicht abgelegt** | vor dem Senden das Ablage-Ziel neu wählen |
+
+### Sonstiges
+
+| Befund | Was passiert | Was hilft |
+|---|---|---|
+| [E-173](Intern/BEFUNDE.md#e-173) | Beim Anlegen eines Filters mit *Make Label* können die Labels einmal ausgegraut sein (Vermutung, nicht nachgestellt) | Filter löschen und neu anlegen |
+| [E-222](Intern/BEFUNDE.md#e-222) | Nach dem Öffnen einer S/MIME-signierten Mail über das Anhangsymbol stehen über dem Inhalt zwei Zeilen Kopftext (unkritisch, offen) | — |
+| [E-124](Intern/BEFUNDE.md#e-124) | Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | [Windows Defender meldet Eudora als Trojaner](Doku/ANWENDER.md#windows-defender-meldet-eudora-als-trojaner) |
+
+Bei jedem Fehler gilt: Die Post selbst geht in den genannten Fällen nicht verloren; *Was hilft* beschreibt, wie man Anzeige- und Bedienprobleme umgeht. Wo es um Kennwörter, fremde Server oder Zertifikate geht, steht es ausdrücklich dabei (siehe [E-204](Intern/BEFUNDE.md#e-204) in 7.2.2.132 behoben, [eMudhra](#kompromittierte-zertifikate-von-emudhra-oktober-2026)).
+
+---
+
+## Wenn Windows den Start blockiert (*Mark of the Web*)
+
+Lädt man ein ZIP aus dem Netz, merkt sich Windows die Herkunft in einem Alternativdatenstrom `Zone.Identifier` — und der Explorer vererbt ihn beim Auspacken an **jede** einzelne Datei. Eine `.exe` wird damit blockiert, eine `.cmd` nicht; deshalb läuft `Eudora starten.cmd`, aber `Eudora.exe` per Doppelklick nicht. **Das ist kein Fehler von Eudora 7.2**, sondern eine Windows-Vorkehrung ([E-138](Intern/BEFUNDE.md#e-138)).
+
+**Am besten vorher:** Rechtsklick auf die heruntergeladene `.zip` → *Eigenschaften* → unten das Kästchen *Zulassen* ankreuzen → *OK* — **dann erst auspacken**. So bekommt keine der Dateien die Markierung.
+
+**Schon ausgepackt?** In PowerShell:
+
+```
+Get-ChildItem -Recurse 'C:\Pfad\zum\Eudora72-Verzeichnis' | Unblock-File
+```
+
+**Nachsehen, ob es wirklich daran liegt:**
+
+```
+Get-Item 'C:\Pfad\zum\Eudora72-Verzeichnis\Eudora.exe' -Stream *
+```
+
+Steht dort ein Strom `Zone.Identifier`, ist es die Markierung; `Get-Content ... -Stream Zone.Identifier` zeigt sogar die Herkunfts-URL. Nach dem Entsperren ist der Strom weg und der Doppelklick startet.
+
+> Das Kästchen *Zulassen* im Eigenschaften-Dialog einer **einzelnen** Datei hilft nur dieser einen — die DLLs daneben tragen die Markierung weiter.
+
+> **Nicht zu verwechseln mit dem Defender-Fehlalarm** ([E-124](Intern/BEFUNDE.md#e-124)): der entfernt die Datei und meldet `Trojan:Win32/Bearfoos.A!ml`. Hier wird nichts entfernt, der Start wird nur verweigert.
+
+---
+
+## Kompromittierte Zertifikate von eMudhra (Oktober 2026)
+
+**Worum es geht.** Am 20.10.2026 wurde bekannt, dass acht Zwischenzertifikate der indischen Zertifizierungsstelle **eMudhra** mit Schlüsseln von nur 3 bis 8 Bit erzeugt worden waren — wer sie kennt, kann für **jeden** Server im Internet ein Zertifikat ausstellen, dem Programme mit den eMudhra-Wurzeln vertrauen ([Ars Technica](https://arstechnica.com/security/2026/10/the-internet-goes-on-high-alert-after-discovery-of-8-compromised-tls-certs/)). Browser haben die Zertifikate noch am selben Tag gesperrt. Der Artikel warnt ausdrücklich vor Programmen, die **ihre eigene Liste** von Wurzelzertifikaten mitliefern — Eudora gehört dazu.
+
+**Warum Eudora betroffen war.** Eudora prüft Serverzertifikate nicht gegen Windows, sondern gegen die Datei `rootcerts.p7b` — zuerst im Mailverzeichnis, sonst im Programmverzeichnis — und fragt keine Sperrlisten ab. Die Liste bis Paket 1.0.122 enthielt vier eMudhra-Wurzeln (*emSign Root CA – G1*, *– C1*, *emSign ECC Root CA – G3*, *– C3*). Ausnutzen lässt sich das nur, wenn jemand den Netzverkehr zwischen Eudora und dem Mailserver umleitet, etwa in einem öffentlichen WLAN; dann könnte er Eudora einen gefälschten Mailserver vorspielen und Kennwort und Post mitlesen.
+
+**Was behoben ist (ab dem Release 7.2.1).** Die vier Wurzeln sind aus der mitgelieferten Liste entfernt: [`Releases/1.0/rootcerts.p7b`](Releases/1.0/rootcerts.p7b) enthält jetzt 117 statt 121 Zertifikate, erzeugt von [`rootcerts-erzeugen.ps1`](Releases/1.0/rootcerts-erzeugen.ps1) mit einer Ausschlussliste; der Paketbau legt diese Datei in jedes Paket. GMX und freenet (IMAP, POP3, SMTP) sind gegen die neue Liste mit OpenSSL gemessen und werden angenommen — ihre Zertifikate stammen von der Telekom (T-TeleSec). Mit Eudora selbst hat Gregor es am Testpaket 7.2.0.123 gemessen: Abruf ohne Zertifikatsfehler. Dass Eudora eine eMudhra-Kette ablehnt, bleibt eine Rechnung. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel zurückkommt ([E-148](Intern/BEFUNDE.md#e-148)).
+
+**Mit einem älteren Paket:** Eudora beenden, die vorhandene `rootcerts.p7b` im Programmverzeichnis in `rootcerts.p7b.alt` umbenennen und die neue Datei aus `Releases/1.0/` hineinlegen — oder Eudora bis dahin nur im eigenen Netz benutzen. Nach dem Austausch einmal Mail abrufen. Meldet Eudora einen Zertifikatsfehler, die neue Datei löschen und `rootcerts.p7b.alt` zurückbenennen; dann sind allerdings auch die vier eMudhra-Wurzeln wieder da.
+
+**Auch im Mailverzeichnis nachsehen.** Wer selbst einmal eine `rootcerts.p7b` ins Mailverzeichnis kopiert hat, behält **diese** Liste, auch mit dem neuen Paket: dort löschen oder durch die neue Datei ersetzen (gefunden von [PRÜFER-51](Befunde/PRUEFER-51.md#pruefer-51), K6).
+
+**Welche Liste gilt, steht im Protokoll** — sofern `LogLevel` in der Gruppe `[Debug]` der `Eudora.ini` den Schalter 32768 enthält (das Paket setzt `LogLevel=58527`, eine eigene `Eudora.ini` oft nicht; siehe [Doku/ANWENDER.md](Doku/ANWENDER.md)). Beim ersten verschlüsselten Abruf oder Versand nach dem Start schreibt Eudora eine Zeile wie `rootcerts.p7b geladen aus: C:\…\Mailverzeichnis\rootcerts.p7b (vorhanden)` in die `eudora.log` im Mailverzeichnis. *„FEHLT“* heißt: in keinem der beiden Verzeichnisse liegt eine `rootcerts.p7b`, und Eudora hat keine Liste, gegen die es Serverzertifikate prüfen kann.
+
+---
+
 ## Eigene Änderungen prüfen (Prüfstand)
 
-Wer Eudora in einem Klon oder Fork ändert, prüft mit dem Prüfstand, ob dabei
-etwas kaputtgegangen ist, was vorher ging. Er startet Eudora rund sechzig Mal
-mit vorbereiteten Testmails und eigenen Prüfservern auf dem eigenen Rechner
-(nichts geht ins Internet) und prüft gut hundert Fälle.
+Wer Eudora in einem Klon oder Fork ändert, prüft mit dem Prüfstand, ob dabei etwas kaputtgegangen ist, was vorher ging. Er startet Eudora rund sechzig Mal mit vorbereiteten Testmails und eigenen Prüfservern auf dem eigenen Rechner (nichts geht ins Internet) und prüft gut hundert Fälle.
 
 1. Eudora bauen: `powershell -File tools\bauen.ps1` ([Doku/BAUEN.md](Doku/BAUEN.md)).
 2. **`Pruefstand starten.cmd`** im Hauptordner doppelklicken, Frage mit `j` beantworten.
 3. Warten — gemessen 60 bis 91 Minuten für den vollen Lauf (Stand 06.11.2026) — und den Rechner nicht benutzen; Eudora-Fenster gehen auf und zu. Der Starter nennt vorher die erwartete und am Ende die tatsächliche Dauer.
 4. Am Ende: `ERGEBNIS: alle Fälle bestanden` oder die Liste der roten Fälle.
 
-**Nur ausprobieren, ohne Visual Studio:** Git für Windows installieren, Repo klonen, `Pruefstand starten.cmd` doppelklicken, `j` – geprüft wird dann das zuletzt veröffentlichte Release (einmaliger Download, rund 9 MB).
+**Nur ausprobieren, ohne Visual Studio:** Git für Windows installieren, Repo klonen, `Pruefstand starten.cmd` doppelklicken, `j` — geprüft wird dann das zuletzt veröffentlichte Release (einmaliger Download, rund 9 MB).
+
 **Voraussetzungen kurz:** eigenes Windows-Konto oder VM · Git für Windows · Visual Studio 2022 nur für eigene Änderungen · freie Ports 11110, 1143, 1144, 1025, 18169 · Klon in einem Ordner ohne Leerzeichen · gut 700 MB plus 1,6 GB · eine bis anderthalb Stunden · Internet beim ersten Lauf.
 
-Voraussetzungen, Schalter, Ergebnis lesen und Fehlerbilder:
-**[Doku/PRUEFSTAND.md](Doku/PRUEFSTAND.md)**. Die Prüfverzeichnisse entstehen
-unter `C:\Temp\Eudora72-Pruefstand` (anderer Ordner mit `-Wurzel`); der
-Prüfstand fasst nur Verzeichnisse an, die er selbst angelegt und markiert hat –
-eigene Eudora-Ordner mit echten Mails bleiben unberührt. Wegen der Registry
-auf einem Rechner mit echter Eudora-Einrichtung trotzdem besser ein eigenes
-Windows-Konto oder eine VM nehmen.
+Voraussetzungen, Schalter, Ergebnis lesen und Fehlerbilder: [**Doku/PRUEFSTAND.md**](Doku/PRUEFSTAND.md). Die Prüfverzeichnisse entstehen unter `C:\Temp\Eudora72-Pruefstand` (anderer Ordner mit `-Wurzel`); der Prüfstand fasst nur Verzeichnisse an, die er selbst angelegt und markiert hat — eigene Eudora-Ordner mit echten Mails bleiben unberührt. Wegen der Registry auf einem Rechner mit echter Eudora-Einrichtung trotzdem besser ein eigenes Windows-Konto oder eine VM nehmen.
 
-## Auf einen Blick: was das Paket kann und wo noch Fehler sind
-
-*Stand **7.2.2.136** — Release `v7.2.2.136` vom 06.11.2026 mit [E-239](Intern/BEFUNDE.md#e-239) (kein Absturz beim Beenden bei offenem Hinweis) und [E-169](Intern/BEFUNDE.md#e-169) (`PrintBackground`): am 05.11.2026 geschnürt, voller Prüfstandslauf am 06.11.2026 110/110 am Bau `2a8fd4d7`, Unit-Tests 428/428, von Gregor am 06.11.2026 getestet und freigegeben. Davor **7.2.2.135** — Testpaket: alles aus 7.2.2.134 und der Rest von [E-193](Intern/BEFUNDE.md#e-193) (*Edit → Find*): am 05.11.2026 geschnürt, Prüfbericht BESTANDEN (425 Unit-Tests, 19 Schranken, 103 Prüfstandsfälle; im vollen Lauf waren 3 Fälle rot, einzeln wiederholt grün, darunter ein Absturz beim Beenden, [E-239](Intern/BEFUNDE.md#e-239)), nicht veröffentlicht. Davor **7.2.2.134** — Testpaket mit zwei Fehlerbehebungen ([E-223](Intern/BEFUNDE.md#e-223), [E-222](Intern/BEFUNDE.md#e-222)): am 05.11.2026 geschnürt, Prüfbericht BESTANDEN (424 Unit-Tests, 19 Schranken, 102 Prüfstandsfälle), nicht veröffentlicht. Davor **7.2.2.133** — Release mit Fehlerbehebungen ([E-188](Intern/BEFUNDE.md#e-188), [E-192](Intern/BEFUNDE.md#e-192), [E-193](Intern/BEFUNDE.md#e-193), [E-199](Intern/BEFUNDE.md#e-199), [E-220](Intern/BEFUNDE.md#e-220), [E-221](Intern/BEFUNDE.md#e-221)): am 04.11.2026 geschnürt, von Gregor am 04.11.2026 an seinem System getestet, veröffentlicht am 05.11.2026 als [`v7.2.2.133`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.133); sein Test fand drei neue Fehler aus dem Original ([E-222](Intern/BEFUNDE.md#e-222), [E-223](Intern/BEFUNDE.md#e-223), ein Rest von [E-193](Intern/BEFUNDE.md#e-193)), behoben in den Testpaketen 7.2.2.134 und 7.2.2.135. Davor **7.2.2.132** — die erste Fassung der Reihe 7.2.2: am 03.11.2026 geschnürt, Prüfbericht BESTANDEN (408 Unit-Tests, 19 Schranken, 81 Prüfstandsfälle), von Gregor am 03.11.2026 an seinem System getestet (alle zwölf Schritte [bestanden](Intern/TESTPLAN.md#test-7-2-2-132)), veröffentlicht am 03.11.2026 als [`v7.2.2.132`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.132). Neu sind das Hilfe-Menü ([A-5](Intern/BEFUNDE.md#a-5)), der About-Dialog mit *Latest Release* ([E-216](Intern/BEFUNDE.md#e-216)) und *Speichern unter* mit passender Endung ([E-128](Intern/BEFUNDE.md#e-128)), dazu Behebungen an Persönlichkeiten ([E-39](Intern/BEFUNDE.md#e-39), [E-203](Intern/BEFUNDE.md#e-203), [E-204](Intern/BEFUNDE.md#e-204)), beim Speichern ([E-194](Intern/BEFUNDE.md#e-194), [E-195](Intern/BEFUNDE.md#e-195), [E-196](Intern/BEFUNDE.md#e-196), [E-205](Intern/BEFUNDE.md#e-205), [E-207](Intern/BEFUNDE.md#e-207)), beim fehlenden Mailverzeichnis ([E-133](Intern/BEFUNDE.md#e-133)) und am IMAP-Label ([E-170](Intern/BEFUNDE.md#e-170)); was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.2.132, die Testschritte im [TESTPLAN](Intern/TESTPLAN.md#test-7-2-2-132). Davor **7.2.1.131** — zweites Release 7.2.1, am 02.11.2026 geschnürt, von Gregor am 02.11.2026 an seinem System getestet (alle sieben Schritte [bestanden](Intern/TESTPLAN.md#test-7-2-1-131)), veröffentlicht am 02.11.2026 als [`v7.2.1.131`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.131); es enthält die nicht veröffentlichten Testpakete 7.2.1.129 und 7.2.1.130, was darin neu ist, steht im [CHANGELOG](CHANGELOG.md) unter 7.2.1.131 bis 7.2.1.129. Davor das erste Release 7.2.1, [`v7.2.1.128`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.1.128) vom 29.10.2026 (CHANGELOG unter 7.2.1.128 und 7.2.0.127 bis 7.2.0.123). Seit dieser Fassung tragen Quellstand, `VERSION`, ZIP und Marke dieselbe Nummer ([PAKETE](Releases/PAKETE.md#drei-zählungen-und-wie-sie-zusammenhängen)).*
-
-### Was geht
-
-* **Mail abrufen und senden** über POP3, IMAP und SMTP mit TLS 1.3 – auch an
-  heutigen Servern (geprüft an GMX und freenet).
-* **Lesen** von Text- und HTML-Nachrichten, mit Bildern in der richtigen Größe.
-* **Schreiben, antworten, weiterleiten**, Anhänge mit vollem Namen und Endung,
-  mehrere Persönlichkeiten, Filter, Postfachverwaltung.
-* **Verschieben in einen IMAP-Ordner** – auch HTML-Nachrichten mit
-  eingebetteten Bildern und gesendete Post; die Nachricht verschwindet aus dem
-  lokalen Postfach erst, wenn sie auf dem Server steht.
-* **Ohne Installation**: ZIP auspacken, `Eudora starten.cmd` doppelklicken.
-  **Nicht `Eudora.exe` direkt starten** — ohne Angabe des Mailverzeichnisses
-  sucht Eudora sich eines und findet dabei über die Registry das einer
-  **vorhandenen** Eudora- oder Hermes-Installation, auch in einem ganz anderen
-  Ordner; es schreibt dann in deren `Eudora.ini` ([E-132](Intern/BEFUNDE.md#e-132),
-  der Weg hinter [E-131](Intern/BEFUNDE.md#e-131)). `Eudora starten.cmd` übergibt das
-  Verzeichnis als Argument und verhindert das; wer eine Verknüpfung anlegt,
-  gibt den Pfad mit an: `Eudora.exe "C:\…\Mailverzeichnis"`. **Ab 7.2.0.114
-  fragt Eudora vorher** und legt ohne Zutun ein eigenes Verzeichnis an — seit
-  7.2.0.116 auf allen Startwegen, seit 7.2.0.117 auch bei einem fremden Ordner
-  ohne `Eudora.ini`. **Veröffentlicht ist das seit dem 21.10.2026 als
-  `v1.0.120`** (19:07:37 UTC); **für `v1.0.117` und älter gilt der Hinweis oben
-  unverändert.** Die Pakete 1.0.115 bis 1.0.118 sind geschnürt und liegen bei
-  Gregor; 1.0.119 liegt seit dem 21.10.2026 als Testverzeichnis bei ihm.
-
-**Neu im veröffentlichten `v1.0.120` gegenüber `v1.0.101`:** Eudora übernimmt das
-Mailverzeichnis einer **fremden Installation** nicht mehr stillschweigend, sondern
-fragt vorher und legt ohne Zutun ein eigenes an — auf allen Startwegen
-([E-132](Intern/BEFUNDE.md#e-132), der Weg hinter dem ersten Fehlerbericht von
-außen); der Kurzname eines neuen Adressbucheintrags kommt an
-([E-134](Intern/BEFUNDE.md#e-134)); die Auswahlbox im `To:`-Feld schrumpft nicht
-mehr bei jedem Cursor-Schritt ([E-135](Intern/BEFUNDE.md#e-135)); und es wird keine
-ungültige Fensterposition mehr in eine gemeinsam benutzte `Eudora.ini` geschrieben
-([E-131](Intern/BEFUNDE.md#e-131)).
-
-**Neu in den Testpaketen 7.2.0.123 bis 7.2.0.127** (nicht einzeln veröffentlicht, enthalten im Release `v7.2.1.128`):
-steht an einer Stelle, im [CHANGELOG](CHANGELOG.md) unter diesen fünf Fassungen — darunter
-[E-156](Intern/BEFUNDE.md#e-156), [E-158](Intern/BEFUNDE.md#e-158), [E-160](Intern/BEFUNDE.md#e-160),
-[E-137](Intern/BEFUNDE.md#e-137), [E-146](Intern/BEFUNDE.md#e-146), [E-77](Intern/BEFUNDE.md#e-77), [E-113](Intern/BEFUNDE.md#e-113), [E-119](Intern/BEFUNDE.md#e-119), [E-148](Intern/BEFUNDE.md#e-148), [E-150](Intern/BEFUNDE.md#e-150), [E-130](Intern/BEFUNDE.md#e-130), [E-154](Intern/BEFUNDE.md#e-154).
-
-**Was zur Fassung 7.2.1 noch fehlt, steht erzeugt ganz oben in
-[ZIEL.md](ZIEL.md)** — dort und nur dort, mit der Angabe, wer es prüft.
-
-### Bekannte Fehler
-
-Die zweite Spalte sagt, was dabei verlorengehen oder verfälscht werden kann;
-*nichts* heißt, es betrifft nur Anzeige oder Bedienung.
-
-| Was passiert | Was kann verlorengehen | Was hilft | Befund |
-|---|---|---|---|
-| **Bis 7.2.1.128: ein Filter mit einer verneinten Bedingung trifft jede Nachricht** — *„Kopfzeile … doesn't appear“* trifft alle, *„appears“* keine; *„doesn't contain“* oder *„is not“* mit leerem Wert ebenfalls alle | mit der Aktion *transfer* verschiebt so ein Filter den **ganzen Posteingang** (nichts wird gelöscht, alles liegt im Zielpostfach) | **behoben ab 7.2.1.129**, enthalten im Release 7.2.1.131 (am Quelltext und im Regressionstest gesichert, am laufenden Programm nicht gemessen); wer noch 7.2.1.128 benutzt: solche Filter abschalten oder statt der Verneinung eine positive Bedingung nehmen | [E-72](Intern/BEFUNDE.md#e-72) |
-| **Bis Paket 1.0.122: Eudora vertraut vier Wurzelzertifikaten der Zertifizierungsstelle eMudhra**, unter denen am 20.10.2026 acht kompromittierte Zwischenzertifikate bekannt wurden. Wer zwischen Eudora und dem Mailserver sitzt, könnte Eudora einen gefälschten Server vorspielen | **Zugangsdaten und Post**, wenn jemand den Netzverkehr umleitet (öffentliches WLAN, fremdes Netz) | **Behoben ab dem Release 7.2.1** (schon im Testpaket 7.2.0.123) – die vier Wurzeln sind aus der mitgelieferten Liste entfernt. Bis dahin: Eudora nicht in fremden Netzen benutzen, oder `rootcerts.p7b` im Programmverzeichnis durch die neue Datei ersetzen. Liegt eine eigene `rootcerts.p7b` im Mailverzeichnis, gilt **diese** – auch nach dem neuen Paket. Einzelheiten unten | [E-148](Intern/BEFUNDE.md#e-148) |
-| **Bis 7.2.1.131: Eudora startet per Doppelklick nicht, weil das zuletzt benutzte Mailverzeichnis gelöscht oder verschoben wurde** — Meldung *„The directory specified in the command line … doesn't exist or is not writable"* (Text aus `IDS_ERR_BAD_EUDORA_DIR`, gesetzt in `CheckMailDirectory`) | nichts — die Daten sind schon vorher weg, Eudora fasst nichts an | **`Eudora starten.cmd` benutzen.** Es übergibt das eigene Mailverzeichnis des Pakets und umgeht den gemerkten Pfad. **Ab 7.2.2.132** fragt Eudora stattdessen: *Yes* = anderen Ordner wählen, *No* = den Ordner neben dem Programm nehmen, *Cancel* = beenden; der gewählte Ort wird für den nächsten Start gemerkt | [E-133](Intern/BEFUNDE.md#e-133) |
-| **Nach dem Herunterladen von GitHub startet `Eudora.exe` nicht per Doppelklick** — nur der Umweg über `Eudora starten.cmd` geht. Windows hängt beim Auspacken an jede Datei die Markierung *„stammt von einem anderen Computer“* (*Mark of the Web*) | nichts — das Programm startet nur nicht | **ZIP vor dem Auspacken entsperren**: Rechtsklick auf die `.zip` → Eigenschaften → *Zulassen*. Schon ausgepackt: siehe unten | [E-138](Intern/BEFUNDE.md#e-138) |
-| Läuft eine Fassung **vor 7.2.0.113** neben einer vorhandenen Eudora oder Hermes 7.1, schreibt sie `MRUFloatXPos=-2147483648` – eine ungültige Fensterposition – in die gemeinsam benutzte `Eudora.ini`. Der Melder berichtet, dass sein Hermes 7.1 danach beim Start abstürzte (`EXCEPTION_ACCESS_VIOLATION` in `MFC71.DLL`) | nichts von Ihrer Post – aber möglicherweise die **Benutzbarkeit der vorhandenen Installation** | **Behoben in 7.2.0.113, seit `v1.0.113` veröffentlicht:** diese Fassung schreibt den Wert nicht mehr, am Prüfstand rot und grün gemessen. **Zwei Einschränkungen:** eine `Eudora.ini`, die den Wert schon trägt, wird erst beim nächsten Sichern durch unsere Fassung berichtigt – wer sie nicht mehr startet, berichtigt sie von Hand oder spielt die Sicherung zurück. Und **dass dieser Wert der Grund des Absturzes war, ist nicht belegt** ([PRÜFER-40](Befunde/PRUEFER-40.md#k1) K1: `-2147483648` ist `CW_USEDEFAULT`, das MFC selbst setzt und beim Lesen wieder abfängt); belegt ist nur, dass wir ihn schreiben. **Sicherheitshalber weiter:** `Eudora.ini` und Mailverzeichnis sichern, bevor diese Fassung neben einer vorhandenen Installation läuft. Von außen gemeldet ([Issue #102](https://github.com/HansWurst81675/Eudora7.2/issues/102), 18.10.2026, an `v1.0.101`) | [E-131](Intern/BEFUNDE.md#e-131) |
-| Eine Nachricht, die der Filter nicht lesen kann, wird still übersprungen | nichts geht verloren – **diese eine Nachricht** bleibt ungefiltert liegen, die übrigen werden weiter gefiltert (am Quelltext gelesen für *Filter Messages*, [LEKTOR-41](Befunde/LEKTOR-41.md)) | nach dem Filtern stichprobenartig nachsehen; ab 7.2.0.106 (seit `v1.0.112` veröffentlicht) steht die Nachricht mit Betreff und Grund im Fenster *Task Errors*, ab 7.2.0.110 nur noch der erste Fall eines Laufs einzeln und der Rest als ein Sammeleintrag, und es piept höchstens einmal je zwei Sekunden | [E-69](Intern/BEFUNDE.md#e-69) |
-| Eine als Datei gespeicherte Nachricht zeigt in anderen Programmen falsche Zeichen | die **gespeicherte Datei** ist verfälscht (die Nachricht im Postfach nicht) | aus der Postfachliste speichern (Nachricht markieren, *File → Save As*) — dieser Weg ergänzt seit 7.2.0.120 die Zeichensatzangabe; aus dem geöffneten Nachrichten- oder Verfassen-Fenster siehe [E-140](Intern/BEFUNDE.md#e-140). **In 7.2.0.107 bis 7.2.0.109 — alle drei nie als Paket geschnürt — war es für Post in `windows-1251`, `koi8-r` oder `iso-8859-2` schlechter als in `v1.0.101`; ab 7.2.0.110 nicht mehr** ([PRÜFER-37](Befunde/PRUEFER-37.md) F3/F4 behoben). Bei Latin-1- und UTF-8-Post trat das nie auf | [E-101](Intern/BEFUNDE.md#e-101) |
-| Eine über *File → Save As* gespeicherte Nachricht heißt immer `.txt` – auch wenn ihr Inhalt HTML ist, und ohne jeden Hinweis. **Ab 7.2.2.132** schlägt der Dialog die passende Endung vor: aus der Postfachliste `.eml`, wenn die Datei einen Kopf trägt (Kopfzeilen, HTML oder Umlaute), aus den Fenstern `.htm` für eine HTML-Mail | nichts – der Inhalt ist vollständig, nur die Endung passt nicht | bis 7.2.2.132: die Datei in `.html` umbenennen und im Browser öffnen, oder in `.eml` umbenennen und in Thunderbird | [E-128](Intern/BEFUNDE.md#e-128) |
-| *File → Save As* schlägt den Dateinamen **ohne Umlaute** vor, mit doppelten Leerzeichen, wo `\|` oder `:` stand, und nach 63 Zeichen abgeschnitten (am 03.11.2026 an 7.2.1.131 und 7.2.2.132 am Prüfstand gemessen). **Behoben in 7.2.2.133** (am Prüfstand gemessen, Gegenprobe an 7.2.1.131) | nichts | bis 7.2.2.132: den Namen im Dialog ändern | [E-220](Intern/BEFUNDE.md#e-220) |
-| Ein neues Postfach mit Umlaut im Namen (etwa *Prüfung*) bekommt eine **Datei ohne Umlaut** im Mailverzeichnis (`Prfung.mbx`); in Eudora heißt es richtig (am Quelltext gelesen, `StripIllegalMT`). **Bewusst so gelassen** — wer es anders braucht, ist eingeladen, ein [Issue zu eröffnen](https://github.com/HansWurst81675/Eudora7.2/issues) oder einen PR zu schicken | nichts | – | [E-220](Intern/BEFUNDE.md#e-220) |
-| Ein langer **Betreff mit Umlauten** erscheint in der Postfachliste um seine **ersten sieben Zeichen** gekürzt, wenn der Absender die Kopfzeile gleich hinter `Subject:` umbricht – Eudora selbst tut das bei etwa jedem fünften Umlaut-Betreff von 40 bis 60 Zeichen (an 7.2.1.131 und 7.2.2.132 gemessen, Originalfehler). **Behoben in 7.2.2.133** (am Prüfstand gemessen, Gegenprobe an 7.2.1.131 und 7.2.2.132) | nichts – die Nachricht selbst ist vollständig, nur der Listeneintrag ist gekürzt | bis 7.2.2.132: die Nachricht öffnen; dort steht der ganze Betreff | [`E-221`](Intern/BEFUNDE.md#e-221) |
-| Ein leerer Rest einer gelöschten Persönlichkeit (nur die Zeile `SavePasswordText=`) steht nach dem Beenden wieder in der `Eudora.ini`; Eudora liest ihn nicht — nur nach diesem Umweg: zuvor *Change Password* für sie aufgerufen (ab Werk nicht im Menü; nur über einen eigenen Knopf aus *Customize Toolbar* oder mit `RemoveChangePassword=0`), ihr POP-Konto hat kein „@“ (Fehlermeldung *„I can't tell where the machine name is …“*), danach *Special → Forget Password(s)*. Das gewöhnliche Löschen über *Personalities → Delete* ist nicht betroffen (am Prüfstand gemessen) | **Einstellungen** der Persönlichkeit (Ihre Post nicht) | nach einer solchen Fehlermeldung Eudora einmal beenden und neu starten, bevor Sie die Persönlichkeit löschen. **Behoben in 7.2.2.132** | [E-39](Intern/BEFUNDE.md#e-39) |
-| **Bis 7.2.1.131: wer eine Persönlichkeit löscht und in derselben Sitzung eine neue mit demselben Namen anlegt, dessen neue Persönlichkeit schickt beim ersten Abruf ungefragt das Kennwort der gelöschten** an den Server ihres eigenen Kontos (am Prüfstand gemessen). Betroffen ist der gewöhnliche Fall: die gelöschte war beim Löschen nicht die aktuelle | das **Kennwort** der gelöschten Persönlichkeit kann an einen fremden Server gehen | nach dem Löschen Eudora einmal beenden und neu starten, bevor Sie eine gleichnamige Persönlichkeit anlegen — Eudora hält das Kennwort nur im Arbeitsspeicher. **Behoben in 7.2.2.132** | [E-204](Intern/BEFUNDE.md#e-204) |
-| **Bis Paket 1.0.127:** wer die Kontoeinstellungen (*Tools → Personalities*, Rechtsklick → *Properties*) mit OK schließt, verliert Einstellungen, die Eudora seit dem letzten Speichern nur im Arbeitsspeicher hielt — etwa die Antwort auf die Frage *„Automatically put junk mail in the Junk mailbox?“*, die dann beim nächsten Start wiederkommt | **Einstellungen** (Ihre Post nicht) | Eudora vor dem Öffnen der Kontoeinstellungen einmal beenden und neu starten. **Behoben ab dem Release 7.2.1** | [E-166](Intern/BEFUNDE.md#e-166) |
-| An einem IMAP-Server, der beim Verschieben **keine neuen Nummern** meldet (ohne UIDPLUS), geht das **Label** einer Mail verloren, wenn sie zwischen zwei Ordnern **desselben IMAP-Kontos** verschoben wird (am Prüfstand am 02.11.2026 an 7.2.1.128 und 7.2.1.131 gemessen) — Eudora speichert Labels nur bei sich, nicht auf dem Server. Meldet der Server die Nummern (UIDPLUS, wie Gregors Server), bleibt das Label; das tat schon 7.2.1.128 — einmal ging es trotzdem verloren (29.10.2026, Ursache offen). **In 7.2.2.132 berichtigt:** ohne UIDPLUS erkennt Eudora die Mail nach dem Abgleich an Datum, Absender und Betreff wieder; passen zwei neue Mails gleich gut, bleibt das Label aus, statt auf der falschen zu landen | das **Label** der Mail (die Mail selbst nicht) | Label nach dem Verschieben neu setzen | [E-170](Intern/BEFUNDE.md#e-170) |
-| Wird eine Mail zwischen zwei Ordnern **desselben IMAP-Kontos** verschoben und liegt im Zielordner schon eine **andere** Mail mit derselben internen Nummer, zeigt Eudora danach Betreff und Absender der verschobenen Mail an deren Stelle (Server mit UIDPLUS). In 7.2.1.131 berichtigt (am Prüfstand gemessen) | die **Anzeige** im Zielordner (auf dem Server nichts) | keine gemessene; ob ein erneuter Abgleich (im Postfachfenster Rechtsklick auf den Ordner → *Resynchronize Mailbox*) die Anzeige richtigstellt, ist nicht gemessen | [E-184](Intern/BEFUNDE.md#e-184) |
-| Dasselbe bei einem Server **ohne** UIDPLUS: die verschobene Mail steht im Zielordner unter der alten Nummer, neben der anderen Mail, die diese Nummer wirklich trägt. In 7.2.1.131 berichtigt (am Prüfstand gemessen) | die **Anzeige**; **Vorsicht** beim Löschen des doppelten Eintrags — vermutlich trifft das auf dem Server die andere Mail (nicht gemessen) | den doppelten Eintrag **nicht löschen**; ein erneuter Abgleich räumt ihn vermutlich nicht weg (am Quelltext, [PRÜFER-75](Befunde/PRUEFER-75.md) K2) | [E-189](Intern/BEFUNDE.md#e-189) |
-| Werden **mehrere** Mails eines IMAP-Kontos auf einmal in den **Papierkorb**, nach **Junk** oder per **Filter** verschoben, können die Einträge im Zielordner Betreff und Absender der einen Mail tragen und den Text einer anderen laden — dieselbe Verwechslung wie beim Verschieben zwischen IMAP-Ordnern, Fehler aus dem Original. **Behoben in 7.2.2.133** (am Prüfstand gemessen für den Papierkorb: drei Mails, nach Datum sortiert, auf einmal gelöscht, jeder Eintrag richtig; Junk und Filter nicht eigens gemessen) | die **Anzeige** im Zielordner (auf dem Server geht nichts verloren) | bis 7.2.2.132: IMAP-Mails einzeln in den Papierkorb oder nach Junk verschieben (aus dem Quelltext abgeleitet, nicht gemessen) | [E-192](Intern/BEFUNDE.md#e-192) |
-| Dieselbe Verwechslung beim Verschieben **zwischen zwei IMAP-Konten** und beim Verschieben einer **nicht ganz geladenen** IMAP-Mail in ein **lokales** Postfach: Eudora kann den Eintrag einer fremden Mail mit derselben internen Nummer überschreiben. **Lehnt das Ziel das Hochladen ab oder lässt sich der Text nicht laden, löscht Eudora die Mail in der Quelle trotzdem** – beim Verschieben nach lokal auch dann, wenn dort schon eine Mail mit derselben Nummer liegt (am Prüfstand am 03.11.2026 an 7.2.2.132 gemessen; der Quelltext stammt aus dem Original). **Behoben in 7.2.2.133** (am Prüfstand gemessen, 10 von 10; 7.2.2.132 und älter haben den Fehler noch) | die **verschobene Mail auf dem Server**, sobald der Quellordner bereinigt wird (Purge); dazu die Anzeige im Ziel | nach dem Verschieben die Mail im Ziel öffnen und prüfen, **bevor** der Quellordner bereinigt wird – bis dahin ist sie in der Quelle nur zum Löschen markiert und lässt sich zurückholen; scheinbare Doppel im Ziel nicht löschen (gilt für 7.2.2.132 und älter; wer sie löscht, löscht auf dem Server auch eine fremde Mail) | [E-188](Intern/BEFUNDE.md#e-188) |
-| **Verweigert ein IMAP-Server dauerhaft einen Teil einer Mail** (etwa einen Anhang oder ein eingebettetes Bild; gemessen ist nur der Fall, dass **alle** Teile einer HTML-Mail verweigert werden), zeigt Eudora, was angekommen ist, **holt die Mail aber bei jedem Anzeigen neu**; die Postfachdatei und der Anhangordner können dabei wachsen (am Quelltext belegt, [PRÜFER-95](Befunde/PRUEFER-95.md#k3) K3, nicht am Prüfstand gemessen). Beim Verschieben in ein anderes Konto oder nach lokal bleibt die Mail in der Quelle stehen (am Prüfstand gemessen für eine HTML-Mail, deren Teile alle verweigert werden). Im Ziel steht danach ein leerer Eintrag (nach lokal am Prüfstand gemessen) oder nichts (zwischen Konten am Quelltext belegt), ohne Meldung; die Suche nimmt die Mail ohne Text auf; beim Löschen der Mail bleiben die gesammelten Anhangdateien liegen (je am Quelltext belegt). Scheitert etwas in einer weitergeleiteten Mail, bricht die Anzeige dort ab: die Teile dahinter fehlen in dieser Ladung und, solange der Server den Teil verweigert, auch bei keinem späteren Öffnen; die Mail wird beim nächsten Öffnen neu geholt (am Quelltext belegt, [PRÜFER-97](Befunde/PRUEFER-97.md#k1) K1). Gilt ab 7.2.2.133; Gregors Entscheidung vom 04.11.2026, *Sicherheit vor Platz*. Ob *Compact* die Postfachdatei bei IMAP-Ordnern wieder verkleinert, ist nicht gemessen | **Platz**, nicht Post: das Verbleiben in der Quelle schützt vor Verlust | der Fall ist selten (der Server müsste denselben Teil immer wieder verweigern); verweigert er ihn nur einmal, holt das nächste Öffnen die Mail vollständig. Wächst eine Postfachdatei auffällig, die betroffene Mail auf dem Server prüfen; die Quelle nach dem Verschieben nicht von Hand löschen, den leeren Eintrag im Ziel nicht für die verschobene Mail halten | [E-188](Intern/BEFUNDE.md#e-188) |
-| Die **Druckvorschau** mancher HTML-Mails zeigt keine Bilder und keine farbigen Flächen; im Lesefenster ist die Mail vollständig; **behoben in 7.2.2.136** (Release vom 06.11.2026; gemessen ist die Vorschau, der Druck auf Papier nicht): mit `PrintBackground=1` in `[Settings]` der `Eudora.ini` druckt Eudora die Hintergründe mit (Vorgabe `0`) | nichts | – | [E-169](Intern/BEFUNDE.md#e-169) |
-| Rechtsklick in einer Mail → *Search Mailfolder* (ebenso *Search Mailbox*, *Search Eudora*) **ohne markierten Text** meldet *„There has been an internal error during the search“* | nichts | vorher ein Wort markieren, oder *Edit → Find → Find Messages* benutzen; behoben in 7.2.1.129 (Testpaket) | [E-171](Intern/BEFUNDE.md#e-171) |
-| Beim Anlegen eines Filters mit der Aktion *Make Label* stehen die Labels **einmal ausgegraut** da und lassen sich nicht wählen; eine Spur am Quelltext gibt es (Vermutung, nicht nachgestellt) | nichts | Filter löschen und neu anlegen, dann sind die Labels wählbar | [E-173](Intern/BEFUNDE.md#e-173) |
-| Selten, vermutet: wird eine **gesendete** Mail genau in dem Moment in einen IMAP-Ordner verschoben, in dem Eudora diesen Ordner gerade abgleicht, kommt sie nicht auf dem Server an und liegt nur im lokalen Papierkorb | diese **gesendete Mail**, wenn danach der Papierkorb geleert wird | nach dem Verschieben kurz im IMAP-Ordner nachsehen; den Papierkorb nicht sofort leeren | [E-126](Intern/BEFUNDE.md#e-126) |
-| Nach einem Neustart mitten im Verschieben nach IMAP können eingebettete Bilder einer Nachricht fehlen; die Nachricht selbst bleibt | die **eingebetteten Bilder** dieser Nachricht | vor dem Beenden warten, bis das Verschieben fertig ist. Ab 7.2.0.104 (seit `v1.0.112` veröffentlicht) wartet Eudora beim Beenden selbst, bis das Hochladen fertig ist; ab 7.2.0.108 wird nach fünf Minuten **nicht** mehr erzwungen beendet, sondern das Beenden aufgegeben — das Fenster bleibt offen und der Grund steht in der Statuszeile. Nach einem Absturz, Stromausfall oder erzwungenen Herunterfahren kann es weiter passieren | [E-123](Intern/BEFUNDE.md#e-123) |
-| War der IMAP-Ordner seit dem Start **noch nie geöffnet**, konnten die eben dorthin verschobenen Mails in seiner Liste fehlen, bis man ihn noch einmal schloss und öffnete. **Am 23.10.2026 in zwei Läufen an 7.2.0.120 nicht mehr aufgetreten; die Ursache wurde nie gefunden** — wer es sieht, bitte melden | nichts – die Mails sind auf dem Server | den Ordner schließen und neu öffnen | [E-127](Intern/BEFUNDE.md#e-127) |
-| Wird **ohne Serververbindung** in einen IMAP-Ordner verschoben und sofort beendet, zeigt der Zielordner danach nur einen Teil der Nachrichten | nichts – die Nachrichten stehen weiter im Ausgangspostfach | *Rechtsklick auf das Postfach → Show Deleted Messages* macht sie wieder sichtbar, *Message → UnDelete* holt sie zurück; *Message → Purge Messages* dabei **nicht** benutzen – das entfernt sie | [E-129](Intern/BEFUNDE.md#e-129) |
-| **Verzeichnisdienste** (LDAP, Ph, EudoraBk) , S/MIME und der Junk-Filter fehlen — Dialog *„Directory Services unavailable“*. S/MIME, der Junk-Filter (SpamWatch, SpamHeaders) und LDAP brauchen `MFC71.DLL` (Microsoft, z. B. 7.10.6041.0) und `msvcp71.dll` (Microsoft, z. B. 7.10.6052.0) **neben der `Eudora.exe`** (oder schon in `C:\Windows\SysWOW64`). Herkunft: eine vorhandene Installation von Eudora 7.1, Hermes oder Visual Studio 2003 – ein offizielles Nachinstallationspaket von Microsoft gibt es für diese Fassung nicht; **von DLL-Download-Seiten raten wir ab**. Ohne sie läuft Eudora, nur diese Zusätze fehlen (Gregor 05.11.2026, [S-3](Intern/BEFUNDE.md#s-3)) ([FILTER.md](Intern/FILTER.md#warum-die-junk-bewertung-hier-nicht-arbeitet)). **Das eigene Adressbuch ist davon nicht betroffen** und arbeitet | nichts | – (die Bibliotheken von 2003 dürfen nicht mitgeliefert werden) | [E-47](Intern/BEFUNDE.md#e-47) |
-| Bilder, die als `data:` im HTML stecken, erscheinen beim Antworten und Weiterleiten **bis Paket 1.0.122** als grauer Kasten; **im Testpaket 7.2.0.123** kleine Bilder richtig, Bilder über 48 KB verstümmelt (grüne oder graue Fläche mit Streifen) | nichts – die Nachricht selbst bleibt unverändert | die Behebung für große Bilder ist im Testpaket 7.2.0.124, von Gregor bestätigt, und kommt mit dem Release 7.2.1 | [E-119](Intern/BEFUNDE.md#e-119) |
-| **Bis Paket 1.0.122:** sehr breite Bilder laufen im Verfassen-Fenster rechts aus dem Fenster; Größenangaben wie `35px` können ein Bild verzerren | nichts | **Behoben ab dem Release 7.2.1** (schon im Testpaket 7.2.0.123): ein zu breites Bild wird beim Laden auf die Fensterbreite verkleinert | [E-113](Intern/BEFUNDE.md#e-113), [E-116](Intern/BEFUNDE.md#e-116) |
-| In einen IMAP-Ordner hochgeladene Nachrichten tragen ein um die Zeitzone verschobenes Eingangsdatum (Sortierung) | nichts | – ; in 7.2.1.131 behoben (am IMAP-Prüfserver gemessen, von Gregor am 02.11.2026 an 7.2.1.131 bestätigt) | [E-122](Intern/BEFUNDE.md#e-122) |
-| **Bis Paket 1.0.122:** IMAP-Ordnernamen mit Umlauten stehen roh da (`Entw&APw-rfe`) | nichts | **Behoben ab dem Release 7.2.1** (schon im Testpaket 7.2.0.123), auch beim Anlegen und Umbenennen | [E-77](Intern/BEFUNDE.md#e-77) |
-| Emoji in Betreffzeilen erscheinen gar nicht — sie fallen beim Abrufen ersatzlos weg (seit 7.2.0.59; davor standen zwei `?` je Emoji) | nichts | – | [E-90](Intern/BEFUNDE.md#e-90) |
-| Im Speicherdialog fehlen *Kopfzeilen einschließen* und *Absätze raten* | nichts | es gilt die zuletzt gewählte Einstellung | [E-98](Intern/BEFUNDE.md#e-98) |
-| **Bis `v1.0.120`:** eine Nachricht aus einem IMAP-Ordner nach `Out` gezogen wird nicht verschoben: in `Out` entsteht eine neue Nachricht mit `<br>` im Betreff und in den Kopfzeilen, dazu die Meldung *„No messages were transferred!“* | nichts – das Original bleibt im IMAP-Ordner; wer die neue Nachricht sendet, schickt sie mit kaputtem Empfänger | Nachrichten nicht aus einem IMAP-Ordner nach `Out` ziehen; so entstandene Einträge in `Out` nicht senden, sondern löschen. **Ab Paket 1.0.122** lehnt Eudora das Ziehen mit einem Hinweis ab | [E-125](Intern/BEFUNDE.md#e-125) |
-| Wird eine Nachricht mit Emoji oder mit Zeichen außerhalb des westeuropäischen Zeichensatzes in Eudora gespeichert (*Strg+S*), werden diese Zeichen zu Fragezeichen – obwohl sie vorher richtig angezeigt wurden. Gemessen an einem Emoji, das das Plug-in EudoraUnicodeFix als HTML-Entität geschrieben hatte; für andere Schriften erschlossen | **diese Zeichen** in der gespeicherten Nachricht, nicht rückgängig zu machen | solche Nachrichten nicht bearbeiten und speichern; vorher das Postfach sichern; in 7.2.1.129 geändert (Strg+S), in 7.2.1.130 auch *Speichern unter* als `.htm`; Strg+S am 02.11.2026 an 7.2.1.130 am Prüfstand gemessen (die Zeichen bleiben erhalten), *Speichern unter* als `.htm` am Programm noch nicht | [E-136](Intern/BEFUNDE.md#e-136) |
-| Ein Entwurf aus einem **IMAP-Ordner** nach `Out` gezogen ergibt in `Out` eine **leere** Nachricht (ohne Empfänger, Betreff und Text); das Original bleibt im IMAP-Ordner. Ab dem Release 7.2.1 fragt Eudora vorher nach und weist darauf hin; hat Eudora den Entwurf inzwischen neu vom Server geladen, lehnt es das Verschieben ab, und auch *Message → Send Again* ergibt dann eine leere Mail. **Entwürfe daher im lokalen Postfach `Out` lassen** (*File → Save*, Strg+S) und nicht in einen IMAP-Ordner verschieben | der **Entwurf**, wenn man das Original im IMAP-Ordner löscht, weil man es für verschoben hält | das Original im IMAP-Ordner erst löschen, wenn die Kopie in `Out` geprüft ist; ist sie leer, die Kopie löschen und den Text aus dem Original in eine neue Nachricht übernehmen. Nach *Ja* meldet Eudora weiter *„No messages were transferred!“* ([E-141](Intern/BEFUNDE.md#e-141)) | [E-142](Intern/BEFUNDE.md#e-142) |
-| Ein Antwortentwurf, der aus einem lokalen Postfach (etwa `Trash`) zurück nach `Out` gezogen wird, verliert die Angabe, worauf er antwortet (`In-Reply-To`, `References`) – beim Empfänger hängt die Antwort nicht mehr im Gesprächsfaden | nichts – Text und Betreff bleiben, nur die Zuordnung zum Gesprächsfaden fehlt | Antwortentwürfe nicht aus `Out` herausziehen; sonst die Antwort neu aus der ursprünglichen Nachricht anlegen; behoben in 7.2.1.129 (Testpaket) | [E-144](Intern/BEFUNDE.md#e-144) |
-| Ein **Filter** mit Ziel `Out` oder ein Verschieben vieler Treffer aus dem **Suchfenster** nach `Out` zeigt den Hinweis je Nachricht – zwanzig Treffer, zwanzig Dialoge; ein solcher Filter hält den automatischen Mailabruf vermutlich an, bis man klickt (am Quelltext gelesen, nicht gemessen) | nichts | keinen Filter mit Ziel `Out` anlegen; aus dem Suchfenster nicht nach `Out` verschieben. In 7.2.1.130 für Filter geändert: Out ist dort nicht wählbar (von Gregor an allen drei Wegen bestätigt), ältere Filter mit Ziel Out werden mit einer Zeile im Log übergangen (das Übergehen ist nicht gemessen). Für das Suchfenster in 7.2.1.131 geändert: ein Hinweis je Übertragung (am Prüfstand gemessen) | [E-143](Intern/BEFUNDE.md#e-143) |
-| Im **Bearbeiten-Modus** einer Nachricht machen *Link einfügen*, *Festbreite* und die Antwort auf markierten Text aus Emoji und Zeichen außerhalb des westeuropäischen Zeichensatzes `??` (*Fett* und *Kursiv* sind nicht betroffen) | **diese Zeichen**, wenn die Nachricht danach gespeichert wird | in solchen Nachrichten keinen Link einfügen und keine Festbreite setzen; vorher das Postfach sichern; in 7.2.1.130 berichtigt (am 02.11.2026 am Prüfstand gemessen für Link, Festbreite und Speichern; die Antwort auf markierten Text ist nicht gemessen) | [E-178](Intern/BEFUNDE.md#e-178) |
-| Im **Bearbeiten-Modus** einer empfangenen Nachricht schreibt *Festbreite* die Zeichen `t;` sichtbar in den Text, und *Strg+S* speichert sie mit (am 02.11.2026 an 7.2.1.130 am Prüfstand gemessen; Fehler aus dem Original); **behoben in 7.2.2.133** (7.2.2.132 und älter haben ihn noch; am Prüfstand rot an `main` und grün mit der Behebung gemessen) | nichts geht verloren, aber **Zeichenmüll** kommt in die gespeicherte Nachricht | bis 7.2.2.132: in empfangenen Nachrichten im Bearbeiten-Modus keine *Festbreite* setzen | [E-199](Intern/BEFUNDE.md#e-199) |
-| **Bis 7.2.1.128:** im **Textteil** einer gesendeten HTML-Mail und in der Suche wird aus einem Emoji, das als Zeichenangabe (`&#128293;`) im HTML steht, ein einzelnes falsches Zeichen (`%`); nach einer hexadezimalen Angabe (`&#x1F525;`) bricht der Textteil ab | im Textteil der Rest der Nachricht nach einer hexadezimalen Angabe – ein HTML-Teil bleibt richtig | auf 7.2.1.131 wechseln; berichtigt ab 7.2.1.130, am Prüfstand am 02.11.2026 beim Senden als reiner Text bestätigt; der Textteil neben dem HTML-Teil (Vorgabe) und die Suche rufen dieselbe Umwandlung, gemessen sind sie nicht | [E-179](Intern/BEFUNDE.md#e-179) |
-| Die Vervollständigungsbox im `To:`-Feld sieht mit einem einzigen Treffer verbaut aus – grauer Balken unten, Box höher als der Eintrag | nichts | den Kurznamen ganz tippen oder mit den Pfeiltasten wählen; behoben in 7.2.1.129 (Testpaket, von Gregor bestätigt) | [E-165](Intern/BEFUNDE.md#e-165) |
-| Die Meldung, dass die Rechtschreibprüfung in dieser Fassung fehlt, kommt nach jedem Programmstart einmal wieder – es gibt kein Kästchen *„Nicht mehr anzeigen"* | nichts | mit *OK* wegklicken; behoben in 7.2.1.129 (Testpaket) | [E-139](Intern/BEFUNDE.md#e-139) |
-| Ein Anhang **ganz ohne Endung** im Dateinamen bekommt über **IMAP** keine Endung angehängt (über POP schon) | nichts – die Datei ist vollständig, nur die Endung fehlt | die Datei im Anhangverzeichnis umbenennen und die passende Endung anhängen (etwa `.pdf`) | [AN-1](Intern/BEFUNDE.md#an-1) |
-| Eine Nachricht, die **vor** dem Update auf 7.2.1 mit Ablage (*Fcc*) in einen IMAP-Ordner mit Umlaut im Namen (etwa *Entwürfe*) gespeichert wurde, wird nach dem Update gesendet, aber **ohne Meldung nicht abgelegt** — eine Nebenwirkung der Behebung von [E-77](Intern/BEFUNDE.md#e-77) (am Quelltext gelesen, nicht gemessen) | die **abgelegte Kopie** dieser Nachricht | vor dem Senden solcher älterer Nachrichten das Ablage-Ziel neu wählen | [E-77](Intern/BEFUNDE.md#e-77) |
-| **Bis 7.2.1.128:** zieht man einen **Entwurf** aus einem **IMAP-Ordner** nach `Out` und antwortet auf die Rückfrage mit *Yes*, stößt das die IMAP-Nachbearbeitung an, obwohl nichts übertragen wurde, und meldet *„No messages were transferred!“*; je nach Einstellung kann sie den IMAP-Ordner am Server bereinigen (*Expunge*) — die Meldung am Prüfstand an 7.2.1.128 gemessen, das Bereinigen am Quelltext gelesen | als gelöscht markierte Nachrichten in diesem IMAP-Ordner, die sonst noch zurückzuholen wären | auf 7.2.1.131 wechseln; berichtigt ab 7.2.1.129, am Prüfstand am 02.11.2026 bestätigt (keine Meldung mehr; Verschieben nach lokal und Löschen unverändert) | [E-141](Intern/BEFUNDE.md#e-141) |
-| *File → Save As* aus dem **Nachrichten-** oder **Verfassen-Fenster** schreibt keine Zeichensatzangabe in die Datei; andere Programme können Umlaute dann falsch zeigen (am 31.10.2026 an 7.2.1.128 gemessen) | die **gespeicherte Datei** kann verfälscht angezeigt werden (die Nachricht im Postfach nicht) | aus der Postfachliste speichern (Nachricht markieren, *File → Save As*) — dieser Weg ergänzt die Angabe; behoben in 7.2.1.129 (Testpaket), von Gregor am 01./02.11.2026 an 7.2.1.130 an beiden Fenstern bestätigt | [E-140](Intern/BEFUNDE.md#e-140) |
-| Eine **mehrteilige** empfangene Nachricht in einem Zeichensatz, den Eudora beim Empfang nicht übersetzt (etwa kyrillisch `windows-1251`, `koi8-r`, `iso-8859-2`), bekommt beim *Speichern unter* und bei der Filteraktion *Notify Application* die falsche Angabe `ISO-8859-1`; ein anderes Programm zeigt den Text dann als Zeichensalat (am Programmkern gemessen, am laufenden Programm nicht) | die **gespeicherte oder übergebene Datei** wird verfälscht angezeigt (die Nachricht im Postfach nicht) | keine gemessene | [E-198](Intern/BEFUNDE.md#e-198) |
-| *Speichern unter* hat drei kleine Mängel: aus der **Postfachliste** (mit *Kopfzeilen einschließen* auch aus dem Nachrichtenfenster) stehen bei Mails im Format *format=flowed* Eudoras interne Zeilen `<x-flowed>` und `</x-flowed>` in der Textdatei ([E-194](Intern/BEFUNDE.md#e-194)); der Dateityp *Rtf Files* liefert eine Textdatei unter der Endung `.rtf` ([E-195](Intern/BEFUNDE.md#e-195)); eine als `.htm` gespeicherte Nachricht nennt ihren Zeichensatz nicht, ein Browser, der UTF-8 annimmt, zeigt Umlaute falsch ([E-196](Intern/BEFUNDE.md#e-196)) — alle an Gregors Dateien vom 01.11.2026 an 7.2.1.130 beobachtet, am Prüfstand nachgestellt | nichts — der Inhalt ist vollständig, die Umlaute stehen richtig (windows-1252) in der Datei | die zwei Zeilen von Hand entfernen; als `.txt` statt `.rtf` speichern (der Inhalt ist derselbe); im Browser die Kodierung *Westeuropäisch (Windows-1252)* wählen. **Alle drei behoben in 7.2.2.132 — das `.rtf` nur für Nachrichten; im Signaturfenster bietet der Dialog weiter *Rtf Files* an und schreibt Text ([E-207](Intern/BEFUNDE.md#e-207))** | [E-194](Intern/BEFUNDE.md#e-194), [E-195](Intern/BEFUNDE.md#e-195), [E-196](Intern/BEFUNDE.md#e-196) |
-| *File → Save As* aus dem **Signaturfenster** (*Tools → Signatures*, Signatur geöffnet) schreibt eine **leere Datei** (am 02.11.2026 an 7.2.1.131 gemessen). In 7.2.2.132 steht der Inhalt darin. **Weiter gilt auch danach:** nach *Save As* fragt das Fenster beim Schließen nicht, die Änderung steht nur in der Kopie, die Signatur selbst bleibt unverändert; und der Dialog bietet weiter *Rtf Files* an, schreibt dort aber Text | **Änderungen an der Signatur**, die vor dem *Save As* gemacht wurden (bis 7.2.1.131 ganz, danach nur in der Signatur selbst) | wer die Signatur ändern will, sichert mit *File → Save* (am Quelltext belegt, nicht gemessen); als `.txt` statt `.rtf` speichern | [E-207](Intern/BEFUNDE.md#e-207) |
-| Die **Suche mit Umlauten oder `€`** liefert widersprüchliche Ergebnisse: *Find Messages* meldet Treffer, in denen die Suche im geöffneten Fenster (*Edit → Find*) das Wort nicht findet; *Find Messages* liegt falsch, *Edit → Find* findet richtig (am Prüfstand am 03.11.2026 an 7.2.2.132 gemessen, 24 von 24; von Gregor am 01.11.2026 an 7.2.1.130 beobachtet); **behoben in 7.2.2.133**: mit Umlaut oder € nimmt *Find Messages* die genaue Suche, die auch HTML-Mails mit `&auml;` oder `&euro;` findet (am Prüfstand 11 von 11 Wörtern richtig, vorher 8 von 11); an Gregors Postfach am 04.11.2026 132 HTML-Mails in 141–156 ms (aus seiner `eudora.log`). **Rest behoben im Testpaket 7.2.2.135.** *Edit → Find* im geöffneten Fenster meldete *„not found“*, wenn die Mail aus *Find Messages* geöffnet war und das Wort nur einmal vorkam (von Gregor am 04.11.2026 an 7.2.2.133 beobachtet, Ursache am 05.11.2026 von Gregor gefunden: der Treffer war schon markiert, und die Suche lief ab dort weiter); jetzt sucht *Edit → Find* dann einmal von oben, markiert den Treffer und scrollt ihn in den sichtbaren Bereich (Gregor 05.11.2026; am Prüfstand vorher 1 von 13 Mails gefunden, nachher 13 von 13); die genaue Suche in IMAP-Postfächern ist am Prüfstand nicht gemessen | nichts — aber eine Suche kann Falsches finden oder Vorhandenes übersehen | bis 7.2.2.132: Treffer von *Find Messages* mit Umlauten im geöffneten Fenster nachprüfen; in 7.2.2.133 und 7.2.2.134 gilt: findet *Edit → Find* ein Wort nicht, das *Find Messages* meldet, einmal oben in den Text klicken und erneut suchen | [E-193](Intern/BEFUNDE.md#e-193) |
-| Eine **IMAP-Mail, deren Betreff gleich hinter `Subject:` umbricht** (so falten manche Programme lange Betreffs mit Umlauten, Eudora selbst bis 7.2.2.132), steht in der Postfachliste vermutlich **ohne Betreff** (am Quelltext belegt, nicht gemessen; betrifft nur IMAP, POP siehe [E-221](Intern/BEFUNDE.md#e-221)) | nichts — die Mail ist vollständig, nur der Betreff fehlt in der Liste | die Mail öffnen; der Betreff steht im Kopf | [E-233](Intern/BEFUNDE.md#e-233) |
-| Ein **Filter** mit der Aktion *Notify Application* und `%6` übergibt dem Programm eine Datei, deren Kopf bei einer empfangenen UTF-8-Nachricht `charset=utf-8` sagt, obwohl der Text in windows-1252 steht (am 02.11.2026 an 7.2.1.130 gemessen) | nichts in Eudora; das **andere Programm** kann € und Umlaute falsch zeigen | im Programm windows-1252 annehmen; in 7.2.1.131 behoben (am Prüfstand gemessen) | [E-177](Intern/BEFUNDE.md#e-177) |
-| In fehlerhaft kodierter Post (Base64 mit Bytes über 127) entstehen beim Dekodieren einzelne falsche Bytes, statt dass die ungültigen Zeichen übersprungen werden (am Original-Dekodierer gemessen) | einzelne Zeichen dieses Anhangs oder Textes | solche Post ist fehlerhaft und selten; behoben in 7.2.1.129 (Testpaket) | [E-145](Intern/BEFUNDE.md#e-145) |
-| Der Filterbericht bleibt nach einem Filterlauf leer — kein Fehler: der Bericht ist ab Werk aus (wie im Original; am 07.11.2026 am Prüfstand gemessen) | nichts | *Tools → Options → Getting Attention → Generate filter report* einschalten, siehe [FAQ 23](Doku/FAQ.md#23-warum-ist-der-filterbericht-leer) | [E-71](Intern/BEFUNDE.md#e-71) |
-| Microsoft Defender kann eine Fassung fälschlich als Trojaner einstufen und das Programm ohne Meldung beenden | nichts | siehe [Windows Defender meldet Eudora als Trojaner](Doku/ANWENDER.md#windows-defender-meldet-eudora-als-trojaner) | [E-124](Intern/BEFUNDE.md#e-124) |
-| **„Remember password“ wirkt erst beim zweiten Mal:** wer das Häkchen im Kennwortdialog zum ersten Mal setzt, wird beim nächsten Start noch einmal gefragt; erst danach ist das Kennwort gespeichert (von Gregor am 04.11.2026 an 7.2.2.133 beobachtet, Ursache am Quelltext belegt, Fehler aus dem Original); **behoben in 7.2.2.136** (Release vom 06.11.2026; im Testpaket 7.2.2.134 von Gregor am 05.11.2026 bestätigt) | nichts | das Kennwort beim nächsten Start noch einmal eingeben, Häkchen gesetzt lassen | [E-223](Intern/BEFUNDE.md#e-223) |
-| Ein Klick auf das Anhangsymbol einer **S/MIME-signierten Mail** meldet *„Plugin no longer available“*, obwohl das Plug-in geladen ist; der Inhalt erscheint nicht (von Gregor am 04.11.2026 an 7.2.2.133 beobachtet, Ursache am Quelltext belegt, Fehler aus dem Original); **behoben in 7.2.2.136** (Release vom 06.11.2026; von Gregor am 05.11.2026 an 7.2.2.135 bestätigt); über dem Inhalt stehen danach zwei Zeilen Kopftext (unkritisch, offen) | nichts – die Mail bleibt vollständig im Postfach | keine gemessene | [E-222](Intern/BEFUNDE.md#e-222) |
-| **Druck und Druckvorschau** einer Mail zeigen unten den Pfad der Zwischendatei (`file:///C:/Users/<Windows-Benutzer>/…`) statt *„Printed for …“* — der Windows-Anmeldename steht auf dem Ausdruck (am 06.11.2026 an 7.2.2.136 auf Gregors Bildschirmfoto gesehen, am Prüfstand nachgestellt) | nichts; eine persönliche Angabe auf dem Papier | Behebung für die Druckvorschau im Quellstand für 7.2.2.137 gebaut, im Testpaket 7.2.2.137 (nicht veröffentlicht); der Druck über *Microsoft Print to PDF* ist von Gregor an 7.2.2.137 bestanden | [E-242](Intern/BEFUNDE.md#e-242) |
-| *File → Print Preview* braucht beim ersten Aufruf nach dem Start lange (von Gregor an 7.2.2.136 mit rund 38 s gestoppt), ohne Rückmeldung | nichts | warten und nicht erneut klicken; im Quellstand für 7.2.2.137 eine Sanduhr, im Testpaket 7.2.2.138 bleibt sie bis zur Vorschau stehen (nicht veröffentlicht) | [E-240](Intern/BEFUNDE.md#e-240) |
-| Eudora kann beim **Beenden abstürzen**, wenn gleichzeitig der Hinweis nach dem Mailabruf („neue Mail“ bzw. „keine neue Mail“) offen ist (am Prüfstand am 05.11.2026 zweimal, ausgelöst durch zwei Schließwünsche aus Skripten; bei Anwendern nicht beobachtet, ob sie den Weg erreichen, ist offen); **behoben in 7.2.2.136** (Release vom 06.11.2026, von Gregor getestet): Eudora schiebt das Beenden auf, bis der Hinweis geschlossen ist | nichts – gemessen am Prüfstand: die abgerufene Mail steht im Postfach, die Postfachübersicht ist aktuell | nicht mehr nötig | [E-239](Intern/BEFUNDE.md#e-239) |
-
-**Ihre Post sichern.** Eudora legt alles im Verzeichnis `Mailverzeichnis`
-neben dem Programm ab. Wer es vor dem ersten Start einer neuen Fassung kopiert,
-kann jederzeit zurück.
-
-### Wenn Windows den Start blockiert (*Mark of the Web*)
-
-Lädt man ein ZIP aus dem Netz, merkt sich Windows die Herkunft in einem
-Alternativdatenstrom `Zone.Identifier` — und der Explorer vererbt ihn beim
-Auspacken an **jede** einzelne Datei. Eine `.exe` wird damit blockiert, eine
-`.cmd` nicht; deshalb läuft `Eudora starten.cmd` und `Eudora.exe` nicht.
-**Das ist kein Fehler von Eudora 7.2**, sondern eine Windows-Vorkehrung.
-
-**Am besten vorher:** Rechtsklick auf die heruntergeladene `.zip` →
-*Eigenschaften* → unten das Kästchen *Zulassen* ankreuzen → *OK* — **dann
-erst auspacken**. So bekommt keine der rund 50 Dateien die Markierung.
-
-**Schon ausgepackt?** In PowerShell:
-
-```powershell
-Get-ChildItem -Recurse 'C:\Pfad\zum\Eudora72-Verzeichnis' | Unblock-File
-```
-
-**Nachsehen, ob es wirklich daran liegt:**
-
-```powershell
-Get-Item 'C:\Pfad\zum\Eudora72-Verzeichnis\Eudora.exe' -Stream *
-```
-
-Steht dort ein Strom `Zone.Identifier`, ist es die Markierung;
-`Get-Content ... -Stream Zone.Identifier` zeigt sogar die Herkunfts-URL.
-Nach dem Entsperren ist der Strom weg und der Doppelklick startet.
-
-> Das Kästchen *Zulassen* im Eigenschaften-Dialog einer **einzelnen** Datei
-> hilft nur dieser einen — die DLLs daneben tragen die Markierung weiter.
-
-> **Nicht zu verwechseln mit dem Defender-Fehlalarm**
-> ([E-124](Intern/BEFUNDE.md#e-124)): der entfernt die Datei und meldet
-> `Trojan:Win32/Bearfoos.A!ml`. Hier wird nichts entfernt, der Start wird nur
-> verweigert.
-
-### Kompromittierte Zertifikate von eMudhra (Oktober 2026)
-
-**Worum es geht.** Am 20.10.2026 wurde bekannt, dass acht
-Zwischenzertifikate der indischen Zertifizierungsstelle **eMudhra** mit
-Schlüsseln von nur 3 bis 8 Bit erzeugt worden waren — wer sie kennt, kann für
-**jeden** Server im Internet ein Zertifikat ausstellen, dem Programme mit den
-eMudhra-Wurzeln vertrauen
-([Ars Technica: *„The Internet goes on high alert after discovery of 8 compromised TLS certs“*](https://arstechnica.com/security/2026/10/the-internet-goes-on-high-alert-after-discovery-of-8-compromised-tls-certs/)).
-Browser haben die Zertifikate noch am selben Tag gesperrt. Der Artikel warnt
-ausdrücklich vor Programmen, die **ihre eigene Liste** von
-Wurzelzertifikaten mitliefern — Eudora gehört dazu.
-
-**Warum Eudora betroffen war.** Eudora prüft Serverzertifikate nicht gegen
-Windows, sondern gegen die Datei `rootcerts.p7b` — zuerst im Mailverzeichnis,
-sonst im Programmverzeichnis (siehe unten) —, und
-fragt keine Sperrlisten ab. Die Liste bis Paket 1.0.122 enthielt vier
-eMudhra-Wurzeln (*emSign Root CA – G1*, *– C1*, *emSign ECC Root CA – G3*,
-*– C3*). Ausnutzen lässt sich das nur, wenn jemand den Netzverkehr zwischen
-Eudora und dem Mailserver umleitet — etwa in einem öffentlichen WLAN; dann
-könnte er Eudora einen gefälschten Mailserver vorspielen und Kennwort und Post
-mitlesen.
-
-**Was behoben ist (ab dem Release 7.2.1).** Die vier Wurzeln sind aus der
-mitgelieferten Liste entfernt: [`Releases/1.0/rootcerts.p7b`](Releases/1.0/rootcerts.p7b)
-enthält jetzt 117 statt 121 Zertifikate, erzeugt von
-[`rootcerts-erzeugen.ps1`](Releases/1.0/rootcerts-erzeugen.ps1) mit einer
-Ausschlussliste, und der Paketbau legt diese Datei in jedes Paket. GMX und
-freenet (IMAP, POP3, SMTP) sind gegen die neue Liste mit **OpenSSL** gemessen
-und werden angenommen — ihre Zertifikate stammen von der Telekom (T-TeleSec),
-nicht von eMudhra. **Mit Eudora selbst** hat Gregor es am Testpaket 7.2.0.123 gemessen:
-Abruf ohne Zertifikatsfehler. Dass Eudora eine eMudhra-Kette ablehnt, bleibt eine Rechnung. Ein Regressionstest wird rot, sobald eine eMudhra-Wurzel
-zurückkommt ([E-148](Intern/BEFUNDE.md#e-148)).
-
-**Was Sie mit einem älteren Paket tun können:** Eudora beenden, die
-vorhandene `rootcerts.p7b` im Programmverzeichnis in `rootcerts.p7b.alt`
-umbenennen und die neue Datei aus `Releases/1.0/` hineinlegen — oder Eudora
-bis zum neuen Paket nur im eigenen Netz benutzen. Ob Eudora mit der neuen
-Datei bei Ihrem Anbieter weiter abruft, ist wie oben gesagt erst mit OpenSSL
-gemessen: nach dem Austausch einmal Mail abrufen. Meldet Eudora einen
-Zertifikatsfehler, die neue Datei löschen und `rootcerts.p7b.alt` wieder in
-`rootcerts.p7b` umbenennen — dann sind allerdings auch die vier
-eMudhra-Wurzeln wieder da, und für das fremde Netz gilt wieder die Vorsicht
-von oben.
-
-**Auch im Mailverzeichnis nachsehen.** Eudora sucht `rootcerts.p7b` zuerst im
-**Mailverzeichnis** (dort, wo `Eudora.ini` und die Postfächer liegen) und nur,
-wenn sie dort fehlt, im Programmverzeichnis — so hat QUALCOMM es gebaut, damit
-man die mitgelieferte Liste durch eine eigene ersetzen kann
-(`QCSSLContext.cpp`, `ChooseCertFileDirectory`). Das Paket legt dort keine
-solche Datei ab. Wer aber selbst einmal eine `rootcerts.p7b` ins
-Mailverzeichnis kopiert hat, behält **diese** Liste, auch mit dem neuen Paket:
-dort löschen oder ebenfalls durch die neue Datei ersetzen. Gefunden von
-[PRUEFER-51](Befunde/PRUEFER-51.md#pruefer-51) (K6).
-
-**Welche Liste gilt, steht ab dem Release 7.2.1 im Protokoll** — sofern
-`LogLevel` in der `[Debug]`-Gruppe der `Eudora.ini` den Schalter 32768
-enthält (das Paket setzt `LogLevel=58527`, eine eigene `Eudora.ini` oft
-nicht; siehe [Doku/ANWENDER.md](Doku/ANWENDER.md)). Beim ersten
-verschlüsselten Abruf oder Versand nach dem Start schreibt Eudora eine Zeile wie
-`rootcerts.p7b geladen aus: C:\…\Mailverzeichnis\rootcerts.p7b (vorhanden)`
-in die Datei `eudora.log` im Mailverzeichnis. Steht dort das
-Mailverzeichnis, gilt Ihre eigene Liste; steht dort das Programmverzeichnis,
-die mitgelieferte. *„FEHLT"* heißt: in keinem der beiden Verzeichnisse liegt
-eine `rootcerts.p7b`, und Eudora hat keine Liste, gegen die es Serverzertifikate prüfen kann.
-
-## Was es kann
-
-* **Mail abrufen und verschicken** über POP3 und SMTP mit **TLS 1.3** — das
-  Original von 2006 kann nur SSL 3.0 / TLS 1.0 und kommt damit an keinen
-  heutigen Mailserver mehr heran.
-* **Ohne Installation starten.** Das Paket enthält alles, was der Lader
-  braucht; es schreibt nichts in die Registrierung und nichts nach
-  `C:\Program Files`.
-* **Selbst weiterbauen.** Der Quellbaum übersetzt vollständig mit MSVC v143
-  und MFC 14, ohne die Stingray-Bibliothek — an ihrer Stelle steht ein
-  Nachbau im Verzeichnis [`Eudora71/OTShim`](Eudora71/OTShim) (siehe [Die
-  Ersatzschicht für Stingray OT501](Doku/HINTERGRUND.md#die-ersatzschicht-für-stingray-ot501)).
-* **Schreiben, senden, antworten, weiterleiten**, Anhänge, mehrere
-  Persönlichkeiten, die Postfachverwaltung — der Alltag funktioniert.
+---
 
 ## Stand
 
-Die Messlatte steht in [ZIEL.md](ZIEL.md): neun Kriterien, an denen sich
-entscheidet, ob eine Fassung abnahmefähig ist, dazu einzelne Anforderungen
-`A-n`. **ZIEL.md ist die Quelle** — `tools/doku-pruefen.pl` weist jeden Commit
-ab, in dem eine andere Datei etwas anderes über ein Kriterium behauptet.
+Die Messlatte steht in [ZIEL.md](ZIEL.md): neun Kriterien, an denen sich entscheidet, ob eine Fassung abnahmefähig ist, dazu einzelne Anforderungen `A-n`. **ZIEL.md ist die Quelle** — `tools/doku-pruefen.pl` weist jeden Commit ab, in dem eine andere Datei etwas anderes über ein Kriterium behauptet.
 
-Kurz: Eudora baut aus einem frischen Klon, das Paket startet auf einem Rechner
-ohne Visual Studio, Mail wird über TLS abgerufen und verschickt, Antworten und
-Weiterleitungen gehen, das Programm beendet sich sauber, und die offenen
-Fenster stehen als Registerkarten am unteren Rand. Was ein Anwender heute noch
-merkt, steht oben unter [Was es nicht kann](Doku/ANWENDER.md#was-es-nicht-kann); die
-vollständige Liste mit Messung und Fundstelle führt
-[CHANGELOG.md](CHANGELOG.md) unter *Noch offen* und *Erreicht*.
+Kurz: Eudora baut aus einem frischen Klon, das Paket startet auf einem Rechner ohne Visual Studio, Mail wird über TLS abgerufen und verschickt, Antworten und Weiterleitungen gehen, das Programm beendet sich sauber, und die offenen Fenster stehen als Registerkarten am unteren Rand. Was ein Anwender heute noch merkt, steht oben unter [Bekannte Fehler](#bekannte-fehler) und in [Doku/ANWENDER.md](Doku/ANWENDER.md#was-es-nicht-kann); die vollständige Liste mit Messung und Fundstelle führt das [CHANGELOG](CHANGELOG.md) unter *Noch offen* und *Erreicht*.
 
-**Die Prüfanleitung zum jeweils aktuellen Paket steht nicht hier**, sondern im
-CHANGELOG beim Eintrag der Fassung — eine Anleitung in der README veraltet mit
-dem nächsten Bau, ohne dass es jemand merkt.
-
+**Die Prüfanleitung zum jeweils aktuellen Paket steht nicht hier**, sondern im CHANGELOG beim Eintrag der Fassung — eine Anleitung in der README veraltet mit dem nächsten Bau, ohne dass es jemand merkt.
 
 ## Verwandte Projekte
 
-- [HermesMail](https://sourceforge.net/projects/hermesmail/) — rüstet ein
-  installiertes Eudora 7.1 binär mit neueren TLS-DLLs nach (OpenSSL 1.0.2)
-- [Eudora_patches](https://github.com/HansWurst81675/Eudora_patches) — Binärpatches
-  für die Umlautdarstellung
+- [HermesMail](https://sourceforge.net/projects/hermesmail/) — rüstet ein installiertes Eudora 7.1 binär mit neueren TLS-DLLs nach (OpenSSL 1.0.2)
+- [Eudora_patches](https://github.com/HansWurst81675/Eudora_patches) — Binärpatches für die Umlautdarstellung
 
 ## Lizenz
 
-**[LICENSE](LICENSE)** — der vollständige Text. Kurz:
+[**LICENSE**](LICENSE) — der vollständige Text. Kurz:
 
-Der Eudora-Quelltext steht unter der BSD-3-Clause-Lizenz mit Patentausschluss,
-unter der ihn das Computer History Museum 2018 freigegeben hat (Urheberzeile
-von 2016, siehe Kopf der Quelldateien). **Alles, was in diesem Projekt neu
-entstanden ist** — die Ersatzschicht unter `Eudora71/OTShim`, die Werkzeuge
-unter `tools/` und die Dokumentation — steht unter **derselben** Lizenz. Die
-Änderungen liegen fast alle innerhalb von Dateien mit diesem Lizenzkopf; eine
-zweite Lizenz ergäbe eine Grenze, die niemand nachziehen kann.
+Der Eudora-Quelltext steht unter der BSD-3-Clause-Lizenz mit Patentausschluss, unter der ihn das Computer History Museum 2018 freigegeben hat (Urheberzeile von 2016, siehe Kopf der Quelldateien). **Alles, was in diesem Projekt neu entstanden ist** — die Ersatzschicht unter `Eudora71/OTShim`, die Werkzeuge unter `tools/` und die Dokumentation — steht unter **derselben** Lizenz. Die Änderungen liegen fast alle innerhalb von Dateien mit diesem Lizenzkopf; eine zweite Lizenz ergäbe eine Grenze, die niemand nachziehen kann.
 
-Benutzen, verändern und weitergeben ist damit erlaubt, auch gewerblich,
-solange Urhebervermerk und Lizenztext mitgehen. Keine Gewährleistung, keine
-Patentrechte, und unsere Namen nicht zur Werbung.
+Benutzen, verändern und weitergeben ist damit erlaubt, auch gewerblich, solange Urhebervermerk und Lizenztext mitgehen. Keine Gewährleistung, keine Patentrechte, und unsere Namen nicht zur Werbung.
 
-**Zwei Einschränkungen**, die [LICENSE](LICENSE) im Einzelnen aufführt:
-Fremdbestandteile wie OpenSSL, expat und libpng behalten ihre eigenen
-Lizenzen — und einiges im Baum gehört **weder uns noch dem Computer History
-Museum**: die Stingray-Header unter `Eudora71/OT501`, `Paige32.dll`,
-`SMIME.dll` und die Verzeichnisdienst-Bibliotheken von 2003. Daran können wir
-niemandem Rechte einräumen.
-
+**Zwei Einschränkungen**, die [LICENSE](LICENSE) im Einzelnen aufführt: Fremdbestandteile wie OpenSSL, expat und libpng behalten ihre eigenen Lizenzen — und einiges im Baum gehört **weder uns noch dem Computer History Museum**: die Stingray-Header unter `Eudora71/OT501`, `Paige32.dll`, `SMIME.dll` und die Verzeichnisdienst-Bibliotheken von 2003. Daran können wir niemandem Rechte einräumen.
