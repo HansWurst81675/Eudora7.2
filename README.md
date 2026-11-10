@@ -1,3 +1,4 @@
+<meta name="google-site-verification" content="YX-GGHQSbBuzUtVsdfd1Ft5hxvO6f6zE_EVL58v5xT0" />
 # Eudora 7.2
 
 **Deutsch | [English](README.en.md)**
