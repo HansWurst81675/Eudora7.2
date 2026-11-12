@@ -1,3 +1,4 @@
+<meta name="google-site-verification" content="YX-GGHQSbBuzUtVsdfd1Ft5hxvO6f6zE_EVL58v5xT0" />
 # Eudora 7.2
 
 **Deutsch | [English](README.en.md)**
@@ -23,7 +24,7 @@ Neuere Testpakete (7.2.2.137, 7.2.2.138) sind gebaut, aber **nicht veröffentlic
 
 | Fassung | Art | Datum | Inhalt |
 |---|---|---|---|
-| **7.2.2.138** | Testpaket, nicht veröffentlicht | — | Sanduhr bei der ersten Druckvorschau ([E-240](Intern/BEFUNDE.md#e-240)); eigenes Release-ZIP aus frischem Klon baubar ([E-248](Intern/BEFUNDE.md#e-248)) |
+| **7.2.2.138** | **Release** | 12.11.2026 | Sanduhr bei der ersten Druckvorschau ([E-240](Intern/BEFUNDE.md#e-240)); eigenes Release-ZIP aus frischem Klon baubar ([E-248](Intern/BEFUNDE.md#e-248)) |
 | **7.2.2.137** | Testpaket, nicht veröffentlicht | — | Behebung der Druckvorschau für [E-242](Intern/BEFUNDE.md#e-242) gebaut (Befund noch offen: Pfad der Zwischendatei); Druck über *Microsoft Print to PDF* von Gregor bestanden |
 | **7.2.2.136** | **Release** | 06.11.2026 | Kein Absturz mehr beim Beenden bei offenem Hinweis ([E-239](Intern/BEFUNDE.md#e-239)); `PrintBackground` für die Druckvorschau ([E-169](Intern/BEFUNDE.md#e-169)); „Remember password“ wirkt beim ersten Mal ([E-223](Intern/BEFUNDE.md#e-223)); Anhangsymbol bei S/MIME-signierten Mails ([E-222](Intern/BEFUNDE.md#e-222)). Voller Prüfstandslauf 110/110 am Bau `2a8fd4d7`, Unit-Tests 428/428, von Gregor getestet und freigegeben |
 | 7.2.2.135 | Testpaket | 05.11.2026 | Rest von [E-193](Intern/BEFUNDE.md#e-193) (Edit → Find). Prüfbericht bestanden (425 Unit-Tests, 19 Schranken, 103 Prüfstandsfälle; im vollen Lauf 3 Fälle rot, einzeln grün, darunter der Absturz [E-239](Intern/BEFUNDE.md#e-239)) |
