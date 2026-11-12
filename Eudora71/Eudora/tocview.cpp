@@ -670,7 +670,9 @@ void CTocListBox::DrawItem(LPDRAWITEMSTRUCT lpDIS)
 	CBrush* OldBrush = NULL;
 	CBrush ForeBrush(ForeColor);
 	CFont* OldFont = NULL;
-	if (GetIniShort(IDS_INI_COMP_SUMMARY_ITALIC) && Sum->CantEdit() && Sum->m_TheToc->m_Type != MBT_OUT)
+	// Absturz 12.11.2026 (Dump, DrawItem+0x6f0): m_TheToc ist NULL, solange die Zusammenfassung
+	// in keinem Postfach steht (Konstruktor, summary.cpp) - hier also nicht ohne Pruefung dereferenzieren.
+	if (GetIniShort(IDS_INI_COMP_SUMMARY_ITALIC) && Sum->CantEdit() && Sum->m_TheToc && Sum->m_TheToc->m_Type != MBT_OUT)
 		OldFont = pDC->SelectObject(&ScreenFontItalic);
 	
 	// Status
@@ -821,7 +823,7 @@ void CTocListBox::DrawItem(LPDRAWITEMSTRUCT lpDIS)
 		{
 			int BitmapIndex = -1;
 #ifdef IMAP4 // IMAP4
-			if (Sum->m_TheToc->IsImapToc())
+			if (IsImapSum(Sum))	// faengt m_TheToc == NULL ab (Absturz 12.11.2026)
 			{
 				BitmapIndex = 0;
 				if ( Sum->IsNotIMAPDownloadedAtAll() )
