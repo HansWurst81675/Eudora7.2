@@ -251,6 +251,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `selbst_bauen_korrektur` | 08.11.2026 | ich baue selbst auf einem anderen PC |
 | `20261109_update_readme` | 09.11.2026 | claude hat verpennt, alles upzudaten. README mit aktuellem Stand. |
 | `20261112_patch4crash` | 13.11.2026 | crash update - 1 |
+| `20261113_temp_commit` | 13.11.2026 | crash update - 2 |
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl

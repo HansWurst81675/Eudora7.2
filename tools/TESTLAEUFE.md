@@ -1681,3 +1681,4 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-11-08 13:14:43 | c:\Users\CzempikG\GitLab\Eudora7.2\Eudora71\Bin\Release  | Gregor: 08.11.2026: eigenbau selbst getestet, ob die richtige versionsnummer drin steht |
 | 2026-11-09 07:21:31  | C:\Temp\Eudora72-7.2.2.138-test-mit-smime-dlls  | Gregor: 09.11.2026: mails abgerufen und verschickt |
 |  2026-11-09 07:52:07  | C:/Temp/Eudora72-7.2.2.132-release | Gregor: 09.11.2026: mails abgerufen und verschickt |
+|  2026-11-13 13:17:00  | C:/Temp/Eudora72-7.2.2.132-release | Gregor: 13.11.2026: mails abgerufen und verschickt |
