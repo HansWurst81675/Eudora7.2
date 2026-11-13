@@ -250,6 +250,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `release_7_2_2_132` | 03.11.2026 | **Von Gregor bestätigt** (03.11.2026, *„Ja, so“*). `tools/release-veroeffentlichen.ps1` lässt neben 7.2.1.N auch die Reihe 7.2.2.N zu (die Entscheidung für 7.2.2 war dort nicht nachgezogen, das Werkzeug wies 7.2.2.132 ab); Veröffentlichung von `v7.2.2.132` aus diesem Zweig, danach die Nachträge zum Release. |
 | `selbst_bauen_korrektur` | 08.11.2026 | ich baue selbst auf einem anderen PC |
 | `20261109_update_readme` | 09.11.2026 | claude hat verpennt, alles upzudaten. README mit aktuellem Stand. |
+| `20261112_patch4crash` | 13.11.2026 | crash update - 1 |
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl
