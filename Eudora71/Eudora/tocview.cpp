@@ -617,6 +617,25 @@ void CTocListBox::DrawItem(LPDRAWITEMSTRUCT lpDIS)
 		return;
 	}
 
+	if (!Sum->m_TheToc)
+	{
+		static int s_nOhnePostfach = 0;
+		if (s_nOhnePostfach < 20)
+		{
+			++s_nOhnePostfach;
+			CTocDoc* pTocDoc = ((CTocView*)GetParent())->GetDocument();
+			char szM[256];
+			_snprintf(szM, sizeof(szM),
+				"DrawItem: Zusammenfassung ohne Postfach: Sum=0x%08lX index=%d zustand=%d "
+				"vorabE121=%d vorabE184=%d uid=%lu liste=\"%s\"",
+				(unsigned long) Sum, (int) lpDIS->itemID, (int) Sum->m_State,
+				(int) Sum->IstE121Vorab(), (int) Sum->IstE184Vorab(),
+				(unsigned long) Sum->GetUniqueMessageId(),
+				pTocDoc ? (const char*)(LPCTSTR) pTocDoc->GetMBFileName() : "?");
+			szM[sizeof(szM) - 1] = 0;
+			PutDebugLog(DEBUG_MASK_MISC, szM);
+		}
+	}
 	// Set up some color values
 	COLORREF BackColor, ForeColor;
 	const BOOL bWholeSummaryLabelColor = GetIniShort(IDS_INI_WHOLE_SUMMARY_LABEL_COLOR);
