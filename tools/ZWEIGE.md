@@ -252,6 +252,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `20261109_update_readme` | 09.11.2026 | claude hat verpennt, alles upzudaten. README mit aktuellem Stand. |
 | `20261112_patch4crash` | 13.11.2026 | crash update - 1 |
 | `fix_imap_attachment_20261115` | 16.11.2026 | fix IMAP attachment PDF|
+| `fix_crash_20261116` | 16.11.2026 | fix crash - 1 |
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
 Am 13.09.2026 habe ich **drei** Zweige selbst benannt, obwohl
