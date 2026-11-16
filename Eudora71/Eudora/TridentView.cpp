@@ -3159,6 +3159,14 @@ IHTMLElement* pElement )
 
 	USES_CONVERSION;
 
+	// Absturz 16.11.2026: LaunchURL(CPoint) gibt weiter, was elementFromPoint liefert.
+	// Das ist NULL (mit S_OK), wenn unter dem Klick kein Element liegt. Die Pruefung steht
+	// vor GetDoc2/GetBody, damit keine COM-Referenz (pBody) liegen bleibt.
+	if ( pElement == NULL )
+	{
+		return FALSE;
+	}
+
 	// Get document
 	VERIFY( pDoc = m_pSite->GetDoc2() );
 	
@@ -3174,21 +3182,7 @@ IHTMLElement* pElement )
 		return FALSE;
 	}
 
-	// vorher:
-	//hr = pElement->get_tagName( BSTRARG( cbstr ) );
-	//szValue = cbstr;
-	// nachher:
-	if (pElement == NULL)
-	{
-		// Klick fiel auf einen Bereich ohne DOM-Element
-		// (z. B. Whitespace zwischen Anhängen) -> abbrechen statt Crash
-		return FALSE;
-	}
-
-	hr = pElement->get_tagName(BSTRARG(cbstr));
-	if (FAILED(hr))
-		return FALSE;
-
+	hr = pElement->get_tagName( BSTRARG( cbstr ) );
 	szValue = cbstr;
 
 	pParent = NULL;
