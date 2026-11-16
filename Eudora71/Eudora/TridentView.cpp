@@ -3174,7 +3174,21 @@ IHTMLElement* pElement )
 		return FALSE;
 	}
 
-	hr = pElement->get_tagName( BSTRARG( cbstr ) );
+	// vorher:
+	//hr = pElement->get_tagName( BSTRARG( cbstr ) );
+	//szValue = cbstr;
+	// nachher:
+	if (pElement == NULL)
+	{
+		// Klick fiel auf einen Bereich ohne DOM-Element
+		// (z. B. Whitespace zwischen Anhängen) -> abbrechen statt Crash
+		return FALSE;
+	}
+
+	hr = pElement->get_tagName(BSTRARG(cbstr));
+	if (FAILED(hr))
+		return FALSE;
+
 	szValue = cbstr;
 
 	pParent = NULL;
