@@ -6145,6 +6145,31 @@ void GetFilenameParameter (BODY *pBody, CString& szFilename)
 		}
 	}
 
+	//	Anhangsname als RFC-2047-Wort (15.11.2026, IMAP): manche Absender, hier eine
+	//	Samsung-Mail ueber GMX, schicken den Namen als
+	//	=?ISO-8859-1?Q?Best=E4tigung=5F5997148849=2EPDF?= . RFC 2047 erlaubt das in
+	//	Parametern nicht, es kommt aber vor. Roh landete das Wort im Dateinamen:
+	//	LOCAL_DeMacifyName32 warf die Fragezeichen weg, die Datei hiess
+	//	"=ISO-8859-1QBest=E4tigung=5F5997148849=2EPDF=", hatte keine Endung ".PDF"
+	//	und liess sich nicht oeffnen. ImapFix2047 dekodiert an Ort und Stelle und
+	//	rechnet den Zeichensatz um, wie bei den Kopfzeilen.
+	if (!szFilename.IsEmpty() && szFilename.Find("=?") >= 0)
+	{
+		char	szDekodiert[1024];
+		if (szFilename.GetLength() < (int)sizeof(szDekodiert))
+		{
+			strcpy(szDekodiert, (LPCTSTR)szFilename);
+			int nLaenge = (int)strlen(szDekodiert);
+			if (ImapFix2047(szDekodiert, nLaenge) && szDekodiert[0])
+			{
+				PutDebugLogSichtbar(DEBUG_MASK_ATTACH,
+					"ANHANG Name (IMAP): RFC-2047-Wort dekodiert, vorher",
+					(LPCTSTR)szFilename, (long)szFilename.GetLength());
+				szFilename = szDekodiert;
+			}
+		}
+	}
+
 	// 
 	if (!szFilename.IsEmpty())
 	{
