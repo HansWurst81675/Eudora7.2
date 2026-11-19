@@ -241,6 +241,10 @@ STDMETHODIMP CTridentView::QueryInterface( REFIID riid, void **ppv )
      * We provide IOleInPlaceFrame and IOleCommandTarget
 	 *   interfaces here for the ActiveX Document hosting
 	 */
+    // SICHERUNG: ppv darf nicht NULL sein (COM-Konvention, hier explizit)
+    if ( ppv == NULL )
+        return E_POINTER;
+
     *ppv = NULL;
 
     if ( IID_IUnknown == riid || IID_IOleInPlaceUIWindow == riid
@@ -299,9 +303,13 @@ STDMETHODIMP CTridentView::GetWindow( HWND* phWnd )
 {
 	CFrameWnd*	pParentFrame;
 
+	// SICHERUNG: *phWnd immer setzen, auch wenn kein Parent-Frame da ist.
+	if ( phWnd != NULL )
+		*phWnd = NULL;
+
 	pParentFrame = GetParentFrame();
 	
-	if( pParentFrame != NULL )
+	if( pParentFrame != NULL && phWnd != NULL )
 	{
 		*phWnd = pParentFrame->m_hWnd;
 	}
@@ -940,13 +948,18 @@ int CTridentView::CreateDocObject( TCHAR* pchPath )
 	if ( m_pSite->GetCommandTarget() == NULL )
 	{
 		IUnknown* lpUnk = m_pSite->GetObjectUnknown();
-		IOleCommandTarget* pCommandTarget = NULL;
 
-		lpUnk->QueryInterface(IID_IOleCommandTarget, (void **)&pCommandTarget);
-
-		if ( pCommandTarget != NULL )
+		// SICHERUNG: GetObjectUnknown() kann NULL liefern.
+		if ( lpUnk != NULL )
 		{
-			m_pSite->SetCommandTarget( pCommandTarget );
+			IOleCommandTarget* pCommandTarget = NULL;
+
+			lpUnk->QueryInterface(IID_IOleCommandTarget, (void **)&pCommandTarget);
+
+			if ( pCommandTarget != NULL )
+			{
+				m_pSite->SetCommandTarget( pCommandTarget );
+			}
 		}
 	}
 
@@ -1043,8 +1056,6 @@ void CTridentView::OnDestroy()
 
 	CView::OnDestroy();
 }
-
-
 void CTridentView::OnCopy() 
 {
     ExecCommand( IDM_COPY );
@@ -1264,10 +1275,14 @@ void CTridentView::OnInitialUpdate()
 		return;
 
 	// We created the thing, now activate it with "Show"
-	if( GetStyle() & WS_VISIBLE )
-		m_pSite->Activate( OLEIVERB_SHOW );
-	else
-		m_pSite->Activate( OLEIVERB_HIDE );
+	// SICHERUNG: m_pSite kann NULL sein, wenn CreateDocObject mit Fehler zurueckkam.
+	if ( m_pSite != NULL )
+	{
+		if( GetStyle() & WS_VISIBLE )
+			m_pSite->Activate( OLEIVERB_SHOW );
+		else
+			m_pSite->Activate( OLEIVERB_HIDE );
+	}
 }
 
 
@@ -1411,7 +1426,7 @@ CTridentView::WriteTempFile(
 		// One reason this could fail is if the message couldn't be retrieved from an IMAP server
 		if (!szFullMessage) 
 		{
-			if (bLoadedDoc)
+			if (bLoadedDoc && pSummary)
 			{
 				pSummary->NukeMessageDocIfUnused();
 				pDoc = NULL;
@@ -1488,7 +1503,7 @@ CTridentView::WriteTempFile(
 			bWriteGood = FALSE;
 		}
 		
-		if (bLoadedDoc)
+		if (bLoadedDoc && pSummary)
 			pSummary->NukeMessageDocIfUnused();
 		
 		delete [] szFullMessage;
@@ -1656,7 +1671,14 @@ void CTridentView::OnSpecialAddAsRecipient()
 	CBstr text;
 
 	// Get document
+	// SICHERUNG: m_pSite und pDoc koennen NULL sein.
+	if ( m_pSite == NULL )
+		return;
+
 	pDoc = m_pSite->GetDoc2();
+
+	if ( pDoc == NULL )
+		return;
 
 	// Get selection
 	hr = pDoc->get_selection(&pSel);
@@ -1770,6 +1792,10 @@ BOOL CTridentView::DoFindFirst(const char* szSearch, BOOL bMatchCase, BOOL bWhol
 	}
 
 	// Get document
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return FALSE;
+
 	pBody = m_pSite->GetBody();
 	
 	if( !pBody ) 
@@ -1862,6 +1888,10 @@ BOOL CTridentView::DoFindNext(const char* szSearch, BOOL bMatchCase, BOOL bWhole
 	bReturn = FALSE;
 		
 	// Get body
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return FALSE;
+
 	pBody = m_pSite->GetBody();
 	
 	if( !pBody ) 
@@ -2014,6 +2044,10 @@ LPARAM )
 	ExecCommand( IDM_BASELINEFONT1 + iSize );
 
 	// Get document
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return 0;
+
 	pDoc = m_pSite->GetDoc2();
 	
 	if ( !pDoc ) 
@@ -2744,6 +2778,10 @@ void CTridentView::SetFont(const char* szFontName, INT iSize)
 	ExecCommand( IDM_BASELINEFONT1 + iSize );
 
 	// Get document
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return;
+
 	pDoc = m_pSite->GetDoc2();
 	
 	if ( !pDoc ) 
@@ -2965,9 +3003,14 @@ BOOL CTridentView::PreTranslateMessage(MSG* pMsg)
                 m_bEnableAttachmentMenus = FALSE;
 
             // wm_contextmenu handlers expect screen coordinates
-            pWnd->ClientToScreen( &pt );
-            pFrameWnd->PostMessage( WM_CONTEXTMENU, WPARAM(GetSafeHwnd()),
-                                    MAKELPARAM(pt.x, pt.y) );
+            // SICHERUNG: pFrameWnd kann NULL sein, wenn die View noch nicht
+            // in ein Frame eingehaengt ist (VERIFY ist im Release ein No-op).
+            if ( pWnd && pFrameWnd )
+            {
+                pWnd->ClientToScreen( &pt );
+                pFrameWnd->PostMessage( WM_CONTEXTMENU, WPARAM(GetSafeHwnd()),
+                                        MAKELPARAM(pt.x, pt.y) );
+            }
 
             return TRUE;
         }
@@ -3093,6 +3136,10 @@ CTridentView::GetAnchorElement(
 		return NULL;
 
 	// Get document
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return NULL;
+
 	IHTMLDocument2 *		pDoc = m_pSite->GetDoc2();
 	if (!pDoc)
 		return NULL;
@@ -3168,6 +3215,10 @@ IHTMLElement* pElement )
 	}
 
 	// Get document
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return FALSE;
+
 	VERIFY( pDoc = m_pSite->GetDoc2() );
 	
 	if ( !pDoc ) 
@@ -3343,12 +3394,12 @@ CPoint point)
 	}
 
 	// Get document
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return FALSE;
+
 	pDoc = m_pSite->GetDoc2();
 
-  
-
-
-	
 	if ( !pDoc ) 
 	{
 		return FALSE;
@@ -3498,9 +3549,17 @@ LPCSTR	szTag )
 	pRange = NULL;
 	pElementRange = NULL;
 	pElement = NULL;
+	pCollection = NULL;
+
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return NULL;
 
 	// Get document
 	VERIFY( pDoc = m_pSite->GetDoc2() );
+
+	if ( !pDoc )
+		return NULL;
 
 	// Get selection
 	hr = pDoc->get_selection(&pSel);
@@ -3611,9 +3670,13 @@ LPCSTR	szTag )
 		}
 	}
 
-	pCollection->Release();
-	pRange->Release();
-	pElementRange->Release();
+	// SICHERUNG: pCollection steht ausserhalb des if-Blocks, der es prueft.
+	if ( pCollection )
+		pCollection->Release();
+	if ( pRange )
+		pRange->Release();
+	if ( pElementRange )
+		pElementRange->Release();
 	return pElement;
 }
 
@@ -3660,8 +3723,20 @@ IHTMLElement*	pElement, int command /*=0*/ )
 	CString					szName;
 	CBstr					cbstr;
 
+	// SICHERUNG: pElement kann NULL sein (GetSelectedElement liefert NULL).
+	if ( pElement == NULL )
+		return FALSE;
+
 	ASSERT( pElement );
+
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return FALSE;
+
 	VERIFY( pDoc = m_pSite->GetDoc2() );
+
+	if ( !pDoc )
+		return FALSE;
 
 	szHRef = "";
 	szName = "";
@@ -3814,8 +3889,15 @@ BOOL CTridentView::HasSelectedText()
 
 	bReturn = FALSE;
 
+	// SICHERUNG: m_pSite und pDoc koennen NULL sein.
+	if ( m_pSite == NULL )
+		return FALSE;
+
 	// Get document
 	pDoc = m_pSite->GetDoc2();
+
+	if ( pDoc == NULL )
+		return FALSE;
 
 	// Get selection
 	hr = pDoc->get_selection(&pSel);
@@ -3940,6 +4022,10 @@ BOOL CTridentView::QueryElement_FileAttachment( CPoint pt, IHTMLElement** ppElem
     CString             szName = "";
     CString             szHRef = "";
 
+    // SICHERUNG: m_pSite kann NULL sein.
+    if ( m_pSite == NULL )
+        return FALSE;
+
     // get document
     pDoc = m_pSite->GetDoc2();
         
@@ -4012,6 +4098,10 @@ BOOL CTridentView::GetAttachmentURL( IHTMLElement* piFileAttachment, CString &sz
     USES_CONVERSION;
 
     IHTMLBodyElement* pBody = NULL;
+
+    // SICHERUNG: m_pSite kann NULL sein.
+    if ( m_pSite == NULL )
+        return FALSE;
 
     if ( (pBody = m_pSite->GetBody()) == NULL ) {
         assert( 0 );
@@ -4101,6 +4191,10 @@ BOOL CTridentView::GetSelectedText( CString& szText )
     BOOL                     bReturn = FALSE;
 
     szText  = "";
+
+    // SICHERUNG: m_pSite kann NULL sein.
+    if ( m_pSite == NULL )
+        return FALSE;
 
     pDoc = m_pSite->GetDoc2();
         
@@ -4218,6 +4312,10 @@ BOOL CTridentView::GetSelectedHTML( CString& szHTML )
     pDoc    = NULL;
     bReturn = FALSE;
 
+    // SICHERUNG: m_pSite kann NULL sein.
+    if ( m_pSite == NULL )
+        return FALSE;
+
     pDoc = m_pSite->GetDoc2();
         
     if (!pDoc) 
@@ -4272,6 +4370,11 @@ BOOL CTridentView::GetAllText( CString& szText )
 
     bReturn = FALSE;
     szText  = "";
+
+    // SICHERUNG: m_pSite kann NULL sein.
+    if ( m_pSite == NULL )
+        return FALSE;
+
     pBody   = m_pSite->GetBody();
         
     if( !pBody ) 
@@ -4397,6 +4500,11 @@ BOOL CTridentView::GetAllHTML( CString& szHTML )
 
     bReturn = FALSE;
     szHTML  = "";
+
+    // SICHERUNG: m_pSite kann NULL sein.
+    if ( m_pSite == NULL )
+        return FALSE;
+
     pBody   = m_pSite->GetBody();
         
     if( !pBody ) 
@@ -4442,6 +4550,10 @@ BOOL CTridentView::PasteOnDisplayHTML(const char* szHTML, bool bSign)
 	BOOL					bRet;
 
 	USES_CONVERSION;
+
+	// SICHERUNG: m_pSite kann NULL sein.
+	if ( m_pSite == NULL )
+		return FALSE;
 
 	pDoc = m_pSite->GetDoc2();
 	
@@ -4616,7 +4728,10 @@ void CTridentView::ConvertEmoticonImageTagsToTriggers(CString & io_szHTML)
 								
 								//	If the alt text ended with a quotation mark, back up
 								//	one character.
-								if (pEndTagAttribute[-1] == '"')
+								// SICHERUNG: Bei leerem alt-Text (alt="") steht
+								//	pEndTagAttribute auf pTagAttribute - Index [-1] waere
+								//	ausserhalb des Puffers.
+								if ( pEndTagAttribute > pTagAttribute && pEndTagAttribute[-1] == '"' )
 									pEndTagAttribute--;
 								
 								//	Temporarily modify the buffer so that we can work
