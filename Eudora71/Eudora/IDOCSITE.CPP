@@ -119,7 +119,14 @@ STDMETHODIMP CImpIOleDocumentSite::ActivateMe( IOleDocumentView *pView )
     pView->UIActivate( TRUE );
 
     //Set the window size sensitive to new toolbars
-    m_pSite->GetFrame()->GetClientRect( &rc );
+    // m_pSite->GetFrame()->GetClientRect( &rc );
+	// SICHERUNG: m_pSite und der Rueckgabewert von GetFrame() koennen NULL sein.
+	if ( m_pSite != NULL )
+	{
+		CWnd * pFrame = m_pSite->GetFrame();
+		if ( pFrame != NULL )
+			pFrame->GetClientRect( &rc );
+	}
     pView->SetRect( &rc );
 
 	//Makes it all active
