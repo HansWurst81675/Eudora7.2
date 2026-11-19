@@ -79,6 +79,10 @@ CSite::~CSite(void)
  */
 STDMETHODIMP CSite::QueryInterface( REFIID riid, void **ppv )
 {
+    // SICHERUNG: ppv darf nicht NULL sein (COM-Konvention, hier explizit)
+    if ( ppv == NULL )
+        return E_POINTER;
+
     *ppv = NULL;
 
 #ifdef _DEBUG
@@ -310,6 +314,7 @@ void CSite::Close(BOOL fCommit)
 	if( m_pDoc2 != NULL )
 	{
 		m_pDoc2->Release();
+		m_pDoc2 = NULL;
 	}
 
     //OnInPlaceDeactivate releases this pointer.
@@ -357,6 +362,12 @@ void CSite::Close(BOOL fCommit)
 
 void CSite::Activate( LONG iVerb )
 {
+    // SICHERUNG: m_pIOleObject wird erst in ObjectInitialize() gesetzt.
+    // Wird Activate() vorher erreicht (z. B. weil ObjectInitialize mit
+    // Fehler zurueckkam), darf DoVerb() nicht aufgerufen werden.
+    if ( m_pIOleObject == NULL )
+        return;
+
     RECT rc;
             
     GetClientRect( m_hWnd, &rc );
@@ -408,6 +419,10 @@ void CSite::UpdateObjectRects( void )
 HRESULT CSite::Load(TCHAR* pchPath)
 {
     HRESULT   hr = S_OK;
+
+    // SICHERUNG: m_pObj kann NULL sein, wenn Create() fehlgeschlagen ist
+    if ( m_pObj == NULL )
+        return E_UNEXPECTED;
 
     if ( pchPath != NULL && *pchPath != 0)
     {
@@ -486,6 +501,10 @@ HRESULT CSite::Save(TCHAR* pchPath)
 {
     HRESULT   hr = S_OK;
 
+    // SICHERUNG: m_pObj kann NULL sein
+    if ( m_pObj == NULL )
+        return E_UNEXPECTED;
+
     if ( pchPath != NULL && *pchPath != 0)
     {
 	    OLECHAR  szwName[256];
@@ -526,9 +545,16 @@ IHTMLDocument2* CSite::GetDoc2()
 {
 	HRESULT hr;
 
+	// SICHERUNG: m_pObj kann NULL sein, wenn Create() fehlgeschlagen ist
+	// (z. B. CoCreateInstance lieferte SITE_ERROR_NO_MSHTML_DLL).
+	if ( m_pObj == NULL )
+		return NULL;
+
 	if( m_pDoc2 == NULL )
 	{
 		hr = m_pObj->QueryInterface(IID_IHTMLDocument2, (void **)( &m_pDoc2 ) );
+		if ( FAILED(hr) )
+			m_pDoc2 = NULL;
 	}
 	
 	return m_pDoc2;
@@ -544,9 +570,15 @@ IHTMLBodyElement* CSite::GetBody()
 	pElement = NULL;
 	pBody = NULL;
 	
+	// SICHERUNG: siehe GetDoc2()
+	if ( m_pObj == NULL )
+		return NULL;
+
 	if( m_pDoc2 == NULL )
 	{
 		hr = m_pObj->QueryInterface(IID_IHTMLDocument2, (void **)( &m_pDoc2 ) );
+		if ( FAILED(hr) )
+			m_pDoc2 = NULL;
 	}
 	
 	if( m_pDoc2 )
@@ -581,6 +613,11 @@ STDMETHODIMP CSite::OnChanged(DISPID dispID)
 
 		DISPPARAMS dp = {NULL, NULL, 0, 0};
 		VERIFY ( GetDoc2() );
+
+		// SICHERUNG: GetDoc2() kann NULL liefern; dann kein Invoke.
+		if ( m_pDoc2 == NULL )
+			return NOERROR;
+
 		if (SUCCEEDED(hr = m_pDoc2->Invoke(DISPID_READYSTATE, IID_NULL, LOCALE_SYSTEM_DEFAULT, 
 			DISPATCH_PROPERTYGET, &dp, &vResult, &excepInfo, &uArgErr)))
 		{
