@@ -156,10 +156,10 @@ Wie viele Befunde jede Stufe hat, und wie viele davon noch offen sind — erzeug
 | Stufe | offen | erledigt | zusammen |
 |---|---:|---:|---:|
 | **kritisch** | 5 | 66 | 71 |
-| **wichtig** | 24 | 58 | 82 |
+| **wichtig** | 24 | 59 | 83 |
 | **unkritisch** | 20 | 42 | 62 |
 | **werkzeug** | 13 | 36 | 49 |
-| zusammen | 62 | 202 | 264 |
+| zusammen | 62 | 203 | 265 |
 
 <!-- stufen: Ende -->
 

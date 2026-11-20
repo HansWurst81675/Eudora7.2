@@ -3,20 +3,20 @@
 | | |
 |---|---|
 | **Quellstand** | `7.2.2.138` (Paketnummer `7.2.2.138`) |
-| **Commit** | `40df1ebb` (Arbeitsbaum sauber) |
-| **Erstellt** | 2026-11-16 09:10 |
+| **Commit** | `2b3bc7eb` (Arbeitsbaum sauber) |
+| **Erstellt** | 2026-11-20 07:56 |
 | **Gesamturteil** | **NICHT VOLLSTAENDIG** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
 | Teil | Dauer | gemessen |
 |---|---|---|
-| Unit-Tests bauen und fahren | 0 min 13 s | dieser Lauf |
-| Schranken mit Rueckfallprobe | 0 min 13 s | dieser Lauf |
+| Unit-Tests bauen und fahren | 0 min 10 s | dieser Lauf |
+| Schranken mit Rueckfallprobe | 0 min 08 s | dieser Lauf |
 | Pruefstand, 110 Faelle, 67 Eudora-Starts | 91 min 16 s | voller Lauf, Ende 2026-11-06 11:30:46 |
-| **zusammen** | **91 min 42 s** | |
+| **zusammen** | **91 min 34 s** | |
 
-Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.138+40df1ebb* 2026-11-16 09:07`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
+Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.138+2b3bc7eb 2026-11-20 07:54`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
@@ -51,7 +51,7 @@ Danach `perl tools/pruefbericht.pl` schreibt Bericht und Testbuch neu.
 
 ## 1. Unit-Tests
 
-Gelaufen am **2026-11-16 09:10** gegen den Quelltext von Commit `40df1ebb`.
+Gelaufen am **2026-11-20 07:56** gegen den Quelltext von Commit `2b3bc7eb`.
 
 <details><summary>Alle 429 Unit-Tests einzeln</summary>
 
@@ -495,7 +495,7 @@ Eine Schranke im `pre-commit` zaehlt nur als Regressionstest, wenn sie ihren
 Rueckfall abweist: die Behebung wird voruebergehend zurueckgenommen, die
 Schranke muss rot werden, danach wird die Datei byte-genau wiederhergestellt
 (`tools/schranken-gegenprobe.pl`, Liste in `tools/regression-schranken.txt`).
-Gelaufen am **2026-11-16 09:10** gegen Commit `40df1ebb`.
+Gelaufen am **2026-11-20 07:56** gegen Commit `2b3bc7eb`.
 
 | Befund | Schranke | Ergebnis | gemessen |
 |---|---|---|---|
