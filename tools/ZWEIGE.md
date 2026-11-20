@@ -256,6 +256,7 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `update_fix_20261116` | 16.11.2026 | fix crash - 2 |
 | `20261120_testlauf` | 20.11.2026 | lokaler testlauf mit ergebnissen |
 | `20261120_changelog_update` | 20.11.2026 | update von changelog |
+| `20261120_testlaeufe_nachtrag` | 20.11.2026 | testläufe nachfragen |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 
