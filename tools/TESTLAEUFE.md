@@ -1747,3 +1747,7 @@ sich stuetzt. Angelegt und gefuellt von `tools/testlauf.ps1` - siehe dort, warum
 | 2026-11-20 09:31:20 | `C:\Temp\Eudora72-Pruefstand\E128T` | Anwender Gregor am 20.11.2026 per Pruefstand starten: 'j' | Hauptfenster 9635464 - Eudora  Schliesszeit 1 s. |
 | 2026-11-20 09:32:05 | `C:\Temp\Eudora72-Pruefstand\E220` | Anwender Gregor am 20.11.2026 per Pruefstand starten: 'j' | Hauptfenster 3737572 - Eudora  Schliesszeit 1 s. |
 | 2026-11-20 09:32:41 | `C:\Temp\Eudora72-Pruefstand\E221` | Anwender Gregor am 20.11.2026 per Pruefstand starten: 'j' | Hauptfenster 4654936 - Eudora   [Eudora 7.2.2.138+2b3bc7eb 2026-11-20 07:54 - E221]  Schliesszeit 1 s. |
+| 2026-11-20 07:59:03 | `C:\Temp\Eudora72-7.2.2.138-release` | Start vom 20.11.2026 (nur im Audit.log erfasst, kein 7.2.2.132-Start) | Von Hand nachgetragen; Verzeichnis-/Fassungskorrektur auf 7.2.2.138. |
+| 2026-11-20 11:06:02 | `C:\Temp\Eudora72-7.2.2.138-release` | Start vom 20.11.2026 (nur im Audit.log erfasst, kein 7.2.2.132-Start) | Von Hand nachgetragen; Verzeichnis-/Fassungskorrektur auf 7.2.2.138. |
+| 2026-11-20 11:28:34 | `C:\Temp\Eudora72-7.2.2.138-release` | Start vom 20.11.2026 (nur im Audit.log erfasst, kein 7.2.2.132-Start) | Von Hand nachgetragen; Verzeichnis-/Fassungskorrektur auf 7.2.2.138. |
+| 2026-11-20 13:39:43 | `C:\Temp\Eudora72-7.2.2.138-release` | Start vom 20.11.2026 (nur im Audit.log erfasst, kein 7.2.2.132-Start) | Von Hand nachgetragen; Verzeichnis-/Fassungskorrektur auf 7.2.2.138. |
