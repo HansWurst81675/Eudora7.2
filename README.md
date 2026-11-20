@@ -227,7 +227,7 @@ Steht dort ein Strom `Zone.Identifier`, ist es die Markierung; `Get-Content ... 
 Wer Eudora in einem Klon oder Fork ändert, prüft mit dem Prüfstand, ob dabei etwas kaputtgegangen ist, was vorher ging. Er startet Eudora rund sechzig Mal mit vorbereiteten Testmails und eigenen Prüfservern auf dem eigenen Rechner (nichts geht ins Internet) und prüft gut hundert Fälle.
 
 1. Eudora bauen: `powershell -File tools\bauen.ps1` ([Doku/BAUEN.md](Doku/BAUEN.md)).
-2. **`Pruefstand starten.cmd`** im Hauptordner doppelklicken, Frage mit `j` beantworten.
+2. **`Pruefstand starten.cmd`** im Hauptordner doppelklicken. Die Frage „Veröffentlichtes Release herunterladen?" mit **`n`** beantworten, damit der eigene Build geprüft wird. (Mit `j` prüft der Prüfstand das zuletzt veröffentlichte Release — das ist nur sinnvoll, wenn Sie keinen eigenen Build haben.)
 3. Warten — gemessen 60 bis 91 Minuten für den vollen Lauf (Stand 06.11.2026) — und den Rechner nicht benutzen; Eudora-Fenster gehen auf und zu. Der Starter nennt vorher die erwartete und am Ende die tatsächliche Dauer.
 4. Am Ende: `ERGEBNIS: alle Fälle bestanden` oder die Liste der roten Fälle.
 
