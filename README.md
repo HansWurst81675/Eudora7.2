@@ -14,6 +14,7 @@ Eudora war von 1988 bis 2006 einer der meistbenutzten Mailclients überhaupt. 20
 **Dieses Repo macht daraus wieder ein Programm, das man bauen und benutzen kann.** Aus einem frischen Klon entsteht mit einem Befehl eine `Eudora.exe`, die auf einem heutigen Windows startet, Mail über TLS 1.3 abruft und verschickt.
 
 ---
+![Eudora 7.2 – Startbild](Intern/Eudora_Splash.jpg)
 
 ## Update-Infos
 
