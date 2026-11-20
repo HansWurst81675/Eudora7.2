@@ -122,7 +122,7 @@ unten in diesem Dokument unter der jeweiligen Fassung.
 
 ---
 
-## 7.2.2.138 — Testpaket (geschnürt am 07.11.2026, nicht veröffentlicht; Zweig `paket_7_2_2_137`): die Sanduhr bleibt, bis die Druckvorschau da ist (E-240), Release-ZIP aus einem frischen Klon (E-248)
+## 7.2.2.138 — Release (20.11.2026): Sanduhr bei Druckvorschau (E-240), Release-ZIP aus frischem Klon (E-248); von Gregor bestätigt.
 
 Nummer fortlaufend nach Entscheidung 26; Gregor am 07.11.2026 nach seinem Test an 7.2.2.137: *„Jetzt, neues Test-ZIP 7.2.2.138“*. Alles aus 7.2.2.137, dazu:
 
