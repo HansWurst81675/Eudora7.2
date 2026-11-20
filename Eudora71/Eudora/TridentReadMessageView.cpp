@@ -926,8 +926,14 @@ void CTridentReadMessageView::OnEditMode()
 {
 	bool	bIsBlahBlahBlah = (m_pParentFrame->GetCheck(ID_BLAHBLAHBLAH) != 0);
 	bool	bIsRO = !m_pParentFrame->GetCheck(ID_EDIT_MESSAGE);
+
+	// SICHERUNG: GetDocument() und m_Sum koennen NULL sein, wenn die View
+	// noch nicht mit einer Nachricht verbunden ist.
+	CReadMessageDoc *	pDoc = GetDocument();
+	CSummary *			pSum = pDoc ? pDoc->m_Sum : NULL;
+
 	bool	bShouldConcentrate = ( !bIsBlahBlahBlah && bIsRO && m_bCanConcentrate &&
-								   ContentConcentrator::Instance()->ShouldConcentrate(ContentConcentrator::kCCFullViewContext, GetDocument()->m_Sum) );
+								   ContentConcentrator::Instance()->ShouldConcentrate(ContentConcentrator::kCCFullViewContext, pSum) );
 	if (bIsRO)
 		ExecCommand(IDM_BROWSEMODE);
 
@@ -1373,6 +1379,12 @@ LPCSTR	szBlockFmt )
 void CTridentReadMessageView::OnBlahBlahBlah()
 {
 	CMessageDoc* pDoc = GetDocument();
+
+	// SICHERUNG: Button kann gedrueckt werden, waehrend keine Nachricht
+	// geladen ist (pDoc NULL) oder die Summary schon freigegeben wurde.
+	if ( pDoc == NULL || pDoc->m_Sum == NULL )
+		return;
+
 	ASSERT_KINDOF(CMessageDoc, pDoc);
 
 	// BEHEBUNG ZU BEFUND E-80 (Gregor, 11.09.2026): "der bla bla button
@@ -1871,7 +1883,10 @@ HRESULT CTridentReadMessageView::SaveInfo()
 		pSpanElement->Release();
 	}
 
-	pCollection->Release();
+	// SICHERUNG: pCollection steht ausserhalb des if-Blocks, der ihn prueft.
+	// Wenn get_all() fehlschlug, ist pCollection NULL.
+	if ( pCollection )
+		pCollection->Release();
 
 	szHeaders = "";
 	szBody = "";
@@ -1932,9 +1947,13 @@ HRESULT CTridentReadMessageView::SaveInfo()
 //	theFile.Write( szHeaders, szHeaders.GetLength() );
 //	theFile.Close();
 
-	pMessageDoc->SetText( szHeaders );
-	pMessageDoc->m_Sum->SetFlag(MSF_XRICH);
-	pMessageDoc->m_Sum->SetFlagEx( MSFEX_HTML );
+	// SICHERUNG: pMessageDoc/m_Sum koennen NULL sein.
+	if ( pMessageDoc && pMessageDoc->m_Sum )
+	{
+		pMessageDoc->SetText( szHeaders );
+		pMessageDoc->m_Sum->SetFlag(MSF_XRICH);
+		pMessageDoc->m_Sum->SetFlagEx( MSFEX_HTML );
+	}
 
 	return S_OK;
 }
@@ -2010,13 +2029,15 @@ BOOL CTridentReadMessageView::GetAllText( CString& szText )
 
     CReadMessageDoc* pDoc = (CReadMessageDoc*) GetDocument();
 
-    if( pDoc != NULL ) {
+    // SICHERUNG: m_Sum und FMBuffer koennen NULL sein.
+    if( pDoc != NULL && pDoc->m_Sum != NULL ) {
         if (!( pDoc->IsModified()) && 
-            !(pDoc->m_Sum->IsXRich()) && !pDoc->m_Sum->IsHTML() ) {
+            !(pDoc->m_Sum->IsXRich()) && !(pDoc->m_Sum->IsHTML()) ) {
 
             // make sure the message is read up
 			char* FMBuffer = pDoc->GetFullMessage(RAW);
-            szText = FMBuffer;
+            if ( FMBuffer )
+                szText = FMBuffer;
 			delete [] FMBuffer;
             return TRUE;
         }
@@ -2428,11 +2449,15 @@ CTridentReadMessageView::WriteHeaders(
 	// Get headers length
 	int		nHeadersLength = szHeaders.GetLength();
 
+	// SICHERUNG: Bei leerem szHeaders ist nHeadersLength == 0 -> Index -1.
 	// Account for trailing \r\n
-	if (szHeaderScan[nHeadersLength-1] == '\n')
-		--nHeadersLength;
-	if (szHeaderScan[nHeadersLength-1] == '\r')
-		--nHeadersLength;
+	if ( nHeadersLength > 0 )
+	{
+		if (szHeaderScan[nHeadersLength-1] == '\n')
+			--nHeadersLength;
+		if ( nHeadersLength > 0 && szHeaderScan[nHeadersLength-1] == '\r' )
+			--nHeadersLength;
+	}
 
 	const char *	szEndOfHeaders = szHeaderScan + nHeadersLength;
 

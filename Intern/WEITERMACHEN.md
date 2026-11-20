@@ -1,6 +1,6 @@
 # Hier weitermachen
 
-**Stand 07.11.2026.**
+**Stand 20.11.2026.**
 
 - **Veröffentlicht zuletzt:**
   [`v7.2.2.136`](https://github.com/HansWurst81675/Eudora7.2/releases/tag/v7.2.2.136)

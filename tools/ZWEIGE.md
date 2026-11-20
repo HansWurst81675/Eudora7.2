@@ -254,6 +254,8 @@ verschweigt, nimmt ihm diese Entscheidung ab.
 | `fix_imap_attachment_20261115` | 16.11.2026 | fix IMAP attachment PDF|
 | `fix_crash_20261116` | 16.11.2026 | fix crash - 1 |
 | `update_fix_20261116` | 16.11.2026 | fix crash - 2 |
+| `20261120_testlauf` | 20.11.2026 | lokaler testlauf mit ergebnissen |
+| `20261120_changelog_update` | 20.11.2026 | update von changelog |
 
 ## Nicht abgestimmt gewesen — der Anlass für diese Datei
 

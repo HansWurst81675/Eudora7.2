@@ -284,7 +284,8 @@ BOOL		bIncludeHeaders)
 	}
 
 	char* FMBuffer = pMsgDoc->GetFullMessage(RAW);
-	CString szFullMessage(FMBuffer);
+	// SICHERUNG: GetFullMessage() kann NULL liefern.
+	CString szFullMessage( FMBuffer ? FMBuffer : "" );
 	delete [] FMBuffer;
 
 //	delete pSum;
@@ -359,7 +360,12 @@ BOOL		bIncludeHeaders)
 
 	EndOfHeader = const_cast<char *>(strstr(szMsgInPane, "\r\n\r\n"));
 
-	szMsg += EndOfHeader;
+	// SICHERUNG: szMsgInPane kann leer sein -> strstr liefert NULL.
+	// CString::operator+=(const char*) mit NULL ist undefiniert.
+	if ( EndOfHeader != NULL )
+		szMsg += EndOfHeader;
+	else
+		szMsg += (LPCSTR)szMsgInPane;
 
 	return bReturn;
 }
@@ -397,6 +403,11 @@ CTridentPreviewView::GetNumMessageDocs() const
 	int				nNumMessageDocs = 0;
 	CTocFrame *		pParentFrame = reinterpret_cast<CTocFrame *>( GetParentFrame() );
 
+	// SICHERUNG: GetParentFrame() liefert NULL, wenn die View noch nicht
+	// in ein Frame eingehaengt ist. IsKindOf() auf NULL ist undefiniert.
+	if ( pParentFrame == NULL )
+		return 0;
+
 	ASSERT_KINDOF(CTocFrame, pParentFrame);
 
 	if ( pParentFrame->IsKindOf(RUNTIME_CLASS(CTocFrame)) )
@@ -414,6 +425,11 @@ CTridentPreviewView::GetSummary(int in_nMessageIndex)
 {
 	CSummary *		pSummary = NULL;
 	CTocFrame *		pParentFrame = reinterpret_cast<CTocFrame *>( GetParentFrame() );	// the Ugly Typecast(tm)
+
+	// SICHERUNG: siehe GetNumMessageDocs()
+	if ( pParentFrame == NULL )
+		return NULL;
+
 	ASSERT_KINDOF(CTocFrame, pParentFrame);
 
 	if ( pParentFrame->IsKindOf(RUNTIME_CLASS(CTocFrame)) )

@@ -13,6 +13,7 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 
 | Zeit | Fassung | Freigabe | Ergebnis |
 |---|---|---|---|
+| 2026-11-20 | 7.2.2.138 | Testlauf vom 20.11.2026 PASSED | veroeffentlicht |
 | 2026-09-11 13:00:17 | v1.0.48 | Gregor am 11.09.2026 zu 1.0.48: IMAP mit der verschaerften Zertifikatspruefung getestet, 'Successfully retrieved konto-gmx@gregor.invalid' ueber Port 993 | veroeffentlicht |
 | 2026-09-11 08:52:00 | v1.0.47 | Gregor am 11.09.2026 zu 1.0.46: 'ja, jetzt geht es' ([E-80](../Intern/BEFUNDE.md#e-80)) und zu 1.0.47: 'ja, passt!' ([E-81](../Intern/BEFUNDE.md#e-81)) | veroeffentlicht; Release Notes am selben Tag berichtigt (134 statt 175 Nachrichten, zehn statt acht Kopfzeilen) |
 | 2026-09-10 13:00:20 | v1.0.43 | Gregor am 10.09.2026 zu 1.0.42/1.0.43: '1. filter fenstergroesse nach neustart gespeichert: PASS' und '2. filter funktionieren.' | veroeffentlicht |
@@ -51,3 +52,5 @@ auf die es sich stuetzt. Angelegt und gefuellt von
 | 2026-11-03 18:38:35 | v7.2.2.132 | Gregor am 03.11.2026 nach seinem Test ausserhalb der VM: 'ja, wir koennen es auf github releasen, dann mit den anderen punkten fortfahren.'; PR #217 gemergt | veroeffentlicht |
 | 2026-11-05 09:36:39 | v7.2.2.133 | Gregor am 05.11.2026 nach seinem Test vom 04.11.2026: 'ja zu beidem, leg los' (Release 7.2.2.133) und 'gut.' auf 'GitHub-Release, genau das getestete ZIP' | veroeffentlicht |
 | 2026-11-06 11:47:12 | v7.2.2.136 | Gregor am 06.11.2026: 'ja zum release' (nach seinem Test: Schritte 1,2,3,5,6 bestanden) und 'gut, dann release'; voller Pruefstandslauf 110/110 | veroeffentlicht |
+| 2026-11-20 11:45:59 | v7.2.2.138 | Testlauf vom 20.11.2026 PASSED | gh lieferte 1 |
+| 2026-11-20 11:52:58 | v7.2.2.138 | Testlauf vom 20.11.2026 PASSED | gh lieferte 2 |
