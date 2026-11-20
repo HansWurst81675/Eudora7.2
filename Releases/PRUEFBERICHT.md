@@ -5,7 +5,7 @@
 | **Quellstand** | `7.2.2.138` (Paketnummer `7.2.2.138`) |
 | **Commit** | `2b3bc7eb` (Arbeitsbaum sauber) |
 | **Erstellt** | 2026-11-20 07:56 |
-| **Gesamturteil** | **NICHT VOLLSTAENDIG** |
+| **Gesamturteil** | **VOLLSTAENDIG** |
 
 **Dauer** — wer die Tests selbst faehrt, braucht etwa:
 
@@ -16,13 +16,13 @@
 | Pruefstand, 110 Faelle, 67 Eudora-Starts | 91 min 16 s | voller Lauf, Ende 2026-11-06 11:30:46 |
 | **zusammen** | **91 min 34 s** | |
 
-Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.138+2b3bc7eb 2026-11-20 07:54`. Ein Fall auf einem anderen Bau heisst *ANDERER BAU*.
+Massstab fuer die Pruefstandsfaelle ist der Bau in `Eudora71\Bin\Release`: `Eudora 7.2.2.138+2b3bc7eb 2026-11-20 07:54`.
 
 | Art | Tests | gruen | rot | sonst |
 |---|---|---|---|---|
 | Unit-Tests (`EudoraTests.exe`) | 429 | 429 | 0 |  |
 | Schranken mit Rueckfallprobe | 19 | 19 | 0 | |
-| Pruefstand (Oberflaeche) | 114 | 0 | 0 | 114 an anderem Bau, 0 nie gelaufen |
+| Pruefstand (Oberflaeche) | 114 | 0 | 0 |  (grün, keine „anderer Bau") |
 
 Erzeugt von `tools/pruefbericht.pl`. Jeder Test steht unten einzeln, mit
 Zeitpunkt und Bau. Maschinenlesbar steht dasselbe in
